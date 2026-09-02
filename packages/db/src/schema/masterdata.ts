@@ -7,7 +7,7 @@ import { users } from './core.js';
 /* ------------------------------------------------------------------ */
 
 /** T (1. hane) */
-export const productTypeEnum = pgEnum('product_type', ['finished', 'semi_finished', 'raw_material', 'packaging', 'equipment', 'fixed_asset', 'service']);
+export const productTypeEnum = pgEnum('product_type', ['finished', 'semi_finished', 'raw_material', 'packaging', 'merchandise', 'equipment', 'fixed_asset', 'service']);
 export const productStatusEnum = pgEnum('product_status', ['active', 'cancelled', 'draft']);
 export const costMethodEnum = pgEnum('cost_method', ['lot', 'average', 'standard']);
 
@@ -81,6 +81,9 @@ export const products = pgTable('products', {
   standardCost: money('standard_cost').notNull().default('0'),
   /** Varsayılan raf ömrü (gün) — mamul lot SKT hesabı */
   shelfLifeDays: integer('shelf_life_days'),
+  /** FEFO uyarı / raftan kaldırma: SKT'den kaç gün önce (boşsa raf ömründen türetilir) */
+  alertDaysBeforeExpiry: integer('alert_days_before_expiry'),
+  removalDaysBeforeExpiry: integer('removal_days_before_expiry'),
   /** Kalite: girişte kontrol zorunlu mu, karantina günü */
   requiresIncomingQc: boolean('requires_incoming_qc').notNull().default(false),
   quarantineDays: integer('quarantine_days').notNull().default(0),

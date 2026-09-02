@@ -1,4 +1,4 @@
-import { pgTable, text, uuid, index, pgEnum, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid, index, uniqueIndex, pgEnum, timestamp } from 'drizzle-orm/pg-core';
 import { id, qty } from './_common.js';
 
 /**
@@ -53,4 +53,4 @@ export const documentIndex = pgTable('document_index', {
   amount: qty('amount'),
   docDate: timestamp('doc_date', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-}, (t) => [index('document_index_type_record_idx').on(t.type, t.recordId), index('document_index_docno_idx').on(t.docNo), index('document_index_partner_idx').on(t.partnerId)]);
+}, (t) => [uniqueIndex('document_index_type_record_uq').on(t.type, t.recordId), index('document_index_docno_idx').on(t.docNo), index('document_index_partner_idx').on(t.partnerId)]);

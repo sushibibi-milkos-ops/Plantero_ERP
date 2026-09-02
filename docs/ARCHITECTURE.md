@@ -66,9 +66,9 @@ Kurallar (ledger uygular, çağıran güvenmez):
 |---|---|---|
 | receipt (tedarikçiden) | 150/152/153 (ürün tipine göre envanter) | 320.999 "Faturası gelmemiş alımlar" |
 | return_out (tedarikçiye iade) | 320.999 | 15X |
-| consumption (iş emri) | 151 Yarı mamul (WIP) | 150 |
-| production (mamul çıktı) | 152 | 151 (malzeme payı) + 731 Genel üretim gideri yansıtma (genel gider payı) |
-| byproduct | 152 | 151 |
+| consumption (iş emri) | 151.01 Üretimde (WIP) | 150 |
+| production (mamul çıktı) | 152 (mamul) / 151.02 (yarı mamul çıktı) | 151.01 (malzeme payı) + 731 Genel üretim gideri yansıtma (genel gider payı) |
+| byproduct | 152 / 151.02 | 151.01 |
 | scrap | 659 Diğer olağan gider (fire) | 15X |
 | delivery (müşteriye) | 621 Satılan mamul maliyeti (SMM) | 152 (lot maliyeti) |
 | return_in (müşteriden iade) | 152 | 621 |
@@ -76,7 +76,8 @@ Kurallar (ledger uygular, çağıran güvenmez):
 | count_loss | 659 | 15X |
 | recall_return | 152 | 621 |
 | opening | 15X | 500 Sermaye (açılış) |
-Envanter hesabı ürün tipine göre: raw_material→150, semi_finished→151, finished→152, packaging→150, ticari mal→153.
+Envanter hesabı ürün tipine göre: raw_material→150, packaging→150, semi_finished→**151.02 Yarı Mamul Stok**, finished→152, merchandise→153. **151.01 Üretimde (WIP)** yalnızca açık iş emri değeri taşır (I15); I1 yarı mamul quant değerini 151.02 ile karşılaştırır. Ana hesap 151 = 151.01 + 151.02.
+**Dönem kuralı:** fiş tarihi hiçbir `fiscal_periods` satırına düşmüyorsa `postJournalEntry` hata verir (PERIOD_NOT_FOUND); kapalı dönem → PERIOD_CLOSED.
 
 ## 7. Muhasebe — `packages/core/src/accounting/journal.ts` (TEK yazma noktası)
 ```ts

@@ -2,7 +2,7 @@
 
 | # | Kural | SQL dosyası |
 |---|---|---|
-| I1 | Σ(stock_quants.qty × lot.unit_cost) [ürün tipi kırılımı] = 150/152/153 hesap bakiyeleri (VUK ve UFRS ayrı ayrı) | `checks/01_inventory_value.sql` |
+| I1 | Σ(stock_quants.qty × lot.unit_cost) [ürün tipi kırılımı] = 150 / 151.02 / 152 / 153 hesap bakiyeleri (VUK ve UFRS ayrı ayrı); 151.01 (WIP) I1 dışında | `checks/01_inventory_value.sql` |
 | I2 | Her stock_moves: qty × unit_cost = value; quant bakiyesi = Σ giriş − Σ çıkış (lokasyon+lot); quant.qty ≥ 0; reserved ≤ qty | `checks/02_stock_ledger.sql` |
 | I3 | Her değerli stok hareketinin VUK ve UFRS fişi var; her stok fişinin move'u var | `checks/03_stock_journal_link.sql` |
 | I4 | Her yevmiye: Σdebit = Σcredit; kapalı döneme kayıt yok; VUK fişi ↔ UFRS ikizi | `checks/04_journal_balance.sql` |
@@ -16,6 +16,6 @@
 | I12 | KDV: 391 = Σ satış fatura line_vat; 191 = Σ alış fatura line_vat (dönem bazında) | `checks/12_vat.sql` |
 | I13 | Kur farkı: dövizli fatura grand_total_try = grand_total × exchange_rate; tahsilatta fx_difference = amount × (tahsilat kuru − fatura kuru) ve 646/656 fişi var | `checks/13_fx.sql` |
 | I14 | Üretim: WO total_cost = material_cost + overhead_cost; Σ consumption.value = material_cost; Σ outputs.value = total_cost (kapalı WO); output lot unit_cost = value/qty | `checks/14_production_cost.sql` |
-| I15 | 151 WIP bakiyesi = Σ (açık WO material_cost − Σ output value) | `checks/15_wip.sql` |
+| I15 | 151.01 WIP bakiyesi = Σ (açık WO material_cost − Σ output value − Σ fire değeri) | `checks/15_wip.sql` |
 | I16 | Karantina/red lotu müşteri veya üretim lokasyonuna hareket etmemiş | `checks/16_lot_status_moves.sql` |
 | I17 | Audit: son 24 saatteki her create/post işlemi için audit_log satırı var (server action'lar) | `checks/17_audit_coverage.sql` |

@@ -1,4 +1,4 @@
-import { pgTable, text, uuid, boolean, integer, date, timestamp, index, uniqueIndex, pgEnum, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid, boolean, integer, date, timestamp, index, uniqueIndex, unique, pgEnum, jsonb } from 'drizzle-orm/pg-core';
 import { id, auditColumns, money, qty, note, meta } from './_common.js';
 import { products, partners, locations, warehouses, uoms } from './masterdata.js';
 import { users } from './core.js';
@@ -66,7 +66,7 @@ export const stockQuants = pgTable('stock_quants', {
   /** Sayım için */
   lastCountDate: date('last_count_date'),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-}, (t) => [uniqueIndex('stock_quants_uq').on(t.productId, t.locationId, t.lotId), index('stock_quants_location_idx').on(t.locationId), index('stock_quants_product_idx').on(t.productId), index('stock_quants_expiry_idx').on(t.expiryDate)]);
+}, (t) => [unique('stock_quants_uq').on(t.productId, t.locationId, t.lotId).nullsNotDistinct(), index('stock_quants_location_idx').on(t.locationId), index('stock_quants_product_idx').on(t.productId), index('stock_quants_expiry_idx').on(t.expiryDate)]);
 
 /* ------------------------------------------------------------------ */
 /* Stok hareket defteri — her satır maliyetli, muhasebe fişine bağlı    */
@@ -103,6 +103,8 @@ export const stockMoves = pgTable('stock_moves', {
   /** Maliyet: qty × unitCost = value (veri kritik doğrular) */
   unitCost: money('unit_cost').notNull(),
   value: money('value').notNull(),
+  /** Üretim hareketinde genel gider payı (731); value = malzeme + overheadValue */
+  overheadValue: money('overhead_value'),
   /** Kaynak belge (polimorfik) */
   refType: text('ref_type').notNull(), // receipt, delivery, work_order, transfer, stock_count, scrap, quality_check, recall
   refId: uuid('ref_id').notNull(),

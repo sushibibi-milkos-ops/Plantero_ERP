@@ -69,6 +69,7 @@ export const INVENTORY_ACCOUNT_BY_TYPE: Record<ProductType, string> = {
   packaging: '150',
   semi_finished: '151',
   finished: '152',
+  merchandise: '153',
   equipment: '153',
   fixed_asset: '153',
   service: '153',

@@ -1,4 +1,4 @@
-import { pgTable, text, uuid, boolean, integer, date, timestamp, index, uniqueIndex, pgEnum, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid, integer, date, timestamp, index, uniqueIndex, pgEnum } from 'drizzle-orm/pg-core';
 import { id, auditColumns, money, qty, rate, note, meta } from './_common.js';
 import { partners, products } from './masterdata.js';
 import { users } from './core.js';
