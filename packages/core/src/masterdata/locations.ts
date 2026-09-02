@@ -1,4 +1,5 @@
 import { and, eq, gt, inArray } from 'drizzle-orm';
+import type Decimal from 'decimal.js';
 import { locations, warehouses, stockQuants, stockLots, type DbOrTx } from '@plantero/db';
 import { D, ZERO, toDb } from '../money.js';
 import { NotFoundError, ValidationError } from '../auth/errors.js';
@@ -155,7 +156,7 @@ export async function getLocationTree(tx: DbOrTx, warehouseId: string): Promise<
         .where(and(inArray(stockQuants.locationId, locationIds), gt(stockQuants.qty, '0')))
     : [];
 
-  const valueByLocation = new Map<string, { qty: import('decimal.js').default; value: import('decimal.js').default }>();
+  const valueByLocation = new Map<string, { qty: Decimal; value: Decimal }>();
   for (const q of quantRows) {
     const cur = valueByLocation.get(q.locationId) ?? { qty: ZERO, value: ZERO };
     const qty = D(q.qty);
@@ -191,7 +192,7 @@ export async function getLocationTree(tx: DbOrTx, warehouseId: string): Promise<
   }
 
   // Alt toplamları yukarı taşı (post-order)
-  function rollup(node: LocationTreeNode): { qty: import('decimal.js').default; value: import('decimal.js').default } {
+  function rollup(node: LocationTreeNode): { qty: Decimal; value: Decimal } {
     let qty = D(node.ownQty);
     let value = D(node.ownValue);
     for (const child of node.children) {

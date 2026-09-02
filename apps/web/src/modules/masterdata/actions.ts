@@ -12,6 +12,7 @@ import {
 } from '@plantero/core';
 import { requirePermission } from '@/lib/auth';
 import { withAudit, type ActionResult } from '@/lib/actions';
+import { buildImportPreview, type ImportPreviewSummary } from './queries';
 
 /* ==================================================================== */
 /* Ürünler                                                              */
@@ -431,9 +432,10 @@ export const updateLocationAction = withAudit('masterdata.updateLocation', async
 
 export type ImportPreview = Awaited<ReturnType<typeof parseAnaVeri>> & {
   dryRun: Awaited<ReturnType<typeof importAnaVeri>>;
+  diff: ImportPreviewSummary;
 };
 
-/** Dosyayı ayrıştırır + kuru çalıştırma (yazmaz) yapar; önizleme tablosunu besler. */
+/** Dosyayı ayrıştırır + kuru çalıştırma (yazmaz) yapar; önizleme tablosunu (diff dahil) besler. */
 export async function previewImportAction(formData: FormData): Promise<ActionResult<ImportPreview>> {
   try {
     await requirePermission('masterdata.manage');
@@ -441,8 +443,8 @@ export async function previewImportAction(formData: FormData): Promise<ActionRes
     if (!(file instanceof File)) return { ok: false, error: 'Dosya seçilmedi' };
     const buffer = Buffer.from(await file.arrayBuffer());
     const parsed = await parseAnaVeri(buffer);
-    const dryRun = await importAnaVeri(db, parsed, { dryRun: true });
-    return { ok: true, data: { ...parsed, dryRun } };
+    const [dryRun, diff] = await Promise.all([importAnaVeri(db, parsed, { dryRun: true }), buildImportPreview(parsed)]);
+    return { ok: true, data: { ...parsed, dryRun, diff } };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : 'İçe aktarım önizlemesi başarısız' };
   }

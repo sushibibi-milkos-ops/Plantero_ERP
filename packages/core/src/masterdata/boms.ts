@@ -1,6 +1,7 @@
 import { and, desc, eq, gt, ne } from 'drizzle-orm';
-import Decimal from 'decimal.js';
-import { boms, bomLines, products, stockLots, stockQuants, supplierProducts, type DbOrTx } from '@plantero/db';
+import type Decimal from 'decimal.js';
+import type { DbOrTx } from '@plantero/db';
+import { boms, bomLines, products, stockLots, stockQuants, supplierProducts } from '@plantero/db';
 import { D, ZERO, sum, toDb } from '../money.js';
 import { NotFoundError, ValidationError } from '../auth/errors.js';
 

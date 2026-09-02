@@ -1,7 +1,7 @@
 import 'server-only';
 import { alias } from 'drizzle-orm/pg-core';
 import { and, asc, desc, eq, gt, inArray, sql } from 'drizzle-orm';
-import { db, schema } from '@plantero/db';
+import { db, schema, type ParsedProduct } from '@plantero/db';
 import { rollupBomCost, D, toDb } from '@plantero/core';
 
 const {
@@ -211,6 +211,93 @@ export async function listSkuSegments() {
 
 export async function listUoms() {
   return db.select().from(uoms).orderBy(asc(uoms.category), asc(uoms.code));
+}
+
+/* ==================================================================== */
+/* Excel import sihirbazı — önizleme diff'i                             */
+/* ==================================================================== */
+
+export type ImportFieldDiff = { key: string; label: string; before: string; after: string; locked?: boolean };
+export type ImportRowDiff = { sku: string; name: string; type: string; fields: ImportFieldDiff[] };
+export type ImportConflictRow = { sku: string; name: string; field: 'name' | 'barcode'; label: string; existing: string | null; incoming: string | null };
+export type ImportPreviewSummary = {
+  createdRows: ImportRowDiff[];
+  changedRows: ImportRowDiff[];
+  unchangedCount: number;
+  conflicts: ImportConflictRow[];
+};
+
+const IMPORT_FIELD_LABELS: Record<string, string> = {
+  shortCode: 'Kısa kod',
+  type: 'Tip',
+  status: 'Durum',
+  category1: 'Kategori 1',
+  category2: 'Kategori 2',
+  category3: 'Kategori 3',
+  packQty: 'Ambalaj içi adet',
+  caseBarcode: 'Koli barkodu',
+};
+
+/**
+ * Ayrıştırılmış Ana Veri satırlarını mevcut ürünlerle karşılaştırıp önizleme sihirbazı için
+ * alan bazlı diff (eski → yeni) üretir. Salt okunur — `importAnaVeri`'nin "değişti mi" mantığıyla
+ * aynı alan kümesini karşılaştırır (bkz. `packages/db/src/import/anaveri.ts`).
+ * `name`/`barcode` asla üzerine yazılmaz — farklıysa `conflicts`'e (kilitli, korunacak) düşer.
+ */
+export async function buildImportPreview(parsed: { products: ParsedProduct[] }): Promise<ImportPreviewSummary> {
+  const skus = parsed.products.map((p) => p.sku);
+  const existingRows = skus.length ? await db.select().from(products).where(inArray(products.sku, skus)) : [];
+  const existingBySku = new Map(existingRows.map((r) => [r.sku, r]));
+
+  const createdRows: ImportRowDiff[] = [];
+  const changedRows: ImportRowDiff[] = [];
+  const conflicts: ImportConflictRow[] = [];
+  let unchangedCount = 0;
+
+  for (const p of parsed.products) {
+    const existing = existingBySku.get(p.sku);
+    if (!existing) {
+      createdRows.push({
+        sku: p.sku,
+        name: p.name,
+        type: p.type,
+        fields: [
+          { key: 'type', label: 'Tip', before: '—', after: p.type },
+          { key: 'category', label: 'Kategori', before: '—', after: [p.category1, p.category2, p.category3].filter(Boolean).join(' / ') || '—' },
+          { key: 'packaging', label: 'Ambalaj', before: '—', after: p.packagingLabel ?? '—' },
+          { key: 'barcode', label: 'Barkod', before: '—', after: p.barcode ?? '—', locked: true },
+        ],
+      });
+      continue;
+    }
+
+    if (existing.name !== p.name) conflicts.push({ sku: p.sku, name: existing.name, field: 'name', label: 'Ürün adı', existing: existing.name, incoming: p.name });
+    if ((existing.barcode ?? null) !== p.barcode) conflicts.push({ sku: p.sku, name: existing.name, field: 'barcode', label: 'Barkod', existing: existing.barcode, incoming: p.barcode });
+
+    const candidates: Array<{ key: string; before: string | null; after: string | null }> = [
+      { key: 'shortCode', before: existing.shortCode, after: p.shortCode },
+      { key: 'type', before: existing.type, after: p.type },
+      { key: 'status', before: existing.status, after: p.status },
+      { key: 'category1', before: existing.category1, after: p.category1 || null },
+      { key: 'category2', before: existing.category2, after: p.category2 || null },
+      { key: 'category3', before: existing.category3, after: p.category3 || null },
+      { key: 'packQty', before: String(existing.packQty), after: String(p.packQty) },
+      { key: 'caseBarcode', before: existing.caseBarcode, after: p.caseBarcode },
+    ];
+    const diffFields = candidates.filter((c) => (c.before ?? null) !== (c.after ?? null));
+    if (diffFields.length > 0) {
+      changedRows.push({
+        sku: p.sku,
+        name: existing.name,
+        type: existing.type,
+        fields: diffFields.map((f) => ({ key: f.key, label: IMPORT_FIELD_LABELS[f.key] ?? f.key, before: f.before ?? '—', after: f.after ?? '—' })),
+      });
+    } else {
+      unchangedCount++;
+    }
+  }
+
+  return { createdRows, changedRows, unchangedCount, conflicts };
 }
 
 /* ==================================================================== */
