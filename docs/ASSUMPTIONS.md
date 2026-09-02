@@ -5,8 +5,8 @@ Belirsizlikte soru sorulması istendi; oturum otonom çalıştığı için aşa�
 | # | Konu | Varsayım | Değiştirme noktası |
 |---|---|---|---|
 | A1 | Tüzel kişilik | Şirket: Bigetaş Biyoteknoloji A.Ş. (nakit akışı dosyası), marka: Plantero. Fabrika Tire OSB, ikinci depo Buca. | `settings` seed (`packages/db/src/seed/core.ts`) |
-| A2 | Üretim hatları | 4 hat ürün ailesine göre: HAT1 Bazlar, HAT2 Barista & Kremalar, HAT3 Protein & Toz, HAT4 Sürülebilir & Paketleme | `seed/masterdata.ts` → `production_lines` |
-| A3 | Makine kartları | "Kapasite raporu" dosyası verilmedi; ana verideki ekipman kayıtları (T=8) + hat başına tipik gıda ekipmanı (mikser, homojenizatör, pastörizatör, dolum, kapak, etiket, shrink, değirmen, kavurma) seed edildi | `seed/maintenance.ts` — rapor gelince import |
+| A2 | Üretim hatları | ~~4 hat~~ → **Kullanıcı teyit etti (02.09.2026): 3 hat** — HAT1 Bazlar/Barista/Kremalar, HAT2 Toz karıştırma & dolum, HAT3 Saşe/stick toz dolum. Ayrıntı `docs/PRODUCTION-LINES.md` | `seed/masterdata.ts` → `production_lines` |
+| A3 | Makine kartları | **Teyit edildi:** kapasite raporundaki (TOBB 69996) tüm makinelere sahibiz; hat ataması ve proses sırası kullanıcı beyanına göre (`docs/PRODUCTION-LINES.md`). Rapordaki kapasite hesapları KULLANILMAZ | `seed/maintenance.ts` |
 | A4 | Reçeteler | Gerçek reçete yok; her mamul için makul hammadde/ambalaj reçetesi uyduruldu; eksik hammaddeler T=3/T=4 kod yapısına uygun yeni SKU ile eklendi (ürün adı/barkod kuralı yalnızca Excel'den gelenleri korur) | `seed/masterdata.ts` |
 | A5 | Fiyatlar / maliyetler | Nakit akışı dosyasındaki birim fiyat (450 pazaryeri, 230 toptan) ve hammadde (~87-90 TL) verilerinden türetildi | fiyat listeleri seed |
 | A6 | Dış API'ler | Bizimhesap, Trendyol, Hepsiburada, banka açık bankacılık, WhatsApp, SMTP kimlik bilgisi yok → tüm adaptörler sandbox (deterministik sahte veri). `.env` doldurulunca live | `packages/integrations` |
