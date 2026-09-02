@@ -2,6 +2,7 @@ import { and, eq, gte, lte, or, like, inArray, sql } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import { accounts, fiscalPeriods, journals, journalEntries, journalLines, partners, type DbOrTx } from '@plantero/db';
 import { D, toDb, toDbRate, round4, sum, ZERO, isZero4 } from '../money.js';
+import { businessDate } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
 import { DomainError, NotFoundError, ValidationError } from '../auth/errors.js';
@@ -41,7 +42,8 @@ export type JournalEntryInput = {
 
 export type PostJournalResult = { vukId?: string; ufrsId?: string };
 
-const toDateStr = (d: Date | string): string => (typeof d === 'string' ? d.slice(0, 10) : d.toISOString().slice(0, 10));
+/** Yevmiye tarihi = Europe/Istanbul iş günü (UTC gece yarısı kayması dönemi değiştirmez) */
+const toDateStr = (d: Date | string): string => businessDate(d);
 
 /** Tarihin düştüğü mali dönemi bulur; kapalıysa hata */
 export async function resolveOpenPeriod(tx: DbOrTx, entryDate: Date | string): Promise<{ id: string; code: string } | null> {
@@ -90,6 +92,10 @@ async function resolveLines(tx: DbOrTx, lines: JournalLineInput[]): Promise<Reso
     let partnerId = line.partnerId ?? null;
     let acc = await lookup(code);
 
+    // Cari ana hesabına (120/320) cari olmadan kayıt yapılamaz: alacak/borç mutlaka bir cariye bağlanır (I9)
+    if (!partnerId && (code === '120' || code === '320')) {
+      throw new ValidationError(`${code} hesabına cari belirtmeden kayıt yapılamaz; partnerId zorunlu`, { accountCode: code });
+    }
     // Cari ana hesabı (120/320) cari ile kullanılırsa alt hesap açılır; alt hesap kodu verilmiş ama yoksa da açılır
     if (partnerId && (code === '120' || code === '320')) {
       const sub = await ensurePartnerAccount(tx, partnerId, code);

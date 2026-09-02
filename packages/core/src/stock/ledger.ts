@@ -1,7 +1,8 @@
-import { and, eq, isNull, or, like, sql, asc, gt, inArray } from 'drizzle-orm';
+import { and, eq, isNull, or, like, sql, asc, gt, inArray, notInArray } from 'drizzle-orm';
 import Decimal from 'decimal.js';
 import { products, locations, stockLots, stockQuants, stockMoves, type DbOrTx } from '@plantero/db';
 import { D, toDb, round4, ZERO, sum } from '../money.js';
+import { businessDate, addDays } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
 import { DomainError, NotFoundError, ValidationError } from '../auth/errors.js';
@@ -21,7 +22,11 @@ export type StockMoveInput = {
   toLocationId: string;
   qty: Decimal;
   uomId: string;
-  /** Verilmezse lot.unitCost (lotlu) / product.averageCost (lotsuz) */
+  /**
+   * Giriş hareketlerinde (receipt/production/byproduct/opening/count_gain/return_in/recall_return) maliyet.
+   * Lotlu üründe yalnızca lot maliyetini belirleyen orijin hareketlerinde (receipt/production/byproduct/opening)
+   * dikkate alınır; diğer hareketler lot maliyetiyle değerlenir. Lotsuz üründe çıkışlar hareketli ortalama ile değerlenir.
+   */
   unitCost?: Decimal;
   /** production hareketinde genel gider payı (731'e alacak); geri kalan 151'den düşer */
   overheadValue?: Decimal;
@@ -33,6 +38,10 @@ export type StockMoveInput = {
   movedAt?: Date;
   origin?: DocumentOrigin;
   note?: string | null;
+  /**
+   * Yalnızca bilgi amaçlı geriye dönük uyumluluk: değerleme kararını ledger verir
+   * (değerli tür + sıfırdan farklı tutar → fiş atılır). Değerli bir hareket çağıran tarafından değersiz yapılamaz.
+   */
   isValued?: boolean;
   /** Çıkışta önceden yapılmış rezervasyonu tüketir (available yerine qty kontrolü) */
   useReserved?: boolean;
@@ -51,11 +60,34 @@ const isStocked = (u: LocationUsage) => STOCKED_USAGES.includes(u);
 
 /** Lot maliyetini belirleyen (orijin) hareket türleri */
 const LOT_ORIGIN_KINDS: readonly StockMoveKind[] = ['receipt', 'production', 'byproduct', 'opening'];
-/** Sanal kaynaktan gelen giriş hareketleri (ortalama maliyet güncellenir) */
-const INBOUND_KINDS: readonly StockMoveKind[] = ['receipt', 'production', 'byproduct', 'opening', 'count_gain', 'return_in', 'recall_return'];
 /** Red/geri çağrılmış/süresi dolmuş lotun yapabileceği hareketler */
 const BAD_LOT_ALLOWED: readonly StockMoveKind[] = ['scrap', 'return_out', 'recall_return', 'count_loss'];
 const BAD_LOT_STATUSES: readonly LotStatus[] = ['rejected', 'recalled', 'expired'];
+
+/**
+ * Hareket türü → yön ve sanal uç kuralı (ARCHITECTURE §6.1-3).
+ * `in`: sanal → fiziksel (quant artar), `out`: fiziksel → sanal (quant düşer), `internal`: fiziksel → fiziksel.
+ * `virtualUsage` verilmişse sanal ucun kullanımı tam olarak bu olmalı (ör. delivery yalnızca müşteriye).
+ * Bu tablo I1'in ön koşuludur: değerli her hareket quant'ı tam olarak fiş tutarı kadar değiştirir.
+ */
+type MoveDirection = 'in' | 'out' | 'internal';
+const MOVE_RULES: Record<StockMoveKind, { direction: MoveDirection; virtualUsage?: LocationUsage[] }> = {
+  receipt: { direction: 'in', virtualUsage: ['supplier'] },
+  production: { direction: 'in', virtualUsage: ['production'] },
+  byproduct: { direction: 'in', virtualUsage: ['production'] },
+  opening: { direction: 'in' },
+  count_gain: { direction: 'in', virtualUsage: ['inventory_loss'] },
+  return_in: { direction: 'in', virtualUsage: ['customer'] },
+  recall_return: { direction: 'in', virtualUsage: ['customer'] },
+  return_out: { direction: 'out', virtualUsage: ['supplier'] },
+  consumption: { direction: 'out', virtualUsage: ['production'] },
+  scrap: { direction: 'out', virtualUsage: ['scrap'] },
+  delivery: { direction: 'out', virtualUsage: ['customer'] },
+  count_loss: { direction: 'out', virtualUsage: ['inventory_loss'] },
+  transfer: { direction: 'internal' },
+  quarantine_release: { direction: 'internal' },
+  quarantine_reject: { direction: 'internal' },
+};
 
 /* ------------------------------------------------------------------ */
 /* Yardımcılar                                                         */
@@ -69,11 +101,35 @@ async function lockQuant(tx: DbOrTx, productId: string, locationId: string, lotI
   return q ?? null;
 }
 
-async function totalOnHand(tx: DbOrTx, productId: string, lotId?: string | null): Promise<Decimal> {
-  const conds = [eq(stockQuants.productId, productId)];
-  if (lotId) conds.push(eq(stockQuants.lotId, lotId));
+/**
+ * Maliyet taşıyıcısının (lotlu → lot; lotsuz → ürünün lotsuz quant'ları) toplam fiziksel miktarı.
+ * Lotsuz üründe lotlu quant'lar hariç tutulur; aksi halde ortalama maliyet ve I1 değeri yanlış hesaplanır.
+ */
+async function totalOnHand(tx: DbOrTx, productId: string, lotId: string | null): Promise<Decimal> {
+  const conds = [eq(stockQuants.productId, productId), lotId ? eq(stockQuants.lotId, lotId) : isNull(stockQuants.lotId)];
   const [row] = await tx.select({ qty: sql<string>`coalesce(sum(${stockQuants.qty}), 0)` }).from(stockQuants).where(and(...conds));
   return D(row?.qty);
+}
+
+/** Hareket türü ↔ lokasyon kullanımı tutarlılığı (ledger uygular, çağıran güvenmez) */
+function enforceDirection(kind: StockMoveKind, from: { code: string; usage: LocationUsage }, to: { code: string; usage: LocationUsage }): MoveDirection {
+  const rule = MOVE_RULES[kind];
+  if (!rule) throw new DomainError('MOVE_KIND_UNKNOWN', `Bilinmeyen hareket türü: ${kind}`);
+  const fromStocked = isStocked(from.usage);
+  const toStocked = isStocked(to.usage);
+  const fail = (msg: string) => new DomainError('MOVE_DIRECTION_INVALID', `${kind}: ${msg} (${from.code}[${from.usage}] → ${to.code}[${to.usage}])`, { kind, fromUsage: from.usage, toUsage: to.usage });
+  if (rule.direction === 'internal') {
+    if (!fromStocked || !toStocked) throw fail('yalnızca fiziksel lokasyonlar arasında yapılabilir');
+    return 'internal';
+  }
+  if (rule.direction === 'in') {
+    if (fromStocked || !toStocked) throw fail('sanal kaynaktan fiziksel hedefe yapılmalı');
+    if (rule.virtualUsage && !rule.virtualUsage.includes(from.usage)) throw fail(`kaynak lokasyon kullanımı ${rule.virtualUsage.join('/')} olmalı`);
+    return 'in';
+  }
+  if (!fromStocked || toStocked) throw fail('fiziksel kaynaktan sanal hedefe yapılmalı');
+  if (rule.virtualUsage && !rule.virtualUsage.includes(to.usage)) throw fail(`hedef lokasyon kullanımı ${rule.virtualUsage.join('/')} olmalı`);
+  return 'out';
 }
 
 /* ------------------------------------------------------------------ */
@@ -93,6 +149,8 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
   if (!to) throw new NotFoundError('Hedef lokasyon', input.toLocationId);
   if (from.usage === 'view' || to.usage === 'view') throw new ValidationError('Görünüm lokasyonuna hareket yapılamaz');
   if (!from.isActive || !to.isActive) throw new ValidationError('Pasif lokasyona hareket yapılamaz');
+  const direction = enforceDirection(input.kind, from, to);
+  const movedAt = input.movedAt ?? new Date();
 
   // Lot kuralları
   let lot: typeof stockLots.$inferSelect | null = null;
@@ -104,44 +162,48 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
     if (!l) throw new NotFoundError('Lot', input.lotId);
     if (l.productId !== product.id) throw new ValidationError('Lot bu ürüne ait değil', { lotId: l.id, productId: product.id });
     lot = l;
-    enforceLotRules(lot, input.kind, from.usage, to.usage);
+    enforceLotRules(lot, input.kind, from.usage, to.usage, movedAt);
   }
 
+  // Quant'ları kilitle, taşıyıcının hareket öncesi toplamını al (maliyet ve yuvarlama hesabı bunun üstüne kurulur)
+  const lotKey = lot?.id ?? null;
+  const fromQ = isStocked(from.usage) ? await lockQuant(tx, product.id, from.id, lotKey) : null;
+  const toQ = isStocked(to.usage) ? await lockQuant(tx, product.id, to.id, lotKey) : null;
+  const onHandBefore = await totalOnHand(tx, product.id, lotKey);
+
   // Maliyet
-  const movedAt = input.movedAt ?? new Date();
-  const { unitCost, lotCostUpdated, newAverage } = await resolveCost(tx, { product, lot, kind: input.kind, qty, inputCost: input.unitCost, fromUsage: from.usage, toUsage: to.usage });
+  const cost = resolveCost({ product, lot, kind: input.kind, qty, inputCost: input.unitCost, direction, onHandBefore });
+  const { unitCost, costBefore, costAfter } = cost;
   const value = round4(qty.mul(unitCost));
 
   // Quant: kaynak
   if (isStocked(from.usage)) {
-    const q = await lockQuant(tx, product.id, from.id, lot?.id ?? null);
-    const onHand = D(q?.qty);
-    const reserved = D(q?.reservedQty);
+    const onHand = D(fromQ?.qty);
+    const reserved = D(fromQ?.reservedQty);
     const available = input.useReserved ? onHand : onHand.minus(reserved);
-    if (available.lt(qty)) {
+    if (!fromQ || available.lt(qty)) {
       throw new DomainError('INSUFFICIENT_STOCK', `Yetersiz stok: ${product.name}${lot ? ` / ${lot.lotNo}` : ''} @ ${from.code} — mevcut ${toDb(available)}, istenen ${toDb(qty)}`, {
         productId: product.id, lotId: lot?.id ?? null, locationId: from.id, available: toDb(available), requested: toDb(qty),
       });
     }
     const newReserved = input.useReserved ? Decimal.max(ZERO, reserved.minus(qty)) : reserved;
-    await tx.update(stockQuants).set({ qty: toDb(onHand.minus(qty)), reservedQty: toDb(newReserved), updatedAt: new Date() }).where(eq(stockQuants.id, q!.id));
+    await tx.update(stockQuants).set({ qty: toDb(onHand.minus(qty)), reservedQty: toDb(newReserved), updatedAt: new Date() }).where(eq(stockQuants.id, fromQ.id));
   }
 
   // Quant: hedef
   if (isStocked(to.usage)) {
-    const q = await lockQuant(tx, product.id, to.id, lot?.id ?? null);
-    if (q) {
-      await tx.update(stockQuants).set({ qty: toDb(D(q.qty).plus(qty)), expiryDate: lot?.expiryDate ?? q.expiryDate, updatedAt: new Date() }).where(eq(stockQuants.id, q.id));
+    if (toQ) {
+      await tx.update(stockQuants).set({ qty: toDb(D(toQ.qty).plus(qty)), expiryDate: lot?.expiryDate ?? toQ.expiryDate, updatedAt: new Date() }).where(eq(stockQuants.id, toQ.id));
     } else {
       await tx.insert(stockQuants).values({
-        productId: product.id, locationId: to.id, lotId: lot?.id ?? null,
+        productId: product.id, locationId: to.id, lotId: lotKey,
         qty: toDb(qty), reservedQty: toDb(ZERO), inDate: movedAt, expiryDate: lot?.expiryDate ?? null,
       });
     }
   }
 
-  // Değerleme kararı
-  const isValued = input.isValued ?? (!UNVALUED_MOVE_KINDS.includes(input.kind) && !value.isZero());
+  // Değerleme kararı — ledger verir; değerli tür + sıfırdan farklı tutar → fiş
+  const isValued = !UNVALUED_MOVE_KINDS.includes(input.kind) && !value.isZero();
 
   // Hareket kaydı
   const moveNo = await nextDocNo(tx, 'SM', movedAt);
@@ -151,7 +213,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
       moveNo,
       kind: input.kind,
       productId: product.id,
-      lotId: lot?.id ?? null,
+      lotId: lotKey,
       fromLocationId: from.id,
       toLocationId: to.id,
       qty: toDb(qty),
@@ -175,7 +237,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
   // Lot güncellemeleri
   if (lot) {
     const patch: Partial<typeof stockLots.$inferInsert> = {};
-    if (lotCostUpdated) patch.unitCost = toDb(unitCost);
+    if (!costAfter.eq(D(lot.unitCost))) patch.unitCost = toDb(costAfter);
     if (LOT_ORIGIN_KINDS.includes(input.kind)) {
       patch.initialQty = toDb(D(lot.initialQty).plus(qty));
       if (input.kind === 'receipt' && !lot.originReceiptId && input.refType === 'receipt') {
@@ -199,9 +261,8 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
       if (remaining.lte(0)) patch.status = 'consumed';
     }
     if (Object.keys(patch).length) await tx.update(stockLots).set({ ...patch, updatedBy: ctx.userId ?? null }).where(eq(stockLots.id, lot.id));
-  }
-  if (newAverage) {
-    await tx.update(products).set({ averageCost: toDb(newAverage), updatedBy: ctx.userId ?? null }).where(eq(products.id, product.id));
+  } else if (!costAfter.eq(D(product.averageCost))) {
+    await tx.update(products).set({ averageCost: toDb(costAfter), updatedBy: ctx.userId ?? null }).where(eq(products.id, product.id));
   }
 
   // Muhasebe fişi — iki deftere
@@ -211,7 +272,10 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
     const mapping = moveAccountLines(input.kind, inventoryCode, cogsAccountFor(product));
     if (!mapping) throw new DomainError('MOVE_NOT_MAPPED', `${input.kind} hareketi için hesap eşlemesi yok`);
     const overhead = input.kind === 'production' ? round4(D(input.overheadValue)) : ZERO;
+    if (overhead.lt(0)) throw new ValidationError('Genel gider payı negatif olamaz', { overhead: toDb(overhead) });
     if (overhead.gt(value)) throw new ValidationError('Genel gider payı hareket değerinden büyük olamaz', { overhead: toDb(overhead), value: toDb(value) });
+    const warehouseId = (isStocked(to.usage) ? to.warehouseId : from.warehouseId) ?? null;
+    const label = `${moveNo} ${product.name}${lot ? ` [${lot.lotNo}]` : ''}`;
     const lines: JournalLineInput[] = [];
     for (const m of mapping) {
       const amount = m.share === 'total' ? value : m.share === 'overhead' ? overhead : value.minus(overhead);
@@ -221,9 +285,19 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
         debit: m.side === 'debit' ? amount : undefined,
         credit: m.side === 'credit' ? amount : undefined,
         productId: product.id,
-        warehouseId: (isStocked(to.usage) ? to.warehouseId : from.warehouseId) ?? null,
-        description: `${moveNo} ${product.name}${lot ? ` [${lot.lotNo}]` : ''}`,
+        warehouseId,
+        description: label,
       });
+    }
+    // Yuvarlama düzeltmesi: taşıyıcı değeri (Σquant × maliyet, 4 hane) ile fiş tutarı arasındaki
+    // 4 hane yuvarlama farkı 659/679'a atılır; böylece 15X bakiyesi = envanter değeri (I1) tam tutar.
+    const onHandAfter = direction === 'in' ? onHandBefore.plus(qty) : direction === 'out' ? onHandBefore.minus(qty) : onHandBefore;
+    const signedValue = direction === 'in' ? value : direction === 'out' ? value.neg() : ZERO;
+    const rounding = round4(onHandAfter.mul(costAfter)).minus(round4(onHandBefore.mul(costBefore))).minus(signedValue);
+    if (!rounding.isZero()) {
+      const abs = rounding.abs();
+      lines.push({ accountCode: inventoryCode, debit: rounding.gt(0) ? abs : undefined, credit: rounding.lt(0) ? abs : undefined, productId: product.id, warehouseId, description: `${label} — yuvarlama` });
+      lines.push({ accountCode: rounding.gt(0) ? '679' : '659', debit: rounding.lt(0) ? abs : undefined, credit: rounding.gt(0) ? abs : undefined, productId: product.id, warehouseId, description: `${label} — yuvarlama` });
     }
     const res = await postJournalEntry(tx, {
       ledger: 'both',
@@ -247,18 +321,22 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
     tableName: 'stock_moves',
     recordId: moveId,
     summary: `Stok hareketi ${moveNo} (${input.kind}): ${product.name}${lot ? ` [${lot.lotNo}]` : ''} ${toDb(qty)} ${from.code} → ${to.code}`,
-    after: { kind: input.kind, productId: product.id, lotId: lot?.id ?? null, qty: toDb(qty), unitCost: toDb(unitCost), value: toDb(value), refType: input.refType, refId: input.refId, journalEntryIds },
+    after: { kind: input.kind, productId: product.id, lotId: lotKey, qty: toDb(qty), unitCost: toDb(unitCost), value: toDb(value), refType: input.refType, refId: input.refId, journalEntryIds },
   }, ctx);
 
   return { moveId, moveNo, value, unitCost, journalEntryIds };
 }
 
 /** Lot durumu × hareket türü × lokasyon kuralları (I16) */
-function enforceLotRules(lot: typeof stockLots.$inferSelect, kind: StockMoveKind, fromUsage: LocationUsage, toUsage: LocationUsage): void {
+function enforceLotRules(lot: typeof stockLots.$inferSelect, kind: StockMoveKind, fromUsage: LocationUsage, toUsage: LocationUsage, movedAt: Date): void {
   const label = `Lot ${lot.lotNo} (${lot.status})`;
   // Müşteriye / üretime yalnızca serbest lot
   if ((toUsage === 'customer' || toUsage === 'production') && lot.status !== 'released') {
     throw new DomainError('LOT_NOT_RELEASED', `${label} ${toUsage === 'customer' ? 'sevk edilemez' : 'üretime giremez'}; yalnızca serbest (released) lot`, { lotId: lot.id, status: lot.status, kind });
+  }
+  // SKT geçmiş lot (durumu henüz 'expired' yapılmamış olsa da) müşteriye / üretime gidemez
+  if ((toUsage === 'customer' || toUsage === 'production') && lot.expiryDate && lot.expiryDate < businessDate(movedAt)) {
+    throw new DomainError('LOT_EXPIRED', `${label} son kullanma tarihi geçmiş (${lot.expiryDate}); ${toUsage === 'customer' ? 'sevk edilemez' : 'üretime giremez'}`, { lotId: lot.id, expiryDate: lot.expiryDate, kind });
   }
   if (BAD_LOT_STATUSES.includes(lot.status) && !BAD_LOT_ALLOWED.includes(kind)) {
     throw new DomainError('LOT_BLOCKED', `${label} hiçbir yere çıkamaz (fire/iade hariç)`, { lotId: lot.id, status: lot.status, kind });
@@ -276,39 +354,42 @@ function enforceLotRules(lot: typeof stockLots.$inferSelect, kind: StockMoveKind
   if (kind === 'consumption' && fromUsage === 'production') throw new ValidationError('Tüketim üretim lokasyonundan yapılamaz');
 }
 
-/** Maliyet çözümü: lotlu → lot; lotsuz → hareketli ağırlıklı ortalama */
-async function resolveCost(
-  tx: DbOrTx,
-  o: { product: typeof products.$inferSelect; lot: typeof stockLots.$inferSelect | null; kind: StockMoveKind; qty: Decimal; inputCost?: Decimal; fromUsage: LocationUsage; toUsage: LocationUsage },
-): Promise<{ unitCost: Decimal; lotCostUpdated: boolean; newAverage: Decimal | null }> {
+/**
+ * Maliyet çözümü.
+ * - Lotlu: orijin hareketi (receipt/production/byproduct/opening) + verilen maliyet → lot maliyetini belirler;
+ *   lotta halihazırda stok varsa ağırlıklı ortalama ile birleşir. Diğer hareketler lot maliyetiyle değerlenir
+ *   (çağıranın verdiği maliyet yok sayılır — I1: quant değeri = 15X bakiyesi).
+ * - Lotsuz: giriş → hareketli ağırlıklı ortalama güncellenir; çıkış → ortalama maliyet.
+ * Döner: hareketin birim maliyeti, taşıyıcının hareket öncesi/sonrası maliyeti.
+ */
+function resolveCost(o: {
+  product: typeof products.$inferSelect; lot: typeof stockLots.$inferSelect | null; kind: StockMoveKind; qty: Decimal;
+  inputCost?: Decimal; direction: MoveDirection; onHandBefore: Decimal;
+}): { unitCost: Decimal; costBefore: Decimal; costAfter: Decimal } {
   const inputCost = o.inputCost !== undefined ? round4(D(o.inputCost)) : null;
   if (inputCost && inputCost.lt(0)) throw new ValidationError('Birim maliyet negatif olamaz');
+  const base = Decimal.max(ZERO, o.onHandBefore);
+  const weighted = (oldCost: Decimal, newCost: Decimal): Decimal => {
+    const total = base.plus(o.qty);
+    return total.isZero() ? newCost : round4(base.mul(oldCost).plus(o.qty.mul(newCost)).div(total));
+  };
 
   if (o.lot) {
-    if (LOT_ORIGIN_KINDS.includes(o.kind) && inputCost !== null) {
-      // receipt/production/opening lot maliyetini belirler
-      return { unitCost: inputCost, lotCostUpdated: !D(o.lot.unitCost).eq(inputCost), newAverage: null };
-    }
     const lotCost = D(o.lot.unitCost);
-    if (LOT_ORIGIN_KINDS.includes(o.kind) && lotCost.isZero() && !isStocked(o.fromUsage)) {
-      // Orijin hareketinde maliyet verilmedi ve lot maliyetsiz → 0 ile devam (açılışta izinli)
-      return { unitCost: ZERO, lotCostUpdated: false, newAverage: null };
+    if (LOT_ORIGIN_KINDS.includes(o.kind) && inputCost !== null) {
+      const costAfter = base.isZero() ? inputCost : weighted(lotCost, inputCost);
+      return { unitCost: inputCost, costBefore: lotCost, costAfter };
     }
-    return { unitCost: inputCost ?? lotCost, lotCostUpdated: false, newAverage: null };
+    return { unitCost: lotCost, costBefore: lotCost, costAfter: lotCost };
   }
 
   // Lotsuz ürün
   const avg = D(o.product.averageCost);
-  const inbound = INBOUND_KINDS.includes(o.kind) && !isStocked(o.fromUsage) && isStocked(o.toUsage);
-  if (inbound) {
-    const unitCost = inputCost ?? avg;
-    const onHand = await totalOnHand(tx, o.product.id);
-    const base = Decimal.max(ZERO, onHand);
-    const newAverage = base.plus(o.qty).isZero() ? unitCost : round4(base.mul(avg).plus(o.qty.mul(unitCost)).div(base.plus(o.qty)));
-    return { unitCost, lotCostUpdated: false, newAverage };
+  if (o.direction === 'in') {
+    const unitCost = inputCost ?? (o.product.costMethod === 'standard' ? D(o.product.standardCost) : avg);
+    return { unitCost, costBefore: avg, costAfter: weighted(avg, unitCost) };
   }
-  if (o.product.costMethod === 'standard') return { unitCost: inputCost ?? D(o.product.standardCost), lotCostUpdated: false, newAverage: null };
-  return { unitCost: inputCost ?? avg, lotCostUpdated: false, newAverage: null };
+  return { unitCost: avg, costBefore: avg, costAfter: avg };
 }
 
 /* ------------------------------------------------------------------ */
@@ -334,13 +415,6 @@ export type CreateLotInput = {
   meta?: Record<string, unknown>;
 };
 
-const toDateStr = (d: Date | string): string => (typeof d === 'string' ? d.slice(0, 10) : d.toISOString().slice(0, 10));
-const addDays = (d: string, days: number): string => {
-  const dt = new Date(`${d}T00:00:00Z`);
-  dt.setUTCDate(dt.getUTCDate() + days);
-  return dt.toISOString().slice(0, 10);
-};
-
 /** SKT'den FEFO uyarı/kaldırma tarihleri: uyarı = SKT − %25 raf ömrü (≤90 gün), kaldırma = SKT − %5 raf ömrü (≤14 gün) */
 export function fefoDates(expiryDate: string | null, shelfLifeDays: number | null): { alertDate: string | null; removalDate: string | null } {
   if (!expiryDate) return { alertDate: null, removalDate: null };
@@ -359,10 +433,10 @@ export async function createLot(tx: DbOrTx, input: CreateLotInput, ctx: ActorCtx
   if (!product) throw new NotFoundError('Ürün', input.productId);
   if (!input.lotNo?.trim()) throw new ValidationError('Lot numarası zorunlu');
 
-  const productionDate = input.productionDate ? toDateStr(input.productionDate) : null;
-  let expiryDate = input.expiryDate ? toDateStr(input.expiryDate) : null;
+  const productionDate = input.productionDate ? businessDate(input.productionDate) : null;
+  let expiryDate = input.expiryDate ? businessDate(input.expiryDate) : null;
   if (!expiryDate && product.shelfLifeDays && product.shelfLifeDays > 0) {
-    expiryDate = addDays(productionDate ?? toDateStr(new Date()), product.shelfLifeDays);
+    expiryDate = addDays(productionDate ?? businessDate(new Date()), product.shelfLifeDays);
   }
   const { alertDate, removalDate } = fefoDates(expiryDate, product.shelfLifeDays);
   const status: LotStatus = input.status ?? (product.requiresIncomingQc ? 'quarantine' : 'released');
@@ -403,12 +477,12 @@ export async function createLot(tx: DbOrTx, input: CreateLotInput, ctx: ActorCtx
 
 /**
  * FEFO seçimi: kök lokasyon alt ağacındaki (path) toplanabilir, internal lokasyonlardan;
- * lot durumu allowStatuses içinde; en erken SKT önce (NULLS LAST), sonra giriş tarihi.
+ * lot durumu allowStatuses içinde; SKT'si geçmiş lotlar hariç; en erken SKT önce (NULLS LAST), sonra giriş tarihi.
  * available = qty − reserved. Yetersizse hata (allowPartial ile kısmi liste döner).
  */
 export async function pickFefo(
   tx: DbOrTx,
-  opts: { productId: string; qty: Decimal; rootLocationId: string; allowStatuses?: LotStatus[]; allowPartial?: boolean; excludeLotIds?: string[] },
+  opts: { productId: string; qty: Decimal; rootLocationId: string; allowStatuses?: LotStatus[]; allowPartial?: boolean; excludeLotIds?: string[]; asOf?: Date },
 ): Promise<FefoPick[]> {
   const need = round4(D(opts.qty));
   if (need.lte(0)) throw new ValidationError('Miktar sıfırdan büyük olmalı');
@@ -427,9 +501,13 @@ export async function pickFefo(
     eq(locations.usage, 'internal'),
     gt(available, sql`0`),
   ];
-  if (product.isLotTracked) conds.push(inArray(stockLots.status, allow));
-  else conds.push(isNull(stockQuants.lotId));
-  if (opts.excludeLotIds?.length) conds.push(sql`${stockQuants.lotId} is null or ${stockQuants.lotId} not in ${opts.excludeLotIds}`);
+  if (product.isLotTracked) {
+    conds.push(inArray(stockLots.status, allow));
+    conds.push(or(isNull(stockLots.expiryDate), sql`${stockLots.expiryDate} >= ${businessDate(opts.asOf ?? new Date())}`)!);
+  } else {
+    conds.push(isNull(stockQuants.lotId));
+  }
+  if (opts.excludeLotIds?.length) conds.push(or(isNull(stockQuants.lotId), notInArray(stockQuants.lotId, opts.excludeLotIds))!);
 
   const rows = await tx
     .select({

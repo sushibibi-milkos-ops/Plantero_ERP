@@ -1,5 +1,5 @@
 -- I2 — Stok defteri tutarlılığı
---   a) her stock_moves: qty × unit_cost = value
+--   a) her stock_moves: round(qty × unit_cost, 4) = value (ledger 4 hanede değerler; numeric(18,4))
 --   b) quant bakiyesi = Σ giriş − Σ çıkış (lokasyon+lot, stock_moves'tan türetilir)
 --   c) quant.qty ≥ 0
 --   d) reserved ≤ qty
@@ -34,11 +34,11 @@ computed AS (
 
 SELECT
   'I2' AS rule, 'stock_move_value' AS entity, sm.id::text AS id,
-  (sm.qty * sm.unit_cost)::numeric(18, 4) AS expected,
+  round(sm.qty * sm.unit_cost, 4)::numeric(18, 4) AS expected,
   sm.value::numeric(18, 4) AS actual,
-  (sm.value - sm.qty * sm.unit_cost)::numeric(18, 4) AS diff
+  (sm.value - round(sm.qty * sm.unit_cost, 4))::numeric(18, 4) AS diff
 FROM stock_moves sm
-WHERE abs(sm.value - sm.qty * sm.unit_cost) > 0
+WHERE abs(sm.value - round(sm.qty * sm.unit_cost, 4)) > 0
 
 UNION ALL
 

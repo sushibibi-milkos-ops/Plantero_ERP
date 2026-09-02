@@ -275,4 +275,81 @@ describe('stock ledger', () => {
       expect(picks[0]!.unitCost.toFixed(4)).toBe('3.0000');
     });
   });
+  it('yuvarlama: 4 haneye sığmayan maliyetlerde 15X bakiyesi = round4(Σquant × maliyet) (I1) ve value = round4(qty × maliyet) (I2)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      // Lotsuz ürün: 3 × 10 + 1 × 10.0001 → ortalama 10.000025 → 10.0000 (4 hane); fark 679'a yuvarlama satırı
+      await postStockMove(tx, { kind: 'receipt', productId: b.pack.id, fromLocationId: b.loc.sup.id, toLocationId: b.loc.hamR01.id, qty: d(3), uomId: b.kg.id, unitCost: d('10'), refType: 'receipt', refId: REF }, ctx);
+      const r2 = await postStockMove(tx, { kind: 'receipt', productId: b.pack.id, fromLocationId: b.loc.sup.id, toLocationId: b.loc.hamR01.id, qty: d(1), uomId: b.kg.id, unitCost: d('10.0001'), refType: 'receipt', refId: REF }, ctx);
+      expect(r2.value.toFixed(4)).toBe('10.0001');
+      const [p] = await tx.select().from(products).where(eq(products.id, b.pack.id));
+      expect(p!.averageCost).toBe('10.0000');
+      const inv = await getOnHand(tx, { productId: b.pack.id });
+      expect(inv.value.toFixed(4)).toBe('40.0000');
+      expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' })).toFixed(4)).toBe('40.0000');
+      expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'UFRS' })).toFixed(4)).toBe('40.0000');
+      expect((await getAccountBalance(tx, { accountCode: '659', ledger: 'VUK' })).toFixed(4)).toBe('0.0001');
+
+      // Lotlu ürün: 0.3333 kg × 1.0001 → value 0.3333; sonra 3 ayrı çıkış; her adımda 150 = round4(kalan × maliyet)
+      const { lot } = await receiveRaw(tx, b, 'RND-L1', '0.9999', '1.0001', { toLocationId: b.loc.hamR01.id, status: 'released' });
+      const [m] = await tx.select().from(stockMoves).where(eq(stockMoves.lotId, lot.id));
+      expect(m!.value).toBe('1.0000');
+      for (let i = 0; i < 3; i++) {
+        await postStockMove(tx, { kind: 'delivery', productId: b.raw.id, lotId: lot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.cust.id, qty: d('0.3333'), uomId: b.kg.id, refType: 'delivery', refId: REF }, ctx);
+        const oh = await getOnHand(tx, { productId: b.raw.id, lotId: lot.id });
+        const bal = await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' });
+        expect(bal.minus(d('40')).toFixed(4)).toBe(oh.value.toFixed(4));
+      }
+      expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' })).toFixed(4)).toBe('40.0000');
+    });
+  });
+
+  it('aynı lota farklı maliyetle ikinci giriş: lot maliyeti ağırlıklı ortalama, I1 korunur', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const { lot } = await receiveRaw(tx, b, 'WA-L1', '100', '10', { toLocationId: b.loc.hamR01.id, status: 'released' });
+      await postStockMove(tx, { kind: 'receipt', productId: b.raw.id, lotId: lot.id, fromLocationId: b.loc.sup.id, toLocationId: b.loc.hamR01.id, qty: d(50), uomId: b.kg.id, unitCost: d('13'), refType: 'receipt', refId: REF }, ctx);
+      const [row] = await tx.select().from(stockLots).where(eq(stockLots.id, lot.id));
+      expect(row!.unitCost).toBe('11.0000'); // (1000 + 650) / 150
+      expect(row!.initialQty).toBe('150.0000');
+      expect((await getOnHand(tx, { productId: b.raw.id, lotId: lot.id })).value.toFixed(4)).toBe('1650.0000');
+      expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' })).toFixed(4)).toBe('1650.0000');
+
+      // Çıkışta çağıranın verdiği maliyet yok sayılır; lot maliyeti kullanılır
+      const out = await postStockMove(tx, { kind: 'delivery', productId: b.raw.id, lotId: lot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.cust.id, qty: d(10), uomId: b.kg.id, unitCost: d('1'), refType: 'delivery', refId: REF }, ctx);
+      expect(out.unitCost.toFixed(4)).toBe('11.0000');
+      expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' })).toFixed(4)).toBe('1540.0000');
+    });
+  });
+
+  it('ledger kurallarını çağıran aşamaz: yön/kullanım uyuşmazlığı, isValued=false, SKT geçmiş lot', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const { lot } = await receiveRaw(tx, b, 'DIR-L1', '10', '10', { toLocationId: b.loc.hamR01.id, status: 'released' });
+      // delivery fiziksel lokasyona olamaz (621/150 fişi atılır ama stok yerinde kalırdı)
+      const e1 = await expectReject(tx, (sp) => postStockMove(sp, { kind: 'delivery', productId: b.raw.id, lotId: lot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.hamR02.id, qty: d(1), uomId: b.kg.id, refType: 'delivery', refId: REF }, ctx));
+      expect((e1 as DomainError).code).toBe('MOVE_DIRECTION_INVALID');
+      // consumption hedefi production olmalı
+      const e2 = await expectReject(tx, (sp) => postStockMove(sp, { kind: 'consumption', productId: b.raw.id, lotId: lot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.scrap.id, qty: d(1), uomId: b.kg.id, refType: 'work_order', refId: REF }, ctx));
+      expect((e2 as DomainError).code).toBe('MOVE_DIRECTION_INVALID');
+      // transfer sanal lokasyona olamaz
+      const e3 = await expectReject(tx, (sp) => postStockMove(sp, { kind: 'transfer', productId: b.raw.id, lotId: lot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.cust.id, qty: d(1), uomId: b.kg.id, refType: 'transfer', refId: REF }, ctx));
+      expect((e3 as DomainError).code).toBe('MOVE_DIRECTION_INVALID');
+      // isValued:false değerli hareketi değersiz yapamaz
+      const del = await postStockMove(tx, { kind: 'delivery', productId: b.raw.id, lotId: lot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.cust.id, qty: d(1), uomId: b.kg.id, refType: 'delivery', refId: REF, isValued: false }, ctx);
+      expect(del.journalEntryIds).toHaveLength(2);
+      // SKT geçmiş (durumu hâlâ released) lot sevk edilemez / üretime giremez; fire olabilir
+      const { lot: old } = await receiveRaw(tx, b, 'EXP-L1', '5', '10', { toLocationId: b.loc.hamR01.id, status: 'released', expiryDate: daysFromNow(-1) });
+      const e4 = await expectReject(tx, (sp) => postStockMove(sp, { kind: 'delivery', productId: b.raw.id, lotId: old.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.cust.id, qty: d(1), uomId: b.kg.id, refType: 'delivery', refId: REF }, ctx));
+      expect((e4 as DomainError).code).toBe('LOT_EXPIRED');
+      const e5 = await expectReject(tx, (sp) => postStockMove(sp, { kind: 'consumption', productId: b.raw.id, lotId: old.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.prod.id, qty: d(1), uomId: b.kg.id, refType: 'work_order', refId: REF }, ctx));
+      expect((e5 as DomainError).code).toBe('LOT_EXPIRED');
+      // FEFO SKT geçmiş lotu seçmez; excludeLotIds da çalışır
+      const picks = await pickFefo(tx, { productId: b.raw.id, qty: d(5), rootLocationId: b.loc.ham.id });
+      expect(picks.map((p) => p.lotId)).toEqual([lot.id]);
+      const picks2 = await pickFefo(tx, { productId: b.raw.id, qty: d(5), rootLocationId: b.loc.ham.id, excludeLotIds: [lot.id], allowPartial: true });
+      expect(picks2).toHaveLength(0);
+      await postStockMove(tx, { kind: 'scrap', productId: b.raw.id, lotId: old.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.scrap.id, qty: d(5), uomId: b.kg.id, refType: 'scrap', refId: REF }, ctx);
+    });
+  });
 });

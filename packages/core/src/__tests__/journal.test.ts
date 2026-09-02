@@ -139,4 +139,35 @@ describe('journal', () => {
       expect((err as DomainError).code).toBe('JOURNAL_NOT_POSTED');
     });
   });
+  it('120/320 ana hesabına cari olmadan kayıt reddedilir', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      const err = await expectReject(tx, (sp) =>
+        postJournalEntry(sp, {
+          ledger: 'VUK', journalCode: 'GEN', entryDate: new Date(), description: 'carisiz alacak',
+          lines: [{ accountCode: '120', debit: d('10') }, { accountCode: '600', credit: d('10') }],
+        }, ctx),
+      );
+      expect((err as Error).message).toContain('partnerId zorunlu');
+    });
+  });
+
+  it('yevmiye tarihi Europe/Istanbul iş günüdür (UTC 22:30 → ertesi gün)', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      // Açık bir döneme düşsün diye 2 ay ileri; UTC 22:30, İstanbul 01:30 ertesi gün
+      const base = new Date();
+      const dt = new Date(Date.UTC(base.getUTCFullYear(), base.getUTCMonth() + 2, 10, 22, 30));
+      await tx.insert(fiscalPeriods).values({
+        code: `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-T`, year: dt.getUTCFullYear(), month: dt.getUTCMonth() + 1,
+        startDate: `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-01`, endDate: `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-28`,
+      }).onConflictDoNothing({ target: fiscalPeriods.code });
+      const r = await postJournalEntry(tx, {
+        ledger: 'VUK', journalCode: 'GEN', entryDate: dt, description: 'gece yarısı',
+        lines: [{ accountCode: '100', debit: d('1') }, { accountCode: '500', credit: d('1') }],
+      }, ctx);
+      const [e] = await tx.select().from(journalEntries).where(eq(journalEntries.id, r.vukId!));
+      expect(e!.entryDate).toBe(`${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-11`);
+    });
+  });
 });

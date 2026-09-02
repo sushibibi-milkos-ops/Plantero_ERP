@@ -9,9 +9,22 @@
 -- Fiziksel envanter değeri ledger'dan bağımsızdır (aynı fiziksel stok) — bu yüzden her iki defterde de
 -- aynı beklenen tutarla karşılaştırılır.
 
-WITH lot_value AS (
+-- Yuvarlama: ledger her hareketi 4 hanede değerler ve maliyet taşıyıcısı (lot | lotsuz ürün) başına
+-- round(Σqty × maliyet, 4) ile fiş bakiyesi arasındaki farkı 659/679 yuvarlama satırıyla kapatır.
+-- Bu yüzden beklenen değer taşıyıcı başına 4 haneye yuvarlanarak toplanır (transfer bölünmelerinden bağımsız).
+
+WITH carrier AS (
   SELECT
-    sq.id AS quant_id,
+    sq.product_id,
+    sq.lot_id,
+    SUM(sq.qty) AS qty
+  FROM stock_quants sq
+  JOIN locations loc ON loc.id = sq.location_id
+  WHERE loc.usage IN ('internal', 'quarantine', 'rejected', 'transit')
+  GROUP BY sq.product_id, sq.lot_id
+),
+lot_value AS (
+  SELECT
     COALESCE(
       NULLIF(p.inventory_account_code, ''),
       CASE p.type
@@ -25,13 +38,11 @@ WITH lot_value AS (
         ELSE '153'
       END
     ) AS account_code,
-    sq.qty * COALESCE(l.unit_cost, p.average_cost) AS value
-  FROM stock_quants sq
-  JOIN products p ON p.id = sq.product_id
-  JOIN locations loc ON loc.id = sq.location_id
-  LEFT JOIN stock_lots l ON l.id = sq.lot_id
-  WHERE loc.usage IN ('internal', 'quarantine', 'rejected', 'transit')
-    AND sq.qty <> 0
+    round(c.qty * COALESCE(l.unit_cost, p.average_cost), 4) AS value
+  FROM carrier c
+  JOIN products p ON p.id = c.product_id
+  LEFT JOIN stock_lots l ON l.id = c.lot_id
+  WHERE c.qty <> 0
 ),
 inv_by_account AS (
   SELECT account_code, SUM(value) AS inventory_value
