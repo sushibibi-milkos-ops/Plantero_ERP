@@ -69,7 +69,7 @@ Kurallar (ledger uygular, çağıran güvenmez):
 | consumption (iş emri) | 151.01 Üretimde (WIP) | 150 |
 | production (mamul çıktı) | 152 (mamul) / 151.02 (yarı mamul çıktı) | 151.01 (malzeme payı) + 731 Genel üretim gideri yansıtma (genel gider payı) |
 | byproduct | 152 / 151.02 | 151.01 |
-| scrap | 659 Diğer olağan gider (fire) | 15X |
+| scrap | 659 Diğer olağan gider (fire) | 15X (fiziksel stok) / 151.01 (iş emri WIP firesi: kaynak lokasyon `production`) |
 | delivery (müşteriye) | 621 Satılan mamul maliyeti (SMM) | 152 (lot maliyeti) |
 | return_in (müşteriden iade) | 152 | 621 |
 | count_gain | 15X | 679 Diğer olağandışı gelir |

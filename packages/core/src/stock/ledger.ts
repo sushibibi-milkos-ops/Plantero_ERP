@@ -28,7 +28,7 @@ export type StockMoveInput = {
    * dikkate alınır; diğer hareketler lot maliyetiyle değerlenir. Lotsuz üründe çıkışlar hareketli ortalama ile değerlenir.
    */
   unitCost?: Decimal;
-  /** production hareketinde genel gider payı (731'e alacak); geri kalan 151'den düşer */
+  /** production hareketinde genel gider payı (731'e alacak); geri kalan 151.01 WIP'ten düşer. stock_moves.overheadValue'ya yazılır */
   overheadValue?: Decimal;
   refType: string;
   refId: string;
@@ -66,11 +66,12 @@ const BAD_LOT_STATUSES: readonly LotStatus[] = ['rejected', 'recalled', 'expired
 
 /**
  * Hareket türü → yön ve sanal uç kuralı (ARCHITECTURE §6.1-3).
- * `in`: sanal → fiziksel (quant artar), `out`: fiziksel → sanal (quant düşer), `internal`: fiziksel → fiziksel.
+ * `in`: sanal → fiziksel (quant artar), `out`: fiziksel → sanal (quant düşer), `internal`: fiziksel → fiziksel,
+ * `wip`: üretim (sanal) → fire (sanal) — iş emri WIP firesi; quant değişmez, 659 / 151.01 (I15).
  * `virtualUsage` verilmişse sanal ucun kullanımı tam olarak bu olmalı (ör. delivery yalnızca müşteriye).
  * Bu tablo I1'in ön koşuludur: değerli her hareket quant'ı tam olarak fiş tutarı kadar değiştirir.
  */
-type MoveDirection = 'in' | 'out' | 'internal';
+type MoveDirection = 'in' | 'out' | 'internal' | 'wip';
 const MOVE_RULES: Record<StockMoveKind, { direction: MoveDirection; virtualUsage?: LocationUsage[] }> = {
   receipt: { direction: 'in', virtualUsage: ['supplier'] },
   production: { direction: 'in', virtualUsage: ['production'] },
@@ -122,6 +123,11 @@ function enforceDirection(kind: StockMoveKind, from: { code: string; usage: Loca
     if (!fromStocked || !toStocked) throw fail('yalnızca fiziksel lokasyonlar arasında yapılabilir');
     return 'internal';
   }
+  // İş emri WIP firesi: zaten tüketilmiş (151.01'e alınmış) malzemenin üretim lokasyonundan fireye çıkışı
+  if (kind === 'scrap' && from.usage === 'production') {
+    if (to.usage !== 'scrap') throw fail('üretim lokasyonundan fire yalnızca fire (scrap) lokasyonuna yapılabilir');
+    return 'wip';
+  }
   if (rule.direction === 'in') {
     if (fromStocked || !toStocked) throw fail('sanal kaynaktan fiziksel hedefe yapılmalı');
     if (rule.virtualUsage && !rule.virtualUsage.includes(from.usage)) throw fail(`kaynak lokasyon kullanımı ${rule.virtualUsage.join('/')} olmalı`);
@@ -150,6 +156,9 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
   if (from.usage === 'view' || to.usage === 'view') throw new ValidationError('Görünüm lokasyonuna hareket yapılamaz');
   if (!from.isActive || !to.isActive) throw new ValidationError('Pasif lokasyona hareket yapılamaz');
   const direction = enforceDirection(input.kind, from, to);
+  if (direction === 'wip' && input.refType !== 'work_order') {
+    throw new DomainError('WIP_SCRAP_REQUIRES_WORK_ORDER', 'Üretim lokasyonundan fire yalnızca iş emri kaynaklı olabilir (refType=work_order)', { refType: input.refType });
+  }
   const movedAt = input.movedAt ?? new Date();
 
   // Lot kuralları
@@ -168,7 +177,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
   // Quant'ları kilitle, taşıyıcının hareket öncesi toplamını al (maliyet ve yuvarlama hesabı bunun üstüne kurulur)
   const lotKey = lot?.id ?? null;
   const fromQ = isStocked(from.usage) ? await lockQuant(tx, product.id, from.id, lotKey) : null;
-  const toQ = isStocked(to.usage) ? await lockQuant(tx, product.id, to.id, lotKey) : null;
+  if (isStocked(to.usage)) await lockQuant(tx, product.id, to.id, lotKey);
   const onHandBefore = await totalOnHand(tx, product.id, lotKey);
 
   // Maliyet
@@ -190,20 +199,34 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
     await tx.update(stockQuants).set({ qty: toDb(onHand.minus(qty)), reservedQty: toDb(newReserved), updatedAt: new Date() }).where(eq(stockQuants.id, fromQ.id));
   }
 
-  // Quant: hedef
+  // Quant: hedef — gerçek upsert (stock_quants_uq NULLS NOT DISTINCT: lotsuz quant da tek satır)
   if (isStocked(to.usage)) {
-    if (toQ) {
-      await tx.update(stockQuants).set({ qty: toDb(D(toQ.qty).plus(qty)), expiryDate: lot?.expiryDate ?? toQ.expiryDate, updatedAt: new Date() }).where(eq(stockQuants.id, toQ.id));
-    } else {
-      await tx.insert(stockQuants).values({
+    const now = new Date();
+    await tx
+      .insert(stockQuants)
+      .values({
         productId: product.id, locationId: to.id, lotId: lotKey,
-        qty: toDb(qty), reservedQty: toDb(ZERO), inDate: movedAt, expiryDate: lot?.expiryDate ?? null,
+        qty: toDb(qty), reservedQty: toDb(ZERO), inDate: movedAt, expiryDate: lot?.expiryDate ?? null, updatedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: [stockQuants.productId, stockQuants.locationId, stockQuants.lotId],
+        set: {
+          qty: sql`${stockQuants.qty} + ${toDb(qty)}::numeric`,
+          expiryDate: lot?.expiryDate ? lot.expiryDate : sql`${stockQuants.expiryDate}`,
+          updatedAt: now,
+        },
       });
-    }
   }
 
   // Değerleme kararı — ledger verir; değerli tür + sıfırdan farklı tutar → fiş
   const isValued = !UNVALUED_MOVE_KINDS.includes(input.kind) && !value.isZero();
+
+  // Genel gider payı yalnızca production hareketinde; value = malzeme payı (151.01) + overhead (731)
+  const overhead = input.kind === 'production' && input.overheadValue !== undefined ? round4(D(input.overheadValue)) : null;
+  if (overhead) {
+    if (overhead.lt(0)) throw new ValidationError('Genel gider payı negatif olamaz', { overhead: toDb(overhead) });
+    if (overhead.gt(value)) throw new ValidationError('Genel gider payı hareket değerinden büyük olamaz', { overhead: toDb(overhead), value: toDb(value) });
+  }
 
   // Hareket kaydı
   const moveNo = await nextDocNo(tx, 'SM', movedAt);
@@ -220,6 +243,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
       uomId: input.uomId,
       unitCost: toDb(unitCost),
       value: toDb(value),
+      overheadValue: overhead ? toDb(overhead) : null,
       refType: input.refType,
       refId: input.refId,
       refLineId: input.refLineId ?? null,
@@ -269,16 +293,14 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
   const journalEntryIds: string[] = [];
   if (isValued) {
     const inventoryCode = inventoryAccountFor(product);
-    const mapping = moveAccountLines(input.kind, inventoryCode, cogsAccountFor(product));
+    const mapping = moveAccountLines(input.kind, inventoryCode, cogsAccountFor(product), { wipScrap: direction === 'wip' });
     if (!mapping) throw new DomainError('MOVE_NOT_MAPPED', `${input.kind} hareketi için hesap eşlemesi yok`);
-    const overhead = input.kind === 'production' ? round4(D(input.overheadValue)) : ZERO;
-    if (overhead.lt(0)) throw new ValidationError('Genel gider payı negatif olamaz', { overhead: toDb(overhead) });
-    if (overhead.gt(value)) throw new ValidationError('Genel gider payı hareket değerinden büyük olamaz', { overhead: toDb(overhead), value: toDb(value) });
+    const overheadShare = overhead ?? ZERO;
     const warehouseId = (isStocked(to.usage) ? to.warehouseId : from.warehouseId) ?? null;
     const label = `${moveNo} ${product.name}${lot ? ` [${lot.lotNo}]` : ''}`;
     const lines: JournalLineInput[] = [];
     for (const m of mapping) {
-      const amount = m.share === 'total' ? value : m.share === 'overhead' ? overhead : value.minus(overhead);
+      const amount = m.share === 'total' ? value : m.share === 'overhead' ? overheadShare : value.minus(overheadShare);
       if (amount.isZero()) continue;
       lines.push({
         accountCode: m.accountCode,
@@ -291,6 +313,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
     }
     // Yuvarlama düzeltmesi: taşıyıcı değeri (Σquant × maliyet, 4 hane) ile fiş tutarı arasındaki
     // 4 hane yuvarlama farkı 659/679'a atılır; böylece 15X bakiyesi = envanter değeri (I1) tam tutar.
+    // WIP firesinde (direction 'wip') quant ve taşıyıcı maliyeti değişmez → fark sıfır.
     const onHandAfter = direction === 'in' ? onHandBefore.plus(qty) : direction === 'out' ? onHandBefore.minus(qty) : onHandBefore;
     const signedValue = direction === 'in' ? value : direction === 'out' ? value.neg() : ZERO;
     const rounding = round4(onHandAfter.mul(costAfter)).minus(round4(onHandBefore.mul(costBefore))).minus(signedValue);
@@ -321,7 +344,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
     tableName: 'stock_moves',
     recordId: moveId,
     summary: `Stok hareketi ${moveNo} (${input.kind}): ${product.name}${lot ? ` [${lot.lotNo}]` : ''} ${toDb(qty)} ${from.code} → ${to.code}`,
-    after: { kind: input.kind, productId: product.id, lotId: lotKey, qty: toDb(qty), unitCost: toDb(unitCost), value: toDb(value), refType: input.refType, refId: input.refId, journalEntryIds },
+    after: { kind: input.kind, productId: product.id, lotId: lotKey, qty: toDb(qty), unitCost: toDb(unitCost), value: toDb(value), overheadValue: overhead ? toDb(overhead) : null, refType: input.refType, refId: input.refId, journalEntryIds },
   }, ctx);
 
   return { moveId, moveNo, value, unitCost, journalEntryIds };
@@ -359,7 +382,7 @@ function enforceLotRules(lot: typeof stockLots.$inferSelect, kind: StockMoveKind
  * - Lotlu: orijin hareketi (receipt/production/byproduct/opening) + verilen maliyet → lot maliyetini belirler;
  *   lotta halihazırda stok varsa ağırlıklı ortalama ile birleşir. Diğer hareketler lot maliyetiyle değerlenir
  *   (çağıranın verdiği maliyet yok sayılır — I1: quant değeri = 15X bakiyesi).
- * - Lotsuz: giriş → hareketli ağırlıklı ortalama güncellenir; çıkış → ortalama maliyet.
+ * - Lotsuz: giriş → hareketli ağırlıklı ortalama güncellenir; çıkış → ortalama maliyet; WIP firesi → verilen maliyet (yoksa ortalama).
  * Döner: hareketin birim maliyeti, taşıyıcının hareket öncesi/sonrası maliyeti.
  */
 function resolveCost(o: {
@@ -389,6 +412,8 @@ function resolveCost(o: {
     const unitCost = inputCost ?? (o.product.costMethod === 'standard' ? D(o.product.standardCost) : avg);
     return { unitCost, costBefore: avg, costAfter: weighted(avg, unitCost) };
   }
+  // WIP firesi: taşıyıcı (quant) yok; çağıranın verdiği maliyet (iş emrindeki tüketim maliyeti), yoksa ortalama
+  if (o.direction === 'wip') return { unitCost: inputCost ?? avg, costBefore: avg, costAfter: avg };
   return { unitCost: avg, costBefore: avg, costAfter: avg };
 }
 
@@ -415,17 +440,26 @@ export type CreateLotInput = {
   meta?: Record<string, unknown>;
 };
 
-/** SKT'den FEFO uyarı/kaldırma tarihleri: uyarı = SKT − %25 raf ömrü (≤90 gün), kaldırma = SKT − %5 raf ömrü (≤14 gün) */
-export function fefoDates(expiryDate: string | null, shelfLifeDays: number | null): { alertDate: string | null; removalDate: string | null } {
+export type FefoPolicy = { shelfLifeDays?: number | null; alertDaysBeforeExpiry?: number | null; removalDaysBeforeExpiry?: number | null };
+
+/**
+ * SKT'den FEFO uyarı/kaldırma tarihleri.
+ * Ürün kartındaki gün ofsetleri (`alertDaysBeforeExpiry` / `removalDaysBeforeExpiry`) öncelikli;
+ * boşsa yüzde kuralı: uyarı = SKT − %25 raf ömrü (7..90 gün), kaldırma = SKT − %5 raf ömrü (1..14 gün).
+ */
+export function fefoDates(expiryDate: string | null, policy: FefoPolicy | number | null): { alertDate: string | null; removalDate: string | null } {
   if (!expiryDate) return { alertDate: null, removalDate: null };
-  const life = shelfLifeDays && shelfLifeDays > 0 ? shelfLifeDays : 365;
-  const alertOffset = Math.min(90, Math.max(7, Math.ceil(life * 0.25)));
-  const removalOffset = Math.min(14, Math.max(1, Math.ceil(life * 0.05)));
+  const p: FefoPolicy = typeof policy === 'number' || policy === null ? { shelfLifeDays: policy } : policy;
+  const life = p.shelfLifeDays && p.shelfLifeDays > 0 ? p.shelfLifeDays : 365;
+  const explicit = (v: number | null | undefined) => (v !== null && v !== undefined && v >= 0 ? v : null);
+  const alertOffset = explicit(p.alertDaysBeforeExpiry) ?? Math.min(90, Math.max(7, Math.ceil(life * 0.25)));
+  const removalOffset = explicit(p.removalDaysBeforeExpiry) ?? Math.min(14, Math.max(1, Math.ceil(life * 0.05)));
   return { alertDate: addDays(expiryDate, -alertOffset), removalDate: addDays(expiryDate, -removalOffset) };
 }
 
 /**
- * Lot oluşturur. SKT verilmezse üretim tarihi + ürün raf ömründen; alert/removal tarihleri SKT'den türetilir.
+ * Lot oluşturur. SKT verilmezse üretim tarihi + ürün raf ömründen; alert/removal tarihleri ürün kartındaki
+ * gün ofsetlerinden (yoksa yüzde kuralıyla) SKT'den türetilir.
  * Durum: verilmezse ürün `requiresIncomingQc` ise karantina, değilse serbest.
  */
 export async function createLot(tx: DbOrTx, input: CreateLotInput, ctx: ActorCtx = { userId: null }): Promise<typeof stockLots.$inferSelect> {
@@ -438,7 +472,7 @@ export async function createLot(tx: DbOrTx, input: CreateLotInput, ctx: ActorCtx
   if (!expiryDate && product.shelfLifeDays && product.shelfLifeDays > 0) {
     expiryDate = addDays(productionDate ?? businessDate(new Date()), product.shelfLifeDays);
   }
-  const { alertDate, removalDate } = fefoDates(expiryDate, product.shelfLifeDays);
+  const { alertDate, removalDate } = fefoDates(expiryDate, product);
   const status: LotStatus = input.status ?? (product.requiresIncomingQc ? 'quarantine' : 'released');
 
   const [lot] = await tx

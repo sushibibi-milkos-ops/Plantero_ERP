@@ -77,13 +77,8 @@ export type IndexInput = {
   docDate?: Date | null;
 };
 
-/** document_index upsert — her belge oluşturma/durum değişiminde çağrılır */
+/** document_index upsert — her belge oluşturma/durum değişiminde çağrılır (ON CONFLICT (type, record_id) DO UPDATE) */
 export async function indexDocument(tx: DbOrTx, input: IndexInput): Promise<{ id: string }> {
-  const [existing] = await tx
-    .select({ id: documentIndex.id })
-    .from(documentIndex)
-    .where(and(eq(documentIndex.type, input.type), eq(documentIndex.recordId, input.recordId)))
-    .limit(1);
   const values = {
     docNo: input.docNo,
     partnerId: input.partnerId ?? null,
@@ -94,11 +89,11 @@ export async function indexDocument(tx: DbOrTx, input: IndexInput): Promise<{ id
     docDate: input.docDate ?? new Date(),
     updatedAt: new Date(),
   };
-  if (existing) {
-    await tx.update(documentIndex).set(values).where(eq(documentIndex.id, existing.id));
-    return { id: existing.id };
-  }
-  const [row] = await tx.insert(documentIndex).values({ type: input.type, recordId: input.recordId, ...values }).returning({ id: documentIndex.id });
+  const [row] = await tx
+    .insert(documentIndex)
+    .values({ type: input.type, recordId: input.recordId, ...values })
+    .onConflictDoUpdate({ target: [documentIndex.type, documentIndex.recordId], set: values })
+    .returning({ id: documentIndex.id });
   return { id: row!.id };
 }
 

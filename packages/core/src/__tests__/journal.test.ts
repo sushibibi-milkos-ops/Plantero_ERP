@@ -79,6 +79,31 @@ describe('journal', () => {
     });
   });
 
+  it('tanımsız döneme kayıt reddedilir (PERIOD_NOT_FOUND)', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      await tx.delete(fiscalPeriods).where(eq(fiscalPeriods.code, '1998-06'));
+      const err = await expectReject(tx, (sp) =>
+        postJournalEntry(sp, {
+          ledger: 'both', journalCode: 'GEN', entryDate: new Date(Date.UTC(1998, 5, 15)), description: 'dönemsiz',
+          lines: [{ accountCode: '100', debit: d('1') }, { accountCode: '500', credit: d('1') }],
+        }, ctx),
+      );
+      expect(err).toBeInstanceOf(DomainError);
+      expect((err as DomainError).code).toBe('PERIOD_NOT_FOUND');
+      // Ters kayıt tarihi de tanımlı bir döneme düşmeli
+      const r = await postJournalEntry(tx, {
+        ledger: 'VUK', journalCode: 'GEN', entryDate: new Date(), description: 'x',
+        lines: [{ accountCode: '100', debit: d('1') }, { accountCode: '500', credit: d('1') }],
+      }, ctx);
+      const err2 = await expectReject(tx, (sp) => reverseJournalEntry(sp, r.vukId!, ctx, { reversalDate: new Date(Date.UTC(1998, 5, 15)) }));
+      expect((err2 as DomainError).code).toBe('PERIOD_NOT_FOUND');
+      // Hiç fiş yazılmadı
+      const rows = await tx.select().from(journalEntries).where(eq(journalEntries.description, 'dönemsiz'));
+      expect(rows).toHaveLength(0);
+    });
+  });
+
   it('cari alt hesabı otomatik açılır ve partners.balance güncellenir', async () => {
     await withRollback(async (tx) => {
       const b = await seedBase(tx);

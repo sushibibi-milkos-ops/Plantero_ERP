@@ -5,9 +5,9 @@ import { postStockMove, createLot } from '../stock/ledger.js';
 import { withRollback, seedBase, ctx, d, daysFromNow } from './helpers.js';
 
 const REF = '00000000-0000-4000-8000-0000000000ee';
-const CHECKS = ['01_inventory_value.sql', '02_stock_ledger.sql', '03_stock_journal_link.sql', '04_journal_balance.sql', '16_lot_status_moves.sql'];
+const CHECKS = ['01_inventory_value.sql', '02_stock_ledger.sql', '03_stock_journal_link.sql', '04_journal_balance.sql', '15_wip.sql', '16_lot_status_moves.sql'];
 
-describe('kanıt: yuvarlamalı gerçek hareketler üzerinde I1/I2/I3/I4/I16 SQL 0 ihlal', () => {
+describe('kanıt: yuvarlamalı gerçek hareketler üzerinde I1/I2/I3/I4/I15/I16 SQL 0 ihlal', () => {
   it('çalışır', async () => {
     await withRollback(async (tx) => {
       const b = await seedBase(tx);
@@ -26,9 +26,10 @@ describe('kanıt: yuvarlamalı gerçek hareketler üzerinde I1/I2/I3/I4/I16 SQL 
       await postStockMove(tx, { kind: 'receipt', productId: b.raw.id, lotId: lot2.id, fromLocationId: b.loc.sup.id, toLocationId: b.loc.hamR01.id, qty: d('0.5555'), uomId: b.kg.id, unitCost: d('9.1234'), refType: 'receipt', refId: REF }, ctx);
       await postStockMove(tx, { kind: 'transfer', productId: b.raw.id, lotId: lot2.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.hamR02.id, qty: d('6.1111'), uomId: b.kg.id, refType: 'transfer', refId: REF }, ctx);
       await postStockMove(tx, { kind: 'scrap', productId: b.raw.id, lotId: lot2.id, fromLocationId: b.loc.hamR02.id, toLocationId: b.loc.scrap.id, qty: d('1.2345'), uomId: b.kg.id, refType: 'scrap', refId: REF }, ctx);
-      // WIP'i kapat: 151'deki 14.3940 → 2 adet mamul @ 7.197 (151 sıfırlanır, I1 151 için 0 bekler)
+      // WIP firesi (üretim lokasyonundan, 659 / 151.01) ve kapanış: 151.01'deki 14.3940 − 0.3940 → 2 adet mamul @ 7.0 (151.01 sıfırlanır; I15 açık WO yokken 0 bekler)
+      await postStockMove(tx, { kind: 'scrap', productId: b.pack.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.scrap.id, qty: d('0.1'), uomId: b.kg.id, unitCost: d('3.94'), refType: 'work_order', refId: REF }, ctx);
       const fin = await createLot(tx, { productId: b.finished.id, lotNo: 'PL-PRF-01', origin: 'production', productionDate: new Date() }, ctx);
-      await postStockMove(tx, { kind: 'production', productId: b.finished.id, lotId: fin.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.mamul.id, qty: d('2'), uomId: b.kg.id, unitCost: d('7.197'), refType: 'work_order', refId: REF }, ctx);
+      await postStockMove(tx, { kind: 'production', productId: b.finished.id, lotId: fin.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.mamul.id, qty: d('2'), uomId: b.kg.id, unitCost: d('7'), refType: 'work_order', refId: REF }, ctx);
       for (const f of CHECKS) {
         const text = (await readFile(new URL(`../../../db/src/checks/${f}`, import.meta.url), 'utf-8')).replace(/;\s*$/, '');
         const res = await tx.execute(sql.raw(text));

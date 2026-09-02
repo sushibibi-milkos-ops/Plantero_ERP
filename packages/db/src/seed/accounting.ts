@@ -4,7 +4,7 @@ import { accounts, journals, taxes, fiscalPeriods, bankAccounts, type accountTyp
 import { log, type SeedSummary } from './_helpers.js';
 
 type AccountType = (typeof accountTypeEnum.enumValues)[number];
-type AccountDef = { code: string; name: string; type: AccountType; parentCode?: string; ifrsCode?: string; ifrsName?: string; currency?: string };
+type AccountDef = { code: string; name: string; type: AccountType; parentCode?: string; ifrsCode?: string; ifrsName?: string; currency?: string; isPostable?: boolean };
 
 /**
  * Tek Düzen Hesap Planı (VUK) — kullanılan alt küme + makul üst hesaplar.
@@ -18,7 +18,10 @@ const ACCOUNTS: AccountDef[] = [
   { code: '102.03', name: 'Vakıfbank Tire Şb. EUR', type: 'asset', parentCode: '102', currency: 'EUR' },
   { code: '120', name: 'Alıcılar', type: 'asset', ifrsCode: '120', ifrsName: 'Ticari Alacaklar' },
   { code: '150', name: 'İlk Madde ve Malzeme', type: 'asset', ifrsCode: '150', ifrsName: 'Stoklar — Hammadde' },
-  { code: '151', name: 'Yarı Mamuller — Üretim', type: 'asset', ifrsCode: '151', ifrsName: 'Stoklar — Yarı Mamul (WIP)' },
+  // 151 ana hesabı kayıt almaz (docs/ARCHITECTURE.md §6): 151.01 açık iş emri değeri (I15), 151.02 yarı mamul stok (I1)
+  { code: '151', name: 'Yarı Mamuller — Üretim', type: 'asset', ifrsCode: '151', ifrsName: 'Stoklar — Yarı Mamul', isPostable: false },
+  { code: '151.01', name: 'Üretimde (WIP)', type: 'asset', parentCode: '151', ifrsCode: '151.01', ifrsName: 'Stoklar — Üretimde (WIP)' },
+  { code: '151.02', name: 'Yarı Mamul Stok', type: 'asset', parentCode: '151', ifrsCode: '151.02', ifrsName: 'Stoklar — Yarı Mamul Stok' },
   { code: '152', name: 'Mamuller', type: 'asset', ifrsCode: '152', ifrsName: 'Stoklar — Mamul' },
   { code: '153', name: 'Ticari Mallar', type: 'asset', ifrsCode: '153', ifrsName: 'Stoklar — Ticari Mal' },
   { code: '190', name: 'Devreden KDV', type: 'asset' },
@@ -107,11 +110,12 @@ export async function seedAccounting(db: DbOrTx, summary: SeedSummary): Promise<
         type: a.type,
         parentCode: a.parentCode ?? null,
         level: a.code.includes('.') ? 2 : 1,
+        isPostable: a.isPostable ?? true,
         ifrsCode: a.ifrsCode ?? null,
         ifrsName: a.ifrsName ?? null,
         currency: a.currency ?? 'TRY',
       })
-      .onConflictDoUpdate({ target: accounts.code, set: { name: a.name, type: a.type, parentCode: a.parentCode ?? null, ifrsCode: a.ifrsCode ?? null, ifrsName: a.ifrsName ?? null } });
+      .onConflictDoUpdate({ target: accounts.code, set: { name: a.name, type: a.type, parentCode: a.parentCode ?? null, isPostable: a.isPostable ?? true, ifrsCode: a.ifrsCode ?? null, ifrsName: a.ifrsName ?? null } });
   }
   summary.add('accounts', ACCOUNTS.length);
 

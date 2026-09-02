@@ -2,9 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { eq, and } from 'drizzle-orm';
 import { stockQuants, stockLots, stockMoves, journalEntries, journalLines, products } from '@plantero/db';
 import { postStockMove, createLot, pickFefo, reserve, release, getOnHand } from '../stock/ledger.js';
-import { getAccountBalance } from '../accounting/journal.js';
+import { getAccountBalance, postJournalEntry } from '../accounting/journal.js';
 import { type DomainError } from '../auth/errors.js';
 import { withRollback, expectReject, seedBase, ctx, d, daysFromNow, type Base } from './helpers.js';
+import { D } from '../money.js';
+import { fefoDates } from '../stock/ledger.js';
+import { addDays } from '../dates.js';
 import type { Tx } from '@plantero/db';
 
 const REF = '00000000-0000-4000-8000-000000000001';
@@ -206,7 +209,8 @@ describe('stock ledger', () => {
         kind: 'consumption', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.prod.id, qty: d(40), uomId: b.kg.id, refType: 'work_order', refId: WO,
       }, ctx);
       expect(cons.value.toFixed(4)).toBe('400.0000');
-      expect((await getAccountBalance(tx, { accountCode: '151', ledger: 'VUK' })).toFixed(4)).toBe('400.0000');
+      expect((await getAccountBalance(tx, { accountCode: '151.01', ledger: 'VUK' })).toFixed(4)).toBe('400.0000');
+      expect((await getAccountBalance(tx, { accountCode: '151', ledger: 'VUK' })).toFixed(4)).toBe('400.0000'); // ana hesap = alt hesaplar
       expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' })).toFixed(4)).toBe('600.0000');
 
       const overhead = d(50);
@@ -228,16 +232,20 @@ describe('stock ledger', () => {
       expect(outLotRow!.initialQty).toBe('20.0000');
 
       for (const ledger of ['VUK', 'UFRS'] as const) {
-        expect((await getAccountBalance(tx, { accountCode: '151', ledger })).toFixed(4)).toBe('0.0000');
+        expect((await getAccountBalance(tx, { accountCode: '151.01', ledger })).toFixed(4)).toBe('0.0000');
         expect((await getAccountBalance(tx, { accountCode: '152', ledger })).toFixed(4)).toBe('450.0000');
         expect((await getAccountBalance(tx, { accountCode: '731', ledger })).toFixed(4)).toBe('-50.0000');
       }
-      // Fişteki satırlar: 152 borç 450; 151 alacak 400; 731 alacak 50
+      // Fişteki satırlar: 152 borç 450; 151.01 alacak 400; 731 alacak 50
       const lines = await tx.select().from(journalLines).where(eq(journalLines.entryId, prod.journalEntryIds[0]!));
       const byCode = Object.fromEntries(lines.map((l) => [l.accountCode, l]));
       expect(byCode['152']?.debit).toBe('450.0000');
-      expect(byCode['151']?.credit).toBe('400.0000');
+      expect(byCode['151.01']?.credit).toBe('400.0000');
       expect(byCode['731']?.credit).toBe('50.0000');
+      // Genel gider payı move'a yazılır (I15: 151.01'den yalnızca malzeme payı düşer)
+      const [prodMove] = await tx.select().from(stockMoves).where(eq(stockMoves.id, prod.moveId));
+      expect(prodMove!.overheadValue).toBe('50.0000');
+      expect(cons.value.toFixed(4)).toBe(D(prodMove!.value).minus(D(prodMove!.overheadValue)).toFixed(4));
 
       // Envanter değeri = hesap bakiyesi (I1)
       const ohRaw = await getOnHand(tx, { productId: b.raw.id });
@@ -350,6 +358,134 @@ describe('stock ledger', () => {
       const picks2 = await pickFefo(tx, { productId: b.raw.id, qty: d(5), rootLocationId: b.loc.ham.id, excludeLotIds: [lot.id], allowPartial: true });
       expect(picks2).toHaveLength(0);
       await postStockMove(tx, { kind: 'scrap', productId: b.raw.id, lotId: old.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.scrap.id, qty: d(5), uomId: b.kg.id, refType: 'scrap', refId: REF }, ctx);
+    });
+  });
+
+  it('yarı mamul çıktı 151.02 borç / 151.01 alacak; 151 ana hesabına doğrudan kayıt reddedilir', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const [semi] = await tx.insert(products).values({
+        sku: `4${b.s}01`, name: `Badem Sütü Bazı YM ${b.s}`, type: 'semi_finished', uomId: b.kg.id, isLotTracked: true, isManufactured: true, costMethod: 'lot', shelfLifeDays: 30,
+      }).returning();
+      const { lot: rawLot } = await receiveRaw(tx, b, 'RAW-S1', '10', '5', { toLocationId: b.loc.hamR01.id, status: 'released' });
+      const WO = '00000000-0000-4000-8000-0000000000ab';
+      await postStockMove(tx, { kind: 'consumption', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.prod.id, qty: d(10), uomId: b.kg.id, refType: 'work_order', refId: WO }, ctx);
+      const semiLot = await createLot(tx, { productId: semi!.id, lotNo: 'PL-YM-01', origin: 'production', productionDate: new Date() }, ctx);
+      const out = await postStockMove(tx, {
+        kind: 'production', productId: semi!.id, lotId: semiLot.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.mamul.id, qty: d(5), uomId: b.kg.id,
+        unitCost: d(10), refType: 'work_order', refId: WO,
+      }, ctx);
+      expect(out.value.toFixed(4)).toBe('50.0000');
+      const lines = await tx.select().from(journalLines).where(eq(journalLines.entryId, out.journalEntryIds[0]!));
+      const byCode = Object.fromEntries(lines.map((l) => [l.accountCode, l]));
+      expect(byCode['151.02']?.debit).toBe('50.0000');
+      expect(byCode['151.01']?.credit).toBe('50.0000');
+      expect(byCode['731']).toBeUndefined();
+      const [move] = await tx.select().from(stockMoves).where(eq(stockMoves.id, out.moveId));
+      expect(move!.overheadValue).toBeNull();
+      for (const ledger of ['VUK', 'UFRS'] as const) {
+        expect((await getAccountBalance(tx, { accountCode: '151.02', ledger })).toFixed(4)).toBe('50.0000');
+        expect((await getAccountBalance(tx, { accountCode: '151.01', ledger })).toFixed(4)).toBe('0.0000');
+        expect((await getAccountBalance(tx, { accountCode: '151', ledger })).toFixed(4)).toBe('50.0000');
+      }
+      expect((await getOnHand(tx, { productId: semi!.id })).value.toFixed(4)).toBe('50.0000');
+
+      // Yarı mamul tüketimi: 151.01 borç / 151.02 alacak
+      const cons2 = await postStockMove(tx, { kind: 'consumption', productId: semi!.id, lotId: semiLot.id, fromLocationId: b.loc.mamul.id, toLocationId: b.loc.prod.id, qty: d(2), uomId: b.kg.id, refType: 'work_order', refId: WO }, ctx);
+      const l2 = await tx.select().from(journalLines).where(eq(journalLines.entryId, cons2.journalEntryIds[0]!));
+      const c2 = Object.fromEntries(l2.map((l) => [l.accountCode, l]));
+      expect(c2['151.01']?.debit).toBe('20.0000');
+      expect(c2['151.02']?.credit).toBe('20.0000');
+
+      // 151 ana hesabı kayıt almaz
+      const err = await expectReject(tx, (sp) => postJournalEntry(sp, {
+        ledger: 'VUK', journalCode: 'GEN', entryDate: new Date(), description: 'ana hesaba kayıt',
+        lines: [{ accountCode: '151', debit: d(1) }, { accountCode: '500', credit: d(1) }],
+      }, ctx));
+      expect((err as DomainError).code).toBe('ACCOUNT_NOT_POSTABLE');
+    });
+  });
+
+  it('iş emri WIP firesi: üretim lokasyonundan fire → 659 / 151.01, quant değişmez; fiziksel fire 659 / 15X', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const { lot: rawLot } = await receiveRaw(tx, b, 'RAW-W1', '100', '10', { toLocationId: b.loc.hamR01.id, status: 'released' });
+      const WO = '00000000-0000-4000-8000-0000000000ac';
+      await postStockMove(tx, { kind: 'consumption', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.prod.id, qty: d(40), uomId: b.kg.id, refType: 'work_order', refId: WO }, ctx);
+      expect((await getAccountBalance(tx, { accountCode: '151.01', ledger: 'VUK' })).toFixed(4)).toBe('400.0000');
+
+      // İş emri dışı kaynak reddedilir
+      const e1 = await expectReject(tx, (sp) => postStockMove(sp, { kind: 'scrap', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.scrap.id, qty: d(3), uomId: b.kg.id, refType: 'scrap', refId: WO }, ctx));
+      expect((e1 as DomainError).code).toBe('WIP_SCRAP_REQUIRES_WORK_ORDER');
+      // Üretim lokasyonundan yalnızca fire lokasyonuna
+      const e2 = await expectReject(tx, (sp) => postStockMove(sp, { kind: 'scrap', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.loss.id, qty: d(3), uomId: b.kg.id, refType: 'work_order', refId: WO }, ctx));
+      expect((e2 as DomainError).code).toBe('MOVE_DIRECTION_INVALID');
+
+      const quantsBefore = await tx.select().from(stockQuants).where(eq(stockQuants.productId, b.raw.id));
+      const scr = await postStockMove(tx, { kind: 'scrap', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.scrap.id, qty: d(3), uomId: b.kg.id, refType: 'work_order', refId: WO, note: 'dökülme' }, ctx);
+      expect(scr.unitCost.toFixed(4)).toBe('10.0000'); // lot maliyeti
+      expect(scr.value.toFixed(4)).toBe('30.0000');
+      expect(scr.journalEntryIds).toHaveLength(2);
+      const lines = await tx.select().from(journalLines).where(eq(journalLines.entryId, scr.journalEntryIds[0]!));
+      const byCode = Object.fromEntries(lines.map((l) => [l.accountCode, l]));
+      expect(byCode['659']?.debit).toBe('30.0000');
+      expect(byCode['151.01']?.credit).toBe('30.0000');
+      expect(byCode['150']).toBeUndefined();
+      expect((await getAccountBalance(tx, { accountCode: '151.01', ledger: 'VUK' })).toFixed(4)).toBe('370.0000');
+      expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' })).toFixed(4)).toBe('600.0000');
+      // Quant'lar değişmedi (I1 korunur)
+      const quantsAfter = await tx.select().from(stockQuants).where(eq(stockQuants.productId, b.raw.id));
+      expect(quantsAfter.map((q) => [q.locationId, q.qty])).toEqual(quantsBefore.map((q) => [q.locationId, q.qty]));
+      expect((await getOnHand(tx, { productId: b.raw.id })).value.toFixed(4)).toBe('600.0000');
+
+      // Lotsuz üründe WIP firesi verilen maliyetle değerlenir
+      await postStockMove(tx, { kind: 'receipt', productId: b.pack.id, fromLocationId: b.loc.sup.id, toLocationId: b.loc.hamR01.id, qty: d(10), uomId: b.kg.id, unitCost: d(2), refType: 'receipt', refId: REF }, ctx);
+      await postStockMove(tx, { kind: 'consumption', productId: b.pack.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.prod.id, qty: d(10), uomId: b.kg.id, refType: 'work_order', refId: WO }, ctx);
+      const scr2 = await postStockMove(tx, { kind: 'scrap', productId: b.pack.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.scrap.id, qty: d(4), uomId: b.kg.id, unitCost: d('2.5'), refType: 'work_order', refId: WO }, ctx);
+      expect(scr2.value.toFixed(4)).toBe('10.0000');
+      expect((await getAccountBalance(tx, { accountCode: '151.01', ledger: 'VUK' })).toFixed(4)).toBe('380.0000'); // 370 + 20 − 10
+
+      // Fiziksel stoktan iş emri kaynaklı fire yine 659 / 150 (quant düşer, I1 korunur)
+      const scr3 = await postStockMove(tx, { kind: 'scrap', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.scrap.id, qty: d(5), uomId: b.kg.id, refType: 'work_order', refId: WO }, ctx);
+      const l3 = await tx.select().from(journalLines).where(eq(journalLines.entryId, scr3.journalEntryIds[0]!));
+      expect(Object.fromEntries(l3.map((l) => [l.accountCode, l]))['150']?.credit).toBe('50.0000');
+      expect((await getAccountBalance(tx, { accountCode: '150', ledger: 'VUK' })).toFixed(4)).toBe('550.0000');
+      expect((await getOnHand(tx, { productId: b.raw.id })).value.toFixed(4)).toBe('550.0000');
+    });
+  });
+
+  it('FEFO uyarı/kaldırma: ürün kartındaki gün ofsetleri öncelikli, yoksa yüzde kuralı', async () => {
+    expect(fefoDates(null, 100)).toEqual({ alertDate: null, removalDate: null });
+    expect(fefoDates('2026-12-31', 365)).toEqual({ alertDate: addDays('2026-12-31', -90), removalDate: addDays('2026-12-31', -14) });
+    expect(fefoDates('2026-12-31', { shelfLifeDays: 20 })).toEqual({ alertDate: addDays('2026-12-31', -7), removalDate: addDays('2026-12-31', -1) });
+    expect(fefoDates('2026-12-31', { shelfLifeDays: 365, alertDaysBeforeExpiry: 45, removalDaysBeforeExpiry: 10 })).toEqual({ alertDate: '2026-11-16', removalDate: '2026-12-21' });
+    expect(fefoDates('2026-12-31', { shelfLifeDays: 365, alertDaysBeforeExpiry: 45, removalDaysBeforeExpiry: null })).toEqual({ alertDate: '2026-11-16', removalDate: addDays('2026-12-31', -14) });
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await tx.update(products).set({ alertDaysBeforeExpiry: 60, removalDaysBeforeExpiry: 5 }).where(eq(products.id, b.raw.id));
+      const lot = await createLot(tx, { productId: b.raw.id, lotNo: 'OFS-1', origin: 'receipt', expiryDate: '2027-03-01' }, ctx);
+      expect(lot.alertDate).toBe(addDays('2027-03-01', -60));
+      expect(lot.removalDate).toBe(addDays('2027-03-01', -5));
+      const lot2 = await createLot(tx, { productId: b.finished.id, lotNo: 'OFS-2', origin: 'production', expiryDate: '2027-03-01' }, ctx);
+      expect(lot2.alertDate).toBe(addDays('2027-03-01', -45)); // 180 × %25
+      expect(lot2.removalDate).toBe(addDays('2027-03-01', -9)); // 180 × %5
+    });
+  });
+
+  it('lotsuz quant upsert: eşzamanlı iki giriş tek satırda toplanır (NULLS NOT DISTINCT)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      for (let i = 0; i < 3; i++) {
+        await postStockMove(tx, { kind: 'receipt', productId: b.pack.id, fromLocationId: b.loc.sup.id, toLocationId: b.loc.hamR01.id, qty: d(5), uomId: b.kg.id, unitCost: d(1), refType: 'receipt', refId: REF }, ctx);
+      }
+      const rows = await tx.select().from(stockQuants).where(and(eq(stockQuants.productId, b.pack.id), eq(stockQuants.locationId, b.loc.hamR01.id)));
+      expect(rows).toHaveLength(1);
+      expect(rows[0]!.lotId).toBeNull();
+      expect(rows[0]!.qty).toBe('15.0000');
+      // Aynı anahtarla ikinci satır eklenemez (unique kısıt gerçek)
+      const err = await expectReject(tx, (sp) => sp.insert(stockQuants).values({ productId: b.pack.id, locationId: b.loc.hamR01.id, lotId: null, qty: '1.0000' }));
+      const cause = (err as Error & { cause?: { constraint_name?: string; code?: string } }).cause;
+      expect(cause?.constraint_name ?? cause?.code).toBe(cause?.constraint_name ? 'stock_quants_uq' : '23505');
     });
   });
 });

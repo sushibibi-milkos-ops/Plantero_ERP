@@ -16,7 +16,10 @@ export const ACCOUNT_CATALOG: readonly AccountDef[] = [
   { code: '102', name: 'Bankalar', type: 'asset' },
   { code: '120', name: 'Alıcılar', type: 'asset', ifrsCode: '120', ifrsName: 'Ticari Alacaklar' },
   { code: '150', name: 'İlk Madde ve Malzeme', type: 'asset', ifrsCode: '150', ifrsName: 'Stoklar — Hammadde' },
-  { code: '151', name: 'Yarı Mamuller — Üretim', type: 'asset', ifrsCode: '151', ifrsName: 'Stoklar — Yarı Mamul (WIP)' },
+  // 151 ana hesabı kayıt almaz: 151.01 = açık iş emri değeri (WIP, I15), 151.02 = yarı mamul stok değeri (I1). 151 = 151.01 + 151.02
+  { code: '151', name: 'Yarı Mamuller — Üretim', type: 'asset', ifrsCode: '151', ifrsName: 'Stoklar — Yarı Mamul', isPostable: false },
+  { code: '151.01', name: 'Üretimde (WIP)', type: 'asset', parentCode: '151', ifrsCode: '151.01', ifrsName: 'Stoklar — Üretimde (WIP)' },
+  { code: '151.02', name: 'Yarı Mamul Stok', type: 'asset', parentCode: '151', ifrsCode: '151.02', ifrsName: 'Stoklar — Yarı Mamul Stok' },
   { code: '152', name: 'Mamuller', type: 'asset', ifrsCode: '152', ifrsName: 'Stoklar — Mamul' },
   { code: '153', name: 'Ticari Mallar', type: 'asset', ifrsCode: '153', ifrsName: 'Stoklar — Ticari Mal' },
   { code: '190', name: 'Devreden KDV', type: 'asset' },
@@ -41,9 +44,18 @@ export const ACCOUNT_CATALOG: readonly AccountDef[] = [
   { code: '780', name: 'Finansman Giderleri', type: 'expense' },
 ];
 
-/** Katalogdaki ana hesapları (yoksa) oluşturur — seed ve test kurulumu için idempotent */
+/** Açık iş emri değerini (WIP) taşıyan hesap — yalnızca consumption/production/byproduct/WIP firesi hareketleri dokunur */
+export const WIP_ACCOUNT = '151.01';
+/** Yarı mamul stok hesabı — semi_finished ürünlerin envanter hesabı (I1) */
+export const SEMI_FINISHED_ACCOUNT = '151.02';
+
+/**
+ * Katalogdaki ana hesapları (yoksa) oluşturur — seed ve test kurulumu için idempotent.
+ * Var olan hesapta yalnızca `isPostable` katalogla eşitlenir (151 ana hesabı kayıt almaz).
+ */
 export async function ensureCoreAccounts(tx: DbOrTx): Promise<void> {
   for (const def of ACCOUNT_CATALOG) {
+    const isPostable = def.isPostable ?? true;
     await tx
       .insert(accounts)
       .values({
@@ -52,11 +64,11 @@ export async function ensureCoreAccounts(tx: DbOrTx): Promise<void> {
         type: def.type,
         parentCode: def.parentCode ?? null,
         level: def.code.includes('.') ? 2 : 1,
-        isPostable: def.isPostable ?? true,
+        isPostable,
         ifrsCode: def.ifrsCode ?? null,
         ifrsName: def.ifrsName ?? null,
       })
-      .onConflictDoNothing({ target: accounts.code });
+      .onConflictDoUpdate({ target: accounts.code, set: { isPostable } });
   }
 }
 
@@ -67,7 +79,7 @@ export async function ensureCoreAccounts(tx: DbOrTx): Promise<void> {
 export const INVENTORY_ACCOUNT_BY_TYPE: Record<ProductType, string> = {
   raw_material: '150',
   packaging: '150',
-  semi_finished: '151',
+  semi_finished: SEMI_FINISHED_ACCOUNT,
   finished: '152',
   merchandise: '153',
   equipment: '153',
@@ -97,11 +109,20 @@ export type MoveAccountLine = { accountCode: string; side: 'debit' | 'credit'; s
 /** Değersiz hareketler: hesap değişmez */
 export const UNVALUED_MOVE_KINDS: readonly StockMoveKind[] = ['transfer', 'quarantine_release', 'quarantine_reject'];
 
+export type MoveAccountOptions = {
+  /**
+   * İş emri kaynaklı WIP firesi: üretim (sanal) lokasyonundaki, yani zaten 151.01'e alınmış malzemenin
+   * firesi → 659 / 151.01 (fiziksel stoktan fire → 659 / 15X). Ledger, kaynak lokasyon `production` ise işaretler.
+   */
+  wipScrap?: boolean;
+};
+
 /**
- * Hareket türü → borç/alacak hesap çiftleri. `INV` = ürünün envanter hesabı.
- * production: 152 borç; 151 (malzeme payı) + 731 (genel gider payı) alacak.
+ * Hareket türü → borç/alacak hesap çiftleri. `INV` = ürünün envanter hesabı (152 mamul, 151.02 yarı mamul, 150/153).
+ * consumption: 151.01 borç / INV alacak. production: INV borç; 151.01 (malzeme payı) + 731 (genel gider payı) alacak.
+ * byproduct: INV borç / 151.01 alacak. scrap: 659 borç / INV alacak; WIP firesi ise 659 / 151.01.
  */
-export function moveAccountLines(kind: StockMoveKind, inventoryCode: string, cogsCode = '621'): MoveAccountLine[] | null {
+export function moveAccountLines(kind: StockMoveKind, inventoryCode: string, cogsCode = '621', opts: MoveAccountOptions = {}): MoveAccountLine[] | null {
   const INV = inventoryCode;
   const pair = (debit: string, credit: string): MoveAccountLine[] => [
     { accountCode: debit, side: 'debit', share: 'total' },
@@ -110,15 +131,15 @@ export function moveAccountLines(kind: StockMoveKind, inventoryCode: string, cog
   switch (kind) {
     case 'receipt': return pair(INV, '320.999');
     case 'return_out': return pair('320.999', INV);
-    case 'consumption': return pair('151', INV);
+    case 'consumption': return pair(WIP_ACCOUNT, INV);
     case 'production':
       return [
         { accountCode: INV, side: 'debit', share: 'total' },
-        { accountCode: '151', side: 'credit', share: 'material' },
+        { accountCode: WIP_ACCOUNT, side: 'credit', share: 'material' },
         { accountCode: '731', side: 'credit', share: 'overhead' },
       ];
-    case 'byproduct': return pair(INV, '151');
-    case 'scrap': return pair('659', INV);
+    case 'byproduct': return pair(INV, WIP_ACCOUNT);
+    case 'scrap': return pair('659', opts.wipScrap ? WIP_ACCOUNT : INV);
     case 'delivery': return pair(cogsCode, INV);
     case 'return_in': return pair(INV, cogsCode);
     case 'count_gain': return pair(INV, '679');

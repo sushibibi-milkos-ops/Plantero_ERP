@@ -1,10 +1,11 @@
 -- I1 — Envanter değeri = hesap bakiyesi (VUK ve UFRS ayrı ayrı)
 -- Σ(stock_quants.qty × lot.unit_cost | product.average_cost) [ürün tipi kırılımı, hesap koduna göre]
---   = 150/151/152/153 hesap bakiyeleri (getAccountBalance ile aynı yöntem: posted+reversed, alt hesaplar dahil)
+--   = 150 / 151.02 / 152 / 153 hesap bakiyeleri (getAccountBalance ile aynı yöntem: posted+reversed, alt hesaplar dahil)
+-- 151.01 Üretimde (WIP) I1 dışındadır: açık iş emri değerini taşır, quant karşılığı yoktur (I15 doğrular).
 --
 -- Kapsam: yalnızca fiziksel (usage in internal/quarantine/rejected/transit) lokasyonlardaki quant'lar.
 -- Hesap eşlemesi (packages/core/src/accounting/mapping.ts — INVENTORY_ACCOUNT_BY_TYPE ile birebir):
---   raw_material→150, packaging→150, semi_finished→151, finished→152, equipment/fixed_asset/service→153
+--   raw_material→150, packaging→150, semi_finished→151.02, finished→152, merchandise/equipment/fixed_asset/service→153
 --   ürün kartında inventory_account_code doluysa o öncelikli.
 -- Fiziksel envanter değeri ledger'dan bağımsızdır (aynı fiziksel stok) — bu yüzden her iki defterde de
 -- aynı beklenen tutarla karşılaştırılır.
@@ -30,8 +31,9 @@ lot_value AS (
       CASE p.type
         WHEN 'raw_material' THEN '150'
         WHEN 'packaging' THEN '150'
-        WHEN 'semi_finished' THEN '151'
+        WHEN 'semi_finished' THEN '151.02'
         WHEN 'finished' THEN '152'
+        WHEN 'merchandise' THEN '153'
         WHEN 'equipment' THEN '153'
         WHEN 'fixed_asset' THEN '153'
         WHEN 'service' THEN '153'
@@ -51,13 +53,14 @@ inv_by_account AS (
   GROUP BY account_code
 ),
 -- Envanter benzeri (15X) hesaplara yapılmış tüm postalamaları da hesaba dahil et: envanteri olmayan
--- ama 15X hesabına bakiyesi olan bir hesap da ihlal olarak yakalanmalı (yetim kayıt).
+-- ama 15X hesabına bakiyesi olan bir hesap da ihlal olarak yakalanmalı (yetim kayıt). 151.01 (WIP) hariç.
 journal_inventory_accounts AS (
   SELECT DISTINCT jl.account_code
   FROM journal_lines jl
   JOIN journal_entries je ON je.id = jl.entry_id
   WHERE je.status IN ('posted', 'reversed')
     AND jl.account_code ~ '^15[0-9](\.|$)'
+    AND jl.account_code <> '151.01' AND jl.account_code NOT LIKE '151.01.%'
 ),
 accounts_all AS (
   SELECT account_code FROM inv_by_account

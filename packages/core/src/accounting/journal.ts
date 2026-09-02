@@ -45,15 +45,18 @@ export type PostJournalResult = { vukId?: string; ufrsId?: string };
 /** Yevmiye tarihi = Europe/Istanbul iş günü (UTC gece yarısı kayması dönemi değiştirmez) */
 const toDateStr = (d: Date | string): string => businessDate(d);
 
-/** Tarihin düştüğü mali dönemi bulur; kapalıysa hata */
-export async function resolveOpenPeriod(tx: DbOrTx, entryDate: Date | string): Promise<{ id: string; code: string } | null> {
+/**
+ * Tarihin düştüğü mali dönemi bulur. Dönem kuralı (ARCHITECTURE §6):
+ * tarih hiçbir `fiscal_periods` satırına düşmüyorsa PERIOD_NOT_FOUND, dönem kapalıysa PERIOD_CLOSED.
+ */
+export async function resolveOpenPeriod(tx: DbOrTx, entryDate: Date | string): Promise<{ id: string; code: string }> {
   const ds = toDateStr(entryDate);
   const [period] = await tx
     .select({ id: fiscalPeriods.id, code: fiscalPeriods.code, isClosed: fiscalPeriods.isClosed })
     .from(fiscalPeriods)
     .where(and(lte(fiscalPeriods.startDate, ds), gte(fiscalPeriods.endDate, ds)))
     .limit(1);
-  if (!period) return null;
+  if (!period) throw new DomainError('PERIOD_NOT_FOUND', `${ds} tarihi için tanımlı mali dönem yok; kayıt yapılamaz`, { entryDate: ds });
   if (period.isClosed) throw new DomainError('PERIOD_CLOSED', `${period.code} dönemi kapalı; kayıt yapılamaz`, { period: period.code, entryDate: ds });
   return { id: period.id, code: period.code };
 }
@@ -120,7 +123,7 @@ async function resolveLines(tx: DbOrTx, lines: JournalLineInput[]): Promise<Reso
 /**
  * TEK muhasebe yazma noktası.
  * - Σborç = Σalacak (4 hanede sıfır fark) yoksa hata
- * - Dönem kapalıysa hata
+ * - Dönem yoksa (PERIOD_NOT_FOUND) veya kapalıysa (PERIOD_CLOSED) hata
  * - ledger 'both' → VUK + UFRS iki fiş, twinEntryId çapraz bağlanır
  * - journalLines.accountCode denormalize, accountId çözümlenir
  * - Cari alt hesabı otomatik açılır; partners.balance yeniden hesaplanır
@@ -155,7 +158,7 @@ export async function postJournalEntry(tx: DbOrTx, input: JournalEntryInput, ctx
         journalId: journal.id,
         status: 'posted',
         entryDate,
-        periodId: period?.id ?? null,
+        periodId: period.id,
         description: input.description,
         refType: input.refType ?? null,
         refId: input.refId ?? null,
@@ -259,7 +262,7 @@ export async function reverseJournalEntry(
         journalId: t.journalId,
         status: 'posted',
         entryDate: toDateStr(reversalDate),
-        periodId: period?.id ?? null,
+        periodId: period.id,
         description: opts.description ?? `Ters kayıt: ${t.docNo} — ${t.description}`,
         refType: t.refType,
         refId: t.refId,
