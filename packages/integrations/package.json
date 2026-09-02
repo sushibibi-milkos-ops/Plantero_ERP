@@ -1,0 +1,10 @@
+{
+  "name": "@plantero/integrations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts", "./*": "./src/*.ts" },
+  "scripts": { "typecheck": "tsc --noEmit", "lint": "eslint src", "test": "vitest run --passWithNoTests" },
+  "dependencies": { "@plantero/core": "workspace:*", "@plantero/db": "workspace:*", "decimal.js": "^10.5.0", "zod": "^4.0.0", "nodemailer": "^7.0.0" },
+  "devDependencies": { "@types/node": "^22.15.0", "@types/nodemailer": "^6.4.17", "eslint": "^9.30.0", "typescript": "^5.9.0", "vitest": "^3.2.0" }
+}

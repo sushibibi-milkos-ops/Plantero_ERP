@@ -1,0 +1,28 @@
+{
+  "name": "plantero-erp",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "dev:web": "pnpm --filter @plantero/web dev",
+    "dev:worker": "pnpm --filter @plantero/worker dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "e2e": "pnpm --filter @plantero/web e2e",
+    "db:push": "pnpm --filter @plantero/db push",
+    "db:seed": "pnpm --filter @plantero/db seed",
+    "db:reset": "pnpm --filter @plantero/db reset",
+    "db:check": "pnpm --filter @plantero/db check",
+    "db:studio": "pnpm --filter @plantero/db studio",
+    "shot": "tsx scripts/screenshot.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "tsx": "^4.20.0",
+    "turbo": "^2.10.12",
+    "typescript": "^5.9.0"
+  }
+}

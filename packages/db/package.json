@@ -1,0 +1,38 @@
+{
+  "name": "@plantero/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "push": "drizzle-kit push --force",
+    "generate": "drizzle-kit generate",
+    "studio": "drizzle-kit studio",
+    "seed": "tsx src/seed/index.ts",
+    "reset": "tsx src/reset.ts && drizzle-kit push --force && tsx src/seed/index.ts",
+    "check": "tsx src/checks/run.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "decimal.js": "^10.5.0",
+    "drizzle-orm": "^0.45.2",
+    "exceljs": "^4.4.0",
+    "postgres": "^3.4.7",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9.30.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}
