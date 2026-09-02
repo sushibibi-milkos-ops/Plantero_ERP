@@ -1,0 +1,27 @@
+# Modül: Depo (stock)
+
+Route kökü `/depo`, izinler `stock.*`, core `packages/core/src/stock/**` (ledger.ts hazır — değiştirme; yeni dosyalar: receipts.ts, deliveries.ts, transfers.ts, counts.ts, expiry.ts, labels.ts), web `apps/web/src/modules/stock/**`, seed `seed/stock.ts`.
+
+## Ekranlar
+1. `/depo/stok` — KPI şeridi (toplam envanter değeri, hammadde/mamul değeri, karantinada, 30 gün içinde SKT, rezerve). Tablo: ürün, tip, depo bazında eldeki/rezerve/kullanılabilir, değer, en yakın SKT (rozet). Satır genişletme → lot/lokasyon kırılımı. Filtre depo/tip/kategori, "sadece kritik" (reorder kuralı altı), arama.
+2. `/depo/lotlar` — lot listesi: lot no (mono), ürün, durum rozeti, miktar, lokasyon(lar), SKT (expiry-badge), tedarikçi/iş emri kaynağı, maliyet. Filtre durum/SKT aralığı/depo. `/depo/lotlar/[id]`: özet, quant'lar, hareketler, kalite kontrol, **izlenebilirlik** (trace-graph iki yön, `/kalite/izlenebilirlik?lot=` bağlantısı), aksiyonlar: serbest bırak / reddet (`quality.release` izni), etiket yazdır (QR `LOT:<lotNo>`), taşı.
+3. `/depo/mal-kabul` — liste (durum, tedarikçi, PO, tarih, satır sayısı, toplam). `/depo/mal-kabul/yeni?po=` — başlık (tedarikçi, depo, irsaliye no/tarih), satırlar: ürün (barkod tarama alanı: enter ile `findByBarcode`), miktar, birim maliyet (PO satırından gelir), tedarikçi lot no, üretim tarihi, SKT (ürün raf ömründen öneri), karar (karantina/serbest/red — ürün `requiresIncomingQc` ise karantina zorunlu), hedef lokasyon (varsayılan: karantina → TIRE/KARANTINA; serbest → tipe göre TIRE/HAM/R01/A veya TIRE/MAMUL/R01). "Kabul et" → `receiveGoods`: lot oluştur (`createLot`), `postStockMove(kind:'receipt', from SUPPLIERS → hedef)`, red miktarı için `TIRE/RED`e ayrı hareket + lot status rejected, PO satırı `receivedQty` güncelle, `document_links(purchase_order→receipt)` satır bazlı, QC gerekiyorsa `qc_checks` pending kaydı (`quality` modülü henüz yoksa sadece kayıt), `wasOnTime` (PO expectedDate'e göre). Mobil: satır satır kart görünümü, büyük alanlar.
+4. `/depo/sevkiyat` — liste (durum, müşteri, sipariş, planlanan tarih, satır). Detay: satırlar (talep/toplanan/lot), "FEFO ile rezerve et" → her satır için `pickFefo` → lot atamaları + `reserve`; **Toplama ekranı** `/depo/sevkiyat/[id]/topla` (mobil öncelikli): sıradaki satır → gösterilen lot/lokasyon → "Lot okut" (QR/barkod girişi; yanlış lot → uyarı "FEFO'ya göre önce X lotu çıkmalı", karantina/red → engel) → miktar onayı → sonraki. "Sevk et" → `shipDelivery`: her satır `postStockMove(kind:'delivery', from lokasyon → CUSTOMERS, lotId)` (SMM fişi ledger'da), `release` rezervasyon, `salesOrderLines.deliveredQty` artır, status `shipped`, `document_links(sales_order→delivery)`; "Teslim edildi" → delivered. e-İrsaliye butonu (integrations sandbox → `eDespatchStatus`).
+5. `/depo/transfer` — liste + form (kaynak/hedef depo-lokasyon, satırlar ürün+lot+miktar; lot combobox kaynak lokasyondaki quant'lardan). "Tamamla" → `postStockMove(kind:'transfer')` değersiz. Depolar arası (Tire→Buca) `in_transit` ara durumu: TIRE/SEVK transit lokasyonuna, sonra "Teslim al" → BUCA lokasyonu.
+6. `/depo/sayim` — sayım oturumları: yeni (depo + kapsam lokasyonu) → `snapshotCount` (quant'lardan systemQty) → **sayım ekranı** (mobil: lokasyon okut → o lokasyonun satırları → sayılan miktar gir; bulunmayan lot/ürün ekle) → "İncelemeye gönder" → fark tablosu (miktar farkı, değer farkı, sebep) → "Onayla" (`stock.approve_count`; toplam |fark değeri| > 5.000 TL ise `approvals` kuyruğu kaydı ve GM onayı) → "Kaydet" → her farklı satır için `count_gain`/`count_loss` move (TIRE/SAYIM ↔ lokasyon).
+7. `/depo/skt` — SKT panosu: 4 kova (geçmiş, <30, 30-60, 60-90 gün) kart + liste (lot, ürün, miktar, değer, lokasyon, kalan gün), "hurdaya ayır" hızlı aksiyon (scrap move + lot expired), önerilen aksiyon (kampanya/iade). Renkler: expiry-badge kuralıyla aynı.
+8. `/depo/tara` — tek giriş alanı: barkod/QR → ürün/lot/lokasyon kartı + hızlı aksiyonlar (stok gör, taşı, etiket). Kamera yok; klavye emülasyonlu el terminali varsayımı (enter ile gönder).
+9. Etiketler: `/depo/etiket?lot=|loc=` yazdırılabilir A6 etiket (QR SVG `qrcode` paketi, ürün adı, lot, SKT, miktar) — `print` CSS.
+
+## Core servisleri
+`receipts.ts` (`createReceipt`, `receiveGoods`), `deliveries.ts` (`createDeliveryFromOrder`, `reserveFefo`, `confirmPick`, `shipDelivery`, `markDelivered`), `transfers.ts`, `counts.ts` (`createCount`, `snapshot`, `recordCount`, `submitReview`, `approveCount`, `postCount`), `expiry.ts` (`getExpiryBuckets`, `scrapExpired`), `scan/resolve.ts`, `labels.ts` (QR payload).
+
+## Seed (`seed/stock.ts`) — core servisleriyle
+- Açılış stokları: her hammaddeye 2-3 lot (SKT dağılımı: 1 lot < 30 gün, 1 lot 45-60 gün, 1 lot 120-400 gün), maliyet makul (badem 320 TL/kg, fındık 280, kaju 380, yulaf 40, pea protein 210, kakao 180, aromalar 900, gum 450, ambalaj 8-25 TL), miktarlar 50-800; mamullere 1-2 lot (üretim kaynaklı lotlar üretim seed'inde; burada `opening` lotlar `PL-260701-H1-01` gibi). Karantinada 2 lot, 1 red lot. `opening` hareketleri (15X / 500).
+- 6 mal kabul belgesi (manuel origin; tedarikçi + tedarikçi lot no), biri kısmi red, biri karantinada QC bekliyor.
+- 3 transfer (biri Tire→Buca transit), 1 tamamlanmış sayım (2 fark satırı), SKT'si geçmiş 1 lot.
+
+## Kabul kriterleri
+- Karantinadaki lot toplama ekranında okutulamaz (hata mesajı), FEFO sırası ihlali uyarı verir.
+- `pnpm db:check` yeşil (I1, I2, I3, I5, I6, I8, I16).
+- Tüm ekranlar 390px; toplama ve sayım ekranları dokunma hedefi ≥44px.
