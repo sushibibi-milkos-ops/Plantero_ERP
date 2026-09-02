@@ -1,0 +1,81 @@
+'use server';
+
+import { cookies, headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { eq } from 'drizzle-orm';
+import { z } from 'zod';
+import bcrypt from 'bcryptjs';
+import { db, schema } from '@plantero/db';
+import { createSession, destroySession } from '@plantero/core/auth/session';
+import { writeAudit } from '@plantero/core/audit';
+import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/auth';
+
+const loginSchema = z.object({
+  email: z.string().trim().toLowerCase().email('Geçerli bir e-posta girin'),
+  password: z.string().min(1, 'Şifre gerekli'),
+  next: z.string().optional(),
+});
+
+export type LoginState = { error?: string; fieldErrors?: Record<string, string[]> } | null;
+
+/** Güvenli yönlendirme: yalnızca site içi mutlak yollar */
+function safeNext(next: string | undefined): string {
+  if (!next || !next.startsWith('/') || next.startsWith('//')) return '/kokpit';
+  return next;
+}
+
+export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {
+  const parsed = loginSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+    next: formData.get('next') ?? undefined,
+  });
+  if (!parsed.success) {
+    const fieldErrors: Record<string, string[]> = {};
+    for (const issue of parsed.error.issues) (fieldErrors[String(issue.path[0] ?? '_')] ??= []).push(issue.message);
+    return { error: 'Lütfen alanları kontrol edin.', fieldErrors };
+  }
+  const { email, password, next } = parsed.data;
+
+  const [user] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
+  // Kullanıcı yoksa da bcrypt çalıştır: zamanlama farkıyla hesap keşfini önle
+  const ok = user ? await bcrypt.compare(password, user.passwordHash) : await bcrypt.compare(password, '$2a$10$abcdefghijklmnopqrstuuA9kZ2h8YvI8nP7iUbZQqXm1x0WcWyf6');
+  if (!user || !ok || !user.isActive) {
+    return { error: 'E-posta veya şifre hatalı.' };
+  }
+
+  const h = await headers();
+  const meta = {
+    userAgent: h.get('user-agent') ?? undefined,
+    ip: h.get('x-forwarded-for')?.split(',')[0]?.trim() ?? undefined,
+  };
+
+  const session = await db.transaction(async (tx) => {
+    const s = await createSession(tx, user.id, meta);
+    await tx.update(schema.users).set({ lastLoginAt: new Date() }).where(eq(schema.users.id, user.id));
+    await writeAudit(
+      tx,
+      { action: 'login', tableName: 'users', recordId: user.id, summary: `${user.email} giriş yaptı` },
+      { userId: user.id, userEmail: user.email, ip: meta.ip },
+    );
+    return s;
+  });
+
+  const jar = await cookies();
+  jar.set(SESSION_COOKIE, session.token, sessionCookieOptions(new Date(session.expiresAt)));
+  redirect(safeNext(next));
+}
+
+export async function logout(): Promise<void> {
+  const jar = await cookies();
+  const token = jar.get(SESSION_COOKIE)?.value;
+  if (token) {
+    try {
+      await destroySession(db, token);
+    } catch (err) {
+      console.error('[logout] oturum silinemedi', err);
+    }
+  }
+  jar.delete(SESSION_COOKIE);
+  redirect('/login');
+}
