@@ -1,6 +1,6 @@
 # Plantero ERP — Proje Kuralları (tüm agent'lar önce bunu okur)
 
-Plantero (Bigetaş Biyoteknoloji A.Ş., İzmir/Tire) bitkisel gıda üreticisinin tam dijital ikizi. SAP Business One mantığı: tek veritabanı, tek ana veri, belge zinciri (teklif → sipariş → irsaliye → fatura → tahsilat), her stok hareketi maliyetli kayıt üretir, lot izlenebilirliği hiçbir noktada kopmaz. RBAC + audit log her tabloda standart. UI dili Türkçe.
+Plantero (Bigetaş Biyoteknoloji A.Ş., VKN 1700727314, üretim: Tire Küçük Sanayi Sitesi, merkez: Bayraklı/İzmir; 3 üretim hattı — `docs/PRODUCTION-LINES.md`) bitkisel gıda üreticisinin tam dijital ikizi. SAP Business One mantığı: tek veritabanı, tek ana veri, belge zinciri (teklif → sipariş → irsaliye → fatura → tahsilat), her stok hareketi maliyetli kayıt üretir, lot izlenebilirliği hiçbir noktada kopmaz. RBAC + audit log her tabloda standart. UI dili Türkçe.
 
 ## Monorepo
 - `apps/web` — Next.js 15 App Router, React 19, Tailwind v4, shadcn/ui. Tüm ekranlar `src/app/(app)/<modul>/...`, modül mantığı `src/modules/<modul>/{actions.ts,queries.ts,components/}`.
