@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ScanLine, ClipboardCheck, Send, CheckCircle2, Save, Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LotBadge } from '@/components/lot-badge';
@@ -20,7 +21,7 @@ export type CountLineVm = {
   locationId: string; locationCode: string; uomCode: string; systemQty: string; countedQty: string | null; varianceQty: string; unitCost: string;
 };
 
-function CountedQtyInput({ line, disabled, onCommit }: { line: CountLineVm; disabled: boolean; onCommit: (value: string) => void }) {
+function CountedQtyInput({ line, disabled, onCommit, className }: { line: CountLineVm; disabled: boolean; onCommit: (value: string) => void; className?: string }) {
   const [draft, setDraft] = useState<string | null>(line.countedQty);
   return (
     <NumberInput
@@ -30,7 +31,7 @@ function CountedQtyInput({ line, disabled, onCommit }: { line: CountLineVm; disa
       maxDigits={3}
       suffix={line.uomCode}
       disabled={disabled}
-      className="h-11 w-32 text-[15px]"
+      className={cn('h-11 w-32 text-[15px]', className)}
     />
   );
 }
@@ -146,16 +147,16 @@ export function CountWorkspace({
             <EmptyState compact title="Bu lokasyonda satır yok" />
           ) : (
             filtered.map((l) => (
-              <div key={l.id} className="flex items-center gap-3 rounded-lg border border-border/60 p-3">
+              <div key={l.id} className="flex flex-col gap-2.5 rounded-lg border border-border/60 p-3 sm:flex-row sm:items-center sm:gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-[14px] font-medium">{l.productName}</div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
                     <span className="font-mono">{l.locationCode}</span>
                     {l.lotNo ? <LotBadge lotNo={l.lotNo} className="h-4 px-1 text-[10px]" /> : null}
                     <span>sistem: {l.systemQty}</span>
                   </div>
                 </div>
-                <CountedQtyInput line={l} disabled={!canCount} onCommit={(v) => onRecord(l.id, v)} />
+                <CountedQtyInput line={l} disabled={!canCount} onCommit={(v) => onRecord(l.id, v)} className="h-11 w-full text-[15px] sm:w-32" />
               </div>
             ))
           )}

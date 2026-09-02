@@ -5,13 +5,14 @@ import { seedUoms } from './uoms.js';
 import { seedMasterdata } from './masterdata.js';
 import { seedAccounting } from './accounting.js';
 import { seedFinance } from './finance.js';
+import { seedStock } from './stock.js';
 
 /**
  * Seed sırası — docs/ARCHITECTURE.md §11:
  * core → uoms → masterdata → accounting → finance → stock → production → sales → purchasing
  *   → quality → bank → maintenance → rnd
  *
- * Bu turda yalnızca ilk 5 adım (core, uoms, masterdata, accounting, finance) uygulanmıştır.
+ * Bu turda ilk 6 adım (core, uoms, masterdata, accounting, finance, stock) uygulanmıştır.
  * Sonraki adımlar ileride modül agent'ları tarafından bu diziye eklenecek — yeni bir seed dosyası
  * yazıp `{ name: '<modul>', run: seedX }` olarak SEED_STEPS'e eklemek yeterlidir.
  */
@@ -21,6 +22,7 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   { name: 'masterdata', run: seedMasterdata },
   { name: 'accounting', run: seedAccounting },
   { name: 'finance', run: seedFinance },
+  { name: 'stock', run: seedStock },
 ];
 
 async function main() {

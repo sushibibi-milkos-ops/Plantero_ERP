@@ -36,9 +36,11 @@ export function TransferForm({ warehouses, locations }: { warehouses: Array<{ id
   const router = useRouter();
   const [stockAtSource, setStockAtSource] = useState<LocationStockRow[]>([]);
 
+  // Varsayılan kaynak/hedef depo: üretim tesisi (TIRE) — transferlerin büyük çoğunluğu orada başlar.
+  const defaultWarehouseId = warehouses.find((w) => w.code === 'TIRE')?.id ?? warehouses[0]?.id ?? '';
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { fromWarehouseId: warehouses[0]?.id ?? '', toWarehouseId: warehouses[0]?.id ?? '', fromLocationId: '', toLocationId: '', scheduledDate: '', reason: '', note: '', lines: [] },
+    defaultValues: { fromWarehouseId: defaultWarehouseId, toWarehouseId: defaultWarehouseId, fromLocationId: '', toLocationId: '', scheduledDate: '', reason: '', note: '', lines: [] },
   });
   const { fields, append, remove } = useFieldArray({ control: form.control, name: 'lines' });
   const fromWarehouseId = form.watch('fromWarehouseId');

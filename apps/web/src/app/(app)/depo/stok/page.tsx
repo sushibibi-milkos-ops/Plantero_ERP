@@ -22,12 +22,12 @@ export default async function StockPage() {
       />
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-6">
-        <KpiCard title="Toplam envanter değeri" value={kpis.totalValue} format="money" icon={Boxes} />
-        <KpiCard title="Hammadde/ambalaj değeri" value={kpis.rawValue} format="money" icon={Wheat} />
-        <KpiCard title="Mamul değeri" value={kpis.finishedValue} format="money" icon={PackageCheckIcon} />
-        <KpiCard title="Karantinada" value={kpis.quarantineValue} format="money" icon={Beaker} />
-        <KpiCard title="30 gün içinde SKT" value={kpis.expiringValue30} format="money" icon={CalendarClock} />
-        <KpiCard title="Rezerve değeri" value={kpis.reservedValue} format="money" icon={Lock} />
+        <KpiCard title="Toplam envanter değeri" value={kpis.totalValue} format="money" icon={<Boxes strokeWidth={1.75} />} />
+        <KpiCard title="Hammadde/ambalaj değeri" value={kpis.rawValue} format="money" icon={<Wheat strokeWidth={1.75} />} />
+        <KpiCard title="Mamul değeri" value={kpis.finishedValue} format="money" icon={<PackageCheckIcon strokeWidth={1.75} />} />
+        <KpiCard title="Karantinada" value={kpis.quarantineValue} format="money" icon={<Beaker strokeWidth={1.75} />} />
+        <KpiCard title="30 gün içinde SKT" value={kpis.expiringValue30} format="money" icon={<CalendarClock strokeWidth={1.75} />} />
+        <KpiCard title="Rezerve değeri" value={kpis.reservedValue} format="money" icon={<Lock strokeWidth={1.75} />} />
       </div>
 
       <StockTable rows={rows} />

@@ -15,7 +15,8 @@ type LocationOption = { id: string; code: string; usage: string; warehouseId: st
 
 export function CreateCountDialog({ warehouses, locations }: { warehouses: Array<{ id: string; code: string; name: string }>; locations: LocationOption[] }) {
   const [open, setOpen] = useState(false);
-  const [warehouseId, setWarehouseId] = useState<string | null>(warehouses[0]?.id ?? null);
+  // Varsayılan depo: üretim tesisi (TIRE) — sayımların büyük çoğunluğu orada yapılır.
+  const [warehouseId, setWarehouseId] = useState<string | null>(warehouses.find((w) => w.code === 'TIRE')?.id ?? warehouses[0]?.id ?? null);
   const [scopeLocationId, setScopeLocationId] = useState<string | null>(null);
   const [countDate, setCountDate] = useState<string | null>(new Date().toISOString().slice(0, 10));
   const [pending, setPending] = useState(false);

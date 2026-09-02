@@ -72,7 +72,9 @@ export function ReceiptForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      warehouseId: initialWarehouseId ?? warehouses[0]?.id ?? '',
+      // Varsayılan depo: üretim tesisi (TIRE) — mal kabul neredeyse her zaman orada yapılır;
+      // depo listesi koda göre alfabetik geldiği için (BUCA < TIRE) ilk öğeye güvenmiyoruz.
+      warehouseId: initialWarehouseId ?? warehouses.find((w) => w.code === 'TIRE')?.id ?? warehouses[0]?.id ?? '',
       partnerId: initialPartnerId ?? null,
       supplierDeliveryNo: '',
       supplierDeliveryDate: '',
