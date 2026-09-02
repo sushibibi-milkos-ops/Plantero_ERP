@@ -1,6 +1,7 @@
 'use client';
 
-import NumberFlow from '@number-flow/react';
+import { isValidElement } from 'react';
+import NumberFlow, { type Format as NumberFlowFormat } from '@number-flow/react';
 import Link from 'next/link';
 import { ArrowUpRight, ArrowDownRight, Minus, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -39,13 +40,14 @@ export function KpiCard({
   /** Düşüş iyiyse (örn. fire, vadesi geçen) */
   invertDelta?: boolean;
   sparkline?: number[];
-  icon?: LucideIcon;
+  /** Lucide bileşeni (istemciden) veya hazır element (sunucu bileşeninden `<Icon />`) */
+  icon?: LucideIcon | React.ReactElement;
   href?: string;
   hint?: string;
   className?: string;
 }) {
   const num = typeof value === 'string' ? Number(value) : value;
-  const nfFormat: Intl.NumberFormatOptions =
+  const nfFormat: NumberFlowFormat =
     format === 'money'
       ? { style: 'currency', currency, maximumFractionDigits: num >= 100_000 ? 0 : 2, minimumFractionDigits: num >= 100_000 ? 0 : 2 }
       : format === 'pct'
@@ -63,7 +65,13 @@ export function KpiCard({
     <>
       <div className="flex items-start justify-between gap-2">
         <div className="text-[13px] font-medium text-muted-foreground">{title}</div>
-        {Icon ? <Icon className="size-4 text-muted-foreground/70" strokeWidth={1.75} /> : null}
+        {Icon ? (
+          isValidElement(Icon) ? (
+            <span className="[&>svg]:size-4 [&>svg]:text-muted-foreground/70">{Icon}</span>
+          ) : (
+            <Icon className="size-4 text-muted-foreground/70" strokeWidth={1.75} />
+          )
+        ) : null}
       </div>
       <div className="mt-2 flex items-end justify-between gap-3">
         <div className="min-w-0">

@@ -95,7 +95,7 @@ export function AppShell({
     <ShellContext.Provider value={value}>
       <div className="flex min-h-dvh bg-background">
         <Sidebar />
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
           <Topbar />
           <main id="main" className="flex-1 px-4 pt-4 pb-24 md:px-6 md:pt-6 md:pb-10">
             <div className="mx-auto w-full max-w-[1400px]">{children}</div>

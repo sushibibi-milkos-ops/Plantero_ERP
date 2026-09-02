@@ -46,7 +46,7 @@ const APPROVALS = [
 
 function Section({ title, href, children, className }: { title: string; href?: string; children: React.ReactNode; className?: string }) {
   return (
-    <section className={cn('rounded-xl border border-border/70 bg-card', className)}>
+    <section className={cn('min-w-0 rounded-xl border border-border/70 bg-card', className)}>
       <header className="flex h-11 items-center justify-between border-b border-border/60 px-4">
         <h2 className="text-[13px] font-semibold">{title}</h2>
         {href ? (
@@ -79,7 +79,7 @@ export default async function CockpitPage() {
               delta={k.delta}
               invertDelta={'invertDelta' in k ? k.invertDelta : false}
               sparkline={'sparkline' in k ? [...k.sparkline] : undefined}
-              icon={k.icon}
+              icon={<k.icon strokeWidth={1.75} />}
               href={k.href}
               hint={'hint' in k ? k.hint : undefined}
             />
@@ -91,14 +91,21 @@ export default async function CockpitPage() {
         <Section title="Bugün" href="/satis/siparisler" className="lg:col-span-2">
           <ul className="divide-y divide-border/50">
             {TODAY.map((t) => (
-              <li key={t.no} className="flex h-11 items-center gap-3 px-4 text-[13px]">
-                <span className="w-20 shrink-0 text-xs text-muted-foreground">{t.kind}</span>
-                <span className="w-36 shrink-0 font-mono text-xs">{t.no}</span>
-                <span className="min-w-0 flex-1 truncate">{t.partner}</span>
-                <span className="hidden sm:inline">
-                  {'amount' in t ? <MoneyCell value={t.amount} /> : <QtyCell value={t.qty} uom={t.uom} />}
-                </span>
-                <StatusBadge status={t.status} kind={t.k} />
+              /* Mobil: iki satır (belge · durum / cari · tutar); sm+: tek satır 44px */
+              <li key={t.no} className="flex flex-col gap-1 px-4 py-2.5 text-[13px] sm:h-11 sm:flex-row sm:items-center sm:gap-3 sm:py-0">
+                <div className="flex items-center justify-between gap-3 sm:contents">
+                  <span className="flex min-w-0 items-center gap-2 sm:contents">
+                    <span className="shrink-0 text-xs text-muted-foreground sm:w-20">{t.kind}</span>
+                    <span className="truncate font-mono text-xs sm:w-36 sm:shrink-0">{t.no}</span>
+                  </span>
+                  <span className="shrink-0 sm:order-last">
+                    <StatusBadge status={t.status} kind={t.k} />
+                  </span>
+                </div>
+                <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                  <span className="min-w-0 flex-1 truncate">{t.partner}</span>
+                  <span className="shrink-0">{'amount' in t ? <MoneyCell value={t.amount} /> : <QtyCell value={t.qty} uom={t.uom} />}</span>
+                </div>
               </li>
             ))}
           </ul>
@@ -123,12 +130,20 @@ export default async function CockpitPage() {
         <Section title="SKT yaklaşan lotlar" href="/depo/skt" className="lg:col-span-2">
           <ul className="divide-y divide-border/50">
             {EXPIRING.map((e) => (
-              <li key={e.lot} className="flex h-11 items-center gap-3 px-4 text-[13px]">
-                <CalendarClock className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
-                <LotBadge lotNo={e.lot} status="released" />
-                <span className="min-w-0 flex-1 truncate">{e.product}</span>
-                <QtyCell value={e.qty} uom="adet" className="hidden sm:inline-flex" />
-                <ExpiryBadge date={dayOffset(e.days)} showDate={false} />
+              <li key={e.lot} className="flex flex-col gap-1 px-4 py-2.5 text-[13px] sm:h-11 sm:flex-row sm:items-center sm:gap-3 sm:py-0">
+                <div className="flex items-center justify-between gap-3 sm:contents">
+                  <span className="flex min-w-0 items-center gap-2 sm:contents">
+                    <CalendarClock className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
+                    <LotBadge lotNo={e.lot} status="released" />
+                  </span>
+                  <span className="shrink-0 sm:order-last">
+                    <ExpiryBadge date={dayOffset(e.days)} showDate={false} />
+                  </span>
+                </div>
+                <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                  <span className="min-w-0 flex-1 truncate">{e.product}</span>
+                  <QtyCell value={e.qty} uom="adet" className="shrink-0" />
+                </div>
               </li>
             ))}
           </ul>

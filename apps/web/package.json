@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
-    "e2e": "playwright test"
+    "e2e": "PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers playwright test"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -58,10 +58,12 @@
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "@next/eslint-plugin-next": "15.5.25",
     "eslint": "^9.30.0",
-    "eslint-config-next": "15.5.25",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "tailwindcss": "^4.3.3",
     "tw-animate-css": "^1.3.5",
+    "typescript-eslint": "^8.69.0",
     "typescript": "^5.9.0",
     "vitest": "^3.2.0"
   }

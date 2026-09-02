@@ -3,7 +3,7 @@ import { eq, and } from 'drizzle-orm';
 import { stockQuants, stockLots, stockMoves, journalEntries, journalLines, products } from '@plantero/db';
 import { postStockMove, createLot, pickFefo, reserve, release, getOnHand } from '../stock/ledger.js';
 import { getAccountBalance } from '../accounting/journal.js';
-import { DomainError } from '../auth/errors.js';
+import { type DomainError } from '../auth/errors.js';
 import { withRollback, expectReject, seedBase, ctx, d, daysFromNow, type Base } from './helpers.js';
 import type { Tx } from '@plantero/db';
 

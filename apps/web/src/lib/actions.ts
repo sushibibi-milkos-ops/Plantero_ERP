@@ -1,6 +1,6 @@
 import 'server-only';
 import { db } from '@plantero/db';
-import { writeAudit } from '@plantero/core/audit';
+import { writeAudit } from '@plantero/core/audit/index';
 import { ForbiddenError } from '@plantero/core/auth/errors';
 import { ZodError } from 'zod';
 import { getCurrentUser, type UserCtx } from './auth';

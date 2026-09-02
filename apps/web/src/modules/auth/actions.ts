@@ -7,7 +7,7 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { db, schema } from '@plantero/db';
 import { createSession, destroySession } from '@plantero/core/auth/session';
-import { writeAudit } from '@plantero/core/audit';
+import { writeAudit } from '@plantero/core/audit/index';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/auth';
 
 const loginSchema = z.object({
@@ -16,7 +16,7 @@ const loginSchema = z.object({
   next: z.string().optional(),
 });
 
-export type LoginState = { error?: string; fieldErrors?: Record<string, string[]> } | null;
+export type LoginState = { error?: string; fieldErrors?: Record<string, string[]>; /** Hatada formda kalsın */ email?: string } | null;
 
 /** Güvenli yönlendirme: yalnızca site içi mutlak yollar */
 function safeNext(next: string | undefined): string {
@@ -33,7 +33,7 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   if (!parsed.success) {
     const fieldErrors: Record<string, string[]> = {};
     for (const issue of parsed.error.issues) (fieldErrors[String(issue.path[0] ?? '_')] ??= []).push(issue.message);
-    return { error: 'Lütfen alanları kontrol edin.', fieldErrors };
+    return { error: 'Lütfen alanları kontrol edin.', fieldErrors, email: String(formData.get('email') ?? '') };
   }
   const { email, password, next } = parsed.data;
 
@@ -41,7 +41,7 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   // Kullanıcı yoksa da bcrypt çalıştır: zamanlama farkıyla hesap keşfini önle
   const ok = user ? await bcrypt.compare(password, user.passwordHash) : await bcrypt.compare(password, '$2a$10$abcdefghijklmnopqrstuuA9kZ2h8YvI8nP7iUbZQqXm1x0WcWyf6');
   if (!user || !ok || !user.isActive) {
-    return { error: 'E-posta veya şifre hatalı.' };
+    return { error: 'E-posta veya şifre hatalı.', email };
   }
 
   const h = await headers();

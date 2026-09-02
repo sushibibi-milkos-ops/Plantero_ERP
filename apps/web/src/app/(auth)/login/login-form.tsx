@@ -40,7 +40,7 @@ export function LoginForm({ next }: { next?: string }) {
           required
           autoFocus
           aria-invalid={Boolean(emailError)}
-          defaultValue=""
+          defaultValue={state?.email ?? ''}
         />
         {emailError ? <p className="text-xs text-destructive">{emailError}</p> : null}
       </div>

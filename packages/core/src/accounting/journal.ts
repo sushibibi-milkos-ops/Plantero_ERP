@@ -1,5 +1,5 @@
 import { and, eq, gte, lte, or, like, inArray, sql } from 'drizzle-orm';
-import Decimal from 'decimal.js';
+import type Decimal from 'decimal.js';
 import { accounts, fiscalPeriods, journals, journalEntries, journalLines, partners, type DbOrTx } from '@plantero/db';
 import { D, toDb, toDbRate, round4, sum, ZERO, isZero4 } from '../money.js';
 import { nextDocNo } from '../sequences.js';
