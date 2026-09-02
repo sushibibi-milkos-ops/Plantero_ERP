@@ -20,6 +20,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@plantero/core": "workspace:*",
     "decimal.js": "^10.5.0",
     "drizzle-orm": "^0.45.2",
     "exceljs": "^4.4.0",
