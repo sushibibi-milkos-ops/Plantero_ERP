@@ -289,3 +289,10 @@ export const SUBPATH_LABELS: Record<string, string> = {
   board: 'Pano',
   detay: 'Detay',
 };
+
+/** İstemci tarafı izin denetleyicisi: admin rolü her şeyi görür, `*` joker izindir */
+export function makeCan(roles: string[], permissions: string[]): PermissionChecker {
+  const set = new Set(permissions);
+  const isAdmin = roles.includes('admin') || set.has('*');
+  return (code: string) => isAdmin || set.has(code);
+}

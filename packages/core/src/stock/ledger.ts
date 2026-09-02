@@ -222,7 +222,6 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
         credit: m.side === 'credit' ? amount : undefined,
         productId: product.id,
         warehouseId: (isStocked(to.usage) ? to.warehouseId : from.warehouseId) ?? null,
-        partnerId: m.accountCode === '320.999' ? null : null,
         description: `${moveNo} ${product.name}${lot ? ` [${lot.lotNo}]` : ''}`,
       });
     }
