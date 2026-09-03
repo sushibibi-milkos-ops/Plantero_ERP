@@ -46,6 +46,9 @@ function greeting(): string {
 export default async function CockpitPage() {
   const user = await requirePermission('cockpit.view');
   const first = user.fullName.split(' ')[0];
+  // "Sistem Yöneticisi" gibi rol adları ilk kelimeye kesilince "İYİ GÜNLER, SİSTEM" — insan adı
+  // değil, ham hesap adı gibi okunuyordu (Tur 5 P2 bulgusu). Adsız bir selamlama, yanlış bir isimden iyidir.
+  const eyebrow = first && first.toLocaleLowerCase('tr-TR') !== 'sistem' ? `${greeting()}, ${first}` : greeting();
 
   const [kpis, today, expiring, approvals, receivables, lines] = await Promise.all([
     getCockpitKpis(),
@@ -56,27 +59,33 @@ export default async function CockpitPage() {
     getCockpitLineCards(),
   ]);
 
-  // Dördü de aynı kart anatomisini paylaşır (sparkline yok, delta yalnızca gerçekten hesaplanabildiğinde
-  // geçilir) — "Bugünkü ciro" dışında geçmiş güne dayalı gerçek bir karşılaştırma verisi yok (sayaç/tutar
-  // anlık görüntü, tarihsel seri tutulmuyor); `delta`'yı `undefined` bırakmak KpiCard'ın gri "— —"
-  // rozeti basmasını engeller ve ipucu metni (`hint`) görünür kalır (Tur 2 bulgusu). "Bugünkü ciro"
-  // için de dün hiç fatura kesilmemişse (`revenueDeltaPct === null`, bölen sıfır) `?? undefined` ile
-  // aynı kurala tabi tutulur — `null` geçmek de aynı gri rozeti basardı.
+  // Dördü de aynı kart anatomisini paylaşır (sparkline yok). Dördü de artık "dünden" deltası taşır
+  // (Tur 5 P1 bulgusu — önceden yalnızca "Bugünkü ciro" karşılaştırmalıydı, diğer üçü hep boş yer
+  // tutucuydu; tek karşılaştırmalı kart "yarım kokpit" hissi veriyordu). Üçü `getCockpitKpis` içinde
+  // MEVCUT tablolardaki gerçek iş tarihleriyle (orderDate/invoiceDate/moved_at <= dün) geriye dönük
+  // türetilir — bu üçü BİRBİRİYLE aynı temeli (dün aynı saatteki gerçek durum) paylaştığından
+  // /satis/net-ciro'daki "hepsi ya da hiçbiri" kuralı burada uygulanmaz: her KPI kendi payda/bölen
+  // durumuna göre bağımsız değerlendirilir (`deltaPct`: bölen sıfırsa `null`). "Bugünkü ciro" ayrı bir
+  // temel kullanır (postedAt — muhasebe kayıt anı, `getCockpitToday` listesiyle birebir aynı filtre,
+  // Tur 2 bulgusu) ve dün hiç fatura kesilmemişse (revenueDeltaPct === null) kendi başına `undefined`
+  // düşer; bu üçünü etkilemez — dördü FARKLI ölçümler, birinin payda sorunuyla diğer üçünü de
+  // susturmak "hepsi ya da hiçbiri" kuralının yanlış uygulanışı olurdu (o kural yalnızca AYNI
+  // karşılaştırma tabanını paylaşan bir KPI şeridi için anlamlıdır, bkz. net-ciro).
   // İkon alanı tamamen kaldırıldı (Tur 4 P1 bulgusu): Banknote/ShoppingCart/AlertTriangle/Clock
   // hiçbir bilgi taşımıyordu, başlıktaki metni birebir tekrarlıyordu ("ikon süs değildir" ihlali) —
   // ayrıca `variant="card"` (1px çerçeve + 133px yükseklik) /satis/net-ciro'nun `variant="strip"`
   // (kutusuz, ikonsuz, hairline'lı, 80px) anatomisiyle çelişiyordu; ürünün tek bir finans ekranı
   // dili konuşması için burada da strip kullanılıyor.
-  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta?: number | null; deltaLabel?: string; href: string; hint?: string }> = [
+  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta?: number | null; deltaLabel?: string; invertDelta?: boolean; href: string; hint?: string }> = [
     { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', delta: kpis.revenueDeltaPct ?? undefined, deltaLabel: 'dünden', href: '/satis/net-ciro' },
-    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
-    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', href: '/satin-alma/kritik-stok' },
-    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', href: '/finans/tahsilat-takibi' },
+    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', delta: kpis.openOrdersDeltaPct ?? undefined, deltaLabel: 'dünden', href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
+    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', delta: kpis.criticalStockDeltaPct ?? undefined, deltaLabel: 'dünden', invertDelta: true, href: '/satin-alma/kritik-stok' },
+    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', delta: kpis.overdueReceivableDeltaPct ?? undefined, deltaLabel: 'dünden', invertDelta: true, href: '/finans/tahsilat-takibi' },
   ];
 
   return (
     <>
-      <PageHeader eyebrow={`${greeting()}, ${first}`} title="Kokpit" description={`${formatDateLong(new Date())} · Tire tesisi özeti`} />
+      <PageHeader eyebrow={eyebrow} title="Kokpit" description={`${formatDateLong(new Date())} · Tire tesisi özeti`} />
 
       {/* KpiStripRow + variant="strip": /satis/net-ciro ile aynı KPI dili (kutusuz, ikonsuz, dikey
           hairline, sabit 80px/72px) — önceki `variant="card"` grid'i (260×133px, çerçeveli, dekoratif
@@ -91,6 +100,7 @@ export default async function CockpitPage() {
             format={k.format}
             delta={k.delta}
             deltaLabel={k.deltaLabel}
+            invertDelta={k.invertDelta}
             href={k.href}
             hint={k.hint}
             variant="strip"
@@ -159,6 +169,22 @@ export default async function CockpitPage() {
         </div>
 
         <div className="flex flex-col gap-4">
+        {approvals.length === 0 && receivables.length === 0 ? (
+          // Onay kuyruğu VE Bugünün tahsilatları AYNI ANDA boşsa iki ayrı boş-durum kartı alt alta
+          // gelip sağ rayın (~900px) neredeyse tamamını "1 birim bilgi" ile dolduruyordu (Tur 5 P2
+          // bulgusu) — tek bir 72px'lik özet satırında birleştirilir, dolu bölüme (Üretim) dikey alan açılır.
+          <div className="flex h-[72px] shrink-0 items-center justify-between gap-3 rounded-xl border border-border/70 bg-card px-4 text-[13px]">
+            <span className="shrink-0 text-muted-foreground">2 bölüm boş</span>
+            <span className="flex shrink-0 items-center gap-3">
+              <Link href="/satin-alma/onay-kuyrugu" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+                Onay kuyruğu <ArrowRight className="size-3" />
+              </Link>
+              <Link href="/finans/tahsilat-takibi" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+                Tahsilatlar <ArrowRight className="size-3" />
+              </Link>
+            </span>
+          </div>
+        ) : (
         <Section title="Onay kuyruğu" href="/satin-alma/onay-kuyrugu">
           {approvals.length === 0 ? (
             <EmptyState compact title="Onay bekleyen öğe yok" description="AI taslakları ve mutabakat önerileri burada listelenir." />
@@ -178,6 +204,7 @@ export default async function CockpitPage() {
             </ul>
           )}
         </Section>
+        )}
 
         <Section title="Üretim" href="/uretim/is-emirleri">
           <div className="space-y-3 p-4 text-[13px]">
@@ -197,7 +224,7 @@ export default async function CockpitPage() {
                         render hatası gibi okunuyordu; gerçekten aktif olan hatlarda ilerleme kalır. */}
                     {l.activeWorkOrder ? <StatusBadge status={l.activeWorkOrder.status} kind="work_order" /> : <StatusBadge status="idle" label="Boşta" tone="muted" />}
                   </div>
-                  {l.activeWorkOrder ? (
+                  {l.activeWorkOrder && pct > 0 ? (
                     <>
                       <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted">
                         <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
@@ -207,6 +234,14 @@ export default async function CockpitPage() {
                         <span className="tabular-nums">%{pct}</span>
                       </div>
                     </>
+                  ) : l.activeWorkOrder ? (
+                    // pct === 0: tam genişlikte boş bir çubuk ("Toz Karıştırma & Dolum" ile WO no
+                    // arasında bir AYRAÇ sanılıyordu, Tur 5 P2 bulgusu) — henüz üretim başlamamış bir
+                    // iş emri için çubuk hiç çizilmez, yalnızca metin satırı kalır.
+                    <div className="mt-1.5 flex justify-between text-[11px] text-muted-foreground">
+                      <span className="font-mono">{l.activeWorkOrder.docNo}</span>
+                      <span className="tabular-nums">%{pct}</span>
+                    </div>
                   ) : null}
                 </div>
               );
@@ -214,6 +249,7 @@ export default async function CockpitPage() {
           </div>
         </Section>
 
+        {approvals.length === 0 && receivables.length === 0 ? null : (
         <Section title="Bugünün tahsilatları" href="/finans/tahsilat-takibi">
           {receivables.length === 0 ? (
             <EmptyState compact title="Bugün tahsilat yok" description="Bugün alınan tahsilatlar burada listelenir." />
@@ -231,6 +267,7 @@ export default async function CockpitPage() {
             </ul>
           )}
         </Section>
+        )}
         </div>
       </div>
     </>

@@ -333,17 +333,28 @@ export async function getNetRevenueReport(from: string, to: string) {
       return point;
     });
 
+  // Önceden ayrı bir eşik (>=3 sipariş) kullanıyordu — "Sipariş" kartı bu yüzden diğer 5 kartın
+  // hepsi rozet basarken hiç rozet basmıyordu (Tur 3 bulgusu). Aynı genel `delta` fonksiyonuna
+  // taşındı: aynı üst sınır (%500) ve aynı "önceki<=0 → karşılaştırılamaz" kuralı tüm KPI'larda
+  // tek dil. Ama önceki dönemin tabanı çok küçükse (ör. tek bir siparişlik önceki 30 gün, güncel 26
+  // sipariş) TOPLAM tutarlar (%500 tavanına takılır → null) kapanırken ORAN olan "Ortalama sepet"
+  // tavana takılmayabiliyor — 6 kartlık şeritte TEK BAŞINA asılı kalan bir rozet, "neden yalnız bu?"
+  // sorusu doğuruyordu (Tur 5 P1 bulgusu). Stripe'ta karşılaştırma ya tüm şeritte vardır ya hiç:
+  // altısından biri bile hesaplanamıyorsa (null) hiçbiri basılmaz — tutarlı sessizlik, tutarsız
+  // gürültüden iyidir.
+  const rawDeltas = {
+    gross: delta(current.grossRevenue, previous.grossRevenue),
+    commission: delta(current.commission, previous.commission),
+    shipping: delta(current.shipping, previous.shipping),
+    net: delta(current.netRevenue, previous.netRevenue),
+    orderCount: delta(String(current.orderCount), String(previous.orderCount)),
+    avgBasket: delta(current.avgBasket, previous.avgBasket),
+  };
+  const allComputable = Object.values(rawDeltas).every((v) => v !== null);
+  const deltas = allComputable ? rawDeltas : { gross: null, commission: null, shipping: null, net: null, orderCount: null, avgBasket: null };
+
   return {
-    current, previous, deltas: {
-      gross: delta(current.grossRevenue, previous.grossRevenue), commission: delta(current.commission, previous.commission),
-      shipping: delta(current.shipping, previous.shipping), net: delta(current.netRevenue, previous.netRevenue),
-      // Önceden ayrı bir eşik (>=3 sipariş) kullanıyordu — "Sipariş" kartı bu yüzden diğer 5 kartın
-      // hepsi rozet basarken hiç rozet basmıyordu (Tur 3 bulgusu). Aynı genel `delta` fonksiyonuna
-      // taşındı: aynı üst sınır (%500) ve aynı "önceki<=0 → karşılaştırılamaz" kuralı tüm KPI'larda
-      // tek dil.
-      orderCount: delta(String(current.orderCount), String(previous.orderCount)),
-      avgBasket: delta(current.avgBasket, previous.avgBasket),
-    },
+    current, previous, deltas,
     breakdown, series, channelCodes: channelCodes.map((code) => ({ code, name: daily.find((r) => r.channelCode === code)?.channelName ?? code })),
   };
 }

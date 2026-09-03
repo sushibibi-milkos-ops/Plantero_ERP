@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Trash2, ListPlus, PackagePlus } from 'lucide-react';
+import { Trash2, PackagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormText, FormSelect, FieldLabel } from '@/components/form/fields';
 import { FormMoney, FormQty } from '@/components/form/money-qty';
@@ -198,9 +198,16 @@ export function SalesDocForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Tur 5 P1 bulgusu: üç kart da max-w-3xl + sola yaslıydı — 1440px'te 420px'lik asimetrik ölü
+            alan sağda kalıyor, Özet kartı sayfanın en altında göz yolunun dışında duruyordu. `lg:` ve
+            üstünde iki sütuna ayrılır: sol 768px (Belge başlığı + Satırlar), sağ 320px (Özet, sticky —
+            form doldurulurken toplamlar hep görünür kalır). `lg` altında (mobil/tablet) tek sütun,
+            max-w-3xl korunur. */}
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,768px)_320px] lg:items-start">
+        <div className="max-w-3xl space-y-6 lg:max-w-none">
         {/* max-w-3xl: 1440px'te 4 sütuna yayılan form gövdesi alanlar arası 1200px göz yolu bırakıyordu —
             Stripe/Linear form gövdesini 640-768px ile sınırlar, burada 2 sütuna (4×2 satır) düşürüldü. */}
-        <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
+        <div className="rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Belge başlığı</h2>
           <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
             <div className="space-y-1.5">
@@ -222,10 +229,9 @@ export function SalesDocForm({
           </div>
         </div>
 
-        {/* max-w-3xl: "Belge başlığı" kartıyla aynı genişlik — önceden bu kart doğal içerik genişliğine
-            (satır grid'i) uzayıp ~1600px'e kadar yayılıyor, üstteki kart ~768px'te bitiyordu (Tur 3 P2,
-            aynı sayfada iki farklı kap genişliği). */}
-        <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
+        {/* Kendi max-w-3xl'i kaldırıldı — artık sol sütun kapsayıcısıyla (ebeveyn) aynı genişliği
+            paylaşıyor (Tur 3 P2'nin çözdüğü "iki farklı kap genişliği" sorunu bu şekilde korunur). */}
+        <div className="rounded-xl border border-border/70 bg-card p-4">
           <div className="mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-2">
             <h2 className="text-[13px] font-semibold text-foreground">Satırlar</h2>
           </div>
@@ -276,19 +282,26 @@ export function SalesDocForm({
             ) : null}
           </div>
         </div>
+        </div>
 
+        <div className="max-w-3xl lg:max-w-none lg:sticky lg:top-6">
         {fields.length > 0 ? (
-          <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
+          <div className="rounded-xl border border-border/70 bg-card p-4">
             <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Özet</h2>
-            <dl className="ml-auto grid max-w-xs grid-cols-2 gap-y-1.5 text-[13px]">
+            <dl className="grid grid-cols-2 gap-y-1.5 text-[13px]">
               <dt className="text-muted-foreground">Ara toplam</dt><dd className="text-right"><MoneyCell value={totals.subtotal.toFixed(2)} /></dd>
               {/* `muted` yalnızca sıfırsa — bkz. sales-doc-summary.tsx aynı bulgu. */}
               <dt className="text-muted-foreground">KDV</dt><dd className="text-right"><MoneyCell value={totals.vat.toFixed(2)} /></dd>
               <dt className="font-medium">Genel toplam</dt><dd className="text-right font-medium"><MoneyCell value={totals.grandTotal.toFixed(2)} /></dd>
               {docType === 'order' ? (
                 <>
-                  <dt className="pt-1.5 text-muted-foreground">Komisyon</dt><dd className="pt-1.5 text-right"><MoneyCell value={(-totals.commission).toFixed(2)} muted /></dd>
-                  <dt className="text-muted-foreground">Kargo kesintisi</dt><dd className="text-right"><MoneyCell value={(-totals.shipping).toFixed(2)} muted /></dd>
+                  {/* Aynı kök neden, sales-doc-summary.tsx'teki aritmetik boşluk bulgusuyla birebir
+                      (Tur 5 P1): "Genel toplam" KDV DAHİL, hemen altı Komisyon/Kargo ile çıkarma
+                      bekletiyordu ama aradaki KDV farkı hiç yazılmıyordu. */}
+                  {totals.vat > 0 ? (<><dt className="pt-1.5 text-muted-foreground">KDV (−)</dt><dd className="pt-1.5 text-right"><MoneyCell value={(-totals.vat).toFixed(2)} muted /></dd></>) : null}
+                  <dt className={totals.vat > 0 ? 'text-muted-foreground' : 'pt-1.5 text-muted-foreground'}>Komisyon</dt>
+                  <dd className={totals.vat > 0 ? 'text-right' : 'pt-1.5 text-right'}><MoneyCell value={(totals.commission > 0 ? -totals.commission : totals.commission).toFixed(2)} muted /></dd>
+                  <dt className="text-muted-foreground">Kargo kesintisi</dt><dd className="text-right"><MoneyCell value={(totals.shipping > 0 ? -totals.shipping : totals.shipping).toFixed(2)} muted /></dd>
                   {totals.other ? (<><dt className="text-muted-foreground">Diğer kesinti</dt><dd className="text-right"><MoneyCell value={(-totals.other).toFixed(2)} muted /></dd></>) : null}
                   {/* Marka yeşili yalnızca birincil eylem/pozitif delta anlamına ayrılır — nötr toplam
                       rakamı foreground'da, ayrım border-t + font-semibold ile kurulur. */}
@@ -298,6 +311,8 @@ export function SalesDocForm({
             </dl>
           </div>
         ) : null}
+        </div>
+        </div>
 
         {/* Satır sayacı artık mobilde de görünür (önceden `hidden ... sm:flex` ile 390px'te tamamen
             gizliydi) — "Kaydet" butonu `fields.length === 0` iken pasif olduğunda kullanıcının NEDENİNİ
@@ -306,13 +321,19 @@ export function SalesDocForm({
             sıkışıyor — uzun bir "N satır · en az bir satır ekleyin" metni burada iki parçaya bölünüp
             kelimelerin ortasından kırpılıyordu. Bunun yerine sayaç sıfırken AYNI kısa slotta doğrudan
             eylem metnine döner ("Satır ekleyin") — hem durumu hem nedeni tek satırda, kırpılmadan
-            anlatır. `aria-live` ile değişiklik ekran okuyucuya da bildirilir. */}
-        <FormActions submitLabel={docType === 'quotation' ? 'Teklifi kaydet' : 'Siparişi kaydet'} onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={fields.length === 0}>
-          <span className="flex items-center gap-1 text-xs whitespace-nowrap text-muted-foreground" aria-live="polite">
-            <ListPlus className="size-3.5 shrink-0" />
-            {fields.length > 0 ? `${fields.length} satır` : 'Satır ekleyin'}
-          </span>
-        </FormActions>
+            anlatır. `aria-live` ile değişiklik ekran okuyucuya da bildirilir.
+            Tur 5 P1 bulgusu: bu ipucu 13px + ikonla düğme gibi görünüp tıklanamıyordu — ikon kaldırıldı,
+            metin 11px'e düşürüldü, `mr-auto` ile düğmelerden görsel olarak ayrıştırıldı. Ortak
+            FormActions/Button bileşenleri (apps/web/src/components) değiştirilmeden `title`
+            özniteliği bir üst sarmalayıcıya konur — düğmenin kendi `title`'ı yoksa tarayıcı en yakın
+            atadaki `title`'ı gösterir, disabled düğme üzerinde hover ile NEDEN görünür olur. */}
+        <div title={fields.length === 0 ? 'En az bir satır ekleyin' : undefined}>
+          <FormActions submitLabel={docType === 'quotation' ? 'Teklifi kaydet' : 'Siparişi kaydet'} onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={fields.length === 0}>
+            <span className="mr-auto text-[11px] whitespace-nowrap text-muted-foreground" aria-live="polite">
+              {fields.length > 0 ? `${fields.length} satır` : 'Satır ekleyin'}
+            </span>
+          </FormActions>
+        </div>
       </form>
     </Form>
   );

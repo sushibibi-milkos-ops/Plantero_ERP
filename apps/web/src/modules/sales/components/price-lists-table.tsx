@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from 'react';
 import { DataTable, type ColumnDef } from '@/components/data-table';
-import { EmptyCell } from '@/components/empty-cell';
 import { PriceListDrawer } from './price-list-drawer';
 import { formatDate } from '@/lib/format';
 import type { listPriceListsWithCounts, SellableProductRow } from '../queries';
@@ -18,17 +17,18 @@ export function PriceListsTable({ rows, products }: { rows: Row[]; products: Sel
   const columns = useMemo<ColumnDef<Row, unknown>[]>(
     () => [
       {
+        // Liste kodu (IHRACAT/PERAKENDE/TOPTAN) satır içi mono çip olmaktan çıkarıldı (Tur 5 P1
+        // bulgusu): ad uzunlukları farklı olan satırlarda çipler üç ayrı x'te başlayıp sütunu
+        // tırtıklı okutuyordu — artık kendi 110px'lik sütununda, tek bir x'te hizalı.
         id: 'name', accessorFn: (r) => r.name, header: 'Liste', meta: { width: 360, mobile: 'title' },
-        cell: ({ row }) => (
-          <div className="flex items-baseline gap-2">
-            <span className="font-medium">{row.original.name}</span>
-            <span className="font-mono text-xs text-muted-foreground">{row.original.code}</span>
-          </div>
-        ),
+        cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
       },
-      // 930px genişliğe yayılan "Liste" kolonu (en uzun içerik ~400px) satır başına 530px ölü alan
-      // bırakıyordu — sabit width + doldurucu bir "Kanal" kolonu eklendi (defaultHidden kaldırıldı).
-      { id: 'channelName', accessorFn: (r) => r.channelName ?? '', header: 'Kanal', meta: { mobile: 'meta' }, cell: ({ row }) => row.original.channelName ?? <EmptyCell /> },
+      {
+        id: 'code', accessorFn: (r) => r.code, header: 'Kod', meta: { width: 110, className: 'font-mono text-[11px] text-muted-foreground', mobile: 'hidden' },
+      },
+      // Boş "Kanal" sütunu kaldırıldı (Tur 5 P1 bulgusu): 3 fiyat listesinin 3'ü de tek bir kanala
+      // değil, bir kanal GRUBUNA bağlı (channel_id null) — sütun ~370px kaplayıp 3 satırın 3'ünde de
+      // '—' basıyordu, tablodaki en geniş sütun sıfır bilgi taşıyordu.
       { id: 'currency', accessorFn: (r) => r.currency, header: 'Para birimi', meta: { width: 100, className: 'font-mono text-xs', mobile: 'meta' } },
       { id: 'includesVat', header: 'KDV', meta: { width: 80, mobile: 'hidden' }, cell: ({ row }) => (row.original.includesVat ? 'Dahil' : 'Hariç') },
       {

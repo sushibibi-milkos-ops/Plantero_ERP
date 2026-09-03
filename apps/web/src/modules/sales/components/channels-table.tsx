@@ -27,10 +27,14 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         cell: ({ row }) => <span className="font-medium">{row.original.channel.name}</span>,
       },
       {
+        // mobile:'subtitle' (Tur 5 P2 bulgusu — önceden 'meta'): kanalın NE OLDUĞU (pazaryeri/site/
+        // toptan) son senkron zamanından daha temel bir kimlik bilgisi, masaüstündeki 2. sütun konumuyla
+        // aynı önceliği mobilde de taşımalı — mobil hiyerarşi artık masaüstüyle aynı dili konuşuyor.
         id: 'kind', accessorFn: (r) => CHANNEL_KIND_LABELS[r.channel.kind] ?? r.channel.kind, header: 'Tip',
-        meta: { width: 130, mobile: 'meta', className: 'text-muted-foreground' },
+        meta: { width: 130, mobile: 'subtitle', className: 'text-muted-foreground' },
       },
-      { id: 'todayRevenue', header: 'Bugün', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.todayRevenue} /> },
+      // "Bugün" sütunu kaldırıldı (Tur 5 P2 bulgusu): 7 satırın 7'sinde ₺0,00 basıp tablodaki en geniş
+      // sütunu sıfır bilgiyle dolduruyordu — tek para sütunu "Bu ay" kalır.
       { id: 'monthRevenue', header: 'Bu ay', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.monthRevenue} /> },
       {
         id: 'orderCount', accessorFn: (r) => r.orderCount, header: 'Sipariş (ay)', meta: { align: 'right', width: 100, mobile: 'hidden' },
@@ -45,15 +49,18 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         cell: ({ row }) => <span className="num tabular-nums text-muted-foreground">{formatPct(row.original.channel.commissionPct, 0)}</span>,
       },
       {
-        // mobile:'subtitle': kart başlığının (kanal adı) altında 11px soluk göreli zaman olarak
-        // görünür ("2 saat önce") — önceden mobilde tamamen düşüyordu (Tur 4 P2 bulgusu). Masaüstünde
-        // aynı hücre tablo sütununda kalır; tam tarih `title` tooltip'inde saklı.
-        id: 'lastSyncedAt', header: 'Son senkron', meta: { width: 150, mobile: 'subtitle', className: 'text-xs text-muted-foreground' },
+        // mobile:'meta' (Tur 5 P2 bulgusu — önceden 'subtitle'): kanal TİPİ kimlik bilgisi olarak
+        // kartın 2. satırına taşındı, son senkron zamanı etiketsiz tek satırlık "meta" konumuna iner —
+        // masaüstünde de bu sütun listenin son sütunu, aynı düşük öncelik mobilde de korunur. Tam
+        // tarih `title` tooltip'inde saklı.
+        id: 'lastSyncedAt', header: 'Son senkron', meta: { width: 150, mobile: 'meta', className: 'text-xs text-muted-foreground' },
         cell: ({ row }) => {
           const { lastSyncedAt, pendingErrors } = row.original;
           return (
             <span className="inline-flex items-center gap-1.5" title={lastSyncedAt ? formatDateTime(lastSyncedAt) : undefined}>
-              {lastSyncedAt ? relativeTime(lastSyncedAt) : 'Henüz yapılmadı'}
+              {/* "Henüz yapılmadı" nötr griden ayrışan sessiz bir uyarı tonu taşır (Tur 5 P2 bulgusu) —
+                  hiç senkronize olmamış bir kanal, "2 saat önce"den kalitatif olarak farklı bir durum. */}
+              {lastSyncedAt ? relativeTime(lastSyncedAt) : <StatusBadge status="pending" label="Henüz yapılmadı" tone="warning" size="sm" />}
               {pendingErrors > 0 ? <StatusBadge status="error" label={`${pendingErrors} hata`} tone="danger" /> : null}
             </span>
           );

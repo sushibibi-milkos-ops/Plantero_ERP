@@ -18,6 +18,13 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <LoginForm next={next} />
       </div>
       <p className="mt-6 text-center text-xs text-muted-foreground">
+        <a
+          href="mailto:admin@plantero.local?subject=Şifremi%20unuttum"
+          className="underline-offset-2 hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none"
+        >
+          Şifremi unuttum
+        </a>
+        {' · '}
         Sorun mu yaşıyorsunuz? Sistem yöneticinize başvurun.
       </p>
     </div>

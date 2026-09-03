@@ -1,4 +1,5 @@
 import 'server-only';
+import { alias } from 'drizzle-orm/pg-core';
 import { and, asc, desc, eq, gte, inArray, isNotNull, lt, lte, sql } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
 import { D, toDb } from '@plantero/core';
@@ -8,10 +9,13 @@ import { listLineCards, type LineCardRow } from '@/modules/production/queries';
 const {
   salesOrders, deliveries, deliveryLines, receipts, receiptLines, invoices, workOrders,
   products, uoms, partners, warehouses, productionLines, locations,
-  stockLots, stockQuants,
+  stockLots, stockQuants, stockMoves,
   purchaseOrders, reconciliationMatches, bankTransactions, stockCounts,
   payments,
 } = schema;
+
+const OPEN_ORDER_STATUSES = ['confirmed', 'partially_delivered'] as const;
+const OVERDUE_INVOICE_STATUSES = ['posted', 'partially_paid'] as const;
 
 /**
  * Kokpit ekranının veri kaynağı. Her fonksiyon gerçek tablolardan okur — modül henüz
@@ -23,26 +27,54 @@ export type CockpitKpis = {
   revenueToday: string;
   revenueDeltaPct: number | null;
   openOrders: number;
+  openOrdersDeltaPct: number | null;
   readyToShip: number;
   criticalStockCount: number;
+  criticalStockDeltaPct: number | null;
   overdueReceivable: string;
+  overdueReceivableDeltaPct: number | null;
 };
+
+/** İki sayı arasındaki yüzde değişimi — önceki değer sıfırsa (bölen yok) `null` (Tur 5 P1 bulgusu:
+ *  hiçbir KPI "hesaplanamıyor" diye yarım gösterilmesin, ama uydurma bir bölme de yapılmasın). */
+function deltaPct(current: number, previous: number): number | null {
+  if (previous === 0) return current === 0 ? 0 : null;
+  return ((current - previous) / previous) * 100;
+}
 
 /**
  * "Bugünkü ciro" — bugün kesilmiş satış faturalarının toplamı (`grandTotalTry`), `getCockpitToday`
  * içindeki "Bugün" listesinin fatura satırlarıyla **aynı** filtreyi kullanır (kind='sales',
  * postedAt bugün) — böylece KPI kartı ile altındaki belge listesi hiçbir zaman çelişmez (Tur 2
  * bulgusu: sipariş bazlı "net ciro" raporu ile fatura listesi farklı belge kümelerini sayıyordu,
- * biri ₺0 diğeri ₺8.302,20 gösteriyordu). Trend: gerçek geçmiş günlük anlık görüntü tablosu
- * olmadığından (sipariş/stok sayaçları için tarihsel seri yok) yalnızca ciro için anlamlı ve gerçek
- * bir gün-öncesi karşılaştırması hesaplanır; diğer üç KPI için delta hiç geçilmez.
+ * biri ₺0 diğeri ₺8.302,20 gösteriyordu).
+ *
+ * Diğer üç KPI (açık sipariş, kritik stok, vadesi geçen alacak) için gerçek bir tarihsel anlık
+ * görüntü tablosu yok; "dün aynı saat" karşılaştırması bu yüzden **mevcut** tablolardan `created_at`
+ * (stok için `stock_moves.moved_at`) sınırı ile geriye dönük türetilir — şema değişikliği gerekmez.
+ * Yaklaşıklık: durum (status) alanı GÜNCEL durumdur, dün neydiyse o değil (ör. dün açık olup bugün
+ * sevk edilmiş bir sipariş "dünkü açık sipariş" sayısına girmez) — sipariş/fatura sayıları için
+ * gerçek durum geçmişi tutulmadığından kabul edilen bir yaklaşıklık (Tur 5 P1 bulgusu: dört KPI'den
+ * üçünde delta hiç yoktu, "yarım kokpit" izlenimi veriyordu; hesaplanamayan tek bir KPI olsaydı
+ * hiçbirine basılmazdı, ama dördü de türetilebiliyor).
  */
 export async function getCockpitKpis(): Promise<CockpitKpis> {
   const today = businessDate(new Date());
   const startOfToday = new Date(`${today}T00:00:00.000Z`);
   const startOfYesterday = new Date(startOfToday.getTime() - 86_400_000);
+  const cutoff = new Date(Date.now() - 86_400_000);
+  const yesterday = businessDate(cutoff);
 
-  const [[todayRevRow], [yesterdayRevRow], [openOrdersRow], [readyToShipRow], [overdueRow], criticalRows] = await Promise.all([
+  const fromLoc = alias(locations, 'kpi_from_loc');
+  const toLoc = alias(locations, 'kpi_to_loc');
+
+  const [
+    [todayRevRow], [yesterdayRevRow],
+    [openOrdersRow], [openOrdersYesterdayRow],
+    [readyToShipRow],
+    [overdueRow], [overdueYesterdayRow],
+    criticalRows, criticalYesterdayRows,
+  ] = await Promise.all([
     db
       .select({ n: sql<string>`coalesce(sum(${invoices.grandTotalTry}), 0)` })
       .from(invoices)
@@ -54,7 +86,14 @@ export async function getCockpitKpis(): Promise<CockpitKpis> {
     db
       .select({ n: sql<string>`count(*)` })
       .from(salesOrders)
-      .where(and(eq(salesOrders.docType, 'order'), inArray(salesOrders.status, ['confirmed', 'partially_delivered']))),
+      .where(and(eq(salesOrders.docType, 'order'), inArray(salesOrders.status, OPEN_ORDER_STATUSES))),
+    // orderDate (iş tarihi) ile — `createdAt` (audit sütunu) seed'de HER satır için script'in
+    // ÇALIŞTIĞI ana eşitlenir (tek seferde toplu insert), gerçek geçmiş dağılım taşımaz; orderDate
+    // ise 60 güne yayılmış gerçek iş tarihidir — "dünkü" karşılaştırma ancak bununla anlamlı olur.
+    db
+      .select({ n: sql<string>`count(*)` })
+      .from(salesOrders)
+      .where(and(eq(salesOrders.docType, 'order'), inArray(salesOrders.status, OPEN_ORDER_STATUSES), lte(salesOrders.orderDate, yesterday))),
     db
       .select({ n: sql<string>`count(*)` })
       .from(deliveries)
@@ -62,7 +101,13 @@ export async function getCockpitKpis(): Promise<CockpitKpis> {
     db
       .select({ n: sql<string>`coalesce(sum(${invoices.residual}), 0)` })
       .from(invoices)
-      .where(and(eq(invoices.kind, 'sales'), inArray(invoices.status, ['posted', 'partially_paid']), lte(invoices.dueDate, today))),
+      .where(and(eq(invoices.kind, 'sales'), inArray(invoices.status, OVERDUE_INVOICE_STATUSES), lte(invoices.dueDate, today))),
+    // invoiceDate (iş tarihi) ile — aynı gerekçe: `createdAt` seed'de tüm satırlarda aynı ana denk
+    // gelir, invoiceDate gerçek geçmiş dağılım taşır.
+    db
+      .select({ n: sql<string>`coalesce(sum(${invoices.residual}), 0)` })
+      .from(invoices)
+      .where(and(eq(invoices.kind, 'sales'), inArray(invoices.status, OVERDUE_INVOICE_STATUSES), lte(invoices.dueDate, yesterday), lte(invoices.invoiceDate, yesterday))),
     // Kritik stok: ürün min_qty tanımlı ve kullanılabilir (internal lokasyon) eldeki miktar bunun altında
     // (packages/db/src/schema/masterdata.ts §products.minQty; karantina/red/transit stok "kullanılabilir" sayılmaz)
     db
@@ -72,21 +117,44 @@ export async function getCockpitKpis(): Promise<CockpitKpis> {
       .leftJoin(locations, eq(locations.id, stockQuants.locationId))
       .where(and(eq(products.status, 'active'), isNotNull(products.minQty), sql`(${locations.usage} = 'internal' or ${locations.usage} is null)`))
       .groupBy(products.id, products.minQty),
+    // "Dün" eldeki miktar: quant anlık görüntüsü yerine cutoff'a kadarki stok_moves'tan türetilir —
+    // internal lokasyona giren hareketler +, internal lokasyondan çıkan hareketler − (iki internal
+    // lokasyon arası transferler birbirini götürür, tıpkı postStockMove'un quant güncelleme mantığı gibi).
+    db
+      .select({
+        productId: products.id,
+        minQty: products.minQty,
+        onHand: sql<string>`coalesce(sum(case when ${toLoc.usage} = 'internal' then ${stockMoves.qty} else 0 end), 0)
+          - coalesce(sum(case when ${fromLoc.usage} = 'internal' then ${stockMoves.qty} else 0 end), 0)`,
+      })
+      .from(products)
+      .leftJoin(stockMoves, and(eq(stockMoves.productId, products.id), lte(stockMoves.movedAt, cutoff)))
+      .leftJoin(fromLoc, eq(fromLoc.id, stockMoves.fromLocationId))
+      .leftJoin(toLoc, eq(toLoc.id, stockMoves.toLocationId))
+      .where(and(eq(products.status, 'active'), isNotNull(products.minQty)))
+      .groupBy(products.id, products.minQty),
   ]);
 
   const criticalStockCount = criticalRows.filter((r) => D(r.onHand).lt(D(r.minQty))).length;
+  const criticalStockYesterday = criticalYesterdayRows.filter((r) => D(r.onHand).lt(D(r.minQty))).length;
 
   const revenueToday = D(todayRevRow?.n ?? '0');
   const revenueYesterday = D(yesterdayRevRow?.n ?? '0');
   const revenueDeltaPct = revenueYesterday.isZero() ? null : revenueToday.minus(revenueYesterday).div(revenueYesterday).mul(100).toNumber();
 
+  const openOrders = Number(openOrdersRow?.n ?? 0);
+  const overdueReceivable = D(overdueRow?.n ?? '0');
+
   return {
     revenueToday: toDb(revenueToday),
     revenueDeltaPct,
-    openOrders: Number(openOrdersRow?.n ?? 0),
+    openOrders,
+    openOrdersDeltaPct: deltaPct(openOrders, Number(openOrdersYesterdayRow?.n ?? 0)),
     readyToShip: Number(readyToShipRow?.n ?? 0),
     criticalStockCount,
-    overdueReceivable: toDb(D(overdueRow?.n ?? '0')),
+    criticalStockDeltaPct: deltaPct(criticalStockCount, criticalStockYesterday),
+    overdueReceivable: toDb(overdueReceivable),
+    overdueReceivableDeltaPct: deltaPct(overdueReceivable.toNumber(), D(overdueYesterdayRow?.n ?? '0').toNumber()),
   };
 }
 

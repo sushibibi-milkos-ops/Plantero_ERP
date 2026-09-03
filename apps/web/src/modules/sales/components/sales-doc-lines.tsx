@@ -14,6 +14,10 @@ export function SalesDocLines({ lines, currency, showProgress }: { lines: Detail
   const grandTotal = lines.reduce((sum, l) => sum.plus(l.line.lineTotal), new Decimal(0));
   return (
     <div className="rounded-lg border border-border/70 bg-card">
+      {/* Kart başlığı eklendi (Tur 5 P2 bulgusu): sipariş detayında üç ayrı tablo anatomisi vardı —
+          bu bölüm başlıksız, İrsaliyeler/Faturalar bölümleri başlıklıydı. Tek Section başlığı +
+          hairline tablo kalıbına indirildi, üçü artık aynı dili konuşuyor. */}
+      <div className="border-b border-border/60 px-4 py-2.5 text-[13px] font-medium text-muted-foreground">Satırlar</div>
       {/* Mobil kart listesi: 9 sütunlu ham tablo 390px'te en kritik sütunu (Satır toplamı) ekran
           dışına itiyordu. Ürün + miktar×fiyat + toplam kalır, kaynak/iskonto/KDV/ilerleme ikinci
           satırda etiket-değer çiftleri olarak (grid-cols-2) — hiçbiri kırpılmaz. */}

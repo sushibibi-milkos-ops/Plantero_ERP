@@ -18,27 +18,6 @@ export function LoginForm({ next }: { next?: string }) {
     <form action={action} className="space-y-4" noValidate>
       {next ? <input type="hidden" name="next" value={next} /> : null}
 
-      {/* Kosullu render yerine daima 44px'lik bir bolge ayrilir (Tur 4 P2 bulgusu): hata kutusu
-          formun UZERINE eklendiginde E-posta/Sifre alanlari ve "Giris yap" butonu ~46px asagi
-          kayiyordu — kullanici hatayi tam okurken tikladigi yer yerinden oynuyordu. Icerik kosullu
-          dolar, yer her zaman ayrilir; hatasiz durumda kutu gorunmez (border/bg yok) ama yuksekligi
-          korunur. */}
-      <div
-        role="alert"
-        aria-live="polite"
-        className={cn(
-          'flex min-h-11 items-start gap-2 rounded-md border px-3 py-2 text-sm',
-          state?.error && !state.fieldErrors ? 'border-destructive/30 bg-destructive/5 text-destructive' : 'border-transparent',
-        )}
-      >
-        {state?.error && !state.fieldErrors ? (
-          <>
-            <AlertCircle className="mt-0.5 size-4 shrink-0" />
-            <span>{state.error}</span>
-          </>
-        ) : null}
-      </div>
-
       <div className="space-y-1.5">
         <Label htmlFor="email">E-posta</Label>
         <Input
@@ -74,9 +53,9 @@ export function LoginForm({ next }: { next?: string }) {
             className={cn(
               'absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground',
               'hover:text-foreground focus-visible:text-foreground focus-visible:outline-none',
+              'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
             )}
             aria-label={showPassword ? 'Şifreyi gizle' : 'Şifreyi göster'}
-            tabIndex={-1}
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
@@ -88,6 +67,20 @@ export function LoginForm({ next }: { next?: string }) {
         {pending ? <Loader2 className="size-4 animate-spin" /> : null}
         {pending ? 'Giriş yapılıyor' : 'Giriş yap'}
       </Button>
+
+      {/* Hata kutusu dugmenin ALTINDA: E-posta/Sifre alanlari ve dugme asla kaymaz (Tur 4'teki
+          layout-shift sorunu boylece kaynaginda cozulur), bosken de hicbir yer tutucu birakmaz
+          (Tur 5 P0 bulgusu — kosulsuz min-h-11 her girişte ~76px'lik bos bant birakiyordu). */}
+      {state?.error && !state.fieldErrors ? (
+        <div
+          role="alert"
+          aria-live="polite"
+          className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
+        >
+          <AlertCircle className="mt-0.5 size-4 shrink-0" />
+          <span>{state.error}</span>
+        </div>
+      ) : null}
     </form>
   );
 }

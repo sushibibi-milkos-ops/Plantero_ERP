@@ -33,6 +33,37 @@ function ProgressDot({ pct, label }: { pct: number; label: string }) {
   );
 }
 
+/**
+ * Yoğun mobil kart (Tur 5 P1 bulgusu): DataTable'ın varsayılan kart üretici algoritması 6 alanı
+ * ayraçlı ayrı dikey satırlara açıp her satırda etiketi tekrar ediyordu — /satis/siparisler'de
+ * ~141px, /satis/teklifler'de ~113px/kart (30 sipariş ~4.230px kaydırma). `renderMobileCard`
+ * ORTAK bileşeni (apps/web/src/components/data-table) DEĞİŞTİRMEDEN, DataTable'ın zaten desteklediği
+ * özel kart kancasıyla ~76px'e indirir: başlık satırı (belge no + durum), alt başlık (cari · kanal),
+ * tek meta satırı (tarih solda, genel toplam sağda) — "Tarih"/"Net ciro"/"Genel toplam" etiketleri
+ * karttan kaldırılır (sütun başlıkları mobilde gereksiz kroni).
+ */
+function DocCard({ row, docType }: { row: SalesDocRow; docType: 'quotation' | 'order' }) {
+  return (
+    <div className="cursor-pointer rounded-lg border border-border/70 bg-card p-3 active:bg-accent/50">
+      <div className="flex items-center justify-between gap-2">
+        <span className="truncate font-mono text-[13px] font-medium">{row.docNo}</span>
+        <StatusBadge status={row.status} kind="sales_order" />
+      </div>
+      <div className="mt-0.5 truncate text-xs text-muted-foreground">
+        {row.partnerName}
+        {row.channelName ? ` · ${row.channelName}` : ''}
+      </div>
+      <div className="mt-1.5 flex items-baseline justify-between gap-2 text-[13px]">
+        <span className="shrink-0 text-[11px] text-muted-foreground">
+          {formatDate(row.orderDate)}
+          {docType === 'quotation' && row.validUntil ? ` · gçrl. ${formatDate(row.validUntil)}` : ''}
+        </span>
+        <MoneyCell value={row.grandTotal} currency={row.currency} className="shrink-0 font-medium text-foreground" />
+      </div>
+    </div>
+  );
+}
+
 export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType: 'quotation' | 'order' }) {
   const basePath = docType === 'quotation' ? '/satis/teklifler' : '/satis/siparisler';
 
@@ -55,11 +86,23 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
         cell: ({ row }) => <span className="block max-w-full truncate text-muted-foreground">{row.original.channelName}</span>,
       },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="sales_order" /> },
-      { id: 'orderDate', accessorFn: (r) => r.orderDate, header: 'Tarih', meta: { width: 90 }, cell: ({ row }) => formatDate(row.original.orderDate) },
+      {
+        id: 'orderDate', accessorFn: (r) => r.orderDate, header: 'Tarih', meta: { width: docType === 'quotation' ? 100 : 90, className: docType === 'quotation' ? 'whitespace-normal' : undefined },
+        cell: ({ row }) =>
+          // Ayrı "Geçerlilik" sütunu kaldırıldı (Tur 5 P2 bulgusu): 4 satırın 3'ünde '—' basıp
+          // 130px'lik en geniş sütunlardan biri sıfır bilgi taşıyordu — dolu olduğunda "Tarih"
+          // hücresinin altına 11px soluk ikinci satır olarak taşındı, boşken hiçbir yer tutucu bırakmaz.
+          docType === 'quotation' ? (
+            <div className="leading-tight">
+              <div>{formatDate(row.original.orderDate)}</div>
+              {row.original.validUntil ? <div className="text-[11px] text-muted-foreground">gçrl. {formatDate(row.original.validUntil)}</div> : null}
+            </div>
+          ) : (
+            formatDate(row.original.orderDate)
+          ),
+      },
     ];
-    if (docType === 'quotation') {
-      cols.push({ id: 'validUntil', accessorFn: (r) => r.validUntil, header: 'Geçerlilik', meta: { width: 100, mobile: 'hidden' }, cell: ({ row }) => (row.original.validUntil ? formatDate(row.original.validUntil) : <EmptyCell />) });
-    } else {
+    if (docType !== 'quotation') {
       cols.push(
         // defaultHidden: 30 satırın 24'ünde değer em-dash (sütun seçiciden açılabilir kalır) — 1440px'te
         // taşan tabloda en sağdaki "Genel toplam" büyük ölçüde boş bir sütuna kırpılıyordu (Tur 3 P2).
@@ -68,9 +111,12 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
           // Sütun başlığı sırasız olduğundan (enableSorting:false) DataTableColumnHeader'ın
           // sıralanabilir sarmalayıcısını atlayıp özel bir başlık veriyoruz: `title` ile ipucu
           // (60 satırda 2 harfli rozetin anlamı hiçbir yerde açıklanmıyordu).
+          // Header metni artık "Teslim / Fatura" (Tur 5 P2 bulgusu): tek açıklama önceden yalnızca
+          // header'daki `title` özniteliğiydi (yalnız hover ile açılır) — dokunmatik cihazda T/F'nin
+          // anlamı hiç öğrenilemiyordu. Genişlik 64→104px.
           id: 'progress',
-          header: () => <span title="T = teslim yüzdesi, F = fatura yüzdesi" className="cursor-help border-b border-dotted border-muted-foreground/40">İlerleme</span>,
-          enableSorting: false, meta: { width: 64, mobile: 'hidden' },
+          header: 'Teslim / Fatura',
+          enableSorting: false, meta: { width: 104, mobile: 'hidden' },
           cell: ({ row }) => (
             <div className="flex items-center gap-1">
               <ProgressDot pct={row.original.deliveredPct} label="T" />
@@ -114,6 +160,7 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
       initialSorting={[{ id: 'orderDate', desc: true }]}
       emptyTitle={docType === 'quotation' ? 'Henüz teklif yok' : 'Henüz sipariş yok'}
       emptyDescription={docType === 'quotation' ? 'Fırsatlar ekranından ya da doğrudan yeni teklif oluşturun.' : 'Onaylı bir teklifi siparişe dönüştürün ya da doğrudan yeni sipariş açın.'}
+      renderMobileCard={(row) => <DocCard row={row} docType={docType} />}
     />
   );
 }

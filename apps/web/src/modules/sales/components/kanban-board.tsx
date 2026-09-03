@@ -13,7 +13,7 @@ import { formatMoney } from '@/lib/format';
 import { moveOpportunityAction } from '../actions';
 import { OpportunityCard } from './opportunity-card';
 import { OpportunityDrawer } from './opportunity-drawer';
-import { OpportunitiesListView } from './opportunities-list-view';
+import { OpportunitiesListView, OpportunitiesMobileGroupedList } from './opportunities-list-view';
 import type { OpportunityCardRow } from '../queries';
 import type { opportunityStages } from '@plantero/db';
 /** Sunucu bileşeninden istemciye yalnızca serileştirilebilir alanlar geçirilir (Decimal aktarılamaz). */
@@ -134,8 +134,12 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
 
       {/* 250px'lik sütunlar 390px genişlikte kart başlıklarını ortadan kesiyordu — kanban md altında
           hiç render edilmez, liste görünümü zorlanır (masaüstünde `view` state'i geçerli kalır). */}
+      {/* Tur 5 P1 bulgusu: mobil düz liste kanban'ın aşama gruplamasını hiç yansıtmıyordu — sahada
+          (390px, kanban hiç render edilmez) tek gerçek görünüm bu olduğundan aşama modeli burada da
+          korunur (sticky grup başlıkları). Masaüstü "Liste" görünümü (aşağıda) bilinçli olarak
+          gruplamasız kalır — orada kullanıcı zaten Kanban'a bir tık uzakta. */}
       <div className="md:hidden">
-        <OpportunitiesListView rows={rows} stages={stages} onOpen={setOpenId} />
+        <OpportunitiesMobileGroupedList rows={rows} stages={stages} onOpen={setOpenId} />
       </div>
       <div className="hidden md:block">
         {view === 'kanban' ? (
