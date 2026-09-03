@@ -57,12 +57,20 @@ const KIND_BY_DIRECTION: Record<'inbound' | 'outbound', readonly string[]> = {
 /** Yön → cari ana hesap kökü (120 alacak, 320 tedarikçi) */
 const accountRootFor = (direction: 'inbound' | 'outbound') => (direction === 'inbound' ? '120' : '320');
 
-/** Nakit/banka hesabı: yöntem 'cash' → 100 Kasa; aksi halde banka hesabının 102.xx kodu (verilmezse genel 102) */
-async function resolveCashAccount(tx: DbOrTx, method: string, bankAccountId?: string | null): Promise<{ code: string; journalCode: 'KAS' | 'BNK' }> {
+/**
+ * Nakit/banka hesabı: yöntem 'cash' → 100 Kasa; aksi halde banka hesabının 102.xx kodu (verilmezse genel 102).
+ * (I30, tur 10 P1) Banka hesabı tek bir para biriminde tutulur — seçilen hesabın `currency`'si tahsilat/ödeme
+ * `currency`'sinden farklıysa reddedilir (aksi halde 102.xx hesabına gerçekte var olmayan bir döviz hareketi
+ * işlenir ve banka ekstresiyle mutabakat asla tutmaz).
+ */
+async function resolveCashAccount(tx: DbOrTx, method: string, currency: string, bankAccountId?: string | null): Promise<{ code: string; journalCode: 'KAS' | 'BNK' }> {
   if (method === 'cash') return { code: '100', journalCode: 'KAS' };
   if (bankAccountId) {
-    const [row] = await tx.select({ accountCode: bankAccounts.accountCode }).from(bankAccounts).where(eq(bankAccounts.id, bankAccountId)).limit(1);
+    const [row] = await tx.select({ accountCode: bankAccounts.accountCode, currency: bankAccounts.currency }).from(bankAccounts).where(eq(bankAccounts.id, bankAccountId)).limit(1);
     if (!row) throw new NotFoundError('Banka hesabı', bankAccountId);
+    if (row.currency !== currency) {
+      throw new ValidationError(`Banka hesabı para birimi (${row.currency}) tahsilat/ödeme para birimiyle (${currency}) uyuşmuyor`, { bankAccountId, accountCurrency: row.currency, paymentCurrency: currency });
+    }
     return { code: row.accountCode, journalCode: 'BNK' };
   }
   return { code: '102', journalCode: 'BNK' };
@@ -127,7 +135,7 @@ export async function recordPayment(tx: DbOrTx, input: RecordPaymentInput, ctx: 
   }
   const unallocated = round4(amount.minus(allocatedNative));
 
-  const { code: cashAccount, journalCode } = await resolveCashAccount(tx, method, input.bankAccountId ?? null);
+  const { code: cashAccount, journalCode } = await resolveCashAccount(tx, method, currency, input.bankAccountId ?? null);
   const accountRoot = accountRootFor(input.direction);
   const docNo = await nextDocNo(tx, 'PAY', new Date(paymentDate));
   const kind = input.direction === 'inbound' ? 'Tahsilat' : 'Ödeme';

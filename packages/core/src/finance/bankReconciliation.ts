@@ -54,6 +54,15 @@ export async function importStatement(tx: DbOrTx, input: ImportStatementInput, c
   const [account] = await tx.select().from(bankAccounts).where(eq(bankAccounts.id, input.bankAccountId)).limit(1);
   if (!account) throw new NotFoundError('Banka hesabı', input.bankAccountId);
 
+  // (I30, tur 10 P1) Banka hesabı tek bir para biriminde tutulur — satır para birimi belirtilmişse hesabınkiyle
+  // uyuşmalı; sessizce hesabın kuruna "düşürülmez" (aksi halde bank_transactions.currency ≠ bank_accounts.currency
+  // olur ve gerçek ekstreyle mutabakat asla tutmaz).
+  for (const line of input.lines) {
+    if (line.currency && line.currency !== account.currency) {
+      throw new ValidationError(`Ekstre satırı para birimi (${line.currency}) banka hesabının para birimiyle (${account.currency}) uyuşmuyor`, { bankAccountId: account.id, lineCurrency: line.currency, accountCurrency: account.currency, externalRef: line.externalRef });
+    }
+  }
+
   const [imp] = await tx
     .insert(bankStatementImports)
     .values({

@@ -74,13 +74,26 @@ export function RecordPaymentForm({
   const partnerId = form.watch('partnerId');
   const method = form.watch('method');
   const amount = form.watch('amount');
+  const currency = form.watch('currency');
+  const bankAccountId = form.watch('bankAccountId');
 
   const partnerOptions = useMemo(() => {
     const kinds = direction === 'inbound' ? ['customer', 'both'] : ['supplier', 'both'];
     return partners.filter((p) => kinds.includes(p.kind)).map((p) => ({ value: p.id, label: p.name, description: p.code }));
   }, [partners, direction]);
 
-  const bankAccountOptions = useMemo(() => bankAccounts.map((b) => ({ value: b.id, label: `${b.code} — ${b.bankName}` })), [bankAccounts]);
+  // (I30, tur 10 P1) Bir banka hesabı tek bir para biriminde tutulur — seçici yalnızca seçilen para birimindeki
+  // hesapları listeler; kullanıcı EUR tutar girip TL hesabı seçemez (banka ekstresiyle mutabakat bozulur).
+  const bankAccountOptions = useMemo(
+    () => bankAccounts.filter((b) => b.currency === currency).map((b) => ({ value: b.id, label: `${b.code} — ${b.bankName}` })),
+    [bankAccounts, currency],
+  );
+
+  useEffect(() => {
+    if (bankAccountId && !bankAccountOptions.some((o) => o.value === bankAccountId)) {
+      form.setValue('bankAccountId', '');
+    }
+  }, [bankAccountOptions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     form.setValue('partnerId', '');

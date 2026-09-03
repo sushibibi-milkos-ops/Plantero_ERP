@@ -1,102 +1,27 @@
-import { and, eq, gt, inArray } from 'drizzle-orm';
-import { approvals, bankTransactions, db, invoices, loanInstallments, loans, partners, reconciliationLearnings, reconciliationMatches } from '@plantero/db';
-import { isAutoApplicable, matchBankTransaction, type ReconCandidates } from '@plantero/ai';
-
-const BATCH_LIMIT = 200;
+import { db } from '@plantero/db';
+import { runReconciliation, SYSTEM_ACTOR } from '@plantero/core';
 
 /**
- * Gece mutabakat ajanı: eşleşmemiş banka hareketlerini açık faturalar, cariler, kredi
- * taksitleri ve öğrenilmiş desenlerle eşleştirir; sonucu `reconciliation_matches`'a öneri
- * olarak yazar. Gerçek fişleştirme (postJournalEntry ile tahsilat/ödeme kaydı) muhasebe
- * modülünün onay akışında yapılır — burada yalnızca öneri üretilir, bakiye etkilenmez.
+ * Gece mutabakat ajanı (cron 02:00, `apps/worker/src/queues.ts`): eşleşmemiş banka hareketlerini
+ * `packages/core/src/finance/bankReconciliation.ts::runReconciliation` — `reconciliation_matches` /
+ * `bank_transactions` yazan TEK gerçek akış — üzerinden değerlendirir.
+ *
+ * (I29, tur 10 P0 düzeltmesi) Daha önce burada ayrı, uyumsuz bir yol vardı: `packages/ai`
+ * `matchBankTransaction` ile güven ≥0.92 sonuçlar için doğrudan `reconciliation_matches` satırı
+ * `status:'auto_applied'` ile ekleniyor ama `recordPayment` hiç çağrılmıyordu (payment_id her zaman
+ * NULL) ve `bank_transactions.status` her zaman 'suggested' bırakılıyordu (autoOk olsa bile) —
+ * tüketicisi olmayan bir `approvals(kind='reconciliation')` satırı ekleniyordu. `runReconciliation`
+ * zaten aynı eşiği (güven ≥0.92 VE tek aday) kural tabanlı skorlamayla uyguluyor; otomatik uygulanan
+ * her eşleşme `applyInvoiceAllocation` → `recordPayment` ile gerçek bir tahsilat/ödeme + muhasebe fişi
+ * üretir ve `bank_transactions.status`'u 'matched' yapar (I11/I29 bunu doğrular). `packages/ai`
+ * entegrasyonu bu modülün kapsamı dışında bırakıldı — bkz. `bankReconciliation.ts` dosya başı yorumu.
  */
 export async function runReconciliationNightly(): Promise<Record<string, unknown>> {
-  const unmatched = await db.select().from(bankTransactions).where(eq(bankTransactions.status, 'unmatched')).limit(BATCH_LIMIT);
-  if (unmatched.length === 0) return { evaluated: 0, suggested: 0, autoApplicable: 0 };
-
-  const openInvoices = await db
-    .select({ id: invoices.id, docNo: invoices.docNo, partnerId: invoices.partnerId, partnerName: partners.name, residual: invoices.residual, dueDate: invoices.dueDate, kind: invoices.kind })
-    .from(invoices)
-    .innerJoin(partners, eq(partners.id, invoices.partnerId))
-    .where(and(inArray(invoices.status, ['posted', 'partially_paid']), gt(invoices.residual, '0')));
-
-  const allPartners = await db.select({ id: partners.id, name: partners.name }).from(partners).where(eq(partners.isActive, true));
-
-  const openInstallments = await db
-    .select({ id: loanInstallments.id, loanId: loanInstallments.loanId, loanCode: loans.code, dueDate: loanInstallments.dueDate, installment: loanInstallments.installment })
-    .from(loanInstallments)
-    .innerJoin(loans, eq(loans.id, loanInstallments.loanId))
-    .where(inArray(loanInstallments.status, ['scheduled', 'overdue']));
-
-  const learnings = await db.select().from(reconciliationLearnings);
-
-  const candidates: ReconCandidates = {
-    invoices: openInvoices.map((i) => ({ id: i.id, docNo: i.docNo, partnerId: i.partnerId, partnerName: i.partnerName, residual: i.residual, dueDate: i.dueDate, kind: i.kind as 'sales' | 'purchase' })),
-    partners: allPartners,
-    loanInstallments: openInstallments.map((i) => ({ id: i.id, loanId: i.loanId, loanCode: i.loanCode, dueDate: i.dueDate, installment: i.installment })),
-    learnings: learnings.map((l) => ({
-      pattern: l.pattern,
-      patternKind: l.patternKind as 'description' | 'iban' | 'counterparty',
-      partnerId: l.partnerId,
-      expenseAccountCode: l.expenseAccountCode,
-      matchKind: l.matchKind,
-      hits: l.hits,
-    })),
-  };
-
-  let suggested = 0;
-  let autoApplicable = 0;
-
-  for (const tx of unmatched) {
-    const matches = await matchBankTransaction(
-      { id: tx.id, description: tx.description, amount: tx.amount, counterpartyName: tx.counterpartyName, counterpartyIban: tx.counterpartyIban, txDate: tx.txDate, txType: tx.txType },
-      candidates,
-    );
-    const top = matches[0];
-    if (!top) continue;
-
-    const autoOk = top.confidence >= 0.92 && isAutoApplicable(matches);
-
-    await db.insert(reconciliationMatches).values({
-      bankTransactionId: tx.id,
-      kind: top.kind,
-      status: autoOk ? 'auto_applied' : 'suggested',
-      partnerId: top.partnerId ?? null,
-      invoiceIds: top.invoiceIds,
-      allocations: top.allocations,
-      loanInstallmentId: top.loanInstallmentId ?? null,
-      expenseAccountCode: top.expenseAccountCode ?? null,
-      confidence: String(top.confidence),
-      rationale: top.rationale,
-      features: top.features,
-      source: top.source,
-    });
-
-    // Banka hareketi 'suggested' işaretlenir; 'matched' yalnızca muhasebe modülünün onay akışında
-    // gerçek tahsilat/ödeme (postJournalEntry) oluştuğunda set edilir (I11 bütünlük kuralı).
-    await db.update(bankTransactions).set({ status: 'suggested' }).where(eq(bankTransactions.id, tx.id));
-
-    if (autoOk) {
-      autoApplicable++;
-      await db.insert(approvals).values({
-        kind: 'reconciliation',
-        refTable: 'bank_transactions',
-        refId: tx.id,
-        title: `Otomatik mutabakat önerisi: ${tx.description.slice(0, 60)}`,
-        summary: top.rationale,
-        payload: { matchKind: top.kind, confidence: top.confidence },
-        confidence: String(top.confidence),
-        status: 'pending',
-      });
-    } else {
-      suggested++;
-    }
-  }
-
+  const result = await db.transaction((tx) => runReconciliation(tx, {}, SYSTEM_ACTOR));
   return {
-    evaluated: unmatched.length,
-    suggested,
-    autoApplicable,
-    note: 'Fişleştirme (postJournalEntry) muhasebe modülünün onay akışında yapılır; burada yalnızca öneri üretilir.',
+    evaluated: result.evaluated,
+    suggested: result.suggested,
+    autoApplied: result.autoApplied,
+    note: 'Otomatik uygulanan (auto_applied) her eşleşme runReconciliation → recordPayment ile gerçek bir tahsilat/ödeme fişi üretti; onay bekleyenler /muhasebe/mutabakat ekranında listelenir.',
   };
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { journals, invoices, payments, exchangeRates, type Tx } from '@plantero/db';
+import { journals, invoices, payments, exchangeRates, bankAccounts, type Tx } from '@plantero/db';
 import { postJournalEntry, getPartnerBalance } from '../accounting/journal.js';
 import { recordPayment, unapplyPayment, getOpenInvoicesForPartner } from './payments.js';
 import { withRollback, seedBase, ctx, d, today, expectReject, balanceProbe, type Base } from '../__tests__/helpers.js';
@@ -248,6 +248,24 @@ describe('finance/payments', () => {
         recordPayment(sp, { direction: 'inbound', partnerId: b.supplier.id, paymentDate: today(), amount: d(100), allocations: [{ invoiceId: invoice.id, amount: d(100) }] }, ctx),
       );
       expect(err).toBeTruthy();
+    });
+  });
+
+  it('I30 (tur 10 P1 regresyon): banka hesabı para birimi tahsilat/ödeme para biriminden farklıysa reddedilir', async () => {
+    await withRollback(async (tx) => {
+      const b: Base = await seedBase(tx);
+      await ensureJournals(tx);
+      const invoice = await makeInvoice(tx, { partnerId: b.customer.id, kind: 'sales', currency: 'EUR', exchangeRate: '35', grandTotal: '100' });
+      const [tlAccount] = await tx.insert(bankAccounts).values({ code: 'TEST-TL', bankName: 'Test Banka', currency: 'TRY', accountCode: '102.99' }).returning();
+
+      // TL hesabına EUR tahsilat yönlendirilmeye çalışılıyor — reddedilmeli, sessizce 102.99'a EUR hareketi işlenmemeli.
+      const err = await expectReject(tx, (sp) =>
+        recordPayment(sp, { direction: 'inbound', method: 'bank_transfer', partnerId: b.customer.id, bankAccountId: tlAccount!.id, currency: 'EUR', paymentDate: today(), amount: d(100), allocations: [{ invoiceId: invoice.id, amount: d(100) }] }, ctx),
+      );
+      expect(String((err as Error).message)).toMatch(/para birimi/);
+
+      const [untouched] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
+      expect(untouched!.residual).toBe('100.0000'); // reddedildi, fatura etkilenmedi
     });
   });
 

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { journals, invoices, bankAccounts, bankTransactions, reconciliationMatches, type Tx } from '@plantero/db';
 import { postJournalEntry } from '../accounting/journal.js';
 import { importStatement, runReconciliation, approveMatch, rejectMatch, manualMatch, findInvoiceCandidates, AUTO_APPLY_THRESHOLD } from './bankReconciliation.js';
-import { withRollback, seedBase, ctx, d, today, type Base } from '../__tests__/helpers.js';
+import { withRollback, seedBase, ctx, d, today, expectReject, type Base } from '../__tests__/helpers.js';
 import { round4 } from '../money.js';
 
 async function ensureJournals(tx: Tx) {
@@ -55,6 +55,19 @@ describe('finance/bankReconciliation', () => {
 
       const rows = await tx.select().from(bankTransactions).where(eq(bankTransactions.bankAccountId, account.id));
       expect(rows).toHaveLength(1);
+    });
+  });
+
+  it('I30 (tur 10 P1 regresyon): ekstre satırı para birimi banka hesabınınkinden farklıysa reddedilir', async () => {
+    await withRollback(async (tx) => {
+      const account = await makeBankAccount(tx, `BA-${Math.random().toString(36).slice(2, 6)}`); // TRY hesap
+      const line = { externalRef: 'EXT-FX-001', txDate: today(), amount: d(100), currency: 'EUR', description: 'Yanlış para birimi' };
+
+      const err = await expectReject(tx, (sp) => importStatement(sp, { bankAccountId: account.id, source: 'csv', lines: [line] }, ctx));
+      expect(String((err as Error).message)).toMatch(/para birimi/);
+
+      const rows = await tx.select().from(bankTransactions).where(eq(bankTransactions.bankAccountId, account.id));
+      expect(rows).toHaveLength(0); // reddedildi, hiçbir satır yazılmadı
     });
   });
 
