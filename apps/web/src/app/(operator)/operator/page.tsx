@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Factory, ChevronRight, ListOrdered } from 'lucide-react';
+import { Factory, ChevronRight, ListOrdered, OctagonPause } from 'lucide-react';
 import { requireUser } from '@/lib/auth';
-import { listProductionLines, listOpenWorkOrdersForLine } from '@/modules/production/queries';
+import { listProductionLines, listOpenWorkOrdersForLine, listLineShiftSummaries } from '@/modules/production/queries';
 import { EmptyState } from '@/components/empty-state';
 import { QtyCell } from '@/components/qty-cell';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { formatTime } from '@/lib/format';
 import { D } from '@plantero/core';
+import { DOWNTIME_REASON_LABELS } from '@/modules/production/labels';
 
 export const metadata: Metadata = { title: 'Operatör' };
 export const dynamic = 'force-dynamic';
@@ -37,6 +39,8 @@ export default async function OperatorHome() {
   const runningCount = withActive.filter((w) => w.active?.status === 'in_progress').length;
   const pausedCount = withActive.filter((w) => w.active?.status === 'paused').length;
   const idleCount = lines.length - runningCount - pausedCount;
+  const shiftSummaries = await listLineShiftSummaries(lines.map((l) => l.id));
+  const summaryByLine = new Map(shiftSummaries.map((s) => [s.lineId, s]));
 
   return (
     // lg:max-w-5xl: 1024×768 tabletde max-w-3xl (768px) içerik yüksekliğin ~%53'ünü, genişliğin
@@ -53,13 +57,20 @@ export default async function OperatorHome() {
         <>
           <div className="grid gap-3 sm:grid-cols-3">
             {withActive.map(({ line, active, queue }) => {
-              const tone = active?.status === 'paused' ? STATUS_TONE.paused : active?.status === 'in_progress' ? STATUS_TONE.running : STATUS_TONE.idle;
+              const running = active?.status === 'in_progress';
+              const tone = active?.status === 'paused' ? STATUS_TONE.paused : running ? STATUS_TONE.running : STATUS_TONE.idle;
               return (
                 <Link
                   key={line.id}
                   href={`/operator/${line.id}`}
                   data-pressable
-                  className="flex min-h-52 flex-col justify-between gap-3 rounded-xl border border-border/70 bg-card p-4 transition-transform active:scale-[0.98] lg:min-h-64"
+                  className={cn(
+                    'flex min-h-52 flex-col justify-between gap-3 rounded-xl border p-4 transition-transform active:scale-[0.98] lg:min-h-64',
+                    // Çalışan hat boşta/duraklatılmış hatlarla aynı görsel ağırlıktaydı — fabrika
+                    // zemininde hangi hattın çalıştığı kartlara bakmadan, göz gezdirerek ayırt
+                    // edilemiyordu (Tur 4 bulgusu, P1).
+                    running ? 'border-success/40 bg-success/5' : 'border-border/70 bg-card',
+                  )}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -107,8 +118,17 @@ export default async function OperatorHome() {
                   )}
                 {/* Tek dokunma göstergesi köşedeki 20px ChevronRight'tan tam genişlik bir "düğme"ye
                     (kart zaten tek büyük dokunma hedefi — <a> içine gerçek <button> konmaz, görsel
-                    olarak düğme gibi davranan bir bant yeterli) — Tur 2 bulgusu. */}
-                  <div className="mt-1 flex h-12 items-center justify-center gap-1.5 rounded-lg bg-primary/10 text-sm font-medium text-primary">
+                    olarak düğme gibi davranan bir bant yeterli) — Tur 2 bulgusu.
+                    Kök neden (Tur 4 P1): birincil aksiyon her hatta aynı açık yeşil zemin + yeşil
+                    metindi (düşük kontrast) — fabrika zemininin parlak ışığında ve eldivenli
+                    kullanımda çalışan hatta yüksek kontrastlı dolu birincil, boşta/duraklatılmış
+                    hatlarda nötr outline daha net bir hiyerarşi kurar. */}
+                  <div
+                    className={cn(
+                      'mt-1 flex h-12 items-center justify-center gap-1.5 rounded-lg text-sm font-medium',
+                      running ? 'bg-primary text-primary-foreground' : 'border border-border text-foreground',
+                    )}
+                  >
                     Hattı aç <ChevronRight className="size-4" />
                   </div>
                 </Link>
@@ -117,18 +137,51 @@ export default async function OperatorHome() {
           </div>
 
           {/* Vardiya özeti: min-h-52/lg:min-h-64 ile büyüyen kartların altında kalan boşluğu dolduran,
-              hattı tek tek incelemeden genel duruma bakış sağlayan şerit (Tur 2 bulgusu). */}
-          <div className="hidden items-center gap-4 rounded-xl border border-border/70 bg-card px-4 py-3 lg:flex">
-            <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">Vardiya özeti</span>
-            <span className="flex items-center gap-1.5 text-sm">
-              <span aria-hidden className="size-1.5 rounded-full bg-success motion-safe:animate-pulse" /> {runningCount} çalışıyor
-            </span>
-            <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <span aria-hidden className="size-1.5 rounded-full bg-warning" /> {pausedCount} duraklatıldı
-            </span>
-            <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <span aria-hidden className="size-1.5 rounded-full bg-muted-foreground/50" /> {idleCount} boşta
-            </span>
+              hattı tek tek incelemeden genel duruma bakış sağlayan şerit (Tur 2 bulgusu).
+              Kök neden (Tur 4 P1): 1024×768'te tek satırlık bu şerit içerik y=498'de bitiriyor,
+              ekranın %35'i (~270px) boş kalıyordu — operatörün hat seçmeden önce ihtiyaç duyduğu
+              vardiya ilerlemesi/duruş bilgisi hiçbir yerde yoktu. Şerit hat başına bugünkü
+              üretim/hedef mini çubuğu + son duruş süresiyle genişletilir. */}
+          <div className="hidden rounded-xl border border-border/70 bg-card lg:block">
+            <div className="flex items-center gap-4 border-b border-border/60 px-4 py-3">
+              <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">Vardiya özeti</span>
+              <span className="flex items-center gap-1.5 text-sm">
+                <span aria-hidden className="size-1.5 rounded-full bg-success motion-safe:animate-pulse" /> {runningCount} çalışıyor
+              </span>
+              <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <span aria-hidden className="size-1.5 rounded-full bg-warning" /> {pausedCount} duraklatıldı
+              </span>
+              <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <span aria-hidden className="size-1.5 rounded-full bg-muted-foreground/50" /> {idleCount} boşta
+              </span>
+            </div>
+            <div className="divide-y divide-border/40">
+              {lines.map((line) => {
+                const summary = summaryByLine.get(line.id);
+                const produced = D(summary?.todayProducedQty ?? 0);
+                const target = D(summary?.todayTargetQty ?? 0);
+                const pct = target.gt(0) ? Math.min(100, produced.div(target).mul(100).toNumber()) : 0;
+                return (
+                  <div key={line.id} className="flex items-center gap-4 px-4 py-2.5">
+                    <span className="w-16 shrink-0 font-mono text-xs text-muted-foreground">{line.code}</span>
+                    <Progress value={pct} className="h-1.5 flex-1" />
+                    <span className="w-36 shrink-0 text-right text-xs text-muted-foreground">
+                      <QtyCell value={produced.toFixed(4)} className="justify-end" /> / <QtyCell value={target.toFixed(4)} className="justify-end" /> (%{Math.round(pct)})
+                    </span>
+                    <span className="flex w-44 shrink-0 items-center justify-end gap-1.5 text-right text-xs text-muted-foreground">
+                      {summary?.lastDowntime ? (
+                        <>
+                          <OctagonPause className="size-3.5 shrink-0" aria-hidden />
+                          {DOWNTIME_REASON_LABELS[summary.lastDowntime.reason] ?? summary.lastDowntime.reason} · {summary.lastDowntime.minutes} dk · {formatTime(summary.lastDowntime.startedAt)}
+                        </>
+                      ) : (
+                        'Bugün duruş yok'
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </>
       )}

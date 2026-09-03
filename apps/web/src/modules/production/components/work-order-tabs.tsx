@@ -25,6 +25,42 @@ type ScrapRow = Detail['scraps'][number];
 export function WorkOrderTabs({ detail }: { detail: Detail }) {
   const { wo, uomCode, materials, consumptions, outputs, scraps, events, chain } = detail;
 
+  // DataTable'ın varsayılan mobil kart görünümü, `mobile` rolü verilmemiş sütunları ("rest") 2
+  // sütunlu bir tanım listesine diziyor — üç ölçü (Planlanan/Tüketilen/Kalan) burada 2+1'e
+  // bölünüp "Tüketilen" etiketi satır ortasında sahipsiz kalıyordu (Tur 4 bulgusu, P1). Ortak
+  // `DataTable`/`DataTableMobileCards` bileşenini değiştirmek yerine (dondurulmuş ortak dosya —
+  // CLAUDE.md kural 2), zaten var olan `renderMobileCard` özelleştirme noktası kullanılıp bu
+  // tabloya özel tek sütunlu bir kart çizilir: her ölçü kendi 24px'lik satırında, etiket solda
+  // soluk, değer sağda `tabular-nums` — 3 satır = 72px kart gövdesi.
+  const renderMaterialCard = (row: MaterialRow) => {
+    const remaining = new Decimal(row.m.plannedQty).minus(new Decimal(row.m.consumedQty));
+    return (
+      <div className="rounded-lg border border-border/70 bg-card p-3">
+        <div className="min-w-0">
+          <div className="truncate text-[14px] font-medium">
+            {row.productName}
+            {row.m.isByproduct ? <span className="ml-1.5 text-[11px] font-normal text-muted-foreground">(yan ürün)</span> : null}
+          </div>
+          <div className="truncate font-mono text-[11px] text-muted-foreground">{row.sku}</div>
+        </div>
+        <dl className="mt-2 space-y-1.5 border-t border-border/40 pt-2">
+          <div className="flex h-6 items-baseline justify-between gap-2">
+            <dt className="text-xs text-muted-foreground">Planlanan</dt>
+            <dd className="min-w-0"><QtyCell value={row.m.plannedQty} uom={row.uomCode} /></dd>
+          </div>
+          <div className="flex h-6 items-baseline justify-between gap-2">
+            <dt className="text-xs text-muted-foreground">Tüketilen</dt>
+            <dd className="min-w-0"><QtyCell value={row.m.consumedQty} uom={row.uomCode} /></dd>
+          </div>
+          <div className="flex h-6 items-baseline justify-between gap-2">
+            <dt className="text-xs text-muted-foreground">Kalan</dt>
+            <dd className="min-w-0"><QtyCell value={remaining.toFixed(4)} uom={row.uomCode} className={remaining.gt(0) ? '' : 'text-success'} /></dd>
+          </div>
+        </dl>
+      </div>
+    );
+  };
+
   const materialColumns: ColumnDef<MaterialRow, unknown>[] = [
     {
       id: 'material',
@@ -130,7 +166,7 @@ export function WorkOrderTabs({ detail }: { detail: Detail }) {
       </div>
 
       <TabsContent value="materials">
-        <DataTable columns={materialColumns} data={materials} getRowId={(r) => r.m.id} searchable={false} columnToggle={false} pagination={false} emptyTitle="Malzeme yok" />
+        <DataTable columns={materialColumns} data={materials} getRowId={(r) => r.m.id} searchable={false} columnToggle={false} pagination={false} emptyTitle="Malzeme yok" renderMobileCard={renderMaterialCard} />
       </TabsContent>
 
       <TabsContent value="consumptions">

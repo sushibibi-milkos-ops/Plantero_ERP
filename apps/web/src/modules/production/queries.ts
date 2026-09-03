@@ -6,7 +6,7 @@ import { businessDate, addDays } from '@plantero/core/dates';
 
 const {
   workOrders, workOrderMaterials, workOrderConsumptions, workOrderOutputs, workOrderScraps, workOrderEvents,
-  products, uoms, boms, productionLines, warehouses, locations, stockLots, users, roles, userRoles,
+  products, uoms, boms, productionLines, warehouses, locations, stockLots, users, roles, userRoles, downtimes,
 } = schema;
 
 /* ==================================================================== */
@@ -144,61 +144,64 @@ export async function getWorkOrderKpis(): Promise<WorkOrderKpis> {
 /* ==================================================================== */
 
 export async function getWorkOrderDetail(id: string) {
-  const [row] = await db
-    .select({ wo: workOrders, product: products, uomCode: uoms.code, bom: boms, line: productionLines, warehouse: warehouses, operatorName: users.fullName })
-    .from(workOrders)
-    .innerJoin(products, eq(products.id, workOrders.productId))
-    .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
-    .innerJoin(boms, eq(boms.id, workOrders.bomId))
-    .innerJoin(productionLines, eq(productionLines.id, workOrders.lineId))
-    .innerJoin(warehouses, eq(warehouses.id, workOrders.warehouseId))
-    .leftJoin(users, eq(users.id, workOrders.operatorId))
-    .where(eq(workOrders.id, id))
-    .limit(1);
+  // Kök neden (Tur 4 P1): yedi bağımsız sorgu (ana satır + 5 alt tablo + belge zinciri) sırayla
+  // `await`lenip her biri ayrı bir round-trip bekliyordu — /uretim/is-emirleri/[id] için toplam
+  // gecikme networkidle sonrası 1140ms'e çıkıyor, `loading.tsx` iskeleti o süre boyunca ekranda
+  // kalıyordu. Hiçbiri diğerinin sonucuna bağlı değil (hepsi yalnızca `id` ile filtrelenir) —
+  // `Promise.all` ile paralel çalıştırılır, ana satır bulunamazsa (`row` boş) alt sorguların
+  // sonucu görmezden gelinip `null` dönülür.
+  const [rowResult, materials, consumptions, outputs, scraps, events, chain] = await Promise.all([
+    db
+      .select({ wo: workOrders, product: products, uomCode: uoms.code, bom: boms, line: productionLines, warehouse: warehouses, operatorName: users.fullName })
+      .from(workOrders)
+      .innerJoin(products, eq(products.id, workOrders.productId))
+      .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
+      .innerJoin(boms, eq(boms.id, workOrders.bomId))
+      .innerJoin(productionLines, eq(productionLines.id, workOrders.lineId))
+      .innerJoin(warehouses, eq(warehouses.id, workOrders.warehouseId))
+      .leftJoin(users, eq(users.id, workOrders.operatorId))
+      .where(eq(workOrders.id, id))
+      .limit(1),
+    db
+      .select({ m: workOrderMaterials, sku: products.sku, productName: products.name, uomCode: uoms.code })
+      .from(workOrderMaterials)
+      .innerJoin(products, eq(products.id, workOrderMaterials.productId))
+      .innerJoin(uoms, eq(uoms.id, workOrderMaterials.uomId))
+      .where(eq(workOrderMaterials.workOrderId, id))
+      .orderBy(asc(workOrderMaterials.sequence)),
+    db
+      .select({ c: workOrderConsumptions, sku: products.sku, productName: products.name, uomCode: uoms.code, lotNo: stockLots.lotNo, locationCode: locations.code, scannedByName: users.fullName })
+      .from(workOrderConsumptions)
+      .innerJoin(products, eq(products.id, workOrderConsumptions.productId))
+      .innerJoin(uoms, eq(uoms.id, workOrderConsumptions.uomId))
+      .innerJoin(stockLots, eq(stockLots.id, workOrderConsumptions.lotId))
+      .innerJoin(locations, eq(locations.id, workOrderConsumptions.fromLocationId))
+      .leftJoin(users, eq(users.id, workOrderConsumptions.scannedBy))
+      .where(eq(workOrderConsumptions.workOrderId, id))
+      .orderBy(desc(workOrderConsumptions.consumedAt)),
+    db
+      .select({ o: workOrderOutputs, lotNo: stockLots.lotNo, lotStatus: stockLots.status, locationCode: locations.code })
+      .from(workOrderOutputs)
+      .innerJoin(stockLots, eq(stockLots.id, workOrderOutputs.lotId))
+      .innerJoin(locations, eq(locations.id, workOrderOutputs.toLocationId))
+      .where(eq(workOrderOutputs.workOrderId, id))
+      .orderBy(desc(workOrderOutputs.producedAt)),
+    db
+      .select({ s: workOrderScraps, recordedByName: users.fullName })
+      .from(workOrderScraps)
+      .leftJoin(users, eq(users.id, workOrderScraps.recordedBy))
+      .where(eq(workOrderScraps.workOrderId, id))
+      .orderBy(desc(workOrderScraps.recordedAt)),
+    db
+      .select({ e: workOrderEvents, userName: users.fullName })
+      .from(workOrderEvents)
+      .leftJoin(users, eq(users.id, workOrderEvents.userId))
+      .where(eq(workOrderEvents.workOrderId, id))
+      .orderBy(desc(workOrderEvents.at)),
+    getChain(db, 'work_order', id),
+  ]);
+  const row = rowResult[0];
   if (!row) return null;
-
-  const materials = await db
-    .select({ m: workOrderMaterials, sku: products.sku, productName: products.name, uomCode: uoms.code })
-    .from(workOrderMaterials)
-    .innerJoin(products, eq(products.id, workOrderMaterials.productId))
-    .innerJoin(uoms, eq(uoms.id, workOrderMaterials.uomId))
-    .where(eq(workOrderMaterials.workOrderId, id))
-    .orderBy(asc(workOrderMaterials.sequence));
-
-  const consumptions = await db
-    .select({ c: workOrderConsumptions, sku: products.sku, productName: products.name, uomCode: uoms.code, lotNo: stockLots.lotNo, locationCode: locations.code, scannedByName: users.fullName })
-    .from(workOrderConsumptions)
-    .innerJoin(products, eq(products.id, workOrderConsumptions.productId))
-    .innerJoin(uoms, eq(uoms.id, workOrderConsumptions.uomId))
-    .innerJoin(stockLots, eq(stockLots.id, workOrderConsumptions.lotId))
-    .innerJoin(locations, eq(locations.id, workOrderConsumptions.fromLocationId))
-    .leftJoin(users, eq(users.id, workOrderConsumptions.scannedBy))
-    .where(eq(workOrderConsumptions.workOrderId, id))
-    .orderBy(desc(workOrderConsumptions.consumedAt));
-
-  const outputs = await db
-    .select({ o: workOrderOutputs, lotNo: stockLots.lotNo, lotStatus: stockLots.status, locationCode: locations.code })
-    .from(workOrderOutputs)
-    .innerJoin(stockLots, eq(stockLots.id, workOrderOutputs.lotId))
-    .innerJoin(locations, eq(locations.id, workOrderOutputs.toLocationId))
-    .where(eq(workOrderOutputs.workOrderId, id))
-    .orderBy(desc(workOrderOutputs.producedAt));
-
-  const scraps = await db
-    .select({ s: workOrderScraps, recordedByName: users.fullName })
-    .from(workOrderScraps)
-    .leftJoin(users, eq(users.id, workOrderScraps.recordedBy))
-    .where(eq(workOrderScraps.workOrderId, id))
-    .orderBy(desc(workOrderScraps.recordedAt));
-
-  const events = await db
-    .select({ e: workOrderEvents, userName: users.fullName })
-    .from(workOrderEvents)
-    .leftJoin(users, eq(users.id, workOrderEvents.userId))
-    .where(eq(workOrderEvents.workOrderId, id))
-    .orderBy(desc(workOrderEvents.at));
-
-  const chain = await getChain(db, 'work_order', id);
 
   return { ...row, materials, consumptions, outputs, scraps, events, chain };
 }
@@ -271,23 +274,25 @@ export async function listLineCards(): Promise<LineCardRow[]> {
 /* /uretim/planlama                                                     */
 /* ==================================================================== */
 
-export type PlanningWorkOrderRow = { id: string; docNo: string; status: string; productName: string; lineId: string; plannedQty: string; plannedStart: string | null };
+export type PlanningWorkOrderRow = { id: string; docNo: string; status: string; productName: string; lineId: string; plannedQty: string; uomCode: string; plannedStart: string | null };
 
 export async function listPlanningWorkOrders(fromIso: string, toIso: string): Promise<PlanningWorkOrderRow[]> {
   const rows = await db
-    .select({ wo: workOrders, productName: products.name })
+    .select({ wo: workOrders, productName: products.name, uomCode: uoms.code })
     .from(workOrders)
     .innerJoin(products, eq(products.id, workOrders.productId))
+    .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
     .where(and(inArray(workOrders.status, ['planned', 'released', 'in_progress', 'paused']), gte(workOrders.plannedStart, new Date(`${fromIso}T00:00:00Z`)), lte(workOrders.plannedStart, new Date(`${toIso}T23:59:59Z`))))
     .orderBy(asc(workOrders.plannedStart));
   const unscheduled = await db
-    .select({ wo: workOrders, productName: products.name })
+    .select({ wo: workOrders, productName: products.name, uomCode: uoms.code })
     .from(workOrders)
     .innerJoin(products, eq(products.id, workOrders.productId))
+    .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
     .where(and(inArray(workOrders.status, ['planned', 'released']), isNull(workOrders.plannedStart)));
   return [...rows, ...unscheduled].map((r) => ({
     id: r.wo.id, docNo: r.wo.docNo, status: r.wo.status, productName: r.productName, lineId: r.wo.lineId,
-    plannedQty: r.wo.plannedQty, plannedStart: r.wo.plannedStart ? r.wo.plannedStart.toISOString().slice(0, 10) : null,
+    plannedQty: r.wo.plannedQty, uomCode: r.uomCode, plannedStart: r.wo.plannedStart ? r.wo.plannedStart.toISOString().slice(0, 10) : null,
   }));
 }
 
@@ -367,4 +372,45 @@ export type LineOption = { id: string; code: string; name: string; capacityPerHo
 export async function listLineOptions(): Promise<LineOption[]> {
   const rows = await listProductionLines();
   return rows.map((r) => ({ id: r.id, code: r.code, name: r.name, capacityPerHour: r.capacityPerHour, shiftMinutes: r.shiftMinutes }));
+}
+
+/* ==================================================================== */
+/* /operator — Vardiya özeti                                            */
+/* ==================================================================== */
+
+export type LineShiftSummary = {
+  lineId: string;
+  /** Bugün üretilen (mamul) miktar */
+  todayProducedQty: string;
+  /** Bugünün ideal (hedef) üretimi — kapasite/saat × (vardiya süresi − duruş süresi) */
+  todayTargetQty: string;
+  lastDowntime: { reason: string; minutes: number; startedAt: Date } | null;
+};
+
+/**
+ * Operatör ana ekranındaki "Vardiya özeti" şeridi için hat başına bugünkü üretim/hedef ve son
+ * duruş bilgisi — `computeLineOeeForDay` zaten bu hesabı yapıyor (Tur 4 bulgusu, P1: 1024×768'te
+ * kartların altında %35 boş alan kalıyordu, şerit bu bilgiyle genişletilir).
+ */
+export async function listLineShiftSummaries(lineIds: string[]): Promise<LineShiftSummary[]> {
+  const today = businessDate(new Date());
+  return Promise.all(
+    lineIds.map(async (lineId) => {
+      const [oee, [lastDowntime]] = await Promise.all([
+        computeLineOeeForDay(db, lineId, today),
+        db
+          .select({ reason: downtimes.reason, minutes: downtimes.minutes, startedAt: downtimes.startedAt })
+          .from(downtimes)
+          .where(and(eq(downtimes.lineId, lineId), gte(downtimes.startedAt, new Date(`${today}T00:00:00Z`))))
+          .orderBy(desc(downtimes.startedAt))
+          .limit(1),
+      ]);
+      return {
+        lineId,
+        todayProducedQty: toDb(oee.actualOutput),
+        todayTargetQty: toDb(oee.idealOutput),
+        lastDowntime: lastDowntime ? { reason: lastDowntime.reason, minutes: lastDowntime.minutes, startedAt: lastDowntime.startedAt } : null,
+      };
+    }),
+  );
 }

@@ -97,9 +97,11 @@ export function CreateWorkOrderForm({
 
   return (
     <Form {...form}>
-      {/* pb-28: mobilde sticky aksiyon çubuğu (FormActions) son kartın altına gelince içeriği
-          kesmesin diye alt boşluk rezerve edilir. */}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-28 md:pb-0">
+      {/* Kök neden (Tur 4 P2): `pb-28` (112px) yalnızca sticky aksiyon çubuğunu (~72px) hesaba
+          katıyordu — altta uygulama alt navigasyonu da (~64px) sabit durduğundan toplam ~136px'lik
+          sabit katman içeriği örtüyordu ("Reçete henüz hesaplanmadı" boş durum metni çubuğun
+          arkasında yarı görünür kalıyordu). 144px (9rem) + güvenli alan iki katmanı da karşılar. */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0">
         <div className="rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">Ürün ve miktar</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">

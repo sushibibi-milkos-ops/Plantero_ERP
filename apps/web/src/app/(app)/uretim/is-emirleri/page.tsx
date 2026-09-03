@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Plus, ListChecks, PlayCircle, PackageCheck, Percent } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { requirePermission, userCan } from '@/lib/auth';
 import { listWorkOrders, getWorkOrderKpis } from '@/modules/production/queries';
 import { WorkOrdersTable } from '@/modules/production/components/work-orders-table';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
+import { KpiStripRow } from '@/components/kpi-strip';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = { title: 'İş Emirleri' };
@@ -31,19 +32,21 @@ export default async function WorkOrdersPage() {
         }
       />
 
-      {/* min-h-[104px]: iki satıra sarabilen başlıklarda (ör. "Açık iş emri değeri" 2 sütunlu mobil
-          ızgarada) kart yüksekliği sabitlenir, komşu kartla değer taban çizgisi kaymaz.
+      {/* `strip` varyant: depo/stok, depo/mal-kabul, depo/sayim, depo/sevkiyat, depo/transfer,
+          depo/skt ve satis/net-ciro ile aynı Stripe kalıbı — çerçevesiz, 80px, dikey hairline
+          ayraçlı (masaüstü), 140×72 yatay snap şeridi (mobil). Üretim modülü eskiden tek başına
+          134px'lik kutulu `card` varyantında kalmıştı (Tur 4 bulgusu, P1).
           `hint`: yalnızca delta yokken ve gerçekten yeni bilgi taşıyorsa gösterilir — eskiden iki
           kart birbirinin birincil değerini tekrar ediyordu ("Açık iş emri 4 / 1 üretimde" ↔
           "Üretimde 1 / 4 açık iş emri", sıfır yeni bilgi) ve diğer ikisinde "geçmiş dönem verisi
           yok"/"son 30 gün" gibi dolgu metin vardı — Stripe'ta ikincil satır ya karşılaştırma
           deltasıdır ya hiç yoktur (Tur 3 bulgusu, P1). */}
-      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4 [&>*]:min-h-[104px]">
-        <KpiCard title="Açık iş emri" value={kpis.openCount} format="int" icon={<ListChecks strokeWidth={1.75} />} delta={kpis.openCountDelta ?? undefined} hint={kpis.openCountDelta === null ? (kpis.overdueCount > 0 ? `${kpis.overdueCount} gecikmiş` : 'gecikme yok') : undefined} />
-        <KpiCard title="Üretimde" value={kpis.inProgressCount} format="int" icon={<PlayCircle strokeWidth={1.75} />} delta={kpis.inProgressCountDelta ?? undefined} hint={kpis.inProgressCountDelta === null ? `${kpis.runningLines}/${kpis.totalLines} hatta çalışıyor` : undefined} />
-        <KpiCard title="Açık iş emri değeri" value={kpis.plannedValue} format="money" icon={<PackageCheck strokeWidth={1.75} />} delta={kpis.plannedValueDelta ?? undefined} invertDelta />
-        <KpiCard title="Ortalama verim" value={kpis.avgYieldPct} format="pct" icon={<Percent strokeWidth={1.75} />} delta={kpis.avgYieldPctDelta ?? undefined} />
-      </div>
+      <KpiStripRow>
+        <KpiCard variant="strip" title="Açık iş emri" value={kpis.openCount} format="int" delta={kpis.openCountDelta ?? undefined} hint={kpis.openCountDelta === null ? (kpis.overdueCount > 0 ? `${kpis.overdueCount} gecikmiş` : 'gecikme yok') : undefined} />
+        <KpiCard variant="strip" title="Üretimde" value={kpis.inProgressCount} format="int" delta={kpis.inProgressCountDelta ?? undefined} hint={kpis.inProgressCountDelta === null ? `${kpis.runningLines}/${kpis.totalLines} hatta çalışıyor` : undefined} />
+        <KpiCard variant="strip" title="Açık iş emri değeri" value={kpis.plannedValue} format="money" delta={kpis.plannedValueDelta ?? undefined} invertDelta />
+        <KpiCard variant="strip" title="Ortalama verim" value={kpis.avgYieldPct} format="pct" delta={kpis.avgYieldPctDelta ?? undefined} />
+      </KpiStripRow>
 
       <WorkOrdersTable workOrders={workOrders} />
     </>

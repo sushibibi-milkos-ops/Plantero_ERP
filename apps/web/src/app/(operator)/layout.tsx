@@ -19,20 +19,26 @@ export default async function OperatorLayout({ children }: { children: React.Rea
         <div className="ml-auto flex items-center gap-3">
           <OperatorClock />
           <span className="hidden max-w-[160px] truncate text-sm font-medium sm:inline">{user.fullName}</span>
+          {/* h-14 min-w-14 (h-11 w-11 idi): eldivenli parmakla, hareketli üretim ortamında 44px WCAG
+              asgarisine yapışmak yanlış dokunma riskini artırıyordu; çıkış ayrıca yalnızca ikon
+              taşıyıp etiketsizdi — iki düğme de metinle adlandırılıp 56×56'ya büyütüldü (Tur 4
+              bulgusu, P2). */}
           <Link
             href="/kokpit"
-            className="grid h-11 w-11 place-items-center rounded-lg border text-muted-foreground hover:bg-accent hover:text-foreground"
-            aria-label="Kokpit"
+            className="flex h-14 min-w-14 items-center justify-center gap-1.5 rounded-lg border px-3 text-muted-foreground hover:bg-accent hover:text-foreground"
+            aria-label="Kokpite dön"
           >
-            <LayoutDashboard className="size-5" />
+            <LayoutDashboard className="size-5 shrink-0" />
+            <span className="hidden text-sm sm:inline">Kokpit</span>
           </Link>
           <form action={operatorLogout}>
             <button
               type="submit"
-              className="grid h-11 w-11 place-items-center rounded-lg border text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+              className="flex h-14 min-w-14 items-center justify-center gap-1.5 rounded-lg border px-3 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
               aria-label="Çıkış"
             >
-              <LogOut className="size-5" />
+              <LogOut className="size-5 shrink-0" />
+              <span className="hidden text-sm sm:inline">Çıkış</span>
             </button>
           </form>
         </div>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { DndContext, DragOverlay, useDraggable, useDroppable, type DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { GripVertical, CalendarX } from 'lucide-react';
+import { GripVertical, CalendarX, Plus } from 'lucide-react';
 // Not: '@plantero/core' barrel'ı sunucu-özel kod (node:crypto) içerir — istemci bileşeninde
 // yalnızca gösterim amaçlı hesaplama için doğrudan 'decimal.js' kullanılır (bkz. operator-work-order.tsx).
 import Decimal from 'decimal.js';
@@ -141,17 +141,20 @@ export function PlanningBoard({
   // 132px 'Planlanmamış' sütunu Hat'tan sonra, tarih sütunlarından önce (Tur 3 bulgusu, P0 —
   // tarihsiz iş emirleri hiçbir hücrede görünmüyordu).
   const gridTemplate = `110px 132px repeat(${dateCols.length}, minmax(${dayColWidth}px, 1fr)) 92px`;
-  // Satırlar viewport yüksekliğine yayılır (Tur 3 bulgusu, P1 — tahta 900px boşluk bırakıyordu):
-  // başlık satırı içeriğine göre, hat satırları eşit 1fr ile kabın kalan yüksekliğini paylaşır.
-  const gridTemplateRows = `auto repeat(${lines.length}, minmax(76px, 1fr))`;
+  // Kök neden (Tur 4 P1): satırlar viewport yüksekliğine (`md:h-[calc(100dvh-16rem)]`) eşit `1fr`
+  // ile yayılıyordu — 3 hat × 7 gün ızgarasının 21 hücresinin 19'u boşken bu, hat başına ~202px'e
+  // (kart yalnızca 36px) şişiyordu. Satır yüksekliği artık içeriğe bağlı: `minmax(96px, auto)` —
+  // 3 hat × 96px = 288px, kalan viewport alanı gerilmeden boş bırakılır. Kap yalnızca çok sayıda
+  // hatta (nadiren) taşan içeriği sınırlamak için üst sınır taşır (`max-h`, `h` değil).
+  const gridTemplateRows = `auto repeat(${lines.length}, minmax(96px, auto))`;
 
   return (
     <DndContext sensors={sensors} onDragStart={(e) => setActiveId(e.active.id as string)} onDragEnd={handleDragEnd} onDragCancel={() => setActiveId(null)}>
-      {/* Masaüstü ızgara. scroll-fade-x: kaydırılabilir olduğuna dair kenar ipucu.
-          md:h-[...]: satırları viewport'a yayar (Tur 3 bulgusu, P1 — 1440×900'de içerik %49
-          kullanıyordu); overflow-y-auto çok sayıda hatta (nadiren) dikey taşmayı karşılar. */}
-      <div className="scroll-fade-x scrollbar-thin hidden overflow-x-auto overflow-y-auto rounded-lg border border-border/70 bg-card md:block md:h-[calc(100dvh-16rem)] md:min-h-[420px]">
-        <div className="grid h-full" style={{ gridTemplateColumns: gridTemplate, gridTemplateRows }}>
+      {/* Masaüstü ızgara. scroll-fade-x: kaydırılabilir olduğuna dair kenar ipucu. md:max-h: çok
+          sayıda hatta dikey taşmayı sınırlar, az hatta ızgara kendi doğal (kısa) yüksekliğinde kalır
+          (Tur 4 bulgusu, P1 — eskiden `md:h-[...]` sabit yükseklik zorluyordu). */}
+      <div className="scroll-fade-x scrollbar-thin hidden overflow-x-auto overflow-y-auto rounded-lg border border-border/70 bg-card md:block md:max-h-[calc(100dvh-16rem)]">
+        <div className="grid" style={{ gridTemplateColumns: gridTemplate, gridTemplateRows }}>
           <div className="sticky left-0 z-10 border-r border-b border-border/60 bg-muted/40 p-2 text-xs font-medium text-muted-foreground">Hat</div>
           <div className="sticky left-[110px] z-10 border-r border-b border-border/60 bg-muted/40 p-2 text-center text-[11px] font-medium whitespace-nowrap text-muted-foreground">
             Planlanmamış
@@ -252,10 +255,12 @@ function PlanningLineRow({
   const unscheduledCellItems = byCell.get(`${line.id}:unscheduled`) ?? [];
   // Toplam: tarihli günler + tarihsiz kalan iş emirleri (hattın tüm planlanmış miktarı — Tur 3
   // bulgusu ile eklenen "Planlanmamış" sütunu görmezden gelinmez).
-  const rowTotal = [...dateCols, 'unscheduled'].reduce((acc, d) => {
-    const cellQty = (byCell.get(`${line.id}:${d}`) ?? []).reduce((a, w) => a.plus(new Decimal(w.plannedQty)), new Decimal(0));
-    return acc.plus(cellQty);
-  }, new Decimal(0));
+  const rowWorkOrders = [...dateCols, 'unscheduled'].flatMap((d) => byCell.get(`${line.id}:${d}`) ?? []);
+  const rowTotal = rowWorkOrders.reduce((acc, w) => acc.plus(new Decimal(w.plannedQty)), new Decimal(0));
+  // Hattaki tüm iş emirleri aynı birimdeyse o birim gösterilir, karışıksa (nadiren — hat farklı
+  // ürün tipleri üretebilir) toplam miktar tek birime indirgenemeyeceğinden birim boş bırakılır
+  // (line-cards.tsx'teki `todayUomCode` ile aynı desen — yanlış/varsayılan birim göstermek yerine).
+  const rowUomCode = rowWorkOrders.length && rowWorkOrders.every((w) => w.uomCode === rowWorkOrders[0]!.uomCode) ? rowWorkOrders[0]!.uomCode : null;
 
   return (
     <>
@@ -267,8 +272,12 @@ function PlanningLineRow({
       {dateCols.map((d) => (
         <PlanningCell key={d} lineId={line.id} dateIso={d} items={byCell.get(`${line.id}:${d}`) ?? []} isToday={d === todayIso} isWeekend={dowMonFirst(d) >= 5} dailyCapacity={dailyCapacity} />
       ))}
-      <div className="flex items-center justify-end border-b border-border/60 bg-muted/10 px-2">
+      {/* items-start pt-2: eskiden dikey ortalanan rakam, satırın üstündeki hat kartıyla hizasız
+          görünüyordu — üste hizalanıp altına birim etiketi eklenince "Toplam" hücresi diğer hücrelerle
+          aynı üst hizadan başlar (Tur 4 bulgusu, P2). */}
+      <div className="flex flex-col items-end justify-start border-b border-border/60 bg-muted/10 px-2 pt-2">
         <QtyCell value={rowTotal.toFixed(4)} className="text-xs font-medium" />
+        {rowUomCode ? <span className="text-[11px] text-muted-foreground">{rowUomCode}</span> : null}
       </div>
     </>
   );
@@ -282,13 +291,17 @@ function UnscheduledCell({ lineId, items }: { lineId: string; items: PlanningWor
     <div
       ref={setNodeRef}
       className={cn(
-        'sticky left-[110px] z-[5] space-y-1.5 overflow-y-auto border-r border-b border-border/60 bg-muted/15 p-1.5 transition-colors',
+        'sticky left-[110px] z-[5] flex flex-col space-y-1.5 overflow-y-auto border-r border-b border-border/60 bg-muted/15 p-1.5 transition-colors',
         isOver && 'bg-primary/8',
       )}
     >
-      {items.map((wo) => (
-        <WoCard key={wo.id} wo={wo} />
-      ))}
+      {items.length === 0 ? (
+        // Boş "Planlanmamış" hücresi eskiden sessizdi — sürükle-bırak hedefi olduğuna dair hiçbir
+        // ipucu vermiyordu (Tur 4 bulgusu, P1). Hattın tüm iş emirlerinin planlandığını netleştirir.
+        <div className="flex flex-1 items-center justify-center px-1 text-center text-[11px] text-muted-foreground">Tüm iş emirleri planlandı</div>
+      ) : (
+        items.map((wo) => <WoCard key={wo.id} wo={wo} />)
+      )}
     </div>
   );
 }
@@ -311,25 +324,40 @@ function PlanningCell({
   const { setNodeRef, isOver } = useDroppable({ id: `${lineId}::${dateIso}` });
   const cellQty = items.reduce((a, w) => a.plus(new Decimal(w.plannedQty)), new Decimal(0));
   const fillPct = dailyCapacity && dailyCapacity.gt(0) && items.length > 0 ? Math.round(cellQty.div(dailyCapacity).mul(100).toNumber()) : null;
+  const isEmpty = items.length === 0;
 
   return (
     <div
       ref={setNodeRef}
+      title={fillPct !== null ? `Gün kapasitesinin %${fillPct}'i` : undefined}
       className={cn(
         // h-full (min-h-16 idi): satırlar artık kabın kalan yüksekliğini eşit paylaşıyor (Tur 3
         // bulgusu, P1) — hücre kendi satırını doldurur; taşan içerik hücre içinde kaydırılır.
-        'relative h-full space-y-1.5 overflow-y-auto border-b border-border/40 p-1.5 pb-4 transition-colors',
+        // group: boş hücrede hover'da sürükle-bırak hedefi ipucu (Plus ikonu) gösterir — eskiden boş
+        // hücrede hiçbir işaret yoktu (Tur 4 bulgusu, P1).
+        'group relative h-full space-y-1.5 overflow-y-auto border-b border-border/40 p-1.5 pb-2.5 transition-colors',
         isWeekend && !isToday && 'bg-muted/25',
         isToday && 'bg-primary/[0.03]',
+        isEmpty && !isOver && 'hover:bg-accent/30',
         isOver && 'bg-primary/8',
       )}
     >
+      {isEmpty ? (
+        <Plus className="pointer-events-none absolute inset-0 m-auto size-4 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground/50" aria-hidden />
+      ) : null}
       {items.map((wo) => (
         <WoCard key={wo.id} wo={wo} />
       ))}
-      {/* text-[11px] text-muted-foreground/70: 9px %50 opaklık okunabilirlik tabanının (11px) altındaydı
-          (Tur 2 bulgusu) — pratikte görünmezdi. */}
-      {fillPct !== null ? <span className="pointer-events-none absolute right-1.5 bottom-1 font-mono text-[11px] text-muted-foreground/70">%{fillPct}</span> : null}
+      {/* Kök neden (Tur 4 P2): 11px açık gri bir sayı hangi ölçüye ait olduğu (gün kapasitesinin
+          yüzdesi mi, hat doluluğu mu) hiçbir etiketle söylenmiyordu ve boş hücrede hiç görünmüyordu
+          — sütunlar arası karşılaştırma yapılamıyordu. Sayı yerine hücrenin altında tam genişlikte
+          3px'lik bir kapasite çubuğu: doluluk oranı doğrudan görsel uzunluk olarak okunur, tam
+          değer yalnızca hover'da (`title` tooltip) gösterilir. */}
+      {fillPct !== null ? (
+        <div className="pointer-events-none absolute right-1.5 bottom-1 left-1.5 h-[3px] overflow-hidden rounded-full bg-primary/25">
+          <div className="h-full rounded-full bg-primary/60" style={{ width: `${Math.min(100, fillPct)}%` }} />
+        </div>
+      ) : null}
     </div>
   );
 }

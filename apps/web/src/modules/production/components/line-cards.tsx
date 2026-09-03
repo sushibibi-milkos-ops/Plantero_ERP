@@ -76,18 +76,46 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
                   belirsizdi (Tur 3 bulgusu, P2) — üstteki aktif iş emri ilerlemesinden ayrı bir
                   ölçü olduğu açıklama ile netleşir. */}
               <Metric label="Bugün (hat)" value={<QtyCell value={line.todayProducedQty} uom={line.todayUomCode} className="justify-center text-sm font-semibold" />} title="Hattın bugünkü toplam üretimi (tüm iş emirleri)" />
-              <Metric label="Doluluk" value={<span className="num text-sm font-semibold">{fillPct === null ? '—' : `%${fillPct}`}</span>} />
-              <Metric label="Kapasite" value={<span className="num text-sm font-semibold">{line.capacityPerHour ? `${formatQty(line.capacityPerHour, undefined, { maxDigits: 0 })}/sa` : '—'}</span>} />
+              {/* Üç metrik tek kalıba indirildi: değer `text-sm font-semibold tabular-nums`,
+                  birim daima ayrı, soluk `ml-0.5 text-[11px]` span (QtyCell'in birim kalıbıyla
+                  aynı) — eskiden "80/sa" ve "%3" birimi değerle aynı ağırlıkta ya da önde
+                  yazıyordu, göz sütunları karşılaştıramıyordu (Tur 4 bulgusu, P2). */}
+              <Metric
+                label="Doluluk"
+                value={
+                  <span className="num text-sm font-semibold">
+                    {fillPct === null ? '—' : fillPct}
+                    {fillPct === null ? null : <span className="ml-0.5 text-[11px] font-normal text-muted-foreground">%</span>}
+                  </span>
+                }
+              />
+              <Metric
+                label="Kapasite"
+                value={
+                  <span className="num text-sm font-semibold">
+                    {line.capacityPerHour ? formatQty(line.capacityPerHour, undefined, { maxDigits: 0 }) : '—'}
+                    {line.capacityPerHour ? <span className="ml-0.5 text-[11px] font-normal text-muted-foreground">/sa</span> : null}
+                  </span>
+                }
+              />
             </div>
 
-            {/* Son 7 gün + son kapatılan iş emri: 900px viewport'ta kartların altında ~%47 boş alan
-                kalıyordu (Tur 3 bulgusu, P2) — boşluk bilgiye çevrilir. */}
-            {line.sparkline.some((v) => v > 0) ? (
-              <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3">
-                <span className="text-[11px] tracking-wide text-muted-foreground uppercase">Son 7 gün</span>
+            {/* Son 7 gün: veri olsun olmasın daima render edilir — HAT3'te tüm değerler 0 diye
+                bölüm hiç çizilmiyordu, üç kart farklı satır sayısına düşüp metrik satırları
+                yatayda hizasız kalıyordu (Tur 4 bulgusu, P1). Veri yokken Sparkline yerine sabit
+                boyutlu (88×24) kutuda 1px taban çizgisi + "—" gösterilir ki kart iskeleti
+                (satır sayısı, yükseklik) üç hatta da aynı kalsın. */}
+            <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3">
+              <span className="text-[11px] tracking-wide text-muted-foreground uppercase">Son 7 gün</span>
+              {line.sparkline.some((v) => v > 0) ? (
                 <Sparkline data={line.sparkline} width={88} height={24} tone="muted" />
-              </div>
-            ) : null}
+              ) : (
+                <div className="relative flex h-6 w-[88px] items-center" title="Son 7 günde üretim yok">
+                  <div aria-hidden className="h-px w-full bg-border" />
+                  <span className="absolute right-0 bg-card pl-1.5 text-[11px] text-muted-foreground">—</span>
+                </div>
+              )}
+            </div>
             {line.lastClosedWorkOrder ? (
               <div className="flex items-center gap-2 border-t border-border/60 pt-3 text-xs text-muted-foreground">
                 <Lock className="size-3.5 shrink-0" />
