@@ -1,0 +1,40 @@
+{
+  "routes": {
+    "/operator/[lineId]": {
+      "round": 8,
+      "reference": "linear",
+      "closed": [
+        {
+          "id": "uretim-operator-lineid-01",
+          "severity": "P2",
+          "text": "İlk e2e koşusunda HAT3 kartına tıklandıktan hemen sonra (rota ilk kez derlenirken) Next.js dev sunucusu bellek eşiğine yaklaştığı için kendi kendini yeniden başlattı; o anki RSC isteği yarıda kesilip istemcide 'Runtime TypeError: network error' görüldü ve 'Oat Coffee Creamer' başlığı hiç render edilmedi.",
+          "rootCause": "Uygulama kodu değil — uzun ömürlü dev sunucusunun kendi bellek eşiği koruması (Next.js dev watchdog restart) ile e2e koşusu arasındaki ortam yarışı. Kod tarafında tetikleyici bir kusur bulunamadı.",
+          "measure": "Bu turda /operator/[lineId] rotası üç hat için de (HAT1 boş, HAT2 in_progress 'Strawberry Protein Mixi', HAT3 boş) süreç sıfırdan kill edilip 'nohup pnpm dev:web' ile temiz başlatılan bir dev sunucusuna karşı yeniden çekildi: pnpm shot ile masaüstü (1440x900) + mobil (390x844) ekran görüntüleri alındı, hiçbirinde network error / boş sayfa oluşmadı. pnpm measure /operator/<HAT2-lineId> --viewport 1024x768 → {\"overflowX\":false,\"touchTargetsBelow44\":[],\"h1\":{\"size\":24,\"weight\":600}} ve --viewport 390x844 → {\"overflowX\":false,\"touchTargetsBelow44\":[]}. pnpm db:reset && pnpm db:check → I1-I28 hepsi GEÇTİ (0 ihlal). pnpm typecheck, pnpm lint, packages/core src/production/*.test.ts (12/12) temiz.",
+          "target": "Temiz/yeniden başlatılmış bir dev sunucusuna karşı rota network error vermeden render eder; touchTargetsBelow44 boş; db:check I1-I28 yeşil.",
+          "verdict": "ortam-kaynaklı flake, kod değişikliği gerekmedi",
+          "file": "apps/web/src/app/(operator)/operator/[lineId]/page.tsx",
+          "openedRound": 7,
+          "closedRound": 8,
+          "verifiedBy": "pnpm shot + pnpm measure + pnpm db:reset/db:check (temiz dev sunucusu)"
+        },
+        {
+          "id": "uretim-operator-lineid-02",
+          "severity": "P2",
+          "text": "Doğrulama sırasında (verilen bulgu kapsamı dışında, kök nedeni ararken) operatör lot-okutma girişinde (\"Lot okut\") 1024x768 tablet genişliğinde dokunma hedefi 36px'e düşüyordu: bileşen kendi satırında `h-14` (56px) veriyordu ama paylaşılan `apps/web/src/components/ui/input.tsx` Input primitive'inin dahili `md:h-9` (>=768px) varsayılanı CSS kademesinde sonra geldiği için sessizce kazanıyordu.",
+          "rootCause": "Paylaşılan bileşen (apps/web/src/components/ui/input.tsx) kaynaklı kademe çakışması; dosyanın kendisi düzenlenmedi (kural 2/rule 5 — shell modülü sahipliği). Yalnızca kendi modül dosyamda (operator-work-order.tsx) `h-14` yerine `!h-14` (Tailwind important) kullanılarak bu ekrana özgü zorunlu yükseklik verildi; paylaşılan dosyaya dokunulmadı.",
+          "measure": "Öncesi: pnpm measure /operator/<HAT2-lineId> --viewport 1024x768 → touchTargetsBelow44: [{\"selector\":\"input[data-slot=\\\"input\\\"]\",\"w\":942,\"h\":36}]. Sonrası (apps/web/src/modules/production/components/operator-work-order.tsx içindeki lot-okutma Input'una `!h-14` verildikten sonra): aynı ölçüm → touchTargetsBelow44: [].",
+          "target": "Operatör ekranında tüm etkileşimli hedefler >=44px (CLAUDE.md kesin kural 9).",
+          "verdict": "kapatıldı — kendi modül dosyasında düzeltildi, paylaşılan bileşen değiştirilmedi",
+          "file": "apps/web/src/modules/production/components/operator-work-order.tsx",
+          "openedRound": 8,
+          "closedRound": 8,
+          "verifiedBy": "pnpm measure (öncesi/sonrası)"
+        }
+      ],
+      "open": [],
+      "sharedComponentRequests": [
+        "apps/web/src/components/ui/input.tsx: `md:h-9` varsayılanı (Tailwind v4 çıktısında responsive katman base katmandan sonra geldiği için) çağıran taraftaki düz `hN` override'larını >=768px'te sessizce eziyor (örn. `className=\"h-14 ...\"` masaüstünde 36px'e düşüyor). apps/web/src/components/form/number-input.tsx da aynı deseni (`h-11 ... md:h-9`) doğrudan kendi Input'unda tekrar ediyor; onu saran `[&_input]:hN` wrapper'ları da aynı riski taşıyor (bu turda ölçülmedi, operator-work-order.tsx'teki iki NumberInput kullanım yeri — Fire gir/Bitir miktar alanları — bir sonraki turda ölçülmeli). Öneri: paylaşılan Input'ta masaüstü küçültmesini `md:h-9` yerine `has-[]`/veri-attribute tabanlı bir `size` prop'una taşımak ya da çağıran taraf override'larını `!` ile beklemek yerine primitive'in kendisini öngörülebilir kılmak."
+      ]
+    }
+  }
+}
