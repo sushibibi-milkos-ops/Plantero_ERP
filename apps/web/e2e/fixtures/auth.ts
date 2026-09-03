@@ -32,9 +32,22 @@ export async function loginAs(page: Page, role: TestRole = 'admin', next?: strin
   await expect(page.getByTestId('user-menu')).toBeVisible();
 }
 
-/** Üst bardaki kullanıcı menüsünden çıkış yapar ve /login'e dönmeyi bekler */
+/**
+ * Üst bardaki kullanıcı menüsünden çıkış yapar ve /login'e dönmeyi bekler.
+ * Dev sunucusunda ilk derleme sırasında sayfa henüz yerleşmeden tıklanırsa çıkış aksiyonu
+ * yarışa girebiliyor; bu yüzden önce ağın sakinleşmesi beklenir, sonunda da oturum çerezinin
+ * gerçekten silindiği doğrulanır (URL tek başına yeterli kanıt değil: middleware çerez varsa
+ * /login'i /kokpit'e geri yönlendirir).
+ */
 export async function logout(page: Page): Promise<void> {
+  await page.waitForLoadState('networkidle');
   await page.getByTestId('user-menu').click();
   await page.getByTestId('logout').click();
   await page.waitForURL(/\/login/, { timeout: 30_000 });
+  await expect
+    .poll(async () => (await page.context().cookies()).some((c) => c.name === 'plantero_session'), {
+      message: 'çıkış sonrası plantero_session çerezi silinmeli',
+      timeout: 10_000,
+    })
+    .toBe(false);
 }

@@ -1,11 +1,12 @@
 import { randomBytes } from 'node:crypto';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, inArray, sql } from 'drizzle-orm';
 import Decimal from 'decimal.js';
 import {
-  db, type Tx, uoms, warehouses, locations, partners, products, journals, fiscalPeriods,
+  db, type Tx, uoms, warehouses, locations, partners, products, journals, fiscalPeriods, journalEntries, journalLines,
 } from '@plantero/db';
 import { ensureCoreAccounts } from '../accounting/mapping.js';
-import type { ActorCtx } from '../types.js';
+import { getAccountBalance } from '../accounting/journal.js';
+import type { ActorCtx, Ledger } from '../types.js';
 
 export const ctx: ActorCtx = { userId: null, userEmail: 'test@plantero.local', requestId: 'test' };
 
@@ -118,3 +119,32 @@ export async function seedBase(tx: Tx) {
 
 export const d = (v: string | number) => new Decimal(v);
 export { and, eq };
+
+/**
+ * Hesap bakiyesi sondası: test başında (posted+reversed) tüm hesapların bakiyesini anlık görüntü olarak alır;
+ * `bal(kod, defter)` o andan bu yana oluşan FARKI döner (alt hesaplar dahil — getAccountBalance ile aynı kapsam).
+ * Seed verisiyle dolu bir veritabanında mutlak bakiye yerine delta doğrulanır; testler seed durumundan bağımsız kalır.
+ */
+export async function balanceProbe(tx: Tx) {
+  const rows = await tx
+    .select({
+      code: journalLines.accountCode,
+      ledger: journalLines.ledger,
+      debit: sql<string>`coalesce(sum(${journalLines.debit}), 0)`,
+      credit: sql<string>`coalesce(sum(${journalLines.credit}), 0)`,
+    })
+    .from(journalLines)
+    .innerJoin(journalEntries, eq(journalEntries.id, journalLines.entryId))
+    .where(inArray(journalEntries.status, ['posted', 'reversed']))
+    .groupBy(journalLines.accountCode, journalLines.ledger);
+  const base = rows.map((r) => ({ code: r.code, ledger: r.ledger, net: new Decimal(r.debit).minus(new Decimal(r.credit)) }));
+  const baseline = (accountCode: string, ledger: Ledger) =>
+    base
+      .filter((r) => r.ledger === ledger && (r.code === accountCode || r.code.startsWith(`${accountCode}.`)))
+      .reduce((acc, r) => acc.plus(r.net), new Decimal(0));
+  return {
+    /** Sondadan bu yana hesap bakiyesindeki değişim (Σborç − Σalacak) */
+    bal: async (accountCode: string, ledger: Ledger): Promise<Decimal> =>
+      (await getAccountBalance(tx, { accountCode, ledger })).minus(baseline(accountCode, ledger)),
+  };
+}

@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { journalEntries, journalLines, accounts, partners, fiscalPeriods } from '@plantero/db';
-import { postJournalEntry, reverseJournalEntry, getAccountBalance, getPartnerBalance } from '../accounting/journal.js';
+import { postJournalEntry, reverseJournalEntry, getPartnerBalance } from '../accounting/journal.js';
 import { ensurePartnerAccount } from '../accounting/mapping.js';
 import { DomainError } from '../auth/errors.js';
-import { withRollback, expectReject, seedBase, ctx, d } from './helpers.js';
+import { withRollback, expectReject, seedBase, ctx, d, balanceProbe } from './helpers.js';
 
 describe('journal', () => {
   it('dengesiz fiş reddedilir', async () => {
@@ -35,6 +35,7 @@ describe('journal', () => {
   it("ledger 'both' → iki fiş, twinEntryId çapraz, satırlarda accountCode/accountId", async () => {
     await withRollback(async (tx) => {
       await seedBase(tx);
+      const { bal } = await balanceProbe(tx);
       const r = await postJournalEntry(tx, {
         ledger: 'both', journalCode: 'GEN', entryDate: new Date(), description: 'açılış',
         lines: [{ accountCode: '100', debit: d('1000') }, { accountCode: '500', credit: d('1000') }],
@@ -58,9 +59,9 @@ describe('journal', () => {
       expect(l100?.accountId).toBe(acc100!.id);
       expect(l100?.ledger).toBe('VUK');
 
-      expect((await getAccountBalance(tx, { accountCode: '100', ledger: 'VUK' })).toFixed(4)).toBe('1000.0000');
-      expect((await getAccountBalance(tx, { accountCode: '100', ledger: 'UFRS' })).toFixed(4)).toBe('1000.0000');
-      expect((await getAccountBalance(tx, { accountCode: '500', ledger: 'VUK' })).toFixed(4)).toBe('-1000.0000');
+      expect((await bal('100', 'VUK')).toFixed(4)).toBe('1000.0000');
+      expect((await bal('100', 'UFRS')).toFixed(4)).toBe('1000.0000');
+      expect((await bal('500', 'VUK')).toFixed(4)).toBe('-1000.0000');
     });
   });
 
@@ -147,6 +148,7 @@ describe('journal', () => {
   it('ters kayıt: ikiz fiş de ters çevrilir, bakiye sıfırlanır', async () => {
     await withRollback(async (tx) => {
       await seedBase(tx);
+      const { bal } = await balanceProbe(tx);
       const r = await postJournalEntry(tx, {
         ledger: 'both', journalCode: 'GEN', entryDate: new Date(), description: 'x',
         lines: [{ accountCode: '100', debit: d('250') }, { accountCode: '500', credit: d('250') }],
@@ -158,8 +160,8 @@ describe('journal', () => {
       expect(orig!.reversedById).toBe(rev.vukId);
       const [twin] = await tx.select().from(journalEntries).where(eq(journalEntries.id, r.ufrsId!));
       expect(twin!.status).toBe('reversed');
-      expect((await getAccountBalance(tx, { accountCode: '100', ledger: 'VUK' })).isZero()).toBe(true);
-      expect((await getAccountBalance(tx, { accountCode: '100', ledger: 'UFRS' })).isZero()).toBe(true);
+      expect((await bal('100', 'VUK')).isZero()).toBe(true);
+      expect((await bal('100', 'UFRS')).isZero()).toBe(true);
       const err = await expectReject(tx, (sp) => reverseJournalEntry(sp, r.vukId!, ctx));
       expect((err as DomainError).code).toBe('JOURNAL_NOT_POSTED');
     });

@@ -15,6 +15,8 @@ import {
   ClipboardList,
   Tags,
   CalendarClock,
+  ScanLine,
+  QrCode,
   Factory,
   ListChecks,
   Rows3,
@@ -120,6 +122,8 @@ export const NAV: NavGroup[] = [
       { label: 'Sayım', href: '/depo/sayim', icon: ClipboardList, permission: 'stock.count', keywords: ['envanter sayımı'] },
       { label: 'Lotlar', href: '/depo/lotlar', icon: Tags, permission: 'stock.view', keywords: ['parti', 'lot'] },
       { label: 'SKT Takibi', href: '/depo/skt', icon: CalendarClock, permission: 'stock.view', keywords: ['son kullanma', 'fefo'] },
+      { label: 'Tara', href: '/depo/tara', icon: ScanLine, permission: 'stock.view', keywords: ['barkod', 'qr', 'okut', 'scan'] },
+      { label: 'Etiket', href: '/depo/etiket', icon: QrCode, permission: 'stock.view', keywords: ['lot etiketi', 'qr', 'yazdır'] },
     ],
   },
   {

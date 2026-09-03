@@ -24,3 +24,8 @@ export * from './production/workOrders.js';
 export * from './production/consume.js';
 export * from './production/finish.js';
 export * from './production/yield.js';
+export * from './sales/pricing.js';
+export * from './sales/orders.js';
+export * from './sales/invoicing.js';
+export * from './sales/channels.js';
+export * from './sales/crm.js';
