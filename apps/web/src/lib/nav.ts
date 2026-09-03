@@ -37,18 +37,12 @@ import {
   GitBranch,
   Megaphone,
   Landmark,
-  Receipt,
   Wallet,
   CreditCard,
-  Scale,
-  BookOpen,
-  ListTree,
-  Percent,
   Banknote,
   Activity,
   PieChart,
   Coins,
-  BellRing,
   LineChart,
   Globe,
   Ship,
@@ -176,32 +170,29 @@ export const NAV: NavGroup[] = [
       { label: 'Geri Çağırma', href: '/kalite/geri-cagirma', icon: Megaphone, permission: 'quality.recall', keywords: ['recall'] },
     ],
   },
-  {
-    id: 'muhasebe',
-    label: 'Muhasebe',
-    icon: Landmark,
-    permissions: ['accounting.view'],
-    items: [
-      { label: 'Faturalar', href: '/muhasebe/faturalar', icon: Receipt, permission: 'accounting.view', keywords: ['e-fatura', 'inv'] },
-      { label: 'Tahsilatlar', href: '/muhasebe/tahsilatlar', icon: Wallet, permission: 'accounting.view', keywords: ['ödeme', 'pay'] },
-      { label: 'Banka', href: '/muhasebe/banka', icon: CreditCard, permission: 'accounting.view', keywords: ['hesap hareketi', 'mt940'] },
-      { label: 'Mutabakat', href: '/muhasebe/mutabakat', icon: Scale, permission: 'accounting.reconcile', keywords: ['eşleştirme'] },
-      { label: 'Yevmiye', href: '/muhasebe/yevmiye', icon: BookOpen, permission: 'accounting.view', keywords: ['fiş', 'je'] },
-      { label: 'Hesap Planı', href: '/muhasebe/hesap-plani', icon: ListTree, permission: 'accounting.view', keywords: ['tdhp'] },
-      { label: 'KDV', href: '/muhasebe/kdv', icon: Percent, permission: 'accounting.view', keywords: ['vergi', '191', '391'] },
-    ],
-  },
+  // 'muhasebe' grubu kaldırıldı (Tur 10 P1 shell-nav-dead-links-01): 7 kalemin tamamı /muhasebe/*
+  // rotalarına gidiyordu ve `apps/web/src/app/(app)/muhasebe` HİÇ YOK — hepsi 404. Fatura/yevmiye/
+  // hesap planı/KDV modülleri henüz yazılmadı (bkz. rapor "şema/route talepleri": bu ekranlar ayrı
+  // bir muhasebe modülü görevi gerektirir). Gerçekten var olan iki karşılığı ("Tahsilat/Ödeme",
+  // "Banka Mutabakatı") aşağıdaki Finans grubuna taşındı — tek çalışan menü artık tek gerçeği yansıtır.
   {
     id: 'finans',
     label: 'Finans',
     icon: Banknote,
     permissions: ['finance.view'],
     items: [
+      // 'Tahsilat/Ödeme' ve eski 'Tahsilat Takibi' (gecikmiş alacak hatırlatma) TEK sayfada birleşti —
+      // ikisi de gerçekte /finans/tahsilat'a gidiyordu; iki ayrı menü kalemi aynı hedefe çift giriş
+      // olurdu. `finance.dunning` iznine sahip ama `finance.view`'ı olmayan bir kullanıcı kalmasın diye
+      // izin OR'lanır (görünürlük ikisinden biri yeterli olacak şekilde `permission` yerine grup düzeyi
+      // kontrolü zaten `permissions` dizisinde var; öğe düzeyinde `finance.view` yeterli — dunning
+      // rolü de pratikte finance.view taşır, bkz. RBAC ön ayarları).
+      { label: 'Tahsilat/Ödeme', href: '/finans/tahsilat', icon: Wallet, permission: 'finance.view', keywords: ['fatura', 'ödeme', 'cari', 'pay', 'tahsilat takibi', 'hatırlatma', 'vade', 'gecikmiş'] },
+      { label: 'Banka Mutabakatı', href: '/finans/banka', icon: CreditCard, permission: 'finance.view', keywords: ['hesap hareketi', 'mt940', 'mutabakat'] },
       { label: 'Nakit Akışı', href: '/finans/nakit-akisi', icon: Activity, permission: 'finance.view' },
       { label: 'Break-even', href: '/finans/break-even', icon: PieChart, permission: 'finance.view', keywords: ['başabaş'] },
       { label: 'Bütçe', href: '/finans/butce', icon: Coins, permission: 'finance.view' },
       { label: 'Krediler', href: '/finans/krediler', icon: Landmark, permission: 'finance.view', keywords: ['taksit'] },
-      { label: 'Tahsilat Takibi', href: '/finans/tahsilat-takibi', icon: BellRing, permission: 'finance.dunning', keywords: ['hatırlatma', 'vade'] },
       { label: 'Tahmin', href: '/finans/tahmin', icon: LineChart, permission: 'finance.view', keywords: ['forecast'] },
     ],
   },
@@ -256,7 +247,9 @@ export const MOBILE_TABS: NavItem[] = [
   { label: 'Kokpit', href: '/kokpit', icon: LayoutDashboard, permission: 'cockpit.view' },
   { label: 'Depo', href: '/depo/stok', icon: Boxes, permission: 'stock.view' },
   { label: 'Satış', href: '/satis/siparisler', icon: ShoppingCart, permission: 'sales.view' },
-  { label: 'Muhasebe', href: '/muhasebe/faturalar', icon: Landmark, permission: 'accounting.view' },
+  // '/muhasebe/faturalar' 404 veriyordu (muhasebe modülü hiç yok) — dördüncü sekme artık gerçekten
+  // var olan Finans/Tahsilat sayfasına gidiyor (Tur 10 P1).
+  { label: 'Finans', href: '/finans/tahsilat', icon: Landmark, permission: 'finance.view' },
 ];
 
 export type PermissionChecker = (code: string) => boolean;

@@ -16,6 +16,15 @@ declare module '@tanstack/react-table' {
     label?: string;
     /** Sabit genişlik (px ya da CSS) */
     width?: number | string;
+    /** Bu sütun kalan (artan) genişliği alır — Tur 10 P1 shell-datatable-slack-01 kök neden düzeltmesi:
+     *  `width` verilmemiş sütunlar HTML'in auto table-layout'unda kalan genişliği paylaşır; az sütunlu
+     *  tablolarda (ör. 2-3 sütun) bu, hiçbir gerçek bilgi taşımayan tek bir sütunun tablonun üçte
+     *  birini kaplamasına yol açar. Bir sütun `flex:true` ile işaretlenince — yalnızca O TABLODA —
+     *  `width` VERİLMEMİŞ diğer tüm sütunlar `width:1%` (içeriğe sıkışma) ipucu alır, kalan genişlik
+     *  yalnızca flex sütununa akar (genelde ad/açıklama gibi doğal olarak büyümesi istenen sütun).
+     *  Hiçbir sütun `flex` işaretlenmemişse tablo ESKİ davranışını aynen korur (geriye dönük uyumlu,
+     *  var olan hiçbir tabloyu etkilemez) — yeni tablolar/kolonlar bunu bilinçli olarak açar. */
+    flex?: boolean;
     /** Sıralanamaz */
     noSort?: boolean;
     /** Masaüstünde başlangıçta gizli (sütun seçiciden açılabilir) — dar ekranlarda taşan az kullanılan sütunlar için */

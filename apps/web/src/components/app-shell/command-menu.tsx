@@ -35,8 +35,10 @@ const DEFAULT_ACTIONS: QuickAction[] = [
   { id: 'new-transfer', label: 'Yeni transfer', href: '/depo/transfer/yeni', icon: Plus, permission: 'stock.transfer' },
   { id: 'new-wo', label: 'Yeni iş emri', href: '/uretim/is-emirleri/yeni', icon: Plus, permission: 'production.plan' },
   { id: 'new-po', label: 'Yeni satın alma siparişi', href: '/satin-alma/siparisler/yeni', icon: Plus, permission: 'purchasing.draft' },
-  { id: 'new-invoice', label: 'Yeni fatura', href: '/muhasebe/faturalar/yeni', icon: Plus, permission: 'accounting.invoice' },
-  { id: 'new-payment', label: 'Yeni tahsilat', href: '/muhasebe/tahsilatlar/yeni', icon: Plus, permission: 'accounting.post' },
+  // 'new-invoice' kaldırıldı (Tur 10 P1): /muhasebe/faturalar/yeni hiç yazılmamış bir modüle
+  // gidiyordu (kalıcı 404) — fatura modülü yazılana kadar ⌘K'da bu eylem sunulmaz (bkz. rapor
+  // "şema/route talepleri"). 'new-payment' gerçek sayfaya (/finans/tahsilat) düzeltildi.
+  { id: 'new-payment', label: 'Yeni tahsilat/ödeme', href: '/finans/tahsilat/yeni', icon: Plus, permission: 'finance.manage' },
   { id: 'new-fault', label: 'Arıza bildir', href: '/bakim/is-emirleri/yeni', icon: Plus, permission: 'maintenance.report' },
 ];
 

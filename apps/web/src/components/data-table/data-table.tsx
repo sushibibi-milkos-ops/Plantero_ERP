@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   flexRender,
@@ -184,6 +184,15 @@ export function DataTable<T>({
   // (toplam <= geçerli sayfa boyutu) taşıyoruz ki 4 kayıtlık bir listede hiç sayfalama şeridi çizilmesin.
   const showPagination = usePagination && totalFiltered > table.getState().pagination.pageSize;
 
+  // Tur 10 P1 shell-datatable-slack-01: bir sütun `meta.flex` işaretlediyse, `width` verilmemiş
+  // diğer sütunlar `width:1%` (içeriğe sıkışma) alır — bkz. types.ts `flex` alanı yorumu.
+  const hasFlexColumn = visibleCols.some((c) => c.columnDef.meta?.flex);
+  const widthStyle = (meta: { width?: number | string; flex?: boolean } | undefined): CSSProperties | undefined => {
+    if (meta?.width) return { width: meta.width, minWidth: meta.width };
+    if (hasFlexColumn && !meta?.flex) return { width: '1%' };
+    return undefined;
+  };
+
   // Tam opak arka plan (var(--muted), /40 saydamlığı YOK) — sabitlenmiş başlık kaydırılan satırların
   // üzerinden geçer; saydam olsaydı altındaki hücreler sızardı (Tur 4 P1 bulgusu).
   const headerRow = () => (
@@ -195,7 +204,7 @@ export function DataTable<T>({
             <th
               key={h.id}
               scope="col"
-              style={meta?.width ? { width: meta.width, minWidth: meta.width } : undefined}
+              style={widthStyle(meta)}
               className={cn(
                 'h-9 px-3 text-left align-middle text-[12px] font-medium whitespace-nowrap text-muted-foreground',
                 meta?.align === 'right' && 'text-right',
@@ -217,6 +226,7 @@ export function DataTable<T>({
       return (
         <td
           key={cell.id}
+          style={widthStyle(meta)}
           className={cn(
             'h-9 px-3 align-middle text-[13px] whitespace-nowrap',
             meta?.align === 'right' && 'text-right',

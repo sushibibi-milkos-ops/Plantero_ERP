@@ -405,30 +405,40 @@ export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   opportunity: 'Fırsat',
 };
 
-/** Belge tipi → detay sayfası yolu */
+// Tur 10 P1 shell bulgusu: `/muhasebe/*` altında HİÇBİR sayfa yok (modül henüz yazılmadı) — bu
+// beş tip için eski eşleme her zaman 404 üretiyordu. `payment`/`bank_transaction` için gerçek,
+// çalışan karşılıkları var (/finans/tahsilat, /finans/banka) ama onlar da yalnızca LİSTE sayfası
+// (henüz `[id]` detay rotası yok) — id eklemek onları da 404'e düşürürdü. `invoice`/`credit_note`/
+// `journal_entry` için hiç sayfa yok; kalıcı 404 yerine kokpit'e (nötr, çalışan bir hedef) düşer.
+// Kalıcı çözüm: fatura/yevmiye modülü yazılana ve tahsilat/banka'ya `[id]` detay rotası eklenene
+// kadar bu beşi `hasDetail: false` kalmalı (bkz. rapor "şema/route talepleri").
+const DOCUMENT_HREF_MAP: Record<string, { base: string; hasDetail: boolean }> = {
+  quotation: { base: '/satis/teklifler', hasDetail: true },
+  sales_order: { base: '/satis/siparisler', hasDetail: true },
+  delivery: { base: '/depo/sevkiyat', hasDetail: true },
+  invoice: { base: '/kokpit', hasDetail: false },
+  payment: { base: '/finans/tahsilat', hasDetail: false },
+  credit_note: { base: '/kokpit', hasDetail: false },
+  purchase_order: { base: '/satin-alma/siparisler', hasDetail: true },
+  receipt: { base: '/depo/mal-kabul', hasDetail: true },
+  transfer: { base: '/depo/transfer', hasDetail: true },
+  stock_count: { base: '/depo/sayim', hasDetail: true },
+  scrap: { base: '/depo/stok', hasDetail: false },
+  work_order: { base: '/uretim/is-emirleri', hasDetail: true },
+  quality_check: { base: '/kalite/kontroller', hasDetail: true },
+  recall: { base: '/kalite/geri-cagirma', hasDetail: true },
+  export_shipment: { base: '/ihracat/sevkiyatlar', hasDetail: true },
+  proforma: { base: '/ihracat/belgeler', hasDetail: false },
+  packing_list: { base: '/ihracat/belgeler', hasDetail: false },
+  maintenance_order: { base: '/bakim/is-emirleri', hasDetail: true },
+  journal_entry: { base: '/kokpit', hasDetail: false },
+  bank_transaction: { base: '/finans/banka', hasDetail: false },
+  opportunity: { base: '/satis/firsatlar', hasDetail: true },
+};
+
+/** Belge tipi → detay sayfası yolu (yalnızca liste sayfası olan tipler için id eklenmez). */
 export function documentHref(type: string, id: string): string {
-  const map: Record<string, string> = {
-    quotation: '/satis/teklifler',
-    sales_order: '/satis/siparisler',
-    delivery: '/depo/sevkiyat',
-    invoice: '/muhasebe/faturalar',
-    payment: '/muhasebe/tahsilatlar',
-    credit_note: '/muhasebe/faturalar',
-    purchase_order: '/satin-alma/siparisler',
-    receipt: '/depo/mal-kabul',
-    transfer: '/depo/transfer',
-    stock_count: '/depo/sayim',
-    scrap: '/depo/stok',
-    work_order: '/uretim/is-emirleri',
-    quality_check: '/kalite/kontroller',
-    recall: '/kalite/geri-cagirma',
-    export_shipment: '/ihracat/sevkiyatlar',
-    proforma: '/ihracat/belgeler',
-    packing_list: '/ihracat/belgeler',
-    maintenance_order: '/bakim/is-emirleri',
-    journal_entry: '/muhasebe/yevmiye',
-    bank_transaction: '/muhasebe/banka',
-    opportunity: '/satis/firsatlar',
-  };
-  return `${map[type] ?? '/kokpit'}/${id}`;
+  const entry = DOCUMENT_HREF_MAP[type];
+  if (!entry) return '/kokpit';
+  return entry.hasDetail ? `${entry.base}/${id}` : entry.base;
 }

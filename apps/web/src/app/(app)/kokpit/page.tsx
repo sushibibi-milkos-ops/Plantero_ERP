@@ -24,7 +24,9 @@ function Section({ title, href, children, className }: { title: string; href?: s
       <header className="flex h-11 items-center justify-between border-b border-border/60 px-4">
         <h2 className="text-[13px] font-semibold">{title}</h2>
         {href ? (
-          <Link href={href} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+          // max-md:min-h-11: mobil dokunma hedefi 44px altındaydı (16px metin yüksekliği) — header
+          // zaten h-11 (44px) sabit, bağlantı kendi kutusunu doldurup tam o yüksekliğe çıkar.
+          <Link href={href} className="inline-flex items-center gap-1 max-md:min-h-11 text-xs text-muted-foreground hover:text-foreground">
             Tümü <ArrowRight className="size-3" />
           </Link>
         ) : null}
@@ -80,7 +82,7 @@ export default async function CockpitPage() {
     { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', delta: kpis.revenueDeltaPct ?? undefined, deltaLabel: 'dünden', href: '/satis/net-ciro' },
     { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', delta: kpis.openOrdersDeltaPct ?? undefined, deltaLabel: 'dünden', href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
     { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', delta: kpis.criticalStockDeltaPct ?? undefined, deltaLabel: 'dünden', invertDelta: true, href: '/satin-alma/kritik-stok' },
-    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', delta: kpis.overdueReceivableDeltaPct ?? undefined, deltaLabel: 'dünden', invertDelta: true, href: '/finans/tahsilat-takibi' },
+    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', delta: kpis.overdueReceivableDeltaPct ?? undefined, deltaLabel: 'dünden', invertDelta: true, href: '/finans/tahsilat' },
   ];
 
   return (
@@ -113,8 +115,15 @@ export default async function CockpitPage() {
           sütunlarını aynı satırlara zorluyor, üçüncü kart tek başına yeni bir grid satırı açıp
           karşı sütunda ~700×1050px boş bir hücre bırakıyordu (Tur 2 bulgusu). Flex sütunlarda her
           taraf yalnızca kendi içeriği kadar yükseklik kaplar, boş hücre oluşmaz. */}
+      {/* min-w-0 (Tur 10 P0 shell-kokpit-overflow-01): grid item'ların varsayılan min-width:auto'su
+          çocukların min-content genişliğini (uzun para/durum metinleri) track'e dayatıyordu — 390px'te
+          her <section> 394px'e (viewport dışına 22px) çıkıp app-shell'in overflow-x-clip'i bunu
+          sessizce KIRPIYOR, kaydırarak da erişilemiyordu (₺ tutarları/durum rozetleri/"Tümü" bağlantıları
+          harf ortasından kesiliyordu). min-w-0 grid item'ın kendi içeriğine göre değil, track genişliğine
+          göre küçülmesine izin verir — DataTable'ın kendi yatay kaydırma sarmalayıcıları zaten var,
+          burada gerçek çözüm taşmayı normal responsive akışa (truncate/wrap) bırakmaktır. */}
       <div className="mt-4 grid gap-4 lg:grid-cols-3 lg:items-start">
-        <div className="flex flex-col gap-4 lg:col-span-2">
+        <div className="min-w-0 flex flex-col gap-4 lg:col-span-2">
         <Section title="Bugün" href="/satis/siparisler">
           {today.length === 0 ? (
             <EmptyState compact title="Bugün henüz belge yok" description="Sevkiyat, iş emri, mal kabul veya fatura oluştuğunda burada görünür." />
@@ -125,7 +134,9 @@ export default async function CockpitPage() {
                   <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
                     <span className="flex min-w-0 items-center gap-2 sm:contents">
                       <span className="shrink-0 text-xs text-muted-foreground sm:w-20">{t.kind}</span>
-                      <Link href={t.href} className="truncate font-mono text-xs hover:underline sm:w-36 sm:shrink-0">{t.no}</Link>
+                      {/* max-sm:min-h-11: mobilde (satır flex-col, sm altı) bağlantının kendi kutusu
+                          yalnızca 16px'lik metin satırıydı — dokunma hedefi 44px'in altındaydı. */}
+                      <Link href={t.href} className="inline-flex items-center truncate font-mono text-xs hover:underline max-sm:min-h-11 sm:w-36 sm:shrink-0">{t.no}</Link>
                     </span>
                     <span className="shrink-0 sm:order-last">
                       <StatusBadge status={t.status} kind={t.k} />
@@ -168,7 +179,7 @@ export default async function CockpitPage() {
         </Section>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="min-w-0 flex flex-col gap-4">
         {approvals.length === 0 && receivables.length === 0 ? (
           // Onay kuyruğu VE Bugünün tahsilatları AYNI ANDA boşsa iki ayrı boş-durum kartı alt alta
           // gelip sağ rayın (~900px) neredeyse tamamını "1 birim bilgi" ile dolduruyordu (Tur 5 P2
@@ -179,7 +190,7 @@ export default async function CockpitPage() {
               <Link href="/satin-alma/onay-kuyrugu" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
                 Onay kuyruğu <ArrowRight className="size-3" />
               </Link>
-              <Link href="/finans/tahsilat-takibi" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+              <Link href="/finans/tahsilat" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
                 Tahsilatlar <ArrowRight className="size-3" />
               </Link>
             </span>
@@ -194,7 +205,8 @@ export default async function CockpitPage() {
                 <li key={a.id} className="flex items-start gap-3 px-4 py-2.5 text-[13px]">
                   <CheckSquare className="mt-0.5 size-4 shrink-0 text-primary" strokeWidth={1.75} />
                   <span className="min-w-0 flex-1">
-                    <Link href={a.href} className="line-clamp-2 hover:underline">{a.title}</Link>
+                    {/* max-md:min-h-11: kısa (tek satır) başlıklarda bağlantı kutusu 44px altındaydı. */}
+                    <Link href={a.href} className="line-clamp-2 hover:underline block max-md:min-h-11">{a.title}</Link>
                     {a.confidence !== null ? (
                       <span className="mt-0.5 block text-[11px] text-muted-foreground">AI güveni %{Math.round(a.confidence * 100)}</span>
                     ) : null}
@@ -250,7 +262,7 @@ export default async function CockpitPage() {
         </Section>
 
         {approvals.length === 0 && receivables.length === 0 ? null : (
-        <Section title="Bugünün tahsilatları" href="/finans/tahsilat-takibi">
+        <Section title="Bugünün tahsilatları" href="/finans/tahsilat">
           {receivables.length === 0 ? (
             <EmptyState compact title="Bugün tahsilat yok" description="Bugün alınan tahsilatlar burada listelenir." />
           ) : (

@@ -27,7 +27,10 @@ export function PageHeader({
         <div className="min-w-0">
           {eyebrow ? <div className="mb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">{eyebrow}</div> : null}
           <h1 className="truncate text-xl font-semibold tracking-tight md:text-2xl">{title}</h1>
-          {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
+          {/* <p> DEĞİL: yükleniyor iskeletleri description'a <Skeleton/> (bir <div>) geçiriyor —
+              <div>, <p> içinde geçersiz HTML + hydration hatası üretiyordu (Tur 10 P1). Tipografi
+              aynı kalır, yalnızca sarmalayıcı etiket değişti. */}
+          {description ? <div className="mt-1 text-sm text-muted-foreground">{description}</div> : null}
         </div>
         {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2 [&>*]:flex-1 sm:[&>*]:flex-none">{actions}</div> : null}
       </div>

@@ -1,19 +1,29 @@
 'use client';
 
-import { flexRender, type Row, type Table } from '@tanstack/react-table';
+import { flexRender, type Table } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { DataTableRowActions } from './row-actions';
 import type { RowAction } from './types';
 
-function headerLabel<T>(row: Row<T>, cellColumnId: string): string {
-  const col = row.getVisibleCells().find((c) => c.column.id === cellColumnId)?.column;
-  if (!col) return cellColumnId;
-  return col.columnDef.meta?.label ?? (typeof col.columnDef.header === 'string' ? col.columnDef.header : col.id);
+/** Hücrenin ham (accessor) değeri gerçekten boş mu — `getValue()` render edilmiş düğümden değil
+ *  KAYNAK veriden okur, bu yüzden "—" gösteren bir hücre bile (ör. sıfır bakiye) burada boş SAYILMAZ:
+ *  yalnızca gerçekten null/undefined/'' olan alanlar (veri hiç yok) elenir. */
+function isEmptyValue(v: unknown): boolean {
+  return v === null || v === undefined || v === '';
 }
 
 /**
  * Mobil kart görünümü: sütun meta'sına göre başlık/alt başlık/rozet/satır düzeni.
  * Özel `renderCard` verilirse o kullanılır.
+ *
+ * Kök neden (Tur 10 P1 shell-mobile-card-height-01): önceki kalıp 4 dikey katman üretiyordu
+ * (başlık, alt başlık, etiketsiz meta satırı, N alanlık `<dl>`) — 99-118px, puan kartı hedefinin
+ * (56-72px) çok üzerinde. Kalıp artık EN FAZLA 2 katman üretir: satır 1 başlık + rozetler, satır 2
+ * alt başlık + (varsa) boş olmayan meta ipuçları + TEK metrik (kalan alanların SONUNCUSU — tablo
+ * tanımlarında en önemli/parasal alan sona konur, bkz. partners-table balance, boms-table unitCost,
+ * products-table listPrice). Diğer "rest" alanları mobil kartta artık hiç gösterilmez — özet karttan
+ * tam alan listesi değil, detay sayfasına gitmek için yeterli bağlam beklenir. Boş değerli meta
+ * hücreleri (`getValue()` null/undefined/'') satıra hiç eklenmez.
  */
 export function DataTableMobileCards<T>({
   table,
@@ -42,20 +52,32 @@ export function DataTableMobileCards<T>({
         const subtitle = cells.find((c) => c.column.columnDef.meta?.mobile === 'subtitle');
         const badges = cells.filter((c) => c.column.columnDef.meta?.mobile === 'badge');
         // 'meta': masaüstünde `hidden` olan ama kartta bağlam için gerekli alanlar (hat, tarih…) —
-        // etiketsiz, tek satır, soluk/mono ("HAT1 · 04.09.2026").
-        const metaCells = cells.filter((c) => c.column.columnDef.meta?.mobile === 'meta');
-        const rest = cells.filter((c) => c !== title && c !== subtitle && !badges.includes(c) && !metaCells.includes(c) && c.column.columnDef.meta?.mobile !== 'hidden');
+        // boş olanlar hiç eklenmez (Tur 10 P1).
+        const metaCells = cells.filter((c) => c.column.columnDef.meta?.mobile === 'meta' && !isEmptyValue(c.getValue()));
+        const rest = cells.filter((c) => c !== title && c !== subtitle && !badges.includes(c) && c.column.columnDef.meta?.mobile !== 'meta' && c.column.columnDef.meta?.mobile !== 'hidden');
+        // Tek metrik: kalan alanların sonuncusu (tablo tanımında en sona konan alan modül genelinde
+        // tutarlı biçimde en "parasal"/önemli alandır — bkz. yukarıdaki not).
+        const metric = rest.length ? rest[rest.length - 1]! : null;
         const actions = rowActions?.(row.original) ?? [];
+        // Satır 2 sol taraf: alt başlık + boş olmayan meta ipuçları, tek satırda "·" ile ayrılmış.
+        const leftBits = [
+          ...(subtitle ? [{ key: subtitle.id, node: flexRender(subtitle.column.columnDef.cell, subtitle.getContext()) }] : []),
+          ...metaCells.map((c) => ({ key: c.id, node: flexRender(c.column.columnDef.cell, c.getContext()) })),
+        ];
         return (
           <li
             key={row.id}
             onClick={() => onRowClick?.(row.original)}
             className={cn(
-              'rounded-lg border border-border/70 bg-card p-3',
+              // p-2.5 (p-3 değil): 2 satırlık kalıpta 12px dolgu bazı rotalarda (rozet+badge satırı
+              // beklenenden birkaç px taşan) kartı 72px hedefinin hemen üstüne taşıyordu — 10px hâlâ
+              // rahat, referans aralığın (56-72px) içinde güvenli pay bırakır.
+              'rounded-lg border border-border/70 bg-card p-2.5',
               onRowClick && 'cursor-pointer active:bg-accent/50',
             )}
           >
-            <div className="flex items-start gap-2">
+            {/* Satır 1: başlık solda, rozet(ler) + aksiyon menüsü sağda. */}
+            <div className="flex items-center gap-2">
               {/* min-w-0 + overflow-hidden: bu kolon rozet/aksiyon sütunlarıyla flex'te paylaşılıyor,
                   min-w-0 olmadan içerik hiç küçülmeden kart genişliğini zorluyordu. `truncate` yalnızca
                   DÜZ METİN çocuklar için çalışır (text-overflow yalnızca bloğun kendi metnini keser);
@@ -63,29 +85,11 @@ export function DataTableMobileCards<T>({
                   span'ı) tarayıcı üç nokta basamıyor, içerik sert kesiliyordu (Tur 4 P1 bulgusu — bkz.
                   stock-table.tsx Ürün sütunu, lots-table.tsx LotBadge). `[&>*]:min-w-0 [&>*]:truncate`
                   doğrudan çocuk bir ELEMENT ise (metin değil) ona da aynı kırpma kuralını zorlar. */}
-              <div className="min-w-0 flex-1 overflow-hidden">
-                {title ? <div className="min-w-0 truncate text-[14px] font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:truncate">{flexRender(title.column.columnDef.cell, title.getContext())}</div> : null}
-                {subtitle ? (
-                  <div className="min-w-0 truncate text-xs text-muted-foreground [&>*]:min-w-0 [&>*]:max-w-full [&>*]:truncate">{flexRender(subtitle.column.columnDef.cell, subtitle.getContext())}</div>
-                ) : null}
-                {metaCells.length ? (
-                  // font-mono kaldırıldı: bu satır düz etiketler taşıyor (kanal adı, ürün tipi…) —
-                  // gerçek kod/belge no değeri zaten kendi hücresinde mono basılıyor (ör. LotBadge).
-                  // Önceden burası mono, başlık (asıl belge no) sans basıyordu — mobilde mono/sans
-                  // rolleri masaüstünün tam tersiydi (Tur 3 bulgusu).
-                  // Kök neden (Tur 5 P1): "·" ayraç glifi ÖĞENİN KENDİ span'ının içindeydi — flex-wrap
-                  // sarmasında ayraç içerikle birlikte alt satıra düşüyordu ("Eldeki 60 ADET" / "· Rezerve
-                  // 0 ADET" gibi parçalı satırlar). Ayrıca aynı kapsayıcıda `truncate` (nowrap) ile
-                  // `flex-wrap` çelişiyordu — ölü kural. Glif tamamen kaldırıldı; ayrım artık yalnızca
-                  // 12px'lik yatay boşlukla kuruluyor (Linear kalıbı), `truncate` da kaldırıldı.
-                  <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground/70">
-                    {metaCells.map((c) => (
-                      <span key={c.id} className="inline-flex items-center gap-1.5">
-                        {flexRender(c.column.columnDef.cell, c.getContext())}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
+              {/* leading-5 (20px): text-[14px] boyut ipucu olmadan gelir, satır yüksekliği gövdenin
+                  1.5 varsayılanına (21px) düşerdi — kartı 72px hedefinin (kriter 3) hemen üstüne
+                  taşıyordu (72.5px ölçüldü). */}
+              <div className="min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:truncate">
+                {title ? flexRender(title.column.columnDef.cell, title.getContext()) : null}
               </div>
               {badges.map((b) => (
                 // max-w-[45%]: uzun bir rozet metni (ör. "10 gün önce doldu · 24.08.2026") başlık
@@ -97,42 +101,21 @@ export function DataTableMobileCards<T>({
               ))}
               {actions.length ? <DataTableRowActions row={row.original} actions={actions} /> : null}
             </div>
-            {rest.length ? (
-              // Tek ayraç kartın tam genişliğinde: her öğeye ayrı border-t vermek yerine (grid-cols-2'de
-              // tek elemanlı son satırda kartın yalnızca yarısını kaplayan "kırık" bir çizgiye yol açardı)
-              // <dl>'nin kendisine üstten tek bir hairline veriliyor.
-              // Kök neden (Tur 3 P1): önceki sürüm her alanı DİKEY kuruyordu (etiket üstte, değer
-              // altta) — alan başına iki satır harcayınca /satis/teklifler kartı 390px'te ~290px'e,
-              // /satis/siparisler ~185px'e çıkıyordu (referansın 2-3 katı). Artık her hücre TEK satır:
-              // etiket solda, değer sağda (items-baseline justify-between) — daima 2 sütun (alan sayısı
-              // ne olursa olsun), 20px'lik tek satırlık alanlar.
-              // grid-cols-2 sabit yerine grid-cols-[repeat(auto-fit,minmax(150px,1fr))]: tek metrikli
-              // kartta (ör. /satis/fiyat-listeleri "Satır 33") değer artık kartın ortasında asılı
-              // kalmayıp sağ kenara yaslanıyor — 2 sütunda boş bir hücre bırakmak yerine tek sütun
-              // tam genişlik alıyor (Tur 4 P1 bulgusu).
-              // Bu genişlikte (~330-380px kart içi) minmax(150px,1fr) pratikte HER ZAMAN tam olarak
-              // 2 sütun üretir (3×150=450px sığmıyor) — bu nedenle tek başına kalan TEK SAYI'ıncı son
-              // öğe (3, 5. metrik…) 2 sütunlu ızgarada yalnızca sol yarıya yerleşip değeri kartın
-              // ORTASINDA asılı bırakıyordu (ör. /satis/siparisler mobil "Genel toplam", "Net ciro"
-              // ile farklı bir sağ hizada duruyordu — auto-fit tek başına bunu çözmüyor, boş sütun
-              // basitçe collapse OLMUYOR çünkü sütun üstteki dolu satırdan dolayı hâlâ var). Son öğe
-              // hem `:last-child` hem `:nth-child(odd)` ise (2 sütunlu bir satırda YALNIZ kalmış
-              // demektir) `col-span-full` ile tüm satırı kaplar, değer artık diğer satırlarla AYNI sağ
-              // kenara yaslanır — tek bir dikey eksen.
-              <dl className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-x-3 gap-y-1.5 border-t border-border/40 pt-2 text-[13px] [&>*:last-child:nth-child(odd)]:col-span-full">
-                {rest.map((c) => (
-                  <div key={c.id} className="flex min-w-0 items-baseline justify-between gap-2">
-                    {/* Kök neden (Tur 4 P0): etiket sabit kalıp (`shrink-0`) DEĞERİN kırpılmasına izin
-                        veriyordu — "Beklenen tutar" ~72px'i korurken "₺120.000,00" kalan ~77px'e
-                        sığmayıp son karakterden kırpılıyordu ("₺120.000,0("), kullanıcı yanlış tutar
-                        okuyordu. Para/miktar hiçbir kırılımda kesilmemeli — daralması gereken taraf
-                        etiket: `dt` artık `min-w-0 truncate`, `dd` artık `shrink-0 whitespace-nowrap`
-                        (truncate KALDIRILDI). */}
-                    <dt className="min-w-0 truncate text-[11px] text-muted-foreground">{headerLabel(row, c.column.id)}</dt>
-                    <dd className="shrink-0 text-right text-[13px] whitespace-nowrap tabular-nums">{flexRender(c.column.columnDef.cell, c.getContext())}</dd>
-                  </div>
-                ))}
-              </dl>
+            {/* Satır 2: alt başlık (+ meta ipuçları) solda, tek metrik sağda — kalıp burada durur. */}
+            {leftBits.length || metric ? (
+              <div className="mt-0.5 flex items-baseline justify-between gap-2">
+                <div className="flex min-w-0 items-center gap-1.5 truncate text-xs text-muted-foreground [&>*]:min-w-0 [&>*]:max-w-full [&>*]:truncate">
+                  {leftBits.map((b, i) => (
+                    <span key={b.key} className="inline-flex min-w-0 items-center gap-1.5 truncate">
+                      {i > 0 ? <span aria-hidden className="text-muted-foreground/40">·</span> : null}
+                      {b.node}
+                    </span>
+                  ))}
+                </div>
+                {metric ? (
+                  <div className="shrink-0 text-[13px] tabular-nums">{flexRender(metric.column.columnDef.cell, metric.getContext())}</div>
+                ) : null}
+              </div>
             ) : null}
           </li>
         );

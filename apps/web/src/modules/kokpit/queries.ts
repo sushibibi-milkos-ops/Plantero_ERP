@@ -4,6 +4,7 @@ import { and, asc, desc, eq, gte, inArray, isNotNull, lt, lte, sql } from 'drizz
 import { db, schema } from '@plantero/db';
 import { D, toDb } from '@plantero/core';
 import { businessDate } from '@plantero/core/dates';
+import { formatMoney } from '@/lib/format';
 import { listLineCards, type LineCardRow } from '@/modules/production/queries';
 
 const {
@@ -269,9 +270,12 @@ export async function getCockpitApprovals(): Promise<CockpitApproval[]> {
   ]);
 
   const items: CockpitApproval[] = [
-    ...draftPOs.map((r): CockpitApproval => ({ id: r.id, title: `AI satın alma taslağı · ${r.partnerName} · ${toDb(D(r.grandTotal))} ₺`, kind: 'purchase_draft', confidence: r.confidence !== null ? D(r.confidence).toNumber() : null, href: `/satin-alma/siparisler/${r.id}` })),
-    ...reconRows.map((r): CockpitApproval => ({ id: r.id, title: `Mutabakat önerisi · ${toDb(D(r.amount))} ₺ → ${r.partnerName ?? r.description}`, kind: 'reconciliation', confidence: D(r.confidence).toNumber(), href: `/muhasebe/mutabakat` })),
-    ...countRows.map((r): CockpitApproval => ({ id: r.id, title: `Sayım farkı · ${r.warehouseCode} (${toDb(D(r.varianceValue))} ₺)`, kind: 'count_variance', confidence: null, href: `/depo/sayim/${r.id}` })),
+    // formatMoney (Tur 10 P1): önceden `${toDb(D(x))} ₺` ham DB gösterimini basıyordu (İngiliz ondalık
+    // noktası, 4 basamak, sona eklenmiş sembol — ör. "-450.7500 ₺") — projenin geri kalanındaki
+    // formatMoney/MoneyCell çıktısıyla ("-₺450,75") çelişiyordu.
+    ...draftPOs.map((r): CockpitApproval => ({ id: r.id, title: `AI satın alma taslağı · ${r.partnerName} · ${formatMoney(r.grandTotal)}`, kind: 'purchase_draft', confidence: r.confidence !== null ? D(r.confidence).toNumber() : null, href: `/satin-alma/siparisler/${r.id}` })),
+    ...reconRows.map((r): CockpitApproval => ({ id: r.id, title: `Mutabakat önerisi · ${formatMoney(r.amount)} → ${r.partnerName ?? r.description}`, kind: 'reconciliation', confidence: D(r.confidence).toNumber(), href: `/finans/banka` })),
+    ...countRows.map((r): CockpitApproval => ({ id: r.id, title: `Sayım farkı · ${r.warehouseCode} (${formatMoney(r.varianceValue)})`, kind: 'count_variance', confidence: null, href: `/depo/sayim/${r.id}` })),
   ];
 
   return items.slice(0, 5);

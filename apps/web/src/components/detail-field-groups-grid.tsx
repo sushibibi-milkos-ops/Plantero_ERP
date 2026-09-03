@@ -42,7 +42,11 @@ export function DetailFieldGroupsGrid({ groups, className }: { groups: DetailFie
         <button
           type="button"
           onClick={() => setShowEmpty((s) => !s)}
-          className="text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground"
+          // Tur 10 P1 shell-empty-fields-toggle-01: buton önceden yalnızca metin satırı yüksekliğinde
+          // (~18px) idi — mobil dokunma hedefi 44px'in yarısından küçüktü. min-h-11 + py-3 dokunma
+          // yastığını büyütür, -mx-3 (yatay) buton kutusunun sol kenarını görsel metinle hizalı tutar
+          // (yastık dışa değil içe doğru büyümüş gibi görünür).
+          className="-mx-3 flex min-h-11 items-center px-3 py-3 text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground md:mx-0 md:min-h-0 md:px-0 md:py-0"
         >
           {showEmpty ? 'Boş alanları gizle' : `Boş alanları göster (${hiddenCount})`}
         </button>
