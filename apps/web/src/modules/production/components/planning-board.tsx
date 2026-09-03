@@ -456,7 +456,10 @@ function MobileWoCard({ wo, lineCode }: { wo: PlanningWorkOrderRow; lineCode: st
         <div className="truncate font-medium">{wo.productName}</div>
         <div className="font-mono text-[11px] text-muted-foreground">{wo.docNo}</div>
       </div>
-      <QtyCell value={wo.plannedQty} className="shrink-0 text-xs" />
+      {/* Tur 11 P2 (uretim-planlama-03): masaüstü panoda birim sütun sonundaki "Toplam" hücresinde
+          duruyordu ("90 ADET"); mobil kartta o sütun hiç render edilmediği için birim tamamen
+          kayboluyordu ("70", "90"). Mobil kartta birim artık miktarın yanında basılıyor. */}
+      <QtyCell value={wo.plannedQty} uom={wo.uomCode} className="shrink-0 text-xs" />
       <StatusBadge status={wo.status} kind="work_order" dot={false} className="h-4 shrink-0 px-1 text-[11px]" />
     </Link>
   );

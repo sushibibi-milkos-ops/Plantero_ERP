@@ -20,8 +20,12 @@ import type { WorkOrderRow } from '../queries';
  * altta docNo·HAT·tarih meta (soldan) ve Planlanan/Üretilen özeti (sağdan) — hairline'lı ayrı bölme
  * kaldırıldı. Ortak `mobile-cards.tsx` değiştirilmedi — `DataTable`'ın zaten desteklediği
  * `renderMobileCard` ile bu tabloya özel çizilir.
+ *
+ * Tur 11 P1 (uretim-is-emirleri-02): mobil kartta sütun başlığı yok, dolayısıyla masaüstündeki
+ * "birim → başlığa taşınır" kısayolu (`uniformUom`) burada birimi tamamen görünmez kılıyordu
+ * ("90 / 0"). Mobil kart artık `uniformUom`'u yok sayıp birimi her zaman değerin yanında basar.
  */
-function WorkOrderMobileCard({ wo, uniformUom }: { wo: WorkOrderRow; uniformUom: string | null | undefined }) {
+function WorkOrderMobileCard({ wo }: { wo: WorkOrderRow }) {
   return (
     <div className="cursor-pointer rounded-lg border border-border/70 bg-card p-3 active:bg-accent/50">
       <div className="flex items-center justify-between gap-2">
@@ -37,7 +41,7 @@ function WorkOrderMobileCard({ wo, uniformUom }: { wo: WorkOrderRow; uniformUom:
           <span>{wo.plannedStart ? formatDate(wo.plannedStart) : '—'}</span>
         </div>
         <span className="shrink-0 text-[13px] tabular-nums">
-          <QtyCell value={wo.plannedQty} uom={uniformUom ? undefined : wo.uomCode} className="inline-flex" /> / <QtyCell value={wo.producedQty} uom={uniformUom ? undefined : wo.uomCode} className="inline-flex" />
+          <QtyCell value={wo.plannedQty} uom={wo.uomCode} className="inline-flex" /> / <QtyCell value={wo.producedQty} uom={wo.uomCode} className="inline-flex" />
         </span>
       </div>
     </div>
@@ -106,7 +110,7 @@ export function WorkOrdersTable({ workOrders }: { workOrders: WorkOrderRow[] }) 
       initialColumnFilters={initialColumnFilters}
       emptyTitle="Henüz iş emri yok"
       emptyDescription="Üretim planlamak için “Yeni iş emri” ile başlayın."
-      renderMobileCard={(r) => <WorkOrderMobileCard wo={r} uniformUom={uniformUom} />}
+      renderMobileCard={(r) => <WorkOrderMobileCard wo={r} />}
     />
   );
 }

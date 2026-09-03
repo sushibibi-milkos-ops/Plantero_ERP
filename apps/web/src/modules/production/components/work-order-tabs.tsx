@@ -163,7 +163,9 @@ export function WorkOrderTabs({ detail }: { detail: Detail }) {
           <TabsTrigger value="materials">Malzemeler</TabsTrigger>
           <TabsTrigger value="consumptions">Tüketimler</TabsTrigger>
           <TabsTrigger value="outputs">Çıktılar</TabsTrigger>
-          <TabsTrigger value="scraps">Fire</TabsTrigger>
+          {/* Tur 11 P2 (uretim-wo-detay-03): kısa etiket ("Fire") + varsayılan yatay dolgu 44px dokunma
+              hedefinin 0,8px altında kalıyordu (43,2px); `min-w-11` genişliği zorunlu 44px'e sabitler. */}
+          <TabsTrigger value="scraps" className="min-w-11">Fire</TabsTrigger>
           <TabsTrigger value="events">Olaylar</TabsTrigger>
           <TabsTrigger value="cost">Maliyet</TabsTrigger>
           <TabsTrigger value="chain">Zincir</TabsTrigger>

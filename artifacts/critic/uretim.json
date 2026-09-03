@@ -1,7 +1,7 @@
 {
   "routes": {
     "/operator/[lineId]": {
-      "round": 8,
+      "round": 11,
       "reference": "linear",
       "closed": [
         {
@@ -34,15 +34,11 @@
       "open": [],
       "sharedComponentRequests": [
         "apps/web/src/components/ui/input.tsx: `md:h-9` varsayılanı (Tailwind v4 çıktısında responsive katman base katmandan sonra geldiği için) çağıran taraftaki düz `hN` override'larını >=768px'te sessizce eziyor (örn. `className=\"h-14 ...\"` masaüstünde 36px'e düşüyor). apps/web/src/components/form/number-input.tsx da aynı deseni (`h-11 ... md:h-9`) doğrudan kendi Input'unda tekrar ediyor; onu saran `[&_input]:hN` wrapper'ları da aynı riski taşıyor (bu turda ölçülmedi, operator-work-order.tsx'teki iki NumberInput kullanım yeri — Fire gir/Bitir miktar alanları — bir sonraki turda ölçülmeli). Öneri: paylaşılan Input'ta masaüstü küçültmesini `md:h-9` yerine `has-[]`/veri-attribute tabanlı bir `size` prop'una taşımak ya da çağıran taraf override'larını `!` ile beklemek yerine primitive'in kendisini öngörülebilir kılmak."
-      ]
-    },
-    "/uretim/is-emirleri": {
-      "round": 10,
-      "reference": "linear",
+      ],
       "scores": [
         5,
         5,
-        3,
+        4,
         5,
         5,
         5,
@@ -53,7 +49,27 @@
         5,
         5
       ],
-      "total": 58,
+      "total": 59,
+      "scoreNotes": "Tur 11'de ilk kez 12 kriter puanlandı (önceki turlarda yalnızca bulgu kaydı vardı). Ölçüm: 1024x768 / 390x844 / 1440x900 → overflowX false, touchTargetsBelow44 boş, distinctColors 10, h1 24/20px. Kriter 3: 4 (operatör terminali bilinçli iri)."
+    },
+    "/uretim/is-emirleri": {
+      "round": 11,
+      "reference": "linear",
+      "scores": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "total": 60,
       "open": [],
       "closed": [
         {
@@ -69,27 +85,42 @@
           "measureAfter": "pnpm measure /uretim/is-emirleri --viewport 390x844 → rows.heights [70.5,70.5,70.5] (≤72 hedefi karşılandı)",
           "verdict": "kapatıldı — kart 5 katmandan 2 satıra indirildi (ürün adı+rozet / docNo·HAT·tarih+Planlanan-Üretilen özeti)",
           "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        },
+        {
+          "id": "uretim-is-emirleri-02",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Mobil iş emri kartındaki miktar çifti hem etiketini hem birimini kaybetti: kart yalnızca \"90 / 0\" basıyor. Kök neden — kart, masaüstü tablosu için yazılmış `uniformUom ? undefined : wo.uomCode` kuralını aynen kullanıyor; masaüstünde birim sütun başlığına taşınıyor (\"Planlanan (ADET)\"), ama mobil kartta sütun başlığı yok, dolayısıyla birim hiçbir yerde görünmüyor. Tur 10'da kartta hâlâ 'Planlanan / Üretilen' etiketi vardı; kart 2 satıra indirilirken (uretim-is-emirleri-01) etiket de kaldırıldı, yerine bir şey konmadı. Modülün kendi içtihadı bu sınıfı P1 sayıyor (uretim-planlama Tur 5: birimsiz çıplak '0' → P1).",
+          "measure": "390x844 /uretim/is-emirleri: 8 kartın tamamında sağ üst özet birimsiz ve etiketsiz — \"90 / 0\", \"70 / 0\", \"40 / 39\"; ekranın hiçbir yerinde (kart, başlık, filtre) ADET geçmiyor. Masaüstü karşılığı: \"Planlanan (ADET)\" / \"Üretilen (ADET)\" sütun başlıkları.",
+          "target": "Mobil kartta miktar çifti kendini açıklamalı: ya birim görünür (`90 / 0 ADET` — mobil kartta `uniformUom` kısayolunu uygulama, `wo.uomCode` geç) ya da 11px muted bir etiket (`Plan/Üretim`) taşısın; ölçüt: 390px kartta miktarın birimi ya da etiketi DOM'da görünür.",
+          "file": "apps/web/src/modules/production/components/work-orders-table.tsx:38-40 (WorkOrderMobileCard)",
+          "openedRound": 11,
+          "closedRound": 11,
+          "measureAfter": "pnpm measure /uretim/is-emirleri --viewport 390x844 → rows.heights [70.5,70.5,70.5] (değişmedi). pnpm shot /uretim/is-emirleri --viewport 390x844 (mobile.png): kartlarda artık \"90 ADET / 0 ADET\", \"70 ADET / 0 ADET\", \"40 ADET / 39 ADET\" basılıyor — mobil kartta uniformUom kısayolu kaldırıldı, QtyCell'e her zaman wo.uomCode geçiliyor.",
+          "verdict": "kapatıldı — mobil kartta uniformUom kısayolu kaldırıldı, QtyCell birimi (ADET) her zaman gösteriyor",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11 düzeltme turu)"
         }
-      ]
+      ],
+      "scoreNotes": "Kriter 3: 3→5 (mobil kart 118px → 70,5px, ölçüldü; masaüstü satır 37px/13px, taşma yok). Kriter 6: 5→4 (gerekçe: mobil kartta miktar çifti hem etiketsiz hem birimsiz — uretim-is-emirleri-02). Tur 11 düzeltme turu — Kriter 6: 4→5 (mobil kart artık \"90 ADET / 0 ADET\" — birim her zaman görünür, uretim-is-emirleri-02 kapatıldı)."
     },
     "/uretim/is-emirleri/[id]": {
-      "round": 10,
+      "round": 11,
       "reference": "linear",
       "scores": [
         5,
         5,
-        3,
         5,
         5,
         5,
         5,
         5,
-        3,
+        5,
+        5,
         5,
         5,
         5
       ],
-      "total": 56,
+      "total": 60,
       "open": [],
       "closed": [
         {
@@ -119,15 +150,30 @@
           "measureAfter": "pnpm measure /uretim/is-emirleri/<id> --viewport 390x844 → rows.heights [71.3,71.3,71.3] (≤72 hedefi karşılandı)",
           "verdict": "kapatıldı — ad+SKU tek satıra indi, 3 metrik tek satırlık 3 sütunlu grid’e alındı (p-3→p-2, leading-tight)",
           "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        },
+        {
+          "id": "uretim-wo-detay-03",
+          "criterion": 9,
+          "severity": "P2",
+          "text": "Mobilde 'Fire' sekmesi tetikleyicisi 43,2px geniş — 44px dokunma hedefi eşiğinin hemen altında (yükseklik 44px tamam). Etiket kısa olduğu için `px` dolgusu 44px'e yetmiyor; diğer altı sekme eşiği geçiyor.",
+          "measure": "pnpm measure /uretim/is-emirleri/<id> --viewport 390x844 → touchTargetsBelow44: [{\"selector\":\"button#…-trigger-scraps\",\"w\":43.2,\"h\":44}]",
+          "target": "tetikleyiciye mobilde `min-w-11` (veya `px-3`) — ölçümde touchTargetsBelow44 boş (breadcrumb false-positive hariç)",
+          "file": "apps/web/src/modules/production/components/work-order-tabs.tsx (TabsTrigger)",
+          "openedRound": 11,
+          "closedRound": 11,
+          "measureAfter": "pnpm measure /uretim/is-emirleri/<id> --viewport 390x844 → touchTargetsBelow44: [{\"selector\":\"span[data-slot=\\\"breadcrumb-page\\\"] \\\"Detay\\\"\",\"w\":36.2,\"h\":19.5}] (yalnızca ilgisiz breadcrumb false-positive; Fire sekmesi tetikleyicisi listede yok).",
+          "verdict": "kapatıldı — Fire TabsTrigger'a min-w-11 verildi (43.2px → ≥44px genişlik)",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11 düzeltme turu)"
         }
-      ]
+      ],
+      "scoreNotes": "Kriter 3: 3→5 (mobil malzeme kartı 164,5px → 71,3px, ölçüldü). Kriter 9: 3→4 (sekme şeridi 36px→44px, tetikleyiciler 29px→44px; yalnızca 'Fire' sekmesi 43,2px genişlikte kaldı, 5 değil 4). Tur 11 düzeltme turu — Kriter 9: 4→5 (Fire sekmesi tetikleyicisi 43,2px→≥44px min-w-11 ile, uretim-wo-detay-03 kapatıldı)."
     },
     "/uretim/is-emirleri/yeni": {
-      "round": 10,
+      "round": 11,
       "reference": "linear",
       "scores": [
         5,
-        4,
+        5,
         5,
         5,
         5,
@@ -139,7 +185,7 @@
         5,
         5
       ],
-      "total": 59,
+      "total": 60,
       "open": [],
       "closed": [
         {
@@ -156,26 +202,27 @@
           "verdict": "kapatıldı — form kabındaki `mx-auto` kaldırıldı, kart artık H1 ile aynı sol eksende sola dayalı",
           "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
         }
-      ]
+      ],
+      "scoreNotes": "Kriter 2: 4→5 (H1 sol kenarı 265px, form kartı sol kenarı 458px iken artık ikisi de 264px — tek eksen, Playwright DOM ölçümü ile doğrulandı)."
     },
     "/uretim/planlama": {
-      "round": 10,
+      "round": 11,
       "reference": "linear",
       "scores": [
         5,
         5,
         4,
         5,
-        4,
         5,
         5,
         5,
-        3,
+        5,
+        5,
         5,
         5,
         5
       ],
-      "total": 56,
+      "total": 59,
       "open": [],
       "closed": [
         {
@@ -205,27 +252,42 @@
           "measureAfter": "1440x900 /uretim/planlama ekran görüntüsü: gün sütunları arasındaki dikey ayraçlar (border-r) kaldırıldı, yalnızca satır hairline'ı (border-b) + yapısal sütun ayraçları (Hat|Planlanmamış|gün ızgarası|Toplam) kaldı — 'çerçeve çorbası' görünümü giderildi",
           "verdict": "kapatıldı — PlanningCell/gün başlığı hücrelerinden border-r kaldırıldı, Toplam sütununa yapısal border-l eklendi",
           "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        },
+        {
+          "id": "uretim-planlama-03",
+          "criterion": 6,
+          "severity": "P2",
+          "text": "Mobil gün listesi kartında planlanan miktar birimsiz basılıyor (\"70\", \"90\") ve mobil düzende birimi taşıyan bir bağlam yok — masaüstü panoda birim satır sonundaki 'Toplam' hücresinde (\"90 ADET\") duruyor, mobilde o sütun hiç render edilmiyor.",
+          "measure": "390x844 /uretim/planlama: MobileWoCard'da QtyCell uom prop'suz çağrılıyor (planning-board.tsx:459); ekranda hiç birim metni yok.",
+          "target": "MobileWoCard'daki QtyCell'e `uom={wo.uomCode}` geç — 390px'te miktarın yanında birim görünür",
+          "file": "apps/web/src/modules/production/components/planning-board.tsx:459 (MobileWoCard)",
+          "openedRound": 11,
+          "closedRound": 11,
+          "measureAfter": "pnpm shot /uretim/planlama --viewport 390x844 (mobile.png): mobil gün kartlarında artık \"70 ADET\", \"90 ADET\" görünüyor (önceden birimsiz \"70\", \"90\"). pnpm measure /uretim/planlama --viewport 390x844 → overflowX false, touchTargetsBelow44'te yalnızca ilgisiz breadcrumb false-positive.",
+          "verdict": "kapatıldı — MobileWoCard'daki QtyCell'e uom={wo.uomCode} geçildi",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11 düzeltme turu)"
         }
-      ]
+      ],
+      "scoreNotes": "Kriter 5: 4→5 (gün hücrelerinden border-r kaldırıldı; yalnızca yapısal sütun ayraçları + satır hairline'ı kaldı — 'çerçeve çorbası' giderildi). Kriter 9: 3→5 ('7 gün'/'14 gün' 40px→44px, ölçümde touchTargetsBelow44 boş). Kriter 6: 5→4 (mobil kartta birim yok — uretim-planlama-03). Kriter 3: 4 (3 hat × 9 sütunluk pano 1440x900'ün üst ~470px'ini kullanıyor, veri kaynaklı; değişmedi). Tur 11 düzeltme turu — Kriter 6: 4→5 (mobil gün kartında miktarın yanında birim (ADET) görünüyor, uretim-planlama-03 kapatıldı)."
     },
     "/uretim/hatlar": {
-      "round": 10,
+      "round": 11,
       "reference": "linear",
       "scores": [
         5,
         5,
         4,
         5,
-        4,
-        3,
         5,
         5,
-        3,
         5,
-        4,
+        5,
+        5,
+        5,
+        5,
         5
       ],
-      "total": 53,
+      "total": 59,
       "open": [],
       "closed": [
         {
@@ -256,10 +318,11 @@
           "verdict": "kapatıldı — Link’e `block min-h-11 py-0.5` eklendi",
           "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
         }
-      ]
+      ],
+      "scoreNotes": "Kriter 6: 3→5 (HAT3'te '↘%100 + Veri yok' çelişkisi kalktı; delta yalnızca sparkline verisi varken basılıyor, üç kartta metrikler aynı kalıpta: değer `num` + soluk 11px birim). Kriter 9: 3→5 (hat bağlantısı 40px→44px, ölçümde touchTargetsBelow44 boş). Kriter 5: 4→5 (üç kart aynı bölme dizisini aynı yüksekliklerde taşıyor; 'Son 7 gün' yuvası her kartta 88x24). Kriter 11: 4→5 (aynı gerekçe). Kriter 3: 4 (3 kartlık koleksiyon 1440x900'ün üst ~530px'i; veri kaynaklı, değişmedi)."
     },
     "/operator": {
-      "round": 10,
+      "round": 11,
       "reference": "linear",
       "scores": [
         5,
@@ -277,7 +340,13 @@
       ],
       "total": 59,
       "open": [],
-      "closed": []
+      "closed": [],
+      "scoreNotes": "Değişiklik yok; 1024x768 tablet görüntüsü de çekildi (artifacts/screens/operator/tablet.png). Ölçüm: 1440/390'da touchTargetsBelow44 boş, taşma yok, distinctColors 15. Kriter 3: 4 (terminal bilinçli olarak seyrek/iri — eldivenli dokunuş)."
     }
+  },
+  "round": 11,
+  "referenceTotals": {
+    "linear": 57,
+    "stripe": 56
   }
 }
