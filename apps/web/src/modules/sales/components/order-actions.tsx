@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { CheckCircle2, XCircle, Loader2, ReceiptText } from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, ReceiptText, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { confirmOrderAction, cancelOrderAction, createInvoiceFromOrderAction } from '../actions';
@@ -65,6 +65,11 @@ export function OrderActions({ id, status, hasDeliveries }: { id: string; status
           }}
         />
       ) : null}
+      {/* Belge zinciri sonuna gelmiş (faturalandı/iptal/kapalı) siparişte yukarıdaki eylemlerin
+          hiçbiri koşulu sağlamaz — sayfa başlığı hiç eylemsiz kalmasın diye yazdırma her zaman var. */}
+      <Button size="sm" variant="outline" onClick={() => window.print()}>
+        <Printer className="size-3.5" /> Yazdır
+      </Button>
     </div>
   );
 }

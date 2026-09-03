@@ -6,15 +6,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Trash2, ListPlus } from 'lucide-react';
+import { Trash2, ListPlus, PackagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormText, FormSelect, FieldLabel } from '@/components/form/fields';
 import { FormMoney, FormQty } from '@/components/form/money-qty';
 import { FormDate } from '@/components/form/date-field';
-import { Combobox } from '@/components/form/combobox';
+import { Combobox, type ComboboxOption } from '@/components/form/combobox';
 import { FormActions } from '@/components/form/form-actions';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
+import { EmptyState } from '@/components/empty-state';
 import { createSalesDocAction, resolvePriceAction } from '../actions';
 import { PRICE_SOURCE_LABELS } from '../labels';
 import type { SellableProductRow } from '../queries';
@@ -94,6 +95,33 @@ export function SalesDocForm({
   const warehouseOptions = useMemo(() => warehouses.map((w) => ({ value: w.id, label: `${w.code} — ${w.name}` })), [warehouses]);
   const productOptions = useMemo(() => products.map((p) => ({ value: p.id, label: p.name, description: p.sku, keywords: [p.sku, p.barcode ?? ''] })), [products]);
 
+  /**
+   * Combobox'ın varsayılan yerel süzmesi (ad+SKU+barkod içinde basit "includes") benzer isimli
+   * farklı SKU'ları (ör. "BADEM BAZI" ararken "2x/3x/6x Badem Bazı") tam SKU/ad eşleşmesinin önüne
+   * geçirebiliyordu. `onSearch` ile skorlu kendi sıralamamızı veriyoruz: tam/başlangıç SKU eşleşmesi
+   * > tam/başlangıç ad eşleşmesi > içerir. tr-TR duyarsız.
+   */
+  async function searchProducts(query: string): Promise<ComboboxOption[]> {
+    const needle = query.trim().toLocaleLowerCase('tr-TR');
+    if (!needle) return productOptions;
+    const scored: Array<{ opt: ComboboxOption; score: number }> = [];
+    for (const opt of productOptions) {
+      const sku = (opt.description ?? '').toLocaleLowerCase('tr-TR');
+      const name = opt.label.toLocaleLowerCase('tr-TR');
+      const barcode = (opt.keywords?.[1] ?? '').toLocaleLowerCase('tr-TR');
+      let score = -1;
+      if (sku === needle || barcode === needle) score = 100;
+      else if (sku.startsWith(needle)) score = 90;
+      else if (name === needle) score = 80;
+      else if (name.startsWith(needle)) score = 60;
+      else if (sku.includes(needle)) score = 40;
+      else if (name.includes(needle)) score = 20;
+      if (score >= 0) scored.push({ opt, score });
+    }
+    scored.sort((a, b) => b.score - a.score || a.opt.label.localeCompare(b.opt.label, 'tr-TR'));
+    return scored.slice(0, 50).map((s) => s.opt);
+  }
+
   // Cari seçilince kanal/fiyat listesi/vade otomatik doldurulur (kullanıcı sonradan değiştirebilir)
   const appliedPartnerRef = useRef<string | null>(null);
   useEffect(() => {
@@ -171,9 +199,9 @@ export function SalesDocForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="rounded-xl border border-border/70 bg-card p-4">
-          <h2 className="mb-3 text-sm font-medium text-muted-foreground">Belge başlığı</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-1.5 lg:col-span-2">
+          <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Belge başlığı</h2>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="space-y-1.5">
               <FieldLabel required>Cari</FieldLabel>
               <Controller control={form.control} name="partnerId" render={({ field }) => <Combobox value={field.value} onChange={(v) => field.onChange(v ?? '')} options={partnerOptions} placeholder="Müşteri seçin" />} />
               {form.formState.errors.partnerId ? <p className="text-xs text-destructive">{form.formState.errors.partnerId.message}</p> : null}
@@ -193,12 +221,12 @@ export function SalesDocForm({
         </div>
 
         <div className="rounded-xl border border-border/70 bg-card p-4">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-medium text-muted-foreground">Satırlar</h2>
+          <div className="mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-2">
+            <h2 className="text-[13px] font-semibold text-foreground">Satırlar</h2>
           </div>
           <div className="space-y-1.5">
             <FieldLabel>Ürün ekle</FieldLabel>
-            <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
+            <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} onSearch={searchProducts} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
           </div>
           {form.formState.errors.lines?.message ? <p className="mt-2 text-xs text-destructive">{form.formState.errors.lines.message}</p> : null}
 
@@ -236,13 +264,15 @@ export function SalesDocForm({
                 </div>
               );
             })}
-            {fields.length === 0 ? <p className="rounded-lg border border-dashed py-8 text-center text-sm text-muted-foreground">Ürün arayarak satır ekleyin.</p> : null}
+            {fields.length === 0 ? (
+              <EmptyState compact icon={PackagePlus} title="Henüz satır yok" description="Yukarıdaki aramadan ürün seçin." className="rounded-lg border border-dashed" />
+            ) : null}
           </div>
         </div>
 
         {fields.length > 0 ? (
           <div className="rounded-xl border border-border/70 bg-card p-4">
-            <h2 className="mb-3 text-sm font-medium text-muted-foreground">Özet</h2>
+            <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Özet</h2>
             <dl className="ml-auto grid max-w-xs grid-cols-2 gap-y-1.5 text-[13px]">
               <dt className="text-muted-foreground">Ara toplam</dt><dd className="text-right"><MoneyCell value={totals.subtotal.toFixed(2)} /></dd>
               <dt className="text-muted-foreground">KDV</dt><dd className="text-right"><MoneyCell value={totals.vat.toFixed(2)} muted /></dd>

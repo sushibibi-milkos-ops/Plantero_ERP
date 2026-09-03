@@ -14,11 +14,11 @@ async function checkFiles(): Promise<string[]> {
 // Modül yüklenirken bir kere okunur — describe/it.each senkron kurulum sırasında kullanılabilir.
 const FILES = await checkFiles();
 
-describe('bütünlük kontrolleri (I1..I17) — sözdizimsel çalışırlık', () => {
-  it('checks/ altında tam olarak 17 kural dosyası var (01..17)', () => {
-    expect(FILES).toHaveLength(17);
+describe('bütünlük kontrolleri (I1..I21) — sözdizimsel çalışırlık', () => {
+  it('checks/ altında tam olarak 21 kural dosyası var (01..21)', () => {
+    expect(FILES).toHaveLength(21);
     const numbers = FILES.map((f) => Number(f.slice(0, 2))).sort((a, b) => a - b);
-    expect(numbers).toEqual(Array.from({ length: 17 }, (_, i) => i + 1));
+    expect(numbers).toEqual(Array.from({ length: 21 }, (_, i) => i + 1));
   });
 
   it('temel seed (core+uoms+masterdata+accounting+finance) üzerinde tüm kurallar hatasız çalışır ve 0 ihlal döner', async () => {

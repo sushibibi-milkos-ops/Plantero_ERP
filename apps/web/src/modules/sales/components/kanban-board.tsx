@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DndContext, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { useDroppable } from '@dnd-kit/core';
@@ -21,20 +21,31 @@ export type FunnelSummary = { stages: Array<{ stageId: string; name: string; cou
 
 type Stage = typeof opportunityStages.$inferSelect;
 
-function Column({ stage, cards, onOpen }: { stage: Stage; cards: OpportunityCardRow[]; onOpen: (id: string) => void }) {
+function Column({ stage, cards, onOpen, columnRef }: { stage: Stage; cards: OpportunityCardRow[]; onOpen: (id: string) => void; columnRef: (el: HTMLDivElement | null) => void }) {
   const { setNodeRef, isOver } = useDroppable({ id: stage.id });
   const total = cards.reduce((sum, c) => sum + Number(c.expectedAmount), 0);
 
   return (
-    <div ref={setNodeRef} className={cn('flex w-72 shrink-0 flex-col rounded-xl border border-border/60 bg-muted/30 transition-colors', isOver && 'border-primary/50 bg-primary/5')}>
+    <div
+      ref={(el) => {
+        setNodeRef(el);
+        columnRef(el);
+      }}
+      className={cn('flex w-64 shrink-0 flex-col rounded-xl border border-border/60 bg-muted/30 transition-colors', isOver && 'border-primary/50 bg-primary/5')}
+    >
       <div className="flex items-center justify-between gap-2 px-3 py-2.5">
         <div className="flex items-center gap-1.5 text-[13px] font-medium">
           {stage.name}
           <span className="rounded-full bg-muted px-1.5 py-px text-[11px] text-muted-foreground">{cards.length}</span>
         </div>
-        <span className="text-[11px] text-muted-foreground">{formatMoney(total, 'TRY', { digits: 0, compact: true })}</span>
+        {/* Kart içindeki tutarla aynı biçim (tam, ondalıksız kısaltma yok) — "197 B ₺" vs "₺45.000,00"
+            gibi iki farklı para gösterimi karıştırılmasın. */}
+        <span className="text-[11px] text-muted-foreground">{formatMoney(total, 'TRY', { digits: 0 })}</span>
       </div>
-      <div className="flex-1 space-y-2 overflow-y-auto px-2 pb-2" style={{ maxHeight: 'calc(100vh - 260px)' }}>
+      {/* Kolon içeriği kısa olunca sabit bir 'sihirli' viewport yüksekliğine zorlanmıyor (yalnızca üst
+          sınır — max-h); satır hizası kardeş kolonlarla align-items:stretch üzerinden değil, her kolon
+          kendi içeriği kadar yükseklik alır (bkz. dış kaydırma kabındaki items-start). */}
+      <div className="min-h-0 space-y-2 overflow-y-auto px-2 pb-2" style={{ maxHeight: 'min(560px, calc(100dvh - 18rem))' }}>
         {cards.map((c) => (
           <OpportunityCard key={c.id} row={c} onOpen={onOpen} />
         ))}
@@ -49,6 +60,15 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
   const [openId, setOpenId] = useState<string | null>(null);
   const [view, setView] = useState<'kanban' | 'list'>('kanban');
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  const columnRefs = useRef(new Map<string, HTMLDivElement>());
+
+  function goToStage(stageId: string) {
+    setView('kanban');
+    // Görünüm 'list' idiyse kanban ilk çizilsin diye kaydırmayı bir sonraki frame'e bırak.
+    requestAnimationFrame(() => {
+      columnRefs.current.get(stageId)?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    });
+  }
 
   const byStage = useMemo(() => {
     const map = new Map<string, OpportunityCardRow[]>();
@@ -84,10 +104,16 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/70 bg-card px-4 py-2.5">
         <div className="flex flex-wrap items-center gap-4 text-[13px]">
           {funnel.stages.map((s) => (
-            <div key={s.stageId} className="flex items-baseline gap-1.5">
+            <button
+              key={s.stageId}
+              type="button"
+              onClick={() => goToStage(s.stageId)}
+              className="flex items-baseline gap-1.5 rounded px-1 -mx-1 hover:bg-muted/70"
+              title={`${s.name} sütununa git`}
+            >
               <span className="text-muted-foreground">{s.name}</span>
               <span className="font-mono font-medium tabular-nums">{s.count}</span>
-            </div>
+            </button>
           ))}
           {funnel.winRate !== null ? (
             <div className="flex items-baseline gap-1.5 border-l border-border/60 pl-4">
@@ -104,9 +130,18 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
 
       {view === 'kanban' ? (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          <div className="scrollbar-thin flex gap-3 overflow-x-auto pb-2">
+          <div className="scrollbar-thin scroll-fade-x flex items-start gap-3 overflow-x-auto pb-2">
             {stages.map((s) => (
-              <Column key={s.id} stage={s} cards={byStage.get(s.id) ?? []} onOpen={setOpenId} />
+              <Column
+                key={s.id}
+                stage={s}
+                cards={byStage.get(s.id) ?? []}
+                onOpen={setOpenId}
+                columnRef={(el) => {
+                  if (el) columnRefs.current.set(s.id, el);
+                  else columnRefs.current.delete(s.id);
+                }}
+              />
             ))}
           </div>
         </DndContext>

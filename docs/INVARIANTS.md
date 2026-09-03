@@ -12,10 +12,14 @@
 | I8 | Miktar zinciri: sales_order_lines.delivered_qty = Σ delivery_lines.picked_qty; invoiced_qty ≤ delivered_qty; PO received_qty = Σ receipt_lines.qty | `checks/08_qty_chain.sql` |
 | I9 | Cari bakiye: partners.balance = Σ satış faturaları (posted) − Σ tahsilat allocations (+iadeler) = 120.cari bakiyesi (VUK) | `checks/09_partner_balance.sql` |
 | I10 | Fatura: residual = grand_total − paid_amount; Σ allocations = paid_amount; status tutarlı | `checks/10_invoice_residual.sql` |
-| I11 | Banka: her bank_transaction en fazla 1 approved/auto_applied match; matched → payment/journal var; suggested/rejected match bakiyeyi etkilemez | `checks/11_bank_reconciliation.sql` |
+| I11 | Banka: her bank_transaction en fazla 1 approved/auto_applied match; matched → payment/journal var; suggested/rejected match bakiyeyi etkilemez; eşleşen tutar = ödeme tutarı / fatura tahsis toplamı | `checks/11_bank_reconciliation.sql` |
 | I12 | KDV: 391 = Σ satış fatura line_vat; 191 = Σ alış fatura line_vat (dönem bazında) | `checks/12_vat.sql` |
 | I13 | Kur farkı: dövizli fatura grand_total_try = grand_total × exchange_rate; tahsilatta fx_difference = amount × (tahsilat kuru − fatura kuru) ve 646/656 fişi var | `checks/13_fx.sql` |
 | I14 | Üretim: WO total_cost = material_cost + overhead_cost; Σ consumption.value = material_cost; Σ outputs.value = total_cost (kapalı WO); output lot unit_cost = value/qty | `checks/14_production_cost.sql` |
 | I15 | 151.01 WIP bakiyesi = Σ (açık WO material_cost − Σ output value − Σ fire değeri) | `checks/15_wip.sql` |
 | I16 | Karantina/red lotu müşteri veya üretim lokasyonuna hareket etmemiş | `checks/16_lot_status_moves.sql` |
 | I17 | Audit: son 24 saatteki her create/post işlemi için audit_log satırı var (server action'lar) | `checks/17_audit_coverage.sql` |
+| I18 | Cari bakiye (tedarikçi tarafı, I9'un simetriği): Σ alış faturaları − Σ tahsis edilmiş ödemeler = −partners.balance (payable) = 320 hesabının (alacak−borç) bakiyesi (VUK) | `checks/18_supplier_balance.sql` |
+| I19 | Sipariş miktar tavanı: sales_order_lines.delivered_qty ≤ qty; purchase_order_lines.received_qty ≤ qty; purchase_order_lines.invoiced_qty ≤ received_qty | `checks/19_order_qty_ceiling.sql` |
+| I20 | Kur kaynağı: dövizli satış faturasının exchange_rate'i fiş tarihine eşit/önceki en yakın exchange_rates.buying (TCMB) ile birebir eşleşmeli (I13 yalnızca fatura içi çarpımı doğrular, kaynağı doğrulamaz) | `checks/20_fx_rate_source.sql` |
+| I21 | Devreden KDV (190): vat_periods zinciri — bu ayın carried_from_prev = önceki ayın carried_to_next; payable = greatest(carried_from_prev+input_vat−output_vat, 0); carried_to_next = greatest(−(...), 0); 190 defter bakiyesi = carried_to_next. **Bulgu**: vat_periods'ı dolduran servis yok (bkz. rapor) — kural bugün veri yokluğundan geçiyor, kod tamamlandığında otomatik devreye girer | `checks/21_vat_carryforward.sql` |

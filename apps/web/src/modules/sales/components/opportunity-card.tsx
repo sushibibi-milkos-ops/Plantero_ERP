@@ -33,9 +33,20 @@ export function OpportunityCard({ row, onOpen }: { row: OpportunityCardRow; onOp
       </div>
       <div className="flex items-center justify-between gap-2">
         {row.nextActivityDate ? (
-          <span className={cn('inline-flex items-center gap-1 text-[11px]', row.isOverdue ? 'text-destructive' : 'text-muted-foreground')}>
-            <CalendarClock className="size-3" /> {formatDate(row.nextActivityDate)}
-          </span>
+          row.isOverdue ? (
+            // ExpiryBadge deseniyle uyumlu küçük rozet: ham kırmızı metin "hata" gibi okunuyordu,
+            // rozet + "gecikti" etiketi nedenini açıklıyor.
+            <span
+              title={`Sonraki aktivite: ${formatDate(row.nextActivityDate)} (gecikti)`}
+              className="inline-flex h-4 items-center gap-1 rounded bg-destructive/10 px-1 text-[10px] font-medium whitespace-nowrap text-destructive tabular-nums"
+            >
+              <CalendarClock className="size-2.5" /> gecikti · {formatDate(row.nextActivityDate).slice(0, 5)}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+              <CalendarClock className="size-3" /> {formatDate(row.nextActivityDate)}
+            </span>
+          )
         ) : <span />}
         {row.ownerName ? (
           <span className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-medium text-muted-foreground" title={row.ownerName}>
