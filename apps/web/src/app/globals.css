@@ -266,6 +266,16 @@
   .enter-up {
     animation-name: none;
   }
+  /* İstisna: yukarıdaki 120ms genel kısaltma, süregiden "işleniyor" göstergelerini de
+     yakalayıp saniyede ~8 tur döndürüyordu — bu, hareket azaltma isteğinin amacının
+     tam tersi (titreşen bulanıklık). Kısaltılması gereken giriş/çıkış animasyonlarıdır,
+     sürekli durum göstergeleri değil; bunlara normal hızlarını geri veriyoruz. */
+  .animate-spin {
+    animation-duration: 800ms !important;
+  }
+  .animate-pulse {
+    animation-duration: 2s !important;
+  }
 }
 
 /* cmdk / sonner ince ayarlar */

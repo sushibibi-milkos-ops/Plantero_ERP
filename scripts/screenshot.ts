@@ -94,14 +94,25 @@ async function shoot(browser: Browser, opts: ReturnType<typeof parseArgs>, kind:
     colorScheme: opts.dark ? 'dark' : 'light',
   });
   const page = await ctx.newPage();
+  // Soğuk derleme (ilk istekte Next.js route'u derler) + RSC veri getirme 30s'in üstüne
+  // çıkabiliyor; varsayılan navigasyon timeout'unu büyütmezsek /ana-veri/receteler gibi
+  // rotalarda 'pnpm shot' sahte bir timeout hatasıyla düşüyordu.
+  page.setDefaultNavigationTimeout(120_000);
   const account = ACCOUNTS[opts.as];
   if (!account) throw new Error(`Bilinmeyen hesap: ${opts.as} (${Object.keys(ACCOUNTS).join(', ')})`);
   if (!opts.route.startsWith('/login')) await login(page, opts.base, account, opts.route);
   if (!page.url().startsWith(`${opts.base}${opts.route.split('?')[0]}`)) {
-    await page.goto(`${opts.base}${opts.route}`, { waitUntil: 'networkidle' });
+    await page.goto(`${opts.base}${opts.route}`, { waitUntil: 'networkidle', timeout: 120_000 });
   } else {
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('networkidle', { timeout: 120_000 });
   }
+  // 'networkidle' RSC akışının bittiğini garanti etmez: loading.tsx iskeletleri kendi
+  // aria-busy'sini gerçek içerik gelene dek taşır (bkz. data-table/skeleton.tsx ve
+  // modules/masterdata/components/loading-skeletons.tsx). Ekranı yalnızca son iskelet
+  // kaybolduğunda çekiyoruz — aksi halde artifact yanlış (gri baloncuklu) kanıt üretir.
+  await page
+    .waitForFunction(() => document.querySelectorAll('[aria-busy]').length === 0, null, { timeout: 120_000 })
+    .catch(() => {});
   // Giriş animasyonları (enter-up 220ms) ve NumberFlow bitene dek bekle
   await page.waitForTimeout(600);
   await page.screenshot({ path: outFile, fullPage: opts.full, animations: 'disabled' });
