@@ -1,7 +1,8 @@
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
 import {
   products, uoms, warehouses, locations, partners, stockLots, qcChecks, receipts,
+  purchaseOrders, purchaseOrderLines,
 } from '../schema/index.js';
 import {
   D, SYSTEM_ACTOR, writeAudit,
@@ -84,6 +85,28 @@ async function partnerByCode(tx: DbOrTx, code: string) {
 async function productBySku(tx: DbOrTx, sku: string) {
   const [row] = await tx.select().from(products).where(eq(products.sku, sku)).limit(1);
   if (!row) throw new Error(`seed:stock — ürün bulunamadı (SKU): ${sku}`);
+  return row;
+}
+
+/**
+ * `purchasing` seed adımı `stock`'tan ÖNCE çalışır (seed/index.ts) ve tam bu mal kabullerle eşleşen
+ * açık siparişleri (`sent`/`confirmed`/`partially_received`) önceden kurar — burada tedarikçi+ürün
+ * bazında ilgili PO satırını bulup mal kabulü ona bağlıyoruz (docs/INVARIANTS.md I24: PO'suz mal kabul
+ * yasak). Aynı tedarikçi+ürün için birden fazla açık PO olabileceğinden (ör. kritik stok motoru demo
+ * taslakları) yalnızca gerçekten "açık" durumdaki sipariş eşleşir.
+ */
+async function findOpenPoLine(tx: DbOrTx, supplierId: string, productId: string) {
+  const [row] = await tx
+    .select({ line: purchaseOrderLines, orderId: purchaseOrders.id })
+    .from(purchaseOrderLines)
+    .innerJoin(purchaseOrders, eq(purchaseOrders.id, purchaseOrderLines.orderId))
+    .where(and(
+      eq(purchaseOrders.partnerId, supplierId),
+      eq(purchaseOrderLines.productId, productId),
+      inArray(purchaseOrders.status, ['sent', 'confirmed', 'partially_received']),
+    ))
+    .limit(1);
+  if (!row) throw new Error(`seed:stock — açık PO satırı bulunamadı (tedarikçi=${supplierId}, ürün=${productId}) — seed/purchasing.ts önce çalışmalı`);
   return row;
 }
 
@@ -360,40 +383,49 @@ async function seedReceipts(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   const adet = await uom(tx, 'ADET');
   const tire = await wh(tx, 'TIRE');
 
-  const line = (sku: string, uomId: string, qty: number, unitCost: number, extra: Partial<ReceiptLineInput> = {}): Promise<ReceiptLineInput> =>
-    productBySku(tx, sku).then((p) => ({ productId: p.id, uomId, qty: D(qty), unitCost: D(unitCost), disposition: 'released' as const, ...extra }));
+  const line = async (sku: string, uomId: string, qty: number, unitCost: number, extra: Partial<ReceiptLineInput> = {}, supplierId?: string): Promise<ReceiptLineInput> => {
+    const p = await productBySku(tx, sku);
+    const purchaseOrderLineId = supplierId ? (await findOpenPoLine(tx, supplierId, p.id)).line.id : undefined;
+    return { productId: p.id, uomId, qty: D(qty), unitCost: D(unitCost), disposition: 'released' as const, purchaseOrderLineId, ...extra };
+  };
+  /** İlgili tedarikçi için `purchasing` seed'inin önceden açtığı siparişin id'si (mal kabul PO'suna bağlanır — I24). */
+  const poIdFor = async (supplierId: string, productId: string) => (await findOpenPoLine(tx, supplierId, productId)).orderId;
 
   // R1 — Proteinsan: Isolated Pea Protein
   const supProteinsan = await partnerByCode(tx, 'S-000001');
-  const r1lines = [await line('301010000', kg.id, 120, 210, { supplierLotNo: 'PSN-2609-01', expiryDate: addDaysStr(OPEN_FROM, 480) })];
-  const r1 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supProteinsan.id, supplierDeliveryNo: 'İRS-8842', supplierDeliveryDate: addDaysStr(OPEN_FROM, 24), lines: r1lines }, SYSTEM_ACTOR);
+  const protein = await productBySku(tx, '301010000');
+  const r1lines = [await line('301010000', kg.id, 120, 210, { supplierLotNo: 'PSN-2609-01', expiryDate: addDaysStr(OPEN_FROM, 480) }, supProteinsan.id)];
+  const r1 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supProteinsan.id, purchaseOrderId: await poIdFor(supProteinsan.id, protein.id), supplierDeliveryNo: 'İRS-8842', supplierDeliveryDate: addDaysStr(OPEN_FROM, 24), lines: r1lines }, SYSTEM_ACTOR);
   await auditCreate(tx, 'receipts', r1.receipt.id, `Mal kabul ${r1.receipt.docNo} kaydedildi (1 satır)`);
   await auditReceiptLots(tx, r1.receipt.docNo, r1.createdLotIds);
 
   // R2 — Anadolu Kuruyemiş: Badem + Fındık
   const supAnadolu = await partnerByCode(tx, 'S-000005');
+  const badem = await productBySku(tx, '301030000');
   const r2lines = [
-    await line('301030000', kg.id, 200, 315, { supplierLotNo: 'AKY-0826-B', expiryDate: addDaysStr(OPEN_FROM, 300) }),
-    await line('301040000', kg.id, 150, 275, { supplierLotNo: 'AKY-0826-F', expiryDate: addDaysStr(OPEN_FROM, 300) }),
+    await line('301030000', kg.id, 200, 315, { supplierLotNo: 'AKY-0826-B', expiryDate: addDaysStr(OPEN_FROM, 300) }, supAnadolu.id),
+    await line('301040000', kg.id, 150, 275, { supplierLotNo: 'AKY-0826-F', expiryDate: addDaysStr(OPEN_FROM, 300) }, supAnadolu.id),
   ];
-  const r2 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supAnadolu.id, supplierDeliveryNo: 'İRS-3301', supplierDeliveryDate: addDaysStr(OPEN_FROM, 26), lines: r2lines }, SYSTEM_ACTOR);
+  const r2 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supAnadolu.id, purchaseOrderId: await poIdFor(supAnadolu.id, badem.id), supplierDeliveryNo: 'İRS-3301', supplierDeliveryDate: addDaysStr(OPEN_FROM, 26), lines: r2lines }, SYSTEM_ACTOR);
   await auditCreate(tx, 'receipts', r2.receipt.id, `Mal kabul ${r2.receipt.docNo} kaydedildi (2 satır)`);
   await auditReceiptLots(tx, r2.receipt.docNo, r2.createdLotIds);
 
   // R3 — Tatlısu: Suklaroz (tam kabul) + stevya (kısmi red)
   const supTatlisu = await partnerByCode(tx, 'S-000002');
+  const suklaroz = await productBySku(tx, '302010000');
   const r3lines = [
-    await line('302010000', kg.id, 80, 690, { supplierLotNo: 'TTM-1140' }),
-    await line('302020000', kg.id, 60, 650, { supplierLotNo: 'TTM-1141', rejectedQty: D(8), rejectReason: 'Nem oranı spesifikasyon sınırında — kısmi red' }),
+    await line('302010000', kg.id, 80, 690, { supplierLotNo: 'TTM-1140' }, supTatlisu.id),
+    await line('302020000', kg.id, 60, 650, { supplierLotNo: 'TTM-1141', rejectedQty: D(8), rejectReason: 'Nem oranı spesifikasyon sınırında — kısmi red' }, supTatlisu.id),
   ];
-  const r3 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supTatlisu.id, supplierDeliveryNo: 'İRS-5567', supplierDeliveryDate: addDaysStr(OPEN_FROM, 27), lines: r3lines }, SYSTEM_ACTOR);
+  const r3 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supTatlisu.id, purchaseOrderId: await poIdFor(supTatlisu.id, suklaroz.id), supplierDeliveryNo: 'İRS-5567', supplierDeliveryDate: addDaysStr(OPEN_FROM, 27), lines: r3lines }, SYSTEM_ACTOR);
   await auditCreate(tx, 'receipts', r3.receipt.id, `Mal kabul ${r3.receipt.docNo} kaydedildi (kısmi red içerir)`);
   await auditReceiptLots(tx, r3.receipt.docNo, r3.createdLotIds);
 
   // R4 — Aromatik Kimya: Vanilya Aroması, karantinada QC bekliyor
   const supAromatik = await partnerByCode(tx, 'S-000003');
-  const r4lines = [await line('304010000', kg.id, 40, 910, { supplierLotNo: 'ARK-2290', disposition: 'quarantine', expiryDate: addDaysStr(OPEN_FROM, 700) })];
-  const r4 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supAromatik.id, supplierDeliveryNo: 'İRS-9012', supplierDeliveryDate: addDaysStr(OPEN_FROM, 29), lines: r4lines }, SYSTEM_ACTOR);
+  const vanilya = await productBySku(tx, '304010000');
+  const r4lines = [await line('304010000', kg.id, 40, 910, { supplierLotNo: 'ARK-2290', disposition: 'quarantine', expiryDate: addDaysStr(OPEN_FROM, 700) }, supAromatik.id)];
+  const r4 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supAromatik.id, purchaseOrderId: await poIdFor(supAromatik.id, vanilya.id), supplierDeliveryNo: 'İRS-9012', supplierDeliveryDate: addDaysStr(OPEN_FROM, 29), lines: r4lines }, SYSTEM_ACTOR);
   await auditCreate(tx, 'receipts', r4.receipt.id, `Mal kabul ${r4.receipt.docNo} kaydedildi (karantina)`);
   await auditReceiptLots(tx, r4.receipt.docNo, r4.createdLotIds);
   // requiresIncomingQc=false olduğundan receiveGoods otomatik qc_checks açmadı — karantinadaki lot için gelen QC kaydını
@@ -411,23 +443,25 @@ async function seedReceipts(tx: DbOrTx, summary: SeedSummary): Promise<void> {
 
   // R5 — Ege Ambalaj: kavanoz/kapak/etiket/koli
   const supEge = await partnerByCode(tx, 'S-000004');
+  const kavanoz = await productBySku(tx, '401010000');
   const r5lines = [
-    await line('401010000', adet.id, 1000, 22, { supplierLotNo: 'EGA-4471' }),
-    await line('401020000', adet.id, 1000, 10, { supplierLotNo: 'EGA-4472' }),
-    await line('401030000', adet.id, 2000, 8, { supplierLotNo: 'EGA-4473' }),
-    await line('401040000', adet.id, 300, 25, { supplierLotNo: 'EGA-4474' }),
+    await line('401010000', adet.id, 1000, 22, { supplierLotNo: 'EGA-4471' }, supEge.id),
+    await line('401020000', adet.id, 1000, 10, { supplierLotNo: 'EGA-4472' }, supEge.id),
+    await line('401030000', adet.id, 2000, 8, { supplierLotNo: 'EGA-4473' }, supEge.id),
+    await line('401040000', adet.id, 300, 25, { supplierLotNo: 'EGA-4474' }, supEge.id),
   ];
-  const r5 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supEge.id, supplierDeliveryNo: 'İRS-1180', supplierDeliveryDate: addDaysStr(OPEN_FROM, 30), lines: r5lines }, SYSTEM_ACTOR);
+  const r5 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supEge.id, purchaseOrderId: await poIdFor(supEge.id, kavanoz.id), supplierDeliveryNo: 'İRS-1180', supplierDeliveryDate: addDaysStr(OPEN_FROM, 30), lines: r5lines }, SYSTEM_ACTOR);
   await auditCreate(tx, 'receipts', r5.receipt.id, `Mal kabul ${r5.receipt.docNo} kaydedildi (4 satır)`);
   await auditReceiptLots(tx, r5.receipt.docNo, r5.createdLotIds);
 
   // R6 — Kahve Dünyası: yeşil kahve + matcha
   const supKahve = await partnerByCode(tx, 'S-000006');
+  const yesilKahve = await productBySku(tx, '308010000');
   const r6lines = [
-    await line('308010000', kg.id, 100, 255, { supplierLotNo: 'KDN-7710', expiryDate: addDaysStr(OPEN_FROM, 540) }),
-    await line('308020000', kg.id, 25, 810, { supplierLotNo: 'KDN-7711', expiryDate: addDaysStr(OPEN_FROM, 540) }),
+    await line('308010000', kg.id, 100, 255, { supplierLotNo: 'KDN-7710', expiryDate: addDaysStr(OPEN_FROM, 540) }, supKahve.id),
+    await line('308020000', kg.id, 25, 810, { supplierLotNo: 'KDN-7711', expiryDate: addDaysStr(OPEN_FROM, 540) }, supKahve.id),
   ];
-  const r6 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supKahve.id, supplierDeliveryNo: 'İRS-6603', supplierDeliveryDate: addDaysStr(OPEN_FROM, 31), lines: r6lines }, SYSTEM_ACTOR);
+  const r6 = await createAndReceive(tx, { warehouseId: tire.id, partnerId: supKahve.id, purchaseOrderId: await poIdFor(supKahve.id, yesilKahve.id), supplierDeliveryNo: 'İRS-6603', supplierDeliveryDate: addDaysStr(OPEN_FROM, 31), lines: r6lines }, SYSTEM_ACTOR);
   await auditCreate(tx, 'receipts', r6.receipt.id, `Mal kabul ${r6.receipt.docNo} kaydedildi (2 satır)`);
   await auditReceiptLots(tx, r6.receipt.docNo, r6.createdLotIds);
 

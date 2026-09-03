@@ -31,3 +31,6 @@ export * from './sales/invoicing.js';
 export * from './sales/channels.js';
 export * from './sales/crm.js';
 export * from './purchasing/invoicing.js';
+export * from './purchasing/orders.js';
+export * from './purchasing/replenishment.js';
+export * from './purchasing/whitelist.js';

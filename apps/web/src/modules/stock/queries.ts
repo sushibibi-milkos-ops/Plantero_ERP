@@ -63,11 +63,18 @@ export async function listCustomers() {
   return db.select().from(partners).where(and(inArray(partners.kind, ['customer', 'both']), eq(partners.isActive, true))).orderBy(asc(partners.name));
 }
 
-/** Belirli tedarikçinin (verilmezse tümü) henüz tamamen alınmamış satın alma siparişleri — mal kabul formunda `?po=` seçimi */
+/** Belirli tedarikçinin (verilmezse tümü) henüz tamamen alınmamış satın alma siparişleri — mal kabul
+ * formunda `?po=` seçimi (P0 düzeltme: `receipt-form.tsx`'in üstündeki "Sipariş seç" combobox'ı). */
 export async function listOpenPurchaseOrders(supplierId?: string) {
   const conds = [inArray(purchaseOrders.status, ['sent', 'confirmed', 'partially_received'])];
   if (supplierId) conds.push(eq(purchaseOrders.partnerId, supplierId));
-  return db.select().from(purchaseOrders).where(and(...conds)).orderBy(desc(purchaseOrders.orderDate));
+  const rows = await db
+    .select({ o: purchaseOrders, partnerName: partners.name })
+    .from(purchaseOrders)
+    .innerJoin(partners, eq(partners.id, purchaseOrders.partnerId))
+    .where(and(...conds))
+    .orderBy(desc(purchaseOrders.orderDate));
+  return rows.map((r) => ({ id: r.o.id, docNo: r.o.docNo, partnerId: r.o.partnerId, partnerName: r.partnerName, grandTotal: r.o.grandTotal }));
 }
 
 export async function getPurchaseOrderWithLines(id: string) {

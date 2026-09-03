@@ -8,16 +8,19 @@ import { seedFinance } from './finance.js';
 import { seedStock } from './stock.js';
 import { seedProduction } from './production.js';
 import { seedSales } from './sales.js';
-import { seedPurchasing } from './purchasing.js';
+import { seedPurchasing, seedPurchasingBackfill } from './purchasing.js';
 
 /**
- * Seed sırası — docs/ARCHITECTURE.md §11:
- * core → uoms → masterdata → accounting → finance → stock → production → sales → purchasing
- *   → quality → bank → maintenance → rnd
- *
- * Bu turda ilk 9 adım (core, uoms, masterdata, accounting, finance, stock, production, sales,
- * purchasing) uygulanmıştır. Sonraki adımlar ileride modül agent'ları tarafından bu diziye eklenecek —
- * yeni bir seed dosyası yazıp `{ name: '<modul>', run: seedX }` olarak SEED_STEPS'e eklemek yeterlidir.
+ * Seed sırası — docs/ARCHITECTURE.md §11 genel akışı `... stock → production → sales → purchasing ...`
+ * belirtse de, docs/modules/tedarik.md `purchasing`'in `stock`'tan ÖNCE çalışmasını ŞART koşar: `stock`
+ * seed'i (6 mal kabul) gerçek `purchase_orders`/`purchase_order_lines`e bağlanmalı (docs/INVARIANTS.md
+ * I24 — "PO'suz mal kabul yasak"), bu da PO'ların mal kabullerden önce var olmasını gerektirir. Bu
+ * çelişki modül sözleşmesi lehine çözülmüştür (tur 6 P0 düzeltmesi): `purchasing` artık `finance`'ten
+ * hemen sonra, `stock`'tan önce çalışır. Ayrıca dizinin EN SONUNA `purchasing-backfill` eklendi: diğer
+ * tüm modüllerin (production/sales/...) kendi ürettiği, PO'suz kalabilecek herhangi bir mal kabulü
+ * geriye dönük bir siparişe bağlayan güvenlik ağı (idempotent — bkz. `purchasing.ts`
+ * `seedPurchasingBackfill`). Yeni bir modül seed'i eklerken (quality/bank/maintenance/rnd) bu son adımın
+ * ÖNÜNE eklenmelidir ki kendi ürettiği olası PO'suz mal kabuller de yamanabilsin.
  */
 const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) => Promise<void> }> = [
   { name: 'core', run: seedCore },
@@ -25,10 +28,11 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   { name: 'masterdata', run: seedMasterdata },
   { name: 'accounting', run: seedAccounting },
   { name: 'finance', run: seedFinance },
+  { name: 'purchasing', run: seedPurchasing },
   { name: 'stock', run: seedStock },
   { name: 'production', run: seedProduction },
   { name: 'sales', run: seedSales },
-  { name: 'purchasing', run: seedPurchasing },
+  { name: 'purchasing-backfill', run: seedPurchasingBackfill },
 ];
 
 async function main() {

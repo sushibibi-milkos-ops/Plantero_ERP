@@ -11,6 +11,7 @@ import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { writeAudit } from '../audit/index.js';
 import { createLot, postStockMove } from './ledger.js';
 import { getSuppliersLocation, getQuarantineLocation, getRejectedLocation, resolveDefaultPutawayLocation } from './locations.js';
+import { createPurchaseInvoiceFromReceipt } from '../purchasing/invoicing.js';
 import type { ActorCtx, DocumentOrigin } from '../types.js';
 
 /**
@@ -247,6 +248,25 @@ export async function receiveGoods(tx: DbOrTx, receiptId: string, ctx: ActorCtx)
     type: 'receipt', recordId: receipt.id, docNo: receipt.docNo, partnerId: receipt.partnerId, status,
     origin: receipt.origin, title: `Mal Kabul ${receipt.docNo}`, amount: totalValue, docDate: receivedAt,
   });
+
+  /**
+   * Otomatik alış faturalama (P0 düzeltme — docs/INVARIANTS.md I23/I25): `postStockMove` her değerli
+   * 'receipt' hareketinde 320.999'a (Faturası Gelmemiş Alımlar) alacak yazar; bu ara hesap yalnızca
+   * `createPurchaseInvoiceFromReceipt` çalıştığında 320.<tedarikçi>'ye devredilir ve 191 (İndirilecek
+   * KDV) doğar. Önceden bu yalnızca `packages/db/src/seed/purchasing.ts`'te geriye dönük bir
+   * seed-workaround'uydu — canlı `/depo/mal-kabul/yeni` akışında hiç tetiklenmiyordu. Artık mal kabul
+   * her tamamlandığında (kalite beklese de — I23 kontrolü `receipt.status`'a değil, değerli hareketin
+   * varlığına bakar) tedarikçisi olan ve değerli hareket üreten her mal kabul aynı transaction içinde
+   * otomatik faturalanır (SAP B1'deki "based on" faturaya karşılık gelir; gerçek tedarikçi faturası
+   * geldiğinde `supplierInvoiceNo` muhasebe tarafından güncellenebilir — şema bunu destekler).
+   */
+  if (receipt.partnerId && totalValue.gt(0)) {
+    const { invoice } = await createPurchaseInvoiceFromReceipt(tx, receipt.id, ctx);
+    await writeAudit(tx, {
+      action: 'create', tableName: 'invoices', recordId: invoice.id,
+      summary: `Alış faturası ${invoice.docNo} mal kabul ${receipt.docNo} kabulünde otomatik oluşturuldu`, after: invoice,
+    }, ctx);
+  }
 
   const finalLines = await tx.select().from(receiptLines).where(eq(receiptLines.receiptId, receiptId));
   return { receipt: updated!, lines: finalLines, createdLotIds };

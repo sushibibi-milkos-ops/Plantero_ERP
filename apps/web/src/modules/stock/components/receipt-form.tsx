@@ -47,12 +47,15 @@ type FormValues = z.infer<typeof schema>;
 
 type LocationOption = { id: string; code: string; usage: string; warehouseId: string | null; isPickable: boolean };
 
+type OpenPurchaseOrderOption = { id: string; docNo: string; partnerId: string; partnerName: string; grandTotal: string };
+
 export function ReceiptForm({
   warehouses,
   suppliers,
   products,
   locations,
   purchaseOrderId,
+  openPurchaseOrders,
   initialLines,
   initialWarehouseId,
   initialPartnerId,
@@ -62,6 +65,10 @@ export function ReceiptForm({
   products: ProductPickerRow[];
   locations: LocationOption[];
   purchaseOrderId?: string;
+  /** Sayfa `?po=` OLMADAN açıldığında gösterilen açık sipariş listesi (P0 düzeltme — docs/INVARIANTS.md
+   *  I24: mal kabul her zaman bir siparişe bağlanabilmeli, yalnızca doğrudan bağlantıyla değil). Seçim
+   *  `?po=<id>`'ye yönlendirir; sayfa o PO'nun kalan satırlarıyla yeniden yüklenir (üstteki `page.tsx`). */
+  openPurchaseOrders?: OpenPurchaseOrderOption[];
   initialLines?: Array<Partial<FormValues['lines'][number]> & { purchaseOrderLineId?: string }>;
   initialWarehouseId?: string;
   initialPartnerId?: string | null;
@@ -91,6 +98,10 @@ export function ReceiptForm({
   const productOptions = useMemo(() => products.map((p) => ({ value: p.id, label: `${p.name}`, description: p.sku, keywords: [p.sku, p.barcode ?? ''] })), [products]);
   const warehouseOptions = useMemo(() => warehouses.map((w) => ({ value: w.id, label: `${w.code} — ${w.name}` })), [warehouses]);
   const supplierOptions = useMemo(() => suppliers.map((s) => ({ value: s.id, label: s.name, description: s.code })), [suppliers]);
+  const openPoOptions = useMemo(
+    () => (openPurchaseOrders ?? []).map((p) => ({ value: p.id, label: `${p.docNo} — ${p.partnerName}`, description: `₺${Number(p.grandTotal).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}` })),
+    [openPurchaseOrders],
+  );
 
   function locationOptionsFor(disposition: string) {
     const usage = disposition === 'rejected' ? 'rejected' : disposition === 'released' ? 'internal' : 'quarantine';
@@ -143,6 +154,24 @@ export function ReceiptForm({
           (Tur 4 P1 bulgusu). İçeriğe iki çubuk kadar (56px aksiyon + 64px alt nav + nefes payı) alt
           boşluk ayrıldı; masaüstünde çubuk statik olduğundan gerek yok. */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
+        {/* P0 düzeltme (docs/INVARIANTS.md I24 — "PO'suz mal kabul yasak"): sayfa `?po=` ile değil
+            doğrudan `/depo/mal-kabul/yeni`'den açıldığında da bir siparişe bağlanabilmeli. Seçim, o
+            siparişin kalan satırlarıyla önceden dolu formu yeniden yükler (bkz. page.tsx `?po=`
+            işleyişi) — ayrı bir "bağla" adımı yok, tek combobox yeterli. `purchaseOrderId` zaten
+            doluysa (bağlantıdan geldiyse) bu satır hiç render edilmez. */}
+        {!purchaseOrderId && openPoOptions.length > 0 ? (
+          <div className="max-w-md rounded-lg border border-primary/20 bg-primary/[0.03] p-3">
+            <FieldLabel>Sipariş seç (opsiyonel)</FieldLabel>
+            <p className="mb-2 text-xs text-muted-foreground">Bir satın alma siparişinden geliyorsa seçin — satırlar ve tedarikçi otomatik doldurulur.</p>
+            <Combobox
+              value={null}
+              onChange={(id) => { if (id) router.push(`/depo/mal-kabul/yeni?po=${id}`); }}
+              options={openPoOptions}
+              placeholder="Açık siparişlerde ara…"
+              clearable={false}
+            />
+          </div>
+        ) : null}
         {/* Önceki sürüm iki bölümü 1px çerçeveli kutuya alıyordu (klasik ERP formu); bölüm başlığı da
             (`text-sm text-muted-foreground`, normal ağırlık) alan etiketlerinden (`text-[13px]
             font-medium`, tam kontrast) daha zayıf basılıyordu — hiyerarşi tersti (Tur 3 P2 bulgusu).

@@ -14,11 +14,13 @@ async function checkFiles(): Promise<string[]> {
 // Modül yüklenirken bir kere okunur — describe/it.each senkron kurulum sırasında kullanılabilir.
 const FILES = await checkFiles();
 
-describe('bütünlük kontrolleri (I1..I21) — sözdizimsel çalışırlık', () => {
-  it('checks/ altında tam olarak 21 kural dosyası var (01..21)', () => {
-    expect(FILES).toHaveLength(21);
+// Not: başlık "I1..I21" turdan kalma — I22 (üretim denormalize), I23/I24 (satın alma faturalama/sipariş
+// zinciri) ve I25 (GRNI bakiyesi) sonraki turlarda eklendi; dosya sayısı/aralığı buna göre güncellendi.
+describe('bütünlük kontrolleri (I1..I25) — sözdizimsel çalışırlık', () => {
+  it('checks/ altında tam olarak 25 kural dosyası var (01..25)', () => {
+    expect(FILES).toHaveLength(25);
     const numbers = FILES.map((f) => Number(f.slice(0, 2))).sort((a, b) => a - b);
-    expect(numbers).toEqual(Array.from({ length: 21 }, (_, i) => i + 1));
+    expect(numbers).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
   });
 
   it('temel seed (core+uoms+masterdata+accounting+finance) üzerinde tüm kurallar hatasız çalışır ve 0 ihlal döner', async () => {
