@@ -17,6 +17,8 @@ export const QUEUES = {
   maintenanceScheduler: { name: 'maintenance-scheduler', cron: '0 5 * * *' },
   oeeDaily: { name: 'oee-daily', cron: '30 23 * * *' },
   cashflowRecompute: { name: 'cashflow-recompute', cron: '0 3 * * *' },
+  // Bir önceki ayı kapatır: ayın 1'i, banka/mutabakat işlerinden sonra 04:00'te çalışır.
+  vatMonthlyClose: { name: 'vat-monthly-close', cron: '0 4 1 * *' },
   // Anlık kuyruklar: cron yok, iş kalemleri diğer modüllerin server action'larından `queue.add(...)` ile eklenir.
   einvoiceSend: { name: 'einvoice-send', cron: null },
   notifications: { name: 'notifications', cron: null },

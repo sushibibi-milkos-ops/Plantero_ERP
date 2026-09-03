@@ -21,7 +21,7 @@ export function KpiCard({
   suffix,
   fractionDigits,
   delta,
-  deltaLabel = 'geçen döneme göre',
+  deltaLabel = 'önceki dönem',
   invertDelta = false,
   sparkline,
   icon: Icon,
@@ -89,10 +89,12 @@ export function KpiCard({
             <NumberFlow value={displayValue} locales="tr-TR" format={nfFormat} suffix={suffix ? ` ${suffix}` : undefined} />
           </div>
           {delta !== undefined ? (
-            <div className="mt-2 flex items-center gap-1.5 text-xs">
+            // flex-wrap: dar kartlarda (ör. bir şeritte 6 KPI) etiket satır sonuna kırpılmadan
+            // taşar — tek satırda `truncate` yerine bu, hiçbir karakteri kesmez (Tur 1 bulgusu).
+            <div className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
               <span
                 className={cn(
-                  'inline-flex items-center gap-0.5 rounded-full px-1.5 py-px font-medium tabular-nums',
+                  'inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-px font-medium tabular-nums',
                   good === null && 'bg-muted text-muted-foreground',
                   good === true && 'bg-success/12 text-success',
                   good === false && 'bg-destructive/10 text-destructive',
@@ -101,7 +103,7 @@ export function KpiCard({
                 <DeltaIcon className="size-3" />
                 {delta === null || delta === undefined ? '—' : `%${Math.abs(delta).toLocaleString('tr-TR', { maximumFractionDigits: 1 })}`}
               </span>
-              <span className="truncate text-muted-foreground">{deltaLabel}</span>
+              <span className="whitespace-nowrap text-muted-foreground">{deltaLabel}</span>
             </div>
           ) : hint ? (
             <div className="mt-2 truncate text-xs text-muted-foreground">{hint}</div>

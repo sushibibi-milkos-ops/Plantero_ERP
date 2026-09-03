@@ -55,7 +55,7 @@ function ChainCard({ node, current }: { node: ChainNode; current: boolean }) {
         </span>
         {node.status ? <StatusBadge status={node.status} kind={TYPE_TO_KIND[node.type]} dot={false} className="h-4 px-1.5 text-[10px]" /> : null}
       </div>
-      <div className="truncate font-mono text-[13px] font-medium">{node.docNo}</div>
+      <div className="code truncate text-[13px] font-medium">{node.docNo}</div>
       <div className="flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
         <span>{node.date ? formatDate(node.date) : ''}</span>
         {node.amount !== null && node.amount !== undefined ? <span className="num">{formatMoney(node.amount)}</span> : null}

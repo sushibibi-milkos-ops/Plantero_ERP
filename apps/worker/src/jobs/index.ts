@@ -10,6 +10,7 @@ import { runOeeDaily } from './oeeDaily.js';
 import { runReconciliationNightly } from './reconciliationNightly.js';
 import { runReplenishmentEngine } from './replenishmentEngine.js';
 import { runTcmbRates } from './tcmbRates.js';
+import { runVatMonthlyClose } from './vatMonthlyClose.js';
 
 /** Zamanlanmış (cron) işler: kuyruk adı → çalıştırıcı fonksiyon */
 export const CRON_JOB_HANDLERS: Record<string, () => Promise<Record<string, unknown>>> = {
@@ -22,6 +23,7 @@ export const CRON_JOB_HANDLERS: Record<string, () => Promise<Record<string, unkn
   [QUEUES.maintenanceScheduler.name]: runMaintenanceScheduler,
   [QUEUES.oeeDaily.name]: runOeeDaily,
   [QUEUES.cashflowRecompute.name]: runCashflowRecompute,
+  [QUEUES.vatMonthlyClose.name]: runVatMonthlyClose,
 };
 
 /** Anlık (on-demand) işler: kuyruk adı → iş verisini işleyen fonksiyon */

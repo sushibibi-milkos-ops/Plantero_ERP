@@ -91,17 +91,25 @@ const GENERIC: Record<string, StatusInfo> = {
 
 /** Enum özel etiketler (genel sözlüğü ezer) */
 const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
+  // Yaşam döngüsü boyunca monoton ilerleyen, çakışmayan bir ton skalası: her ton (muted/neutral
+  // hariç) yalnızca BİR durumda kullanılır — aynı sütunda iki durum asla aynı renkte görünmez
+  // (bkz. status.test.ts). NOT: `primary` ve `success` token'ları aynı yeşil aile (globals.css'te
+  // ikisi de hue 152) olduğundan "farklı ton" olsalar da göz için neredeyse ayırt edilemezler —
+  // bu yüzden ikisi asla aynı kind içinde birlikte kullanılmaz (yalnızca `delivered` yeşili taşır).
+  // draft/sent/confirmed/invoiced/closed/lost "sessiz" gri ailesinde (muted/neutral, tekrar
+  // serbest — henüz fiziksel bir şey olmamış ya da idari/kapanış durumları); accepted (mavi),
+  // partially_delivered (amber), delivered (tek yeşil), cancelled (kırmızı) kendi rengini taşır.
   sales_order: {
     draft: { label: 'Taslak', tone: 'muted' },
-    sent: { label: 'Teklif gönderildi', tone: 'info' },
+    sent: { label: 'Teklif gönderildi', tone: 'neutral' },
     accepted: { label: 'Kabul edildi', tone: 'info' },
-    confirmed: { label: 'Sipariş onaylı', tone: 'primary' },
-    partially_delivered: { label: 'Kısmen sevk', tone: 'info' },
+    confirmed: { label: 'Sipariş onaylı', tone: 'neutral' },
+    partially_delivered: { label: 'Kısmen sevk', tone: 'warning' },
     delivered: { label: 'Sevk edildi', tone: 'success' },
-    invoiced: { label: 'Faturalandı', tone: 'success' },
+    invoiced: { label: 'Faturalandı', tone: 'neutral' },
     closed: { label: 'Kapalı', tone: 'neutral' },
     cancelled: { label: 'İptal', tone: 'danger' },
-    lost: { label: 'Kaybedildi', tone: 'danger' },
+    lost: { label: 'Kaybedildi', tone: 'neutral' },
   },
   invoice: {
     draft: { label: 'Taslak', tone: 'muted' },
@@ -339,9 +347,12 @@ export function getStatusInfo(status: string | null | undefined, kind?: StatusKi
   if (specific) return specific;
   const generic = GENERIC[status];
   if (generic) return generic;
-  // Bilinmeyen kod: alt çizgileri boşluğa çevirip baş harfi büyüt
-  const label = status.replace(/_/g, ' ');
-  return { label: label.charAt(0).toLocaleUpperCase('tr-TR') + label.slice(1), tone: 'neutral' };
+  // Sözlükte karşılığı yok: ham enum değerini (İngilizce olabilir) kullanıcıya asla gösterme —
+  // TR arayüz kuralı (CLAUDE.md). Geliştirici eksik eşlemeyi fark etsin diye dev'de uyar.
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn(`[status] "${status}" için${kind ? ` (kind: ${kind})` : ''} Türkçe etiket tanımlı değil — lib/status.ts'e eklenmeli.`);
+  }
+  return { label: '—', tone: 'muted' };
 }
 
 /** Bir enumun tüm seçenekleri (filtre menüleri için) */

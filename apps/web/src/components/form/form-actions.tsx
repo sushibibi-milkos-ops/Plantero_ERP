@@ -28,7 +28,10 @@ export function FormActions({
     <div
       className={cn(
         'flex items-center justify-end gap-2 border-t border-border/60 pt-4',
-        sticky && 'sticky bottom-16 -mx-4 bg-background/90 px-4 pb-3 backdrop-blur-md md:static md:mx-0 md:bg-transparent md:px-0 md:pb-0 md:backdrop-blur-none',
+        // Mobilde alt tab bar'ın üstünde (bottom-16), masaüstünde ekranın en altında (md:bottom-0)
+        // yapışkan — iki kırılımda da "Kaydet" hep görünür kalır (Tur 1 bulgusu: md:static'te
+        // uzun formlarda düğme gözden kayboluyordu).
+        sticky && 'sticky bottom-16 -mx-4 bg-background/90 px-4 pb-3 backdrop-blur-md md:bottom-0 md:-mx-6 md:bg-background/85 md:px-6 md:pb-3',
         className,
       )}
     >

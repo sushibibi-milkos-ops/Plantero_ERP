@@ -5,6 +5,7 @@ export * from './auth/index.js';
 export * from './audit/index.js';
 export * from './accounting/mapping.js';
 export * from './accounting/journal.js';
+export * from './accounting/vat.js';
 export * from './stock/ledger.js';
 export * from './stock/locations.js';
 export * from './stock/receipts.js';

@@ -188,8 +188,17 @@
 /* ------------------------------------------------------------------ */
 /* Yardımcı sınıflar                                                   */
 /* ------------------------------------------------------------------ */
-/* Sayısal hücreler: mono + tablo rakamları */
+/* Sayısal hücreler (para/miktar/yüzde/KPI): sans + tablo rakamları — Stripe finans ekranları
+   rakamları sans yüzle basar, monospace yalnızca kimlik/kod alanlarına ayrılır (bkz. `code`
+   yardımcısı aşağıda). Tur 1 bulgusu: önceden `num` monospace'ti, KPI/MoneyCell rakamlarını
+   terminal çıktısı gibi gösteriyor ve kart kenarına taşırıyordu. */
 @utility num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.01em;
+}
+/* Kimlik alanları: belge no, SKU, barkod, lot no — hizalı/ayırt edici mono yüz burada kalır */
+@utility code {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";

@@ -29,6 +29,9 @@ export const ACCOUNT_CATALOG: readonly AccountDef[] = [
   { code: '320.999', name: 'Faturası Gelmemiş Alımlar', type: 'liability', parentCode: '320' },
   { code: '360', name: 'Ödenecek Vergi ve Fonlar', type: 'liability' },
   { code: '391', name: 'Hesaplanan KDV', type: 'liability' },
+  // Aylık KDV kapanış mahsup farkı (accounting/vat.ts) — ham 391/391 hesabına DOKUNMAZ (checks/12_vat.sql
+  // o hesabı dönem bazlı fatura KDV'siyle tam eşleştirir); alt hesap olduğundan I12'nin `=` eşleşmesini bozmaz.
+  { code: '391.99', name: 'KDV Kapanış Mahsup Farkı', type: 'liability', parentCode: '391' },
   { code: '500', name: 'Sermaye', type: 'equity' },
   { code: '600', name: 'Yurtiçi Satışlar', type: 'income' },
   { code: '601', name: 'Yurtdışı Satışlar', type: 'income' },
