@@ -8,15 +8,16 @@ import { seedFinance } from './finance.js';
 import { seedStock } from './stock.js';
 import { seedProduction } from './production.js';
 import { seedSales } from './sales.js';
+import { seedPurchasing } from './purchasing.js';
 
 /**
  * Seed sırası — docs/ARCHITECTURE.md §11:
  * core → uoms → masterdata → accounting → finance → stock → production → sales → purchasing
  *   → quality → bank → maintenance → rnd
  *
- * Bu turda ilk 8 adım (core, uoms, masterdata, accounting, finance, stock, production, sales) uygulanmıştır.
- * Sonraki adımlar ileride modül agent'ları tarafından bu diziye eklenecek — yeni bir seed dosyası
- * yazıp `{ name: '<modul>', run: seedX }` olarak SEED_STEPS'e eklemek yeterlidir.
+ * Bu turda ilk 9 adım (core, uoms, masterdata, accounting, finance, stock, production, sales,
+ * purchasing) uygulanmıştır. Sonraki adımlar ileride modül agent'ları tarafından bu diziye eklenecek —
+ * yeni bir seed dosyası yazıp `{ name: '<modul>', run: seedX }` olarak SEED_STEPS'e eklemek yeterlidir.
  */
 const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) => Promise<void> }> = [
   { name: 'core', run: seedCore },
@@ -27,6 +28,7 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   { name: 'stock', run: seedStock },
   { name: 'production', run: seedProduction },
   { name: 'sales', run: seedSales },
+  { name: 'purchasing', run: seedPurchasing },
 ];
 
 async function main() {
