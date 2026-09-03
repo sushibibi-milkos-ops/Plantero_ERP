@@ -117,8 +117,8 @@ export type ReceiveGoodsResult = ReceiptWithLines & { createdLotIds: string[] };
  * Mal kabulü işler: her satır için (kabul edilen kısım + red kısmı ayrı lot) `createLot` + `postStockMove(kind:'receipt')`.
  * QC gerektiren ürün karantinaya giderse `qc_checks` bekleyen kaydı açılır. PO satırı varsa `receivedQty` günceller
  * ve `document_links(purchase_order→receipt)` kurar.
- * SÖZLEŞME (docs/INVARIANTS.md I17): yan etkilerden (`stock_lots`, otomatik retro `purchase_orders`,
- * otomatik `invoices`) doğan audit satırlarını burası kendi yazar (`writeAudit`) — ama `receipts`
+ * SÖZLEŞME (docs/INVARIANTS.md I17): yan etkilerden (`stock_lots`, `qc_checks`, otomatik retro
+ * `purchase_orders`, otomatik `invoices`) doğan audit satırlarını burası kendi yazar (`writeAudit`) — ama `receipts`
  * tablosunun kendi create/post audit'ini YAZMAZ, bunu çağıran katman üretir (web: `withAudit`, seed:
  * `writeAudit`). Bu fonksiyonu wrapper'sız doğrudan çağırmak `receipts` için I17'yi ihlal eder.
  */
@@ -181,10 +181,22 @@ export async function receiveGoods(tx: DbOrTx, receiptId: string, ctx: ActorCtx)
       if (product.requiresIncomingQc && disposition === 'quarantine' && lotId) {
         anyPendingQc = true;
         const qcNo = await nextDocNo(tx, 'QC', receivedAt);
-        await tx.insert(qcChecks).values({
-          docNo: qcNo, kind: 'incoming', productId: product.id, lotId, receiptId: receipt.id, receiptLineId: line.id,
-          supplierId: receipt.partnerId, result: 'pending', sampledQty: null, checkedAt: null,
-        });
+        const [qcRow] = await tx
+          .insert(qcChecks)
+          .values({
+            docNo: qcNo, kind: 'incoming', productId: product.id, lotId, receiptId: receipt.id, receiptLineId: line.id,
+            supplierId: receipt.partnerId, result: 'pending', sampledQty: null, checkedAt: null,
+          })
+          .returning();
+        // docs/INVARIANTS.md I17 (audit kapsamı — checks/17_audit_coverage.sql qc_checks'i de tarar):
+        // önceden yalnızca seed'in elle açtığı gösterim amaçlı QC kaydı audit'liydi, canlı mal kabul
+        // akışında açılan bekleyen QC kaydı hiç audit'lenmiyordu (P2 düzeltmesiyle birlikte fark edildi —
+        // artık bu kayıtlar `releaseLotAction`/`rejectLotAction` ile karara bağlandığından oluşum anının
+        // da izlenebilir olması gerekir).
+        await writeAudit(tx, {
+          action: 'create', tableName: 'qc_checks', recordId: qcRow!.id,
+          summary: `Girdi kalite kontrolü ${qcRow!.docNo} açıldı (mal kabul ${receipt.docNo}, bekliyor)`, after: qcRow,
+        }, ctx);
       }
       await tx.update(receiptLines).set({ toLocationId, lotId }).where(eq(receiptLines.id, line.id));
     }

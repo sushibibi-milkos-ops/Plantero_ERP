@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { db, schema } from '@plantero/db';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import {
   D, postStockMove,
   createAndReceive,
@@ -112,10 +112,42 @@ export const receiveGoodsAction = withAudit('stock.receiveGoods', async (raw: z.
 
 const lotDecisionSchema = z.object({ lotId: z.string().uuid(), toLocationId: z.string().uuid(), note: z.string().trim().optional().nullable() });
 
+/**
+ * Karantinadaki lota bağlı, hâlâ 'pending' olan girdi kalite kontrol kayıtlarını (`qc_checks`) karara
+ * bağlar (P2 düzeltme — docs/INVARIANTS.md I16 sonrası bulgu: `qc_checks`'i okuyan tek yer lot detay
+ * sayfasıydı, hiçbir aksiyon `result`'ı 'pending'den çıkarmıyordu; kayıtlar süresiz asılı kalıyordu).
+ * `releaseLotAction`/`rejectLotAction` zaten karantina→serbest/red stok hareketini (`postStockMove`)
+ * yapan TEK yol olduğundan (docs/modules/depo.md §2 "aksiyonlar: serbest bırak/reddet") kök neden
+ * düzeltmesi yeni bir ekran değil, bu iki aksiyonun QC kaydını da aynı transaction'da kapatmasıdır —
+ * her karantina lotu QC'den gelmez (ör. `requiresIncomingQc=false` ürünlerin manuel karantinaya
+ * alınması), bu yüzden bağlı `pending` kayıt yoksa sessizce atlanır (boş dizi döner).
+ */
+async function resolvePendingQcChecks(
+  tx: Parameters<Parameters<typeof db.transaction>[0]>[0],
+  lotId: string,
+  decision: 'released' | 'rejected',
+  note: string | null,
+  inspectorId: string | null,
+) {
+  const { qcChecks } = schema;
+  const pending = await tx.select().from(qcChecks).where(and(eq(qcChecks.lotId, lotId), eq(qcChecks.result, 'pending')));
+  const result: (typeof qcChecks.$inferSelect)['result'] = decision === 'released' ? 'passed' : 'failed';
+  const updated: Array<typeof qcChecks.$inferSelect> = [];
+  for (const row of pending) {
+    const [u] = await tx
+      .update(qcChecks)
+      .set({ result, checkedAt: new Date(), inspectorId, disposition: decision, decisionNote: note, updatedBy: inspectorId })
+      .where(eq(qcChecks.id, row.id))
+      .returning();
+    if (u) updated.push(u);
+  }
+  return updated;
+}
+
 export const releaseLotAction = withAudit('quality.releaseLot', async (raw: z.infer<typeof lotDecisionSchema>) => {
   const user = await requirePermission('quality.release');
   const input = lotDecisionSchema.parse(raw);
-  const lot = await db.transaction(async (tx) => {
+  const { lot, qcResolved } = await db.transaction(async (tx) => {
     const [l] = await tx.select().from(stockLots).where(eq(stockLots.id, input.lotId)).limit(1);
     if (!l) throw new Error('Lot bulunamadı');
     const { stockQuants } = schema;
@@ -125,13 +157,20 @@ export const releaseLotAction = withAudit('quality.releaseLot', async (raw: z.in
       kind: 'quarantine_release', productId: l.productId, lotId: l.id, fromLocationId: quant.locationId, toLocationId: input.toLocationId,
       qty: D(quant.qty), uomId: l.uomId, refType: 'quality_check', refId: l.id, refNo: l.lotNo, origin: 'manual', note: input.note ?? null,
     }, user.actor);
+    const qcResolved = await resolvePendingQcChecks(tx, l.id, 'released', input.note ?? null, user.userId ?? null);
     const [updated] = await tx.select().from(stockLots).where(eq(stockLots.id, l.id)).limit(1);
-    return updated!;
+    return { lot: updated!, qcResolved };
   });
   revalidatePath('/depo/lotlar');
   revalidatePath(`/depo/lotlar/${lot.id}`);
   revalidatePath('/depo/stok');
-  return { data: { id: lot.id }, audit: { action: 'approve', tableName: 'stock_lots', recordId: lot.id, summary: `Lot ${lot.lotNo} serbest bırakıldı`, after: lot } };
+  return {
+    data: { id: lot.id },
+    audit: [
+      { action: 'approve' as const, tableName: 'stock_lots', recordId: lot.id, summary: `Lot ${lot.lotNo} serbest bırakıldı`, after: lot },
+      ...qcResolved.map((qc) => ({ action: 'approve' as const, tableName: 'qc_checks', recordId: qc.id, summary: `Girdi kalite kontrolü ${qc.docNo} geçti — lot ${lot.lotNo} serbest bırakıldı`, after: qc })),
+    ],
+  };
 });
 
 const rejectLotSchema = z.object({ lotId: z.string().uuid(), rejectedLocationId: z.string().uuid(), reason: z.string().trim().min(2, 'Red gerekçesi gerekli') });
@@ -139,7 +178,7 @@ const rejectLotSchema = z.object({ lotId: z.string().uuid(), rejectedLocationId:
 export const rejectLotAction = withAudit('quality.rejectLot', async (raw: z.infer<typeof rejectLotSchema>) => {
   const user = await requirePermission('quality.release');
   const input = rejectLotSchema.parse(raw);
-  const lot = await db.transaction(async (tx) => {
+  const { lot, qcResolved } = await db.transaction(async (tx) => {
     const [l] = await tx.select().from(stockLots).where(eq(stockLots.id, input.lotId)).limit(1);
     if (!l) throw new Error('Lot bulunamadı');
     const { stockQuants } = schema;
@@ -149,13 +188,20 @@ export const rejectLotAction = withAudit('quality.rejectLot', async (raw: z.infe
       kind: 'quarantine_reject', productId: l.productId, lotId: l.id, fromLocationId: quant.locationId, toLocationId: input.rejectedLocationId,
       qty: D(quant.qty), uomId: l.uomId, refType: 'quality_check', refId: l.id, refNo: l.lotNo, origin: 'manual', note: input.reason,
     }, user.actor);
+    const qcResolved = await resolvePendingQcChecks(tx, l.id, 'rejected', input.reason, user.userId ?? null);
     const [updated] = await tx.select().from(stockLots).where(eq(stockLots.id, l.id)).limit(1);
-    return updated!;
+    return { lot: updated!, qcResolved };
   });
   revalidatePath('/depo/lotlar');
   revalidatePath(`/depo/lotlar/${lot.id}`);
   revalidatePath('/depo/stok');
-  return { data: { id: lot.id }, audit: { action: 'reject', tableName: 'stock_lots', recordId: lot.id, summary: `Lot ${lot.lotNo} reddedildi`, after: lot } };
+  return {
+    data: { id: lot.id },
+    audit: [
+      { action: 'reject' as const, tableName: 'stock_lots', recordId: lot.id, summary: `Lot ${lot.lotNo} reddedildi`, after: lot },
+      ...qcResolved.map((qc) => ({ action: 'reject' as const, tableName: 'qc_checks', recordId: qc.id, summary: `Girdi kalite kontrolü ${qc.docNo} kaldı — lot ${lot.lotNo} reddedildi`, after: qc })),
+    ],
+  };
 });
 
 /* ==================================================================== */
