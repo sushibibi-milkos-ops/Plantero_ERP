@@ -13,7 +13,42 @@ export function SalesDocLines({ lines, currency, showProgress }: { lines: Detail
   // Ekran toplamı da her sayı gibi Decimal ile toplanır — float toplama yasak (CLAUDE.md).
   const grandTotal = lines.reduce((sum, l) => sum.plus(l.line.lineTotal), new Decimal(0));
   return (
-    <div className="scrollbar-thin overflow-x-auto rounded-lg border border-border/70 bg-card">
+    <div className="rounded-lg border border-border/70 bg-card">
+      {/* Mobil kart listesi: 9 sütunlu ham tablo 390px'te en kritik sütunu (Satır toplamı) ekran
+          dışına itiyordu. Ürün + miktar×fiyat + toplam kalır, kaynak/iskonto/KDV/ilerleme ikinci
+          satırda etiket-değer çiftleri olarak (grid-cols-2) — hiçbiri kırpılmaz. */}
+      <ul className="divide-y divide-border/60 md:hidden">
+        {lines.map((l) => (
+          <li key={l.line.id} className="space-y-2 p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-medium">{l.productName}</div>
+                <div className="font-mono text-[11px] text-muted-foreground">{l.sku}</div>
+              </div>
+              <MoneyCell value={l.line.lineTotal} currency={currency} className="shrink-0 font-semibold text-foreground" />
+            </div>
+            <div className="text-xs text-muted-foreground">
+              <QtyCell value={l.line.qty} uom={l.uomCode} className="justify-start" /> × <MoneyCell value={l.line.unitPrice} currency={currency} digits={2} className="inline text-muted-foreground" />
+            </div>
+            <dl className="grid grid-cols-2 gap-x-3 gap-y-1 border-t border-border/40 pt-2 text-[12px]">
+              <div><dt className="text-[11px] text-muted-foreground">Kaynak</dt><dd>{l.line.priceSource ? <StatusBadge status={l.line.priceSource} label={PRICE_SOURCE_LABELS[l.line.priceSource] ?? l.line.priceSource} tone={l.line.priceSource === 'customer' ? 'primary' : l.line.priceSource === 'channel' ? 'info' : 'muted'} dot={false} /> : '—'}</dd></div>
+              <div><dt className="text-[11px] text-muted-foreground">İskonto</dt><dd className="font-mono tabular-nums">{Number(l.line.discountPct) > 0 ? formatPct(l.line.discountPct, 2) : '—'}</dd></div>
+              {showProgress ? (
+                <>
+                  <div><dt className="text-[11px] text-muted-foreground">Teslim</dt><dd><QtyCell value={l.line.deliveredQty} uom={l.uomCode} className="justify-start" /></dd></div>
+                  <div><dt className="text-[11px] text-muted-foreground">Fatura</dt><dd><QtyCell value={l.line.invoicedQty} uom={l.uomCode} className="justify-start" /></dd></div>
+                </>
+              ) : null}
+            </dl>
+          </li>
+        ))}
+        <li className="flex items-center justify-between p-3 text-xs font-medium text-muted-foreground">
+          <span>Satırlar toplamı (KDV dahil)</span>
+          <MoneyCell value={grandTotal.toFixed(4)} currency={currency} className="font-semibold text-foreground" />
+        </li>
+      </ul>
+
+      <div className="scrollbar-thin hidden overflow-x-auto md:block">
       <Table>
         <TableHeader>
           <TableRow>
@@ -64,6 +99,7 @@ export function SalesDocLines({ lines, currency, showProgress }: { lines: Detail
           </TableRow>
         </TableFooter>
       </Table>
+      </div>
     </div>
   );
 }

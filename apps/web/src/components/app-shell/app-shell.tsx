@@ -118,7 +118,10 @@ export function AppShell({
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
           <Topbar />
-          <main id="main" className="flex-1 px-4 pt-4 pb-24 md:px-6 md:pt-6 md:pb-10">
+          {/* pb-32 (128px) mobilde: FormActions (sticky bottom-16, ~52px) + MobileNav (fixed bottom-0,
+              h-14=56px) alt 116px'i kaplıyor — eski pb-24 (96px) 20px kısa kalıp formun son alanlarını
+              (ör. "Müşteri sipariş no") tab bar'ın altında bırakıyordu (Tur 2 bulgusu). */}
+          <main id="main" className="flex-1 px-4 pt-4 pb-32 md:px-6 md:pt-6 md:pb-10">
             <div className="mx-auto w-full max-w-[1400px]">{children}</div>
           </main>
         </div>

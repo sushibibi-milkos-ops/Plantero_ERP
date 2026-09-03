@@ -20,11 +20,6 @@ declare module '@tanstack/react-table' {
     noSort?: boolean;
     /** Masaüstünde başlangıçta gizli (sütun seçiciden açılabilir) — dar ekranlarda taşan az kullanılan sütunlar için */
     defaultHidden?: boolean;
-    /** Sağa sabitlenen sütun (ör. "Genel toplam") — yalnızca tablo GERÇEKTEN yatay taşarken
-     *  `sticky right-0 bg-card` uygulanır (bkz. data-table.tsx `scrollable` ölçümü); taşmayan
-     *  tabloda sabit konumlama ve opak zemin YOK, böylece başlıkta/satırda kaza eseri gri
-     *  dikdörtgen kalmaz. Sütun tanımı bg/position sınıfını kendi className'inde TEKRARLAMAMALI. */
-    pinRight?: boolean;
   }
 }
 

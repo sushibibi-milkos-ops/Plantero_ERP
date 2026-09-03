@@ -31,7 +31,7 @@ function Column({ stage, cards, onOpen, columnRef }: { stage: Stage; cards: Oppo
         setNodeRef(el);
         columnRef(el);
       }}
-      className={cn('flex w-64 shrink-0 flex-col rounded-xl border border-border/60 bg-muted/30 transition-colors', isOver && 'border-primary/50 bg-primary/5')}
+      className={cn('flex w-64 shrink-0 snap-start flex-col rounded-xl border border-border/60 bg-muted/30 transition-colors', isOver && 'border-primary/50 bg-primary/5')}
     >
       <div className="flex items-center justify-between gap-2 px-3 py-2.5">
         <div className="flex items-center gap-1.5 text-[13px] font-medium">
@@ -101,14 +101,16 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/70 bg-card px-4 py-2.5">
-        <div className="flex flex-wrap items-center gap-4 text-[13px]">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-card px-4 py-2.5">
+        {/* Sarınca (flex-wrap) "Kazanma oranı" önündeki border-l öksüz kalıyordu — tek satır, yatay
+            kayan bir şeride sabitlendi (390px'te de başlık/filtre/görünüm satırı bozulmaz). */}
+        <div className="scrollbar-thin flex items-center gap-4 overflow-x-auto text-[13px] whitespace-nowrap">
           {funnel.stages.map((s) => (
             <button
               key={s.stageId}
               type="button"
               onClick={() => goToStage(s.stageId)}
-              className="flex items-baseline gap-1.5 rounded px-1 -mx-1 hover:bg-muted/70"
+              className="flex shrink-0 items-baseline gap-1.5 rounded px-1 -mx-1 hover:bg-muted/70"
               title={`${s.name} sütununa git`}
             >
               <span className="text-muted-foreground">{s.name}</span>
@@ -116,38 +118,47 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
             </button>
           ))}
           {funnel.winRate !== null ? (
-            <div className="flex items-baseline gap-1.5 border-l border-border/60 pl-4">
+            <div className="flex shrink-0 items-baseline gap-1.5 border-l border-border/60 pl-4">
               <span className="text-muted-foreground">Kazanma oranı</span>
               <span className="font-mono font-medium tabular-nums text-success">%{funnel.winRate.toFixed(0)}</span>
             </div>
           ) : null}
         </div>
-        <div className="flex items-center gap-1 rounded-md border border-border/70 p-0.5">
+        {/* Görünüm değiştirici yalnızca md+'ta anlamlı — 390px'te kanban zaten kullanılamaz olduğundan
+            (aşağıda her koşulda liste zorlanır) burada gösterilmesi kafa karıştırırdı. */}
+        <div className="hidden shrink-0 items-center gap-1 rounded-md border border-border/70 p-0.5 md:flex">
           <Button variant={view === 'kanban' ? 'secondary' : 'ghost'} size="icon-sm" onClick={() => setView('kanban')} aria-label="Kanban görünümü"><LayoutGrid className="size-3.5" /></Button>
           <Button variant={view === 'list' ? 'secondary' : 'ghost'} size="icon-sm" onClick={() => setView('list')} aria-label="Liste görünümü"><List className="size-3.5" /></Button>
         </div>
       </div>
 
-      {view === 'kanban' ? (
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          <div className="scrollbar-thin scroll-fade-x flex items-start gap-3 overflow-x-auto pb-2">
-            {stages.map((s) => (
-              <Column
-                key={s.id}
-                stage={s}
-                cards={byStage.get(s.id) ?? []}
-                onOpen={setOpenId}
-                columnRef={(el) => {
-                  if (el) columnRefs.current.set(s.id, el);
-                  else columnRefs.current.delete(s.id);
-                }}
-              />
-            ))}
-          </div>
-        </DndContext>
-      ) : (
+      {/* 250px'lik sütunlar 390px genişlikte kart başlıklarını ortadan kesiyordu — kanban md altında
+          hiç render edilmez, liste görünümü zorlanır (masaüstünde `view` state'i geçerli kalır). */}
+      <div className="md:hidden">
         <OpportunitiesListView rows={rows} stages={stages} onOpen={setOpenId} />
-      )}
+      </div>
+      <div className="hidden md:block">
+        {view === 'kanban' ? (
+          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+            <div className="scrollbar-thin scroll-fade-x flex snap-x snap-mandatory items-start gap-3 overflow-x-auto pb-2">
+              {stages.map((s) => (
+                <Column
+                  key={s.id}
+                  stage={s}
+                  cards={byStage.get(s.id) ?? []}
+                  onOpen={setOpenId}
+                  columnRef={(el) => {
+                    if (el) columnRefs.current.set(s.id, el);
+                    else columnRefs.current.delete(s.id);
+                  }}
+                />
+              ))}
+            </div>
+          </DndContext>
+        ) : (
+          <OpportunitiesListView rows={rows} stages={stages} onOpen={setOpenId} />
+        )}
+      </div>
 
       <OpportunityDrawer id={openId} onClose={() => setOpenId(null)} />
     </div>

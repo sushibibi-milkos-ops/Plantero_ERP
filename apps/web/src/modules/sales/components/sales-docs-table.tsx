@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
+import { EmptyCell } from '@/components/empty-cell';
 import { statusOptions } from '@/lib/status';
 import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
@@ -57,10 +58,10 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
       { id: 'orderDate', accessorFn: (r) => r.orderDate, header: 'Tarih', meta: { width: 90 }, cell: ({ row }) => formatDate(row.original.orderDate) },
     ];
     if (docType === 'quotation') {
-      cols.push({ id: 'validUntil', accessorFn: (r) => r.validUntil, header: 'Geçerlilik', meta: { width: 100, mobile: 'hidden' }, cell: ({ row }) => (row.original.validUntil ? formatDate(row.original.validUntil) : '—') });
+      cols.push({ id: 'validUntil', accessorFn: (r) => r.validUntil, header: 'Geçerlilik', meta: { width: 100, mobile: 'hidden' }, cell: ({ row }) => (row.original.validUntil ? formatDate(row.original.validUntil) : <EmptyCell />) });
     } else {
       cols.push(
-        { id: 'externalOrderNo', accessorFn: (r) => r.externalOrderNo ?? '', header: 'Dış no', meta: { width: 100, mobile: 'hidden', className: 'font-mono text-xs' }, cell: ({ row }) => row.original.externalOrderNo ?? '—' },
+        { id: 'externalOrderNo', accessorFn: (r) => r.externalOrderNo ?? '', header: 'Dış no', meta: { width: 100, mobile: 'hidden', className: 'font-mono text-xs' }, cell: ({ row }) => row.original.externalOrderNo || <EmptyCell /> },
         {
           // Sütun başlığı sırasız olduğundan (enableSorting:false) DataTableColumnHeader'ın
           // sıralanabilir sarmalayıcısını atlayıp özel bir başlık veriyoruz: `title` ile ipucu
@@ -81,11 +82,16 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
       );
     }
     cols.push({
-      // Sabitleme (sticky + opak zemin) yalnızca tablo gerçekten yatay taştığında DataTable
-      // tarafından uygulanır (meta.pinRight, bkz. data-table.tsx `scrollable` ölçümü) — taşmayan
-      // genişlikte başlıkta kaza eseri gri dikdörtgen bırakmaz.
+      // Kök neden analizi (Tur 2 P0): `position:sticky;right:0` son sütunu, tablo yalnızca birkaç
+      // on piksel taştığında (tam da bu tabloda: ~47px taşma, 120px sütun genişliği) doğal akıştaki
+      // ÖNCEKİ sütunun (Net ciro) üzerine BİNDİRİYORDU — sticky'nin "görünür kalsın" kenetlemesi
+      // taşma miktarından bağımsız her zaman devreye giriyor, taşma sütun genişliğinden azsa iki
+      // hücre aynı ekran alanını paylaşıyor (opak zemin altındakini gizliyor). Koşullu (meta.pinRight)
+      // hale getirmek bunu düzeltmiyordu, yalnızca ne zaman göründüğünü değiştiriyordu — bu yüzden
+      // sabitleme tamamen kaldırıldı: tablo artık `min-w-full` ile gerçekten yatay kayıyor (bkz.
+      // data-table.tsx), Genel toplam da diğer sütunlar gibi normal akışta, kaydırınca görünür.
       id: 'grandTotal', accessorFn: (r) => r.grandTotal, header: 'Genel toplam',
-      meta: { align: 'right', width: 120, pinRight: true },
+      meta: { align: 'right', width: 120 },
       cell: ({ row }) => <MoneyCell value={row.original.grandTotal} currency={row.original.currency} />,
     });
     return cols;

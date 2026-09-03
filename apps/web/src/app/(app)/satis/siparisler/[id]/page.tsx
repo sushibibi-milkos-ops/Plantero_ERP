@@ -68,7 +68,30 @@ export default async function SalesOrderDetailPage({ params }: { params: Promise
           {deliveries.length ? (
             <div className="rounded-lg border border-border/70 bg-card">
               <div className="border-b border-border/60 px-4 py-2.5 text-[13px] font-medium text-muted-foreground">İrsaliyeler</div>
-              <div className="scrollbar-thin overflow-x-auto">
+              {/* Mobil kart: 5 sütunlu tablo 390px'te "Sevk" tarihini kesiyordu. */}
+              <ul className="divide-y divide-border/60 md:hidden">
+                {deliveries.map((d) => {
+                  const invoiced = invoices.some((i) => i.deliveryId === d.id);
+                  return (
+                    <li key={d.id} className="space-y-1.5 p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <Link href={`/depo/sevkiyat/${d.id}`} className="font-mono text-xs text-primary hover:underline">{d.docNo}</Link>
+                        <StatusBadge status={d.status} kind="delivery" />
+                      </div>
+                      <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                        <span>Planlanan: {d.scheduledDate ? formatDate(d.scheduledDate) : '—'}</span>
+                        <span>Sevk: {d.shippedAt ? formatDate(d.shippedAt) : '—'}</span>
+                      </div>
+                      {['shipped', 'delivered'].includes(d.status) && !invoiced && userCan(user, 'accounting.invoice') ? (
+                        <div className="pt-0.5"><DeliveryInvoiceButton deliveryId={d.id} /></div>
+                      ) : invoiced ? (
+                        <div className="pt-0.5 text-xs text-muted-foreground">Faturalandı</div>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="scrollbar-thin hidden overflow-x-auto md:block">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -103,7 +126,24 @@ export default async function SalesOrderDetailPage({ params }: { params: Promise
           {invoices.length ? (
             <div className="rounded-lg border border-border/70 bg-card">
               <div className="border-b border-border/60 px-4 py-2.5 text-[13px] font-medium text-muted-foreground">Faturalar</div>
-              <div className="scrollbar-thin overflow-x-auto">
+              {/* Mobil kart: 6 sütunlu tablo 390px'te Tutar/Kalan'ı hiç göstermiyordu — bunlar bu
+                  listenin en önemli iki değeri. */}
+              <ul className="divide-y divide-border/60 md:hidden">
+                {invoices.map((inv) => (
+                  <li key={inv.id} className="space-y-1.5 p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <Link href={`/muhasebe/faturalar/${inv.id}`} className="font-mono text-xs text-primary hover:underline">{inv.docNo}</Link>
+                      <StatusBadge status={inv.status} kind="invoice" />
+                    </div>
+                    <div className="text-xs text-muted-foreground">{formatDate(inv.invoiceDate)} · Vade {formatDate(inv.dueDate)}</div>
+                    <div className="flex items-center justify-between gap-2 border-t border-border/40 pt-1.5 text-[13px]">
+                      <span className="text-muted-foreground">Tutar <MoneyCell value={inv.grandTotal} currency={inv.currency} className="font-medium text-foreground" /></span>
+                      <span className="text-muted-foreground">Kalan <MoneyCell value={inv.residual} currency={inv.currency} muted={Number(inv.residual) === 0} /></span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="scrollbar-thin hidden overflow-x-auto md:block">
                 <Table>
                   <TableHeader>
                     <TableRow>

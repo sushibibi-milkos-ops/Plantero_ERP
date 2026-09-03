@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { DataTable, type ColumnDef } from '@/components/data-table';
 import { MoneyCell } from '@/components/money-cell';
 import { StatusBadge } from '@/components/status-badge';
+import { EmptyCell } from '@/components/empty-cell';
 import { formatDateTime, formatPct } from '@/lib/format';
 import { CHANNEL_KIND_LABELS, CHANNEL_SYNC_SUPPORTED } from '../labels';
 import { ChannelSettingsDrawer } from './channel-settings-drawer';
@@ -14,7 +15,7 @@ import type { ChannelCardRow } from '../queries';
  * her satırda gerçek veriyi (Trendyol'un tek dolu hücresi gibi) göze çarpar kılar. */
 function MoneyOrDash({ value, currency = 'TRY' }: { value: string | number; currency?: string }) {
   const zero = /^-?0*(\.0*)?$/.test(String(value).trim());
-  if (zero) return <span className="num inline-block text-right text-muted-foreground/40">—</span>;
+  if (zero) return <EmptyCell className="num inline-block text-right" />;
   return <MoneyCell value={value} currency={currency} />;
 }
 
@@ -38,7 +39,7 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
       { id: 'monthRevenue', header: 'Bu ay', meta: { align: 'right', width: 110, mobile: 'row' }, cell: ({ row }) => <MoneyOrDash value={row.original.monthRevenue} /> },
       {
         id: 'orderCount', accessorFn: (r) => r.orderCount, header: 'Sipariş (ay)', meta: { align: 'right', width: 100, mobile: 'hidden' },
-        cell: ({ row }) => row.original.orderCount > 0 ? <span className="num tabular-nums">{row.original.orderCount}</span> : <span className="num text-muted-foreground/40">—</span>,
+        cell: ({ row }) => row.original.orderCount > 0 ? <span className="num tabular-nums">{row.original.orderCount}</span> : <EmptyCell className="num" />,
       },
       {
         id: 'commissionPct', accessorFn: (r) => r.channel.commissionPct, header: 'Komisyon', meta: { align: 'right', width: 90, mobile: 'hidden' },
@@ -57,13 +58,15 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         },
       },
       {
-        id: 'actions', header: '', enableSorting: false, meta: { align: 'right', width: 96, mobile: 'row', label: 'İşlem' },
+        // Linear satırında eylem yalnızca hover/focus'ta belirir — 7 satırın sağ 300px'inde sürekli
+        // dolu buton kalıcı gürültüydü. Mobilde (kart, hover yok) her zaman görünür kalır.
+        id: 'actions', header: '', enableSorting: false, meta: { align: 'right', width: 80, mobile: 'row', label: 'İşlem' },
         cell: ({ row }) => {
           const { channel } = row.original;
           const syncSupported = CHANNEL_SYNC_SUPPORTED.has(channel.code);
           return (
-            <span className="inline-flex items-center gap-1">
-              {syncSupported ? <ChannelSyncButton channelCode={channel.code as 'TRENDYOL' | 'HEPSIBURADA'} /> : null}
+            <span className="inline-flex items-center gap-1 opacity-100 transition-opacity focus-within:opacity-100 group-hover/row:opacity-100 md:opacity-0">
+              {syncSupported ? <ChannelSyncButton channelCode={channel.code as 'TRENDYOL' | 'HEPSIBURADA'} compact /> : null}
               <ChannelSettingsDrawer channel={channel} />
             </span>
           );

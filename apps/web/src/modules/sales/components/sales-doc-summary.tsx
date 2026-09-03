@@ -8,14 +8,19 @@ export function SalesDocSummary({ order, showChannelDeductions }: { order: typeo
       <dl className="grid grid-cols-2 gap-y-1.5 text-[13px]">
         <dt className="text-muted-foreground">Ara toplam</dt><dd className="text-right"><MoneyCell value={order.subtotal} currency={order.currency} /></dd>
         {Number(order.discountTotal) > 0 ? (<><dt className="text-muted-foreground">İskonto</dt><dd className="text-right"><MoneyCell value={`-${order.discountTotal}`} currency={order.currency} muted /></dd></>) : null}
-        <dt className="text-muted-foreground">KDV</dt><dd className="text-right"><MoneyCell value={order.vatTotal} currency={order.currency} muted /></dd>
+        {/* `muted` yalnızca değer sıfırsa — sabit soluk ton, ₺40,40 gibi sıfır olmayan KDV'yi de
+            "önemsiz" gibi gösteriyordu (MoneyCell zaten sıfır değeri kendi başına soluklaştırır). */}
+        <dt className="text-muted-foreground">KDV</dt><dd className="text-right"><MoneyCell value={order.vatTotal} currency={order.currency} /></dd>
         <dt className="font-medium">Genel toplam</dt><dd className="text-right font-medium"><MoneyCell value={order.grandTotal} currency={order.currency} /></dd>
         {showChannelDeductions ? (
           <>
             <dt className="pt-1.5 text-muted-foreground">Komisyon</dt><dd className="pt-1.5 text-right"><MoneyCell value={`-${order.commissionAmount}`} currency={order.currency} muted /></dd>
             <dt className="text-muted-foreground">Kargo kesintisi</dt><dd className="text-right"><MoneyCell value={`-${order.shippingDeduction}`} currency={order.currency} muted /></dd>
             {Number(order.otherDeduction) > 0 ? (<><dt className="text-muted-foreground">Diğer kesinti</dt><dd className="text-right"><MoneyCell value={`-${order.otherDeduction}`} currency={order.currency} muted /></dd></>) : null}
-            <dt className="border-t border-border/60 pt-1.5 font-medium">Net ciro</dt><dd className="border-t border-border/60 pt-1.5 text-right font-medium text-primary"><MoneyCell value={order.netRevenue} currency={order.currency} /></dd>
+            {/* Marka yeşili (text-primary) hem birincil eylem hem "iyi haber" (pozitif delta) anlamı
+                taşıyor — nötr bir toplam rakamına uygulanınca yanlış sinyal veriyordu. Ayrım
+                border-t + font-semibold ile kurulur, renk foreground'da kalır. */}
+            <dt className="border-t border-border/60 pt-1.5 font-medium">Net ciro</dt><dd className="border-t border-border/60 pt-1.5 text-right font-semibold text-foreground"><MoneyCell value={order.netRevenue} currency={order.currency} /></dd>
           </>
         ) : null}
       </dl>

@@ -198,9 +198,11 @@ export function SalesDocForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="rounded-xl border border-border/70 bg-card p-4">
+        {/* max-w-3xl: 1440px'te 4 sütuna yayılan form gövdesi alanlar arası 1200px göz yolu bırakıyordu —
+            Stripe/Linear form gövdesini 640-768px ile sınırlar, burada 2 sütuna (4×2 satır) düşürüldü. */}
+        <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Belge başlığı</h2>
-          <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
             <div className="space-y-1.5">
               <FieldLabel required>Cari</FieldLabel>
               <Controller control={form.control} name="partnerId" render={({ field }) => <Combobox value={field.value} onChange={(v) => field.onChange(v ?? '')} options={partnerOptions} placeholder="Müşteri seçin" />} />
@@ -224,7 +226,9 @@ export function SalesDocForm({
           <div className="mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-2">
             <h2 className="text-[13px] font-semibold text-foreground">Satırlar</h2>
           </div>
-          <div className="space-y-1.5">
+          {/* max-w-md: arama alanı ekran genişliğinde (1550px) olmaz — bir arama kutusu ne kadar
+              genişse okuma/tarama o kadar zorlaşır. */}
+          <div className="max-w-md space-y-1.5">
             <FieldLabel>Ürün ekle</FieldLabel>
             <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} onSearch={searchProducts} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
           </div>
@@ -275,14 +279,17 @@ export function SalesDocForm({
             <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Özet</h2>
             <dl className="ml-auto grid max-w-xs grid-cols-2 gap-y-1.5 text-[13px]">
               <dt className="text-muted-foreground">Ara toplam</dt><dd className="text-right"><MoneyCell value={totals.subtotal.toFixed(2)} /></dd>
-              <dt className="text-muted-foreground">KDV</dt><dd className="text-right"><MoneyCell value={totals.vat.toFixed(2)} muted /></dd>
+              {/* `muted` yalnızca sıfırsa — bkz. sales-doc-summary.tsx aynı bulgu. */}
+              <dt className="text-muted-foreground">KDV</dt><dd className="text-right"><MoneyCell value={totals.vat.toFixed(2)} /></dd>
               <dt className="font-medium">Genel toplam</dt><dd className="text-right font-medium"><MoneyCell value={totals.grandTotal.toFixed(2)} /></dd>
               {docType === 'order' ? (
                 <>
                   <dt className="pt-1.5 text-muted-foreground">Komisyon</dt><dd className="pt-1.5 text-right"><MoneyCell value={(-totals.commission).toFixed(2)} muted /></dd>
                   <dt className="text-muted-foreground">Kargo kesintisi</dt><dd className="text-right"><MoneyCell value={(-totals.shipping).toFixed(2)} muted /></dd>
                   {totals.other ? (<><dt className="text-muted-foreground">Diğer kesinti</dt><dd className="text-right"><MoneyCell value={(-totals.other).toFixed(2)} muted /></dd></>) : null}
-                  <dt className="border-t border-border/60 pt-1.5 font-medium">Net ciro</dt><dd className="border-t border-border/60 pt-1.5 text-right font-medium text-primary"><MoneyCell value={totals.netRevenue.toFixed(2)} /></dd>
+                  {/* Marka yeşili yalnızca birincil eylem/pozitif delta anlamına ayrılır — nötr toplam
+                      rakamı foreground'da, ayrım border-t + font-semibold ile kurulur. */}
+                  <dt className="border-t border-border/60 pt-1.5 font-medium">Net ciro</dt><dd className="border-t border-border/60 pt-1.5 text-right font-semibold text-foreground"><MoneyCell value={totals.netRevenue.toFixed(2)} /></dd>
                 </>
               ) : null}
             </dl>

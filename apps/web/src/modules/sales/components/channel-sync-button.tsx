@@ -6,7 +6,7 @@ import { RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { syncChannelOrdersAction } from '../actions';
 
-export function ChannelSyncButton({ channelCode }: { channelCode: 'TRENDYOL' | 'HEPSIBURADA' }) {
+export function ChannelSyncButton({ channelCode, compact = false }: { channelCode: 'TRENDYOL' | 'HEPSIBURADA'; compact?: boolean }) {
   const [pending, startTransition] = useTransition();
 
   function sync() {
@@ -18,6 +18,16 @@ export function ChannelSyncButton({ channelCode }: { channelCode: 'TRENDYOL' | '
         toast.error(res.error);
       }
     });
+  }
+
+  // Tablo satırında (compact): yalnızca ikon + title tooltip — metinli dolu buton satır eylemi için
+  // Linear tabloya göre çok gösterişli. Diğer yerlerde (kanal ayarları vb.) tam metinli buton kalır.
+  if (compact) {
+    return (
+      <Button variant="ghost" size="icon-sm" onClick={sync} disabled={pending} title="Şimdi senkronize et" aria-label="Şimdi senkronize et">
+        <RefreshCw className={pending ? 'size-3.5 animate-spin' : 'size-3.5'} />
+      </Button>
+    );
   }
 
   return (

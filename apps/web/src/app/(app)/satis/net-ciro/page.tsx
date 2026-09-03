@@ -8,13 +8,18 @@ import { NetRevenueChart } from '@/modules/sales/components/net-revenue-chart';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
 import { MoneyCell } from '@/components/money-cell';
-import { formatPct } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = { title: 'Net Ciro' };
 export const dynamic = 'force-dynamic';
 
 const PRESETS: PeriodKey[] = ['bugun', '7g', '30g', 'ay'];
+
+/** formatPct gereksiz sıfırları atar (%100 vs %77,4) — bu sütunda karışık hassasiyet yerine her
+ *  zaman 1 ondalık basılır ki sağa hizalı ondalık ayracı tüm satırlarda aynı x'e düşsün. */
+function formatPctFixed(v: number): string {
+  return `%${v.toLocaleString('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`;
+}
 
 export default async function NetRevenuePage({ searchParams }: { searchParams: Promise<{ period?: string; from?: string; to?: string }> }) {
   await requirePermission('sales.view');
@@ -42,24 +47,37 @@ export default async function NetRevenuePage({ searchParams }: { searchParams: P
               {PERIOD_LABELS[p]}
             </Link>
           ))}
-          <form action="/satis/net-ciro" className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+          <form action="/satis/net-ciro" className="flex w-full flex-wrap items-end gap-2 sm:w-auto">
             <input type="hidden" name="period" value="custom" />
+            {/* Ham `<input type="date">` tarayıcı yer tutucusunu OS/tarayıcı yereline göre çizer —
+                `lang="tr-TR"` tek başına bunu garanti etmez (çoğu tarayıcıda mm/dd/yyyy kalır) ve
+                sipariş formundaki gg.aa.yyyy alanıyla çelişiyordu. Görünür bir "gg.aa.yyyy" ipucu
+                eklendi (Combobox tabanlı DateInput bu native GET formuna bağlanamaz — ayrı bir
+                istemci bileşeni + query-string yönlendirmesi gerektirir). */}
             <div className="flex w-full items-center gap-1.5 sm:w-auto">
-              <input
-                type="date"
-                name="from"
-                lang="tr-TR"
-                defaultValue={period === 'custom' ? from : undefined}
-                className="h-8 min-w-0 flex-1 rounded-md border border-border/70 bg-background px-2 text-[13px] sm:w-36 sm:flex-none"
-              />
-              <span className="shrink-0 text-xs text-muted-foreground">–</span>
-              <input
-                type="date"
-                name="to"
-                lang="tr-TR"
-                defaultValue={period === 'custom' ? to : undefined}
-                className="h-8 min-w-0 flex-1 rounded-md border border-border/70 bg-background px-2 text-[13px] sm:w-36 sm:flex-none"
-              />
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:w-36 sm:flex-none">
+                <label htmlFor="net-ciro-from" className="text-[11px] text-muted-foreground">Başlangıç (gg.aa.yyyy)</label>
+                <input
+                  id="net-ciro-from"
+                  type="date"
+                  name="from"
+                  lang="tr-TR"
+                  defaultValue={period === 'custom' ? from : undefined}
+                  className="h-8 w-full rounded-md border border-border/70 bg-background px-2 text-[13px]"
+                />
+              </div>
+              <span className="shrink-0 self-end pb-2 text-xs text-muted-foreground">–</span>
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:w-36 sm:flex-none">
+                <label htmlFor="net-ciro-to" className="text-[11px] text-muted-foreground">Bitiş (gg.aa.yyyy)</label>
+                <input
+                  id="net-ciro-to"
+                  type="date"
+                  name="to"
+                  lang="tr-TR"
+                  defaultValue={period === 'custom' ? to : undefined}
+                  className="h-8 w-full rounded-md border border-border/70 bg-background px-2 text-[13px]"
+                />
+              </div>
             </div>
             <button type="submit" className={cn('inline-flex h-8 w-full items-center justify-center rounded-md px-3 text-[13px] font-medium sm:w-auto', period === 'custom' ? 'bg-primary text-primary-foreground' : 'border border-border/70 bg-background hover:bg-accent')}>
               Uygula
@@ -68,11 +86,15 @@ export default async function NetRevenuePage({ searchParams }: { searchParams: P
         </div>
       </PageHeader>
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4">
+      {/* 6 kart: lg (2+... ) yerine 3+3 (ya da 2xl'de tek şerit) — 4+2 kırılımı 1440px'te ikinci
+          satırda iki kart genişliğinde öksüz boşluk bırakıyordu. */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <KpiCard title="Brüt ciro" value={current.grossRevenue} format="money" delta={deltas.gross ?? undefined} icon={<Banknote strokeWidth={1.75} />} />
         <KpiCard title="Komisyon" value={current.commission} format="money" delta={deltas.commission ?? undefined} invertDelta icon={<Percent strokeWidth={1.75} />} />
         <KpiCard title="Kargo kesintisi" value={current.shipping} format="money" delta={deltas.shipping ?? undefined} invertDelta icon={<Truck strokeWidth={1.75} />} />
-        <KpiCard title="Net ciro" value={current.netRevenue} format="money" delta={deltas.net ?? undefined} icon={<Wallet strokeWidth={1.75} />} className="ring-1 ring-primary/20" />
+        {/* Vurgu artık çerçeve (ring) değil, değerin kendisinde — diğer 5 kartla anatomi farkı
+            yaratmadan (aynı kutu, aynı gölge) tek bir görsel sinyal (renkli rakam) kalır. */}
+        <KpiCard title="Net ciro" value={current.netRevenue} format="money" delta={deltas.net ?? undefined} icon={<Wallet strokeWidth={1.75} />} className="[&_.tabular-nums]:text-primary" />
         <KpiCard title="Sipariş" value={current.orderCount} format="int" delta={deltas.orderCount ?? undefined} icon={<ShoppingCart strokeWidth={1.75} />} />
         <KpiCard title="Ortalama sepet" value={current.avgBasket} format="money" delta={deltas.avgBasket ?? undefined} icon={<ReceiptText strokeWidth={1.75} />} />
       </div>
@@ -113,7 +135,9 @@ export default async function NetRevenuePage({ searchParams }: { searchParams: P
                   <td className="px-3"><MoneyCell value={r.shipping} muted /></td>
                   <td className="px-3"><MoneyCell value={r.other} muted /></td>
                   <td className="px-3"><MoneyCell value={r.net} className="font-medium text-foreground" /></td>
-                  <td className="px-3 text-right font-mono text-xs tabular-nums text-muted-foreground">{formatPct(r.netMarginPct, 1)}</td>
+                  {/* Her zaman 1 ondalık (%100,0) — karışık hassasiyet (%77,4 / %100) sağa hizalı
+                      sütunda ondalık ayracını hizasızlaştırıyordu. pr-4: diğer sütunlarla eşit iç boşluk. */}
+                  <td className="num px-3 pr-4 text-right text-muted-foreground">{formatPctFixed(r.netMarginPct)}</td>
                 </tr>
               ))
             )}

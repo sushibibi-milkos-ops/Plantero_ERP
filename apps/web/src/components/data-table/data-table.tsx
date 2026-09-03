@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   flexRender,
@@ -184,29 +184,6 @@ export function DataTable<T>({
   // (toplam <= geçerli sayfa boyutu) taşıyoruz ki 4 kayıtlık bir listede hiç sayfalama şeridi çizilmesin.
   const showPagination = usePagination && totalFiltered > table.getState().pagination.pageSize;
 
-  // `meta.pinRight` sütunları (ör. "Genel toplam") yalnızca tablo GERÇEKTEN yatay taşarken
-  // sabitlenir — sabit width'li dar bir sütuna sürekli sticky + opak zemin uygulamak, taşma
-  // olmasa bile başlıkta/satırda kaza eseri bir dikdörtgen bırakıyordu (Tur 2 bulgusu). Kapsayıcının
-  // (`scrollWidth > clientWidth`) hem kendisi (pencere/kenar çubuğu genişlemesi) hem de içindeki
-  // <table> (sütun görünürlüğü, veri, arama sonucu değişince genişlik) izlenir.
-  const scrollWrapRef = useRef<HTMLDivElement>(null);
-  const [scrollable, setScrollable] = useState(false);
-  useEffect(() => {
-    const el = scrollWrapRef.current;
-    if (!el) {
-      setScrollable(false);
-      return;
-    }
-    const check = () => setScrollable(el.scrollWidth - el.clientWidth > 1);
-    check();
-    const ro = new ResizeObserver(check);
-    ro.observe(el);
-    const tableEl = el.querySelector('table');
-    if (tableEl) ro.observe(tableEl);
-    return () => ro.disconnect();
-  }, [rows.length, visibleCols.length]);
-  const pinRightClass = (pin: boolean | undefined) => pin && scrollable && 'sticky right-0 bg-card';
-
   const headerRow = () => (
     <tr className="border-b border-border/60 bg-muted/40">
       {table.getHeaderGroups().flatMap((hg) =>
@@ -221,7 +198,6 @@ export function DataTable<T>({
                 'h-9 px-3 text-left align-middle text-[12px] font-medium whitespace-nowrap text-muted-foreground',
                 meta?.align === 'right' && 'text-right',
                 meta?.align === 'center' && 'text-center',
-                pinRightClass(meta?.pinRight),
                 meta?.headerClassName,
               )}
             >
@@ -243,7 +219,6 @@ export function DataTable<T>({
             'h-9 px-3 align-middle text-[13px] whitespace-nowrap',
             meta?.align === 'right' && 'text-right',
             meta?.align === 'center' && 'text-center',
-            pinRightClass(meta?.pinRight),
             meta?.className,
           )}
         >
@@ -326,15 +301,21 @@ export function DataTable<T>({
             style={{ height: virtualHeight }}
             data={rows}
             components={{
-              Table: (props) => <table {...props} className="w-full border-collapse" />,
+              Table: (props) => <table {...props} className="min-w-full border-collapse" />,
               TableRow: ({ item, ...props }) => <tr {...props} {...rowProps(item)} />,
             }}
             fixedHeaderContent={headerRow}
             itemContent={(_i, row) => rowCells(row)}
           />
         ) : (
-          <div ref={scrollWrapRef} className="scrollbar-thin scroll-fade-x overflow-x-auto">
-            <table className="w-full border-collapse">
+          // Kök neden (Tur 2 P0): `w-full` tabloyu kapsayıcının TAM %100'üne zorluyordu — auto
+          // table-layout bu sabit toplam genişliğe uymak için sütunları (her th'nin width/minWidth
+          // ipucunu göz ardı ederek) orantısız sıkıştırıyordu; gerçek yatay kaydırma hiç tetiklenmiyordu
+          // (tablo asla kapsayıcısından "taşmıyordu", sadece içerik ezilyordu). `min-w-full`: tablo
+          // hiçbir zaman %100'ün altına sıkışmaz ama içerik daha genişse doğal genişliğine büyür —
+          // overflow-x-auto o zaman gerçekten devreye girer, sütun genişlikleri korunur.
+          <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
+            <table className="min-w-full border-collapse">
               <thead>{headerRow()}</thead>
               <tbody>{rows.map(bodyRow)}</tbody>
             </table>

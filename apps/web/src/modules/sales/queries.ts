@@ -285,9 +285,12 @@ export async function getNetRevenueReport(from: string, to: string) {
   const prevFrom = new Date(new Date(prevTo).getTime() - (days - 1) * 86_400_000).toISOString().slice(0, 10);
   const previous = await periodTotals(prevFrom, prevTo);
 
-  const delta = (curr: string, prev: string): number | null => {
+  // Önceki dönem eşik altındaysa (para için <1₺, adet için <3) yüzde delta anlamsızlaşıyor —
+  // 1 siparişten 26'ya çıkmak "%2.500" gibi dört haneli, güvensiz bir rozet üretiyordu (Tur 2
+  // bulgusu). KpiCard delta=null iken zaten "—" basıyor.
+  const delta = (curr: string, prev: string, minPrev = D(1)): number | null => {
     const p = D(prev);
-    if (p.isZero()) return null;
+    if (p.lt(minPrev)) return null;
     return D(curr).minus(p).div(p).mul(100).toNumber();
   };
 
@@ -330,7 +333,7 @@ export async function getNetRevenueReport(from: string, to: string) {
     current, previous, deltas: {
       gross: delta(current.grossRevenue, previous.grossRevenue), commission: delta(current.commission, previous.commission),
       shipping: delta(current.shipping, previous.shipping), net: delta(current.netRevenue, previous.netRevenue),
-      orderCount: previous.orderCount > 0 ? ((current.orderCount - previous.orderCount) / previous.orderCount) * 100 : null,
+      orderCount: previous.orderCount >= 3 ? ((current.orderCount - previous.orderCount) / previous.orderCount) * 100 : null,
       avgBasket: delta(current.avgBasket, previous.avgBasket),
     },
     breakdown, series, channelCodes: channelCodes.map((code) => ({ code, name: daily.find((r) => r.channelCode === code)?.channelName ?? code })),

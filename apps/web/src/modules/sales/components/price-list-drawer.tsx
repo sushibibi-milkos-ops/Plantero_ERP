@@ -37,8 +37,28 @@ function EditablePrice({ priceListId, productId, minQty, initial }: { priceListI
   );
 }
 
-export function PriceListDrawer({ listId, listName, currency, itemCount, products }: { listId: string; listName: string; currency: string; itemCount: number; products: SellableProductRow[] }) {
-  const [open, setOpen] = useState(false);
+export function PriceListDrawer({
+  listId,
+  listName,
+  currency,
+  itemCount,
+  products,
+  open: openProp,
+  onOpenChange,
+}: {
+  listId: string;
+  listName: string;
+  currency: string;
+  itemCount: number;
+  products: SellableProductRow[];
+  /** Dıştan kontrol (ör. satır tıklaması tabloda) — verilmezse kendi tetikleyici düğmesini çizer. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const controlled = openProp !== undefined;
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const open = controlled ? openProp : uncontrolledOpen;
+  const setOpen = onOpenChange ?? setUncontrolledOpen;
   const [items, setItems] = useState<PriceListItemRow[] | null>(null);
   const [bulkPct, setBulkPct] = useState('');
   const [addProductId, setAddProductId] = useState<string | null>(null);
@@ -86,11 +106,13 @@ export function PriceListDrawer({ listId, listName, currency, itemCount, product
 
   return (
     <Drawer open={open} onOpenChange={setOpen} direction="right">
-      <DrawerTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8">
-          Satırlar ({itemCount})
-        </Button>
-      </DrawerTrigger>
+      {controlled ? null : (
+        <DrawerTrigger asChild>
+          <Button variant="outline" size="sm" className="h-8">
+            Satırlar ({itemCount})
+          </Button>
+        </DrawerTrigger>
+      )}
       <DrawerContent className="w-full sm:max-w-lg">
         <DrawerHeader>
           <DrawerTitle>{listName}</DrawerTitle>

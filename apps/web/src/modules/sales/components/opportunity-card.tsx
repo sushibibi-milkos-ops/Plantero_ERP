@@ -26,9 +26,13 @@ export function OpportunityCard({ row, onOpen }: { row: OpportunityCardRow; onOp
       )}
     >
       <div className="line-clamp-2 text-[13px] font-medium">{row.title}</div>
-      {row.partnerName ? <div className="truncate text-xs text-muted-foreground">{row.partnerName}</div> : null}
+      {/* Cari adı yoksa satır boş bırakılmaz — soluk "cari bağlı değil" ile aynı yükseklik korunur,
+          aksi halde kart kart yükseklikleri zıplayıp eksik veri hata gibi okunuyordu. */}
+      <div className="truncate text-xs text-muted-foreground">{row.partnerName || <span className="text-muted-foreground/40">— cari bağlı değil</span>}</div>
       <div className="flex items-center justify-between gap-2">
-        <MoneyCell value={row.expectedAmount} currency={row.currency} className="text-[13px] font-semibold text-foreground" />
+        {/* Kolon başlığındaki toplam da ondalıksız (kanban-board.tsx `formatMoney(...,{digits:0})`) —
+            kartta kuruş bilgisi taşımıyor; iki farklı hassasiyet aynı ekranda karışmasın. */}
+        <MoneyCell value={row.expectedAmount} currency={row.currency} digits={0} className="text-[13px] font-semibold text-foreground" />
         <span className="font-mono text-[11px] text-muted-foreground">%{row.probability}</span>
       </div>
       <div className="flex items-center justify-between gap-2">
