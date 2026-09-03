@@ -1,17 +1,14 @@
 import type { Metadata } from 'next';
 import { requirePermission } from '@/lib/auth';
 import { ScanScreen } from '@/modules/stock/components/scan-screen';
-import { PageHeader } from '@/components/page-header';
 
 export const metadata: Metadata = { title: 'Tara' };
 export const dynamic = 'force-dynamic';
 
 export default async function ScanPage() {
   await requirePermission('stock.view');
-  return (
-    <>
-      <PageHeader title="Tara" description="Barkod, QR, lot ya da lokasyon kodu okutun" />
-      <ScanScreen />
-    </>
-  );
+  // Önceden sola dayalı, tam genişlik `PageHeader` + ortalanmış dar bir tarama kartı aynı sayfada iki
+  // farklı hizalama ekseni yaratıyordu (Tur 3 P1 bulgusu). Başlık artık `ScanScreen`'in kendi ortalanmış
+  // kolonunda, kartın üstünde bir eyebrow olarak duruyor — tek eksen.
+  return <ScanScreen />;
 }

@@ -3,11 +3,9 @@ import { notFound } from 'next/navigation';
 import { requirePermission, userCan } from '@/lib/auth';
 import { getTransferDetail } from '@/modules/stock/queries';
 import { TransferActions } from '@/modules/stock/components/transfer-actions';
+import { TransferLinesTable } from '@/modules/stock/components/transfer-lines-table';
 import { PageHeader } from '@/components/page-header';
 import { StatusBadge } from '@/components/status-badge';
-import { LotBadge } from '@/components/lot-badge';
-import { QtyCell } from '@/components/qty-cell';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDate, formatDateTime } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Transfer Detayı' };
@@ -36,31 +34,7 @@ export default async function TransferDetailPage({ params }: { params: Promise<{
         </div>
       </PageHeader>
 
-      <div className="overflow-x-auto rounded-lg border border-border/70 bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Ürün</TableHead>
-              <TableHead>Lot</TableHead>
-              <TableHead className="text-right">Miktar</TableHead>
-              <TableHead>Kaynak lokasyon</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {lines.map((l) => (
-              <TableRow key={l.line.id}>
-                <TableCell>
-                  <div className="font-medium">{l.productName}</div>
-                  <div className="font-mono text-xs text-muted-foreground">{l.sku}</div>
-                </TableCell>
-                <TableCell>{l.lotNo ? <LotBadge lotNo={l.lotNo} id={l.line.lotId ?? undefined} /> : <span className="text-xs text-muted-foreground">Lotsuz</span>}</TableCell>
-                <TableCell className="text-right"><QtyCell value={l.line.qty} uom={l.uomCode} /></TableCell>
-                <TableCell className="font-mono text-xs text-muted-foreground">{l.fromCode}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <TransferLinesTable lines={lines} />
     </>
   );
 }

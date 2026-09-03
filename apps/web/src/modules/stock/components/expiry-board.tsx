@@ -34,10 +34,50 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
     () => [
       { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot', meta: { mobile: 'title' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} id={row.original.lotId} /> },
       { accessorKey: 'productName', header: 'Ürün', meta: { mobile: 'subtitle' }, cell: ({ row }) => <span>{row.original.productName} <span className="font-mono text-xs text-muted-foreground">· {row.original.sku}</span></span> },
-      { accessorKey: 'locationCode', header: 'Lokasyon', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-xs">{row.original.locationCode}</span> },
-      { accessorKey: 'qty', header: 'Miktar', meta: { align: 'right', width: 110 }, cell: ({ row }) => <QtyCell value={row.original.qty} uom={row.original.uomCode} /> },
-      { accessorKey: 'value', header: 'Değer', meta: { align: 'right', width: 120 }, cell: ({ row }) => <MoneyCell value={row.original.value} /> },
-      { id: 'expiryDate', accessorFn: (r) => r.expiryDate, header: 'SKT', meta: { width: 150, mobile: 'badge' }, cell: ({ row }) => <ExpiryBadge date={row.original.expiryDate} /> },
+      // Diğer depo tablolarıyla aynı kalıp (Tur 3 P1): masaüstünde değişiklik yok, mobilde tek etiketli
+      // meta satırında toplanır — ayrı `dl` satırları yerine kart yüksekliği düşürülür.
+      {
+        accessorKey: 'locationCode',
+        header: 'Lokasyon',
+        meta: { width: 130, mobile: 'meta' },
+        cell: ({ row }) => (
+          <>
+            <span className="hidden font-mono text-xs md:inline">{row.original.locationCode}</span>
+            <span className="md:hidden">{row.original.locationCode}</span>
+          </>
+        ),
+      },
+      {
+        accessorKey: 'qty',
+        header: 'Miktar',
+        meta: { align: 'right', width: 110, mobile: 'meta' },
+        cell: ({ row }) => (
+          <>
+            <span className="hidden md:inline-flex"><QtyCell value={row.original.qty} uom={row.original.uomCode} /></span>
+            <span className="inline-flex items-baseline gap-1 md:hidden">
+              <span className="text-muted-foreground/70">Miktar</span>
+              <QtyCell value={row.original.qty} uom={row.original.uomCode} />
+            </span>
+          </>
+        ),
+      },
+      {
+        accessorKey: 'value',
+        header: 'Değer',
+        meta: { align: 'right', width: 120, mobile: 'meta' },
+        cell: ({ row }) => (
+          <>
+            <span className="hidden md:inline-flex"><MoneyCell value={row.original.value} /></span>
+            <span className="inline-flex items-baseline gap-1 md:hidden">
+              <span className="text-muted-foreground/70">Değer</span>
+              <MoneyCell value={row.original.value} />
+            </span>
+          </>
+        ),
+      },
+      // stock-table.tsx ile aynı kök nedenle (Tur 3 P1) genişletildi — geçmiş SKT'li satırlar bu panonun
+      // tam odağı, tarihin kırpılması burada özellikle kabul edilemez.
+      { id: 'expiryDate', accessorFn: (r) => r.expiryDate, header: 'SKT', meta: { width: 228, mobile: 'badge' }, cell: ({ row }) => <ExpiryBadge date={row.original.expiryDate} /> },
     ],
     [],
   );

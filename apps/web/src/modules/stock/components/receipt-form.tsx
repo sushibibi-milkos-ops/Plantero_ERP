@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Trash2, PackagePlus, ScanBarcode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { EmptyState } from '@/components/empty-state';
 import { Form, FormText, FormSelect, FieldLabel } from '@/components/form/fields';
 import { FormMoney, FormQty } from '@/components/form/money-qty';
 import { FormDate } from '@/components/form/date-field';
@@ -138,11 +139,13 @@ export function ReceiptForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* max-w-3xl kaldırıldı: "Satırlar" kartıyla aynı genişlikte olmalı — ikisi farklı genişlikte
-            olunca sağ kenarları 384px kayıyordu (1440px'te 768px vs 1152px). İkisi de artık formun
-            tam genişliğini (w-full) paylaşıyor. */}
-        <div className="w-full rounded-xl border border-border/70 bg-card p-4">
-          <h2 className="mb-3 text-sm font-medium text-muted-foreground">Belge başlığı</h2>
+        {/* Önceki sürüm iki bölümü 1px çerçeveli kutuya alıyordu (klasik ERP formu); bölüm başlığı da
+            (`text-sm text-muted-foreground`, normal ağırlık) alan etiketlerinden (`text-[13px]
+            font-medium`, tam kontrast) daha zayıf basılıyordu — hiyerarşi tersti (Tur 3 P2 bulgusu).
+            Kutular kaldırıldı, bölümler ince bir üst hairline ile ayrılır; başlık artık daha büyük
+            ağırlıkta (font-semibold, tam kontrast) alan etiketlerinin üstünde durur. */}
+        <div className="w-full">
+          <h2 className="mb-3 text-[13px] font-semibold text-foreground">Belge başlığı</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {/* Tedarikçi ve Ürün ekle ile aynı seçim bileşeni (Combobox) — Select farklı bir
                 affordance (tek chevron) kullanıyordu, aynı formda iki farklı "seç" dili oluşuyordu. */}
@@ -159,21 +162,21 @@ export function ReceiptForm({
           </div>
         </div>
 
-        <div className="rounded-xl border border-border/70 bg-card p-4">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-medium text-muted-foreground">Satırlar</h2>
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <ScanBarcode className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  ref={barcodeRef}
-                  value={barcode}
-                  onChange={(e) => setBarcode(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleBarcode(); } }}
-                  placeholder="Barkod okut…"
-                  className="h-9 w-56 pl-8 font-mono text-[13px]"
-                />
-              </div>
+        <div className="border-t border-border/60 pt-5">
+          {/* 390px'te barkod input'u (w-56 sabit) başlığı eziyordu — mobilde alt satıra iner, input
+              tam genişlik olur (Tur 3 P2 bulgusu). */}
+          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-[13px] font-semibold text-foreground">Satırlar</h2>
+            <div className="relative w-full sm:w-56">
+              <ScanBarcode className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                ref={barcodeRef}
+                value={barcode}
+                onChange={(e) => setBarcode(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleBarcode(); } }}
+                placeholder="Barkod okut…"
+                className="h-9 w-full pl-8 font-mono text-[13px]"
+              />
             </div>
           </div>
 
@@ -234,7 +237,21 @@ export function ReceiptForm({
                 </div>
               );
             })}
-            {fields.length === 0 ? <p className="rounded-lg border border-dashed py-8 text-center text-sm text-muted-foreground">Barkod okutun veya ürün arayarak satır ekleyin.</p> : null}
+            {fields.length === 0 ? (
+              // Önceki sürüm ikonsuz, eylemsiz tek gri cümleydi (Tur 3 P2 bulgusu) — ortak EmptyState
+              // (compact) + barkod alanına odaklanan birincil eylem.
+              <EmptyState
+                compact
+                icon={PackagePlus}
+                title="Henüz satır yok"
+                description="Barkod okutun veya ürün arayarak satır ekleyin."
+                action={
+                  <Button type="button" variant="outline" size="sm" onClick={() => barcodeRef.current?.focus()}>
+                    <ScanBarcode className="size-3.5" /> Barkod alanına git
+                  </Button>
+                }
+              />
+            ) : null}
           </div>
         </div>
 

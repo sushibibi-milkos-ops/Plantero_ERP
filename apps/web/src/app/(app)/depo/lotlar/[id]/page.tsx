@@ -7,14 +7,13 @@ import { LotActions } from '@/modules/stock/components/lot-actions';
 import { PageHeader } from '@/components/page-header';
 import { StatusBadge } from '@/components/status-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
-import { QtyCell } from '@/components/qty-cell';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
 import { TraceGraph } from '@/components/trace-graph';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { formatDate, formatDateTime, formatQty } from '@/lib/format';
-import { LOCATION_USAGE_LABELS, MOVE_KIND_LABELS } from '@/modules/stock/labels';
+import { LotQuantsTable } from '@/modules/stock/components/lot-quants-table';
+import { LotMovesTable } from '@/modules/stock/components/lot-moves-table';
+import { formatDate, formatQty } from '@/lib/format';
 import { D } from '@plantero/core';
 
 export const metadata: Metadata = { title: 'Lot Detayı' };
@@ -25,7 +24,11 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
   const user = await requirePermission('stock.view');
   const detail = await getLotDetail(id);
   if (!detail) notFound();
-  const { lot, product, quants, moves, qc, forward, backward } = detail;
+  const { lot, product, quants, moves, qc, forward, backward, supplier, originReceipt, originWorkOrder } = detail;
+
+  const onHandQty = quants.reduce((a, q) => a.plus(D(q.qty)), D(0));
+  const initialQty = D(lot.initialQty);
+  const consumedRatio = initialQty.gt(0) ? onHandQty.div(initialQty).mul(100) : null;
 
   const quarantineQuants = quants.filter((q) => q.usage === 'quarantine' && D(q.qty).gt(0));
   const quarantineQty = quarantineQuants.reduce((a, q) => a.plus(D(q.qty)), D(0)).toFixed(4);
@@ -40,7 +43,7 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
       {/* Önceki sürüm 5 satıra yayılıyordu (eyebrow "LOT" / lot no / ürün·sku / rozet satırı / maliyet
           satırı, ~76px+ başlık yüksekliği). Eyebrow kaldırıldı (breadcrumb'ta zaten var); lot no + tüm
           rozetler (durum, köken, SKT) tek satıra alındı; ürün·sku açıklama satırında kaldı — başlık
-          bloğu 2 satıra indi. Maliyet/ilk giriş bağlam bilgisi (kimlik değil) alt satırda kalıyor. */}
+          bloğu 2 satıra indi. Maliyet/ilk giriş/tedarikçi lotu artık aşağıdaki tanım listesinde. */}
       <PageHeader
         title={
           <span className="flex flex-wrap items-center gap-2">
@@ -61,19 +64,71 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
             ) : null}
           </div>
         }
-      >
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
-          <span>Maliyet <MoneyCell value={lot.unitCost} className="inline" /></span>
-          <span aria-hidden>·</span>
-          <span>İlk giriş {formatQty(lot.initialQty, product?.uomCode)}</span>
-          {lot.supplierLotNo ? (
-            <>
-              <span aria-hidden>·</span>
-              <span>Tedarikçi lotu: {lot.supplierLotNo}</span>
-            </>
-          ) : null}
+      />
+
+      {/* Önceki sürüm başlık altında yalnızca tek satırlık maliyet/ilk giriş özetiyle 900px viewport'un
+          ~%85'i beyaz kalıyordu — SKT, üretim tarihi, tedarikçi, giriş belgesi ve kalan/ilk giriş oranı
+          hiç gösterilmiyordu (Tur 3 P1 bulgusu). Kompakt sütunlu tanım listesi bu boşluğu gerçek
+          bilgiyle doldurur; alanlar yoksa (ör. üretim kaynaklı lotta tedarikçi) "—" ile aynı ızgara korunur. */}
+      <dl className="mb-6 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-border/60 py-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div>
+          <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">SKT</dt>
+          <dd className="mt-0.5 text-[13px]">{lot.expiryDate ? formatDate(lot.expiryDate) : '—'}</dd>
         </div>
-      </PageHeader>
+        <div>
+          <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Üretim tarihi</dt>
+          <dd className="mt-0.5 text-[13px]">{lot.productionDate ? formatDate(lot.productionDate) : '—'}</dd>
+        </div>
+        <div>
+          <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Tedarikçi</dt>
+          <dd className="mt-0.5 truncate text-[13px]">{supplier?.name ?? (lot.origin === 'production' ? 'Üretim (dahili)' : '—')}</dd>
+        </div>
+        <div>
+          <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Giriş belgesi</dt>
+          <dd className="mt-0.5 text-[13px]">
+            {originReceipt ? (
+              <Link href={`/depo/mal-kabul/${originReceipt.id}`} className="code text-primary underline-offset-2 hover:underline">
+                {originReceipt.docNo}
+              </Link>
+            ) : originWorkOrder ? (
+              <Link href={`/uretim/is-emirleri/${originWorkOrder.id}`} className="code text-primary underline-offset-2 hover:underline">
+                {originWorkOrder.docNo}
+              </Link>
+            ) : (
+              '—'
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Kalan / İlk giriş</dt>
+          <dd className="mt-0.5 text-[13px] tabular-nums">
+            {formatQty(onHandQty.toFixed(4), product?.uomCode)} / {formatQty(lot.initialQty, product?.uomCode)}
+            {consumedRatio ? <span className="text-muted-foreground"> (%{consumedRatio.toDecimalPlaces(0).toString()})</span> : null}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Maliyet</dt>
+          <dd className="mt-0.5 text-[13px]"><MoneyCell value={lot.unitCost} className="inline" /></dd>
+        </div>
+        {lot.supplierLotNo ? (
+          <div>
+            <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Tedarikçi lotu</dt>
+            <dd className="mt-0.5 code text-[13px]">{lot.supplierLotNo}</dd>
+          </div>
+        ) : null}
+        {(lot.status === 'quarantine' || lot.status === 'rejected') && lot.rejectReason ? (
+          <div className="col-span-2 sm:col-span-3 lg:col-span-4">
+            <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+              {lot.status === 'rejected' ? 'Red gerekçesi' : 'Karantina gerekçesi'}
+            </dt>
+            <dd className="mt-0.5 text-[13px]">{lot.rejectReason}</dd>
+          </div>
+        ) : null}
+        <div>
+          <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Oluşturulma</dt>
+          <dd className="mt-0.5 text-[13px] text-muted-foreground">{formatDate(lot.createdAt)}</dd>
+        </div>
+      </dl>
 
       <Tabs defaultValue="quants" className="gap-4">
         <TabsList>
@@ -84,71 +139,11 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
         </TabsList>
 
         <TabsContent value="quants">
-          <div className="overflow-x-auto rounded-lg border border-border/70 bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Lokasyon</TableHead>
-                  <TableHead>Kullanım</TableHead>
-                  <TableHead className="text-right">Eldeki</TableHead>
-                  <TableHead className="text-right">Rezerve</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {quants.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={4}>
-                      <EmptyState compact title="Eldeki stok yok" />
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  quants.map((q) => (
-                    <TableRow key={q.id}>
-                      <TableCell className="font-mono text-xs">{q.locationCode}</TableCell>
-                      <TableCell><StatusBadge status={q.usage} label={LOCATION_USAGE_LABELS[q.usage] ?? q.usage} tone={q.usage === 'quarantine' ? 'warning' : q.usage === 'rejected' ? 'danger' : 'neutral'} /></TableCell>
-                      <TableCell className="text-right"><QtyCell value={q.qty} uom={product?.uomCode} /></TableCell>
-                      <TableCell className="text-right"><QtyCell value={q.reserved} uom={product?.uomCode} /></TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <LotQuantsTable quants={quants} uomCode={product?.uomCode} />
         </TabsContent>
 
         <TabsContent value="moves">
-          <div className="overflow-x-auto rounded-lg border border-border/70 bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Hareket</TableHead>
-                  <TableHead>Tür</TableHead>
-                  <TableHead className="text-right">Miktar</TableHead>
-                  <TableHead className="text-right">Değer</TableHead>
-                  <TableHead>Tarih</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {moves.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5}>
-                      <EmptyState compact title="Hareket yok" />
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  moves.map((m) => (
-                    <TableRow key={m.id}>
-                      <TableCell className="font-mono text-xs">{m.moveNo}</TableCell>
-                      <TableCell><StatusBadge status={m.kind} label={MOVE_KIND_LABELS[m.kind] ?? m.kind} tone="neutral" /></TableCell>
-                      <TableCell className="text-right"><QtyCell value={m.qty} uom={product?.uomCode} /></TableCell>
-                      <TableCell className="text-right"><MoneyCell value={m.value} /></TableCell>
-                      <TableCell className="text-xs text-muted-foreground">{formatDateTime(m.movedAt)}</TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <LotMovesTable moves={moves} uomCode={product?.uomCode} />
         </TabsContent>
 
         <TabsContent value="quality">
@@ -187,7 +182,6 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
           </Link>
         </TabsContent>
       </Tabs>
-      <p className="mt-2 text-xs text-muted-foreground">{formatDate(lot.createdAt)} tarihinde oluşturuldu</p>
     </>
   );
 }

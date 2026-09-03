@@ -71,15 +71,85 @@ export function StockTable({ rows }: { rows: StockRow[] }) {
             );
           },
         },
-        { accessorKey: 'qty', header: 'Eldeki', meta: { align: 'right', width: 110 }, cell: ({ row }) => <QtyCell value={row.original.qty} uom={row.original.uomCode} /> },
-        { accessorKey: 'reserved', header: 'Rezerve', meta: { align: 'right', width: 100, mobile: 'hidden' }, cell: ({ row }) => <QtyCell value={row.original.reserved} uom={row.original.uomCode} /> },
-        { accessorKey: 'available', header: 'Kullanılabilir', meta: { align: 'right', width: 120 }, cell: ({ row }) => <QtyCell value={row.original.available} uom={row.original.uomCode} /> },
-        { accessorKey: 'value', header: 'Değer', meta: { align: 'right', width: 130 }, cell: ({ row }) => <MoneyCell value={row.original.value} /> },
+        // Rezerve ve SKT mobilde `hidden` idi — depo personelinin mobilde en çok baktığı iki alan
+        // masaüstünde bile görünmeden tabletlerde tamamen kayboluyordu (Tur 3 P1 bulgusu). Masaüstünde
+        // değişiklik yok (sağa hizalı `QtyCell`/`MoneyCell`); mobilde `mobile:'meta'` rolüyle tek,
+        // etiketsiz-değil-kısa-etiketli satırda toplanır ("Eldeki 180 KG · Rezerve 20 KG · …") — ayrı bir
+        // `dl` satırı yerine kartın tek meta satırına eklenir, kart yüksekliği ~155px'ten ~90-100px'e iner.
+        {
+          accessorKey: 'qty',
+          header: 'Eldeki',
+          meta: { align: 'right', width: 110, mobile: 'meta' },
+          cell: ({ row }) => (
+            <>
+              <span className="hidden md:inline-flex"><QtyCell value={row.original.qty} uom={row.original.uomCode} /></span>
+              <span className="inline-flex items-baseline gap-1 md:hidden">
+                <span className="text-muted-foreground/70">Eldeki</span>
+                <QtyCell value={row.original.qty} uom={row.original.uomCode} />
+              </span>
+            </>
+          ),
+        },
+        {
+          accessorKey: 'reserved',
+          header: 'Rezerve',
+          meta: { align: 'right', width: 100, mobile: 'meta' },
+          cell: ({ row }) => (
+            <>
+              <span className="hidden md:inline-flex"><QtyCell value={row.original.reserved} uom={row.original.uomCode} /></span>
+              <span className="inline-flex items-baseline gap-1 md:hidden">
+                <span className="text-muted-foreground/70">Rezerve</span>
+                <QtyCell value={row.original.reserved} uom={row.original.uomCode} />
+              </span>
+            </>
+          ),
+        },
+        {
+          accessorKey: 'available',
+          header: 'Kullanılabilir',
+          meta: { align: 'right', width: 120, mobile: 'meta' },
+          cell: ({ row }) => (
+            <>
+              <span className="hidden md:inline-flex"><QtyCell value={row.original.available} uom={row.original.uomCode} /></span>
+              <span className="inline-flex items-baseline gap-1 md:hidden">
+                <span className="text-muted-foreground/70">Kullan.</span>
+                <QtyCell value={row.original.available} uom={row.original.uomCode} />
+              </span>
+            </>
+          ),
+        },
+        {
+          accessorKey: 'value',
+          header: 'Değer',
+          meta: { align: 'right', width: 130, mobile: 'meta' },
+          cell: ({ row }) => (
+            <>
+              <span className="hidden md:inline-flex"><MoneyCell value={row.original.value} /></span>
+              <span className="inline-flex items-baseline gap-1 md:hidden">
+                <span className="text-muted-foreground/70">Değer</span>
+                <MoneyCell value={row.original.value} />
+              </span>
+            </>
+          ),
+        },
         {
           accessorKey: 'nearestExpiryDate',
           header: 'En yakın SKT',
-          meta: { width: 140, mobile: 'hidden' },
-          cell: ({ row }) => (row.original.nearestExpiryDate ? <ExpiryBadge date={row.original.nearestExpiryDate} /> : <span className="text-xs text-muted-foreground/60">—</span>),
+          // Önceki 140px genişlik + scroll-fade gradyanı, süresi geçmiş lotlarda "N gün önce doldu ·
+          // dd.MM.yyyy" metnini kırpıyordu — sayfadaki tek gerçekten aksiyon gerektiren satırın tarihi
+          // okunamıyordu (Tur 3 P1 bulgusu). Tarih bilgisi masaüstünde bilinçli tutuldu (showDate
+          // kaldırılmadı); sütun en uzun olası metne (geçmiş SKT) sığacak kadar genişletildi. Mobilde
+          // (Tur 3 P1: SKT kartta hiç yoktu) sağ üstte kısa rozet olarak (`showDate={false}`) gösterilir.
+          meta: { width: 228, mobile: 'badge' },
+          cell: ({ row }) =>
+            row.original.nearestExpiryDate ? (
+              <>
+                <span className="hidden md:inline-flex"><ExpiryBadge date={row.original.nearestExpiryDate} /></span>
+                <span className="md:hidden"><ExpiryBadge date={row.original.nearestExpiryDate} showDate={false} /></span>
+              </>
+            ) : (
+              <span className="hidden text-xs text-muted-foreground/60 md:inline">—</span>
+            ),
         },
         {
           id: '__expand',

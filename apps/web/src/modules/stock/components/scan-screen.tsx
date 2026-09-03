@@ -35,7 +35,15 @@ export function ScanScreen() {
   }
 
   return (
-    <div className="mx-auto max-w-md space-y-5">
+    // Önceki sürüm `mx-auto max-w-md` ile sabitlenmişti — 1440px'te ~1000px, 1024px el terminalinde
+    // ~570px ölü gri alan kalıyordu (pick-screen.tsx ile aynı kök neden, Tur 3 P1 bulgusu). Sayfa artık
+    // kendi başlığını taşır (eski `PageHeader` kaldırıldı — sola dayalı başlık + ortalanmış kart iki
+    // farklı eksen yaratıyordu) ve içerikle birlikte dikeyde ortalanır.
+    <div className="mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-md flex-col justify-center space-y-5 py-6 md:min-h-[calc(100dvh-3rem)] lg:max-w-2xl">
+      <div>
+        <h1 className="text-lg font-semibold tracking-tight">Tara</h1>
+        <p className="text-sm text-muted-foreground">Barkod, QR, lot ya da lokasyon kodu okutun</p>
+      </div>
       <div className="relative">
         <ScanLine className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -119,7 +127,11 @@ export function ScanScreen() {
         </div>
       )}
       <div className="text-center">
-        <Button asChild variant="ghost" size="sm"><Link href="/depo/stok"><Boxes className="size-3.5" /> Stok ekranına dön</Link></Button>
+        {/* Önceki `size="sm"` 32px'lik dokunma hedefi veriyordu (44px eşiğinin altında) — operatör
+            ekranındaki tek çıkış yolu (Tur 3 P2 bulgusu). */}
+        <Button asChild variant="outline" size="lg" className="h-11 w-full sm:w-auto">
+          <Link href="/depo/stok"><Boxes className="size-4" /> Stok ekranına dön</Link>
+        </Button>
       </div>
     </div>
   );

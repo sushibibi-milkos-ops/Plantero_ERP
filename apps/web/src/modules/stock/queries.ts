@@ -11,6 +11,7 @@ const {
   transfers, transferLines,
   stockCounts, stockCountLines,
   purchaseOrders, purchaseOrderLines,
+  workOrders,
 } = schema;
 
 /* ==================================================================== */
@@ -239,14 +240,22 @@ export async function getLotDetail(id: string) {
   const moves = await db.select().from(stockMoves).where(eq(stockMoves.lotId, id)).orderBy(desc(stockMoves.movedAt)).limit(100);
   const qc = await db.select().from(qcChecks).where(eq(qcChecks.lotId, id)).orderBy(desc(qcChecks.createdAt));
   const [forward, backward] = await Promise.all([traceForward(db, id), traceBackward(db, id)]);
-  return { lot, product: product ?? null, quants, moves, qc, forward, backward };
+  // Lot detay sayfası önceden köken (tedarikçi/iş emri) ve giriş belgesi hiç göstermiyordu — izlenebilirlik
+  // sekmesine bakmadan "bu lot nereden geldi" sorusuna cevap yoktu (Tur 3 P1 bulgusu). Tek sorguda üç
+  // olası kaynak da (tedarikçi, mal kabul, iş emri) getirilir; hiçbiri yoksa alanlar null kalır.
+  const [supplier, originReceipt, originWorkOrder] = await Promise.all([
+    lot.supplierId ? db.select({ id: partners.id, name: partners.name }).from(partners).where(eq(partners.id, lot.supplierId)).limit(1).then((r) => r[0] ?? null) : Promise.resolve(null),
+    lot.originReceiptId ? db.select({ id: receipts.id, docNo: receipts.docNo }).from(receipts).where(eq(receipts.id, lot.originReceiptId)).limit(1).then((r) => r[0] ?? null) : Promise.resolve(null),
+    lot.originWorkOrderId ? db.select({ id: workOrders.id, docNo: workOrders.docNo }).from(workOrders).where(eq(workOrders.id, lot.originWorkOrderId)).limit(1).then((r) => r[0] ?? null) : Promise.resolve(null),
+  ]);
+  return { lot, product: product ?? null, quants, moves, qc, forward, backward, supplier, originReceipt, originWorkOrder };
 }
 
 /* ==================================================================== */
 /* /depo/mal-kabul                                                      */
 /* ==================================================================== */
 
-export type ReceiptRow = { id: string; docNo: string; status: string; partnerName: string | null; warehouseCode: string; lineCount: number; totalValue: string; supplierDeliveryNo: string | null; createdAt: Date; purchaseOrderId: string | null };
+export type ReceiptRow = { id: string; docNo: string; status: string; partnerName: string | null; warehouseCode: string; lineCount: number; totalValue: string; supplierDeliveryNo: string | null; createdAt: Date; receivedAt: Date | null; purchaseOrderId: string | null };
 
 export async function listReceipts(): Promise<ReceiptRow[]> {
   const rows = await db
@@ -262,7 +271,7 @@ export async function listReceipts(): Promise<ReceiptRow[]> {
     .from(receiptLines)
     .groupBy(receiptLines.receiptId);
   const byReceipt = new Map(lineAgg.map((r) => [r.receiptId, r]));
-  return rows.map((r) => ({ id: r.r.id, docNo: r.r.docNo, status: r.r.status, partnerName: r.partnerName, warehouseCode: r.warehouseCode, lineCount: Number(byReceipt.get(r.r.id)?.cnt ?? 0), totalValue: byReceipt.get(r.r.id)?.value ?? '0', supplierDeliveryNo: r.r.supplierDeliveryNo, createdAt: r.r.createdAt, purchaseOrderId: r.r.purchaseOrderId }));
+  return rows.map((r) => ({ id: r.r.id, docNo: r.r.docNo, status: r.r.status, partnerName: r.partnerName, warehouseCode: r.warehouseCode, lineCount: Number(byReceipt.get(r.r.id)?.cnt ?? 0), totalValue: byReceipt.get(r.r.id)?.value ?? '0', supplierDeliveryNo: r.r.supplierDeliveryNo, createdAt: r.r.createdAt, receivedAt: r.r.receivedAt, purchaseOrderId: r.r.purchaseOrderId }));
 }
 
 export async function getReceiptDetail(id: string) {
