@@ -58,7 +58,7 @@ export function MobileNav() {
       </nav>
 
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent side="left" className="w-[85vw] max-w-xs gap-0 p-0 ease-drawer data-[state=closed]:duration-200 data-[state=open]:duration-300">
+        <SheetContent side="left" className="w-[85vw] max-w-xs gap-0 p-0 ease-drawer data-[state=closed]:duration-200 data-[state=open]:duration-[220ms]">
           <SheetHeader className="border-b border-border/60 px-4 py-3">
             <SheetTitle asChild>
               <div>

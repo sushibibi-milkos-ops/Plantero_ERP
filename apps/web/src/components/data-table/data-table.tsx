@@ -184,8 +184,10 @@ export function DataTable<T>({
   // (toplam <= geçerli sayfa boyutu) taşıyoruz ki 4 kayıtlık bir listede hiç sayfalama şeridi çizilmesin.
   const showPagination = usePagination && totalFiltered > table.getState().pagination.pageSize;
 
+  // Tam opak arka plan (var(--muted), /40 saydamlığı YOK) — sabitlenmiş başlık kaydırılan satırların
+  // üzerinden geçer; saydam olsaydı altındaki hücreler sızardı (Tur 4 P1 bulgusu).
   const headerRow = () => (
-    <tr className="border-b border-border/60 bg-muted/40">
+    <tr className="border-b border-border/60 bg-[var(--muted)]">
       {table.getHeaderGroups().flatMap((hg) =>
         hg.headers.map((h) => {
           const meta = h.column.columnDef.meta;
@@ -292,7 +294,10 @@ export function DataTable<T>({
         {rows.length === 0 ? (
           <div>
             <table className="w-full">
-              <thead>{headerRow()}</thead>
+              {/* top-12: topbar'ın (h-12, sticky top-0 z-30) hemen altına sabitlenir; z-10 satırların
+                  üzerinde ama topbar'ın altında kalır (Tur 4 P1 bulgusu — önceden thead hiç sabit
+                  değildi, kaydırılınca başlıklar tamamen kayboluyordu). */}
+              <thead className="sticky top-12 z-10">{headerRow()}</thead>
             </table>
             {empty}
           </div>
@@ -314,9 +319,19 @@ export function DataTable<T>({
           // (tablo asla kapsayıcısından "taşmıyordu", sadece içerik ezilyordu). `min-w-full`: tablo
           // hiçbir zaman %100'ün altına sıkışmaz ama içerik daha genişse doğal genişliğine büyür —
           // overflow-x-auto o zaman gerçekten devreye girer, sütun genişlikleri korunur.
-          <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
+          // Kök neden (Tur 4 P1): CSS'in overflow-x/overflow-y eşleme kuralı yüzünden bu div'e
+          // `overflow-x-auto` tek başına verilince overflow-y de zımnen bir kaydırma konteksti
+          // (auto/hidden) haline geliyor — thead'in `sticky top-*`'ı SAYFAYA değil, hiç kaydırmayan
+          // bu div'e bağlanıyor ve fiilen devre dışı kalıyor (ölçüldü: `overflow-x-auto` kaldırılınca
+          // sticky doğru çalışıyor). Çözüm: sayfaya değil, TABLONUN KENDİSİNE ait sınırlı yükseklikte
+          // bir kaydırma alanı — Linear'ın liste ekranlarındaki desen ve zaten `virtualize` yolunun
+          // kullandığı desenin aynısı (planning-board.tsx/kanban-board.tsx'te de aynı `calc(100dvh-…)`
+          // deseni var). Kısa tablolarda (içerik max-height'ı aşmıyor) hiçbir görsel fark yaratmaz;
+          // uzun tablolarda başlık kendi alanının üstünde sabit kalır, sayfanın geri kalanı (KPI
+          // kartları, sayfalama şeridi) kaydırma dışında kalır.
+          <div className="scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto">
             <table className="min-w-full border-collapse">
-              <thead>{headerRow()}</thead>
+              <thead className="sticky top-0 z-10">{headerRow()}</thead>
               <tbody>{rows.map(bodyRow)}</tbody>
             </table>
           </div>

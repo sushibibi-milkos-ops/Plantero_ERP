@@ -173,9 +173,12 @@
   a[data-pressable] {
     transition: transform 140ms var(--ease-out);
   }
-  button:active:not(:disabled),
-  [role="button"]:not([aria-disabled="true"]):active,
-  a[data-pressable]:active {
+  /* :not(:focus-visible) — Enter/Boşluk ile klavyeden tetiklenen aktivasyon Chromium'da :active'i de
+     tetikler; bu ölçek animasyonu yalnızca işaretleyici (fare/dokunma) basışında oynamalı, klavye
+     odaklı aktivasyonda değil (Tur 4 P2 bulgusu — Linear'ın klavye akışı kesintisiz kalmalı). */
+  button:active:not(:disabled):not(:focus-visible),
+  [role="button"]:not([aria-disabled="true"]):active:not(:focus-visible),
+  a[data-pressable]:active:not(:focus-visible) {
     transform: scale(0.97);
   }
   input[type="number"]::-webkit-outer-spin-button,

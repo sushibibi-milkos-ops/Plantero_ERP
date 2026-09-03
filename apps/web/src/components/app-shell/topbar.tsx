@@ -52,7 +52,9 @@ export function Topbar() {
     <header
       className={cn(
         'sticky top-0 z-30 flex h-12 items-center gap-2 border-b border-border/60 px-3 md:px-5',
-        'bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70',
+        // Kaydırılan satırlar/etiketler arkadan sızmasın diye neredeyse tam opak (Tur 4 P1 bulgusu —
+        // önceki /70 okunabilir seviyede sızdırıyordu). Blur zemin altındaki bulanıklığı korur.
+        'bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/92',
       )}
     >
       <Button variant="ghost" size="icon-sm" className="size-11 md:hidden" onClick={() => setMobileMenuOpen(true)} aria-label="Menü">
