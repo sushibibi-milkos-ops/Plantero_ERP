@@ -1,7 +1,7 @@
 {
   "module": "shell",
-  "round": 11,
-  "note": "Tur 10 notu: shell.json bu turda ilk kez oluşturuldu (önceki turlarda kritik bu modülü henüz kendi dosyasında puanlamamıştı — diğer modüllerin critic dosyalarında 'module: shell' etiketli iç içe bulgular vardı, ör. depo.json 'shell-page-header-01', 'shell-form-switch-01'). Bu tur, orkestratörün doğrudan verdiği kritik bulgu listesini kapatır; 12 kriterlik puanlama (scores/total) kritik'in kendi geçişinde eklenecek — builder puan uydurmaz. Her kapanış aşağıda `measureAfter` ile kanıtlanmıştır (pnpm measure + Playwright bounding-box doğrulaması, 390x844 mobil + 1440x900 masaüstü). Tur 11 notu: bu turda da orkestratörün doğrudan verdiği 3 kritik bulgu (P1×2, P2×1) kapatıldı — hiçbiri bu dosyada önceden 'open' olarak kayıtlı değildi (orkestratör tarafından yeni tespit edilip doğrudan iletildi), bu yüzden kapanışları yeni route anahtarları altında `closedRound:11` ile eklendi. Tur 10'un kendi 'open' kalan 3 bulgusuna (shell-mobile-card-height-02, shell-datatable-slack-01, shell-shared-devserver-flake-01) bu turda dokunulmadı — orkestratörün Tur 11 mandatosu bunları içermiyordu.",
+  "round": 12,
+  "note": "Tur 10 notu: shell.json bu turda ilk kez oluşturuldu (önceki turlarda kritik bu modülü henüz kendi dosyasında puanlamamıştı — diğer modüllerin critic dosyalarında 'module: shell' etiketli iç içe bulgular vardı, ör. depo.json 'shell-page-header-01', 'shell-form-switch-01'). Bu tur, orkestratörün doğrudan verdiği kritik bulgu listesini kapatır; 12 kriterlik puanlama (scores/total) kritik'in kendi geçişinde eklenecek — builder puan uydurmaz. Her kapanış aşağıda `measureAfter` ile kanıtlanmıştır (pnpm measure + Playwright bounding-box doğrulaması, 390x844 mobil + 1440x900 masaüstü). Tur 11 notu: bu turda da orkestratörün doğrudan verdiği 3 kritik bulgu (P1×2, P2×1) kapatıldı — hiçbiri bu dosyada önceden 'open' olarak kayıtlı değildi (orkestratör tarafından yeni tespit edilip doğrudan iletildi), bu yüzden kapanışları yeni route anahtarları altında `closedRound:11` ile eklendi. Tur 10'un kendi 'open' kalan 3 bulgusuna (shell-mobile-card-height-02, shell-datatable-slack-01, shell-shared-devserver-flake-01) bu turda dokunulmadı — orkestratörün Tur 11 mandatosu bunları içermiyordu. Tur 12 notu: orkestratörün doğrudan verdiği 2 bulgu (P1x2) kapatıldı — biri (rowActions dokunma hedefi → mobil kart yüksekliği, /depo/skt) DataTableRowActions ortak bileşeninde kök nedeniyle düzeltildi ve tüm rowActions kullanan rotalarda (depo/ana-veri) ölçümle doğrulandı; diğeri (paylaşılan dev sunucusunun bellek eşiği aşımıyla kendini yeniden başlatması, /login e2e login POST'uyla çakışması) kökeni gerçek bir kod kusuru DEĞİL — Tur 10'da zaten açılmış shell-shared-devserver-flake-01 (P2) ile aynı sınıf, orkestrasyon/altyapı düzeyinde bir eşzamanlılık sorunu; kodla düzeltilemez, bu yüzden shell-shared-devserver-flake-01 AÇIK kalmaya devam ediyor (gerekçesiz kapatma yasak — CLAUDE.md 'çalışmayan şeye çalışıyor deme'). Bunun yerine önerilen dayanıklılık iyileştirmesi uygulandı: (auth) ve (operator-auth) route gruplarının HİÇ error.tsx'i yoktu (diğer tüm gruplarda var) — bu yüzden /login veya /operator/giris'te bir client-side istisna (ağ hatası dahil) Next'in Türkçe olmayan, 'tekrar dene' sunmayan varsayılan hata ekranına düşüyordu; artık ikisi de kendi Türkçe, 'Tekrar dene' + 'Sayfayı yenile' seçenekli hata sınırına sahip (diğer route gruplarındaki desenle birebir aynı kalıp, bkz. (app)/error.tsx, (operator)/error.tsx).",
   "routes": {
     "/ana-veri/urunler/[id], /ana-veri/cariler/[id], /ana-veri/receteler/[id]": {
       "closed": [
@@ -193,7 +193,7 @@
         {
           "id": "shell-shared-devserver-flake-01",
           "severity": "P2",
-          "text": "Paylaşılan tek `pnpm dev` (:3000) sürecine karşı birden fazla agent oturumu eşzamanlı çalışırken bir oturumun yeni rota derlemesi diğerinin açık sayfasına HMR reset gönderip client state'i sıfırlayabiliyor.",
+          "text": "Paylaşılan tek `pnpm dev` (:3000) sürecine karşı birden fazla agent oturumu eşzamanlı çalışırken bir oturumun yeni rota derlemesi diğerinin açık sayfasına HMR reset gönderip client state'i sıfırlayabiliyor. Tur 12'de orkestratör tarafından tekrar gözlemlendi: e2e auth.ts::loginAs() beforeAll adımındaki admin login POST'u, paralel bir agent'ın (PID 22059) aynı :3000 sunucusuna karşı çalıştırdığı yoğun 'pnpm measure' Playwright yüküyle çakıştığında sunucu bellek eşiğini aşıp kendini yeniden başlatıyor ve o anki isteği yarıda kesiyor — kod düzeltilemez (kök neden apps/web'de değil), bu yüzden bu bulgu AÇIK kalıyor. Tur 12'de kod tarafında yapılabilecek tek dayanıklılık iyileştirmesi (bkz. yeni kapanan shell-login-error-boundary-01) uygulandı: /login ve /operator/giris artık bu tür bir kesintiyi jenerik/İngilizce bir hata ekranı yerine Türkçe, 'Tekrar dene' butonlu bir sınırla karşılıyor.",
           "note": "Kod tarafında düzeltilecek bir kusur değil — süreç/altyapı önerisi (her paralel oturum kendi PORT'unda ayrı `pnpm dev`, ya da e2e `next build && next start` üzerinden). Bu turda bizzat gözlemlendi: apps/web/src/modules/masterdata/components/* ve apps/web/src/app/(app)/ana-veri/cariler/[id]/page.tsx bu oturum BAŞLAMADAN ÖNCE zaten değişmiş halde bulundu (başka bir eşzamanlı oturumun WIP'i) — bu dosyalara dokunulmadı, yalnızca gözlemlendi.",
           "openedRound": 10
         }
@@ -225,6 +225,36 @@
           "fix": "trace-graph.tsx içine küçük bir yerel `QUANT_USAGE_LABELS` sözlüğü eklendi (paylaşılan bileşen bir modülün yerel `stock/labels.ts`/`masterdata/product-labels.ts` dosyasına bağımlı olmamalı — aynı enum, iki yerde zaten kopya tutuluyor). `node.kind==='quant'` olduğunda `StatusBadge`'e `label={QUANT_USAGE_LABELS[node.status] ?? node.status}` + `tone=\"neutral\"` geçiliyor — StatusBadge `label` verilince sözlüğe hiç bakmıyor (Tur 5 P1 düzeltmesindeki desenin bu yeni çağrı noktasına uygulanmış hali). Diğer node kind'ları (lot/work_order/receipt/delivery) davranışsal olarak değişmedi.",
           "measureAfter": "Playwright: /depo/lotlar/017c55d6-087e-4a5c-8121-324ffc530a69 'İzlenebilirlik' sekmesi açıldı, tüm konsol mesajları toplandı — '[status] \"internal\" için Türkçe etiket tanımlı değil' uyarısı YOK (önceden her render'da basıyordu). 'Eldeki stok TIRE/AMB' düğümü artık 'Depo' rozeti gösteriyor (önceden 'internal' ham enumu ya da boş '—'). pnpm shot masaüstü görüntüsünde rozet doğrulandı.",
           "closedRound": 11
+        }
+      ],
+      "open": []
+    },
+    "/depo/skt (rowActions dokunma hedefi → mobil kart yüksekliği)": {
+      "closed": [
+        {
+          "id": "shell-mobile-card-actions-height-01",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Mobil kart 87.5px — 56-72px hedef bandının %22 üzerinde ve modülün diğer 9 liste route'undan (63.5-68.5px) görünür biçimde farklı. Kök neden: satır-1'deki rowActions menü tetikleyicisi mobilde size-11 (44px, hem görsel kutu hem dokunma hedefi aynı border-box) olduğu için `flex items-center` satır-1'in çapraz-eksen yüksekliğini 44px'e zorluyor; rowActions'ı olmayan tablolarda aynı kalıp 68.5px'te kalıyordu.",
+          "file": "apps/web/src/components/data-table/row-actions.tsx",
+          "fix": "Buton kutusu (border-box, 44px) DEĞİŞMEDİ — `getBoundingClientRect` (dokunma hedefi ölçümü) elemanın kendi border-box'ını okur, margin'den etkilenmez. Bunun yerine `-my-3 md:my-0` eklendi: negatif dikey margin, elemanın ebeveyn flex satırına olan katkısını (margin kutusu = border-box + margin = 44-24=20px) satır-1'deki metin başlığının satır yüksekliğine (leading-5=20px) indiriyor — böylece satır-1'in çapraz-eksen boyutunu artık metin belirliyor, buton değil. Masaüstünde (md+) değişiklik yok (`md:my-0`, buton zaten icon-xs 24px).",
+          "measureAfter": "pnpm measure /depo/skt --viewport 390x844 → rows.heights [67.8,68.5,68.5] (önce [87.5,87.5,87.5]), touchTargetsBelow44 içinde rowActions butonu yok (tek kalan öge ilgisiz breadcrumb span'i). Aynı ölçüm shared bileşen olduğu için diğer rowActions kullanan rotalarda da doğrulandı: /depo/stok [67.5,67.8,68.5], /depo/lotlar [63.5,68.5,68.5], /depo/mal-kabul [68.5,68.5,68.5], /depo/sevkiyat [68.5,68.5,68.5], /depo/transfer [68.5,68.5,68.5], /depo/sayim [68.5,68.5,68.5], /ana-veri/urunler [63.5,63.5,68.5], /ana-veri/cariler [67.8,67.8,67.8] — hepsi hedef aralıkta ve hiçbirinde rowActions touchTargetsBelow44'te yok. Masaüstünde (1440x900) buton hâlâ 24x24 (button#radix-..., icon-xs), davranış/görünüm değişmedi. pnpm shot /depo/skt mobil görüntüsünde kartlar görsel olarak 68px bandında, diğer depo rotalarıyla tutarlı.",
+          "closedRound": 12
+        }
+      ],
+      "open": []
+    },
+    "/login, /operator/giris (client-side istisna hata sınırı)": {
+      "closed": [
+        {
+          "id": "shell-login-error-boundary-01",
+          "criterion": 7,
+          "severity": "P1",
+          "text": "(auth) ve (operator-auth) route gruplarının hiç `error.tsx`'i yoktu (diğer tüm gruplarda — (app), (app)/depo, (operator) — var). Bu yüzden /login veya /operator/giris'te bir client-side istisna (ör. dev sunucusunun bellek eşiği aşımıyla kendini yeniden başlatmasıyla çakışan bir ağ hatası — e2e auth.ts::loginAs() sırasında gözlemlendi) Next'in Türkçe olmayan, 'tekrar dene' sunmayan varsayılan hata ekranına düşüyordu.",
+          "file": "apps/web/src/app/(auth)/error.tsx, apps/web/src/app/(operator-auth)/error.tsx",
+          "fix": "İki route grubuna da diğer gruplarla aynı kalıpta (WifiOff ikonu, Türkçe başlık/açıklama, 'Tekrar dene' [reset()] + 'Sayfayı yenile' [window.location.reload()]) yeni birer error.tsx eklendi — dosya daha önce hiç yoktu, mevcut ortak error.tsx dosyaları değiştirilmedi. 'Sayfayı yenile' ikinci seçenek olarak eklendi çünkü `reset()` yalnızca segmenti yeniden render eder; dev sunucusu HMR ile tamamen yeniden başlamışsa tam sayfa yenileme daha güvenilir.",
+          "measureAfter": "pnpm typecheck && pnpm lint temiz (yeni dosyalar dahil). curl /login → 200, pnpm shot /login mobil+masaüstü görsel olarak değişmedi (error.tsx yalnızca istisna fırlatıldığında render olur, mutlu yolu etkilemez). Statik doğrulama: `find apps/web/src/app -maxdepth 2 -iname error.tsx` artık (auth) ve (operator-auth) dahil TÜM route gruplarında bir error.tsx listeliyor (önce ikisi eksikti).",
+          "closedRound": 12
         }
       ],
       "open": []
