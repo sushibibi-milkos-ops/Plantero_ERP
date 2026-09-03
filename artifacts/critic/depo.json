@@ -1,0 +1,121 @@
+{
+  "module": "depo",
+  "round": 9,
+  "reference": { "linear": 57, "stripe": 56 },
+  "note": "Tur 9 — depo modülü için ilk kalıcı puan kartı. Önceki tur kartı yoktu; tüm bulgular bu turda açıldı. Ölçümler: pnpm shot (1440x900 + 390x844) + pnpm measure.",
+  "routes": {
+    "/depo/stok": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,4,4,3,3,5,3,5,4,5], "total": 50,
+      "open": [
+        { "id": "depo-stok-01", "criterion": 6, "severity": "P1", "text": "Mobil kartta tüm sayısal sütunlar (Eldeki/Rezerve/Kullanılabilir/Değer) `mobile:'meta'` rolüyle basılıyor — DataTableMobileCards'ın 11px `text-muted-foreground/70` flex-wrap meta satırına düşüyorlar; `dl` etiket/değer dalı (dt 11px muted + dd 13px tabular-nums, ortak sağ eksen) hiç kullanılmıyor. Kullanıcının aradığı sayı kartın en okunmaz öğesi.", "measure": "pnpm measure /depo/stok --viewport 390x844 → fontSizes {\"11\":650,\"12\":59,\"13\":3}; rows.heights [100,118.5,137]", "target": "sayısal sütunlar `mobile:'meta'` yerine dl dalına (varsayılan rol); 13px baskın olmalı, kart yüksekliği tekdüze (±4px), 56–72px bandına yakın", "file": "apps/web/src/modules/stock/components/stock-table.tsx:86,100,114,128", "openedRound": 9 },
+        { "id": "depo-stok-02", "criterion": 9, "severity": "P1", "text": "\"Sadece kritik\" anahtarını saran <label> `h-8` (32px) — mobilde dokunma hedefi 44px altında. Switch'in kendisi 28.8×16.6.", "measure": "stock-table.tsx:192 `flex h-8 items-center`; pnpm measure /depo/stok --viewport 390x844 → touchTargetsBelow44 içinde button[data-slot=\"switch\"] 28.8×16.6", "target": "label `h-8` → `h-11 md:h-8` (mobilde ≥44px)", "file": "apps/web/src/modules/stock/components/stock-table.tsx:192", "openedRound": 9 },
+        { "id": "depo-stok-03", "criterion": 7, "severity": "P1", "text": "loading.tsx `description={<Skeleton/>}` veriyor; PageHeader açıklamayı <p> içinde basıyor, Skeleton bir <div> → <p> içinde <div>: geçersiz HTML, hydration hatası.", "measure": "soğuk derleme koşusunda konsol: \"In HTML, <div> cannot be a descendant of <p>. This will cause a hydration error.\" (/depo/stok ve /depo/mal-kabul); Next dev overlay \"2 Issues\" bu turun 12 ekran görüntüsünün 5'inde görünür", "target": "konsolda 0 hydration hatası — Skeleton yerine <span> tabanlı iskelet ya da PageHeader description sarmalayıcısı <p> yerine <div>", "file": "apps/web/src/app/(app)/depo/stok/loading.tsx:14 (+6 kardeş dosya)", "openedRound": 9 },
+        { "id": "depo-stok-04", "criterion": 4, "severity": "P2", "text": "ExpiryBadge `ok` (90+ gün) kademesi dolgulu `bg-muted` pil basıyor; en acil olmayan kademe ekrandaki en ağır anatomiyi taşıyor, gerçek sinyal (nokta/soft pil) gri pil duvarında kayboluyor. Ortak bileşen — shell.", "measure": "/depo/stok masaüstü ilk ekran: 18 SKT hücresinin 15'i dolgulu gri pil, 1'i amber soft pil, 2'si dolgusuz nokta", "target": "`ok`/`none` kademesi `plain` ağırlığa (dolgusuz düz metin); ilk ekranda dolgulu pil sayısı ≤4", "file": "apps/web/src/components/expiry-badge.tsx (LEVEL_CLASS.ok / levelWeight)", "openedRound": 9, "module": "shell" }
+      ],
+      "closed": []
+    },
+    "/depo/lotlar": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,4,4,3,3,5,4,5,4,5], "total": 51,
+      "open": [
+        { "id": "depo-lotlar-01", "criterion": 6, "severity": "P1", "text": "Mobil kartta Eldeki/Maliyet/Lokasyon `mobile:'meta'` — depo-stok-01 ile aynı kök neden.", "measure": "pnpm measure /depo/lotlar --viewport 390x844 → fontSizes {\"11\":302,\"12\":161,\"13\":2}; rows.heights [109.5,127.5,127.5]", "target": "sayısal sütunlar dl dalına; 13px baskın; kart yüksekliği tekdüze (±4px)", "file": "apps/web/src/modules/stock/components/lots-table.tsx:70,84,98", "openedRound": 9 },
+        { "id": "depo-lotlar-02", "criterion": 7, "severity": "P1", "text": "loading.tsx `description={<Skeleton/>}` → <p> içinde <div> (bkz. depo-stok-03).", "measure": "aynı — soğuk koşuda konsol hatası + dev overlay \"2 Issues\"", "target": "0 hydration hatası", "file": "apps/web/src/app/(app)/depo/lotlar/loading.tsx:9", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/lotlar/[id]": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,4,5,5,4,5,3,5,5,5], "total": 55,
+      "open": [
+        { "id": "depo-lotlar-id-01", "criterion": 9, "severity": "P1", "text": "Detay sekmeleri (Eldeki stok / Hareketler / Kalite kontrol / İzlenebilirlik) mobilde 29px yüksek; TabsList 36px. Kök neden paylaşılan ui/tabs.tsx `group-data-[orientation=horizontal]/tabs:h-9` varsayılanı — ancak modül TabsList'e zaten className geçiyor, modül-yerel çözülebilir.", "measure": "pnpm measure /depo/lotlar/<id> --viewport 390x844 → touchTargetsBelow44: tabs-list 358×36, 4 trigger 29px", "target": "mobilde TabsList `h-11 md:h-9`, tetikleyiciler ≥44px", "file": "apps/web/src/app/(app)/depo/lotlar/[id]/page.tsx:160-165", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/mal-kabul": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,5,5,3,3,5,5,5,5,5], "total": 55,
+      "open": [
+        { "id": "depo-mal-kabul-01", "criterion": 6, "severity": "P1", "text": "\"Ortalama kabul süresi\" KPI'ı \"0 dk\" basıyor — yanlış bilgi. Tur 5'te eklenen koruma yalnızca `avgLeadTimeHours === null` durumunu kapsıyor; seed'de receivedAt = createdAt olduğu için değer 0 (null değil), showLeadInMinutes=true, avgLeadTimeMinutes=0 → \"0 dk\".", "measure": "artifacts/screens/depo-mal-kabul/desktop.png KPI 3 = \"0 dk\"; page.tsx:34-39,71-74", "target": "ölçülemez durumda (dakika < 1) `value={null}` → \"—\" + hint; ekranda \"0 dk\" görünmemeli", "file": "apps/web/src/app/(app)/depo/mal-kabul/page.tsx:34-39,71-74", "openedRound": 9 },
+        { "id": "depo-mal-kabul-02", "criterion": 7, "severity": "P1", "text": "loading.tsx `description={<Skeleton/>}` → <p> içinde <div> (bkz. depo-stok-03).", "measure": "soğuk koşuda konsolda hydration hatası doğrudan gözlendi (/depo/mal-kabul)", "target": "0 hydration hatası", "file": "apps/web/src/app/(app)/depo/mal-kabul/loading.tsx:14", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/mal-kabul/yeni": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,4,5,5,5,5,5,5,5,5], "total": 58,
+      "open": [
+        { "id": "depo-mal-kabul-yeni-01", "criterion": 4, "severity": "P2", "text": "\"Sipariş seç (opsiyonel)\" paneli marka yeşiliyle tonlanmış zemin + yeşil çerçeve taşıyor; sayfadaki en yüksek renk ağırlığı OPSİYONEL bir kontrolde. Yeşil burada anlam değil süs.", "measure": "artifacts/screens/depo-mal-kabul-yeni/desktop.png — tek renkli blok, altındaki zorunlu alanlar (Depo*, Tedarikçi*) nötr", "target": "panel `bg-muted/40 border-border` nötre çekilsin; yeşil yalnızca birincil eylem + başarı durumunda", "file": "apps/web/src/modules/stock/components/receipt-form.tsx", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/sevkiyat": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,5,4,5,5,3,5,5,5,5,5], "total": 57,
+      "open": [
+        { "id": "depo-sevkiyat-01", "criterion": 7, "severity": "P1", "text": "loading.tsx `description={<Skeleton/>}` → <p> içinde <div> (bkz. depo-stok-03).", "measure": "statik: PageHeader description <p> (page-header.tsx:29) + Skeleton <div>; dev overlay \"2 Issues\"", "target": "0 hydration hatası", "file": "apps/web/src/app/(app)/depo/sevkiyat/loading.tsx:14", "openedRound": 9 },
+        { "id": "depo-sevkiyat-02", "criterion": 4, "severity": "P2", "text": "İlk ekrandaki 17 satırın 17'si yeşil \"Sevk edildi\" rozeti taşıyor; sağ üstteki birincil \"Yeni irsaliye\" butonu da yeşil. Yeşil hem marka/vurgu hem başarı rolünde — baskın terminal durum renk taşımamalı.", "measure": "artifacts/screens/depo-sevkiyat/desktop.png — 17/17 satır yeşil rozet", "target": "baskın terminal durum (`shipped`) nötr gri rozete; renkli rozet yalnızca istisna durumlarda (rezerve/iptal)", "file": "apps/web/src/components/status-badge.tsx (shell) / modules/stock/components/deliveries-table.tsx", "openedRound": 9, "module": "shell" }
+      ],
+      "closed": []
+    },
+    "/depo/sevkiyat/[id]": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,4,5,5,4,5,5,5,5,5], "total": 57,
+      "open": [], "closed": []
+    },
+    "/depo/sevkiyat/[id]/topla": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,4,5,5,4,5,5,5,5,5], "total": 57,
+      "open": [
+        { "id": "depo-topla-01", "criterion": 4, "severity": "P2", "text": "\"Satırı atla — eksik/bulunamadı\" saf kırmızı (destructive) düz metin bağlantı; satır atlamak yıkıcı bir eylem değil, ayrıca ekrandaki tek kırmızı öğe olarak birincil \"Onayla\" ile dikkat yarışına giriyor.", "measure": "artifacts/screens/depo-sevkiyat-.../topla/{desktop,mobile}.png — tek kırmızı öğe, buton çerçevesi yok", "target": "ghost/secondary buton + muted metin; kırmızı yalnızca gerçek yıkıcı eylemde", "file": "apps/web/src/modules/stock/components/pick-screen.tsx", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/transfer": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,5,5,5,3,5,3,5,5,5], "total": 55,
+      "open": [
+        { "id": "depo-transfer-01", "criterion": 9, "severity": "P1", "text": "NextStepHint içindeki \"+ Yeni transfer\" bağlantısı mobilde 91.1×19.5 — dokunma hedefi 44px altında.", "measure": "pnpm measure /depo/transfer --viewport 390x844 → touchTargetsBelow44: a \"+ Yeni transfer\" 91.1×19.5", "target": "`inline-flex min-h-11 items-center md:min-h-0` (mobilde ≥44px)", "file": "apps/web/src/app/(app)/depo/transfer/page.tsx:61", "openedRound": 9 },
+        { "id": "depo-transfer-02", "criterion": 7, "severity": "P1", "text": "loading.tsx `description={<Skeleton/>}` → <p> içinde <div> (bkz. depo-stok-03).", "measure": "statik nesting + dev overlay \"2 Issues\" (artifacts/screens/depo-transfer/desktop.png)", "target": "0 hydration hatası", "file": "apps/web/src/app/(app)/depo/transfer/loading.tsx:14", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/sayim": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,5,5,5,3,5,3,5,5,5], "total": 55,
+      "open": [
+        { "id": "depo-sayim-01", "criterion": 9, "severity": "P1", "text": "NextStepHint içindeki \"+ Yeni sayım\" butonu mobilde 78.8×19.5 — dokunma hedefi 44px altında.", "measure": "pnpm measure /depo/sayim --viewport 390x844 → touchTargetsBelow44: button \"+ Yeni sayım\" 78.8×19.5", "target": "`inline-flex min-h-11 items-center md:min-h-0` (mobilde ≥44px)", "file": "apps/web/src/app/(app)/depo/sayim/page.tsx:58", "openedRound": 9 },
+        { "id": "depo-sayim-02", "criterion": 7, "severity": "P1", "text": "loading.tsx `description={<Skeleton/>}` → <p> içinde <div> (bkz. depo-stok-03).", "measure": "statik nesting + dev overlay \"2 Issues\" (artifacts/screens/depo-sayim/desktop.png)", "target": "0 hydration hatası", "file": "apps/web/src/app/(app)/depo/sayim/loading.tsx:14", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/skt": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,4,4,3,3,5,4,5,4,5], "total": 51,
+      "open": [
+        { "id": "depo-skt-01", "criterion": 6, "severity": "P1", "text": "Mobil kartta Lokasyon/Miktar/Değer `mobile:'meta'` — depo-stok-01 ile aynı kök neden; SKT panosunda kullanıcının okuduğu tek şey miktar ve değer.", "measure": "pnpm measure /depo/skt --viewport 390x844 → fontSizes {\"11\":355,\"12\":157,\"13\":1}; rows.heights [123,123,141.5]", "target": "sayısal sütunlar dl dalına; 13px baskın; kart yüksekliği tekdüze (±4px)", "file": "apps/web/src/modules/stock/components/expiry-board.tsx:42,53,67", "openedRound": 9 },
+        { "id": "depo-skt-02", "criterion": 7, "severity": "P1", "text": "loading.tsx `description={<Skeleton/>}` → <p> içinde <div> (bkz. depo-stok-03).", "measure": "statik nesting", "target": "0 hydration hatası", "file": "apps/web/src/app/(app)/depo/skt/loading.tsx:10", "openedRound": 9 },
+        { "id": "depo-skt-03", "criterion": 4, "severity": "P2", "text": "Satırın tamamı SKT seviyesine göre kırmızı/amber tonlanıyor VE aynı satır zaten renkli SKT rozeti taşıyor — tek olgu için iki üst üste kodlama; ilk ekranda 18 satırın 8'i tonlu, tablo Linear'ın monokrom zemininden uzaklaşıyor.", "measure": "artifacts/screens/depo-skt/desktop.png — 8/18 satır zemin tonlu + aynı satırlarda renkli rozet", "target": "satır zemini yalnızca `expired` seviyesinde tonlansın (1 satır); 0–30 gün yalnızca rozetle işaretlensin", "file": "apps/web/src/modules/stock/components/expiry-board.tsx", "openedRound": 9 }
+      ],
+      "closed": []
+    },
+    "/depo/tara": {
+      "round": 9, "reference": "linear",
+      "scores": [5,5,4,5,5,5,5,5,5,5,5,5], "total": 59,
+      "open": [], "closed": [],
+      "verdict": "KAZANAN: Plantero — toplam 59 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok."
+    }
+  },
+  "codeScan": {
+    "transitionAll": 0, "easeIn": 0, "scaleZero": 0, "durationOver300ms": 0,
+    "hoverGating": "globals.css:10-16 — `hover:` varyantı @media (hover:hover) and (pointer:fine) ile proje genelinde kapılı",
+    "transformOrigin": "pick-screen.tsx:140 `origin-left` — ilerleme çubuğu için doğru",
+    "verdict": "temiz — kod düzeyinde bulgu yok"
+  },
+  "sharedComponentRequests": [
+    "apps/web/src/components/page-header.tsx:29 — `description` <p> içinde basılıyor. Çağıranlar iskelet/rozet gibi blok içerik geçtiğinde <p> içinde <div> oluşuyor (geçersiz HTML + hydration hatası). Öneri: sarmalayıcı <p> yerine <div className=\"mt-1 text-sm text-muted-foreground\">.",
+    "apps/web/src/components/ui/tabs.tsx:29 — TabsList varsayılanı `group-data-[orientation=horizontal]/tabs:h-9`; mobilde tetikleyiciler 29px'e düşüyor (<44px). Öneri: yatay TabsList varsayılanı `h-11 md:h-9`.",
+    "apps/web/src/components/expiry-badge.tsx — `ok` (90+ gün) kademesi dolgulu `bg-muted` pil; en düşük öncelikli kademe en ağır anatomiyi taşıyor. Öneri: `ok`/`none` → `plain` ağırlık.",
+    "apps/web/src/components/status-badge.tsx — baskın terminal durumlar (ör. `shipped`) renkli rozet basıyor; 17/17 satırın yeşil olduğu listelerde renk anlam taşımıyor. Öneri: terminal/başarı durumları nötr, renk yalnızca istisnalarda."
+  ]
+}
