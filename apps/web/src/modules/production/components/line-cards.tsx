@@ -29,11 +29,19 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
         // bugün üretilen ÷ günlük kapasite. Yanıltıcı bir OEE% göstermek yerine dürüst bir oran.
         const dailyCapacity = line.capacityPerHour ? D(line.capacityPerHour).mul(line.shiftMinutes).div(60) : null;
         const fillPct = dailyCapacity && dailyCapacity.gt(0) ? Math.round(Math.min(999, D(line.todayProducedQty).div(dailyCapacity).mul(100).toNumber())) : null;
+        // Sparkline: eğri var olduğu sürece gösterilir (bkz. "Son 7 gün" bloğu altta) — delta rozeti
+        // yalnızca eğri VE hesaplanmış bir değişim ikisi de varken anlamlı, yoksa "önceki 7 güne göre
+        // değişim" iddiası veri yokken de basılıp (HAT3) çelişki yaratıyordu (Tur 10 bulgusu, P1).
+        const hasSparklineData = line.sparkline.some((v) => v > 0);
+        const showDelta = hasSparklineData && line.sparklineDeltaPct !== null;
 
         return (
           <div key={line.id} className="flex flex-col gap-4 rounded-xl border border-border/70 bg-card p-4">
             <div className="flex items-start justify-between gap-2">
-              <Link href={`/uretim/is-emirleri?hat=${line.code}`} className="group min-w-0" data-pressable>
+              {/* block min-h-11 py-0.5: kartın geri kalanı tıklanabilir değil, bu bağlantı kartın
+                  birincil navigasyon hedefi — önceden 40px'e düşüyordu (Tur 10 bulgusu, P1). Metin
+                  hizası (satır yükseklikleri) değişmeden hit alanı 44px'e çıkar. */}
+              <Link href={`/uretim/is-emirleri?hat=${line.code}`} className="group block min-h-11 min-w-0 py-0.5" data-pressable>
                 <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{line.code}</div>
                 <div className="text-base font-semibold group-hover:underline group-hover:decoration-border group-hover:underline-offset-2">{line.name}</div>
               </Link>
@@ -107,8 +115,13 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
             <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-border/60 pt-3">
               <span className="text-[11px] tracking-wide text-muted-foreground uppercase">Son 7 gün</span>
               <div className="flex items-center gap-1.5">
-                {line.sparklineDeltaPct !== null ? <SparklineDelta pct={line.sparklineDeltaPct} /> : null}
-                {line.sparkline.some((v) => v > 0) ? (
+                {/* showDelta: delta rozeti "önceki 7 güne göre değişim" iddia eder — sparkline'ın
+                    kendisi hiç üretim göstermiyorsa (tüm günler 0) bu iddia anlamsız, "Veri yok" ile
+                    aynı satırda çelişki yaratıyordu (ör. HAT3'te ↘%100 + "Veri yok" yan yana, Tur 10
+                    bulgusu, P1). Eğri varken delta da hesaplanmışsa ikisi birlikte, eğri yokken tek
+                    "Veri yok" — üç kart aynı düzende. */}
+                {showDelta ? <SparklineDelta pct={line.sparklineDeltaPct!} /> : null}
+                {hasSparklineData ? (
                   <Sparkline data={line.sparkline} width={88} height={24} tone="muted" />
                 ) : (
                   <div className="flex h-6 w-[88px] items-center justify-center text-[11px] text-muted-foreground" title="Son 7 günde üretim yok">

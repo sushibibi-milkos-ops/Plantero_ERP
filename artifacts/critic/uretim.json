@@ -35,6 +35,249 @@
       "sharedComponentRequests": [
         "apps/web/src/components/ui/input.tsx: `md:h-9` varsayılanı (Tailwind v4 çıktısında responsive katman base katmandan sonra geldiği için) çağıran taraftaki düz `hN` override'larını >=768px'te sessizce eziyor (örn. `className=\"h-14 ...\"` masaüstünde 36px'e düşüyor). apps/web/src/components/form/number-input.tsx da aynı deseni (`h-11 ... md:h-9`) doğrudan kendi Input'unda tekrar ediyor; onu saran `[&_input]:hN` wrapper'ları da aynı riski taşıyor (bu turda ölçülmedi, operator-work-order.tsx'teki iki NumberInput kullanım yeri — Fire gir/Bitir miktar alanları — bir sonraki turda ölçülmeli). Öneri: paylaşılan Input'ta masaüstü küçültmesini `md:h-9` yerine `has-[]`/veri-attribute tabanlı bir `size` prop'una taşımak ya da çağıran taraf override'larını `!` ile beklemek yerine primitive'in kendisini öngörülebilir kılmak."
       ]
+    },
+    "/uretim/is-emirleri": {
+      "round": 10,
+      "reference": "linear",
+      "scores": [
+        5,
+        5,
+        3,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "total": 58,
+      "open": [],
+      "closed": [
+        {
+          "id": "uretim-is-emirleri-01",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Mobil iş emri kartı 118px — puan kartı hedefi 56-72px. Kart 5 dikey katman taşıyor (docNo 14px, ürün adı 12px, HAT·tarih 11px mono, hairline, 'Planlanan / Üretilen' satırı). 390x844'te başlık + tam genişlik 'Yeni iş emri' butonu + KPI şeridi + arama/filtre bloğundan sonra ilk ekranda yalnızca ~3 kart görünüyor; Linear mobilde aynı alanda 8-10 satır gösterir. Kök neden ana-veri-urunler-01 ile aynı sınıf ama kart bu modülün kendi renderMobileCard'ında çiziliyor.",
+          "measure": "pnpm measure /uretim/is-emirleri --viewport 390x844 → rows.heights [118,118,118]",
+          "target": "rows.heights ≤ 72 (ör. ürün adı ile HAT·tarih satırını tek satırda birleştir, 'Planlanan / Üretilen' değerini başlık satırının sağına al)",
+          "file": "apps/web/src/modules/production/components/work-orders-table.tsx:21-44 (WorkOrderMobileCard)",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "pnpm measure /uretim/is-emirleri --viewport 390x844 → rows.heights [70.5,70.5,70.5] (≤72 hedefi karşılandı)",
+          "verdict": "kapatıldı — kart 5 katmandan 2 satıra indirildi (ürün adı+rozet / docNo·HAT·tarih+Planlanan-Üretilen özeti)",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        }
+      ]
+    },
+    "/uretim/is-emirleri/[id]": {
+      "round": 10,
+      "reference": "linear",
+      "scores": [
+        5,
+        5,
+        3,
+        5,
+        5,
+        5,
+        5,
+        5,
+        3,
+        5,
+        5,
+        5
+      ],
+      "total": 56,
+      "open": [],
+      "closed": [
+        {
+          "id": "uretim-wo-detay-01",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Detay sekmeleri (Malzemeler/Tüketimler/Çıktılar/Fire/Olaylar/Maliyet/Zincir) mobilde 29px yüksek; TabsList 36px. Kök neden paylaşılan ui/tabs.tsx `group-data-[orientation=horizontal]/tabs:h-9` varsayılanı — ancak modül TabsList'e zaten className geçiyor, modül-yerel çözülebilir (depo-lotlar-id-01 ile aynı kök).",
+          "measure": "pnpm measure /uretim/is-emirleri/<id> --viewport 390x844 → touchTargetsBelow44: tabs-list 629.9x36 + 7 tetikleyici 29px (43.2-95.9 x 29)",
+          "target": "mobilde TabsList `h-11 md:h-9`, tetikleyici yüksekliği ≥44px",
+          "file": "apps/web/src/modules/production/components/work-order-tabs.tsx:157",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "pnpm measure /uretim/is-emirleri/<id> --viewport 390x844 → touchTargetsBelow44'te tabs-list/tetikleyici yok (yalnızca ilgisiz breadcrumb false-positive + 44px'lik Fire sekmesi kaldı); shell zaten Tur 10'da TabsList'i h-auto/md:h-9, TabsTrigger'ı h-11/md:h-[calc(100%-1px)] yapmıştı (commit 60e1520) — modül tarafında ek değişiklik gerekmedi, ölçümle doğrulandı.",
+          "verdict": "kapatıldı — shell (ui/tabs.tsx) düzeltmesi zaten yürürlükte, bu turda yalnızca ölçümle kanıtlandı",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        },
+        {
+          "id": "uretim-wo-detay-02",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Malzeme sekmesinin mobil kartı 164.5px — puan kartı hedefi 56-72px. Kartın kendi yorumu '3 satır = 72px kart gövdesi' diyor ama p-3 + 14px ad + 11px SKU + mt-2 + hairline + pt-2 + 3×h-6 + space-y-1.5 toplamı 164.5px'e çıkıyor; 12 malzemenin ilk ekranda yalnızca 4'ü görünüyor.",
+          "measure": "pnpm measure /uretim/is-emirleri/<id> --viewport 390x844 → rows.heights [164.5,164.5,164.5]",
+          "target": "rows.heights ≤ 72 (üç ölçüyü alt alta dl yerine tek satırda 3 sütunlu grid'e al: ad+SKU satırı + tek metrik satırı)",
+          "file": "apps/web/src/modules/production/components/work-order-tabs.tsx:36-64 (renderMaterialCard)",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "pnpm measure /uretim/is-emirleri/<id> --viewport 390x844 → rows.heights [71.3,71.3,71.3] (≤72 hedefi karşılandı)",
+          "verdict": "kapatıldı — ad+SKU tek satıra indi, 3 metrik tek satırlık 3 sütunlu grid’e alındı (p-3→p-2, leading-tight)",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        }
+      ]
+    },
+    "/uretim/is-emirleri/yeni": {
+      "round": 10,
+      "reference": "linear",
+      "scores": [
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "total": 59,
+      "open": [],
+      "closed": [
+        {
+          "id": "uretim-wo-yeni-01",
+          "criterion": 2,
+          "severity": "P2",
+          "text": "Sayfada iki farklı sol hiza ekseni var: H1 'Yeni İş Emri' içerik kolonunun sol kenarında (x=265 CSS), form kartı ise `mx-auto max-w-3xl` ile ortalanıp x=458'de başlıyor — 193px'lik boşluk 1440px'te kaza gibi okunuyor. (Tur 5'te PageHeader kasıtlı olarak kabın dışına alınmış; sonuç yine iki eksen.)",
+          "measure": "1440x900 masaüstü: H1 sol kenar 265px, form kartı sol kenar 458px (fark 193px); içerik kolonu 265→1416",
+          "target": "tek eksen: ya PageHeader'ı da `mx-auto max-w-3xl` kabına al ya da formu sola daya (kart sol kenarı = H1 sol kenarı, fark ≤ 0px)",
+          "file": "apps/web/src/app/(app)/uretim/is-emirleri/yeni/page.tsx:15-25",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "Playwright DOM ölçümü: H1 left=264px, form kartı left=264px, fark=0px (önceden 193px)",
+          "verdict": "kapatıldı — form kabındaki `mx-auto` kaldırıldı, kart artık H1 ile aynı sol eksende sola dayalı",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        }
+      ]
+    },
+    "/uretim/planlama": {
+      "round": 10,
+      "reference": "linear",
+      "scores": [
+        5,
+        5,
+        4,
+        5,
+        4,
+        5,
+        5,
+        5,
+        3,
+        5,
+        5,
+        5
+      ],
+      "total": 56,
+      "open": [],
+      "closed": [
+        {
+          "id": "uretim-planlama-01",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "'7 gün' / '14 gün' görünüm seçici bağlantıları mobilde 40px yüksek — dokunma hedefi 44px altında. Sınıf `h-10 ... md:h-7`; aynı satırdaki ok ve 'Bugün' butonları 44px'i sağlıyor, yalnızca segment kontrolü kalıyor.",
+          "measure": "pnpm measure /uretim/planlama --viewport 390x844 → touchTargetsBelow44: a '7 gün' 51.9x40, a '14 gün' 57.9x40",
+          "target": "mobilde `h-11 md:h-7` (≥44px); ölçümde touchTargetsBelow44 boş",
+          "file": "apps/web/src/app/(app)/uretim/planlama/page.tsx:81,87",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "pnpm measure /uretim/planlama --viewport 390x844 → touchTargetsBelow44'te '7 gün'/'14 gün' yok (yalnızca ilgisiz breadcrumb false-positive kaldı)",
+          "verdict": "kapatıldı — h-10 → h-11 (mobil), md:h-7 korunur",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        },
+        {
+          "id": "uretim-planlama-02",
+          "criterion": 5,
+          "severity": "P2",
+          "text": "Pano hücreleri dört kenarından da 1px çerçeve taşıyor (tam ızgara). Linear/Stripe panolarında yalnızca sütun ayracı + satır hairline'ı vardır; 3 hat × 9 sütunda 27 kutu 'çerçeve çorbası' etkisi yaratıyor ve ekranın en yüksek renk sayısı burada (25-26).",
+          "measure": "1440x900: hücre başına 4 kenar border, distinctColors 26 (modüldeki en yüksek; is-emirleri 18, operator 15)",
+          "target": "yalnızca dikey sütun ayracı + satır altı hairline (`border-r border-b border-border/60`), hücrelerde üst/sol çerçeve yok",
+          "file": "apps/web/src/modules/production/components/planning-board.tsx:330-381",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "1440x900 /uretim/planlama ekran görüntüsü: gün sütunları arasındaki dikey ayraçlar (border-r) kaldırıldı, yalnızca satır hairline'ı (border-b) + yapısal sütun ayraçları (Hat|Planlanmamış|gün ızgarası|Toplam) kaldı — 'çerçeve çorbası' görünümü giderildi",
+          "verdict": "kapatıldı — PlanningCell/gün başlığı hücrelerinden border-r kaldırıldı, Toplam sütununa yapısal border-l eklendi",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        }
+      ]
+    },
+    "/uretim/hatlar": {
+      "round": 10,
+      "reference": "linear",
+      "scores": [
+        5,
+        5,
+        4,
+        5,
+        4,
+        3,
+        5,
+        5,
+        3,
+        5,
+        4,
+        5
+      ],
+      "total": 53,
+      "open": [],
+      "closed": [
+        {
+          "id": "uretim-hatlar-01",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "HAT3 kartında 'SON 7 GÜN' satırı aynı anda kırmızı '↘ %100' delta rozetini ve 'Veri yok' metnini basıyor — aynı satır hem ölçülmüş bir değişim iddia ediyor hem veri olmadığını söylüyor. Ayrıca kart anatomisi hatlar arasında ayrışıyor: HAT1/HAT2 sparkline gösterip delta göstermiyor, HAT3 delta gösterip sparkline göstermiyor. (ana-veri-cari-detay-01 ile aynı sınıf: metrik yok/0 iken delta basmak.)",
+          "measure": "1440x900 /uretim/hatlar: HAT3 satırında SparklineDelta(-100) + 'Veri yok' kutusu yan yana; sparklineDeltaPct null değil ama line.sparkline.some(v=>v>0) false",
+          "target": "sparkline verisi yokken (`!line.sparkline.some(v=>v>0)`) delta rozeti de basılmaz; üç kart aynı iki öğeyi (delta + sparkline ya da tek 'Veri yok') aynı düzende taşır",
+          "file": "apps/web/src/modules/production/components/line-cards.tsx:106-116",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "1440x900 /uretim/hatlar ekran görüntüsü: HAT1/HAT2 gerçek sparkline'larını korudu, HAT3 yalnızca 'Veri yok' gösteriyor — delta rozeti hiçbir kartta sparkline verisi yokken basılmıyor",
+          "verdict": "kapatıldı — showDelta = hasSparklineData && sparklineDeltaPct!==null; Sparkline/\"Veri yok\" ayrımı yalnızca hasSparklineData’ya bağlı (delta koşulundan bağımsız)",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        },
+        {
+          "id": "uretim-hatlar-02",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Kart başlığındaki hat bağlantısı (HAT kodu + hat adı, /uretim/is-emirleri?hat=… filtresine gider) mobilde 40px yüksek — dokunma hedefi 44px altında. Kartın geri kalanı tıklanabilir değil, bu yüzden bu bağlantı kartın birincil navigasyon hedefi.",
+          "measure": "pnpm measure /uretim/hatlar --viewport 390x844 → touchTargetsBelow44: a 'HAT1…' 199.1x40, a 'HAT2…' 180x40, a 'HAT3…' 176.2x40",
+          "target": "bağlantıya `block min-h-11 py-0.5` (≥44px); ölçümde touchTargetsBelow44 boş",
+          "file": "apps/web/src/modules/production/components/line-cards.tsx:36-39",
+          "openedRound": 10,
+          "closedRound": 11,
+          "measureAfter": "pnpm measure /uretim/hatlar --viewport 390x844 → touchTargetsBelow44'te HAT1/HAT2/HAT3 bağlantıları yok (yalnızca ilgisiz breadcrumb false-positive kaldı)",
+          "verdict": "kapatıldı — Link’e `block min-h-11 py-0.5` eklendi",
+          "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
+        }
+      ]
+    },
+    "/operator": {
+      "round": 10,
+      "reference": "linear",
+      "scores": [
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "total": 59,
+      "open": [],
+      "closed": []
     }
   }
 }

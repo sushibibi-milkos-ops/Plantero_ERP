@@ -16,9 +16,11 @@ export default async function NewWorkOrderPage() {
       {/* PageHeader artık ortalanmış form kabının DIŞINDA: içindeyken H1 içerik alanının sol
           kenarından ~196px içeride başlıyordu, hemen üstündeki üst çubuk kırıntısı sol kenara
           hizalıydı — aynı sayfada iki farklı sol hiza ekseni (Tur 5 bulgusu, P2). Yalnızca form
-          ortalanmış kabında kalır. */}
+          kabında kalır. `mx-auto` kaldırıldı: 1440px masaüstünde kap (768px) içerik alanının
+          (~1152px) ortasına kayıp H1'in sol kenarından 193px içeride başlıyordu — sola dayalı
+          `max-w-3xl` (mx-auto'suz) form kartını H1 ile aynı sol eksende tutar (Tur 10 bulgusu, P2). */}
       <PageHeader title="Yeni İş Emri" description="Ürün ve miktar seçin; reçete malzemeleri otomatik hesaplanır." />
-      <div className="mx-auto max-w-3xl">
+      <div className="max-w-3xl">
         <CreateWorkOrderForm products={products} lines={lines} warehouses={warehouses} />
       </div>
     </>

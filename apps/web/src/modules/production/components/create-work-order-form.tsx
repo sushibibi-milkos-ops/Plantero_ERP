@@ -15,6 +15,7 @@ import { FormActions } from '@/components/form/form-actions';
 import { QtyCell } from '@/components/qty-cell';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { EmptyState } from '@/components/empty-state';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { createWorkOrderAction, previewMaterialsAction, type MaterialPreviewLine } from '../actions';
 import type { ManufacturableProductRow, LineOption } from '../queries';
@@ -41,6 +42,11 @@ export function CreateWorkOrderForm({
 }) {
   const router = useRouter();
   const [preview, setPreview] = useState<MaterialPreviewLine[] | null>(null);
+  // P1 (Tur 10): eskiden yalnızca `res.ok` dalı vardı — action `{ ok: false }` döndüğünde ya da
+  // istek atılamadan reddedildiğinde (ör. dev sunucusu Fast Refresh ile yeniden başlarken) hiçbir
+  // dal `preview`'ı doldurmuyor, "Hesaplanıyor…" durumu süresiz kalıyordu; kullanıcının önünde ne
+  // hata mesajı ne yeniden deneme yolu vardı. Ayrı bir hata durumu + "Yeniden dene" eylemi eklenir.
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewPending, startPreview] = useTransition();
 
   const form = useForm<FormValues>({
@@ -76,18 +82,42 @@ export function CreateWorkOrderForm({
       if (p.defaultLineId) form.setValue('lineId', p.defaultLineId);
     }
     setPreview(null);
+    setPreviewError(null);
   }, [productId, productById, form]);
+
+  // `stale` bayrağı: girdiler değişip yeni bir çağrı başlamadan önceki isteğin geç dönen sonucu
+  // (unmount ya da bomId/plannedQty/warehouseId değişimi) artık state'e yazılmaz — eskiden hiçbir
+  // koruma yoktu, geç dönen bir yanıt daha güncel bir önizlemenin üstüne yazabilirdi.
+  const runPreview = (bomId: string, plannedQty: string, warehouseId: string, isStale: () => boolean) => {
+    startPreview(async () => {
+      try {
+        const res = await previewMaterialsAction({ bomId, plannedQty, warehouseId });
+        if (isStale()) return;
+        if (res.ok) {
+          setPreview(res.data);
+          setPreviewError(null);
+        } else {
+          setPreview(null);
+          setPreviewError(res.error);
+        }
+      } catch {
+        if (isStale()) return;
+        setPreview(null);
+        setPreviewError('Malzeme önizlemesi hesaplanamadı. Bağlantıyı kontrol edip yeniden deneyin.');
+      }
+    });
+  };
 
   useEffect(() => {
     setPreview(null);
+    setPreviewError(null);
     if (!bomId || !plannedQty || !warehouseId || Number(plannedQty) <= 0) return;
-    const t = setTimeout(() => {
-      startPreview(async () => {
-        const res = await previewMaterialsAction({ bomId, plannedQty, warehouseId });
-        if (res.ok) setPreview(res.data);
-      });
-    }, 350);
-    return () => clearTimeout(t);
+    let stale = false;
+    const t = setTimeout(() => runPreview(bomId, plannedQty, warehouseId, () => stale), 350);
+    return () => {
+      stale = true;
+      clearTimeout(t);
+    };
   }, [bomId, plannedQty, warehouseId]);
 
   const hasShortage = preview?.some((l) => Number(l.shortQty) > 0) ?? false;
@@ -152,7 +182,19 @@ export function CreateWorkOrderForm({
             <h2 className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Malzeme önizleme (reçete)</h2>
             {previewPending ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
           </div>
-          {!preview ? (
+          {previewError ? (
+            <EmptyState
+              compact
+              icon={AlertTriangle}
+              title="Malzeme önizlemesi hesaplanamadı"
+              description={previewError}
+              action={
+                <Button type="button" variant="outline" size="sm" onClick={() => runPreview(bomId, plannedQty, warehouseId, () => false)} disabled={previewPending}>
+                  Yeniden dene
+                </Button>
+              }
+            />
+          ) : !preview ? (
             <div className="py-8 text-center text-sm text-muted-foreground">Hesaplanıyor…</div>
           ) : preview.length === 0 ? (
             <EmptyState compact title="Bu reçetede satır yok" />

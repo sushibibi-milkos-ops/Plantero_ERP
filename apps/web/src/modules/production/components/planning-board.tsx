@@ -171,6 +171,10 @@ export function PlanningBoard({
                   dayHeaderRefs.current[d] = el;
                 }}
                 className={cn(
+                  // border-r kaldırıldı: her gün sütunu kendi dikey ayracını taşıyordu, 3 hat × 9
+                  // sütunda 27 kutunun tam ızgara ("çerçeve çorbası") gibi göründüğü Tur 10 bulgusuydu
+                  // (P2) — yalnızca yapısal sütunlar (Hat/Planlanmamış/Toplam, aşağıda) arasında dikey
+                  // ayraç kalır, gün sütunları arasında yalnızca satır hairline'ı (border-b) taşınır.
                   'border-b border-border/60 p-2 text-center text-[11px] font-medium whitespace-nowrap text-muted-foreground',
                   isWeekend && !isToday && 'bg-muted/25',
                   isToday && 'border-t-2 border-t-primary bg-primary/[0.04] font-semibold text-foreground',
@@ -180,7 +184,7 @@ export function PlanningBoard({
               </div>
             );
           })}
-          <div className="border-b border-border/60 bg-muted/40 p-2 text-right text-[11px] font-medium text-muted-foreground">Toplam</div>
+          <div className="border-b border-l border-border/60 bg-muted/40 p-2 text-right text-[11px] font-medium text-muted-foreground">Toplam</div>
 
           {lines.map((line, i) => (
             <PlanningLineRow key={line.id} line={line} dateCols={dateCols} byCell={byCell} todayIso={todayIso} isFirstRow={i === 0} />
@@ -275,7 +279,7 @@ function PlanningLineRow({
         <div className="truncate text-[11px] text-muted-foreground">{line.name}</div>
       </div>
       <UnscheduledCell lineId={line.id} items={unscheduledCellItems} showEmptyLabel={isFirstRow} />
-      {dateCols.map((d, i) => (
+      {dateCols.map((d) => (
         <PlanningCell
           key={d}
           lineId={line.id}
@@ -283,14 +287,13 @@ function PlanningLineRow({
           items={byCell.get(`${line.id}:${d}`) ?? []}
           isToday={d === todayIso}
           isWeekend={dowMonFirst(d) >= 5}
-          isLastCol={i === dateCols.length - 1}
           dailyCapacity={dailyCapacity}
         />
       ))}
       {/* items-start pt-2: eskiden dikey ortalanan rakam, satırın üstündeki hat kartıyla hizasız
           görünüyordu — üste hizalanıp altına birim etiketi eklenince "Toplam" hücresi diğer hücrelerle
           aynı üst hizadan başlar (Tur 4 bulgusu, P2). */}
-      <div className="flex flex-col items-end justify-start border-b border-border/60 bg-muted/10 px-2 pt-2">
+      <div className="flex flex-col items-end justify-start border-b border-l border-border/60 bg-muted/10 px-2 pt-2">
         {/* Satırda hiç iş emri yoksa (rowWorkOrders boş) birim de yok — çıplak "0" birimli hücrelerin
             (HAT1 "90 ADET") yanında ne anlama geldiği belirsiz kalıyordu (line-cards.tsx/queries.ts
             todayUomCode ile aynı desen, Tur 5 bulgusu, P1). Sıfır toplamda dürüst bir "—". */}
@@ -342,7 +345,6 @@ function PlanningCell({
   items,
   isToday,
   isWeekend,
-  isLastCol,
   dailyCapacity,
 }: {
   lineId: string;
@@ -350,9 +352,6 @@ function PlanningCell({
   items: PlanningWorkOrderRow[];
   isToday: boolean;
   isWeekend: boolean;
-  /** Son tarih sütunu: sağ ayraç çizilmez (Tur 5 bulgusu, P1 — sütunlar arası dikey ayraç yoktu, 84px
-   *  serbest kartlarla günler arası sınır göz gezdirerek okunamıyordu). */
-  isLastCol: boolean;
   dailyCapacity: Decimal | null;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: `${lineId}::${dateIso}` });
@@ -367,10 +366,12 @@ function PlanningCell({
         // h-full (min-h-16 idi): satırlar artık kabın kalan yüksekliğini eşit paylaşıyor (Tur 3
         // bulgusu, P1) — hücre kendi satırını doldurur; taşan içerik hücre içinde kaydırılır.
         // group: boş hücrede hover'da sürükle-bırak hedefi ipucu (Plus ikonu) gösterir — eskiden boş
-        // hücrede hiçbir işaret yoktu (Tur 4 bulgusu, P1). border-r: gün sütunları arasında dikey
-        // ayraç (Tur 5 bulgusu, P1), son sütunda kapalı.
-        'group relative flex h-full flex-col gap-1.5 overflow-y-auto border-r border-b border-border/40 p-1.5 transition-colors',
-        isLastCol && 'border-r-0',
+        // hücrede hiçbir işaret yoktu (Tur 4 bulgusu, P1). Gün sütunları arasındaki dikey ayraç
+        // (eski border-r, Tur 5 bulgusu) kaldırıldı: 3 hat × 9 sütunda her hücrenin kendi dikey
+        // çizgisi taşıması tam ızgara ("çerçeve çorbası") etkisi yaratıyordu (Tur 10 bulgusu, P2) —
+        // Linear/Stripe panolarında olduğu gibi yalnızca yapısal sütunlar arasında (Hat/Planlanmamış/
+        // gün ızgarası/Toplam) dikey ayraç var, gün sütunları arasında yalnızca satır hairline'ı.
+        'group relative flex h-full flex-col gap-1.5 overflow-y-auto border-b border-border/40 p-1.5 transition-colors',
         isWeekend && !isToday && 'bg-muted/25',
         isToday && 'bg-primary/[0.03]',
         isEmpty && !isOver && 'hover:bg-accent/30',

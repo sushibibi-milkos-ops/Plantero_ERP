@@ -74,17 +74,20 @@ export default async function PlanningPage({ searchParams }: { searchParams: Pro
                 <ChevronRight className="size-4" />
               </Link>
             </Button>
-            {/* 7 gün / 14 gün görünüm seçici — ızgara genişliğini kullanıcı bilinçli olarak açar. */}
+            {/* 7 gün / 14 gün görünüm seçici — ızgara genişliğini kullanıcı bilinçli olarak açar.
+                h-10 → h-11: 40px, dokunma hedefi eşiği 44px'in altındaydı — aynı satırdaki ok
+                butonları ve "Bugün" zaten h-11 kullanıyordu, yalnızca bu segment kontrolü dışarıda
+                kalmıştı (Tur 10 bulgusu, P1). Masaüstünde md:h-7 korunur. */}
             <div className="ml-1 flex items-center rounded-md border border-border/70 p-0.5">
               <Link
                 href={`/uretim/planlama?hafta=${startIso}`}
-                className={cn('flex h-10 items-center rounded px-2.5 text-xs font-medium md:h-7', days === 7 ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                className={cn('flex h-11 items-center rounded px-2.5 text-xs font-medium md:h-7', days === 7 ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
               >
                 7 gün
               </Link>
               <Link
                 href={`/uretim/planlama?hafta=${startIso}&gorunum=14`}
-                className={cn('flex h-10 items-center rounded px-2.5 text-xs font-medium md:h-7', days === 14 ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                className={cn('flex h-11 items-center rounded px-2.5 text-xs font-medium md:h-7', days === 14 ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
               >
                 14 gün
               </Link>

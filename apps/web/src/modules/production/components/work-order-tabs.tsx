@@ -5,6 +5,7 @@
 // bu yüzden gösterim amaçlı Decimal hesabı için doğrudan 'decimal.js' kullanılır (planning-board.tsx
 // ile aynı desen).
 import Decimal from 'decimal.js';
+import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable, type ColumnDef } from '@/components/data-table';
 import { EmptyState } from '@/components/empty-state';
@@ -30,33 +31,37 @@ export function WorkOrderTabs({ detail }: { detail: Detail }) {
   // bölünüp "Tüketilen" etiketi satır ortasında sahipsiz kalıyordu (Tur 4 bulgusu, P1). Ortak
   // `DataTable`/`DataTableMobileCards` bileşenini değiştirmek yerine (dondurulmuş ortak dosya —
   // CLAUDE.md kural 2), zaten var olan `renderMobileCard` özelleştirme noktası kullanılıp bu
-  // tabloya özel tek sütunlu bir kart çizilir: her ölçü kendi 24px'lik satırında, etiket solda
-  // soluk, değer sağda `tabular-nums` — 3 satır = 72px kart gövdesi.
+  // tabloya özel bir kart çizilir. Önceki sürüm üç ölçüyü alt alta `dl` satırlarına diziyordu
+  // (p-3 + ad 14px + SKU 11px + hairline + 3×h-6 = 164.5px, hedef 56-72px'in çok üstünde — Tur 10
+  // bulgusu, P1). Üç ölçü artık ad+SKU satırının altında tek sıra, 3 sütunlu bir grid'de: etiket
+  // üstte soluk 11px, değer altta 13px tabular-nums — kart gövdesi tek metrik satırına iner.
   const renderMaterialCard = (row: MaterialRow) => {
     const remaining = new Decimal(row.m.plannedQty).minus(new Decimal(row.m.consumedQty));
     return (
-      <div className="rounded-lg border border-border/70 bg-card p-3">
-        <div className="min-w-0">
-          <div className="truncate text-[14px] font-medium">
-            {row.productName}
-            {row.m.isByproduct ? <span className="ml-1.5 text-[11px] font-normal text-muted-foreground">(yan ürün)</span> : null}
-          </div>
-          <div className="truncate font-mono text-[11px] text-muted-foreground">{row.sku}</div>
+      <div className="rounded-lg border border-border/70 bg-card p-2">
+        {/* ad+SKU tek satırda (eskiden ayrı 2 satır — Tur 10 bulgusu, P1 devamı: 3 sütunlu grid'e
+            geçiş tek başına yeterli olmadı, 164.5px → 110px'e indi ama 56-72px hedefinin üstünde
+            kaldı). Ad ve SKU aynı satıra alınıp p-3 → p-2, `leading-tight` ile satır yükseklikleri
+            sıkılaştırılıp kart 2 kompakt satıra iner (hedef ≤72px). */}
+        <div className="flex items-baseline gap-1.5 leading-tight">
+          <span className="truncate text-[13px] font-medium">{row.productName}</span>
+          <span className="shrink-0 font-mono text-[11px] text-muted-foreground">{row.sku}</span>
+          {row.m.isByproduct ? <span className="shrink-0 text-[11px] text-muted-foreground">(yan ürün)</span> : null}
         </div>
-        <dl className="mt-2 space-y-1.5 border-t border-border/40 pt-2">
-          <div className="flex h-6 items-baseline justify-between gap-2">
-            <dt className="text-xs text-muted-foreground">Planlanan</dt>
-            <dd className="min-w-0"><QtyCell value={row.m.plannedQty} uom={row.uomCode} /></dd>
+        <div className="mt-1 grid grid-cols-3 gap-2 leading-tight">
+          <div>
+            <div className="text-[10px] text-muted-foreground">Planlanan</div>
+            <QtyCell value={row.m.plannedQty} uom={row.uomCode} className="justify-start text-[13px] tabular-nums" />
           </div>
-          <div className="flex h-6 items-baseline justify-between gap-2">
-            <dt className="text-xs text-muted-foreground">Tüketilen</dt>
-            <dd className="min-w-0"><QtyCell value={row.m.consumedQty} uom={row.uomCode} /></dd>
+          <div>
+            <div className="text-[10px] text-muted-foreground">Tüketilen</div>
+            <QtyCell value={row.m.consumedQty} uom={row.uomCode} className="justify-start text-[13px] tabular-nums" />
           </div>
-          <div className="flex h-6 items-baseline justify-between gap-2">
-            <dt className="text-xs text-muted-foreground">Kalan</dt>
-            <dd className="min-w-0"><QtyCell value={remaining.toFixed(4)} uom={row.uomCode} className={remaining.gt(0) ? '' : 'text-success'} /></dd>
+          <div>
+            <div className="text-[10px] text-muted-foreground">Kalan</div>
+            <QtyCell value={remaining.toFixed(4)} uom={row.uomCode} className={cn('justify-start text-[13px] tabular-nums', remaining.gt(0) ? '' : 'text-success')} />
           </div>
-        </dl>
+        </div>
       </div>
     );
   };
