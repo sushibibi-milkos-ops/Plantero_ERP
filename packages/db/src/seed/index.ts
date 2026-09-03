@@ -6,6 +6,7 @@ import { seedMasterdata } from './masterdata.js';
 import { seedAccounting } from './accounting.js';
 import { seedFinance } from './finance.js';
 import { seedStock } from './stock.js';
+import { seedProduction } from './production.js';
 
 /**
  * Seed sırası — docs/ARCHITECTURE.md §11:
@@ -23,6 +24,7 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   { name: 'accounting', run: seedAccounting },
   { name: 'finance', run: seedFinance },
   { name: 'stock', run: seedStock },
+  { name: 'production', run: seedProduction },
 ];
 
 async function main() {

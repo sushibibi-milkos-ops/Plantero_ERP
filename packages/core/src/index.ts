@@ -20,3 +20,7 @@ export * from './masterdata/products.js';
 export * from './masterdata/partners.js';
 export * from './masterdata/boms.js';
 export * from './masterdata/locations.js';
+export * from './production/workOrders.js';
+export * from './production/consume.js';
+export * from './production/finish.js';
+export * from './production/yield.js';

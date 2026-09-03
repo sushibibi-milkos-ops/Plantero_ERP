@@ -3,7 +3,7 @@ import { LogOut, LayoutDashboard } from 'lucide-react';
 import { requirePermission } from '@/lib/auth';
 import { Logotype } from '@/components/logotype';
 import { OperatorClock } from '@/components/operator-clock';
-import { logout } from '@/modules/auth/actions';
+import { operatorLogout } from '@/modules/production/actions';
 
 /**
  * Operatör düzeni: tam ekran tablet. Kenar çubuğu yok; büyük dokunma hedefleri,
@@ -26,7 +26,7 @@ export default async function OperatorLayout({ children }: { children: React.Rea
           >
             <LayoutDashboard className="size-5" />
           </Link>
-          <form action={logout}>
+          <form action={operatorLogout}>
             <button
               type="submit"
               className="grid h-11 w-11 place-items-center rounded-lg border text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
