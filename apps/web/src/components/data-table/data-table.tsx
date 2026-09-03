@@ -49,6 +49,8 @@ export type DataTableProps<T> = {
   virtualHeight?: number;
   initialSorting?: SortingState;
   initialColumnVisibility?: VisibilityState;
+  /** Sayfa URL'sinden gelen ön filtre (ör. `/uretim/is-emirleri?hat=HAT1` → `[{ id: 'lineCode', value: ['HAT1'] }]`) */
+  initialColumnFilters?: ColumnFiltersState;
   onRowClick?: (row: T) => void;
   /** Satır bağlantısı (router.push) — onRowClick'ten önce gelir */
   rowHref?: (row: T) => string;
@@ -91,6 +93,7 @@ export function DataTable<T>({
   virtualHeight = 560,
   initialSorting = [],
   initialColumnVisibility = {},
+  initialColumnFilters = [],
   onRowClick,
   rowHref,
   rowActions,
@@ -104,8 +107,17 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>(initialSorting);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(initialColumnVisibility);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(initialColumnFilters);
+  // `meta.defaultHidden` sütunları (nadiren bakılan, dar ekranda taşan) başlangıçta kapalı — sütun
+  // seçiciden açılabilir. Çağıranın açık `initialColumnVisibility`'si her zaman üstün gelir.
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+    const defaults: VisibilityState = {};
+    for (const c of columns) {
+      const id = c.id ?? ('accessorKey' in c ? String(c.accessorKey) : undefined);
+      if (id && c.meta?.defaultHidden) defaults[id] = false;
+    }
+    return { ...defaults, ...initialColumnVisibility };
+  });
   const [globalFilter, setGlobalFilter] = useState('');
 
   const filterColumnIds = useMemo(() => new Set(filters.map((f) => f.columnId)), [filters]);
@@ -263,10 +275,12 @@ export function DataTable<T>({
         total={table.getFilteredRowModel().rows.length}
       />
 
-      {/* Masaüstü tablo — contain-paint: kart içi taşan içeriğin ICB'ye (documentElement) sızmasını
-          engeller (bir sütunun min-content genişliği kart genişliğini aşsa bile sayfa yatay kaymaz;
-          kaydırma yalnızca aşağıdaki overflow-x-auto kapsayıcısında olur). */}
-      <div className={cn('contain-paint overflow-hidden rounded-lg border border-border/70 bg-card', !mobileTable && 'hidden md:block')}>
+      {/* Masaüstü tablo — Linear tabloyu kutuya koymaz: sayfa zemininde yalnızca satır altı hairline
+          kullanılır (başlık `border-b`, satırlar `border-border/50`), çevresinde gri kutu yok.
+          contain-paint: kart içi taşan içeriğin ICB'ye (documentElement) sızmasını engeller (bir
+          sütunun min-content genişliği sayfa genişliğini aşsa bile sayfa yatay kaymaz; kaydırma
+          yalnızca aşağıdaki overflow-x-auto kapsayıcısında olur). */}
+      <div className={cn('contain-paint', !mobileTable && 'hidden md:block')}>
         {rows.length === 0 ? (
           <div>
             <table className="w-full">

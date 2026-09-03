@@ -1,10 +1,13 @@
 'use client';
 
-import { useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { DndContext, DragOverlay, useDraggable, useDroppable, type DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { GripVertical } from 'lucide-react';
+// Not: '@plantero/core' barrel'ı sunucu-özel kod (node:crypto) içerir — istemci bileşeninde
+// yalnızca gösterim amaçlı hesaplama için doğrudan 'decimal.js' kullanılır (bkz. operator-work-order.tsx).
+import Decimal from 'decimal.js';
 import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { cn } from '@/lib/utils';
@@ -20,17 +23,39 @@ function isoAddDays(iso: string, n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-function fmtDay(iso: string): string {
-  const d = new Date(`${iso}T00:00:00Z`);
-  const dow = DAY_LABELS[(d.getUTCDay() + 6) % 7];
-  return `${dow} ${String(d.getUTCDate()).padStart(2, '0')}.${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+function dowMonFirst(iso: string): number {
+  return (new Date(`${iso}T00:00:00Z`).getUTCDay() + 6) % 7; // 0=Pzt … 6=Paz
 }
 
-export function PlanningBoard({ lines, workOrders, startIso, days = 14 }: { lines: LineOption[]; workOrders: PlanningWorkOrderRow[]; startIso: string; days?: number }) {
+function fmtDay(iso: string): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  return `${DAY_LABELS[dowMonFirst(iso)]} ${String(d.getUTCDate()).padStart(2, '0')}.${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+}
+
+function dailyCapacityOf(line: LineOption): Decimal | null {
+  if (!line.capacityPerHour) return null;
+  return new Decimal(line.capacityPerHour).mul(line.shiftMinutes).div(60);
+}
+
+export function PlanningBoard({
+  lines,
+  workOrders,
+  startIso,
+  todayIso,
+  days = 14,
+}: {
+  lines: LineOption[];
+  workOrders: PlanningWorkOrderRow[];
+  startIso: string;
+  /** Europe/Istanbul takvim günü (`YYYY-MM-DD`) — bugünün sütununu işaretlemek ve mount'ta ona kaydırmak için */
+  todayIso: string;
+  days?: number;
+}) {
   const [items, setItems] = useState(workOrders);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+  const dayHeaderRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const dateCols = useMemo(() => Array.from({ length: days }, (_, i) => isoAddDays(startIso, i)), [startIso, days]);
   const byCell = useMemo(() => {
@@ -42,6 +67,12 @@ export function PlanningBoard({ lines, workOrders, startIso, days = 14 }: { line
     return m;
   }, [items]);
   const active = items.find((w) => w.id === activeId) ?? null;
+
+  // Bugünün sütununu görünüre kaydır — 390px mobilde (desktop grid) bugün 4. sütunda başlayıp
+  // kenarda kalabiliyordu, iki iş emri de kaydırma dışında kalıyordu.
+  useEffect(() => {
+    dayHeaderRefs.current[todayIso]?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, [todayIso, startIso]);
 
   function handleDragEnd(e: DragEndEvent) {
     setActiveId(null);
@@ -63,27 +94,91 @@ export function PlanningBoard({ lines, workOrders, startIso, days = 14 }: { line
     });
   }
 
+  const gridTemplate = `110px repeat(${dateCols.length}, minmax(84px, 1fr)) 92px`;
+
   return (
     <DndContext sensors={sensors} onDragStart={(e) => setActiveId(e.active.id as string)} onDragEnd={handleDragEnd} onDragCancel={() => setActiveId(null)}>
-      <div className="scrollbar-thin overflow-x-auto rounded-lg border border-border/70 bg-card">
-        <div className="grid min-w-[1400px] grid-cols-[110px_repeat(14,1fr)]">
+      {/* Masaüstü ızgara. scroll-fade-x: kaydırılabilir olduğuna dair kenar ipucu. */}
+      <div className="scroll-fade-x scrollbar-thin hidden overflow-x-auto rounded-lg border border-border/70 bg-card md:block">
+        <div className="grid" style={{ gridTemplateColumns: gridTemplate }}>
           <div className="sticky left-0 z-10 border-r border-b border-border/60 bg-muted/40 p-2 text-xs font-medium text-muted-foreground">Hat</div>
-          {dateCols.map((d) => (
-            <div key={d} className="border-b border-l border-border/60 bg-muted/40 p-2 text-center text-[11px] font-medium whitespace-nowrap text-muted-foreground">
-              {fmtDay(d)}
-            </div>
-          ))}
+          {dateCols.map((d) => {
+            const isToday = d === todayIso;
+            const isWeekend = dowMonFirst(d) >= 5;
+            return (
+              <div
+                key={d}
+                ref={(el) => {
+                  dayHeaderRefs.current[d] = el;
+                }}
+                className={cn(
+                  'border-b border-border/60 p-2 text-center text-[11px] font-medium whitespace-nowrap text-muted-foreground',
+                  isWeekend && !isToday && 'bg-muted/25',
+                  isToday && 'border-t-2 border-t-primary bg-primary/[0.04] font-semibold text-foreground',
+                )}
+              >
+                {fmtDay(d)}
+              </div>
+            );
+          })}
+          <div className="border-b border-border/60 bg-muted/40 p-2 text-right text-[11px] font-medium text-muted-foreground">Toplam</div>
+
           {lines.map((line) => (
-            <PlanningLineRow key={line.id} line={line} dateCols={dateCols} byCell={byCell} />
+            <PlanningLineRow key={line.id} line={line} dateCols={dateCols} byCell={byCell} todayIso={todayIso} />
           ))}
         </div>
       </div>
+
+      {/* Mobil: ızgara yerine bugünden başlayan gün listesi (yatay kaydırmayı tamamen ortadan
+          kaldırır — 390px'te 110px + 14×92px'lik bir ızgara asla sığmaz). Sürükle-bırak yalnızca
+          masaüstü ızgarada; burada kartlar salt okunur, iş emri detayına bağlanır. */}
+      <div className="space-y-3 md:hidden">
+        {dateCols.map((d) => {
+          const dayItems = lines.flatMap((line) => (byCell.get(`${line.id}:${d}`) ?? []).map((wo) => ({ wo, line })));
+          const isToday = d === todayIso;
+          return (
+            <div key={d} className={cn('rounded-lg border border-border/60 p-2.5', isToday && 'border-primary/40 bg-primary/[0.04]')}>
+              <div className="mb-2 flex items-center gap-2 px-0.5">
+                <span className={cn('text-[12px] font-medium text-muted-foreground', isToday && 'text-primary')}>{fmtDay(d)}</span>
+                {isToday ? <span className="rounded-full bg-primary/10 px-1.5 py-px text-[9px] font-medium text-primary">Bugün</span> : null}
+                <span className="ml-auto font-mono text-[10px] text-muted-foreground/60">{dayItems.length ? `${dayItems.length} iş emri` : ''}</span>
+              </div>
+              {dayItems.length === 0 ? (
+                <div className="px-0.5 py-1.5 text-xs text-muted-foreground/60">Planlanan yok</div>
+              ) : (
+                <div className="space-y-1.5">
+                  {dayItems.map(({ wo, line }) => (
+                    <MobileWoCard key={wo.id} wo={wo} lineCode={line.code} />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
       <DragOverlay>{active ? <WoCard wo={active} dragging /> : null}</DragOverlay>
     </DndContext>
   );
 }
 
-function PlanningLineRow({ line, dateCols, byCell }: { line: LineOption; dateCols: string[]; byCell: Map<string, PlanningWorkOrderRow[]> }) {
+function PlanningLineRow({
+  line,
+  dateCols,
+  byCell,
+  todayIso,
+}: {
+  line: LineOption;
+  dateCols: string[];
+  byCell: Map<string, PlanningWorkOrderRow[]>;
+  todayIso: string;
+}) {
+  const dailyCapacity = dailyCapacityOf(line);
+  const rowTotal = dateCols.reduce((acc, d) => {
+    const cellQty = (byCell.get(`${line.id}:${d}`) ?? []).reduce((a, w) => a.plus(new Decimal(w.plannedQty)), new Decimal(0));
+    return acc.plus(cellQty);
+  }, new Decimal(0));
+
   return (
     <>
       <div className="sticky left-0 z-10 border-r border-b border-border/60 bg-card p-2">
@@ -91,19 +186,48 @@ function PlanningLineRow({ line, dateCols, byCell }: { line: LineOption; dateCol
         <div className="truncate text-[11px] text-muted-foreground">{line.name}</div>
       </div>
       {dateCols.map((d) => (
-        <PlanningCell key={d} lineId={line.id} dateIso={d} items={byCell.get(`${line.id}:${d}`) ?? []} />
+        <PlanningCell key={d} lineId={line.id} dateIso={d} items={byCell.get(`${line.id}:${d}`) ?? []} isToday={d === todayIso} isWeekend={dowMonFirst(d) >= 5} dailyCapacity={dailyCapacity} />
       ))}
+      <div className="flex items-center justify-end border-b border-border/60 bg-muted/10 px-2">
+        <QtyCell value={rowTotal.toFixed(4)} className="text-xs font-medium" />
+      </div>
     </>
   );
 }
 
-function PlanningCell({ lineId, dateIso, items }: { lineId: string; dateIso: string; items: PlanningWorkOrderRow[] }) {
+function PlanningCell({
+  lineId,
+  dateIso,
+  items,
+  isToday,
+  isWeekend,
+  dailyCapacity,
+}: {
+  lineId: string;
+  dateIso: string;
+  items: PlanningWorkOrderRow[];
+  isToday: boolean;
+  isWeekend: boolean;
+  dailyCapacity: Decimal | null;
+}) {
   const { setNodeRef, isOver } = useDroppable({ id: `${lineId}::${dateIso}` });
+  const cellQty = items.reduce((a, w) => a.plus(new Decimal(w.plannedQty)), new Decimal(0));
+  const fillPct = dailyCapacity && dailyCapacity.gt(0) && items.length > 0 ? Math.round(cellQty.div(dailyCapacity).mul(100).toNumber()) : null;
+
   return (
-    <div ref={setNodeRef} className={cn('min-h-24 space-y-1.5 border-b border-l border-border/60 p-1.5 transition-colors', isOver && 'bg-primary/5')}>
+    <div
+      ref={setNodeRef}
+      className={cn(
+        'relative min-h-16 space-y-1.5 border-b border-border/40 p-1.5 pb-4 transition-colors',
+        isWeekend && !isToday && 'bg-muted/25',
+        isToday && 'bg-primary/[0.03]',
+        isOver && 'bg-primary/8',
+      )}
+    >
       {items.map((wo) => (
         <WoCard key={wo.id} wo={wo} />
       ))}
+      {fillPct !== null ? <span className="pointer-events-none absolute right-1.5 bottom-1 font-mono text-[9px] text-muted-foreground/50">%{fillPct}</span> : null}
     </div>
   );
 }
@@ -135,5 +259,20 @@ function WoCard({ wo, dragging }: { wo: PlanningWorkOrderRow; dragging?: boolean
         <StatusBadge status={wo.status} kind="work_order" dot={false} className="h-4 px-1 text-[9px]" />
       </div>
     </div>
+  );
+}
+
+/** Mobil gün listesi kartı — sürüklenemez (masaüstü ızgaranın aksine), hat rozeti taşır. */
+function MobileWoCard({ wo, lineCode }: { wo: PlanningWorkOrderRow; lineCode: string }) {
+  return (
+    <Link href={`/uretim/is-emirleri/${wo.id}`} data-pressable className="flex items-center gap-2 rounded-md border border-border/60 bg-card px-2.5 py-2 text-[13px] active:bg-accent/50">
+      <span className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{lineCode}</span>
+      <div className="min-w-0 flex-1">
+        <div className="truncate font-medium">{wo.productName}</div>
+        <div className="font-mono text-[10px] text-muted-foreground">{wo.docNo}</div>
+      </div>
+      <QtyCell value={wo.plannedQty} className="shrink-0 text-xs" />
+      <StatusBadge status={wo.status} kind="work_order" dot={false} className="h-4 shrink-0 px-1 text-[9px]" />
+    </Link>
   );
 }

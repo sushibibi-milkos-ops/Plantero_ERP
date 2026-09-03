@@ -17,15 +17,20 @@ export function WorkOrderTabs({ detail }: { detail: Detail }) {
 
   return (
     <Tabs defaultValue="materials" className="gap-4">
-      <TabsList className="scrollbar-thin max-w-full overflow-x-auto">
-        <TabsTrigger value="materials">Malzemeler</TabsTrigger>
-        <TabsTrigger value="consumptions">Tüketimler</TabsTrigger>
-        <TabsTrigger value="outputs">Çıktılar</TabsTrigger>
-        <TabsTrigger value="scraps">Fire</TabsTrigger>
-        <TabsTrigger value="events">Olaylar</TabsTrigger>
-        <TabsTrigger value="cost">Maliyet</TabsTrigger>
-        <TabsTrigger value="chain">Zincir</TabsTrigger>
-      </TabsList>
+      {/* -mx-4 px-4: sarmalayıcı sayfa kenarına taşar ki kaydırma tüm genişlikte olsun; aktif sekme
+          hiçbir zaman programatik olarak kaydırılmıyor (scrollIntoView yok) — şerit her zaman soldan
+          "Malzemeler" ile başlar. Kenar maskesi kaydırılabilir olduğuna dair görsel ipucu verir. */}
+      <div className="-mx-4 overflow-x-auto px-4 [mask-image:linear-gradient(to_right,transparent,black_16px,black_calc(100%-16px),transparent)] [scroll-padding-inline:1rem] sm:mx-0 sm:px-0 sm:[mask-image:none]">
+        <TabsList variant="line" className="w-max min-w-full justify-start">
+          <TabsTrigger value="materials">Malzemeler</TabsTrigger>
+          <TabsTrigger value="consumptions">Tüketimler</TabsTrigger>
+          <TabsTrigger value="outputs">Çıktılar</TabsTrigger>
+          <TabsTrigger value="scraps">Fire</TabsTrigger>
+          <TabsTrigger value="events">Olaylar</TabsTrigger>
+          <TabsTrigger value="cost">Maliyet</TabsTrigger>
+          <TabsTrigger value="chain">Zincir</TabsTrigger>
+        </TabsList>
+      </div>
 
       <TabsContent value="materials">
         <div className="overflow-x-auto rounded-lg border border-border/70 bg-card">

@@ -77,9 +77,13 @@ export function OperatorWorkOrder({ detail, lineCode }: { detail: Detail; lineCo
         </div>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-3">
+      {/* Aksiyon hiyerarşisi: geri alınamaz "Bitir" artık en yüksek görsel ağırlığı taşımıyor —
+          Duraklat/Devam et, Fire gir ve Bitir üç eşit hücrede (grid-cols-3, hepsi h-20); Bitir
+          `tone="accent"` ile yalnızca çerçeve/metin rengiyle vurgulanır, dolu değil (onay diyaloğu
+          zaten var, tekrar "birincil buton" ağırlığına gerek yok). */}
+      <div className="grid grid-cols-3 gap-3">
         {wo.status === 'released' ? (
-          <ActionTile label="Başlat" icon={Play} onClick={() => run(() => startWorkOrderAction({ id: wo.id }), 'İş emri başlatıldı')} disabled={pending} className="col-span-2" primary />
+          <ActionTile label="Başlat" icon={Play} onClick={() => run(() => startWorkOrderAction({ id: wo.id }), 'İş emri başlatıldı')} disabled={pending} className="col-span-3" primary />
         ) : null}
         {wo.status === 'in_progress' ? (
           <ActionTile label="Duraklat" icon={Pause} onClick={() => setPauseOpen(true)} disabled={pending} />
@@ -90,7 +94,7 @@ export function OperatorWorkOrder({ detail, lineCode }: { detail: Detail; lineCo
         {['in_progress', 'paused'].includes(wo.status) ? (
           <>
             <ActionTile label="Fire gir" icon={Flame} onClick={() => setScrapOpen(true)} disabled={pending} tone="warning" />
-            <ActionTile label="Bitir" icon={CheckCircle2} onClick={() => setFinishOpen(true)} disabled={pending} primary className={wo.status === 'paused' ? '' : 'col-span-2'} />
+            <ActionTile label="Bitir" icon={CheckCircle2} onClick={() => setFinishOpen(true)} disabled={pending} tone="accent" />
           </>
         ) : null}
       </div>
@@ -165,7 +169,7 @@ function ElapsedTile({ startedAt, status }: { startedAt: Date | null; status: st
   );
 }
 
-function ActionTile({ label, icon: Icon, onClick, disabled, primary, tone, className }: { label: string; icon: React.ComponentType<{ className?: string }>; onClick: () => void; disabled?: boolean; primary?: boolean; tone?: 'warning'; className?: string }) {
+function ActionTile({ label, icon: Icon, onClick, disabled, primary, tone, className }: { label: string; icon: React.ComponentType<{ className?: string }>; onClick: () => void; disabled?: boolean; primary?: boolean; tone?: 'warning' | 'accent'; className?: string }) {
   return (
     <button
       type="button"
@@ -175,6 +179,9 @@ function ActionTile({ label, icon: Icon, onClick, disabled, primary, tone, class
         'flex h-20 flex-col items-center justify-center gap-1.5 rounded-xl border text-sm font-semibold transition-transform active:scale-[0.97] disabled:opacity-50',
         primary ? 'border-transparent bg-primary text-primary-foreground shadow-[0_1px_2px_rgb(0_0_0/0.06)]' : 'border-border/70 bg-card',
         tone === 'warning' && !primary && 'border-warning/40 text-[oklch(0.5_0.14_70)] dark:text-warning',
+        // "Bitir": geri alınamaz ama onay diyaloğu zaten koruyor — dolu birincil yerine yalnızca
+        // çerçeve/metin vurgusu (Duraklat/Fire gir ile aynı görsel ağırlıkta, ayırt edilebilir).
+        tone === 'accent' && !primary && 'border-primary/50 text-primary',
         className,
       )}
     >
@@ -202,7 +209,7 @@ function MaterialsChecklist({ materials, uomFallback }: { materials: Detail['mat
                 <span className={cn('truncate', done && 'text-success')}>{m.productName}</span>
                 <span className="num shrink-0 text-xs text-muted-foreground">{consumed.toFixed(2)} / {planned.toFixed(2)} {m.uomCode ?? uomFallback}</span>
               </div>
-              <Progress value={pct} className={cn('h-1.5', done && '[&>div]:bg-success')} />
+              <Progress value={pct} className={cn('h-1.5', done && '[&>div]:bg-success', pct === 0 && 'opacity-60')} />
             </div>
           );
         })}

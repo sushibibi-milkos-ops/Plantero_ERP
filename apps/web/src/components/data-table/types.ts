@@ -10,14 +10,16 @@ declare module '@tanstack/react-table' {
     /** Hücre sınıfı */
     className?: string;
     headerClassName?: string;
-    /** Mobil kart görünümündeki rol: başlık, alt başlık, satır (varsayılan) ya da gizli */
-    mobile?: 'title' | 'subtitle' | 'row' | 'hidden' | 'badge';
+    /** Mobil kart görünümündeki rol: başlık, alt başlık, satır (varsayılan), etiketsiz tek satır meta ya da gizli */
+    mobile?: 'title' | 'subtitle' | 'row' | 'hidden' | 'badge' | 'meta';
     /** Mobil kartta etiket (başlık string değilse) */
     label?: string;
     /** Sabit genişlik (px ya da CSS) */
     width?: number | string;
     /** Sıralanamaz */
     noSort?: boolean;
+    /** Masaüstünde başlangıçta gizli (sütun seçiciden açılabilir) — dar ekranlarda taşan az kullanılan sütunlar için */
+    defaultHidden?: boolean;
   }
 }
 

@@ -41,7 +41,10 @@ export function DataTableMobileCards<T>({
         const title = cells.find((c) => c.column.columnDef.meta?.mobile === 'title') ?? cells[0];
         const subtitle = cells.find((c) => c.column.columnDef.meta?.mobile === 'subtitle');
         const badges = cells.filter((c) => c.column.columnDef.meta?.mobile === 'badge');
-        const rest = cells.filter((c) => c !== title && c !== subtitle && !badges.includes(c) && c.column.columnDef.meta?.mobile !== 'hidden');
+        // 'meta': masaüstünde `hidden` olan ama kartta bağlam için gerekli alanlar (hat, tarih…) —
+        // etiketsiz, tek satır, soluk/mono ("HAT1 · 04.09.2026").
+        const metaCells = cells.filter((c) => c.column.columnDef.meta?.mobile === 'meta');
+        const rest = cells.filter((c) => c !== title && c !== subtitle && !badges.includes(c) && !metaCells.includes(c) && c.column.columnDef.meta?.mobile !== 'hidden');
         const actions = rowActions?.(row.original) ?? [];
         return (
           <li
@@ -57,6 +60,16 @@ export function DataTableMobileCards<T>({
                 {title ? <div className="truncate text-[14px] font-medium">{flexRender(title.column.columnDef.cell, title.getContext())}</div> : null}
                 {subtitle ? (
                   <div className="truncate text-xs text-muted-foreground">{flexRender(subtitle.column.columnDef.cell, subtitle.getContext())}</div>
+                ) : null}
+                {metaCells.length ? (
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 truncate font-mono text-[11px] text-muted-foreground/70">
+                    {metaCells.map((c, i) => (
+                      <span key={c.id} className="inline-flex items-center gap-1.5">
+                        {i > 0 ? <span aria-hidden>·</span> : null}
+                        {flexRender(c.column.columnDef.cell, c.getContext())}
+                      </span>
+                    ))}
+                  </div>
                 ) : null}
               </div>
               {badges.map((b) => (

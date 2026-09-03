@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import type { FieldValues } from 'react-hook-form';
-import { Check, ChevronsUpDown, Loader2, X } from 'lucide-react';
+import { Check, ChevronDown, Loader2, X } from 'lucide-react';
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
@@ -93,7 +93,10 @@ export function Combobox({
                 }}
               />
             ) : null}
-            <ChevronsUpDown className="size-3.5 text-muted-foreground" />
+            {/* Select ile aynı ikon (ChevronDown) — bidirectional ok yalnızca combobox'a özgü ayrı
+                bir seçim affordance'ı olduğu izlenimi veriyordu, iki alan da tek tıklamalık açılır
+                seçim. */}
+            <ChevronDown className="size-3.5 text-muted-foreground" />
           </span>
         </button>
       </PopoverTrigger>

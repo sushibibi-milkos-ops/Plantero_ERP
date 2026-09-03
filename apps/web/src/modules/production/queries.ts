@@ -1,7 +1,8 @@
 import 'server-only';
-import { and, asc, desc, eq, inArray, gte, lte, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, gte, lte, isNull, isNotNull } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
-import { D, toDb, sum, getChain, computeLineOeeForDay } from '@plantero/core';
+import { D, round2, toDb, sum, getChain, computeLineOeeForDay } from '@plantero/core';
+import { businessDate } from '@plantero/core/dates';
 
 const {
   workOrders, workOrderMaterials, workOrderConsumptions, workOrderOutputs, workOrderScraps, workOrderEvents,
@@ -72,7 +73,21 @@ export async function listWorkOrders(): Promise<WorkOrderRow[]> {
   }));
 }
 
-export type WorkOrderKpis = { openCount: number; inProgressCount: number; plannedValue: string; producedValueToday: string; avgYieldPct: string };
+export type WorkOrderKpis = {
+  openCount: number; openCountDelta: number | null;
+  inProgressCount: number; inProgressCountDelta: number | null;
+  plannedValue: string; plannedValueDelta: number | null;
+  producedValueToday: string;
+  avgYieldPct: string; avgYieldPctDelta: number | null;
+};
+
+/** Yüzde değişim (delta rozeti için) — pay/payda `sum`den gelen Decimal olabileceğinden `D()` ile sarılır. */
+function pctChange(curr: unknown, prev: unknown): number | null {
+  const c = D(curr as never);
+  const p = D(prev as never);
+  if (p.eq(0)) return null;
+  return round2(c.minus(p).div(p).mul(100)).toNumber();
+}
 
 export async function getWorkOrderKpis(): Promise<WorkOrderKpis> {
   const rows = await db.select().from(workOrders);
@@ -82,12 +97,34 @@ export async function getWorkOrderKpis(): Promise<WorkOrderKpis> {
   const finishedToday = rows.filter((r) => r.finishedAt && r.finishedAt.toISOString().slice(0, 10) === today);
   const withYield = rows.filter((r) => r.yieldPct !== null && D(r.yieldPct).gt(0));
   const avgYield = withYield.length ? sum(withYield.map((r) => r.yieldPct)).div(withYield.length) : D(0);
+
+  // "Geçen döneme göre" delta'lar: kalıcı bir KPI geçmişi tablosu yok (şema dondurulmuş — bkz. rapor,
+  // şema talepleri). Mevcut zaman damgalarından (createdAt/startedAt/finishedAt/closedAt) geriye dönük
+  // yaklaşık yeniden inşa yapılır; iptal anı ayrı sütunda tutulmadığından şu an `cancelled` olan iş
+  // emirleri geçmişte hiç "açık" sayılmaz (muhafazakâr yaklaşım) — kesin muhasebe değil, yönelim rozeti.
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const openAsOfWeekAgo = rows.filter((r) => r.status !== 'cancelled' && r.createdAt <= weekAgo && (!r.closedAt || r.closedAt > weekAgo));
+  const inProgressAsOfWeekAgo = rows.filter((r) => ['in_progress', 'paused'].includes(r.status) && r.startedAt && r.startedAt <= weekAgo && (!r.finishedAt || r.finishedAt > weekAgo));
+
+  // Verim: gerçek dönem karşılaştırması (son 30 gün bitenler vs önceki 30 gün) — finishedAt zaten
+  // güvenilir bir zaman damgası olduğundan yaklaşım gerekmez.
+  const periodStart = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const prevPeriodStart = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+  const finishedThisPeriod = rows.filter((r) => r.finishedAt && r.finishedAt >= periodStart && r.yieldPct !== null && D(r.yieldPct).gt(0));
+  const finishedPrevPeriod = rows.filter((r) => r.finishedAt && r.finishedAt >= prevPeriodStart && r.finishedAt < periodStart && r.yieldPct !== null && D(r.yieldPct).gt(0));
+  const avgYieldThisPeriod = finishedThisPeriod.length ? sum(finishedThisPeriod.map((r) => r.yieldPct)).div(finishedThisPeriod.length) : null;
+  const avgYieldPrevPeriod = finishedPrevPeriod.length ? sum(finishedPrevPeriod.map((r) => r.yieldPct)).div(finishedPrevPeriod.length) : null;
+
   return {
     openCount: open.length,
+    openCountDelta: pctChange(open.length, openAsOfWeekAgo.length),
     inProgressCount: inProgress.length,
+    inProgressCountDelta: pctChange(inProgress.length, inProgressAsOfWeekAgo.length),
     plannedValue: toDb(sum(open.map((r) => r.totalCost))),
+    plannedValueDelta: pctChange(sum(open.map((r) => r.totalCost)), sum(openAsOfWeekAgo.map((r) => r.totalCost))),
     producedValueToday: toDb(sum(finishedToday.map((r) => r.totalCost))),
     avgYieldPct: toDb(avgYield),
+    avgYieldPctDelta: avgYieldThisPeriod !== null && avgYieldPrevPeriod !== null ? pctChange(avgYieldThisPeriod, avgYieldPrevPeriod) : null,
   };
 }
 
@@ -162,7 +199,10 @@ export async function getWorkOrderDetail(id: string) {
 export type LineCardRow = {
   id: string; code: string; name: string; capacityPerHour: string | null; shiftMinutes: number;
   activeWorkOrder: { id: string; docNo: string; productName: string; status: string; producedQty: string; plannedQty: string } | null;
-  todayProducedQty: string; oee: Awaited<ReturnType<typeof computeLineOeeForDay>>;
+  todayProducedQty: string;
+  /** Bugün biten iş emirlerinin ortak birimi — hepsi aynıysa dolu, karışıksa null (toplam miktar tek birime indirgenemez) */
+  todayUomCode: string | null;
+  oee: Awaited<ReturnType<typeof computeLineOeeForDay>>;
   lastDowntimeReason: string | null;
 };
 
@@ -180,10 +220,19 @@ export async function listLineCards(): Promise<LineCardRow[]> {
       .limit(1);
 
     const oee = await computeLineOeeForDay(db, line.id, today);
+
+    const finishedRows = await db
+      .select({ finishedAt: workOrders.finishedAt, uomCode: uoms.code })
+      .from(workOrders)
+      .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
+      .where(and(eq(workOrders.lineId, line.id), isNotNull(workOrders.finishedAt)));
+    const todayUomCodes = new Set(finishedRows.filter((r) => businessDate(r.finishedAt!) === today).map((r) => r.uomCode));
+
     out.push({
       id: line.id, code: line.code, name: line.name, capacityPerHour: line.capacityPerHour, shiftMinutes: line.shiftMinutes,
       activeWorkOrder: active ? { id: active.wo.id, docNo: active.wo.docNo, productName: active.productName, status: active.wo.status, producedQty: active.wo.producedQty, plannedQty: active.wo.plannedQty } : null,
       todayProducedQty: toDb(oee.actualOutput),
+      todayUomCode: todayUomCodes.size === 1 ? Array.from(todayUomCodes)[0]! : null,
       oee,
       lastDowntimeReason: null,
     });
@@ -250,8 +299,8 @@ export async function getActiveWorkOrderForLine(lineId: string): Promise<Operato
   return getWorkOrderDetail(rows[0]!.id);
 }
 
-export type LineOption = { id: string; code: string; name: string };
+export type LineOption = { id: string; code: string; name: string; capacityPerHour: string | null; shiftMinutes: number };
 export async function listLineOptions(): Promise<LineOption[]> {
   const rows = await listProductionLines();
-  return rows.map((r) => ({ id: r.id, code: r.code, name: r.name }));
+  return rows.map((r) => ({ id: r.id, code: r.code, name: r.name, capacityPerHour: r.capacityPerHour, shiftMinutes: r.shiftMinutes }));
 }

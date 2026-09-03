@@ -37,7 +37,10 @@ export function DataTableColumnHeader<TData, TValue>({
       aria-sort={sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : 'none'}
     >
       <span className="whitespace-nowrap">{title}</span>
-      <Icon className={cn('size-3 shrink-0', sorted ? 'text-primary' : 'text-muted-foreground/50 group-hover/th:text-muted-foreground')} />
+      {/* Sırasız durumdaki ChevronsUpDown yalnızca hover/focus'ta belirir — kalıcı süs ikonu 11 sütun
+          başlığında birikince kırpılmaya yol açıyordu (16px geri kazanılır). Sıralı oktan (`sorted`)
+          her zaman görünür kalır. */}
+      <Icon className={cn('size-3 shrink-0', sorted ? 'text-primary' : 'text-muted-foreground/50 opacity-0 group-hover/th:opacity-100 group-focus-visible/th:opacity-100')} />
     </button>
   );
 }

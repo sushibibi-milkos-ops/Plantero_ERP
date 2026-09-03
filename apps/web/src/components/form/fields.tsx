@@ -26,7 +26,9 @@ export function FieldLabel({ children, required }: { children: React.ReactNode; 
   return (
     <FormLabel className="text-[13px]">
       {children}
-      {required ? <span className="ml-0.5 text-destructive">*</span> : null}
+      {/* text-destructive değil: kırmızı bu bağlamda hata anlamı taşımıyor (zorunlu alan ≠ hata) —
+          renk enflasyonundan kaçınma, aynı sayfada gerçek kırmızı yalnızca doğrulama hatasına ayrılır. */}
+      {required ? <span className="ml-0.5 text-muted-foreground">*</span> : null}
     </FormLabel>
   );
 }

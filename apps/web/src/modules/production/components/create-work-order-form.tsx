@@ -97,7 +97,9 @@ export function CreateWorkOrderForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      {/* pb-28: mobilde sticky aksiyon çubuğu (FormActions) son kartın altına gelince içeriği
+          kesmesin diye alt boşluk rezerve edilir. */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-28 md:pb-0">
         <div className="rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">Ürün ve miktar</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -113,14 +115,19 @@ export function CreateWorkOrderForm({
           </div>
         </div>
 
+        {/* Ürün+miktar girilmeden bu kart ~200px boş rezervasyona düşüyordu (sayfanın yarısı hiçbir
+            şey göstermeyen bir kutu) — o duruma özel tek satırlık, küçük ipucuna indirilir. */}
+        {!bomId || !plannedQty ? (
+          <div className="rounded-xl border border-dashed border-border/70 px-4 py-3 text-[13px] text-muted-foreground">
+            Ürün ve miktar girin — reçete malzemeleri burada hesaplanacak.
+          </div>
+        ) : (
         <div className="rounded-xl border border-border/70 bg-card p-4">
           <div className="mb-3 flex items-center justify-between gap-2">
             <h2 className="text-sm font-medium text-muted-foreground">Malzeme önizleme (reçete)</h2>
             {previewPending ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
           </div>
-          {!bomId || !plannedQty ? (
-            <EmptyState compact title="Önizleme için ürün ve miktar girin" />
-          ) : !preview ? (
+          {!preview ? (
             <div className="py-8 text-center text-sm text-muted-foreground">Hesaplanıyor…</div>
           ) : preview.length === 0 ? (
             <EmptyState compact title="Bu reçetede satır yok" />
@@ -163,6 +170,7 @@ export function CreateWorkOrderForm({
             </div>
           ) : null}
         </div>
+        )}
 
         <FormActions submitLabel="İş emrini oluştur" onCancel={() => router.back()} pending={form.formState.isSubmitting} />
       </form>

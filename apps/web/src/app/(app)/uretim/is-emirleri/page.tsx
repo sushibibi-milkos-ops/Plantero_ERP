@@ -31,11 +31,13 @@ export default async function WorkOrdersPage() {
         }
       />
 
-      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KpiCard title="Açık iş emri" value={kpis.openCount} format="int" icon={<ListChecks strokeWidth={1.75} />} />
-        <KpiCard title="Üretimde" value={kpis.inProgressCount} format="int" icon={<PlayCircle strokeWidth={1.75} />} />
-        <KpiCard title="Açık iş emri değeri" value={kpis.plannedValue} format="money" icon={<PackageCheck strokeWidth={1.75} />} />
-        <KpiCard title="Ortalama verim" value={kpis.avgYieldPct} format="pct" icon={<Percent strokeWidth={1.75} />} />
+      {/* min-h-[104px]: iki satıra sarabilen başlıklarda (ör. "Açık iş emri değeri" 2 sütunlu mobil
+          ızgarada) kart yüksekliği sabitlenir, komşu kartla değer taban çizgisi kaymaz. */}
+      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4 [&>*]:min-h-[104px]">
+        <KpiCard title="Açık iş emri" value={kpis.openCount} format="int" icon={<ListChecks strokeWidth={1.75} />} delta={kpis.openCountDelta ?? undefined} />
+        <KpiCard title="Üretimde" value={kpis.inProgressCount} format="int" icon={<PlayCircle strokeWidth={1.75} />} delta={kpis.inProgressCountDelta ?? undefined} />
+        <KpiCard title="Açık iş emri değeri" value={kpis.plannedValue} format="money" icon={<PackageCheck strokeWidth={1.75} />} delta={kpis.plannedValueDelta ?? undefined} invertDelta />
+        <KpiCard title="Ortalama verim" value={kpis.avgYieldPct} format="pct" icon={<Percent strokeWidth={1.75} />} delta={kpis.avgYieldPctDelta ?? undefined} />
       </div>
 
       <WorkOrdersTable workOrders={workOrders} />

@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { Gauge, Factory } from 'lucide-react';
+import { Factory } from 'lucide-react';
 import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { formatQty } from '@/lib/format';
 import { D } from '@plantero/core';
@@ -22,14 +23,20 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
         const tone = paused ? { label: 'Duraklatıldı', className: 'bg-warning/15 text-[oklch(0.5_0.14_70)] dark:text-warning' } : STATUS_TONE[running ? 'running' : 'idle'];
         const producedPct = line.activeWorkOrder ? Math.min(100, D(line.activeWorkOrder.producedQty).div(D(line.activeWorkOrder.plannedQty).eq(0) ? 1 : line.activeWorkOrder.plannedQty).mul(100).toNumber()) : 0;
 
+        // Günlük kapasite = kapasite/saat × vardiya dakikası ÷ 60. OEE (kullanılabilirlik×performans×
+        // kalite) formülü henüz doğrulanmadığından (bkz. rapor) burada ham "doluluk" oranı gösterilir:
+        // bugün üretilen ÷ günlük kapasite. Yanıltıcı bir OEE% göstermek yerine dürüst bir oran.
+        const dailyCapacity = line.capacityPerHour ? D(line.capacityPerHour).mul(line.shiftMinutes).div(60) : null;
+        const fillPct = dailyCapacity && dailyCapacity.gt(0) ? Math.round(Math.min(999, D(line.todayProducedQty).div(dailyCapacity).mul(100).toNumber())) : null;
+
         return (
           <div key={line.id} className="flex flex-col gap-4 rounded-xl border border-border/70 bg-card p-4">
             <div className="flex items-start justify-between gap-2">
-              <div>
+              <Link href={`/uretim/is-emirleri?hat=${line.code}`} className="group min-w-0" data-pressable>
                 <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{line.code}</div>
-                <div className="text-base font-semibold">{line.name}</div>
-              </div>
-              <span className={cn('inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium', tone.className)}>
+                <div className="text-base font-semibold group-hover:underline group-hover:decoration-border group-hover:underline-offset-2">{line.name}</div>
+              </Link>
+              <span className={cn('inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium', tone.className)}>
                 <span aria-hidden className={cn('size-1.5 rounded-full', running ? 'bg-success' : paused ? 'bg-warning' : 'bg-muted-foreground/50')} />
                 {tone.label}
               </span>
@@ -42,22 +49,25 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
                   <StatusBadge status={line.activeWorkOrder.status} kind="work_order" size="sm" />
                 </div>
                 <div className="truncate text-sm font-medium">{line.activeWorkOrder.productName}</div>
-                <Progress value={producedPct} className="h-1.5" />
+                <Progress value={producedPct} className={cn('h-1.5', producedPct === 0 && 'opacity-60')} />
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <QtyCell value={line.activeWorkOrder.producedQty} />
                   <QtyCell value={line.activeWorkOrder.plannedQty} />
                 </div>
               </Link>
             ) : (
-              <div className="flex flex-1 flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-border/70 py-6 text-center">
+              <div className="flex flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border/70 py-4 text-center">
                 <Factory className="size-5 text-muted-foreground/60" strokeWidth={1.5} />
                 <span className="text-xs text-muted-foreground">Aktif iş emri yok</span>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/uretim/planlama">Bu hatta iş emri planla</Link>
+                </Button>
               </div>
             )}
 
             <div className="grid grid-cols-3 gap-2 border-t border-border/60 pt-3 text-center">
-              <Metric label="Bugün üretim" value={<QtyCell value={line.todayProducedQty} className="justify-center text-sm font-semibold" />} />
-              <Metric label="OEE" value={<span className="num text-sm font-semibold">%{line.oee.oeePct.toFixed(0)}</span>} icon={<Gauge className="size-3" />} />
+              <Metric label="Bugün üretim" value={<QtyCell value={line.todayProducedQty} uom={line.todayUomCode} className="justify-center text-sm font-semibold" />} />
+              <Metric label="Doluluk" value={<span className="num text-sm font-semibold">{fillPct === null ? '—' : `%${fillPct}`}</span>} />
               <Metric label="Kapasite" value={<span className="num text-sm font-semibold">{line.capacityPerHour ? `${formatQty(line.capacityPerHour, undefined, { maxDigits: 0 })}/sa` : '—'}</span>} />
             </div>
           </div>
@@ -67,13 +77,10 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
   );
 }
 
-function Metric({ label, value, icon }: { label: string; value: React.ReactNode; icon?: React.ReactNode }) {
+function Metric({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <div className="flex items-center justify-center gap-1 text-[10px] tracking-wide text-muted-foreground uppercase">
-        {icon}
-        {label}
-      </div>
+      <div className="text-[10px] tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className="mt-0.5">{value}</div>
     </div>
   );
