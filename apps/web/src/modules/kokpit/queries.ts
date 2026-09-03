@@ -1,9 +1,8 @@
 import 'server-only';
-import { and, asc, desc, eq, gte, inArray, isNotNull, lte, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNotNull, lt, lte, sql } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
 import { D, toDb } from '@plantero/core';
 import { businessDate } from '@plantero/core/dates';
-import { getNetRevenueReport } from '@/modules/sales/queries';
 import { listLineCards, type LineCardRow } from '@/modules/production/queries';
 
 const {
@@ -23,23 +22,35 @@ const {
 export type CockpitKpis = {
   revenueToday: string;
   revenueDeltaPct: number | null;
-  revenueSparkline: number[];
   openOrders: number;
   readyToShip: number;
   criticalStockCount: number;
   overdueReceivable: string;
 };
 
+/**
+ * "Bugünkü ciro" — bugün kesilmiş satış faturalarının toplamı (`grandTotalTry`), `getCockpitToday`
+ * içindeki "Bugün" listesinin fatura satırlarıyla **aynı** filtreyi kullanır (kind='sales',
+ * postedAt bugün) — böylece KPI kartı ile altındaki belge listesi hiçbir zaman çelişmez (Tur 2
+ * bulgusu: sipariş bazlı "net ciro" raporu ile fatura listesi farklı belge kümelerini sayıyordu,
+ * biri ₺0 diğeri ₺8.302,20 gösteriyordu). Trend: gerçek geçmiş günlük anlık görüntü tablosu
+ * olmadığından (sipariş/stok sayaçları için tarihsel seri yok) yalnızca ciro için anlamlı ve gerçek
+ * bir gün-öncesi karşılaştırması hesaplanır; diğer üç KPI için delta hiç geçilmez.
+ */
 export async function getCockpitKpis(): Promise<CockpitKpis> {
   const today = businessDate(new Date());
-  const sevenDaysAgo = businessDate(new Date(Date.now() - 6 * 86_400_000));
+  const startOfToday = new Date(`${today}T00:00:00.000Z`);
+  const startOfYesterday = new Date(startOfToday.getTime() - 86_400_000);
 
-  const [todayReport, weekReport] = await Promise.all([
-    getNetRevenueReport(today, today),
-    getNetRevenueReport(sevenDaysAgo, today),
-  ]);
-
-  const [[openOrdersRow], [readyToShipRow], [overdueRow], criticalRows] = await Promise.all([
+  const [[todayRevRow], [yesterdayRevRow], [openOrdersRow], [readyToShipRow], [overdueRow], criticalRows] = await Promise.all([
+    db
+      .select({ n: sql<string>`coalesce(sum(${invoices.grandTotalTry}), 0)` })
+      .from(invoices)
+      .where(and(eq(invoices.kind, 'sales'), isNotNull(invoices.postedAt), gte(invoices.postedAt, startOfToday))),
+    db
+      .select({ n: sql<string>`coalesce(sum(${invoices.grandTotalTry}), 0)` })
+      .from(invoices)
+      .where(and(eq(invoices.kind, 'sales'), isNotNull(invoices.postedAt), gte(invoices.postedAt, startOfYesterday), lt(invoices.postedAt, startOfToday))),
     db
       .select({ n: sql<string>`count(*)` })
       .from(salesOrders)
@@ -65,10 +76,13 @@ export async function getCockpitKpis(): Promise<CockpitKpis> {
 
   const criticalStockCount = criticalRows.filter((r) => D(r.onHand).lt(D(r.minQty))).length;
 
+  const revenueToday = D(todayRevRow?.n ?? '0');
+  const revenueYesterday = D(yesterdayRevRow?.n ?? '0');
+  const revenueDeltaPct = revenueYesterday.isZero() ? null : revenueToday.minus(revenueYesterday).div(revenueYesterday).mul(100).toNumber();
+
   return {
-    revenueToday: todayReport.current.netRevenue,
-    revenueDeltaPct: todayReport.deltas.net,
-    revenueSparkline: weekReport.series.map((p) => Number(p.total ?? 0)),
+    revenueToday: toDb(revenueToday),
+    revenueDeltaPct,
     openOrders: Number(openOrdersRow?.n ?? 0),
     readyToShip: Number(readyToShipRow?.n ?? 0),
     criticalStockCount,

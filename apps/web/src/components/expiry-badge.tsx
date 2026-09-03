@@ -3,12 +3,15 @@ import { daysUntil, formatDate } from '@/lib/format';
 
 export type ExpiryLevel = 'ok' | 'notice' | 'warning' | 'critical' | 'urgent' | 'expired' | 'none';
 
-/** 7/30/90 kuralı: geçmiş koyu kırmızı(dolu), ≤7 gün kırmızı(dolu), 8–30 gün amber nokta (dolgusuz),
- *  31–90 gün düz metin (rozet yok), 90+ sessiz nötr.
+/** 7/30/90 kuralı: geçmiş koyu kırmızı (dolu, `bg-destructive`), 0–7 gün soluk amber (dolu ama
+ *  soft, `bg-warning/12`), 8–30 gün amber nokta (dolgusuz), 31–90 gün düz metin (rozet yok), 90+
+ *  sessiz nötr.
  *  Önceki sürümde 8–90 gün aralığının tamamı dolgulu bir pil taşıyordu — SKT'si geçmemiş 50 satırlık
  *  bir sayfanın ~45'i kırmızı/pembe oluyor, gerçekten acil olan (<7 gün) satır diğerlerinden hiç
- *  ayrışmıyordu. Renk artık yalnızca gerçek istisnalarda (≤30 gün) "dolgu" olarak kullanılır; 8–30 gün
- *  dahi dolgusuz (yalnızca nokta + amber metin) — dolgu tek başına ≤7 güne ayrılmıştır. */
+ *  ayrışmıyordu. Sonraki sürümde ≤7 gün de tam doygun kırmızı (`bg-destructive/80`) kaldı — Kokpit'te
+ *  arka arkaya 5 satır aynı doygun kırmızı rozet basınca renk artık anlam taşımıyor, alarm duvarına
+ *  dönüşüyordu (Tur 2 bulgusu). Artık yalnızca gerçekten süresi geçmiş lot tam doygun kırmızı; henüz
+ *  dolmamış hiçbir gün aralığı (0–7 dahil) solid destructive kullanmıyor. */
 export function expiryLevel(days: number | null): ExpiryLevel {
   if (days === null) return 'none';
   if (days < 0) return 'expired';
@@ -19,11 +22,13 @@ export function expiryLevel(days: number | null): ExpiryLevel {
   return 'ok';
 }
 
-/** Görsel ağırlık kademesi: `filled` dolgulu pil, `dot` dolgusuz + renkli nokta, `plain` düz metin
+/** Görsel ağırlık kademesi: `filled` dolgulu pil (yalnızca gerçek istisna: süresi geçmiş), `soft`
+ *  soluk renkli dolgu (yaklaşan acil: 0–7 gün), `dot` dolgusuz + renkli nokta, `plain` düz metin
  *  (rozet yok), `quiet` sessiz nötr pil. `warning`/`notice` (31–90 gün) kasıtlı olarak aynı `plain`
  *  kademeyi paylaşır — ikisi de "henüz aksiyon gerektirmiyor" anlamında, ayrı renklere gerek yok. */
-function levelWeight(level: ExpiryLevel): 'filled' | 'dot' | 'plain' | 'quiet' {
-  if (level === 'expired' || level === 'urgent') return 'filled';
+function levelWeight(level: ExpiryLevel): 'filled' | 'soft' | 'dot' | 'plain' | 'quiet' {
+  if (level === 'expired') return 'filled';
+  if (level === 'urgent') return 'soft';
   if (level === 'critical') return 'dot';
   if (level === 'warning' || level === 'notice') return 'plain';
   return 'quiet'; // ok / none
@@ -35,7 +40,7 @@ const LEVEL_CLASS: Record<ExpiryLevel, string> = {
   notice: 'text-muted-foreground',
   warning: 'text-muted-foreground',
   critical: 'text-amber-700 dark:text-amber-400',
-  urgent: 'bg-destructive/80 text-destructive-foreground',
+  urgent: 'bg-warning/12 text-warning',
   expired: 'bg-destructive text-destructive-foreground',
 };
 

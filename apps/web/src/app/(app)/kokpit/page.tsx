@@ -55,11 +55,17 @@ export default async function CockpitPage() {
     getCockpitLineCards(),
   ]);
 
-  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta: number | null; sparkline?: number[]; icon: typeof Banknote; href: string; hint?: string }> = [
-    { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', delta: kpis.revenueDeltaPct, sparkline: kpis.revenueSparkline.length > 1 ? kpis.revenueSparkline : undefined, icon: Banknote, href: '/satis/net-ciro' },
-    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', delta: null, icon: ShoppingCart, href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
-    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', delta: null, icon: AlertTriangle, href: '/satin-alma/kritik-stok' },
-    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', delta: null, icon: Clock, href: '/finans/tahsilat-takibi' },
+  // Dördü de aynı kart anatomisini paylaşır (sparkline yok, delta yalnızca gerçekten hesaplanabildiğinde
+  // geçilir) — "Bugünkü ciro" dışında geçmiş güne dayalı gerçek bir karşılaştırma verisi yok (sayaç/tutar
+  // anlık görüntü, tarihsel seri tutulmuyor); `delta`'yı `undefined` bırakmak KpiCard'ın gri "— —"
+  // rozeti basmasını engeller ve ipucu metni (`hint`) görünür kalır (Tur 2 bulgusu). "Bugünkü ciro"
+  // için de dün hiç fatura kesilmemişse (`revenueDeltaPct === null`, bölen sıfır) `?? undefined` ile
+  // aynı kurala tabi tutulur — `null` geçmek de aynı gri rozeti basardı.
+  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta?: number | null; deltaLabel?: string; icon: typeof Banknote; href: string; hint?: string }> = [
+    { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', delta: kpis.revenueDeltaPct ?? undefined, deltaLabel: 'dünden', icon: Banknote, href: '/satis/net-ciro' },
+    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', icon: ShoppingCart, href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
+    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', icon: AlertTriangle, href: '/satin-alma/kritik-stok' },
+    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', icon: Clock, href: '/finans/tahsilat-takibi' },
   ];
 
   return (
@@ -74,7 +80,7 @@ export default async function CockpitPage() {
               value={k.value}
               format={k.format}
               delta={k.delta}
-              sparkline={k.sparkline}
+              deltaLabel={k.deltaLabel}
               icon={<k.icon strokeWidth={1.75} />}
               href={k.href}
               hint={k.hint}
@@ -83,8 +89,14 @@ export default async function CockpitPage() {
         ))}
       </div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        <Section title="Bugün" href="/satis/siparisler" className="lg:col-span-2">
+      {/* İki bağımsız dikey akış (grid yerine flex sütun) — CSS grid'in örtük satır hizalaması
+          "Bugün + SKT" (2 kart) ile "Onay kuyruğu + Üretim + Bugünün tahsilatları" (3 kart)
+          sütunlarını aynı satırlara zorluyor, üçüncü kart tek başına yeni bir grid satırı açıp
+          karşı sütunda ~700×1050px boş bir hücre bırakıyordu (Tur 2 bulgusu). Flex sütunlarda her
+          taraf yalnızca kendi içeriği kadar yükseklik kaplar, boş hücre oluşmaz. */}
+      <div className="mt-4 grid gap-4 lg:grid-cols-3 lg:items-start">
+        <div className="flex flex-col gap-4 lg:col-span-2">
+        <Section title="Bugün" href="/satis/siparisler">
           {today.length === 0 ? (
             <EmptyState compact title="Bugün henüz belge yok" description="Sevkiyat, iş emri, mal kabul veya fatura oluştuğunda burada görünür." />
           ) : (
@@ -110,27 +122,7 @@ export default async function CockpitPage() {
           )}
         </Section>
 
-        <Section title="Onay kuyruğu" href="/satin-alma/onay-kuyrugu">
-          {approvals.length === 0 ? (
-            <EmptyState compact title="Onay bekleyen öğe yok" description="AI taslakları ve mutabakat önerileri burada listelenir." />
-          ) : (
-            <ul className="divide-y divide-border/50">
-              {approvals.map((a) => (
-                <li key={a.id} className="flex items-start gap-3 px-4 py-2.5 text-[13px]">
-                  <CheckSquare className="mt-0.5 size-4 shrink-0 text-primary" strokeWidth={1.75} />
-                  <span className="min-w-0 flex-1">
-                    <Link href={a.href} className="line-clamp-2 hover:underline">{a.title}</Link>
-                    {a.confidence !== null ? (
-                      <span className="mt-0.5 block text-[11px] text-muted-foreground">AI güveni %{Math.round(a.confidence * 100)}</span>
-                    ) : null}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-
-        <Section title="SKT yaklaşan lotlar" href="/depo/skt" className="lg:col-span-2">
+        <Section title="SKT yaklaşan lotlar" href="/depo/skt">
           {expiring.length === 0 ? (
             <EmptyState compact title="Yaklaşan SKT yok" description="Serbest, elde miktarı olan lotlardan SKT'si en yakın olanlar burada listelenir." />
           ) : (
@@ -150,6 +142,28 @@ export default async function CockpitPage() {
                     <span className="min-w-0 flex-1 truncate">{e.product}</span>
                     <QtyCell value={e.qty} uom={e.uom} className="shrink-0" />
                   </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Section>
+        </div>
+
+        <div className="flex flex-col gap-4">
+        <Section title="Onay kuyruğu" href="/satin-alma/onay-kuyrugu">
+          {approvals.length === 0 ? (
+            <EmptyState compact title="Onay bekleyen öğe yok" description="AI taslakları ve mutabakat önerileri burada listelenir." />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {approvals.map((a) => (
+                <li key={a.id} className="flex items-start gap-3 px-4 py-2.5 text-[13px]">
+                  <CheckSquare className="mt-0.5 size-4 shrink-0 text-primary" strokeWidth={1.75} />
+                  <span className="min-w-0 flex-1">
+                    <Link href={a.href} className="line-clamp-2 hover:underline">{a.title}</Link>
+                    {a.confidence !== null ? (
+                      <span className="mt-0.5 block text-[11px] text-muted-foreground">AI güveni %{Math.round(a.confidence * 100)}</span>
+                    ) : null}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -183,7 +197,7 @@ export default async function CockpitPage() {
           </div>
         </Section>
 
-        <Section title="Bugünün tahsilatları" href="/finans/tahsilat-takibi" className="lg:col-start-3">
+        <Section title="Bugünün tahsilatları" href="/finans/tahsilat-takibi">
           {receivables.length === 0 ? (
             <EmptyState compact title="Bugün tahsilat yok" description="Bugün alınan tahsilatlar burada listelenir." />
           ) : (
@@ -200,6 +214,7 @@ export default async function CockpitPage() {
             </ul>
           )}
         </Section>
+        </div>
       </div>
     </>
   );

@@ -22,7 +22,10 @@ export function MobileNav() {
       <nav
         aria-label="Hızlı erişim"
         className={cn(
-          'fixed inset-x-0 bottom-0 z-30 flex border-t border-border/60 bg-background/85 backdrop-blur-md md:hidden',
+          // %85 opaklık altındaki form etiketleri/kanban kartlarının şeffaf camdan sızmasına yol
+          // açıyordu (Tur 2 bulgusu); üst hairline zaten katman ayrımını sağlıyor, opaklığı /95'e
+          // çıkarmak "kirli cam" etkisini keserken blur'u korur.
+          'fixed inset-x-0 bottom-0 z-30 flex border-t border-border/60 bg-background/95 backdrop-blur-md md:hidden',
           'pb-[env(safe-area-inset-bottom)]',
         )}
       >
