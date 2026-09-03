@@ -42,7 +42,7 @@ export function PlanningBoard({
   workOrders,
   startIso,
   todayIso,
-  days = 14,
+  days = 7,
 }: {
   lines: LineOption[];
   workOrders: PlanningWorkOrderRow[];
@@ -67,6 +67,32 @@ export function PlanningBoard({
     return m;
   }, [items]);
   const active = items.find((w) => w.id === activeId) ?? null;
+
+  type MobileSegment =
+    | { kind: 'day'; date: string; items: Array<{ wo: PlanningWorkOrderRow; line: LineOption }> }
+    | { kind: 'empty'; from: string; to: string };
+
+  const mobileSegments = useMemo<MobileSegment[]>(() => {
+    const segments: MobileSegment[] = [];
+    let emptyStart: string | null = null;
+    const flushEmpty = (toDate: string) => {
+      if (emptyStart !== null) {
+        segments.push({ kind: 'empty', from: emptyStart, to: toDate });
+        emptyStart = null;
+      }
+    };
+    dateCols.forEach((d, i) => {
+      const dayItems = lines.flatMap((line) => (byCell.get(`${line.id}:${d}`) ?? []).map((wo) => ({ wo, line })));
+      if (dayItems.length === 0 && d !== todayIso) {
+        if (emptyStart === null) emptyStart = d;
+      } else {
+        if (emptyStart !== null) flushEmpty(dateCols[i - 1]!);
+        segments.push({ kind: 'day', date: d, items: dayItems });
+      }
+    });
+    if (emptyStart !== null) flushEmpty(dateCols[dateCols.length - 1]!);
+    return segments;
+  }, [dateCols, lines, byCell, todayIso]);
 
   // Bugünün sütununu görünüre kaydır — 390px mobilde (desktop grid) bugün 4. sütunda başlayıp
   // kenarda kalabiliyordu, iki iş emri de kaydırma dışında kalıyordu.
@@ -94,7 +120,11 @@ export function PlanningBoard({
     });
   }
 
-  const gridTemplate = `110px repeat(${dateCols.length}, minmax(84px, 1fr)) 92px`;
+  // 14 günlük görünümde 84px min sütun genişliği (110+14×84+92=1378px) 1440px masaüstünde içerik
+  // alanına (~1096px) hiçbir zaman sığmıyordu (Tur 2 bulgusu) — 7 gün ve altında ferah 84px, 8+
+  // günde dar 60px (110+14×60+92=1042px ≤ 1096px).
+  const dayColWidth = dateCols.length > 7 ? 60 : 84;
+  const gridTemplate = `110px repeat(${dateCols.length}, minmax(${dayColWidth}px, 1fr)) 92px`;
 
   return (
     <DndContext sensors={sensors} onDragStart={(e) => setActiveId(e.active.id as string)} onDragEnd={handleDragEnd} onDragCancel={() => setActiveId(null)}>
@@ -131,30 +161,36 @@ export function PlanningBoard({
 
       {/* Mobil: ızgara yerine bugünden başlayan gün listesi (yatay kaydırmayı tamamen ortadan
           kaldırır — 390px'te 110px + 14×92px'lik bir ızgara asla sığmaz). Sürükle-bırak yalnızca
-          masaüstü ızgarada; burada kartlar salt okunur, iş emri detayına bağlanır. */}
-      <div className="space-y-3 md:hidden">
-        {dateCols.map((d) => {
-          const dayItems = lines.flatMap((line) => (byCell.get(`${line.id}:${d}`) ?? []).map((wo) => ({ wo, line })));
-          const isToday = d === todayIso;
-          return (
-            <div key={d} className={cn('rounded-lg border border-border/60 p-2.5', isToday && 'border-primary/40 bg-primary/[0.04]')}>
+          masaüstü ızgarada; burada kartlar salt okunur, iş emri detayına bağlanır. Ardışık boş
+          günler (bugün hariç) tek satırda birleşir — aksi halde 14 günün 12'si aynı "Planlanan yok"
+          çerçevesini tekrarlayıp sayfanın ~%87'sini bilgisiz boşluğa çeviriyordu (Tur 2 bulgusu). */}
+      <div className="space-y-2 md:hidden">
+        {mobileSegments.map((seg) =>
+          seg.kind === 'empty' ? (
+            <div key={`empty-${seg.from}`} className="flex h-[34px] items-center gap-1.5 rounded-md border border-border/40 px-2.5 text-[12px] text-muted-foreground/70">
+              <span>{seg.from === seg.to ? fmtDay(seg.from) : `${fmtDay(seg.from)} – ${fmtDay(seg.to)}`}</span>
+              <span aria-hidden>·</span>
+              <span>planlanan yok</span>
+            </div>
+          ) : (
+            <div key={seg.date} className={cn('rounded-lg border border-border/60 p-2.5', seg.date === todayIso && 'border-primary/40 bg-primary/[0.04]')}>
               <div className="mb-2 flex items-center gap-2 px-0.5">
-                <span className={cn('text-[12px] font-medium text-muted-foreground', isToday && 'text-primary')}>{fmtDay(d)}</span>
-                {isToday ? <span className="rounded-full bg-primary/10 px-1.5 py-px text-[9px] font-medium text-primary">Bugün</span> : null}
-                <span className="ml-auto font-mono text-[10px] text-muted-foreground/60">{dayItems.length ? `${dayItems.length} iş emri` : ''}</span>
+                <span className={cn('text-[12px] font-medium text-muted-foreground', seg.date === todayIso && 'text-primary')}>{fmtDay(seg.date)}</span>
+                {seg.date === todayIso ? <span className="rounded-full bg-primary/10 px-1.5 py-px text-[11px] font-medium text-primary">Bugün</span> : null}
+                <span className="ml-auto font-mono text-[10px] text-muted-foreground/60">{seg.items.length ? `${seg.items.length} iş emri` : ''}</span>
               </div>
-              {dayItems.length === 0 ? (
+              {seg.items.length === 0 ? (
                 <div className="px-0.5 py-1.5 text-xs text-muted-foreground/60">Planlanan yok</div>
               ) : (
                 <div className="space-y-1.5">
-                  {dayItems.map(({ wo, line }) => (
+                  {seg.items.map(({ wo, line }) => (
                     <MobileWoCard key={wo.id} wo={wo} lineCode={line.code} />
                   ))}
                 </div>
               )}
             </div>
-          );
-        })}
+          ),
+        )}
       </div>
 
       <DragOverlay>{active ? <WoCard wo={active} dragging /> : null}</DragOverlay>
@@ -227,7 +263,9 @@ function PlanningCell({
       {items.map((wo) => (
         <WoCard key={wo.id} wo={wo} />
       ))}
-      {fillPct !== null ? <span className="pointer-events-none absolute right-1.5 bottom-1 font-mono text-[9px] text-muted-foreground/50">%{fillPct}</span> : null}
+      {/* text-[11px] text-muted-foreground/70: 9px %50 opaklık okunabilirlik tabanının (11px) altındaydı
+          (Tur 2 bulgusu) — pratikte görünmezdi. */}
+      {fillPct !== null ? <span className="pointer-events-none absolute right-1.5 bottom-1 font-mono text-[11px] text-muted-foreground/70">%{fillPct}</span> : null}
     </div>
   );
 }
@@ -249,14 +287,17 @@ function WoCard({ wo, dragging }: { wo: PlanningWorkOrderRow; dragging?: boolean
         <button type="button" {...attributes} {...listeners} className="cursor-grab touch-none text-muted-foreground/50 hover:text-foreground active:cursor-grabbing" aria-label="Taşı">
           <GripVertical className="size-3" />
         </button>
-        <Link href={`/uretim/is-emirleri/${wo.id}`} className="truncate font-mono text-[10px] text-muted-foreground hover:text-foreground" onClick={(e) => e.stopPropagation()}>
-          {wo.docNo}
+        {/* Tam iş emri no yerine son 3 hane: dar sütunlarda (60-84px) "WO-2026-000008" → "WO-202…"
+            elipsleniyordu (Tur 2 bulgusu) — tam numara title tooltip'te kalır. */}
+        <Link href={`/uretim/is-emirleri/${wo.id}`} title={wo.docNo} className="truncate font-mono text-[11px] text-muted-foreground hover:text-foreground" onClick={(e) => e.stopPropagation()}>
+          #{wo.docNo.slice(-3)}
         </Link>
       </div>
-      <div className="mt-0.5 truncate font-medium">{wo.productName}</div>
+      <div className="mt-0.5 truncate font-medium" title={wo.productName}>{wo.productName}</div>
       <div className="mt-0.5 flex items-center justify-between gap-1">
         <QtyCell value={wo.plannedQty} className="text-[10px]" />
-        <StatusBadge status={wo.status} kind="work_order" dot={false} className="h-4 px-1 text-[9px]" />
+        {/* text-[11px]: 9px okunabilirlik tabanının (Linear'da 11px) altındaydı (Tur 2 bulgusu). */}
+        <StatusBadge status={wo.status} kind="work_order" dot={false} className="h-4 px-1 text-[11px]" />
       </div>
     </div>
   );

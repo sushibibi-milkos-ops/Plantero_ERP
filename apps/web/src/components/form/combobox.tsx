@@ -90,7 +90,9 @@ export function Combobox({
           aria-invalid={ariaInvalid}
           disabled={disabled}
           className={cn(
-            'flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 text-left text-[13px] shadow-xs outline-none',
+            // h-11 md:h-9: 390px'te 36px dokunma hedefi WCAG/iOS 44px eşiğinin altındaydı (Tur 2
+            // bulgusu) — fields.tsx'teki Input/SelectTrigger ile aynı kalıp.
+            'flex h-11 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 text-left text-[13px] shadow-xs outline-none md:h-9',
             'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30',
             'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
             !selected && 'text-muted-foreground',

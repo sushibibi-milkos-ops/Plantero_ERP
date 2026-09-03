@@ -95,7 +95,8 @@ export function DateInput({
         aria-describedby={ariaDescribedBy}
         aria-label={ariaLabel}
         aria-invalid={ariaInvalid}
-        className="num h-9 pr-16 text-[13px] md:text-[13px]"
+        // h-11 md:h-9: fields.tsx/combobox.tsx ile aynı 44px mobil dokunma hedefi (Tur 2 bulgusu).
+        className="num h-11 pr-16 text-[13px] md:h-9 md:text-[13px]"
       />
       <div className="absolute right-1 flex items-center">
         {clearable && value ? (

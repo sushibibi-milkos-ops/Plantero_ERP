@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ListChecks, Loader2 } from 'lucide-react';
 import { Form, FormSelect, FieldLabel } from '@/components/form/fields';
 import { FormQty } from '@/components/form/money-qty';
 import { FormDate } from '@/components/form/date-field';
@@ -110,16 +110,20 @@ export function CreateWorkOrderForm({
             </div>
             <FormQty control={form.control} name="plannedQty" label="Planlanan miktar" required uom={productId ? productById.get(productId)?.uomCode : undefined} />
             <FormDate control={form.control} name="plannedStart" label="Planlanan başlangıç" />
-            <FormSelect control={form.control} name="warehouseId" label="Depo" required options={warehouseOptions} />
-            <FormSelect control={form.control} name="lineId" label="Hat" required options={lineOptions} />
+            {/* lg:col-span-2: 4 sütunlu ızgarada 2. satır yalnızca Depo+Hat ile yarısı dolu kalıyor,
+                kartın sağında ~380px tırtıklı boşluk bırakıyordu (Tur 2 bulgusu) — ikisi satırı
+                birlikte tam kaplar. */}
+            <FormSelect control={form.control} name="warehouseId" label="Depo" required options={warehouseOptions} className="lg:col-span-2" />
+            <FormSelect control={form.control} name="lineId" label="Hat" required options={lineOptions} className="lg:col-span-2" />
           </div>
         </div>
 
-        {/* Ürün+miktar girilmeden bu kart ~200px boş rezervasyona düşüyordu (sayfanın yarısı hiçbir
-            şey göstermeyen bir kutu) — o duruma özel tek satırlık, küçük ipucuna indirilir. */}
+        {/* Ürün+miktar girilmeden bu kart ~200px boş rezervasyona düşüyordu — ortak EmptyState
+            (compact) kullanılır; dashed çerçeve /uretim/hatlar'daki boş durumla aynı klişeyi
+            tekrarlıyordu (Tur 2 bulgusu). */}
         {!bomId || !plannedQty ? (
-          <div className="rounded-xl border border-dashed border-border/70 px-4 py-3 text-[13px] text-muted-foreground">
-            Ürün ve miktar girin — reçete malzemeleri burada hesaplanacak.
+          <div className="rounded-xl border border-border/70 bg-card">
+            <EmptyState compact icon={ListChecks} title="Reçete henüz hesaplanmadı" description="Ürün ve planlanan miktar seçin." />
           </div>
         ) : (
         <div className="rounded-xl border border-border/70 bg-card p-4">

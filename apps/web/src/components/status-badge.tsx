@@ -11,6 +11,17 @@ const TONE_CLASSES: Record<StatusTone, { badge: string; dot: string }> = {
   primary: { badge: 'bg-primary/10 text-primary border-transparent', dot: 'bg-primary' },
 };
 
+/** `emphasis="subtle"` metin/nokta rengini korur ama dolguyu kaldırır (bkz. work_order özel durumu aşağıda). */
+const TONE_TEXT: Record<StatusTone, string> = {
+  neutral: 'text-foreground/80',
+  muted: 'text-muted-foreground',
+  info: 'text-info',
+  success: 'text-success',
+  warning: 'text-[oklch(0.5_0.14_70)] dark:text-warning',
+  danger: 'text-destructive',
+  primary: 'text-primary',
+};
+
 /**
  * Durum rozeti: sözlükten TR etiket + ton. Nokta + metin (Linear tarzı), 20px yükseklik.
  * `kind` verilirse enuma özel etiket kullanılır; `label` ile ezilebilir.
@@ -33,18 +44,27 @@ export function StatusBadge({
   className?: string;
 }) {
   const info = getStatusInfo(status, kind);
-  const t = TONE_CLASSES[tone ?? info.tone];
+  const resolvedTone = tone ?? info.tone;
+  const t = TONE_CLASSES[resolvedTone];
+  // `work_order` özel durumu: in_progress (primary) ve finished (success) globals.css'te aynı yeşil
+  // aileden (hue 152) olduğundan dolgulu haldeyken göz için neredeyse ayırt edilemez — 8 satırlık bir
+  // listede "hangisi hâlâ çalışıyor" sorusu renkle cevaplanamıyordu (Tur 2 bulgusu). Devam eden süreç
+  // dolgulu + nabız atan noktayla vurgulanır; tamamlanmış süreç dolgusuz (yalnızca metin + nokta) kalır
+  // — aynı listede iki durum artık asla aynı arka plan rengini paylaşmaz.
+  const isWorkOrder = kind === 'work_order';
+  const subtle = isWorkOrder && status === 'finished';
+  const pulseDot = isWorkOrder && status === 'in_progress';
   return (
     <span
       data-status={status ?? ''}
       className={cn(
         'inline-flex shrink-0 items-center gap-1.5 rounded-full border font-medium whitespace-nowrap',
         size === 'sm' ? 'h-5 px-2 text-[11px]' : 'h-6 px-2.5 text-xs',
-        t.badge,
+        subtle ? cn('border-transparent bg-transparent', TONE_TEXT[resolvedTone]) : t.badge,
         className,
       )}
     >
-      {dot ? <span aria-hidden className={cn('size-1.5 rounded-full', t.dot)} /> : null}
+      {dot ? <span aria-hidden className={cn('size-1.5 rounded-full', t.dot, pulseDot && 'motion-safe:animate-pulse')} /> : null}
       {label ?? info.label}
     </span>
   );

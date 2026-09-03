@@ -198,7 +198,7 @@ export async function getWorkOrderDetail(id: string) {
 
 export type LineCardRow = {
   id: string; code: string; name: string; capacityPerHour: string | null; shiftMinutes: number;
-  activeWorkOrder: { id: string; docNo: string; productName: string; status: string; producedQty: string; plannedQty: string } | null;
+  activeWorkOrder: { id: string; docNo: string; productName: string; status: string; producedQty: string; plannedQty: string; uomCode: string } | null;
   todayProducedQty: string;
   /** Bugün biten iş emirlerinin ortak birimi — hepsi aynıysa dolu, karışıksa null (toplam miktar tek birime indirgenemez) */
   todayUomCode: string | null;
@@ -212,9 +212,10 @@ export async function listLineCards(): Promise<LineCardRow[]> {
   const out: LineCardRow[] = [];
   for (const line of lines) {
     const [active] = await db
-      .select({ wo: workOrders, productName: products.name })
+      .select({ wo: workOrders, productName: products.name, uomCode: uoms.code })
       .from(workOrders)
       .innerJoin(products, eq(products.id, workOrders.productId))
+      .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
       .where(and(eq(workOrders.lineId, line.id), inArray(workOrders.status, ['in_progress', 'paused'])))
       .orderBy(desc(workOrders.startedAt))
       .limit(1);
@@ -230,7 +231,7 @@ export async function listLineCards(): Promise<LineCardRow[]> {
 
     out.push({
       id: line.id, code: line.code, name: line.name, capacityPerHour: line.capacityPerHour, shiftMinutes: line.shiftMinutes,
-      activeWorkOrder: active ? { id: active.wo.id, docNo: active.wo.docNo, productName: active.productName, status: active.wo.status, producedQty: active.wo.producedQty, plannedQty: active.wo.plannedQty } : null,
+      activeWorkOrder: active ? { id: active.wo.id, docNo: active.wo.docNo, productName: active.productName, status: active.wo.status, producedQty: active.wo.producedQty, plannedQty: active.wo.plannedQty, uomCode: active.uomCode } : null,
       todayProducedQty: toDb(oee.actualOutput),
       todayUomCode: todayUomCodes.size === 1 ? Array.from(todayUomCodes)[0]! : null,
       oee,

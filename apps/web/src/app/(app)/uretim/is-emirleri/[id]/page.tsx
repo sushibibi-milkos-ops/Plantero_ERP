@@ -38,7 +38,10 @@ export default async function WorkOrderDetailPage({ params }: { params: Promise<
           />
         }
       >
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm [&>*:not(:first-child)]:before:mr-3 [&>*:not(:first-child)]:before:text-border [&>*:not(:first-child)]:before:content-['·']">
+        {/* max-sm:before:content-none + max-sm:flex-col: pseudo-element ayraç mobilde şerit sarınca
+            satır başında öksüz kalıyordu ("· Depo TIRE" 2. satırda başlıyordu, Tur 2 bulgusu) —
+            mobilde dikey düzene geçilip ayraç tamamen kapatılır, masaüstünde nokta ayraç korunur. */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm max-sm:flex-col max-sm:items-start max-sm:gap-y-1 [&>*:not(:first-child)]:before:mr-3 [&>*:not(:first-child)]:before:text-border [&>*:not(:first-child)]:before:content-['·'] max-sm:[&>*:not(:first-child)]:before:content-none">
           <StatusBadge status={wo.status} kind="work_order" size="md" />
           <span className="font-mono text-xs text-muted-foreground">{line.code} — {line.name}</span>
           <span className="text-muted-foreground">Depo {warehouse.code}</span>
@@ -48,7 +51,11 @@ export default async function WorkOrderDetailPage({ params }: { params: Promise<
           {operatorName ? <MetaField label="Operatör" value={operatorName} /> : null}
         </div>
 
-        <div className="mt-4 flex flex-wrap divide-x divide-border/60 overflow-hidden rounded-lg border border-border/60">
+        {/* max-w-2xl: liste tablosunun bilinçli kutusuz-hairline anatomisiyle (data-table.tsx) çelişen
+            dış çerçeve kaldırıldı (yalnızca üst/alt hairline kalır); grid + StatCell'den flex-1
+            kaldırılınca hücreler içeriğine göre daralıyor — 2 istatistikte bile hücre başına 795px'lik
+            ölü bant kalmıyor (Tur 2 bulgusu). */}
+        <div className="mt-4 grid max-w-2xl grid-cols-2 divide-x divide-border/60 border-y border-border/60 sm:grid-cols-4">
           <StatCell label="Planlanan" value={<QtyCell value={wo.plannedQty} uom={uomCode} />} />
           {/* Üretilen miktar nötr bir gerçektir (iyi/kötü sinyali değil) — renk yalnızca Fire gibi
               gerçekten uyarı taşıyan hücrede kullanılır (renk enflasyonundan kaçınma). */}
@@ -76,7 +83,7 @@ function MetaField({ label, value }: { label: string; value: string }) {
 /** İstatistik şeridi hücresi: etiket üstte küçük soluk, değer altta büyük tabular. */
 function StatCell({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="min-w-[92px] flex-1 px-4 py-2.5">
+    <div className="min-w-[92px] px-4 py-2.5">
       <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className="mt-0.5 text-xl leading-none">{value}</div>
     </div>

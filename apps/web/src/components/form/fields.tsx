@@ -95,7 +95,7 @@ export function FormText<TFieldValues extends FieldValues>({
               autoComplete={autoComplete}
               inputMode={inputMode}
               disabled={disabled}
-              className={cn('h-9 text-[13px] md:text-[13px]', mono && 'font-mono')}
+              className={cn('h-11 text-[13px] md:h-9 md:text-[13px]', mono && 'font-mono')}
             />
           </FormControl>
           {description ? <FormDescription className="text-xs">{description}</FormDescription> : null}
@@ -157,7 +157,7 @@ export function FormSelect<TFieldValues extends FieldValues>({
           {label ? <FieldLabel required={required}>{label}</FieldLabel> : null}
           <Select value={field.value ?? ''} onValueChange={field.onChange} disabled={disabled}>
             <FormControl>
-              <SelectTrigger className="h-9 w-full text-[13px]">
+              <SelectTrigger className="h-11 w-full text-[13px] md:h-9">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

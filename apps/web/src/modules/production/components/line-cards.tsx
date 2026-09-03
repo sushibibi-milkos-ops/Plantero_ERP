@@ -43,20 +43,25 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
             </div>
 
             {line.activeWorkOrder ? (
-              <Link href={`/uretim/is-emirleri/${line.activeWorkOrder.id}`} className="space-y-2 rounded-lg border border-border/60 bg-muted/30 p-3 hover:border-border" data-pressable>
+              // Çerçevesiz: yalnızca zemin farkı (bg-muted/30) ayrım için yeterli — dış kart zaten
+              // çerçeveli, iç içe iki çerçeve gereksizdi (Tur 2 bulgusu).
+              <Link href={`/uretim/is-emirleri/${line.activeWorkOrder.id}`} className="space-y-2 rounded-lg bg-muted/30 p-3 hover:bg-muted/50" data-pressable>
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-mono text-xs text-muted-foreground">{line.activeWorkOrder.docNo}</span>
                   <StatusBadge status={line.activeWorkOrder.status} kind="work_order" size="sm" />
                 </div>
                 <div className="truncate text-sm font-medium">{line.activeWorkOrder.productName}</div>
-                <Progress value={producedPct} className={cn('h-1.5', producedPct === 0 && 'opacity-60')} />
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <QtyCell value={line.activeWorkOrder.producedQty} />
-                  <QtyCell value={line.activeWorkOrder.plannedQty} />
+                {/* opacity-60 kaldırıldı: 0/70'te düz gri bir çizgi ayraçtan ayırt edilemiyordu (Tur 2
+                    bulgusu) — hairline yükseklik + altında birleşik "0 / 70 ADET (%0)" etiketi. */}
+                <Progress value={producedPct} className="h-1.5" />
+                <div className="text-xs text-muted-foreground">
+                  <QtyCell value={line.activeWorkOrder.producedQty} /> / <QtyCell value={line.activeWorkOrder.plannedQty} uom={line.activeWorkOrder.uomCode} /> (%{Math.round(producedPct)})
                 </div>
               </Link>
             ) : (
-              <div className="flex flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border/70 py-4 text-center">
+              // dashed border kaldırıldı: /uretim/hatlar ve /uretim/is-emirleri/yeni'de aynı "burada
+              // bir şey yok" klişesi tekrarlanıyordu (Tur 2 bulgusu) — üst hairline yeterli ayrım.
+              <div className="flex flex-1 flex-col items-center justify-center gap-2 border-t border-border/60 pt-4 pb-1 text-center">
                 <Factory className="size-5 text-muted-foreground/60" strokeWidth={1.5} />
                 <span className="text-xs text-muted-foreground">Aktif iş emri yok</span>
                 <Button variant="outline" size="sm" asChild>
@@ -66,7 +71,9 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
             )}
 
             <div className="grid grid-cols-3 gap-2 border-t border-border/60 pt-3 text-center">
-              <Metric label="Bugün üretim" value={<QtyCell value={line.todayProducedQty} uom={line.todayUomCode} className="justify-center text-sm font-semibold" />} />
+              {/* "Bugün (hat)": hattın günlük toplam üretimi, hemen üstündeki aktif iş emri ilerlemesinden
+                  ayrı bir ölçüdür — "Bugün üretim" etiketi ikisini karıştırıyordu (Tur 2 bulgusu). */}
+              <Metric label="Bugün (hat)" value={<QtyCell value={line.todayProducedQty} uom={line.todayUomCode} className="justify-center text-sm font-semibold" />} />
               <Metric label="Doluluk" value={<span className="num text-sm font-semibold">{fillPct === null ? '—' : `%${fillPct}`}</span>} />
               <Metric label="Kapasite" value={<span className="num text-sm font-semibold">{line.capacityPerHour ? `${formatQty(line.capacityPerHour, undefined, { maxDigits: 0 })}/sa` : '—'}</span>} />
             </div>
@@ -80,7 +87,8 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
 function Metric({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <div className="text-[10px] tracking-wide text-muted-foreground uppercase">{label}</div>
+      {/* text-[11px]: 10px okunabilirlik tabanının (Linear'da 11px) altındaydı (Tur 2 bulgusu). */}
+      <div className="text-[11px] tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className="mt-0.5">{value}</div>
     </div>
   );
