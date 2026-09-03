@@ -67,8 +67,14 @@ export default async function BomDetailPage({ params }: { params: Promise<{ id: 
     <>
       <PageHeader
         // Tur 4 P2: eyebrow salt metindi — ürüne gitmenin tek yolu geri gidip ürün listesinden aramaktı.
+        // Tur 12 P1: bağlantı 390px'te 157x15px'ti (dokunma hedefi <44px). Dikey dokunma yastığı eklendi
+        // (detail-field-groups-grid.tsx:47'deki 'Boş alanları göster' kalıbıyla aynı yaklaşım); md: altında
+        // yastık sıfırlanır, masaüstü görünümü değişmez.
         eyebrow={
-          <Link href={`/ana-veri/urunler/${bom.b.productId}`} className="hover:text-foreground hover:underline">
+          <Link
+            href={`/ana-veri/urunler/${bom.b.productId}`}
+            className="-my-3 inline-flex min-h-11 items-center py-3 hover:text-foreground hover:underline md:my-0 md:min-h-0 md:py-0"
+          >
             {bom.sku} — {bom.productName}
           </Link>
         }

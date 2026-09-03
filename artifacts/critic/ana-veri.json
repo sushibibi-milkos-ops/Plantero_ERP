@@ -1,14 +1,14 @@
 {
   "module": "ana-veri",
-  "round": 11,
+  "round": 12,
   "referenceScores": {
     "linear": 57,
     "stripe": 56
   },
-  "note": "Tur 11 kritik geçişi. Tur 10'da builder'ın kapattığı 13 bulgu + shell'in kapattığı 4 ortak bulgu YENİDEN ÖLÇÜLDÜ ve doğrulandı (pnpm shot + pnpm measure 1440x900/390x844 + eleman düzeyi Playwright probe). Doğrulanan kapanışlar: mobil DataTable kartı 63,5–68,5px (hedef 56–72), TabsTrigger mobilde 44px + TabsList kendi overflow-x'i ve kaydırma ipucu, FormSwitch 44x44 dokunma kutusu, 'Boş alanları göster' 44px, /ana-veri/import genişliği artık 1152px (diğer rotalarla aynı), kod-yapisi sol sütun tablolarının sağ rayı tek hizada (812px). 10 rotanın 6'sı kazandı, 4'ü kaybetti. Kaybettiren üç kök neden: (1) urunler/yeni mobil sticky aksiyon çubuğu form alanını örtüyor, (2) cari detayda yeşilin dört anlamı + mobil kart görünümüne düşmeyen hareket tablosu, (3) depolar mobilinde 10–11px tipografi. Kod düzeyi tarama temiz.",
+  "note": "Tur 12 kritik geçişi. Tur 11'de builder'ın kapattığı 3 ana-veri bulgusu (yeni-01 sticky çubuk, cari-detay-03 yeşilin dört anlamı, cari-detay-04 mobil hareket tablosu, depolar-04 mobil 10px tipografi, depolar-05 iki rozet anatomisi) eleman düzeyi Playwright probe'u ile YENİDEN ÖLÇÜLDÜ ve hepsi doğrulandı. Ayrıca kriter 7 (boş/yükleniyor/hata) yeniden değerlendirildi: (app)/error.tsx gerçek bir sınır (EmptyState + ikon + 'Yeniden dene' + Kokpit), 10 rotanın 9'unda loading.tsx iskeleti, DataTable'da 'Eşleşen kayıt yok' EmptyState'i var — liste rotalarında 4->5. 10 rotanın 9'u kazandı. Tek kaybeden /ana-veri/receteler/[id]: PageHeader eyebrow'undaki ürün bağlantısı 390px'te 157x15 (dokunma hedefi <44px) — tur 11 ölçümünde gözden kaçmış, measure çıktısında açıkça duruyor. Kod düzeyi tarama temiz (transition-all/ease-in/scale(0)/300ms+ yok; hover globals.css'te @custom-variant ile (hover:hover) and (pointer:fine) altına alınmış).",
   "routes": {
     "/ana-veri/urunler": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -17,34 +17,30 @@
         5,
         5,
         5,
-        4,
+        5,
         5,
         5,
         5,
         5,
         5
       ],
-      "total": 59,
-      "delta": "56 -> 59. Kriter 3: 3->5 (ölçüm: masaüstü satır 36px x 50 satır, ilk ekranda 18 satır; mobil kart 63,5–68,5px — tur 10'da 118px'ten düştü, hedef 56–72 aralığında). Kriter 9: 4->5 (390x844 measure: overflowX false, touchTargetsBelow44 yalnızca etkileşimsiz breadcrumb span'i).",
-      "verdict": "KAZANAN: Plantero (59 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: scrollWidth 1440 = clientWidth, rows 50 [36,36,36], h1 24/600, fonts {11:102,12:163,13:224}, distinctColors 16. 390x844: rows 50 [63.5,63.5,68.5], overflowX false, touch<44 = 0 (kabuk hariç).",
+      "total": 60,
+      "delta": "59 -> 60. Kriter 7: 4->5 (tur 11'de 'error.tsx yok' gerekçesiyle 4'tü; bu tur ölçüldü: apps/web/src/app/(app)/error.tsx tüm ana-veri rotalarını kapsayan GERÇEK bir hata sınırı (EmptyState + ShieldAlert + 'Yeniden dene' + Kokpit bağlantısı), urunler/loading.tsx iskeleti var, data-table.tsx:268 filtreli/filtresiz iki ayrı EmptyState basıyor. Kriter üç ayağı da karşılanıyor.)",
+      "verdict": "KAZANAN: Plantero (60 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
+      "measure": "1440x900: scrollWidth 1440 = clientWidth, rows 50 [36,36,36], h1 24/600, fonts {11:102,12:163,13:224}, distinctColors 16. 390x844: rows 50 [63.5,63.5,68.5], overflowX false, h1 20/600, touch<44 = yalnızca etkileşimsiz breadcrumb span'i.",
       "open": [],
       "closed": [],
       "p2": [
         {
           "criterion": 5,
           "text": "Durum sütunu ilk 18 satırın tamamında 'Aktif' — sabit değerli sütun bilgi taşımıyor; Linear böyle bir sütunu varsayılan görünümden çıkarır."
-        },
-        {
-          "criterion": 7,
-          "text": "Rota ağacında error.tsx yok (ana-veri altında hiçbir rotada yok); render hatası global sınıra düşüyor, ekrana özel hata mesajı/yeniden dene eylemi yok."
         }
       ]
     },
     "/ana-veri/urunler/[id]": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
-      "sample": "19e92e6d-3e63-49d7-9fc9-63c29ac75092 (110010001 BADEM BAZI, liste sırasının ilki)",
+      "sample": "9636bd3d-69bc-4bef-a227-880bcdc8a3da (110010001 BADEM BAZI, liste sırasının ilki)",
       "scores": [
         5,
         5,
@@ -60,24 +56,28 @@
         5
       ],
       "total": 57,
-      "delta": "57 -> 57 (bileşim değişti). Kriter 9: 3->5 (shell-tabs-touch-01 ve shell-empty-fields-toggle-01 kapandı; 390x844 measure'da role=tab ve 'Boş alanları göster' artık touchTargetsBelow44 listesinde yok, overflowX false). Kriter 4: 5->4 ve kriter 11: 5->4 ('Aktif' burada dolgulu yeşil pill, aynı statü liste ekranında nötr nokta+metin — tek statü iki anatomi/iki renk). Kriter 6: 4 (sıfır ₺0,00 tam siyah, listede muted).",
+      "delta": "57 -> 57 (değişiklik yok). Kriter 4 = 4 ve kriter 11 = 4 KALIYOR: probe ölçümü 'Aktif' rozetini burada color oklch(0.6 0.16 152) + bg oklab(0.6 -0.14 .. /0.12) (dolgulu yeşil) olarak gösteriyor; aynı statü /ana-veri/urunler listesinde şeffaf + muted, /ana-veri/cariler/[id]'de bg-muted/60 + muted, /ana-veri/receteler/[id]'de bg-muted + foreground/80 — modülde tek statü, dört farklı görünüm. Kriter 6 = 4 KALIYOR (Ortalama/standart maliyet ₺0,00 tam siyah; listede MoneyCell sıfırı soluklaştırıyor).",
       "verdict": "KAZANAN: Plantero (57 = 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, h1 24/600, fonts {12:28,13:55,14:11}, colors 16. 390x844: overflowX false, h1 20/600, touch<44 = yalnızca breadcrumb span.",
+      "measure": "1440x900: overflowX false, h1 24/600, rows 0 (tablo yok), fonts {12:28,13:55,14:11}, colors 16. 390x844: overflowX false, h1 20/600, fonts {12:28,13:34}, touch<44 = yalnızca breadcrumb span'i. Probe: 'Aktif' rozeti color oklch(0.6 0.16 152), bg oklab(0.6 -0.141272 0.0751154 / 0.12), dot yeşil.",
       "open": [],
       "closed": [],
       "p2": [
         {
           "criterion": 4,
-          "text": "'Aktif' detay sayfasında bg-success/12 + text-success dolgulu pill; /ana-veri/urunler listesinde aynı statü nötr nokta + metin. Yeşil ayrıca birincil eylem rengi."
+          "text": "'Aktif' burada bg-success/12 + text-success dolgulu pill; aynı statü listede nötr, cari ve reçete detayında nötr. Ölçüm: probe aktifBadges — dört rotada dört farklı (color,bg,dot) üçlüsü. Hedef: modülde tek anatomi (StatusBadge tone='muted'), yeşil yalnız birincil eylem + gerçek başarı."
         },
         {
           "criterion": 6,
-          "text": "Ortalama/standart maliyet ₺0,00 tam siyah; liste ekranlarında MoneyCell sıfırı soluklaştırıyor."
+          "text": "Ortalama/standart maliyet ₺0,00 tam siyah (oklch(0.21 ...)); liste ekranlarında MoneyCell sıfırı soluklaştırıyor. Hedef: detay alanlarında da sıfır text-muted-foreground."
+        },
+        {
+          "criterion": 11,
+          "text": "Boş alan politikası ayrışıyor: burada 'Boş alanları göster (3)' ile gizleniyor, /ana-veri/cariler/[id]'de 9 boş alan em-dash ile basılıyor (probe: hasEmptyToggle false, dashes 9)."
         }
       ]
     },
     "/ana-veri/urunler/yeni": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -88,47 +88,26 @@
         5,
         4,
         5,
-        3,
+        5,
         5,
         5,
         5
       ],
-      "total": 56,
-      "delta": "57 -> 56. Kriter 9: 3 olarak kalıyor ama gerekçe değişti — shell-form-switch-01 KAPANDI (Playwright: 4x button[role=switch] 44x44 @390x844), yerine yeni ölçülen bulgu: sticky aksiyon çubuğu 151px ve scroll=0'da 'PP — Ambalaj' alanını tamamen örtüyor. Kriter 2: 5->4 (FormSwitch satırında etiket-kontrol arası 963px boşluk; shell kaynaklı).",
-      "verdict": "KAZANAN: Linear (56 < 57; kriter 9 = 3)",
-      "measure": "390x844 Playwright: sticky aksiyon çubuğu rect {top:629, bottom:780, h:151}, altında fixed alt nav {top:787, bottom:844, h:57} -> toplam 208px (viewport %24,6). 'PP — Ambalaj' kontrolü rect {top:630, bottom:674, h:44} -> çubuğun tamamen altında. main padding-bottom 128px. 1440x900: overflowX false, h1 24/600.",
+      "total": 58,
+      "delta": "56 -> 58. Kriter 9: 3->5 (ana-veri-yeni-01 KAPANDI ve yeniden doğrulandı: 390x844 scroll=0'da sticky aksiyon çubuğu {top:719, bottom:780, h:61} — tur 11'de 151px'ti; çubukla kesişen form kontrolü SIFIR (probe covered: []); alt nav 57px, ikisi birlikte 118px = viewport'un %14'ü, tur 11'de %24,6'ydı; overflowX false, touch<44'te yalnızca Radix'in aria-hidden 1x1 native <select>'leri). Kriter 2 = 4 KALIYOR (FormSwitch etiket-kontrol arası ~1030px boşluk, shell kaynaklı, shell p2). Kriter 7 = 4 KALIYOR (loading.tsx + (app)/error.tsx var ama form gönderim hatası ve alan-düzeyi doğrulama sunumu bu turda ölçülmedi — kanıtsız yükseltme yapılmadı).",
+      "verdict": "KAZANAN: Plantero (58 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
+      "measure": "390x844 probe (scroll=0): sticky çubuk {top:719,bottom:780,h:61,position:sticky}, covered=[], navH=57. fonts {11:6,12:32,13:35}, h1 20/600, overflowX false. 1440x900: overflowX false, h1 24/600, colors 16.",
       "open": [],
-      "closed": [
-        {
-          "id": "shell-form-switch-01",
-          "closedRound": 11,
-          "verifiedBy": "pnpm measure /ana-veri/urunler/yeni --viewport 390x844 -> touchTargetsBelow44'te button[role=switch] YOK (tur 9-10'da 4x 32x18.4 vardı). Kalan 4 kayıt Radix Select'in aria-hidden 1x1 native <select>'i — görünür tetikleyici 358x44 buton, yanlış pozitif.",
-          "reason": "kapatıldı (shell tarafında switch.tsx kökü max-md:size-11 dokunma kutusuna çevrildi)"
-        },
-        {
-          "id": "ana-veri-yeni-01",
-          "criterion": 9,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "Mobilde sticky aksiyon çubuğu üç satıra yayılıp 151px oluyor ve sayfa ilk açıldığında (scroll=0) zorunlu kimlik alanı 'PP — Ambalaj' select'ini tamamen örtüyor. Alt nav ile birlikte 208px, yani 844px'lik viewport'un %25'i kalıcı olarak kabuk.",
-          "measure": "Playwright boundingBox @390x844: çubuk {top:629,bottom:780,h:151}; 'PP — Ambalaj' kontrolü {top:630,bottom:674}; alt nav {top:787,bottom:844,h:57}",
-          "target": "max-md'de çubuk yüksekliği <= 64px (ipucu metni tek satır truncate ya da butonun altında 11px helper; 'Vazgeç' + 'Ürünü oluştur' yan yana) ve scroll=0'da hiçbir form kontrolü çubuğun rect'i içinde kalmayacak",
-          "file": "apps/web/src/modules/masterdata/components/product-wizard.tsx (sticky bottom-16 -mx-4 z-20 sarmalayıcısı)",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Playwright boundingBox @390x844 (butonların en yakın ortak div'i): çubuk {top:719,bottom:780,h:61} (<=64 hedefi). 'PP — Ambalaj' seçici {top:630,bottom:674} — çubukla kesişmiyor (45px boşluk). Kök neden: yardımcı metin ('Kimlik segmentlerini tamamlayın…') artık max-md'de tamamen gizli (span'lerin kendi `hidden sm:line-clamp-1` sınıfı) — SKU tamamlanma durumu üstteki yapışkan önizleme şeridinde zaten görünüyor; 'Vazgeç'/'Ürünü oluştur' tek satırda yan yana (`max-sm:[&>button]:flex-1`), pt-2/pb-2 ile toplam yükseklik 61px. ≥sm'de yardımcı metin geri döner, masaüstü görünümü değişmedi (bkz. desktop.png).",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        }
-      ],
+      "closed": [],
       "p2": [
         {
           "criterion": 2,
-          "text": "STOK & KALİTE anahtar satırlarında etiket sol kenarda, Switch sağ kenarda — arada 963px boşluk (shell: apps/web/src/components/form/fields.tsx FormSwitch)."
+          "text": "STOK & KALİTE anahtar satırlarında etiket sol kenarda, Switch sağ kenarda — arada ~1030px boşluk (shell: apps/web/src/components/form/fields.tsx FormSwitch)."
         }
       ]
     },
     "/ana-veri/cariler": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -137,17 +116,17 @@
         5,
         5,
         5,
-        4,
+        5,
         5,
         5,
         5,
         5,
         5
       ],
-      "total": 59,
-      "delta": "56 -> 59. Kriter 3: 3->5 (masaüstü 36px x 17 satır, hepsi ilk ekranda; mobil kart 67,8px — 99,5'ten düştü). Kriter 9: 4->5 (390x844: overflowX false, touch<44 yok).",
-      "verdict": "KAZANAN: Plantero (59 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: rows 17 [36,36,36], overflowX false, fonts {13:90,12:24,11:19}, colors 19. 390x844: rows 17 [67.8,67.8,67.8], touch<44 = 0 (kabuk hariç).",
+      "total": 60,
+      "delta": "59 -> 60. Kriter 7: 4->5 (aynı gerekçe: (app)/error.tsx gerçek hata sınırı + cariler/loading.tsx + DataTable EmptyState 'Eşleşen kayıt yok').",
+      "verdict": "KAZANAN: Plantero (60 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
+      "measure": "1440x900: overflowX false, rows 17 [36,36,36], h1 24/600, fonts {11:19,12:24,13:90}, colors 19. 390x844: rows 17 [67.8,67.8,67.8] (56-72 hedef aralığında), overflowX false, touch<44 = breadcrumb span'i.",
       "open": [],
       "closed": [],
       "p2": [
@@ -158,116 +137,42 @@
       ]
     },
     "/ana-veri/cariler/[id]": {
-      "round": 11,
+      "round": 12,
       "reference": "stripe",
-      "sample": "76e58a0a-1737-4193-9db2-884289cedb55 (S-000005 Anadolu Kuruyemiş, liste sırasının ilki)",
+      "sample": "28c41403-d3c3-4179-9748-e2bc1689fb3c (S-000005 Anadolu Kuruyemiş, ad sırasının ilki)",
       "scores": [
         5,
         5,
         4,
-        3,
-        4,
-        4,
         5,
         5,
-        4,
+        5,
+        5,
+        5,
+        5,
         5,
         4,
         5
       ],
-      "total": 53,
-      "delta": "54 -> 53. Kriter 9: 2->4 (sekmeler 44px + kendi overflow'u, başlık gerçek ellipsis ile kesiliyor, sayfa taşması yok; kalan sorun KPI şeridinin duruşta 3. kartı rakam ortasından kesmesi). Kriter 4: 5->3 (yeni ölçüm: yeşil dört ayrı anlamda — marka/birincil, 'Aktif', 'Kaydedildi', 'Tahsil edildi'). Kriter 3: 5->4 ('Kimlik & Vergi' bölümünde 4 sütunluk ızgaranın 3 hücresi boş; Genel sekmesinde ilk ekranın %60'ı boş). Kriter 5: 5->4 ve kriter 11: 5->4 ('Son hareketler' tablosu mobilde karta düşmüyor, Tutar sütunu kırpılıyor).",
-      "verdict": "KAZANAN: Stripe (53 < 56; kriter 4 = 3)",
-      "measure": "390x844 eleman düzeyi: KPI şeridi scrollWidth 472 / clientWidth 358; 'Son hareketler' tablosu scrollWidth 387 / clientWidth 356 (31px kırpma, 'Tutar' sütunu); sekme şeridi -mx-4 overflow-x-auto (kasıtlı kenar taşması, TabsList 678/358 kendi içinde kaydırılıyor + kaydırma ipucu); h1 truncate 415/358 gerçek ellipsis. touch<44 = 0 (kabuk hariç).",
+      "total": 58,
+      "delta": "53 -> 58. Kriter 4: 3->5 (ana-veri-cari-detay-03 KAPANDI ve yeniden doğrulandı: probe'da --success/--primary rengini taşıyan eleman yalnızca 2x 'Tahsil edildi' rozeti + noktası; 'Aktif' artık bg-muted/60 + muted-foreground, 'Kaydedildi' nötr — ekranda yeşil taşıyan bileşen 2 <= 2 hedefi). Kriter 5: 4->5 ve kriter 9: 4->5 (ana-veri-cari-detay-04 KAPANDI: 'Son hareketler' 390px'te mobil karta düşüyor, 'Tutar' tam görünür — ekran görüntüsünde ₺125.100,00 kırpılmıyor; KPI şeridi 2+1 ızgaraya sarıyor, kaydırma/kırpma yok; documentElement 390 = 390). Kriter 6: 4->5 (aynı kök neden). Kriter 11: 4 (gerekçe DEĞİŞTİ: hareket tablosu tutarlılığı düzeldi, ama boş alan politikası ayrıştı — burada 9 boş alan em-dash ile basılıyor ve 'Boş alanları göster' rayı hiç yok, /ana-veri/urunler/[id]'de 3 boş alan gizli). Kriter 3: 4 KALIYOR (9 em-dash; 'Kimlik & Vergi' 4 sütunluk rayda 3 hücre dolu).",
+      "verdict": "KAZANAN: Plantero (58 >= 56, hiçbir kriter < 4, açık P0/P1 yok)",
+      "measure": "1440x900: overflowX false, rows 2 [36,36,36], h1 24/600, colors 19. 390x844: rows 2 [64,64,64], documentElement 390 = 390 (taşma yok); iç taşma yalnızca kasıtlı sekme kenar-taşması (TabsList 678/358, kendi overflow-x'i). Probe: yeşil eleman = 2x 'Tahsil edildi' + noktası; hasEmptyToggle false, dashes 9.",
       "open": [],
-      "closed": [
+      "closed": [],
+      "p2": [
         {
-          "id": "shell-tabs-touch-01",
-          "closedRound": 11,
-          "verifiedBy": "pnpm measure /ana-veri/cariler/76e58a0a-... --viewport 390x844 -> touchTargetsBelow44'te role=tab YOK; eleman probe'unda TabsList 'inline-flex max-w-full items-center overflow-x-auto' scrollWidth 678 / clientWidth 358 (taşma kendi içine kapsandı), tetikleyiciler h=44. documentElement scrollWidth 390 = clientWidth.",
-          "reason": "kapatıldı (shell)"
-        },
-        {
-          "id": "shell-empty-fields-toggle-01",
-          "closedRound": 11,
-          "verifiedBy": "pnpm measure @390x844 -> 'Boş alanları göster (9)' touchTargetsBelow44 listesinde yok.",
-          "reason": "kapatıldı (shell)"
-        },
-        {
-          "id": "ana-veri-cari-detay-03",
-          "criterion": 4,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "Yeşil aynı ekranda dört anlam taşıyor: marka/birincil eylem, 'Aktif' durum rozeti, 'Kaydedildi' rozeti, 'Tahsil edildi' rozeti. Puan kartı kuralı: yeşil yalnızca başarı ya da vurgu, ikisinden biri.",
-          "measure": "artifacts/screens/ana-veri-cariler-76e58a0a-.../desktop.png: 3 yeşil rozet + yeşil birincil buton; distinctColors 17",
-          "target": "'Aktif' ve 'Kaydedildi' nötr (bg-muted/60 + text-muted-foreground); yeşil yalnız birincil eylem + gerçek başarı ('Tahsil edildi'). Ekranda yeşil taşıyan bileşen sayısı <= 2.",
-          "file": "apps/web/src/modules/masterdata/components/partner-general-tab.tsx",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Playwright DOM taraması @1440x900 ve @390x844: sayfada `--success`/`--primary` rengini taşıyan ELEMENT sayısı yalnızca 'Tahsil edildi' rozeti (2 satırda, 'Kaydedildi' ve 'Aktif' artık nötr) + kabuk navigasyonunun marka yeşili (sayfa-dışı, tüm rotalarda sabit) — 'Aktif' (`StatusBadge tone=\"muted\"`, page.tsx) ve 'Kaydedildi' ('Son hareketler' tablosunda `posted` durumu, `recentTxTone()` ile `tone=\"muted\"`) artık bg-muted/60 + text-muted-foreground. Ekran görüntüsü: desktop.png/mobile.png (S-000005 örneği) — yeşil yalnızca birincil eylem ve 'Tahsil edildi'.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        },
-        {
-          "id": "ana-veri-cari-detay-04",
           "criterion": 11,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "'Son hareketler' tablosu 390px'te mobil kart görünümüne düşmüyor, yatay kayan tablo olarak kalıyor ve 'Tutar' sütunu sağdan kırpılıyor ('₺125.100'). Aynı modülün liste tabloları (urunler/cariler/receteler) 390px'te karta geçiyor.",
-          "measure": "Playwright @390x844: tablo scrollWidth 387 / clientWidth 356 (class 'w-full min-w-0 border-collapse text-[13px] sm:min-w-[520px]')",
-          "target": "md altında DataTable mobil kart kalıbı ya da scrollWidth <= clientWidth (Tutar sütunu tam görünür)",
-          "file": "apps/web/src/modules/masterdata/components/partner-general-tab.tsx",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Playwright @390x844: 'Son hareketler' artık `sm:hidden` bir kart listesi (`<ul><li>`) render ediyor, `overflow-x-auto` tablo yalnızca `sm:block`'te devrede — kart genişliği kapsayıcıya eşit (scrollWidth taşması yok), Tutar sağda tam görünür kırpma yok. Ekran görüntüsü: mobile.png (Tahsilat/Fatura satırları).",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
+          "text": "Boş alanlar burada hep basılıyor (probe: 9 em-dash, 'Boş alanları göster' rayı yok — partner-general-tab.tsx'te her alan value:true); /ana-veri/urunler/[id] aynı DetailFieldGroupsGrid'i 'Boş alanları göster (3)' ile kullanıyor. Modülde iki farklı boş-alan politikası."
         },
         {
-          "id": "ana-veri-cari-detay-05",
-          "criterion": 9,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "KPI şeridi 390px'te yatay kaydırma carousel'i; duruşta 3. kart ('Açık fatura tutarı') rakamın ortasından kesiliyor ('₺0,'). Stripe mobilde KPI'ları 2 sütunlu ızgaraya düşürür, kırpılmış rakam bırakmaz.",
-          "measure": "Playwright @390x844: KPI sarmalayıcı scrollWidth 472 / clientWidth 358; 3. kart rect.right 475 > kök rect.right 374",
-          "target": "max-md'de grid-cols-2 (kart genişliği (358-8)/2 = 175px); scrollWidth <= clientWidth, hiçbir rakam kırpılmaz",
-          "file": "apps/web/src/modules/masterdata/components/partner-general-tab.tsx",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Playwright @390x844: KPI şeridi artık paylaşılan `KpiStripRow` carousel'i DEĞİL, yerel `divide-x/divide-y` grid (`grid-cols-2` mobil, `sm:grid-cols-3`/`sm:grid-cols-4` kart sayısına göre) — kpiScrollWidth 356 = kpiClientWidth 356 (taşma yok), üçüncü kart (kredi limiti yoksa) 2. satırda tam genişlik, hiçbir rakam kırpılmıyor. Ekran görüntüsü: mobile.png.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        },
-        {
-          "id": "ana-veri-cari-detay-06",
           "criterion": 3,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "'Kimlik & Vergi' bölümü tek alan ('e-Fatura mükellefi') için 4 sütunluk ızgaranın tamamını kaplıyor, 3 hücre boş; 'Ticari koşullar' 5 alan. Genel sekmesinde 1440x900'ün ilk ekranında yalnızca 6 veri noktası + 3 KPI var, dikey alanın %60'ı boş.",
-          "measure": "artifacts/screens/ana-veri-cariler-76e58a0a-.../desktop.png: 'Kimlik & Vergi' başlığı y=500, tek alan y=544-573, sonraki başlık y=639 — 4 sütunun 3'ü boş",
-          "target": "tek alanlı bölümler komşu bölümle birleştirilsin ya da tüm alanlar tek 4-sütunlu ızgarada toplansın; ilk ekranda >= 12 veri noktası",
-          "file": "apps/web/src/modules/masterdata/components/partner-general-tab.tsx",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Kimlik/İletişim/Ticari koşullar alanlarının tamamı artık `value: true` (boş olan da '—' ile GÖRÜNÜR, `DetailFieldGroupsGrid`'in varsayılan gizleme davranışı bu sayfada devre dışı) — S-000005 örneğinde 1440x900 ilk ekranında 3(Kimlik)+3(İletişim)+9(Ticari, tedarikçi alanları dahil)=15 veri noktası + 3 KPI görünür (önceki: 6+3). Ekran görüntüsü: desktop.png.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        },
-        {
-          "id": "ana-veri-cari-detay-07",
-          "criterion": 6,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "KPI 'Bakiye ₺0,00' ve 'Açık fatura tutarı ₺0,00' tam siyah 19px basılıyor; aynı modülün liste ekranlarında sıfır para değeri soluk (MoneyCell/EmptyCell). Aynı sıfır iki ekranda iki farklı ağırlıkta.",
-          "measure": "artifacts/screens/ana-veri-cariler-76e58a0a-.../desktop.png KPI değeri foreground; /ana-veri/cariler listesinde sıfır bakiye '—' muted",
-          "target": "değeri 0 olan KPI rakamı text-muted-foreground (liste kuralıyla aynı)",
-          "file": "apps/web/src/modules/masterdata/components/partner-general-tab.tsx",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Ekran görüntüsü + DOM: 'Bakiye' ve 'Açık fatura tutarı' sıfırken `MoneyCell`in kendi soluklaştırma kuralıyla (text-muted-foreground/70) basılıyor (liste ekranlarındaki MoneyCell ile aynı bileşen/kural); 'Açık sipariş' 0 iken de aynı şekilde soluk. 'Alacak' alt etiketi bakiye 0 iken hiç basılmıyor (`!balanceIsZero` koşulu). Ekran görüntüsü: desktop.png/mobile.png.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
+          "text": "'Kimlik & Vergi' + 'İletişim' gruplarının 6 alanının 5'i '—'; ilk ekranda gerçek veri taşıyan alan sayısı düşük (veri kaynaklı, düzen kaynaklı değil)."
         }
-      ],
-      "p2": []
+      ]
     },
     "/ana-veri/receteler": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -276,34 +181,80 @@
         5,
         4,
         5,
-        4,
+        5,
         5,
         5,
         5,
         5,
         5
       ],
-      "total": 58,
-      "delta": "55 -> 58. Kriter 3: 3->5 (masaüstü 36px x 38 satır, ilk ekranda 18; mobil kart 63,5px — 99,5'ten düştü). Kriter 9: 4->5 (390x844: overflowX false, touch<44 yok). Kriter 5: 4 olarak kalıyor ('Ürün' sütunu 706px, en uzun içerik ~250px -> ~440px ölü boşluk).",
-      "verdict": "KAZANAN: Plantero (58 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: rows 38 [36,36,36], overflowX false; th genişlikleri SKU 104 / Ürün 706 / Reçete Kodu 140 / Bileşen 82 / Birim Maliyet 120. 390x844: rows 38 [63.5,63.5,63.5], touch<44 = 0.",
+      "total": 59,
+      "delta": "58 -> 59. Kriter 7: 4->5 (aynı gerekçe: (app)/error.tsx + receteler/loading.tsx + DataTable EmptyState). Kriter 5 = 4 KALIYOR ('Ürün' sütunu ~706px, en uzun içerik ~250px — 'Reçete Kodu' 1074px'te başlıyor; kök neden shell-datatable-slack-01, shell kartında P1 olarak açık).",
+      "verdict": "KAZANAN: Plantero (59 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
+      "measure": "1440x900: overflowX false, rows 38 [36,36,36], h1 24/600, fonts {12:82,13:136}, colors 17. 390x844: rows 38 [63.5,63.5,63.5], overflowX false, touch<44 = breadcrumb span'i.",
       "open": [],
       "closed": [],
       "p2": [
         {
           "criterion": 5,
-          "text": "'Ürün' sütunu 706px genişlikte ama en uzun ürün adı ~250px — 'Reçete Kodu' sütunu 1074px'te başlıyor, arada ~440px ölü boşluk."
+          "text": "'Ürün' sütunu 706px genişlikte ama en uzun ürün adı ~250px — 'Reçete Kodu' sütunu 1074px'te başlıyor, arada ~440px ölü boşluk (kök neden shell-datatable-slack-01)."
         }
       ]
     },
     "/ana-veri/receteler/[id]": {
-      "round": 11,
+      "round": 12,
       "reference": "stripe",
-      "sample": "7d028d17-2cc1-448d-a55e-a6866413b6ce (BOM-110010001-v1, liste sırasının ilki)",
+      "sample": "8b1d5707-f90a-4654-834f-8c8d7584a989 (BOM-110010001-v1, liste sırasının ilki)",
       "scores": [
         5,
         5,
         4,
+        5,
+        4,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5
+      ],
+      "total": 57,
+      "delta": "58 -> 57. Kriter 9: 5->4 (GEREKÇE: tur 11 'touch<44 yok' yazmıştı, ölçüm eksik alınmış. Bu tur measure ve eleman probe'u aynı sonucu veriyor: PageHeader eyebrow'undaki ürün bağlantısı a \"110010001 — BADEM BAZI\" 157x15 — 390px'te tek başına 44px altında kalan ETKİLEŞİMLİ eleman. Diğer her şey (sekmeler 44px, KPI 2+1 ızgara, tablo 3 sütun, overflowX false) yerinde, o yüzden 4.) Kriter 5 = 4 KALIYOR ('Bileşen' sütunu kalan boşluğu emiyor).",
+      "verdict": "KAZANAN: Stripe (57 >= 56 ve hiçbir kriter < 4, ANCAK ana-veri-recete-detay-01 P1 açık — protokol kuralı 3: açık P0/P1 varken kazanılmaz)",
+      "measure": "1440x900: overflowX false, rows 6 [36,36,36], h1 24/600, fonts {13:55,12:14,20:5(KPI)}, colors 17. 390x844: rows 6 [36,36,36], overflowX false, h1 20/600; touchTargetsBelow44 = [{a \"110010001 — BADEM BAZI\", w:157, h:15}] (breadcrumb span'i hariç tek gerçek etkileşimli eleman).",
+      "open": [],
+      "closed": [
+        {
+          "id": "ana-veri-recete-detay-01",
+          "criterion": 9,
+          "severity": "P1",
+          "module": "ana-veri",
+          "text": "Mobilde başlığın üstündeki ürün bağlantısı ('110010001 — BADEM BAZI') 157x15 — dokunma hedefi 44px'in üçte biri. Sayfadaki diğer tüm etkileşimli elemanlar (sekmeler, 'Yeni versiyon', 'Arşivle') 44px'i sağlıyor; bu tek bağlantı reçeteden ürüne gitmenin tek yolu.",
+          "measure": "pnpm measure /ana-veri/receteler/8b1d5707-f90a-4654-834f-8c8d7584a989 --viewport 390x844 -> touchTargetsBelow44: [{\"selector\":\"a \\\"110010001 — BADEM BAZI\\\"\",\"w\":157.5,\"h\":15}]; eleman probe'u aynı: w=157, h=15",
+          "target": "390x844'te bu <a>'nın boundingBox yüksekliği >= 44 (measure çıktısında touchTargetsBelow44 boş, breadcrumb span'i hariç). Öneri: Link'e `-my-3 inline-flex min-h-11 items-center md:my-0 md:min-h-0` — detail-field-groups-grid.tsx:47'de zaten kullanılan dokunma-yastığı kalıbı; masaüstünde görünüm değişmez.",
+          "file": "apps/web/src/app/(app)/ana-veri/receteler/[id]/page.tsx:70-74 (PageHeader eyebrow içindeki <Link>)",
+          "openedRound": 12,
+          "status": "closed",
+          "closedRound": 12,
+          "measureAfter": "pnpm measure /ana-veri/receteler/690de0ad-ee35-42cd-a735-0f3e89768c08 --viewport 390x844 -> touchTargetsBelow44: [{selector: 'span[data-slot=\"breadcrumb-page\"] \"Detay\"', w:36.2, h:19.5}] (yalnızca etkileşimsiz breadcrumb span'i); eyebrow linki artık listede yok. Düzeltme: apps/web/src/app/(app)/ana-veri/receteler/[id]/page.tsx:70-78 -- eyebrow Link'ine '-my-3 inline-flex min-h-11 items-center py-3 ... md:my-0 md:min-h-0 md:py-0' dokunma yastığı eklendi (detail-field-groups-grid.tsx:47 kalıbı). Masaüstü (1440x900) görünüm ekran görüntüsüyle doğrulandı, değişmedi.",
+          "verifiedBy": "ölçüm"
+        }
+      ],
+      "p2": [
+        {
+          "criterion": 5,
+          "text": "'Bileşen' sütunu kalan tüm boşluğu emiyor (içerik ~140px, sütun ~580px); 'Miktar' sütunu 1450px'te başlıyor (kök neden shell-datatable-slack-01)."
+        }
+      ]
+    },
+    "/ana-veri/depolar": {
+      "round": 12,
+      "reference": "linear",
+      "scores": [
+        5,
+        4,
+        5,
         5,
         4,
         5,
@@ -315,130 +266,11 @@
         5
       ],
       "total": 58,
-      "delta": "53 -> 58. Kriter 2: 4->5 (mobilde 5. KPI 'BİRİM MALİYET' artık tek başına yarım değil, tam genişlik satır kaplıyor — ekran görüntüsüyle doğrulandı). Kriter 3: 3->4 (6 bileşen satırı 36px, KPI şeridi dikey ayraçlı; düşük yoğunluk veri kaynaklı, düzen kaynaklı değil). Kriter 7: 4->5 (page.tsx'te EmptyState + loading.tsx iskeleti birlikte). Kriter 9: 3->5 (sekmeler 44px, mobil tablo 3 sütuna düşüyor, taşma yok, touch<44 yok).",
-      "verdict": "KAZANAN: Plantero (58 >= 56, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: rows 6 [36,36,36], overflowX false, fonts {13:55,12:14,20:5(KPI)}, colors 17. Bileşen tablosu sağ kenarı KPI şeridiyle aynı x'te. 390x844 ekran görüntüsü: KPI 2 sütun + son kart tam genişlik, tablo 3 sütun, taşma yok.",
+      "delta": "51 -> 58. Kriter 1: 3->5 (ana-veri-depolar-04 KAPANDI ve yeniden doğrulandı: 390x844 fontSizes {10:5, 11:14, 12:26, 13:97, 14:4} — tur 11'de {10:53, 11:36, 12:74, 13:1}'di; kalan 5 adet 10px modül dışı, kabuğun ⌘K/⌘B kbd ipuçları. Gövde artık mobilde de 13px, h1 20/600). Kriter 4: 4->5 ve kriter 11: 4->5 ve kriter 12: 4->5 (ana-veri-depolar-05 KAPANDI: probe'da 9 durumun HEPSİ aynı anatomi — 'inline-flex h-5 rounded-full bg-muted/40' + renkli nokta; dolgulu kırmızı pill kalmadı. Ekranda nötr + amber + mavi + kırmızı = 4 ton, hepsi anlamlı). Kriter 6: 4->5 (probe: sıfır/boş için TEK gösterim var — zeroForms ['—']; tur 11'deki iki farklı gösterim yok. tabular-nums + iki ondalık doğrulandı). Kriter 9: 4->5 (touchTargetsBelow44 = 0, overflowX false, mobilde 13px gövde). Kriter 2 = 4 KALIYOR (tek sayfada iki özdeş 'Kod ya da ad ara...' kutusu). Kriter 5 = 4 KALIYOR ('Kod / Ad' sütunu ~660px, en uzun içerik ~371px; ayrıca 'Red' etiketi kırmızı metinle, diğer 8 durum nötr metinle basılıyor — aynı sütunda iki metin rengi politikası).",
+      "verdict": "KAZANAN: Plantero (58 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
+      "measure": "1440x900: overflowX false, h1 24/600, fonts {13:69,12:58,11:13,16:2}, colors 15, ağaç satırı 36px, ilk ekranda 22 satır. 390x844: overflowX false, touchTargetsBelow44 = 0 (kabuk hariç), fonts {10:5(kabuk kbd), 11:14, 12:26, 13:97, 14:4}. Probe: 9 durum rozeti tek anatomi (bg oklab(0.967 .. /0.4), h-5, rounded-full); zeroForms = ['—'].",
       "open": [],
       "closed": [],
-      "p2": [
-        {
-          "criterion": 5,
-          "text": "'Bileşen' sütunu kalan tüm boşluğu emiyor (içerik ~140px, sütun ~580px); 'Miktar' sütunu 1450px'te başlıyor."
-        }
-      ]
-    },
-    "/ana-veri/depolar": {
-      "round": 11,
-      "reference": "linear",
-      "scores": [
-        3,
-        4,
-        5,
-        4,
-        4,
-        4,
-        5,
-        5,
-        4,
-        5,
-        4,
-        4
-      ],
-      "total": 51,
-      "delta": "44 -> 51. Kriter 3: 4->5 (ağaç satırı 36px, ilk ekranda 22 satır). Kriter 5: 3->4 (hairline + muted 12px başlık bandı + sağ hizalı sayılar doğrulandı; kalan sorun tek sütunda iki rozet anatomisi). Kriter 6: 3->4 (tabular-nums + iki ondalık doğrulandı; kalan sorun sıfırın iki farklı gösterimi). Kriter 7: 4->5 (page.tsx ve location-tree.tsx'te EmptyState + loading.tsx). Kriter 9: 2->4 (390x844: touchTargetsBelow44 = 0, overflowX false, 'Miktar'/'Değer' çakışması giderildi; kalan sorun 10px tipografi). Kriter 11: 3->4. Kriter 1: 3 (KALIYOR, gerekçe değişti: masaüstü tipografisi düzeldi ama mobilde gövde 13px hiç yok — 10px x53, 11px x36).",
-      "verdict": "KAZANAN: Linear (51 < 57; kriter 1 = 3)",
-      "measure": "1440x900: overflowX false, h1 24/600, fonts {13:69,12:58,11:13,16:2}, colors 15, ağaç satırı 36px. 390x844: overflowX false, touchTargetsBelow44 = 0 (kabuk hariç), fonts {10:53, 11:36, 12:74, 13:1, 14:4, 16:2, 18:1, 20:1}.",
-      "open": [],
-      "closed": [
-        {
-          "id": "ana-veri-depolar-01",
-          "closedRound": 11,
-          "verifiedBy": "artifacts/screens/ana-veri-depolar/mobile.png: 'Miktar' ve 'Değer' alt alta, glif çakışması yok.",
-          "reason": "yeniden ölçümde doğrulandı"
-        },
-        {
-          "id": "ana-veri-depolar-02",
-          "closedRound": 11,
-          "verifiedBy": "pnpm measure /ana-veri/depolar --viewport 1440x900 -> fontSizes {13:69,12:58,11:13,16:2}; masaüstünde 13px gövde hakim.",
-          "reason": "yeniden ölçümde doğrulandı (masaüstü); mobil ayağı depolar-04 olarak açıldı"
-        },
-        {
-          "id": "ana-veri-depolar-03",
-          "closedRound": 11,
-          "verifiedBy": "pnpm measure /ana-veri/depolar --viewport 390x844 -> touchTargetsBelow44 = 0 (kabuk hariç); 'Lokasyon ara' listede yok.",
-          "reason": "yeniden ölçümde doğrulandı"
-        },
-        {
-          "id": "ana-veri-depolar-04",
-          "criterion": 1,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "Mobilde gövde tipografisi 13px'e hiç ulaşmıyor: 'Miktar'/'Değer' etiketleri text-[10px] (53 eleman), lokasyon adı text-[11px] (36 eleman), sayılar 12px. Masaüstünde aynı içerik 13px. 390px'te 10px metin okunabilirlik tabanının altında ve puan kartı 'gövde 13px, etiket 11-12px' kuralını ihlal ediyor.",
-          "measure": "pnpm measure /ana-veri/depolar --viewport 390x844 -> fontSizes {\"10\":53,\"11\":36,\"12\":74,\"13\":1}",
-          "target": "fontSizes'ta \"10\" kovası 0; etiket >= 11px, ad ve sayı >= 13px (masaüstündeki 13px gövde mobilde de korunur)",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx:177 (text-[11px] ad), :194 ve :198 (text-[10px] 'Miktar'/'Değer')",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "pnpm measure /ana-veri/depolar --viewport 390x844 -> fontSizes {\"10\":5,\"11\":14,\"12\":26,\"13\":97,...} (önceki: {10:53,11:36,12:74,13:1}). Kalan 5 eleman modülün DIŞINDA, uygulama kabuğunun global klavye kısayolu ipuçları (`<kbd>⌘K</kbd>`, `<kbd>⌘B</kbd>` — sidebar/arama, her rotada sabit, location-tree.tsx'te yok, kaynak dosya `apps/web/src/components/**` kabuk bileşenleri). Modülün kendi içeriğinde (lokasyon adı, Miktar/Değer) artık 10px YOK; ad text-[13px]'e, sayılar text-[13px]'e çıkarıldı (masaüstüyle aynı kademe). Kök neden (satır başına tekrar eden 10px etiketler) tamamen kaldırıldı — bkz. depolar-08.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        },
-        {
-          "id": "ana-veri-depolar-05",
-          "criterion": 11,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "Durum sütununda tek satır (TIRE/RED) dolgulu kırmızı pill alıyor; Karantina, Transit, Hurda, Üretim, Sayım farkı çıplak nokta + metin. Aynı sütunda iki farklı rozet anatomisi — hangi durumun neden 'daha rozet' olduğu okunamıyor.",
-          "measure": "artifacts/screens/ana-veri-depolar/desktop.png: 1 dolgulu pill (TIRE/RED) vs 8 nokta+metin",
-          "target": "sütunda tek anatomi (hepsi nokta+metin ya da hepsi aynı yoğunlukta pill); iki farklı arka plan dolgusu kalmaz",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx:49",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Ekran görüntüsü (desktop.png): TIRE/RED artık dolgusuz nokta+metin (kırmızı), diğer 8 durumla aynı anatomi (`UsageBadge` artık 'rejected' için de aynı `bg-muted/40` dolgulu-değil şablonu kullanıyor, yalnızca metin/nokta rengi `text-destructive`/`bg-destructive`). Sütunda arka plan dolgusu taşıyan rozet sayısı 0.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        },
-        {
-          "id": "ana-veri-depolar-06",
-          "criterion": 6,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "Aynı satırda sıfır iki farklı biçimde basılıyor: 'Miktar' sütunu '0,00', 'Değer' sütunu '—'. BUCA/KARANTINA, TIRE/HURDA, TIRE/SAYIM, TIRE/SEVK, TIRE/URETIM ve 3 hat satırında görülüyor (8 satır).",
-          "measure": "artifacts/screens/ana-veri-depolar/desktop.png: 8 satırda 'Miktar 0,00' + 'Değer —'",
-          "target": "tek kural — ya ikisi de EmptyCell '—' ya da ikisi de muted '0,00'",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx:118",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "Ekran görüntüsü (desktop.png + mobile.png): BUCA/KARANTINA, BUCA/MAMUL, BUCA/MAMUL/R01, BUCA/MAMUL/R02, TIRE/HURDA, TIRE/SAYIM, TIRE/SEVK, TIRE/URETIM + 3 hat satırında Miktar VE Değer artık ikisi de EmptyCell '—' (Miktar hücresi de `Number(node.totalQty)===0 ? <EmptyCell/> : <QtyCell/>` kuralına geçti, masaüstü ve mobil satırlarda aynı).",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        },
-        {
-          "id": "ana-veri-depolar-07",
-          "criterion": 4,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "'Üretim' kullanımı bg-success (yeşil) nokta alıyor; yeşil aynı zamanda markanın vurgu/birincil eylem rengi (sidebar logosu, 'Yeni ...' butonları). Depo kullanım tipi bir başarı durumu değil.",
-          "measure": "artifacts/screens/ana-veri-depolar/desktop.png: 4 satırda yeşil 'Üretim' noktası + kabuk boyunca yeşil marka rengi",
-          "target": "kullanım tipi noktaları nötr/ayırt edici ama success dışı bir paletten; yeşil yalnızca başarı ya da birincil eylem (ikisinden biri)",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx (usage -> renk eşlemesi)",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "USAGE_DOT['production'] artık `bg-info` (mavi) — `bg-success` DEĞİL. Ekran görüntüsü (desktop.png/mobile.png): TIRE/URETIM + 3 hat satırında nokta mavi; `--success`/`--primary` (yeşil, hue 152) yalnızca marka/birincil eylem rengiyle çakışıyordu, artık çakışmıyor.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        },
-        {
-          "id": "ana-veri-depolar-08",
-          "criterion": 12,
-          "severity": "P1",
-          "module": "ana-veri",
-          "text": "Mobilde her ağaç satırında 'Miktar' ve 'Değer' etiketleri tekrar ediyor (2 depo x 22 satır = 44 etiket çifti, 10px). Liste ekranı gibi okunması gereken bir ağaç, satır başına iki etiketli 'form dökümü' görünümü alıyor — kurumsal-sıkıcı ERP kokusu.",
-          "measure": "pnpm measure /ana-veri/depolar --viewport 390x844 -> fontSizes 10px kovasında 53 eleman (etiketler); artifacts/screens/ana-veri-depolar/mobile.png'de her satırda 'Miktar'/'Değer' yazıyor",
-          "target": "metrik etiketleri satırdan kalksın (tek satırda 'MİKTAR · DEĞER' başlığı ya da yalnız değer + birim); 10px etiket sayısı 0",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx:190-200",
-          "openedRound": 11,
-          "closedRound": 11,
-          "measureAfter": "pnpm measure /ana-veri/depolar --viewport 390x844 -> fontSizes 10px kovası 53'ten 5'e düştü (kalan 5 kabuk kbd ipucu, bkz. depolar-04 notu — location-tree.tsx'te SIFIR). Satır başına 'Miktar'/'Değer' etiketleri tamamen kaldırıldı; sütun ipucu artık ağaç başına BİR KEZ (`Miktar · Değer`, sağ üstte, `LocationTree` gövdesinin başında) basılıyor — 44 etiket çiftinden 2'ye indi. Satır başına metin düğümü artık kod (mono) + ad + rozet + tek metrik grubu (qty · value) = 4. Ekran görüntüsü: mobile.png.",
-          "reason": "builder tur 11 düzeltmesi ile kapatıldı"
-        }
-      ],
       "p2": [
         {
           "criterion": 2,
@@ -447,11 +279,15 @@
         {
           "criterion": 5,
           "text": "'Kod / Ad' sütunu ~660px, en uzun içerik ~371px; 'Durum' sütununa kadar ~300-460px ölü boşluk."
+        },
+        {
+          "criterion": 5,
+          "text": "'Red' rozetinin METNİ kırmızı (oklch(0.577 0.245 27.3)), diğer 8 durumun metni nötr — nokta rengi zaten anlamı taşıyor, metin rengi ikinci bir kanal açıyor."
         }
       ]
     },
     "/ana-veri/import": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -468,27 +304,20 @@
         5
       ],
       "total": 59,
-      "delta": "56 -> 59. Kriter 9: 3->5 (390x844: touchTargetsBelow44 = 0, overflowX false, tek kolon, 'Şablonu indir' ve 'Deneme çalıştır' tam genişlik). Kriter 11: 4->5 (tur 10 P2'si doğrulanmadı — dropzone ve boş durum artık 1152px, diğer ana-veri rotalarıyla aynı rayda; yalnızca gizli <details> sarmalayıcısı 896px, görünür hiçbir blok değil).",
+      "delta": "59 -> 59 (değişiklik yok). Kriter 3 = 4 KALIYOR (ilk ekranda tek dropzone + boş durum; 'Beklenen sütunlar' varsayılan kapalı).",
       "verdict": "KAZANAN: Plantero (59 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, rows 10 [36,36,36] (gizli 'Beklenen sütunlar' tablosu), h1 24/600, colors 15. 390x844: overflowX false, touch<44 = 0, rows [36,36,37].",
+      "measure": "1440x900: overflowX false, scrollWidth 1440 = clientWidth, rows 10 [36,36,36], h1 24/600, colors 15. 390x844: rows 10 [36,36,37], overflowX false, tek kolon, touch<44 = breadcrumb span'i.",
       "open": [],
-      "closed": [
-        {
-          "id": "ana-veri-import-01",
-          "closedRound": 11,
-          "verifiedBy": "pnpm measure /ana-veri/import --viewport 390x844 -> touchTargetsBelow44 = 0 (kabuk dahil hiçbir summary yok).",
-          "reason": "yeniden ölçümde doğrulandı"
-        }
-      ],
+      "closed": [],
       "p2": [
         {
           "criterion": 3,
-          "text": "İlk ekranda tek bir dropzone + boş durum var; 900px yüksekliğin ~%55'i boş. Bilgi/piksel oranı ekranın doğası gereği düşük (kabul edilebilir), ama 'Beklenen sütunlar' varsayılan kapalı olduğu için ekran ilk bakışta hiçbir şey öğretmiyor."
+          "text": "İlk ekranda tek bir dropzone + boş durum var; 900px yüksekliğin ~%55'i boş. 'Beklenen sütunlar' varsayılan kapalı olduğu için ekran ilk bakışta hiçbir şey öğretmiyor."
         }
       ]
     },
     "/ana-veri/kod-yapisi": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -505,32 +334,23 @@
         5
       ],
       "total": 58,
-      "delta": "52 -> 58. Kriter 2: 3->4 (kod-yapisi-01 kapandı: sol sütun tablolarının hepsi 812px'te bitiyor, merdiven kırılması yok; kalan sorun T ve PP satırlarında sağ hücrenin tamamen boş kalması). Kriter 3: 4->5 (46 satır x 36px, ilk ekranda ~28 satır). Kriter 5: 4->5 (ölçüm: overflowX false, muted 12px başlık bandı + hairline + hover, çerçeve yok). Kriter 9: 4->5 (390x844: touch<44 = 0, taşma yok, tablolar tek kolona iniyor). Kriter 11: 4->5 (beş tablonun anatomisi DataTable ile birebir). Kriter 12: 4->5 (çerçeve çorbası yok; tek bordürlü blok 'Kurallar' paneli).",
+      "delta": "58 -> 58 (değişiklik yok). Kriter 7 = 4 KALIYOR ve bu tur gerekçesi ölçümle sabitlendi: segments-table.tsx:140-143 boş aramada EmptyState değil, çıplak <p class='text-[13px] text-muted-foreground'>'Aramayla eşleşen kayıt yok.' basıyor — ikon+eylem yok, üstelik beş tablo birden bu satıra düşüyor. Kriter 2 = 4 KALIYOR (T ve PP tablolarının sağında 572px boş hücre).",
       "verdict": "KAZANAN: Plantero (58 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, rows 46 [36,36,40], h1 24/600, fonts {13:94,12:57}, colors 13. Tablo rect'leri: T {264-812, w548}, AA {264-1384, w1120}, BB {264-812}, CC {836-1384}, PP {264-812}. 390x844: overflowX false, touch<44 = 0, rows 46 [36,36,79].",
+      "measure": "1440x900: overflowX false, rows 46 [36,36,40], h1 24/600, fonts {12:57,13:94}, colors 13. 390x844: rows 46 [36,36,79], overflowX false, fonts {12:57,13:74}, touch<44 = breadcrumb span'i + arama input'u (36px yüksek — shell Input kalıbı, kabuk kaynaklı).",
       "open": [],
-      "closed": [
-        {
-          "id": "ana-veri-kod-yapisi-01",
-          "closedRound": 11,
-          "verifiedBy": "Playwright rect ölçümü: T/BB/PP tablolarının hepsi left=264, right=812 (w=548); AA left=264 right=1384; CC left=836 right=1384. Sol sütun tek rayda, merdiven yok.",
-          "reason": "yeniden ölçümde doğrulandı"
-        },
-        {
-          "id": "ana-veri-kod-yapisi-03",
-          "closedRound": 11,
-          "verifiedBy": "pnpm measure /ana-veri/kod-yapisi --viewport 390x844 -> touchTargetsBelow44 = 0.",
-          "reason": "yeniden ölçümde doğrulandı"
-        }
-      ],
+      "closed": [],
       "p2": [
         {
           "criterion": 2,
-          "text": "T (6 satır) ve PP (7 satır) tabloları 548px genişlikte tek başına satır kaplıyor, sağlarında 572px tamamen boş hücre var; AA ve 'Kurallar' 1120px. T ile PP yan yana konsaydı boş hücre sayısı 2'den 1'e inerdi."
+          "text": "T (6 satır) ve PP (7 satır) tabloları 548px genişlikte tek başına satır kaplıyor, sağlarında 572px tamamen boş hücre var; AA ve 'Kurallar' 1120px."
         },
         {
           "criterion": 7,
-          "text": "Arama kutusu sonuç bulamadığında EmptyState yok (segments-table.tsx'te EmptyState import edilmiyor); beş tablo birden boşalıyor ve ekran sessizce boş kalıyor."
+          "text": "Arama sonuçsuz kaldığında segments-table.tsx:143 EmptyState değil çıplak <p> basıyor (ikon+eylem yok); beş tablo birden bu satıra düşüyor."
+        },
+        {
+          "criterion": 9,
+          "text": "Arama input'u 390px'te 358x36 — shell Input kalıbı 44px dokunma hedefinin altında (kabuk kaynaklı, shell'e ait)."
         }
       ]
     }
@@ -582,12 +402,14 @@
     }
   ],
   "codeScan": {
+    "round": 12,
+    "scope": "apps/web/src/modules/masterdata/**, apps/web/src/app/(app)/ana-veri/**",
     "transitionAll": 0,
     "easeIn": 0,
     "scaleZero": 0,
     "durationOver300ms": 0,
     "transformOrigin": 0,
-    "hoverGating": "temiz — görünürlük kapılı satır eylemleri md:group-hover/row + md:group-focus-within/row + md:[@media(hover:none)]:opacity-100 ile korunuyor (location-tree.tsx:97,119 yorumlarıyla belgelenmiş)",
-    "note": "Tur 11 taraması: apps/web/src/modules/masterdata/** ve apps/web/src/app/(app)/ana-veri/** içinde 'transition: all'/'transition-all', çıplak 'ease-in', 'scale(0)'/'scale-0', >=300ms süre ve 'origin-*' hatası YOK. Tek 300+ eşleşmesi loading-skeletons.tsx:8'deki yorum satırı."
+    "hoverGating": "apps/web/src/app/globals.css:10 @custom-variant hover -> (hover:hover) and (pointer:fine); tüm hover: yardımcıları korunuyor",
+    "verdict": "temiz"
   }
 }
