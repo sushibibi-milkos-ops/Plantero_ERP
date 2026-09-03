@@ -12,9 +12,15 @@ export default async function NewWorkOrderPage() {
   const [products, lines, warehouses] = await Promise.all([listManufacturableProducts(), listLineOptions(), listWarehousesForProduction()]);
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <>
+      {/* PageHeader artık ortalanmış form kabının DIŞINDA: içindeyken H1 içerik alanının sol
+          kenarından ~196px içeride başlıyordu, hemen üstündeki üst çubuk kırıntısı sol kenara
+          hizalıydı — aynı sayfada iki farklı sol hiza ekseni (Tur 5 bulgusu, P2). Yalnızca form
+          ortalanmış kabında kalır. */}
       <PageHeader title="Yeni İş Emri" description="Ürün ve miktar seçin; reçete malzemeleri otomatik hesaplanır." />
-      <CreateWorkOrderForm products={products} lines={lines} warehouses={warehouses} />
-    </div>
+      <div className="mx-auto max-w-3xl">
+        <CreateWorkOrderForm products={products} lines={lines} warehouses={warehouses} />
+      </div>
+    </>
   );
 }

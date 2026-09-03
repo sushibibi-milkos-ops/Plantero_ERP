@@ -221,6 +221,9 @@ export type LineCardRow = {
   /** Son 7 günün üretilen değeri (₺, gün gün) — miktar değil değer: hat farklı birimde ürün
    *  üretebildiğinden (todayUomCode ile aynı sorun) fiziksel miktar sparkline'ı yanıltıcı olurdu. */
   sparkline: number[];
+  /** Bu 7 gün toplamının önceki 7 güne göre değişimi (%) — Stripe'ın çıplak bırakmadığı karşılaştırma
+   *  deltası; önceki dönem toplamı 0 ise (yeni hat / veri yok) null (Tur 5 bulgusu, P1). */
+  sparklineDeltaPct: number | null;
   lastClosedWorkOrder: { docNo: string; productName: string; producedQty: string; uomCode: string; closedAt: Date } | null;
 };
 
@@ -247,11 +250,25 @@ export async function listLineCards(): Promise<LineCardRow[]> {
       .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
       .where(and(eq(workOrders.lineId, line.id), isNotNull(workOrders.finishedAt)));
     const todayUomCodes = new Set(finishedRows.filter((r) => businessDate(r.wo.finishedAt!) === today).map((r) => r.uomCode));
+    // Bugün hiç biten iş emri yoksa (küme boş) sütun birimsiz "0" basıyordu — aynı sütunda
+    // HAT2 "39 ADET" iken HAT1/HAT3 çıplak "0", iki farklı rakam anatomisi (Tur 5 bulgusu, P1).
+    // Hattın tüm zamanlardaki üretiminin ortak birimi varsa (çoğunlukla öyle — bir hat tipik
+    // olarak tek tip ürün ailesi üretir) o birim soluk gösterilir; hiç geçmiş üretim de yoksa
+    // (yeni hat) birim boş kalır — bu tek durumda birimsiz "0" dürüsttür.
+    const allTimeUomCodes = new Set(finishedRows.map((r) => r.uomCode));
+    const fallbackUomCode = allTimeUomCodes.size === 1 ? Array.from(allTimeUomCodes)[0]! : null;
 
     // 7 günlük değer sparkline'ı: eskiden kartın altında 900px viewport'un ~%47'si boş kalıyordu
     // (Tur 3 bulgusu, P2) — hattın son bir haftasına dair gerçek bir eğri gösterir.
     const last7Days = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6));
     const sparkline = last7Days.map((d) => sum(finishedRows.filter((r) => businessDate(r.wo.finishedAt!) === d).map((r) => r.wo.totalCost)).toNumber());
+    // Delta: bu 7 günün toplamı vs önceki 7 gün — sparkline tek başına büyüklüğü söylemiyordu
+    // (Tur 4'te eklenen çizgi hangi büyüklükte olduğu okunamayan çıplak bir eğriydi, Tur 5 bulgusu, P1).
+    const prev7Days = Array.from({ length: 7 }, (_, i) => addDays(today, i - 13));
+    const prev7DaySet = new Set(prev7Days);
+    const prevWeekSum = sum(finishedRows.filter((r) => prev7DaySet.has(businessDate(r.wo.finishedAt!))).map((r) => r.wo.totalCost));
+    const thisWeekSum = sparkline.reduce((a, b) => a + b, 0);
+    const sparklineDeltaPct = pctChange(thisWeekSum, prevWeekSum);
 
     const closedRows = finishedRows.filter((r) => r.wo.status === 'closed' && r.wo.closedAt).sort((a, b) => b.wo.closedAt!.getTime() - a.wo.closedAt!.getTime());
     const lastClosed = closedRows[0];
@@ -260,10 +277,11 @@ export async function listLineCards(): Promise<LineCardRow[]> {
       id: line.id, code: line.code, name: line.name, capacityPerHour: line.capacityPerHour, shiftMinutes: line.shiftMinutes,
       activeWorkOrder: active ? { id: active.wo.id, docNo: active.wo.docNo, productName: active.productName, status: active.wo.status, producedQty: active.wo.producedQty, plannedQty: active.wo.plannedQty, uomCode: active.uomCode } : null,
       todayProducedQty: toDb(oee.actualOutput),
-      todayUomCode: todayUomCodes.size === 1 ? Array.from(todayUomCodes)[0]! : null,
+      todayUomCode: todayUomCodes.size === 1 ? Array.from(todayUomCodes)[0]! : fallbackUomCode,
       oee,
       lastDowntimeReason: null,
       sparkline,
+      sparklineDeltaPct,
       lastClosedWorkOrder: lastClosed ? { docNo: lastClosed.wo.docNo, productName: lastClosed.productName, producedQty: lastClosed.wo.producedQty, uomCode: lastClosed.uomCode, closedAt: lastClosed.wo.closedAt! } : null,
     });
   }
@@ -372,6 +390,28 @@ export type LineOption = { id: string; code: string; name: string; capacityPerHo
 export async function listLineOptions(): Promise<LineOption[]> {
   const rows = await listProductionLines();
   return rows.map((r) => ({ id: r.id, code: r.code, name: r.name, capacityPerHour: r.capacityPerHour, shiftMinutes: r.shiftMinutes }));
+}
+
+export type NextPlannedWorkOrder = { docNo: string; plannedStart: string | null };
+
+/**
+ * Hat başına henüz serbest bırakılmamış (status='planned') en yakın iş emri — yalnızca operatör
+ * kuyruğunda (released/in_progress/paused) hiçbir şey yokken boş hat kartında "Sıradaki" ipucu
+ * göstermek için (Tur 5 bulgusu, P1: boş kart "Aktif iş emri yok" dışında hiçbir bağlam
+ * vermiyordu — operatör hattı açmadan bugün/yarın ne planlandığını göremiyordu).
+ */
+export async function listNextPlannedWorkOrders(lineIds: string[]): Promise<Map<string, NextPlannedWorkOrder>> {
+  if (!lineIds.length) return new Map();
+  const rows = await db
+    .select({ lineId: workOrders.lineId, docNo: workOrders.docNo, plannedStart: workOrders.plannedStart })
+    .from(workOrders)
+    .where(and(inArray(workOrders.lineId, lineIds), eq(workOrders.status, 'planned')))
+    .orderBy(asc(workOrders.plannedStart), asc(workOrders.docNo));
+  const map = new Map<string, NextPlannedWorkOrder>();
+  for (const r of rows) {
+    if (!map.has(r.lineId)) map.set(r.lineId, { docNo: r.docNo, plannedStart: r.plannedStart ? r.plannedStart.toISOString().slice(0, 10) : null });
+  }
+  return map;
 }
 
 /* ==================================================================== */

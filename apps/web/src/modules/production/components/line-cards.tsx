@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Factory, Lock } from 'lucide-react';
+import { Factory, CircleCheck, ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { Progress } from '@/components/ui/progress';
@@ -65,7 +65,9 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
               <div className="flex flex-1 flex-col items-center justify-center gap-2 border-t border-border/60 pt-4 pb-1 text-center">
                 <Factory className="size-5 text-muted-foreground/60" strokeWidth={1.5} />
                 <span className="text-xs text-muted-foreground">Aktif iş emri yok</span>
-                <Button variant="outline" size="sm" asChild>
+                {/* h-11 md:h-8: 32px'lik sm düğme mobilde 44px dokunma eşiğinin altındaydı — boş
+                    kartın tek eylemi (Tur 5 bulgusu, P1; data-table/toolbar.tsx'teki kalıpla aynı). */}
+                <Button variant="outline" size="sm" className="h-11 md:h-8" asChild>
                   <Link href="/uretim/planlama">Bu hatta iş emri planla</Link>
                 </Button>
               </div>
@@ -80,15 +82,10 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
                   birim daima ayrı, soluk `ml-0.5 text-[11px]` span (QtyCell'in birim kalıbıyla
                   aynı) — eskiden "80/sa" ve "%3" birimi değerle aynı ağırlıkta ya da önde
                   yazıyordu, göz sütunları karşılaştıramıyordu (Tur 4 bulgusu, P2). */}
-              <Metric
-                label="Doluluk"
-                value={
-                  <span className="num text-sm font-semibold">
-                    {fillPct === null ? '—' : fillPct}
-                    {fillPct === null ? null : <span className="ml-0.5 text-[11px] font-normal text-muted-foreground">%</span>}
-                  </span>
-                }
-              />
+              {/* Yüzde ön ek: Türkçede % son ek değil ön ektir — sayfanın kendi alt başlığı ("ort.
+                  doluluk %1"), iş emri detayı, liste, planlama tooltip'i ve operatör ekranı hep bu
+                  kartı istisna bırakıyordu (Tur 5 bulgusu, P1). */}
+              <Metric label="Doluluk" value={<span className="num text-sm font-semibold">{fillPct === null ? '—' : `%${fillPct}`}</span>} />
               <Metric
                 label="Kapasite"
                 value={
@@ -103,22 +100,29 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
             {/* Son 7 gün: veri olsun olmasın daima render edilir — HAT3'te tüm değerler 0 diye
                 bölüm hiç çizilmiyordu, üç kart farklı satır sayısına düşüp metrik satırları
                 yatayda hizasız kalıyordu (Tur 4 bulgusu, P1). Veri yokken Sparkline yerine sabit
-                boyutlu (88×24) kutuda 1px taban çizgisi + "—" gösterilir ki kart iskeleti
-                (satır sayısı, yükseklik) üç hatta da aynı kalsın. */}
-            <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3">
+                boyutlu (88×24) kutuda ortalanmış "Veri yok" metni — eski hairline+"—" çipi kopuk
+                bir çizgi gibi okunuyordu (Tur 5 bulgusu, P2). Delta rozeti (KpiCard'daki deltaNode
+                kalıbıyla aynı): çıplak bir eğri hangi büyüklükte olduğunu söylemiyordu (Tur 5
+                bulgusu, P1) — önceki 7 güne göre değişim, sparkline'ın hemen solunda. */}
+            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-border/60 pt-3">
               <span className="text-[11px] tracking-wide text-muted-foreground uppercase">Son 7 gün</span>
-              {line.sparkline.some((v) => v > 0) ? (
-                <Sparkline data={line.sparkline} width={88} height={24} tone="muted" />
-              ) : (
-                <div className="relative flex h-6 w-[88px] items-center" title="Son 7 günde üretim yok">
-                  <div aria-hidden className="h-px w-full bg-border" />
-                  <span className="absolute right-0 bg-card pl-1.5 text-[11px] text-muted-foreground">—</span>
-                </div>
-              )}
+              <div className="flex items-center gap-1.5">
+                {line.sparklineDeltaPct !== null ? <SparklineDelta pct={line.sparklineDeltaPct} /> : null}
+                {line.sparkline.some((v) => v > 0) ? (
+                  <Sparkline data={line.sparkline} width={88} height={24} tone="muted" />
+                ) : (
+                  <div className="flex h-6 w-[88px] items-center justify-center text-[11px] text-muted-foreground" title="Son 7 günde üretim yok">
+                    Veri yok
+                  </div>
+                )}
+              </div>
             </div>
             {line.lastClosedWorkOrder ? (
               <div className="flex items-center gap-2 border-t border-border/60 pt-3 text-xs text-muted-foreground">
-                <Lock className="size-3.5 shrink-0" />
+                {/* Asma kilit erişim/güvenlik anlamı taşır, kapatılmış bir iş emrini değil — etiket
+                    ("Son kapatılan:") zaten kendini açıklıyor; ikon anlamı doğru bir işaretle
+                    değiştirildi (Tur 5 bulgusu, P2). */}
+                <CircleCheck className="size-3.5 shrink-0" />
                 <span className="min-w-0 truncate">
                   Son kapatılan: <span className="text-foreground">{line.lastClosedWorkOrder.productName}</span>
                 </span>
@@ -139,5 +143,27 @@ function Metric({ label, value, title }: { label: string; value: React.ReactNode
       <div className="text-[11px] tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className="mt-0.5">{value}</div>
     </div>
+  );
+}
+
+/** "Son 7 gün" sparkline'ının delta rozeti — `KpiCard`'daki `deltaNode` kalıbıyla aynı ton/ikon
+ *  mantığı (yükseliş=success, düşüş=destructive, düz=nötr); üretimde artış varsayılan olarak
+ *  olumlu sayılır (`invertDelta` yok — hattın hedefe göre iyi/kötü olduğu burada bilinmiyor). */
+function SparklineDelta({ pct }: { pct: number }) {
+  const dir = pct === 0 ? 'flat' : pct > 0 ? 'up' : 'down';
+  const Icon = dir === 'up' ? ArrowUpRight : dir === 'down' ? ArrowDownRight : Minus;
+  return (
+    <span
+      className={cn(
+        'inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-px text-[11px] font-medium tabular-nums',
+        dir === 'flat' && 'bg-muted text-muted-foreground',
+        dir === 'up' && 'bg-success/12 text-success',
+        dir === 'down' && 'bg-destructive/10 text-destructive',
+      )}
+      title="Önceki 7 güne göre"
+    >
+      <Icon className="size-3" />
+      %{Math.abs(pct).toLocaleString('tr-TR', { maximumFractionDigits: 1 })}
+    </span>
   );
 }

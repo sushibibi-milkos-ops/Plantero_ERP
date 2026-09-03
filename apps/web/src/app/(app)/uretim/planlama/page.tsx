@@ -46,8 +46,17 @@ export default async function PlanningPage({ searchParams }: { searchParams: Pro
   return (
     <>
       <PageHeader
-        title="Üretim Planlama"
-        description="Kartı sürükleyerek hat/gün değiştirin."
+        // Mobilde üst çubuk zaten "Planlama" kırıntısını taşıyor — aynı desen (Tur 5 bulgusu, P2).
+        title={<span className="max-md:sr-only">Üretim Planlama</span>}
+        // Sürükle-bırak yalnızca masaüstü ızgarada çalışır (mobil görünüm, aşağıda, salt okunur gün
+        // listesi) — koşulsuz "Kartı sürükleyerek…" talimatı 390px'teki kullanıcıya cihazında
+        // uygulayamayacağı bir eylem söylüyordu (Tur 5 bulgusu, P1).
+        description={
+          <>
+            <span className="max-md:hidden">Kartı sürükleyerek hat/gün değiştirin.</span>
+            <span className="md:hidden">Gün gün planlanan iş emirleri.</span>
+          </>
+        }
         actions={
           <div className="flex items-center gap-1">
             <Button variant="outline" size="icon" className="h-11 w-11 md:h-9 md:w-9" asChild aria-label="Önceki hafta">

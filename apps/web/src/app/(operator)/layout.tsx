@@ -32,13 +32,16 @@ export default async function OperatorLayout({ children }: { children: React.Rea
             <span className="hidden text-sm sm:inline">Kokpit</span>
           </Link>
           <form action={operatorLogout}>
+            {/* Etiket her genişlikte görünür: Çıkış yıkıcı bir eylemdir, 640px altında yalnızca
+                ikon bırakmak "Kokpit" düğmesiyle ayırt edilemeyen iki nötr kutu bırakıyordu (Tur 5
+                bulgusu, P2). */}
             <button
               type="submit"
               className="flex h-14 min-w-14 items-center justify-center gap-1.5 rounded-lg border px-3 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
               aria-label="Çıkış"
             >
               <LogOut className="size-5 shrink-0" />
-              <span className="hidden text-sm sm:inline">Çıkış</span>
+              <span className="text-sm">Çıkış</span>
             </button>
           </form>
         </div>

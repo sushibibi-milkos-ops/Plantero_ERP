@@ -153,7 +153,9 @@ export function PlanningBoard({
       {/* Masaüstü ızgara. scroll-fade-x: kaydırılabilir olduğuna dair kenar ipucu. md:max-h: çok
           sayıda hatta dikey taşmayı sınırlar, az hatta ızgara kendi doğal (kısa) yüksekliğinde kalır
           (Tur 4 bulgusu, P1 — eskiden `md:h-[...]` sabit yükseklik zorluyordu). */}
-      <div className="scroll-fade-x scrollbar-thin hidden overflow-x-auto overflow-y-auto rounded-lg border border-border/70 bg-card md:block md:max-h-[calc(100dvh-16rem)]">
+      {/* rounded-lg border (tam dış çerçeve) → border-y: Linear tablo/board'ları dış kutuya alınmaz,
+          kaydırma bölgesini işaretlemek için üst/alt hairline yeterli (Tur 5 bulgusu, P2). */}
+      <div className="scroll-fade-x scrollbar-thin hidden overflow-x-auto overflow-y-auto border-y border-border/60 bg-card md:block md:max-h-[calc(100dvh-16rem)]">
         <div className="grid" style={{ gridTemplateColumns: gridTemplate, gridTemplateRows }}>
           <div className="sticky left-0 z-10 border-r border-b border-border/60 bg-muted/40 p-2 text-xs font-medium text-muted-foreground">Hat</div>
           <div className="sticky left-[110px] z-10 border-r border-b border-border/60 bg-muted/40 p-2 text-center text-[11px] font-medium whitespace-nowrap text-muted-foreground">
@@ -180,8 +182,8 @@ export function PlanningBoard({
           })}
           <div className="border-b border-border/60 bg-muted/40 p-2 text-right text-[11px] font-medium text-muted-foreground">Toplam</div>
 
-          {lines.map((line) => (
-            <PlanningLineRow key={line.id} line={line} dateCols={dateCols} byCell={byCell} todayIso={todayIso} />
+          {lines.map((line, i) => (
+            <PlanningLineRow key={line.id} line={line} dateCols={dateCols} byCell={byCell} todayIso={todayIso} isFirstRow={i === 0} />
           ))}
         </div>
       </div>
@@ -245,11 +247,15 @@ function PlanningLineRow({
   dateCols,
   byCell,
   todayIso,
+  isFirstRow,
 }: {
   line: LineOption;
   dateCols: string[];
   byCell: Map<string, PlanningWorkOrderRow[]>;
   todayIso: string;
+  /** Yalnızca ilk hat satırında "Tüm iş emirleri planlandı" metni gösterilir — sütun düzeyinde tek
+   *  bir kavram, 3 hat satırında birebir tekrar edip 132px'lik sütunu doldurmasın (Tur 5 bulgusu, P2). */
+  isFirstRow: boolean;
 }) {
   const dailyCapacity = dailyCapacityOf(line);
   const unscheduledCellItems = byCell.get(`${line.id}:unscheduled`) ?? [];
@@ -268,16 +274,34 @@ function PlanningLineRow({
         <div className="font-mono text-xs font-medium">{line.code}</div>
         <div className="truncate text-[11px] text-muted-foreground">{line.name}</div>
       </div>
-      <UnscheduledCell lineId={line.id} items={unscheduledCellItems} />
-      {dateCols.map((d) => (
-        <PlanningCell key={d} lineId={line.id} dateIso={d} items={byCell.get(`${line.id}:${d}`) ?? []} isToday={d === todayIso} isWeekend={dowMonFirst(d) >= 5} dailyCapacity={dailyCapacity} />
+      <UnscheduledCell lineId={line.id} items={unscheduledCellItems} showEmptyLabel={isFirstRow} />
+      {dateCols.map((d, i) => (
+        <PlanningCell
+          key={d}
+          lineId={line.id}
+          dateIso={d}
+          items={byCell.get(`${line.id}:${d}`) ?? []}
+          isToday={d === todayIso}
+          isWeekend={dowMonFirst(d) >= 5}
+          isLastCol={i === dateCols.length - 1}
+          dailyCapacity={dailyCapacity}
+        />
       ))}
       {/* items-start pt-2: eskiden dikey ortalanan rakam, satırın üstündeki hat kartıyla hizasız
           görünüyordu — üste hizalanıp altına birim etiketi eklenince "Toplam" hücresi diğer hücrelerle
           aynı üst hizadan başlar (Tur 4 bulgusu, P2). */}
       <div className="flex flex-col items-end justify-start border-b border-border/60 bg-muted/10 px-2 pt-2">
-        <QtyCell value={rowTotal.toFixed(4)} className="text-xs font-medium" />
-        {rowUomCode ? <span className="text-[11px] text-muted-foreground">{rowUomCode}</span> : null}
+        {/* Satırda hiç iş emri yoksa (rowWorkOrders boş) birim de yok — çıplak "0" birimli hücrelerin
+            (HAT1 "90 ADET") yanında ne anlama geldiği belirsiz kalıyordu (line-cards.tsx/queries.ts
+            todayUomCode ile aynı desen, Tur 5 bulgusu, P1). Sıfır toplamda dürüst bir "—". */}
+        {rowWorkOrders.length === 0 ? (
+          <span className="text-xs text-muted-foreground/60">—</span>
+        ) : (
+          <>
+            <QtyCell value={rowTotal.toFixed(4)} className="text-xs font-medium" />
+            {rowUomCode ? <span className="text-[11px] text-muted-foreground">{rowUomCode}</span> : null}
+          </>
+        )}
       </div>
     </>
   );
@@ -285,20 +309,26 @@ function PlanningLineRow({
 
 /** 'Planlanmamış' hücresi: plannedStart=null iş emirlerinin bırakıldığı sabit sütun (sticky, Hat'ın
  *  hemen yanında) — Tur 3 bulgusu, P0. Kapasite doluluk yüzdesi burada anlamsız (tarihsiz), gösterilmez. */
-function UnscheduledCell({ lineId, items }: { lineId: string; items: PlanningWorkOrderRow[] }) {
+function UnscheduledCell({ lineId, items, showEmptyLabel }: { lineId: string; items: PlanningWorkOrderRow[]; showEmptyLabel: boolean }) {
   const { setNodeRef, isOver } = useDroppable({ id: `${lineId}::unscheduled` });
   return (
     <div
       ref={setNodeRef}
       className={cn(
-        'sticky left-[110px] z-[5] flex flex-col space-y-1.5 overflow-y-auto border-r border-b border-border/60 bg-muted/15 p-1.5 transition-colors',
+        'group sticky left-[110px] z-[5] flex flex-col space-y-1.5 overflow-y-auto border-r border-b border-border/60 bg-muted/15 p-1.5 transition-colors',
         isOver && 'bg-primary/8',
       )}
     >
       {items.length === 0 ? (
-        // Boş "Planlanmamış" hücresi eskiden sessizdi — sürükle-bırak hedefi olduğuna dair hiçbir
-        // ipucu vermiyordu (Tur 4 bulgusu, P1). Hattın tüm iş emirlerinin planlandığını netleştirir.
-        <div className="flex flex-1 items-center justify-center px-1 text-center text-[11px] text-muted-foreground">Tüm iş emirleri planlandı</div>
+        showEmptyLabel ? (
+          // Boş "Planlanmamış" hücresi eskiden sessizdi — sürükle-bırak hedefi olduğuna dair hiçbir
+          // ipucu vermiyordu (Tur 4 bulgusu, P1). Hattın tüm iş emirlerinin planlandığını netleştirir.
+          // Yalnızca ilk hat satırında: sütun düzeyinde tek kavram, 3 satırda tekrar edilmez (Tur 5
+          // bulgusu, P2) — diğer satırlarda PlanningCell'deki hover ipucuyla aynı Plus deseni.
+          <div className="flex flex-1 items-center justify-center px-1 text-center text-[11px] text-muted-foreground">Tüm iş emirleri planlandı</div>
+        ) : (
+          <Plus className="pointer-events-none m-auto size-4 text-muted-foreground/0 transition-colors group-hover:text-muted-foreground/50" aria-hidden />
+        )
       ) : (
         items.map((wo) => <WoCard key={wo.id} wo={wo} />)
       )}
@@ -312,6 +342,7 @@ function PlanningCell({
   items,
   isToday,
   isWeekend,
+  isLastCol,
   dailyCapacity,
 }: {
   lineId: string;
@@ -319,6 +350,9 @@ function PlanningCell({
   items: PlanningWorkOrderRow[];
   isToday: boolean;
   isWeekend: boolean;
+  /** Son tarih sütunu: sağ ayraç çizilmez (Tur 5 bulgusu, P1 — sütunlar arası dikey ayraç yoktu, 84px
+   *  serbest kartlarla günler arası sınır göz gezdirerek okunamıyordu). */
+  isLastCol: boolean;
   dailyCapacity: Decimal | null;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: `${lineId}::${dateIso}` });
@@ -329,13 +363,14 @@ function PlanningCell({
   return (
     <div
       ref={setNodeRef}
-      title={fillPct !== null ? `Gün kapasitesinin %${fillPct}'i` : undefined}
       className={cn(
         // h-full (min-h-16 idi): satırlar artık kabın kalan yüksekliğini eşit paylaşıyor (Tur 3
         // bulgusu, P1) — hücre kendi satırını doldurur; taşan içerik hücre içinde kaydırılır.
         // group: boş hücrede hover'da sürükle-bırak hedefi ipucu (Plus ikonu) gösterir — eskiden boş
-        // hücrede hiçbir işaret yoktu (Tur 4 bulgusu, P1).
-        'group relative h-full space-y-1.5 overflow-y-auto border-b border-border/40 p-1.5 pb-2.5 transition-colors',
+        // hücrede hiçbir işaret yoktu (Tur 4 bulgusu, P1). border-r: gün sütunları arasında dikey
+        // ayraç (Tur 5 bulgusu, P1), son sütunda kapalı.
+        'group relative flex h-full flex-col gap-1.5 overflow-y-auto border-r border-b border-border/40 p-1.5 transition-colors',
+        isLastCol && 'border-r-0',
         isWeekend && !isToday && 'bg-muted/25',
         isToday && 'bg-primary/[0.03]',
         isEmpty && !isOver && 'hover:bg-accent/30',
@@ -349,13 +384,22 @@ function PlanningCell({
         <WoCard key={wo.id} wo={wo} />
       ))}
       {/* Kök neden (Tur 4 P2): 11px açık gri bir sayı hangi ölçüye ait olduğu (gün kapasitesinin
-          yüzdesi mi, hat doluluğu mu) hiçbir etiketle söylenmiyordu ve boş hücrede hiç görünmüyordu
-          — sütunlar arası karşılaştırma yapılamıyordu. Sayı yerine hücrenin altında tam genişlikte
-          3px'lik bir kapasite çubuğu: doluluk oranı doğrudan görsel uzunluk olarak okunur, tam
-          değer yalnızca hover'da (`title` tooltip) gösterilir. */}
+          yüzdesi mi, hat doluluğu mu) hiçbir etiketle söylenmiyordu ve boş hücrede hiç görünmüyordu.
+          Kapasite çubuğu — Tur 5 bulgusu, P1 (üç düzeltme):
+          1) Track `bg-primary/25` idi — %0 dolu bir hücre bile tam genişlikte soluk yeşil bir bant
+             çiziyordu; nötr `bg-border` + dolgu `bg-primary/60` (dolu/boş artık ayırt edilebilir).
+          2) `absolute right/bottom/left` ile kartların ~70px altına, satır ayracına yapışık
+             çiziliyordu — artık kart yığınının hemen altında akışta (`gap-1.5` üstteki flex
+             konteynerden gelir), kartla görsel ilişkisi net.
+          3) Tam değer yalnızca native `title` tooltip'inde vardı — klavye/ekran okuyucu erişemiyordu,
+             ~1sn gecikmeli açılıyordu. `role="img"` + `aria-label` + dolu hücrelerde 10px görünür
+             yüzde metni eklendi. */}
       {fillPct !== null ? (
-        <div className="pointer-events-none absolute right-1.5 bottom-1 left-1.5 h-[3px] overflow-hidden rounded-full bg-primary/25">
-          <div className="h-full rounded-full bg-primary/60" style={{ width: `${Math.min(100, fillPct)}%` }} />
+        <div className="mt-auto shrink-0">
+          <div role="img" aria-label={`Gün kapasitesinin %${fillPct}'i`} className="h-[3px] overflow-hidden rounded-full bg-border">
+            <div className="h-full rounded-full bg-primary/60" style={{ width: `${Math.min(100, fillPct)}%` }} />
+          </div>
+          <div className="mt-0.5 text-right text-[10px] text-muted-foreground/70">%{fillPct}</div>
         </div>
       ) : null}
     </div>

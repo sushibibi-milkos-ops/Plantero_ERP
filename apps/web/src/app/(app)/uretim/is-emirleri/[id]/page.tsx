@@ -41,9 +41,15 @@ export default async function WorkOrderDetailPage({ params }: { params: Promise<
         {/* max-sm:before:content-none + max-sm:flex-col: pseudo-element ayraç mobilde şerit sarınca
             satır başında öksüz kalıyordu ("· Depo TIRE" 2. satırda başlıyordu, Tur 2 bulgusu) —
             mobilde dikey düzene geçilip ayraç tamamen kapatılır, masaüstünde nokta ayraç korunur. */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm max-sm:flex-col max-sm:items-start max-sm:gap-y-1 [&>*:not(:first-child)]:before:mr-3 [&>*:not(:first-child)]:before:text-border [&>*:not(:first-child)]:before:content-['·'] max-sm:[&>*:not(:first-child)]:before:content-none">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] max-sm:flex-col max-sm:items-start max-sm:gap-y-1 [&>*:not(:first-child)]:before:mr-3 [&>*:not(:first-child)]:before:text-border [&>*:not(:first-child)]:before:content-['·'] max-sm:[&>*:not(:first-child)]:before:content-none">
           <StatusBadge status={wo.status} kind="work_order" size="md" />
-          <span className="font-mono text-xs text-muted-foreground">{line.code} — {line.name}</span>
+          {/* Mono yalnızca makine kodunda (HAT1); insan-okur hat adı sans + aynı 13px punto — eskiden
+              mono tüm şeridi (kod + ad) kapsıyor, satırda iki farklı punto (12/14px) karışıyordu
+              (Tur 5 bulgusu, P1). */}
+          <span className="inline-flex items-baseline gap-1.5">
+            <span className="font-mono text-xs text-muted-foreground">{line.code}</span>
+            <span className="text-muted-foreground">{line.name}</span>
+          </span>
           <span className="text-muted-foreground">Depo {warehouse.code}</span>
           {wo.plannedStart ? <MetaField label="Planlanan" value={formatDate(wo.plannedStart)} /> : null}
           {wo.startedAt ? <MetaField label="Başladı" value={formatDateTime(wo.startedAt)} /> : null}
@@ -55,7 +61,11 @@ export default async function WorkOrderDetailPage({ params }: { params: Promise<
             (Fire=0, verim yok) 672px'e kadar ölü bant bırakıyordu — border-y/divide-x çizgileri
             içerik olmayan hücrelerde de sürüyordu (Tur 2'de dış çerçeve kaldırıldı ama bu iç bant
             kaldı, Tur 3 bulgusu, P1). flex ile şerit yalnızca dolu hücre kadar genişler. */}
-        <div className="mt-4 flex w-fit divide-x divide-border/60 border-y border-border/60">
+        {/* w-fit → w-full + grid: dolu hücre sayısı 2-4 arasında değişir (Fire/Verim koşullu); `w-fit`
+            şerit yalnızca dolu hücreler kadar genişleyip geniş ekranlarda sağda ~1000px boş bant
+            bırakıyor, `border-y` de ortada asılı kalıyordu (Tur 5 bulgusu, P2). Mobilde 4 hücre
+            ~97px'e sıkışıp etiket kırpılıyordu — 2×2 ızgaraya geçilir (Tur 5 bulgusu, P2). */}
+        <div className="mt-4 grid grid-cols-2 divide-x divide-y divide-border/60 border-y border-border/60 sm:flex sm:w-full sm:divide-y-0">
           <StatCell label="Planlanan" value={<QtyCell value={wo.plannedQty} uom={uomCode} />} />
           {/* Üretilen miktar nötr bir gerçektir (iyi/kötü sinyali değil) — renk yalnızca Fire gibi
               gerçekten uyarı taşıyan hücrede kullanılır (renk enflasyonundan kaçınma). */}

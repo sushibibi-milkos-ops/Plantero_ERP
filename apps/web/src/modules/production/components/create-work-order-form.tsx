@@ -54,7 +54,14 @@ export function CreateWorkOrderForm({
 
   const productById = useMemo(() => new Map(products.map((p) => [p.id, p])), [products]);
   const productOptions = useMemo(() => products.map((p) => ({ value: p.id, label: p.name, description: p.sku, keywords: [p.sku] })), [products]);
-  const lineOptions = useMemo(() => lines.map((l) => ({ value: l.id, label: `${l.code} — ${l.name}` })), [lines]);
+  // Yalnızca kod: Hat alanı artık `lg:col-span-2` değil (Tur 5 bulgusu, P1 — bkz. aşağıdaki ızgara),
+  // "HAT1 — Bazlar, Barista & Kremalar" gibi tam etiketler 245px'lik tek sütuna sığmayıp shadcn
+  // Select tetikleyicisinin (ortak bileşen, `components/form/fields.tsx`) flex öğesi min-width:auto
+  // sınırı yüzünden görsel olarak yan alana taşıyordu — uygulama genelindeki her FormSelect'i
+  // etkileyen bir taşma hatası (yalnızca dar bir sütunda uzun etiketle tetikleniyor). Ortak bileşeni
+  // değiştirmek yerine, hattın zaten her yerde (tablo, kart, operatör ekranı) tek başına kullanılan
+  // kısa kodu yeterli bağlamı veriyor — seçili hat adı zaten formun üstündeki ürün seçiminden bellidir.
+  const lineOptions = useMemo(() => lines.map((l) => ({ value: l.id, label: l.code })), [lines]);
   const warehouseOptions = useMemo(() => warehouses.map((w) => ({ value: w.id, label: `${w.code} — ${w.name}` })), [warehouses]);
 
   const productId = form.watch('productId');
@@ -103,7 +110,11 @@ export function CreateWorkOrderForm({
           arkasında yarı görünür kalıyordu). 144px (9rem) + güvenli alan iki katmanı da karşılar. */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0">
         <div className="rounded-xl border border-border/70 bg-card p-4">
-          <h2 className="mb-3 text-sm font-medium text-muted-foreground">Ürün ve miktar</h2>
+          {/* text-[11px] uppercase: bölüm başlığı hemen altındaki alan etiketleriyle ("Mamul / yarı
+              mamul") aynı punto/ağırlıktaydı, yalnızca daha soluk — hiyerarşi kurmuyordu, unutulmuş
+              bir yer tutucu gibi okunuyordu (Tur 5 bulgusu, P2). Detay sayfasındaki StatCell etiket
+              kalıbıyla aynı. */}
+          <h2 className="mb-3 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Ürün ve miktar</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-1.5 lg:col-span-2">
               <FieldLabel required>Mamul / yarı mamul</FieldLabel>
@@ -111,12 +122,16 @@ export function CreateWorkOrderForm({
               {form.formState.errors.productId ? <p className="text-xs text-destructive">{form.formState.errors.productId.message}</p> : null}
             </div>
             <FormQty control={form.control} name="plannedQty" label="Planlanan miktar" required uom={productId ? productById.get(productId)?.uomCode : undefined} />
-            <FormDate control={form.control} name="plannedStart" label="Planlanan başlangıç" />
             {/* lg:col-span-2: 4 sütunlu ızgarada 2. satır yalnızca Depo+Hat ile yarısı dolu kalıyor,
                 kartın sağında ~380px tırtıklı boşluk bırakıyordu (Tur 2 bulgusu) — ikisi satırı
                 birlikte tam kaplar. */}
             <FormSelect control={form.control} name="warehouseId" label="Depo" required options={warehouseOptions} className="lg:col-span-2" />
-            <FormSelect control={form.control} name="lineId" label="Hat" required options={lineOptions} className="lg:col-span-2" />
+            {/* Hat: lg:col-span-2 kaldırıldı — 3 seçenekli bir dropdown, hemen üstündeki "Planlanan
+                miktar" sayısal alanının (245px) iki katı genişlikteydi (~500px), taşıdığı bilgiyle
+                orantısız (Tur 5 bulgusu, P1). Planlanan başlangıç 2. satırın son sütununa taşındı —
+                iki satır da aynı 4 sütunluk ızgarayı paylaşır. */}
+            <FormSelect control={form.control} name="lineId" label="Hat" required options={lineOptions} />
+            <FormDate control={form.control} name="plannedStart" label="Planlanan başlangıç" />
           </div>
         </div>
 
@@ -125,12 +140,16 @@ export function CreateWorkOrderForm({
             tekrarlıyordu (Tur 2 bulgusu). */}
         {!bomId || !plannedQty ? (
           <div className="rounded-xl border border-border/70 bg-card">
-            <EmptyState compact icon={ListChecks} title="Reçete henüz hesaplanmadı" description="Ürün ve planlanan miktar seçin." />
+            {/* max-md:py-4 max-md:gap-1.5: compact varyant her zaman py-10 (~165px) ayırıyordu — 390px
+                mobilde yapışkan eylem çubuğunun (bottom-16, ~72px) tamamen arkasında kalıyordu,
+                başlık/açıklama hiç görünmüyordu (Tur 5 bulgusu, P1). Ortak bileşen değiştirilmeden
+                `className` ile mobilde daraltılır (~120px), masaüstünde varsayılan kalır. */}
+            <EmptyState compact icon={ListChecks} title="Reçete henüz hesaplanmadı" description="Ürün ve planlanan miktar seçin." className="max-md:gap-1.5 max-md:py-4" />
           </div>
         ) : (
         <div className="rounded-xl border border-border/70 bg-card p-4">
           <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-medium text-muted-foreground">Malzeme önizleme (reçete)</h2>
+            <h2 className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Malzeme önizleme (reçete)</h2>
             {previewPending ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
           </div>
           {!preview ? (
@@ -138,7 +157,10 @@ export function CreateWorkOrderForm({
           ) : preview.length === 0 ? (
             <EmptyState compact title="Bu reçetede satır yok" />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-border/60">
+            // İç çerçeve kaldırıldı: kart zaten `rounded-xl border` — iç içe iki kutu "kurumsal ERP"
+            // klişesiydi (Tur 5 bulgusu, P1, line-cards.tsx'in bilerek kaçındığı desen). Tablonun
+            // kendi satır altı hairline'ı ayrım için yeterli.
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

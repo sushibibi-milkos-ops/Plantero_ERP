@@ -19,11 +19,15 @@ export default async function WorkOrdersPage() {
   return (
     <>
       <PageHeader
-        title="İş Emirleri"
+        // Mobil üst çubuk zaten "İş Emirleri" başlığını taşıyor (bkz. Topbar breadcrumb) — H1 aynı
+        // metni birebir tekrar ediyordu, 844px'lik ekranın ilk ~96px'i iki kez aynı kelimeye
+        // gidiyordu (Tur 5 bulgusu, P2). Masaüstünde üst çubuk yalnızca kırıntı, H1 tek başlık —
+        // orada görünür kalır; mobilde ekran okuyucu için saklanır (sr-only), açıklama yerini alır.
+        title={<span className="max-md:sr-only">İş Emirleri</span>}
         description={`${workOrders.length} iş emri`}
         actions={
           userCan(user, 'production.plan') ? (
-            <Button asChild>
+            <Button asChild className="h-11 md:h-9">
               <Link href="/uretim/is-emirleri/yeni">
                 <Plus className="size-4" /> Yeni iş emri
               </Link>
@@ -44,8 +48,11 @@ export default async function WorkOrdersPage() {
       <KpiStripRow>
         <KpiCard variant="strip" title="Açık iş emri" value={kpis.openCount} format="int" delta={kpis.openCountDelta ?? undefined} hint={kpis.openCountDelta === null ? (kpis.overdueCount > 0 ? `${kpis.overdueCount} gecikmiş` : 'gecikme yok') : undefined} />
         <KpiCard variant="strip" title="Üretimde" value={kpis.inProgressCount} format="int" delta={kpis.inProgressCountDelta ?? undefined} hint={kpis.inProgressCountDelta === null ? `${kpis.runningLines}/${kpis.totalLines} hatta çalışıyor` : undefined} />
-        <KpiCard variant="strip" title="Açık iş emri değeri" value={kpis.plannedValue} format="money" delta={kpis.plannedValueDelta ?? undefined} invertDelta />
-        <KpiCard variant="strip" title="Ortalama verim" value={kpis.avgYieldPct} format="pct" delta={kpis.avgYieldPctDelta ?? undefined} />
+        {/* delta yoksa (geçen hafta bu tutar sıfırdı — pctChange payda=0'da null döner) dönemi
+            belirten bir ipucu bas; Stripe şeridinde ikincil satır ya karşılaştırmadır ya hiçtir,
+            sessiz boşluk bırakılmaz (Tur 5 bulgusu, P2). */}
+        <KpiCard variant="strip" title="Açık iş emri değeri" value={kpis.plannedValue} format="money" delta={kpis.plannedValueDelta ?? undefined} invertDelta hint={kpis.plannedValueDelta === null ? 'son 30 gün' : undefined} />
+        <KpiCard variant="strip" title="Ortalama verim" value={kpis.avgYieldPct} format="pct" delta={kpis.avgYieldPctDelta ?? undefined} hint={kpis.avgYieldPctDelta === null ? 'son 30 gün' : undefined} />
       </KpiStripRow>
 
       <WorkOrdersTable workOrders={workOrders} />

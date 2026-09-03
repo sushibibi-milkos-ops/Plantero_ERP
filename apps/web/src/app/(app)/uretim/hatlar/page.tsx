@@ -24,7 +24,10 @@ export default async function ProductionLinesPage() {
 
   return (
     <>
-      <PageHeader title="Üretim Hatları" description={description} />
+      {/* Mobilde üst çubuk zaten "Hatlar" kırıntısını taşıyor — H1 aynı sayfa başlığını tekrar
+          ediyordu (Tur 5 bulgusu, P2, is-emirleri/page.tsx ile aynı desen). sr-only: ekran okuyucu
+          için kalır, açıklama satırı görsel başlığın yerini alır. */}
+      <PageHeader title={<span className="max-md:sr-only">Üretim Hatları</span>} description={description} />
       <LineCards lines={lines} />
     </>
   );
