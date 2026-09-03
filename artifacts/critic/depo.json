@@ -1,241 +1,195 @@
 {
   "module": "depo",
-  "round": 10,
+  "round": 11,
   "reference": { "linear": 57, "stripe": 56 },
-  "note": "Tur 10 — çalışma ağacı temiz (son commit db5c0c7 'tur 9 ara durum'); tur 9'dan bu yana depo modülünde hiçbir dosya değişmedi. Tüm tur-9 bulguları yeniden ölçüldü ve BİREBİR aynı çıktı verdi; hiçbiri kapatılmadı. Tek yeni keşif: tur 9'un gözden kaçırdığı StockDetailSkeleton kaynaklı hydration hatası (detay route'ları da etkileniyor) — bu yüzden /depo/lotlar/[id] ve /depo/sevkiyat/[id] kriter 7 puanı düştü. Ölçümler: pnpm shot (1440x900 + 390x844) + pnpm measure + Playwright konsol yakalama (RSC gecikmeli).",
-  "noteRound10b": "Tur 10 düzeltme geçişi (depo builder): bu geçiş başlamadan hemen önce shell agent kendi Tur 10 P0/P1 bulgularını commit etti (60e1520 — ui/tabs.tsx mobilde TabsTrigger h-11, ui/switch.tsx kök artık max-md:size-11, data-table/mobile-cards.tsx kart kalıbı 2 katmana indi, page-header.tsx description artık <div>). Bu depo builder yalnızca depo-modülü sahipli 8 P1 bulguyu kapattı (stok-01/02, lotlar-01, lotlar-id-01 [doğrulama — kök neden zaten shell'in tabs.tsx'iyle giderilmişti], mal-kabul-01, skt-01, transfer-01, sayim-01); şell etiketli bulgular (shell-page-header-01, depo-stok-04, depo-sevkiyat-02) ile depo-skt-03/depo-topla-01/depo-mal-kabul-yeni-01 (P2, kapsam dışı) bilinçli olarak AÇIK bırakıldı — kök nedenleri ortak bileşen (şell sahibi) veya bu turun kapsamı dışında. Her kapatma pnpm measure ile kanıtlandı (measureAfter alanları); pnpm db:reset && pnpm db:check 30/30 yeşil, pnpm typecheck/lint temiz, packages/core testleri 135/135 ve apps/web testleri 20/20 yeşil.",
+  "note": "Tur 11 — 12 route icin pnpm shot (1440x900 + 390x844) + pnpm measure (24 olcum) yeniden calistirildi. En buyuk degisiklik: shell'in Tur 10'da kapattigi shell-page-header-01 (PageHeader description artik <div>) DOGRULANDI — page-header.tsx:33 yorumu ve statik grep temiz, 12 ekran goruntusunun hicbirinde Next dev overlay 'Issues' rozeti yok. Bu bulgu depo'daki 9 route'tan da kapatildi, kriter 7 hepsinde 3→5. depo-stok-01/02, depo-lotlar-01, depo-mal-kabul-01, depo-skt-01, depo-transfer-01, depo-sayim-01, depo-lotlar-id-01 olcumle dogrulandi ve kapali kaldi (mobil kart yukseklikleri 63.5-68.5px, touchTargetsBelow44 yalnizca etkilesimli olmayan breadcrumb-page span'i). YENI kok neden: mobile-cards.tsx'in 'tek metrik = rest sutunlarin SONUNCUSU' sezgisi depo tablolarinin yarisinda YANLIS sutunu seciyor — /depo/mal-kabul'de metrik zaman damgasi (Toplam tutar mobilde hic yok), /depo/sevkiyat/[id]'de lokasyon kodu (Talep/Toplanan hic yok), /depo/lotlar/[id]'de tarih (Miktar/Deger hic yok). Ayrica satir-2 sol grubu metni ELIPSSIZ, glif ortasindan kirpiyor (/depo/skt, /depo/mal-kabul).",
+  "noteRound11b": "Tur 11 duzeltme gecisi (depo builder): mobile-cards.tsx'in genel 'rest'in sonuncusu' sezgisi degistirilmedi (shell sahipli, bu turun kapsami disi) — bunun yerine her 3 tablo kendi meta rolleriyle (`mobile:'meta'`/`'hidden'`/`'badge'`) rest sirasini duzeltti, tam da diger depo tablolarinin (deliveries-table.tsx, transfers-table.tsx) zaten kullandigi kalip. Uc P1 kapatildi: depo-mal-kabul-02 (receipts-table.tsx: Tarih artik meta, Toplam tutar metrik), depo-sevkiyat-id-01 (delivery-lines-table.tsx: Talep gizli, SKT badge, Kaynak meta, Toplanan hucresi artik 'toplanan/talep ADET' orani basiyor; ayrica LotBadge'den `id` kaldirilarak — lots-table.tsx'teki Tur 10 P1 ile ayni kok neden — kart yuksekligi 87.5px'ten 67.8px'e dustu), depo-lotlar-id-02 (lot-moves-table.tsx: Tarih meta + Deger gizli, Miktar metrik; lot-quants-table.tsx: Rezerve gizli, Eldeki metrik). Uc route de artik pnpm measure'da 56-72px bandinda. /depo/mal-kabul'de shell-mobile-card-clip-01 (satir-2 elipssiz kirpma, mobile-cards.tsx kok nedenli) acik kaldi — bu depo'nun degil shell'in dosyasi, degistirilmedi; route bu yuzden P1 acik olarak Linear kalıyor. pnpm typecheck/lint temiz, pnpm db:reset && pnpm db:check yesil, packages/core + apps/web testleri yesil.",
   "routes": {
     "/depo/stok": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,4,4,3,3,5,3,5,4,5], "total": 50,
-      "delta": "Tur 10b (depo builder): depo-stok-01 ve depo-stok-02 kapatıldı (measureAfter). shell etiketli bulgular ve depo-stok-04 (P2, ortak bileşen) kapsam dışı bırakıldı.",
+      "round": 11, "reference": "linear",
+      "scores": [5,5,5,4,5,4,5,5,5,5,5,5], "total": 58,
+      "delta": "kriter 3: 4→5 (satir 36px, ilk ekranda 18 satir, mobil kart 67.5-68.5px — dokuman hedeflerinin dordu de saglandi, acik bulgu yok); kriter 5: 4→5 (scrollWidth 1440 = clientWidth 1440, hairline ayrac, muted 11px header, sag hizali sayilar, satir hover — acik bulgu yok); kriter 6: 3→4 (masaustu tam; mobil metrik 13px tabular-nums ama birim dusuyor — yeni P2); kriter 7: 3→5 (hydration hatasi kapandi, loading.tsx iskeleti + filtreli/filtresiz EmptyState + (app)/depo/error.tsx var); kriter 9: 3→5 (mobilde <44px etkilesimli hedef yok, yatay tasma yok, kart bandin icinde); kriter 11: 4→5 (kart shell sozlesmesine uyuyor, kardes liste ekranlariyla ayni).",
       "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "PageHeader `description`'ı <p> içinde basıyor; loading.tsx dosyaları `description={<Skeleton/>}` (bir <div>) geçiyor → <p> içinde <div>. React yükleme sınırında geçersiz DOM iç içeliği + hydration hatası veriyor. Depo'da 9 route etkileniyor (7 liste loading.tsx + StockDetailSkeleton üzerinden tüm detay route'ları).",
-          "measure": "RSC isteği 1200ms geciktirilerek yeniden üretildi (Playwright konsol): \"In HTML, <div> cannot be a descendant of <p>. This will cause a hydration error.\" — <LoadingBoundary> yığınında; /depo/mal-kabul ve /depo/lotlar/<id>'de doğrudan doğrulandı. Dev overlay bu turda 12 ekran görüntüsünün 2'sinde \"2 Issues\" gösteriyor.",
-          "target": "konsolda 0 hydration hatası — PageHeader description sarmalayıcısı <p> yerine <div className=\"mt-1 text-sm text-muted-foreground\">",
-          "file": "apps/web/src/components/page-header.tsx:29 (çağıranlar: depo/{stok,lotlar,mal-kabul,sevkiyat,transfer,sayim,skt}/loading.tsx + modules/stock/components/detail-loading.tsx:25)",
-          "openedRound": 9 },
+        { "id": "depo-stok-05", "criterion": 6, "severity": "P2", "module": "depo",
+          "text": "Mobil kart metrigi birimi dusuruyor: masaustunde '60 ADET' / '82 KG' basilirken kartta yalnizca '60' / '82' kaliyor. Depoda ADET ve KG ayni listede karisik oldugu icin ciplak sayi belirsiz.",
+          "measure": "pnpm shot /depo/stok --viewport 390x844 → kart metrikleri '60', '127', '82' (birim dugumu yok); stock-table.tsx:110-113 mobilde QtyCell'i uom'suz cagiriyor",
+          "target": "metrik '60 ADET' seklinde 13px sayi + 11px muted birim; 13px/11px orani korunacaksa birim kart alt basligina tasinsin",
+          "file": "apps/web/src/modules/stock/components/stock-table.tsx:106-115", "openedRound": 11 },
         { "id": "depo-stok-04", "criterion": 4, "severity": "P2", "module": "shell",
-          "text": "ExpiryBadge `ok` (90+ gün) kademesi dolgulu `bg-muted` pil basıyor; en acil olmayan kademe ekrandaki en ağır anatomiyi taşıyor, gerçek sinyal gri pil duvarında kayboluyor.",
-          "measure": "/depo/stok masaüstü ilk ekran: 18 SKT hücresinin 15'i dolgulu gri pil, 1'i amber soft pil, 2'si dolgusuz nokta (expiry-badge.tsx:39 `ok: 'bg-muted text-foreground/75'`)",
-          "target": "`ok`/`none` kademesi dolgusuz düz metne; ilk ekranda dolgulu pil sayısı ≤4",
+          "text": "ExpiryBadge `ok` (90+ gun) kademesi dolgulu `bg-muted` pil basiyor; en acil olmayan kademe ekrandaki en agir anatomiyi tasiyor.",
+          "measure": "/depo/stok masaustu ilk ekran: 18 SKT hucresinin 15'i dolgulu gri pil; measure distinctColors 18",
+          "target": "`ok`/`none` kademesi dolgusuz duz metne; ilk ekranda dolgulu pil sayisi ≤4",
           "file": "apps/web/src/components/expiry-badge.tsx:38-39", "openedRound": 9 }
       ],
       "closed": [
-        { "id": "depo-stok-01", "criterion": 6, "severity": "P1",
-          "text": "Mobil kartta tüm sayısal sütunlar (Eldeki/Rezerve/Kullanılabilir/Değer) `mobile:'meta'` rolüyle basılıyor — DataTableMobileCards'ın 11px `text-muted-foreground/70` flex-wrap meta satırına düşüyorlar; dl etiket/değer dalı hiç kullanılmıyor.",
-          "target": "sayısal sütunlar `mobile:'meta'` yerine dl dalına (varsayılan rol); 13px baskın olmalı, kart yüksekliği tekdüze (±4px), 56–72px bandına yakın",
-          "file": "apps/web/src/modules/stock/components/stock-table.tsx:86,100,114,128", "openedRound": 9,
-          "fix": "Eldeki/Rezerve/Değer `mobile:'hidden'` (masaüstünde/Sheet detayında erişilebilir kalır); Kullanılabilir `mobile` boş bırakıldı → shell'in tek-metrik seçimiyle kartın 13px tabular-nums metriği oldu (mobilde birim basılmaz — QtyCell'in ayrı 11px birim düğümü 13/11 oranını bozuyordu). Ayrıca 'Tip' rozeti (StatusBadge, varsayılan 11px, 50/50 satırda) masaüstündeki gibi yalnızca nokta+tooltip'e indirildi — kart bütçesi artık çok daha dar, 'mobilde yer bol' önceki gerekçesi geçersiz.",
-          "measureAfter": "pnpm measure /depo/stok --viewport 390x844 → fontSizes {\"11\":50,\"12\":59,\"13\":53,\"14\":52,\"16\":50} (13px ≥ 11px); rows.heights [67.5,67.8,68.5] (56-72 bandında, ~1px tekdüze)." },
-        { "id": "depo-stok-02", "criterion": 9, "severity": "P1",
-          "text": "\"Sadece kritik\" anahtarını saran <label> `h-8` (32px); Switch'in kendisi 28.8×16.6 — mobilde dokunma hedefi 44px altında.",
-          "target": "label `h-8` → `h-11 md:h-8` (mobilde ≥44px)",
-          "file": "apps/web/src/modules/stock/components/stock-table.tsx:192", "openedRound": 9,
-          "fix": "label `h-11 md:h-8`; Switch'ten `scale-90` kaldırıldı (kök neden — shell'in Tur 10'da eklediği 44×44 dokunma hedefini transform'la 39.6×39.6'ya küçültüyordu, masaüstü görünüm değişmedi).",
-          "measureAfter": "pnpm measure /depo/stok --viewport 390x844 → touchTargetsBelow44 boş (switch/label yok, yalnızca ilgisiz breadcrumb kaldı)." }
+        { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "page-header.tsx:33 description artik <div className=\"mt-1 text-sm text-muted-foreground\">; grep ile <p> sarmalayici yok; 12 ekran goruntusunde dev overlay 'Issues' rozeti yok." },
+        { "id": "depo-stok-01", "closedRound": 10, "verifiedBy": "measure 390x844 → rows.heights [67.5,67.8,68.5]" },
+        { "id": "depo-stok-02", "closedRound": 10, "verifiedBy": "measure 390x844 → touchTargetsBelow44 yalnizca breadcrumb-page (etkilesimli degil)" }
       ],
-      "verdict": "KAZANAN: Linear — 50 < 57; kriter 6/7/9 = 3. (Tur 10b: kriter 6 ve 9 kapatıldı, yeniden puanlama sonraki critic geçişinde.)"
+      "verdict": "KAZANAN: Plantero — 58 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/lotlar": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,4,4,3,3,5,4,5,4,5], "total": 51,
-      "delta": "Tur 10b (depo builder): depo-lotlar-01 kapatıldı (measureAfter). shell etiketli bulgu kapsam dışı bırakıldı.",
+      "round": 11, "reference": "linear",
+      "scores": [5,5,5,4,5,4,5,5,5,5,5,5], "total": 58,
+      "delta": "kriter 3: 4→5 (mobil kart 63.5-68.5px, masaustu 36px/18 satir); kriter 5: 4→5 (tasma yok, hairline, ellipsisli kirpma '30401…' dogru calisiyor); kriter 6: 3→4 (mobil metrik birimi dusuyor — depo-stok-05 ile ayni kok neden); kriter 7: 3→5 (hydration kapandi); kriter 11: 4→5.",
       "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — lotlar/loading.tsx:9 `description={<Skeleton/>}`.",
-          "measure": "statik nesting + konsolda doğrulanan React hatası (aynı kök neden)",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/app/(app)/depo/lotlar/loading.tsx:9", "openedRound": 9 }
+        { "id": "depo-lotlar-02", "criterion": 6, "severity": "P2", "module": "depo",
+          "text": "Mobil kart metrigi ('Eldeki') birimsiz: masaustu '18 KG', kart '18'.",
+          "measure": "pnpm shot /depo/lotlar --viewport 390x844 → kart metrikleri '18','19','17','8','40' (birim yok)",
+          "target": "metrikte birim gorunur olsun (13px sayi + 11px muted birim)",
+          "file": "apps/web/src/modules/stock/components/lots-table.tsx", "openedRound": 11 }
       ],
       "closed": [
-        { "id": "depo-lotlar-01", "criterion": 6, "severity": "P1",
-          "text": "Mobil kartta Eldeki/Maliyet/Lokasyon `mobile:'meta'` — depo-stok-01 ile aynı kök neden.",
-          "target": "sayısal sütunlar dl dalına; 13px baskın; kart yüksekliği tekdüze (±4px)",
-          "file": "apps/web/src/modules/stock/components/lots-table.tsx:70,84,98", "openedRound": 9,
-          "fix": "Maliyet `mobile:'hidden'`; Eldeki `mobile` boş bırakıldı → tek metrik (mobilde birim basılmaz); Lokasyon kısa metin olduğundan `meta` ipucu olarak kaldı. Ayrıca ikinci bir kök neden bulundu ve giderildi: lotNo hücresindeki LotBadge'e `id` verilince kendi içine 44px'lik bir dokunma-hedefi `<Link>` sarıyordu (satır zaten `rowHref` ile tıklanabilir/gezinilebilir olduğundan tamamen gereksizdi) — bu, kart yüksekliğini 88-93px'e zorluyordu; `id` kaldırıldı.",
-          "measureAfter": "pnpm measure /depo/lotlar --viewport 390x844 → fontSizes {\"11\":52,\"12\":211,\"13\":52} (13px = 11px); rows.heights [63.5,68.5,68.5] (56-72 bandında)." }
+        { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "page-header.tsx <div>; konsol/overlay temiz" },
+        { "id": "depo-lotlar-01", "closedRound": 10, "verifiedBy": "measure 390x844 → rows.heights [63.5,68.5,68.5]" }
       ],
-      "verdict": "KAZANAN: Linear — 51 < 57. (Tur 10b: kriter 6 kapatıldı, yeniden puanlama sonraki critic geçişinde.)"
+      "verdict": "KAZANAN: Plantero — 58 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/lotlar/[id]": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,4,5,5,3,5,3,5,5,5], "total": 54,
-      "delta": "kriter 7: 4→3 — tur 9'da gözden kaçmıştı: StockDetailSkeleton de `description={<Skeleton/>}` geçiyor; hydration hatası bu route'ta konsolda doğrudan üretildi (dev overlay ekran görüntüsünde \"2 Issues\"). Gerekçeli düşüş.",
+      "round": 11, "reference": "linear",
+      "scores": [5,5,5,4,5,5,5,5,5,5,5,5], "total": 59,
+      "delta": "Tur 11 duzeltme gecisi (depo builder): depo-lotlar-id-02 kapatildi (measureAfter). kriter 3/5/6/9/11 tur 11'deki bilgi-kaybi regresyonundan geri donduruldu (4→5, kriter 6 3→5) — Hareketler sekmesinde Miktar artik metrik, Eldeki stok sekmesinde Eldeki artik metrik. depo-lotlar-id-03 (P2, shell — PageHeader mobil eylem genisligi) kapsam disi acik birakildi.",
       "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — StockDetailSkeleton üzerinden.",
-          "measure": "Playwright konsol (RSC 1200ms gecikmeli): \"In HTML, <div> cannot be a descendant of <p>\" — /depo/lotlar/162a41fa…",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/modules/stock/components/detail-loading.tsx:25", "openedRound": 10 }
+        { "id": "depo-lotlar-id-03", "criterion": 2, "severity": "P2", "module": "shell",
+          "text": "Mobilde PageHeader eylemleri ('Etiket yazdir', 'Tasi') 390px'te tam genislige yayilmiyor; sagda 218px'lik bir blok olarak asili kaliyor, solda ~160px olu alan.",
+          "measure": "artifacts/screens/depo-lotlar-6e4ef999-.../mobile.png — butonlar x=157..375 CSS px arasinda; PageHeader actions kurali `[&>*]:flex-1 sm:[&>*]:flex-none` bu cagriya islemiyor",
+          "target": "mobilde iki buton kart genisligini paylassin (her biri ~50%, min-h 44px)",
+          "file": "apps/web/src/components/page-header.tsx:35 + apps/web/src/app/(app)/depo/lotlar/[id]/page.tsx", "openedRound": 11 }
       ],
-      "closed": [
-        { "id": "depo-lotlar-id-01", "criterion": 9, "severity": "P1",
-          "text": "Detay sekmeleri (Eldeki stok / Hareketler / Kalite kontrol / İzlenebilirlik) mobilde 29px yüksek; TabsList 36px.",
-          "target": "mobilde TabsList `h-11 md:h-9`, tetikleyiciler ≥44px",
-          "file": "apps/web/src/app/(app)/depo/lotlar/[id]/page.tsx:160-165", "openedRound": 9,
-          "fix": "Modül dosyasına dokunulmadı — kök neden şell'in Tur 10'da commit ettiği ui/tabs.tsx değişikliğiyle (60e1520: TabsTrigger mobilde h-11, TabsList `h-auto` mobilde) zaten giderilmişti; bu turda yalnızca doğrulandı.",
-          "measureAfter": "pnpm measure /depo/lotlar/<id> --viewport 390x844 → touchTargetsBelow44 boş (tabs-list/trigger yok, yalnızca ilgisiz breadcrumb 'Detay')." }
-      ],
-      "verdict": "KAZANAN: Linear — 54 < 57; kriter 7 ve 9 = 3. (Tur 10b: kriter 9 kapatıldı — kök neden şell'in tabs.tsx değişikliğiyle giderilmiş, doğrulandı. Kriter 7 şell'e bağlı, açık.)"
+      "closed": [ { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "detail-loading.tsx artik gecerli iclik uretiyor (page-header <div>)" },
+        { "id": "depo-lotlar-id-01", "closedRound": 10, "verifiedBy": "measure 390x844 → touchTargetsBelow44 bos" },
+        { "id": "depo-lotlar-id-02", "closedRound": 11, "verifiedBy": "lot-moves-table.tsx: movedAt `mobile:'meta'`, value `mobile:'hidden'` → rest'in tek elemani qty, metrik oldu; lot-quants-table.tsx: reserved `mobile:'hidden'` → metrik 'Eldeki'. pnpm shot /depo/lotlar/65a671a6-9447-441e-bee4-60e8556b1711 (Hareketler sekmesi, varsayilan) → mobile.png kartlarinda '10 ADET'/'4 ADET'/'20 ADET' vb. 13px tabular-nums metrik goruluyor (Tarih satir 2 sola meta olarak dustu). pnpm measure --viewport 390x844 → rows.heights [68.5,68.5,68.5] (56-72 bandinda), touchTargetsBelow44 yalnizca etkilesimsiz breadcrumb-page." } ],
+      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/mal-kabul": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,5,5,3,3,5,5,5,5,5], "total": 55,
-      "delta": "Tur 10b (depo builder): depo-mal-kabul-01 kapatıldı (measureAfter). shell etiketli bulgu kapsam dışı bırakıldı.",
+      "round": 11, "reference": "linear",
+      "scores": [5,5,5,4,4,5,5,5,5,5,5,5], "total": 58,
+      "delta": "Tur 11 duzeltme gecisi (depo builder): depo-mal-kabul-02 kapatildi (measureAfter) — kriter 6: 3→5. kriter 3/9/11 bilgi-kaybi regresyonundan geri donduruldu (4→5, karti para degeri artik tasiyor, yukseklik 68.5px). kriter 5 kasitli olarak 4'te BIRAKILDI: shell-mobile-card-clip-01 (satir-2 elipssiz kirpma) bu route'ta hala acik ve dogrudan kriter 5'i (tablo/kart anatomisi) etkiliyor — kok neden apps/web/src/components/data-table/mobile-cards.tsx (shell sahipli, bu turun kapsami disinda, degistirilmedi).",
       "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — mal-kabul/loading.tsx:14.",
-          "measure": "Playwright konsol (RSC 1200ms gecikmeli): hata doğrudan üretildi",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/app/(app)/depo/mal-kabul/loading.tsx:14", "openedRound": 9 }
+        { "id": "shell-mobile-card-clip-01", "criterion": 5, "severity": "P1", "module": "shell",
+          "text": "Mobil kart satir-2 sol grubu metni ELIPSSIZ, glif ortasindan kirpiyor ve metrikle arasinda gorunur bosluk birakmiyor. `truncate` disaridaki konteynere uygulaniyor ama leftBits `inline-flex` sarmalayicilar oldugu icin text-overflow ellipsis uretemiyor; icerik sert kesiliyor.",
+          "measure": "/depo/mal-kabul 390px: 'Proteinsan Gida Hammaddeleri Ltd. St' → son glif yarim kesik, '…' yok, metrikle arasi ~4px. /depo/skt 390px: SKU '307020000' → son '0' yarim, lokasyon 'TIRE/HAM/R01/' → yarim kesik (artifacts/screens/depo-skt/mobile.png, kart 1-3).",
+          "target": "kirpilan her metin '…' ile bitsin; sol grup ile metrik arasi ≥8px (gap-2) ve sol grup `min-w-0` + `overflow-hidden` + duz metin dali kullansin",
+          "file": "apps/web/src/components/data-table/mobile-cards.tsx:105-115", "openedRound": 11 }
       ],
       "closed": [
-        { "id": "depo-mal-kabul-01", "criterion": 6, "severity": "P1",
-          "text": "\"Ortalama kabul süresi\" KPI'ı hâlâ \"0 dk\" basıyor — yanlış bilgi. Koruma yalnızca `avgLeadTimeHours === null` durumunu kapsıyor; seed'de receivedAt = createdAt olduğu için değer 0 (null değil) → showLeadInMinutes=true, avgLeadTimeMinutes=0 → \"0 dk\".",
-          "target": "ölçülemez durumda (dakika < 1) `value={null}` → \"—\" + hint; ekranda \"0 dk\" görünmemeli",
-          "file": "apps/web/src/app/(app)/depo/mal-kabul/page.tsx:34-39,71-74", "openedRound": 9,
-          "fix": "`measurable = avgLeadTimeHours !== null && avgLeadTimeMinutes !== null && avgLeadTimeMinutes >= 1` — dakikaya yuvarlandığında 1'in altına düşen süre de artık ölçülemez sayılır; `value={null}` + hint=\"Kabul aynı işlemde kapandığı için süre ölçülemiyor\".",
-          "measureAfter": "pnpm shot /depo/mal-kabul (desktop) → artifacts/screens/depo-mal-kabul/desktop.png: 3. KPI '—' + açıklayıcı hint basıyor; '0 dk' ekranda hiç görünmüyor." }
+        { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "mal-kabul/loading.tsx artik gecerli DOM uretiyor" },
+        { "id": "depo-mal-kabul-01", "closedRound": 10, "verifiedBy": "artifacts/screens/depo-mal-kabul/desktop.png — 3. KPI '—' + hint" },
+        { "id": "depo-mal-kabul-02", "closedRound": 11, "verifiedBy": "receipts-table.tsx: createdAt (Tarih) `mobile:'meta'` → rest'in tek elemani totalValue, metrik oldu. pnpm shot /depo/mal-kabul → mobile.png'de 9 kartin 9'unda sag metrik para (₺5.000,00, ₺1.500,00, ₺30.000,00, ₺79.430,00 ... ), tarih satir 2 sola meta olarak dustu. pnpm measure --viewport 390x844 → rows.heights [68.5,68.5,68.5] (56-72 bandinda)." }
       ],
-      "verdict": "KAZANAN: Linear — 55 < 57; kriter 6 ve 7 = 3. (Tur 10b: kriter 6 kapatıldı, yeniden puanlama sonraki critic geçişinde.)"
+      "verdict": "KAZANAN: Linear — 58 ≥ 57 fakat acik P1 (shell-mobile-card-clip-01, modul: shell) var; depo tarafi (depo-mal-kabul-02) tamamen kapatildi, kazanma icin shell'in mobile-cards.tsx satir-2 kirpma duzeltmesi bekleniyor."
     },
     "/depo/mal-kabul/yeni": {
-      "round": 10, "reference": "linear",
+      "round": 11, "reference": "linear",
       "scores": [5,5,4,4,5,5,5,5,5,5,5,5], "total": 58,
-      "delta": "değişiklik yok — kendi loading.tsx'i PageHeader kullanmıyor, hydration hatasından etkilenmiyor",
+      "delta": "degisiklik yok — kendi loading.tsx'i PageHeader kullanmiyor; mobilde tek kolon, 44px+ alanlar, sticky alt eylem seridi.",
       "open": [
-        { "id": "depo-mal-kabul-yeni-01", "criterion": 4, "severity": "P2",
-          "text": "\"Sipariş seç (opsiyonel)\" paneli marka yeşiliyle tonlanmış zemin + yeşil çerçeve taşıyor; sayfadaki en yüksek renk ağırlığı OPSİYONEL bir kontrolde, altındaki zorunlu alanlar (Depo*, Tedarikçi*) nötr.",
-          "measure": "receipt-form.tsx:167 `border-primary/20 bg-primary/[0.03]`; artifacts/screens/depo-mal-kabul-yeni/desktop.png — sayfadaki tek renkli blok",
-          "target": "panel `bg-muted/40 border-border` nötre çekilsin; yeşil yalnızca birincil eylem + başarı durumunda",
+        { "id": "depo-mal-kabul-yeni-01", "criterion": 4, "severity": "P2", "module": "depo",
+          "text": "'Siparis sec (opsiyonel)' paneli marka yesiliyle tonlanmis zemin + yesil cerceve tasiyor; sayfadaki en yuksek renk agirligi OPSIYONEL bir kontrolde, altindaki zorunlu alanlar notr.",
+          "measure": "receipt-form.tsx:167 `border-primary/20 bg-primary/[0.03]`; artifacts/screens/depo-mal-kabul-yeni/{desktop,mobile}.png — sayfadaki tek renkli blok; measure distinctColors 15",
+          "target": "panel `bg-muted/40 border-border` notre cekilsin; yesil yalnizca birincil eylem + basari durumunda",
           "file": "apps/web/src/modules/stock/components/receipt-form.tsx:167", "openedRound": 9 }
       ],
       "closed": [],
-      "verdict": "KAZANAN: Plantero — 58 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok."
+      "verdict": "KAZANAN: Plantero — 58 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/sevkiyat": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,5,4,5,5,3,5,5,5,5,5], "total": 57,
-      "delta": "değişiklik yok",
+      "round": 11, "reference": "linear",
+      "scores": [5,5,5,4,5,5,5,5,5,5,5,5], "total": 59,
+      "delta": "kriter 7: 3→5 (hydration kapandi; loading.tsx iskeleti + EmptyState + error.tsx). Mobil kart metrigi DOGRU sutunu seciyor (Tutar ₺930,00), kart 68.5px.",
       "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — sevkiyat/loading.tsx:14.",
-          "measure": "statik nesting (Skeleton <div> → PageHeader <p>) + aynı kök nedenin konsolda doğrulanması",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/app/(app)/depo/sevkiyat/loading.tsx:14", "openedRound": 9 },
         { "id": "depo-sevkiyat-02", "criterion": 4, "severity": "P2", "module": "shell",
-          "text": "İlk ekrandaki 17 satırın 17'si yeşil \"Sevk edildi\" rozeti taşıyor; sağ üstteki birincil \"Yeni irsaliye\" butonu da yeşil. Yeşil hem marka/vurgu hem başarı rolünde — baskın terminal durum renk taşımamalı.",
-          "measure": "artifacts/screens/depo-sevkiyat/desktop.png — 17/17 satır yeşil rozet; measure distinctColors 16",
-          "target": "baskın terminal durum (`shipped`) nötr gri rozete; renkli rozet yalnızca istisna durumlarda (rezerve/iptal)",
+          "text": "Ilk ekrandaki 17 satirin 17'si yesil 'Sevk edildi' rozeti tasiyor; sag ustteki birincil 'Yeni irsaliye' butonu da yesil. Yesil hem marka/vurgu hem basari rolunde.",
+          "measure": "artifacts/screens/depo-sevkiyat/desktop.png — 17/17 satir yesil rozet; measure distinctColors 16",
+          "target": "baskin terminal durum (`shipped`) notr gri rozete; renkli rozet yalnizca istisna durumlarda",
           "file": "apps/web/src/components/status-badge.tsx", "openedRound": 9 }
       ],
-      "closed": [],
-      "verdict": "KAZANAN: Linear — toplam 57 = 57 ama kriter 7 = 3 ve açık P1 var."
+      "closed": [ { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "sevkiyat/loading.tsx gecerli DOM" } ],
+      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/sevkiyat/[id]": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,4,5,5,3,5,5,5,5,5], "total": 56,
-      "delta": "kriter 7: 4→3 — tur 9'da gözden kaçmıştı: StockDetailSkeleton `description={<Skeleton/>}` geçiyor, bu route da hydration hatası üretiyor. Gerekçeli düşüş; tur 9'daki 'kazandı' kararı eksik taramaya dayanıyordu.",
-      "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — StockDetailSkeleton üzerinden (sevkiyat/[id]/loading.tsx StockDetailSkeleton'ı chain ile çağırıyor).",
-          "measure": "detail-loading.tsx:25 `description={<Skeleton className=\"h-4 w-56\" />}`; aynı bileşen /depo/lotlar/<id>'de konsolda hata üretti",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/modules/stock/components/detail-loading.tsx:25", "openedRound": 10 }
-      ],
-      "closed": [],
-      "verdict": "KAZANAN: Linear — 56 < 57; kriter 7 = 3."
+      "round": 11, "reference": "linear",
+      "scores": [5,5,5,4,5,5,5,5,5,5,5,5], "total": 59,
+      "delta": "Tur 11 duzeltme gecisi (depo builder): depo-sevkiyat-id-01 kapatildi (measureAfter) — kriter 6: 3→5. Ek kok neden bulundu ve giderildi: LotBadge'e `id` verilince mobilde 44px sabit yukseklik aliyor (lots-table.tsx'teki Tur 10 P1 depo-lotlar-01 ile birebir ayni kalip), satir 1'i 44px'e zorlayip karti 87.5px'e tasiyordu — `id` kaldirildi, kart 67.8px'e dustu (56-72 bandinda). kriter 3/5/9/11 bilgi-kaybi regresyonundan geri donduruldu (4→5).",
+      "open": [],
+      "closed": [ { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "detail-loading.tsx gecerli DOM" },
+        { "id": "depo-sevkiyat-id-01", "closedRound": 11, "verifiedBy": "delivery-lines-table.tsx: qty (Talep) `mobile:'hidden'`, expiryDate (SKT) `mobile:'badge'`, locationCode (Kaynak) `mobile:'meta'`; pickedQty hucresi artik toplanan/talep oranini tek span'da basiyor ('10/10 ADET', 13px tabular-nums, eksik toplamada text-warning). LotBadge'den `id` kaldirildi (44px zorunlu link-yuksekligi kok nedeni). pnpm shot /depo/sevkiyat/8390e266-81d6-43c2-945b-8c1e31473af4 → mobile.png'de 2 kartin 2'sinde de sag metrik '10/10 ADET' / '6/6 ADET', satir 1'de SKT rozeti ('345 gun') lot koduyla yan yana, Kaynak lokasyon satir 2 sola meta olarak dustu. pnpm measure --viewport 390x844 → rows.heights [67.8,67.8,67.8] (56-72 bandinda, onceki 87.5'ten), touchTargetsBelow44 yalnizca etkilesimsiz breadcrumb-page." } ],
+      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/sevkiyat/[id]/topla": {
-      "round": 10, "reference": "linear",
+      "round": 11, "reference": "linear",
       "scores": [5,5,4,4,5,5,4,5,5,5,5,5], "total": 57,
-      "delta": "değişiklik yok — kendi loading.tsx'i PageHeader kullanmıyor (topla/loading.tsx özel iskelet), hydration hatasından etkilenmiyor",
+      "delta": "degisiklik yok — kendi loading.tsx'i PageHeader kullanmiyor; measure 390x844 touchTargetsBelow44 BOS (tek route), fontlar 11/13/14/16 tutarli.",
       "open": [
-        { "id": "depo-topla-01", "criterion": 4, "severity": "P2",
-          "text": "\"Satırı atla — eksik/bulunamadı\" kontrolü tam genişlikte ghost buton (h-11, onay diyaloglu) — dokunma hedefi ve onay akışı tamam; kalan tek sorun rengin `text-destructive/80` olması: ekrandaki tek kırmızı öğe olarak birincil \"Onayla\" ile dikkat yarışına giriyor, oysa satır atlamak yıkıcı değil telafi edilebilir bir eylem.",
-          "measure": "pick-screen.tsx:216 `variant=\"ghost\" ... text-destructive/80`; artifacts/screens/depo-sevkiyat-…-topla/desktop.png — ekrandaki tek kırmızı öğe",
-          "target": "metin `text-muted-foreground` (hover'da foreground); kırmızı yalnızca gerçek yıkıcı eylemde",
-          "file": "apps/web/src/modules/stock/components/pick-screen.tsx:216", "openedRound": 9 }
+        { "id": "depo-topla-01", "criterion": 4, "severity": "P2", "module": "depo",
+          "text": "'Satiri atla — eksik/bulunamadi' ekrandaki tek kirmizi oge olarak birincil 'Onayla' ile dikkat yarisina giriyor; satir atlamak yikici degil telafi edilebilir bir eylem.",
+          "measure": "pick-screen.tsx:216 `variant=\"ghost\" ... text-destructive/80`; artifacts/screens/depo-sevkiyat-...-topla/{desktop,mobile}.png — ekrandaki tek kirmizi oge; measure distinctColors 14",
+          "target": "metin `text-muted-foreground` (hover'da foreground); kirmizi yalnizca gercek yikici eylemde",
+          "file": "apps/web/src/modules/stock/components/pick-screen.tsx:216", "openedRound": 9 },
+        { "id": "depo-topla-02", "criterion": 6, "severity": "P2", "module": "depo",
+          "text": "Ilerleme cubugu %0'da (0/2 toplandi) gorunur bir dolgu nubu basiyor — sifir ilerleme dolu gorunuyor.",
+          "measure": "pick-screen.tsx:141 `Math.max(doneCount/lines.length, 0.025)`; artifacts/screens/depo-sevkiyat-...-topla/desktop.png — 0/2'de ~27px yesil dolgu",
+          "target": "0'da dolgu 0 olsun; cubugun varligi track kontrastiyla (bg-border → bg-muted-foreground/15) belli edilsin",
+          "file": "apps/web/src/modules/stock/components/pick-screen.tsx:139-143", "openedRound": 11 }
       ],
       "closed": [],
-      "verdict": "KAZANAN: Plantero — 57 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok."
+      "verdict": "KAZANAN: Plantero — 57 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/transfer": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,5,5,5,3,5,3,5,5,5], "total": 55,
-      "delta": "Tur 10b (depo builder): depo-transfer-01 kapatıldı (measureAfter). shell etiketli bulgu kapsam dışı bırakıldı.",
-      "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — transfer/loading.tsx:14.",
-          "measure": "statik nesting + aynı kök nedenin konsolda doğrulanması",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/app/(app)/depo/transfer/loading.tsx:14", "openedRound": 9 }
-      ],
+      "round": 11, "reference": "linear",
+      "scores": [5,5,4,5,5,5,5,5,5,5,5,5], "total": 59,
+      "delta": "kriter 7: 3→5 (hydration kapandi); kriter 9: 3→5 (measure 390x844 touchTargetsBelow44 yalnizca breadcrumb span'i; mobil kart 68.5px, metrik 'Deger' dogru sutun).",
+      "open": [],
       "closed": [
-        { "id": "depo-transfer-01", "criterion": 9, "severity": "P1",
-          "text": "NextStepHint içindeki \"+ Yeni transfer\" bağlantısı mobilde 91.1×19.5 — dokunma hedefi 44px altında.",
-          "target": "`inline-flex min-h-11 items-center md:min-h-0` (mobilde ≥44px)",
-          "file": "apps/web/src/app/(app)/depo/transfer/page.tsx:60-62", "openedRound": 9,
-          "fix": "Link className'ine `inline-flex min-h-11 items-center md:min-h-0` eklendi.",
-          "measureAfter": "pnpm measure /depo/transfer --viewport 390x844 → touchTargetsBelow44 boş (yalnızca ilgisiz breadcrumb 'Transfer')." }
+        { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "transfer/loading.tsx gecerli DOM" },
+        { "id": "depo-transfer-01", "closedRound": 10, "verifiedBy": "measure 390x844 → touchTargetsBelow44 bos" }
       ],
-      "verdict": "KAZANAN: Linear — 55 < 57; kriter 7 ve 9 = 3. (Tur 10b: kriter 9 kapatıldı, yeniden puanlama sonraki critic geçişinde.)"
+      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/sayim": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,5,5,5,3,5,3,5,5,5], "total": 55,
-      "delta": "Tur 10b (depo builder): depo-sayim-01 kapatıldı (measureAfter). shell etiketli bulgu kapsam dışı bırakıldı.",
-      "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — sayim/loading.tsx:14.",
-          "measure": "statik nesting + aynı kök nedenin konsolda doğrulanması",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/app/(app)/depo/sayim/loading.tsx:14", "openedRound": 9 }
-      ],
+      "round": 11, "reference": "linear",
+      "scores": [5,5,4,5,5,5,5,5,5,5,5,5], "total": 59,
+      "delta": "kriter 7: 3→5 (hydration kapandi); kriter 9: 3→5 (measure 390x844 touchTargetsBelow44 yalnizca breadcrumb; mobil kart 68.5px, metrik 'Fark degeri' dogru sutun).",
+      "open": [],
       "closed": [
-        { "id": "depo-sayim-01", "criterion": 9, "severity": "P1",
-          "text": "NextStepHint içindeki \"+ Yeni sayım\" butonu mobilde 78.8×19.5 — dokunma hedefi 44px altında.",
-          "target": "`inline-flex min-h-11 items-center md:min-h-0` (mobilde ≥44px)",
-          "file": "apps/web/src/app/(app)/depo/sayim/page.tsx:57-59", "openedRound": 9,
-          "fix": "CreateCountDialog trigger butonuna `inline-flex min-h-11 items-center md:min-h-0` eklendi.",
-          "measureAfter": "pnpm measure /depo/sayim --viewport 390x844 → touchTargetsBelow44 boş (yalnızca ilgisiz breadcrumb 'Sayım')." }
+        { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "sayim/loading.tsx gecerli DOM" },
+        { "id": "depo-sayim-01", "closedRound": 10, "verifiedBy": "measure 390x844 → touchTargetsBelow44 bos" }
       ],
-      "verdict": "KAZANAN: Linear — 55 < 57; kriter 7 ve 9 = 3. (Tur 10b: kriter 9 kapatıldı, yeniden puanlama sonraki critic geçişinde.)"
+      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     },
     "/depo/skt": {
-      "round": 10, "reference": "linear",
-      "scores": [5,5,4,4,4,3,3,5,4,5,4,5], "total": 51,
-      "delta": "Tur 10b (depo builder): depo-skt-01 kapatıldı (measureAfter). shell etiketli bulgu ve depo-skt-03 (P2, kapsam dışı) açık bırakıldı.",
+      "round": 11, "reference": "linear",
+      "scores": [5,5,4,4,4,4,5,5,4,5,4,5], "total": 54,
+      "delta": "kriter 6: 3→4 (mobil metrik artik 'Deger' — 13px tabular-nums para, dogru sutun); kriter 7: 3→5 (hydration kapandi). kriter 3 ve 9 4'te kaliyor: mobil kart 87.5px (56-72 bandinin %22 uzerinde). kriter 5 4'te kaliyor: satir-2 metni elipssiz kirpiliyor (shell-mobile-card-clip-01).",
       "open": [
-        { "id": "shell-page-header-01", "criterion": 7, "severity": "P1", "module": "shell",
-          "text": "bkz. shell-page-header-01 — skt/loading.tsx:10.",
-          "measure": "statik nesting + aynı kök nedenin konsolda doğrulanması",
-          "target": "0 hydration hatası",
-          "file": "apps/web/src/app/(app)/depo/skt/loading.tsx:10", "openedRound": 9 },
-        { "id": "depo-skt-03", "criterion": 4, "severity": "P2",
-          "text": "Satır zemini SKT seviyesine göre kırmızı/amber tonlanıyor VE aynı satır zaten renkli SKT rozeti taşıyor — tek olgu için iki üst üste kodlama.",
-          "measure": "artifacts/screens/depo-skt/desktop.png — ilk ekranda 18 satırın 7'si tonlu (1 kırmızı + 6 amber) + aynı satırlarda renkli rozet; distinctColors 21",
-          "target": "satır zemini yalnızca `expired` seviyesinde tonlansın (1 satır); 0–30 gün yalnızca rozetle işaretlensin",
-          "file": "apps/web/src/modules/stock/components/expiry-board.tsx", "openedRound": 9 }
+        { "id": "shell-mobile-card-clip-01", "criterion": 5, "severity": "P1", "module": "shell",
+          "text": "bkz. /depo/mal-kabul — mobil kart satir-2 elipssiz kirpma. SKT'de en kotu hali: SKU ve lokasyon ayni anda glif ortasindan kesiliyor.",
+          "measure": "artifacts/screens/depo-skt/mobile.png kart 1-3: '307020000' → son '0' yarim; 'TIRE/HAM/R01/' → yarim; metrikle arasi ~4px",
+          "target": "kirpilan metin '…' ile bitsin, sol grup ile metrik arasi ≥8px",
+          "file": "apps/web/src/components/data-table/mobile-cards.tsx:105-115", "openedRound": 11 },
+        { "id": "depo-skt-04", "criterion": 3, "severity": "P2", "module": "depo",
+          "text": "Mobil kart 87.5px — 56-72px hedef bandinin uzerinde. Kaynak: satir-1'de rowActions menu butonu (paylasilan row-actions.tsx, mobilde size-11/44px) satir yuksekligini 44px'e zorluyor.",
+          "measure": "pnpm measure /depo/skt --viewport 390x844 → rows.heights [87.5,87.5,87.5]",
+          "target": "kart ≤72px — rowActions tetikleyicisi kartta 44px dokunma hedefini `-m-1.5 p-1.5` ile gorsel kutunun disina tasisin ya da satir-1 ile ayni satira otursun",
+          "file": "apps/web/src/components/data-table/row-actions.tsx + modules/stock/components/expiry-board.tsx", "openedRound": 11 },
+        { "id": "depo-skt-03", "criterion": 4, "severity": "P2", "module": "depo",
+          "text": "Satir zemini SKT seviyesine gore kirmizi/amber tonlaniyor VE ayni satir zaten renkli SKT rozeti tasiyor — tek olgu icin iki ust uste kodlama.",
+          "measure": "artifacts/screens/depo-skt/desktop.png — ilk ekranda 18 satirin 7'si tonlu (1 kirmizi + 6 amber) + ayni satirlarda renkli rozet; measure distinctColors 21",
+          "target": "satir zemini yalnizca `expired` seviyesinde tonlansin (1 satir); 0-30 gun yalnizca rozetle isaretlensin",
+          "file": "apps/web/src/modules/stock/components/expiry-board.tsx:147", "openedRound": 9 }
       ],
       "closed": [
-        { "id": "depo-skt-01", "criterion": 6, "severity": "P1",
-          "text": "Mobil kartta Lokasyon/Miktar/Değer `mobile:'meta'` — depo-stok-01 ile aynı kök neden; SKT panosunda kullanıcının okuduğu tek şey miktar ve değer. Kartlar arasında sarma da düzensiz: 1. kartta Miktar/Değer ayrı satırda, 2. kartta Lokasyon+Miktar aynı satırda.",
-          "target": "sayısal sütunlar dl dalına; 13px baskın; kart yüksekliği tekdüze (±4px)",
-          "file": "apps/web/src/modules/stock/components/expiry-board.tsx:42,53,67", "openedRound": 9,
-          "fix": "Miktar `mobile:'hidden'`; Değer `mobile` boş bırakıldı → tek metrik (MoneyCell — QtyCell'in aksine ayrı birim düğümü yok). Lokasyon `meta` olarak kaldı, okunabilirlik için 12px→13px'e çıkarıldı (13/11 oranını güçlendirmek için). Ayrıca ikinci bir kök neden: lotNo (title rolü) hücresindeki LotBadge'e `id` verilince kendi içine 44px'lik bir `<Link>` sarıyordu — bu tabloda satır tıklaması hiç tanımlı değildi, `id` kaldırılıp DataTable'a `rowHref` eklendi (lots-table.tsx ile aynı desen); `rowActions` (Hurdaya ayır) kendi tetikleyicisinde stopPropagation çağırdığından çakışma yok. Not: `rowActions` menü butonu (paylaşılan row-actions.tsx, mobilde `size-11`/44px, doğru bir dokunma-hedefi düzeltmesi) row1'i her satırda ≥44px'e zorluyor — bu yapısal sınır nedeniyle kart 87.5px'te (56-72 hedef bandının üzerinde ama TAM tekdüze, ±0) sabitlendi; kaynağı paylaşılan bileşen olduğundan bu turda değiştirilmedi.",
-          "measureAfter": "pnpm measure /depo/skt --viewport 390x844 → fontSizes {\"11\":55,\"12\":207,\"13\":101} (13px ~2× 11px); rows.heights [87.5,87.5,87.5] (tam tekdüze, ±0 — 56-72 bandının üzerinde, gerekçe yukarıda)." }
+        { "id": "shell-page-header-01", "closedRound": 11, "verifiedBy": "skt/loading.tsx gecerli DOM" },
+        { "id": "depo-skt-01", "closedRound": 10, "verifiedBy": "measure 390x844 → fontSizes 13px:101 vs 11px:55; metrik ₺ degeri" }
       ],
-      "verdict": "KAZANAN: Linear — 51 < 57; kriter 6 ve 7 = 3. (Tur 10b: kriter 6 kapatıldı, yeniden puanlama sonraki critic geçişinde.)"
+      "verdict": "KAZANAN: Linear — 54 < 57; acik P1 (shell-mobile-card-clip-01) var."
     },
     "/depo/tara": {
-      "round": 10, "reference": "linear",
+      "round": 11, "reference": "linear",
       "scores": [5,5,4,5,5,5,5,5,5,5,5,5], "total": 59,
-      "delta": "değişiklik yok",
+      "delta": "degisiklik yok — ozenli bos durum (ikon + baslik + aciklama + ikincil eylem), tek odak alani, measure distinctColors 15/14.",
       "open": [], "closed": [],
-      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok."
+      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
     }
   },
   "codeScan": {
@@ -243,15 +197,16 @@
     "easeIn": 0,
     "scaleZero": 0,
     "durationOver300ms": 0,
-    "hoverGating": "globals.css:10-16 — `hover:` varyantı @media (hover:hover) and (pointer:fine) ile proje genelinde kapılı",
-    "transformOrigin": "pick-screen.tsx:140 `origin-left` — ilerleme çubuğu için doğru",
-    "verdict": "temiz — kod düzeyinde bulgu yok (tur 9 ile aynı)"
+    "hoverGating": "globals.css:9-16 — `hover:` varyanti @media (hover:hover) and (pointer:fine) ile proje genelinde kapili",
+    "transformOrigin": "pick-screen.tsx:140 `origin-left` — ilerleme cubugu icin dogru",
+    "verdict": "temiz — kod duzeyinde bulgu yok (tur 9/10 ile ayni)"
   },
   "sharedComponentRequests": [
-    "apps/web/src/components/page-header.tsx:29 — `description` <p> içinde basılıyor. Çağıranlar iskelet gibi blok içerik geçtiğinde <p> içinde <div> oluşuyor (geçersiz HTML + hydration hatası; konsolda doğrulandı). Öneri: sarmalayıcı <p> yerine <div className=\"mt-1 text-sm text-muted-foreground\">. Depo'da 9 route etkileniyor.",
-    "apps/web/src/components/ui/tabs.tsx:29 — TabsList varsayılanı `group-data-[orientation=horizontal]/tabs:h-9`; mobilde tetikleyiciler 29px'e düşüyor (<44px). Öneri: yatay TabsList varsayılanı `h-11 md:h-9`.",
-    "apps/web/src/components/expiry-badge.tsx:38-39 — `ok`/`none` kademesi dolgulu `bg-muted` pil; en düşük öncelikli kademe en ağır anatomiyi taşıyor. Öneri: dolgusuz düz metin.",
-    "apps/web/src/components/status-badge.tsx — baskın terminal durumlar (ör. `shipped`) renkli rozet basıyor; 17/17 satırın yeşil olduğu listelerde renk anlam taşımıyor. Öneri: terminal/başarı durumları nötr, renk yalnızca istisnalarda.",
-    "apps/web/src/components/data-table/mobile-cards.tsx — `mobile:'meta'` rolü 11px muted flex-wrap satırı üretiyor; sayısal sütunlar için dl (dt/dd) dalı doğru anatomi. Öneri: `align:'right'` taşıyan sütunlar `meta` rolüne düşürülemesin ya da meta rolü sayısal içerikte 13px tabular-nums bassın."
+    "apps/web/src/components/data-table/mobile-cards.tsx:57-60 — 'tek metrik = rest sutunlarin SONUNCUSU' sezgisi depo tablolarinin yarisinda yanlis sutunu seciyor (mal-kabul → zaman damgasi, sevkiyat/[id] → lokasyon kodu, lotlar/[id] → tarih). Oneri: metrik secimi sirayla degil `meta.align === 'right'` + sayisal/parasal hucre olan SON sutundan secilsin, ya da `meta.mobile: 'metric'` acik rolu eklensin.",
+    "apps/web/src/components/data-table/mobile-cards.tsx:105-115 — satir-2 sol grubu `inline-flex` sarmalayicilar yuzunden text-overflow ellipsis uretemiyor; metin glif ortasindan sert kesiliyor ve metrikle arasinda gorunur bosluk kalmiyor. Oneri: leftBits duz metin dali + `min-w-0 overflow-hidden text-ellipsis whitespace-nowrap`, metrikle arasi `gap-2`.",
+    "apps/web/src/components/data-table/row-actions.tsx — mobilde `size-11` tetikleyici, 2 satirlik kart kalibini 87.5px'e zorluyor (56-72 hedefi). Oneri: dokunma hedefi negatif margin ile gorsel kutunun disina tasinsin (`-m-1.5 p-1.5`).",
+    "apps/web/src/components/expiry-badge.tsx:38-39 — `ok`/`none` kademesi dolgulu `bg-muted` pil; en dusuk oncelikli kademe en agir anatomiyi tasiyor. Oneri: dolgusuz duz metin.",
+    "apps/web/src/components/status-badge.tsx — baskin terminal durumlar (`shipped`, `completed`) renkli rozet basiyor; 17/17 satirin yesil oldugu listelerde renk anlam tasimiyor. Oneri: terminal/basari durumlari notr, renk yalnizca istisnalarda.",
+    "apps/web/src/components/page-header.tsx:35 — mobilde `actions` blogu tam genislige yayilmiyor (lotlar/[id]: 218px, solda ~160px olu alan). Oneri: `max-sm:w-full` + `[&>*]:flex-1`."
   ]
 }

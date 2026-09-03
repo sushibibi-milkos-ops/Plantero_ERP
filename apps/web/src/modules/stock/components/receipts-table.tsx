@@ -32,7 +32,12 @@ export function ReceiptsTable({ receipts }: { receipts: ReceiptRow[] }) {
         // (yalnızca gün) — aynı gün içinde birden çok belge geldiğinde (Tur 4 P2 bulgusu: 7 belgenin
         // tamamı aynı günde) sütun hiç ayrıştırıcı bilgi taşımıyordu; saat "Ortalama kabul süresi"
         // KPI'sını da (bkz. mal-kabul/page.tsx) anlamlı kılar.
-        { accessorKey: 'createdAt', header: 'Tarih', meta: { width: 150 }, cell: ({ row }) => formatDateTime(row.original.createdAt) },
+        // Kök neden (Tur 11 P1 depo-mal-kabul-02): `meta.mobile` işaretlenmemiş "rest" sütunlarında
+        // mobile-cards.tsx TEK metriği "kalan sütunların SONUNCUSU" seçiyor — bu sütun "Toplam tutar"dan
+        // SONRA tanımlandığı için mobil kartta metrik olarak zaman damgası basılıyor, para hiç
+        // görünmüyordu. `mobile:'meta'` ile bu sütun satır 2'nin sol tarafına (bağlam ipucu) düşer,
+        // "Toplam tutar" `rest`in tek/son elemanı olarak metrik konumunu alır.
+        { accessorKey: 'createdAt', header: 'Tarih', meta: { width: 150, mobile: 'meta' }, cell: ({ row }) => formatDateTime(row.original.createdAt) },
       ];
       if (showWarehouseColumn) {
         cols.splice(3, 0, { accessorKey: 'warehouseCode', header: 'Depo', meta: { width: 90, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono text-xs">{getValue<string>()}</span> });

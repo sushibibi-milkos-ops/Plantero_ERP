@@ -26,8 +26,11 @@ export function LotQuantsTable({ quants, uomCode }: { quants: QuantRow[]; uomCod
         meta: { mobile: 'badge' },
         cell: ({ row }) => <StatusBadge status={row.original.usage} label={LOCATION_USAGE_LABELS[row.original.usage] ?? row.original.usage} tone={row.original.usage === 'quarantine' ? 'warning' : row.original.usage === 'rejected' ? 'danger' : 'neutral'} />,
       },
+      // Kök neden (Tur 11 P1 depo-lotlar-id-02, devamı): iki sütun da mobilde işaretsizdi; tek metrik
+      // kuralı `rest`in sonuncusunu ("Rezerve") seçiyor, operatörün asıl baktığı "Eldeki" miktarı mobil
+      // kartta hiç görünmüyordu. Rezerve mobilde gizlendi — Eldeki artık tek/son eleman olarak metrik.
       { id: 'qty', accessorFn: (r) => r.qty, header: 'Eldeki', meta: { align: 'right', width: 110 }, cell: ({ row }) => <QtyCell value={row.original.qty} uom={uomCode} /> },
-      { id: 'reserved', accessorFn: (r) => r.reserved, header: 'Rezerve', meta: { align: 'right', width: 110 }, cell: ({ row }) => <QtyCell value={row.original.reserved} uom={uomCode} /> },
+      { id: 'reserved', accessorFn: (r) => r.reserved, header: 'Rezerve', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <QtyCell value={row.original.reserved} uom={uomCode} /> },
     ],
     [uomCode],
   );

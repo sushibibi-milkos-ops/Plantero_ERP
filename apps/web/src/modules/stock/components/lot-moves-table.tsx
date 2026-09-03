@@ -28,9 +28,14 @@ export function LotMovesTable({ moves, uomCode }: { moves: MoveRow[]; uomCode?: 
         meta: { mobile: 'badge' },
         cell: ({ row }) => <StatusBadge status={row.original.kind} label={MOVE_KIND_LABELS[row.original.kind] ?? row.original.kind} tone="neutral" />,
       },
+      // Kök neden (Tur 11 P1 depo-lotlar-id-02): üç sütun da (Miktar/Değer/Tarih) mobilde işaretsizdi;
+      // tek metrik kuralı `rest`in SONUNCUSUNU seçtiği için metrik "Tarih" oluyor, iki sayısal alan
+      // (Miktar, Değer) mobil kartta hiç görünmüyordu. Düzeltme: Tarih bağlam ipucu olarak satır 2'nin
+      // soluna (`meta`) taşındı, Değer mobilde tamamen gizlendi (`hidden`) — Miktar artık `rest`in
+      // tek/son elemanı olarak metrik konumunu alır (13px tabular-nums).
       { id: 'qty', accessorFn: (r) => r.qty, header: 'Miktar', meta: { align: 'right', width: 100 }, cell: ({ row }) => <QtyCell value={row.original.qty} uom={uomCode} /> },
-      { id: 'value', accessorFn: (r) => r.value, header: 'Değer', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.value} /> },
-      { id: 'movedAt', accessorFn: (r) => r.movedAt, header: 'Tarih', meta: { width: 130, className: 'text-xs text-muted-foreground' }, cell: ({ row }) => formatDateTime(row.original.movedAt) },
+      { id: 'value', accessorFn: (r) => r.value, header: 'Değer', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <MoneyCell value={row.original.value} /> },
+      { id: 'movedAt', accessorFn: (r) => r.movedAt, header: 'Tarih', meta: { width: 130, className: 'text-xs text-muted-foreground', mobile: 'meta' }, cell: ({ row }) => formatDateTime(row.original.movedAt) },
     ],
     [uomCode],
   );
