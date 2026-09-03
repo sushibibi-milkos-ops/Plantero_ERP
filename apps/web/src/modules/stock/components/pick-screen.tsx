@@ -10,6 +10,7 @@ import { LotBadge } from '@/components/lot-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
+import { useFocusMode } from '@/components/app-shell/use-focus-mode';
 import { scanCodeAction, confirmPickAction } from '../actions';
 
 export type PickLine = {
@@ -19,6 +20,9 @@ export type PickLine = {
 
 export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: string; docNo: string; initialLines: PickLine[] }) {
   const router = useRouter();
+  // Toplama tek görevli, kesintiye kapalı bir akıştır — kenar çubuğu + üst bar dikkat dağıtır ve
+  // 1440px'te içeriği 448px'lik dar bir kolona sıkıştırır. Kabuksuz (odak modu) render edilir.
+  useFocusMode();
   const [lines, setLines] = useState(initialLines);
   const [code, setCode] = useState('');
   const [pending, setPending] = useState(false);
@@ -91,8 +95,15 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
         <span className="text-sm font-medium tabular-nums text-muted-foreground">{doneCount}/{lines.length} toplandı</span>
       </div>
 
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-        <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${(doneCount / lines.length) * 100}%` }} />
+      {/* transform: scaleX yerine width — width bir layout property'dir ve her adımda reflow tetikler.
+          scaleX yalnızca compositor'da çalışır. 0/N durumunda dolgu tamamen görünmez oluyordu (soluk
+          gri bir ayraç sanılıyordu); minimum %2 dolgu bırakılır. Track de bg-muted yerine biraz daha
+          belirgin bg-border kullanır ki boş haldeyken de bir "iz" görünsün. */}
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+        <div
+          className="h-full origin-left rounded-full bg-primary transition-transform duration-200 ease-out"
+          style={{ transform: `scaleX(${Math.max(doneCount / lines.length, lines.length ? 0.02 : 0)})` }}
+        />
       </div>
 
       <div className="rounded-2xl border border-border/70 bg-card p-5">
@@ -100,13 +111,23 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
         <div className="mb-1 text-xl font-semibold">{current.productName}</div>
         <div className="mb-4 font-mono text-sm text-muted-foreground">{current.sku}</div>
         <div className="flex flex-wrap items-center gap-2">
-          {current.lotNo ? <LotBadge lotNo={current.lotNo} id={current.lotId ?? undefined} className="h-11 px-3 text-[13px]" /> : <span className="text-sm text-muted-foreground">Lotsuz ürün</span>}
+          {current.lotNo ? (
+            // LotBadge varsayılan olarak dokunma hedefini yalnızca mobilde büyütür (md:h-5'e geri
+            // döner) — toplama ekranı masaüstü genişliğinde açılsa bile hep büyük dokunma hedefi
+            // istediğinden md: sınıfları burada açıkça ezilir.
+            <LotBadge lotNo={current.lotNo} id={current.lotId ?? undefined} className="h-11 px-3 text-[13px] md:h-11 md:px-3 md:text-[13px]" />
+          ) : (
+            <span className="text-sm text-muted-foreground">Lotsuz ürün</span>
+          )}
           {current.expiryDate ? <ExpiryBadge date={current.expiryDate} /> : null}
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+        {/* Lokasyon kodu (ör. TIRE/MAMUL/R01) tek satırda 2 sütunlu grid'e sığmıyordu (scrollWidth
+            134px > clientWidth 128px, 390px'te) ve kırpılıyordu — yanlış raftan toplama riski. Tam
+            genişlik tek satıra alındı; miktar altında ayrı bir satırda kalıyor. */}
+        <div className="mt-4 space-y-2 text-sm">
           <div className="rounded-lg bg-muted/50 p-3">
             <div className="text-xs text-muted-foreground">Lokasyon</div>
-            <div className="mt-0.5 font-mono text-base font-medium">{current.locationCode ?? '—'}</div>
+            <div className="mt-0.5 font-mono text-[15px] font-medium break-all">{current.locationCode ?? '—'}</div>
           </div>
           <div className="rounded-lg bg-muted/50 p-3">
             <div className="text-xs text-muted-foreground">Miktar</div>

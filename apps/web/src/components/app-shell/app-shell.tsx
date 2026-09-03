@@ -26,6 +26,10 @@ type ShellContextValue = {
   setCommandOpen: (v: boolean) => void;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (v: boolean) => void;
+  /** Odak modu: kesintiye kapalı, tek görevli akışlar (ör. depo toplama ekranı) kenar çubuğu +
+   *  üst bar'ı kaldırır. `useFocusMode()` ile açılıp kapatılır (bkz. app-shell/use-focus-mode.ts). */
+  focusMode: boolean;
+  setFocusMode: (v: boolean) => void;
 };
 
 const ShellContext = createContext<ShellContextValue | null>(null);
@@ -55,6 +59,7 @@ export function AppShell({
   const [collapsed, setCollapsedState] = useState(initialCollapsed);
   const [commandOpen, setCommandOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
 
   const can = useMemo(() => makeCan(user.roles, user.permissions), [user.roles, user.permissions]);
   const nav = useMemo(() => filterNav(can), [can]);
@@ -64,7 +69,9 @@ export function AppShell({
     document.cookie = `${SIDEBAR_COOKIE}=${v ? 'collapsed' : 'expanded'}; path=/; max-age=31536000; samesite=lax`;
   }, []);
 
-  // Rota değişince mobil menüyü kapat
+  // Rota değişince mobil menüyü kapat. Odak modunu burada sıfırlamıyoruz — `useFocusMode()` kendi
+  // unmount temizliğiyle kapatır (bkz. use-focus-mode.ts); pathname'e bağlarsak aynı commit'te
+  // hem hook'un "aç" efekti hem buradaki "kapat" efekti yarışır ve sıralama garantisiz olur.
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
@@ -87,9 +94,23 @@ export function AppShell({
   }, [collapsed, setCollapsed]);
 
   const value = useMemo<ShellContextValue>(
-    () => ({ user, can, nav, collapsed, setCollapsed, commandOpen, setCommandOpen, mobileMenuOpen, setMobileMenuOpen }),
-    [user, can, nav, collapsed, setCollapsed, commandOpen, mobileMenuOpen],
+    () => ({ user, can, nav, collapsed, setCollapsed, commandOpen, setCommandOpen, mobileMenuOpen, setMobileMenuOpen, focusMode, setFocusMode }),
+    [user, can, nav, collapsed, setCollapsed, commandOpen, mobileMenuOpen, focusMode],
   );
+
+  // Odak modu: kenar çubuğu, üst bar ve mobil sekmeler kalkar; içerik viewport'un tamamını kullanır.
+  // Toplama/sayım gibi kesintiye kapalı tek görevli akışlar için (docs bulgusu: 900px+ boşa giden
+  // masaüstü alanı). CommandMenu (⌘K) kasıtlı olarak açık kalır — klavye kısayolları her yerde çalışır.
+  if (focusMode) {
+    return (
+      <ShellContext.Provider value={value}>
+        <div className="min-h-dvh bg-background">
+          <main id="main" className="min-h-dvh px-4 py-4 md:px-6 md:py-6">{children}</main>
+        </div>
+        <CommandMenu />
+      </ShellContext.Provider>
+    );
+  }
 
   return (
     <ShellContext.Provider value={value}>

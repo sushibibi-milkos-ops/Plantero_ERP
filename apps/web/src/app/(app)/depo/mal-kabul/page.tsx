@@ -14,12 +14,14 @@ export default async function ReceiptsPage() {
   const user = await requirePermission('stock.view');
   const receipts = await listReceipts();
   const pending = receipts.filter((r) => r.status === 'qc_pending').length;
+  const distinctWarehouses = Array.from(new Set(receipts.map((r) => r.warehouseCode)));
+  const warehouseSuffix = distinctWarehouses.length === 1 ? ` · ${distinctWarehouses[0]}` : '';
 
   return (
     <>
       <PageHeader
         title="Mal Kabul"
-        description={`${receipts.length} belge${pending ? ` · ${pending} kalite bekliyor` : ''}`}
+        description={`${receipts.length} belge${warehouseSuffix}${pending ? ` · ${pending} kalite bekliyor` : ''}`}
         actions={
           userCan(user, 'stock.receive') ? (
             <Button asChild>

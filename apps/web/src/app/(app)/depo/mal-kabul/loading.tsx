@@ -1,18 +1,23 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTableSkeleton } from '@/components/data-table/skeleton';
+import { PageHeader } from '@/components/page-header';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
-/** /depo/mal-kabul: KPI şeridi yok, doğrudan tablo — genel iskeletin 4 kartı burada fazlaydı. */
+/** /depo/mal-kabul: KPI şeridi yok, doğrudan tablo — başlık ve sütun başlıkları gerçek metin. */
 export default function ReceiptsLoading() {
   return (
-    <div className="space-y-6" aria-busy>
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-2">
-          <Skeleton className="h-6 w-28" />
-          <Skeleton className="h-4 w-56" />
-        </div>
-        <Skeleton className="h-9 w-36 rounded-md" />
-      </div>
-      <DataTableSkeleton columns={6} />
+    <div aria-busy>
+      <PageHeader
+        title="Mal Kabul"
+        description={<Skeleton className="h-4 w-40" />}
+        actions={
+          <Button disabled className="pointer-events-none opacity-60">
+            <Plus className="size-4" /> Yeni mal kabul
+          </Button>
+        }
+      />
+      <DataTableSkeleton headers={['Belge no', 'Tedarikçi', 'Durum', 'Satır', 'Toplam tutar', 'İrsaliye no', 'Tarih']} />
     </div>
   );
 }

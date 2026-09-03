@@ -21,7 +21,16 @@ export function DataTableRowActions<T>({ row, actions }: { row: T; actions: RowA
         <Button
           variant="ghost"
           size="icon-xs"
-          className="text-muted-foreground data-[state=open]:bg-muted"
+          className={[
+            'text-muted-foreground data-[state=open]:bg-muted',
+            // Dokunma hedefi: mobil kartlarda (el terminali/eldivenli operatör) 24px yetersizdi (44px
+            // eşiğinin altında) — mobilde 44px, masaüstünde yoğunluk için 24px korunur.
+            'size-11 md:size-6',
+            // Linear satır aksiyonları yalnızca hover/focus'ta belirir; sürekli görünür "…" 50 satırda
+            // gürültüydü. `group/row` yalnızca masaüstü <tr>'de var — mobil kartlarda (ve dokunmatik
+            // ekranlarda, hover kavramı olmadığından) her zaman görünür kalır.
+            'opacity-100 transition-opacity duration-150 data-[state=open]:opacity-100 md:opacity-0 md:group-hover/row:opacity-100 md:group-focus-within/row:opacity-100 md:focus-visible:opacity-100 md:[@media(hover:none)]:opacity-100',
+          ].join(' ')}
           aria-label="Satır eylemleri"
           onClick={(e) => e.stopPropagation()}
         >

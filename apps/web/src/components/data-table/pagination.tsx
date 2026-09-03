@@ -42,13 +42,15 @@ export function DataTablePagination<TData>({ table, pageSizes = [25, 50, 100] }:
             <Button variant="ghost" size="icon-xs" className="hidden sm:inline-flex" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()} aria-label="İlk sayfa">
               <ChevronsLeft />
             </Button>
-            <Button variant="ghost" size="icon-xs" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} aria-label="Önceki sayfa">
+            {/* Önceki/Sonraki her genişlikte görünür (İlk/Son'un aksine) — bu yüzden dokunma hedefi
+                mobilde 44px'e çıkar, masaüstünde 32px yoğunlukta kalır. */}
+            <Button variant="ghost" size="icon-xs" className="size-11 md:size-8" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} aria-label="Önceki sayfa">
               <ChevronLeft />
             </Button>
             <span className="tabular-nums">
               {pageIndex + 1} / {pageCount}
             </span>
-            <Button variant="ghost" size="icon-xs" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} aria-label="Sonraki sayfa">
+            <Button variant="ghost" size="icon-xs" className="size-11 md:size-8" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} aria-label="Sonraki sayfa">
               <ChevronRight />
             </Button>
             <Button variant="ghost" size="icon-xs" className="hidden sm:inline-flex" onClick={() => table.setPageIndex(pageCount - 1)} disabled={!table.getCanNextPage()} aria-label="Son sayfa">

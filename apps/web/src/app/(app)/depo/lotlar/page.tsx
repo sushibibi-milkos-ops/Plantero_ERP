@@ -12,10 +12,16 @@ export default async function LotsPage() {
   const lots = await listLots();
   const released = lots.filter((l) => l.status === 'released').length;
   const quarantine = lots.filter((l) => l.status === 'quarantine').length;
+  // Önceki sayaç yalnızca serbest + karantina veriyordu — 200 lotun 2'si red iken 195+3=198≠200,
+  // fark sessizce kayboluyordu. Red de sayılır.
+  const rejected = lots.filter((l) => l.status === 'rejected').length;
 
   return (
     <>
-      <PageHeader title="Lotlar" description={`${lots.length} lot · ${released} serbest · ${quarantine} karantinada`} />
+      <PageHeader
+        title="Lotlar"
+        description={`${lots.length} lot · ${released} serbest · ${quarantine} karantinada${rejected ? ` · ${rejected} red` : ''}`}
+      />
       <LotsTable lots={lots} />
     </>
   );

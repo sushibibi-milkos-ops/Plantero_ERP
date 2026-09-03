@@ -24,19 +24,29 @@ export default async function DeliveryDetailPage({ params }: { params: Promise<{
 
   return (
     <>
+      {/* Önceki sürüm 4 satıra yayılıyordu (eyebrow "SEVKİYAT" / belge no / müşteri·depo ayrı satırda /
+          rozet ayrı satırda) ve ~150px dikey yer kaplıyordu. Eyebrow kaldırıldı (rota zaten breadcrumb'ta
+          "Sevkiyat" gösteriyor); belge no + durum rozeti aynı satıra alındı; müşteri·depo tek açıklama
+          satırında kaldı — başlık bloğu artık 2 satır. Planlanan/sevk/teslim/kargo tarihleri (varsa)
+          ayrı, üçüncü bir bağlam satırında — bunlar kimlik değil ek bilgi. */}
       <PageHeader
-        eyebrow="Sevkiyat"
-        title={<span className="font-mono">{delivery.docNo}</span>}
+        title={
+          <span className="flex flex-wrap items-center gap-2">
+            <span className="font-mono">{delivery.docNo}</span>
+            <StatusBadge status={delivery.status} kind="delivery" size="md" />
+          </span>
+        }
         description={`${partner?.name ?? ''} · ${warehouse?.name ?? ''}`}
         actions={<DeliveryActions deliveryId={delivery.id} status={delivery.status} canPick={userCan(user, 'stock.pick')} />}
       >
-        <div className="flex flex-wrap items-center gap-2 text-sm">
-          <StatusBadge status={delivery.status} kind="delivery" size="md" />
-          {delivery.scheduledDate ? <span className="text-muted-foreground">Planlanan {formatDate(delivery.scheduledDate)}</span> : null}
-          {delivery.shippedAt ? <span className="text-muted-foreground">Sevk: {formatDateTime(delivery.shippedAt)}</span> : null}
-          {delivery.deliveredAt ? <span className="text-muted-foreground">Teslim: {formatDateTime(delivery.deliveredAt)}</span> : null}
-          {delivery.carrier ? <span className="text-muted-foreground">Kargo: {delivery.carrier}</span> : null}
-        </div>
+        {delivery.scheduledDate || delivery.shippedAt || delivery.deliveredAt || delivery.carrier ? (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
+            {delivery.scheduledDate ? <span>Planlanan {formatDate(delivery.scheduledDate)}</span> : null}
+            {delivery.shippedAt ? <span>Sevk: {formatDateTime(delivery.shippedAt)}</span> : null}
+            {delivery.deliveredAt ? <span>Teslim: {formatDateTime(delivery.deliveredAt)}</span> : null}
+            {delivery.carrier ? <span>Kargo: {delivery.carrier}</span> : null}
+          </div>
+        ) : null}
       </PageHeader>
 
       {chain.upstream.length || chain.downstream.length ? (

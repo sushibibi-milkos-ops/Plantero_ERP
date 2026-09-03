@@ -11,6 +11,7 @@ import { LotBadge } from '@/components/lot-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { KpiCard } from '@/components/kpi-card';
+import { KpiStripRow } from '@/components/kpi-strip';
 import { formatMoney } from '@/lib/format';
 import { scrapExpiredAction } from '../actions';
 import type { ExpiryRow, ExpiryBuckets, ExpiryBucket } from '@plantero/core';
@@ -43,14 +44,16 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
 
   return (
     <>
-      {/* Modül genelinde tek KPI dili: /depo/stok ile aynı bileşen, aynı 0 ondalık para hassasiyeti. */}
-      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {/* Modül genelinde tek KPI dili: /depo/stok ile aynı bileşen (variant="strip"), aynı 0 ondalık
+          para hassasiyeti, aynı sabit yükseklik (134px yerine 80px). */}
+      <KpiStripRow>
         {BUCKET_ORDER.map((b) => {
           const t = buckets.totals[b];
           const active = activeBucket === b;
           return (
             <KpiCard
               key={b}
+              variant="strip"
               title={BUCKET_LABELS[b]}
               value={t.count}
               format="int"
@@ -60,7 +63,7 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
             />
           );
         })}
-      </div>
+      </KpiStripRow>
 
       <DataTable
         columns={columns}

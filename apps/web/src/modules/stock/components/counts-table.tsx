@@ -11,7 +11,7 @@ import type { CountRow } from '../queries';
 export function CountsTable({ counts }: { counts: CountRow[] }) {
   const columns = useMemo<ColumnDef<CountRow, unknown>[]>(
     () => [
-      { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Belge no', meta: { mobile: 'title', className: 'font-mono' } },
+      { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Belge no', meta: { width: 150, mobile: 'title', className: 'font-mono' } },
       { accessorKey: 'warehouseCode', header: 'Depo', meta: { width: 90, mobile: 'subtitle' }, cell: ({ getValue }) => <span className="font-mono text-xs">{getValue<string>()}</span> },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="count" /> },
       { accessorKey: 'lineCount', header: 'Satır', meta: { align: 'right', width: 80, mobile: 'hidden' } },

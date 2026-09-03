@@ -1,24 +1,23 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTableSkeleton } from '@/components/data-table/skeleton';
+import { PageHeader } from '@/components/page-header';
+import { KpiStripRow } from '@/components/kpi-strip';
 
 /**
- * /depo/stok'a özel iskelet: gerçek düzenle birebir (başlık + 6 KPI kartı + tablo).
- * Genel `app/(app)/loading.tsx` 4 kart varsayıyordu — geçişte sütun sayısı değişip
- * düzen sıçraması (CLS) yaratıyordu.
+ * /depo/stok'a özel iskelet: gerçek düzenle birebir (başlık + KPI şeridi + tablo).
+ * Başlık gerçek metinle basılır (yalnızca açıklamadaki dinamik sayı bilinmediğinden o kısım
+ * iskelet kalır) — Linear/Stripe sayfa kimliğini asla gri kutuya çevirmez, yalnızca veri hücrelerini.
  */
 export default function StockLoading() {
   return (
-    <div className="space-y-6" aria-busy>
-      <div className="space-y-2">
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-4 w-64" />
-      </div>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+    <div aria-busy>
+      <PageHeader title="Stok" description={<Skeleton className="h-4 w-40" />} />
+      <KpiStripRow>
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
+          <Skeleton key={i} className="h-[72px] w-[140px] shrink-0 rounded-lg md:h-20 md:w-auto md:flex-1 md:rounded-none" />
         ))}
-      </div>
-      <DataTableSkeleton columns={7} />
+      </KpiStripRow>
+      <DataTableSkeleton headers={['Ürün', 'SKU', 'Tip', 'Eldeki', 'Kullanılabilir', 'Değer', 'En yakın SKT']} />
     </div>
   );
 }

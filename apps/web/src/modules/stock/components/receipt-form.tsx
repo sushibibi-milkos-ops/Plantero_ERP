@@ -138,7 +138,10 @@ export function ReceiptForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
+        {/* max-w-3xl kaldırıldı: "Satırlar" kartıyla aynı genişlikte olmalı — ikisi farklı genişlikte
+            olunca sağ kenarları 384px kayıyordu (1440px'te 768px vs 1152px). İkisi de artık formun
+            tam genişliğini (w-full) paylaşıyor. */}
+        <div className="w-full rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">Belge başlığı</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {/* Tedarikçi ve Ürün ekle ile aynı seçim bileşeni (Combobox) — Select farklı bir

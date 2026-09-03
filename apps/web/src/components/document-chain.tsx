@@ -103,7 +103,11 @@ export function DocumentChain({
             </div>
           ))
         ) : (
-          <div className="ml-1 shrink-0 self-center text-xs text-muted-foreground">Devam belgesi yok</div>
+          // Önceden kartsız, hizasız düz metindi — zincirdeki kartlarla (w-44, aynı dikey konum) aynı
+          // ölçüde kesikli çerçeveli bir "boş" kart, akışın bittiğini görsel olarak da belirtir.
+          <div className="flex w-44 shrink-0 items-center justify-center self-stretch rounded-lg border border-dashed border-border/70 p-2.5 text-center text-[11px] text-muted-foreground">
+            Devam belgesi yok
+          </div>
         )}
       </div>
     </div>

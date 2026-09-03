@@ -37,9 +37,19 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
 
   return (
     <>
+      {/* Önceki sürüm 5 satıra yayılıyordu (eyebrow "LOT" / lot no / ürün·sku / rozet satırı / maliyet
+          satırı, ~76px+ başlık yüksekliği). Eyebrow kaldırıldı (breadcrumb'ta zaten var); lot no + tüm
+          rozetler (durum, köken, SKT) tek satıra alındı; ürün·sku açıklama satırında kaldı — başlık
+          bloğu 2 satıra indi. Maliyet/ilk giriş bağlam bilgisi (kimlik değil) alt satırda kalıyor. */}
       <PageHeader
-        eyebrow="Lot"
-        title={<span className="font-mono">{lot.lotNo}</span>}
+        title={
+          <span className="flex flex-wrap items-center gap-2">
+            <span className="font-mono">{lot.lotNo}</span>
+            <StatusBadge status={lot.status} kind="lot" size="md" />
+            <StatusBadge status={lot.origin} kind="lot_origin" size="md" />
+            {lot.expiryDate ? <ExpiryBadge date={lot.expiryDate} /> : null}
+          </span>
+        }
         description={product ? `${product.p.name} · ${product.p.sku}` : undefined}
         actions={
           <div className="flex flex-col items-end gap-1.5">
@@ -52,23 +62,16 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
           </div>
         }
       >
-        <div className="flex flex-col gap-1.5">
-          <div className="flex flex-wrap items-center gap-2">
-            <StatusBadge status={lot.status} kind="lot" size="md" />
-            <StatusBadge status={lot.origin} kind="lot_origin" size="md" />
-            {lot.expiryDate ? <ExpiryBadge date={lot.expiryDate} /> : null}
-          </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
-            <span>Maliyet <MoneyCell value={lot.unitCost} className="inline" /></span>
-            <span aria-hidden>·</span>
-            <span>İlk giriş {formatQty(lot.initialQty, product?.uomCode)}</span>
-            {lot.supplierLotNo ? (
-              <>
-                <span aria-hidden>·</span>
-                <span>Tedarikçi lotu: {lot.supplierLotNo}</span>
-              </>
-            ) : null}
-          </div>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
+          <span>Maliyet <MoneyCell value={lot.unitCost} className="inline" /></span>
+          <span aria-hidden>·</span>
+          <span>İlk giriş {formatQty(lot.initialQty, product?.uomCode)}</span>
+          {lot.supplierLotNo ? (
+            <>
+              <span aria-hidden>·</span>
+              <span>Tedarikçi lotu: {lot.supplierLotNo}</span>
+            </>
+          ) : null}
         </div>
       </PageHeader>
 

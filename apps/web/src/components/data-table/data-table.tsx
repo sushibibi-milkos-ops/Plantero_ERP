@@ -233,7 +233,10 @@ export function DataTable<T>({
     tabIndex: clickable ? 0 : undefined,
     className: cn(
       'group/row h-9 border-b border-border/50 last:border-0',
-      clickable && 'cursor-pointer hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-none',
+      // focus-visible eskiden yalnızca hover ile aynı arka plan tonunu ekleyip outline'ı kaldırıyordu
+      // — klavyeyle gezen kullanıcı hangi satırda olduğunu göremiyordu (hover'dan ayırt edilemiyordu).
+      // Görünür bir halka geri eklendi; arka plan tonu ek bir sinyal olarak kalır.
+      clickable && 'cursor-pointer hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
       rowClassName?.(row.original),
     ),
   });

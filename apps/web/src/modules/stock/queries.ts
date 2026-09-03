@@ -188,13 +188,22 @@ export async function getStockKpis(): Promise<StockKpis> {
 export type LotRow = {
   id: string; lotNo: string; productId: string; sku: string; productName: string; uomCode: string;
   status: string; origin: string; initialQty: string; onHandQty: string; unitCost: string; expiryDate: string | null;
-  supplierName: string | null; originWorkOrderId: string | null; locationCount: number;
+  supplierName: string | null; originWorkOrderId: string | null; locationCount: number; firstLocationCode: string | null;
 };
 
 export async function listLots(): Promise<LotRow[]> {
+  // `locationCodes`: sütun başlığı "Lokasyon" iken değer aslında lokasyon SAYISI'ydı (1/2) — kullanıcı
+  // bunu raf kodu sanıyordu. Tek lokasyonlu lotlarda gerçek kodu göstermek için (ör. "TIRE/HAM/R01/A")
+  // en küçük kodu da topluyoruz; UI birden çok lokasyonda "<kod> +N" biçimine düşer.
   const onHand = await db
-    .select({ lotId: stockQuants.lotId, qty: sql<string>`coalesce(sum(${stockQuants.qty}), 0)`, locCount: sql<string>`count(distinct ${stockQuants.locationId})` })
+    .select({
+      lotId: stockQuants.lotId,
+      qty: sql<string>`coalesce(sum(${stockQuants.qty}), 0)`,
+      locCount: sql<string>`count(distinct ${stockQuants.locationId})`,
+      firstLocationCode: sql<string>`min(${locations.code})`,
+    })
     .from(stockQuants)
+    .innerJoin(locations, eq(locations.id, stockQuants.locationId))
     .where(isNotNull(stockQuants.lotId))
     .groupBy(stockQuants.lotId);
   const onHandByLot = new Map(onHand.map((r) => [r.lotId as string, r]));
@@ -213,6 +222,7 @@ export async function listLots(): Promise<LotRow[]> {
       id: r.lot.id, lotNo: r.lot.lotNo, productId: r.lot.productId, sku: r.sku, productName: r.productName, uomCode: r.uomCode,
       status: r.lot.status, origin: r.lot.origin, initialQty: r.lot.initialQty, onHandQty: oh?.qty ?? '0.0000', unitCost: r.lot.unitCost,
       expiryDate: r.lot.expiryDate, supplierName: r.supplierName, originWorkOrderId: r.lot.originWorkOrderId, locationCount: Number(oh?.locCount ?? 0),
+      firstLocationCode: oh?.firstLocationCode ?? null,
     };
   });
 }
@@ -277,7 +287,7 @@ export async function getReceiptDetail(id: string) {
 /* /depo/sevkiyat                                                       */
 /* ==================================================================== */
 
-export type DeliveryRow = { id: string; docNo: string; status: string; partnerName: string; warehouseCode: string; scheduledDate: string | null; lineCount: number; carrier: string | null; salesOrderId: string | null; salesOrderDocNo: string | null };
+export type DeliveryRow = { id: string; docNo: string; status: string; partnerName: string; warehouseCode: string; scheduledDate: string | null; shippedAt: Date | null; lineCount: number; carrier: string | null; salesOrderId: string | null; salesOrderDocNo: string | null; value: string };
 
 export async function listDeliveries(): Promise<DeliveryRow[]> {
   const so = db.select({ id: salesOrders.id, docNo: salesOrders.docNo }).from(salesOrders).as('so');
@@ -288,9 +298,18 @@ export async function listDeliveries(): Promise<DeliveryRow[]> {
     .innerJoin(warehouses, eq(warehouses.id, deliveries.warehouseId))
     .leftJoin(so, eq(so.id, deliveries.salesOrderId))
     .orderBy(desc(deliveries.createdAt));
-  const lineAgg = await db.select({ deliveryId: deliveryLines.deliveryId, cnt: sql<string>`count(*)` }).from(deliveryLines).groupBy(deliveryLines.deliveryId);
-  const byDelivery = new Map(lineAgg.map((r) => [r.deliveryId, Number(r.cnt)]));
-  return rows.map((r) => ({ id: r.d.id, docNo: r.d.docNo, status: r.d.status, partnerName: r.partnerName, warehouseCode: r.warehouseCode, scheduledDate: r.d.scheduledDate, lineCount: byDelivery.get(r.d.id) ?? 0, carrier: r.d.carrier, salesOrderId: r.d.salesOrderId, salesOrderDocNo: r.soDocNo ?? null }));
+  // Değer: toplanan miktar × birim maliyet (lot maliyeti — SMM'in temeli). İrsaliye bir depo belgesi,
+  // satış fiyatı taşımaz; kardeş ekran /depo/mal-kabul de aynı mantıkla (qty×unitCost) "Toplam tutar"
+  // gösteriyordu — bu ekranda tamamen eksikti.
+  const lineAgg = await db
+    .select({ deliveryId: deliveryLines.deliveryId, cnt: sql<string>`count(*)`, value: sql<string>`coalesce(sum(${deliveryLines.pickedQty} * coalesce(${deliveryLines.unitCost}, 0)), 0)` })
+    .from(deliveryLines)
+    .groupBy(deliveryLines.deliveryId);
+  const byDelivery = new Map(lineAgg.map((r) => [r.deliveryId, r]));
+  return rows.map((r) => {
+    const agg = byDelivery.get(r.d.id);
+    return { id: r.d.id, docNo: r.d.docNo, status: r.d.status, partnerName: r.partnerName, warehouseCode: r.warehouseCode, scheduledDate: r.d.scheduledDate, shippedAt: r.d.shippedAt, lineCount: Number(agg?.cnt ?? 0), carrier: r.d.carrier, salesOrderId: r.d.salesOrderId, salesOrderDocNo: r.soDocNo ?? null, value: agg?.value ?? '0' };
+  });
 }
 
 export async function getDeliveryDetail(id: string) {
@@ -315,7 +334,7 @@ export async function getDeliveryDetail(id: string) {
 /* /depo/transfer                                                       */
 /* ==================================================================== */
 
-export type TransferRow = { id: string; docNo: string; status: string; fromWarehouseCode: string; toWarehouseCode: string; lineCount: number; scheduledDate: string | null; createdAt: Date };
+export type TransferRow = { id: string; docNo: string; status: string; fromWarehouseCode: string; toWarehouseCode: string; lineCount: number; scheduledDate: string | null; createdAt: Date; value: string };
 
 export async function listTransfers(): Promise<TransferRow[]> {
   const fromWh = db.select({ id: warehouses.id, code: warehouses.code }).from(warehouses).as('from_wh');
@@ -328,7 +347,17 @@ export async function listTransfers(): Promise<TransferRow[]> {
     .orderBy(desc(transfers.createdAt));
   const lineAgg = await db.select({ transferId: transferLines.transferId, cnt: sql<string>`count(*)` }).from(transferLines).groupBy(transferLines.transferId);
   const byTransfer = new Map(lineAgg.map((r) => [r.transferId, Number(r.cnt)]));
-  return rows.map((r) => ({ id: r.t.id, docNo: r.t.docNo, status: r.t.status, fromWarehouseCode: r.fromCode, toWarehouseCode: r.toCode, lineCount: byTransfer.get(r.t.id) ?? 0, scheduledDate: r.t.scheduledDate, createdAt: r.t.createdAt }));
+  // Transfer defterde değersizdir (hesap değişmez) ama KPI amaçlı taşınan mal değerini göstermek için
+  // lot maliyeti (lotluysa) / ürün ortalama maliyeti (lotsuzsa) × miktar ile bilgilendirici bir toplam
+  // hesaplanır — muhasebe kaydı değil, yalnızca "ne kadarlık mal yolda" özetidir.
+  const valueAgg = await db
+    .select({ transferId: transferLines.transferId, value: sql<string>`coalesce(sum(${transferLines.qty} * coalesce(${stockLots.unitCost}, ${products.averageCost}, 0)), 0)` })
+    .from(transferLines)
+    .leftJoin(stockLots, eq(stockLots.id, transferLines.lotId))
+    .leftJoin(products, eq(products.id, transferLines.productId))
+    .groupBy(transferLines.transferId);
+  const valueByTransfer = new Map(valueAgg.map((r) => [r.transferId, r.value]));
+  return rows.map((r) => ({ id: r.t.id, docNo: r.t.docNo, status: r.t.status, fromWarehouseCode: r.fromCode, toWarehouseCode: r.toCode, lineCount: byTransfer.get(r.t.id) ?? 0, scheduledDate: r.t.scheduledDate, createdAt: r.t.createdAt, value: valueByTransfer.get(r.t.id) ?? '0' }));
 }
 
 export async function getTransferDetail(id: string) {

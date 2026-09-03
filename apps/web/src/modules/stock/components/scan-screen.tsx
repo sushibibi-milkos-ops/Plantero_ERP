@@ -44,9 +44,13 @@ export function ScanScreen() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onScan(); } }}
-          placeholder="Barkod / QR / lot / lokasyon okut…"
+          // Placeholder 390px'te input çerçevesine değecek şekilde kırpılıyordu; kısaltıldı ve
+          // taşarsa (uzun barkod girilirken) kesilsin diye text-ellipsis eklendi. Odak halkası zaten
+          // standart Input bileşeninden geliyor (border-ring + ring-[3px] ring-ring/50) — burada ekstra
+          // kenarlık/halka override edilmiyor.
+          placeholder="Barkod / lot / lokasyon…"
           disabled={pending}
-          className="h-14 pl-11 text-base font-mono"
+          className="h-14 pl-11 text-[15px] font-mono text-ellipsis"
         />
       </div>
 
