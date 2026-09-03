@@ -21,7 +21,7 @@ export default async function StockPage() {
         description={`${rows.length} ürün × depo satırı${criticalCount ? ` · ${criticalCount} kritik seviyede` : ''}`}
       />
 
-      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         <KpiCard title="Toplam envanter değeri" value={kpis.totalValue} format="money" icon={<Boxes strokeWidth={1.75} />} />
         <KpiCard title="Hammadde/ambalaj değeri" value={kpis.rawValue} format="money" icon={<Wheat strokeWidth={1.75} />} />
         <KpiCard title="Mamul değeri" value={kpis.finishedValue} format="money" icon={<PackageCheckIcon strokeWidth={1.75} />} />

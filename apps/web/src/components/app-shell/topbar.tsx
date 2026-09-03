@@ -55,7 +55,7 @@ export function Topbar() {
         'bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70',
       )}
     >
-      <Button variant="ghost" size="icon-sm" className="md:hidden" onClick={() => setMobileMenuOpen(true)} aria-label="Menü">
+      <Button variant="ghost" size="icon-sm" className="size-11 md:hidden" onClick={() => setMobileMenuOpen(true)} aria-label="Menü">
         <Menu className="size-4" />
       </Button>
 
@@ -94,7 +94,7 @@ export function Topbar() {
         <span className="flex-1 text-left">Ara veya git…</span>
         <kbd className="rounded border bg-background px-1.5 py-px font-mono text-[10px] text-muted-foreground">⌘K</kbd>
       </button>
-      <Button variant="ghost" size="icon-sm" className="md:hidden" onClick={() => setCommandOpen(true)} aria-label="Ara">
+      <Button variant="ghost" size="icon-sm" className="size-11 md:hidden" onClick={() => setCommandOpen(true)} aria-label="Ara">
         <Search className="size-4" />
       </Button>
 

@@ -27,6 +27,11 @@ SELECT
   1::numeric(18, 4), 0::numeric(18, 4), 1::numeric(18, 4)
 FROM work_order_consumptions wc
 JOIN stock_lots l ON l.id = wc.lot_id
-WHERE l.origin_receipt_id IS NULL AND l.origin_work_order_id IS NULL
+-- Yalnızca origin='receipt'|'production' lotlarında origin_receipt_id/origin_work_order_id zorunludur
+-- (zincirin bir üst halkasına bağlanmaları gerekir). 'opening' (açılış envanteri), 'count' (sayım
+-- fazlası) ve 'return' (iade) meşru kök kökenlerdir — tanım gereği üst belgeleri yoktur; bunları da
+-- eksik saymak, açılış stoğundan yapılan (tamamen normal) her üretim tüketimini yanlışlıkla I5 ihlali
+-- olarak işaretlerdi.
+WHERE l.origin IN ('receipt', 'production') AND l.origin_receipt_id IS NULL AND l.origin_work_order_id IS NULL
 
 ORDER BY id;

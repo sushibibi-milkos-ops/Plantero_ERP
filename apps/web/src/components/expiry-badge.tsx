@@ -1,12 +1,15 @@
 import { cn } from '@/lib/utils';
 import { daysUntil, formatDate } from '@/lib/format';
 
-export type ExpiryLevel = 'ok' | 'notice' | 'warning' | 'critical' | 'expired' | 'none';
+export type ExpiryLevel = 'ok' | 'notice' | 'warning' | 'critical' | 'urgent' | 'expired' | 'none';
 
-/** 30/60/90 kuralı: >90 nötr, 60–90 sarı, 30–60 turuncu, <30 kırmızı, geçmiş koyu kırmızı */
+/** 7/30/60/90 kuralı: >90 nötr, 60–90 sarı, 30–60 turuncu, 8–30 kırmızı(soft), ≤7 kırmızı(dolu), geçmiş koyu kırmızı.
+ *  7 günlük eşik: aynı 30 günlük kovada onlarca lot birikince (ör. tedarikçi SKT dağılımı) tek düz kırmızı
+ *  renk aciliyet farkını yok ediyordu — kova içinde de bir gradyan olsun diye ikiye bölündü. */
 export function expiryLevel(days: number | null): ExpiryLevel {
   if (days === null) return 'none';
   if (days < 0) return 'expired';
+  if (days <= 7) return 'urgent';
   if (days < 30) return 'critical';
   if (days < 60) return 'warning';
   if (days < 90) return 'notice';
@@ -19,6 +22,7 @@ const LEVEL_CLASS: Record<ExpiryLevel, string> = {
   notice: 'bg-warning/15 text-[oklch(0.5_0.14_70)] dark:text-warning',
   warning: 'bg-[oklch(0.7_0.18_50)]/15 text-[oklch(0.5_0.17_45)] dark:text-[oklch(0.78_0.16_55)]',
   critical: 'bg-destructive/10 text-destructive',
+  urgent: 'bg-destructive/80 text-destructive-foreground',
   expired: 'bg-destructive text-destructive-foreground',
 };
 
@@ -27,7 +31,8 @@ export const EXPIRY_LEVEL_LABELS: Record<ExpiryLevel, string> = {
   ok: '90+ gün',
   notice: '60–90 gün',
   warning: '30–60 gün',
-  critical: '30 günden az',
+  critical: '8–30 gün',
+  urgent: '7 günden az',
   expired: 'SKT geçti',
 };
 

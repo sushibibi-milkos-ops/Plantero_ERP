@@ -1,5 +1,5 @@
 import { eq, and, gt, isNotNull, sql } from 'drizzle-orm';
-import { stockQuants, stockLots, products, locations, warehouses, scraps, type DbOrTx } from '@plantero/db';
+import { stockQuants, stockLots, products, locations, warehouses, scraps, uoms, type DbOrTx } from '@plantero/db';
 import { D, toDb, round4, sum, ZERO } from '../money.js';
 import { businessDate, addDays } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
@@ -15,7 +15,7 @@ export type ExpiryBucket = 'expired' | 'critical' | 'warning' | 'notice';
 export type ExpiryRow = {
   quantId: string; productId: string; productName: string; sku: string; lotId: string; lotNo: string;
   locationId: string; locationCode: string; warehouseId: string | null; warehouseCode: string | null;
-  qty: string; unitCost: string; value: string; expiryDate: string; daysLeft: number; bucket: ExpiryBucket;
+  qty: string; uomCode: string; unitCost: string; value: string; expiryDate: string; daysLeft: number; bucket: ExpiryBucket;
 };
 
 export type ExpiryBuckets = { rows: ExpiryRow[]; totals: Record<ExpiryBucket, { count: number; qtyValue: string }> };
@@ -39,13 +39,14 @@ export async function getExpiryBuckets(db: DbOrTx, opts: { warehouseId?: string;
       quantId: stockQuants.id, productId: products.id, productName: products.name, sku: products.sku,
       lotId: stockLots.id, lotNo: stockLots.lotNo, locationId: locations.id, locationCode: locations.code,
       warehouseId: locations.warehouseId, warehouseCode: warehouses.code,
-      qty: stockQuants.qty, unitCost: stockLots.unitCost, expiryDate: stockLots.expiryDate,
+      qty: stockQuants.qty, uomCode: uoms.code, unitCost: stockLots.unitCost, expiryDate: stockLots.expiryDate,
     })
     .from(stockQuants)
     .innerJoin(products, eq(products.id, stockQuants.productId))
     .innerJoin(stockLots, eq(stockLots.id, stockQuants.lotId))
     .innerJoin(locations, eq(locations.id, stockQuants.locationId))
     .leftJoin(warehouses, eq(warehouses.id, locations.warehouseId))
+    .innerJoin(uoms, eq(uoms.id, products.uomId))
     .where(and(...conds))
     .orderBy(stockLots.expiryDate);
 
@@ -58,7 +59,7 @@ export async function getExpiryBuckets(db: DbOrTx, opts: { warehouseId?: string;
       return {
         quantId: r.quantId, productId: r.productId, productName: r.productName, sku: r.sku, lotId: r.lotId, lotNo: r.lotNo,
         locationId: r.locationId, locationCode: r.locationCode, warehouseId: r.warehouseId, warehouseCode: r.warehouseCode ?? null,
-        qty: r.qty, unitCost: r.unitCost, value: toDb(value), expiryDate: r.expiryDate!, daysLeft, bucket: bucketOf(daysLeft),
+        qty: r.qty, uomCode: r.uomCode, unitCost: r.unitCost, value: toDb(value), expiryDate: r.expiryDate!, daysLeft, bucket: bucketOf(daysLeft),
       };
     });
 

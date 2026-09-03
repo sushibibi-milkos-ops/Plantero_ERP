@@ -27,6 +27,7 @@ export type StatusKind =
   | 'maintenance'
   | 'maintenance_priority'
   | 'maintenance_kind'
+  | 'opportunity'
   | 'export'
   | 'export_doc'
   | 'dunning'
@@ -125,9 +126,9 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
   },
   delivery: {
     draft: { label: 'Taslak', tone: 'muted' },
-    reserved: { label: 'Rezerve', tone: 'info' },
+    reserved: { label: 'Rezerve', tone: 'warning' },
     picking: { label: 'Toplanıyor', tone: 'primary' },
-    picked: { label: 'Toplandı', tone: 'info' },
+    picked: { label: 'Toplandı', tone: 'primary' },
     shipped: { label: 'Sevk edildi', tone: 'info' },
     delivered: { label: 'Teslim edildi', tone: 'success' },
     cancelled: { label: 'İptal', tone: 'danger' },
@@ -256,6 +257,15 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
     sent: { label: 'Gönderildi', tone: 'success' },
     failed: { label: 'Gönderilemedi', tone: 'danger' },
     cancelled: { label: 'İptal', tone: 'danger' },
+  },
+  /** `opportunity_stages.code` (belge zincirinde fırsat düğümünün durumu bu koddan gelir) */
+  opportunity: {
+    lead: { label: 'Aday', tone: 'muted' },
+    qualified: { label: 'Nitelikli', tone: 'info' },
+    proposal: { label: 'Teklif aşaması', tone: 'primary' },
+    negotiation: { label: 'Görüşme', tone: 'warning' },
+    won: { label: 'Kazanıldı', tone: 'success' },
+    lost: { label: 'Kaybedildi', tone: 'danger' },
   },
   rnd_project: {
     idea: { label: 'Fikir', tone: 'muted' },

@@ -159,19 +159,29 @@ async function seedRawAndPackagingOpening(tx: DbOrTx, summary: SeedSummary): Pro
   const REJECT_SKU = '301050000'; // Kaju — karantinaya alınıp reddedilmiş 1 lot
   const EXPIRED_SKU = '307020000'; // Deniz Tuzu — SKT'si geçmiş 1 lot (skt panosu demo)
 
+  let rawIdx = 0;
   for (const def of RAW_MATERIALS) {
     const product = await productBySku(tx, def.sku);
     const shelf = rawShelves[shelfIdx % rawShelves.length]!;
     shelfIdx += 1;
 
+    // Tüm hammaddelere sabit +18/+52/+260 gün verilirse (önceki sürüm) 29 üründen doğan ~87 lot
+    // aynı 3 SKT tarihinde kümelenir; SKT panosunda ve lot listesinde "kırmızı duvar" oluşur (her
+    // lot aynı rozet, aciliyet farkı sıfırlanır). Ürün başına deterministik ama farklı bir ofset
+    // üretip her lotu kendi 30/60/120-400 günlük dilimi içinde yayıyoruz (docs/modules/depo.md §19).
+    const dayOffsetA = 3 + ((rawIdx * 7) % 26); // 3–28 gün (<30 dilimi)
+    const dayOffsetB = 31 + ((rawIdx * 5) % 28); // 31–58 gün (45–60 dilimini de kapsayan orta vade)
+    const dayOffsetC = 120 + ((rawIdx * 37) % 280); // 120–399 gün
+    rawIdx += 1;
+
     // Lot A: yakın vadeli — bugüne göre <30 gün (veya Deniz Tuzu için SKT geçmiş)
-    const expiryA = def.sku === EXPIRED_SKU ? addDaysStr(TODAY, -10) : addDaysStr(TODAY, 18);
+    const expiryA = def.sku === EXPIRED_SKU ? addDaysStr(TODAY, -10) : addDaysStr(TODAY, dayOffsetA);
     const qtyA = Math.round(def.qty * 0.35);
     // Lot B: orta vadeli — 45-60 gün
-    const expiryB = addDaysStr(TODAY, 52);
+    const expiryB = addDaysStr(TODAY, dayOffsetB);
     const qtyB = Math.round(def.qty * 0.35);
     // Lot C: uzun vadeli — 120-400 gün
-    const expiryC = addDaysStr(TODAY, 260);
+    const expiryC = addDaysStr(TODAY, dayOffsetC);
     const qtyC = def.qty - qtyA - qtyB;
 
     const lots: Array<{ tag: string; expiry: string; qty: number; status: 'released' | 'quarantine' }> = [

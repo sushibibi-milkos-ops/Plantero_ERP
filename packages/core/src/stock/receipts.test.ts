@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { stockLots, stockQuants, qcChecks, purchaseOrders, purchaseOrderLines } from '@plantero/db';
+import { stockLots, stockQuants, qcChecks, purchaseOrders, purchaseOrderLines, auditLog } from '@plantero/db';
 import { createReceipt, receiveGoods, createAndReceive } from './receipts.js';
 import { getOnHand } from './ledger.js';
 import { withRollback, seedBase, ctx, d } from '../__tests__/helpers.js';
@@ -29,6 +29,13 @@ describe('stock/receipts', () => {
       const oh = await getOnHand(tx, { productId: b.raw.id, lotId: lot!.id });
       expect(oh.qty.toFixed(4)).toBe('100.0000');
       expect(oh.value.toFixed(4)).toBe('1250.0000');
+
+      // I17 (audit kapsamı): receiveGoods'un oluşturduğu her stock_lots satırı için audit_log kaydı olmalı
+      // (kural #5 — her yazma withAudit ile sarılır; createLot audit yazmaz, çağıran sorumludur).
+      const audits = await tx.select().from(auditLog).where(eq(auditLog.recordId, lot!.id));
+      expect(audits).toHaveLength(1);
+      expect(audits[0]!.tableName).toBe('stock_lots');
+      expect(audits[0]!.action).toBe('create');
     });
   });
 
@@ -52,6 +59,12 @@ describe('stock/receipts', () => {
 
       const rejQuant = await tx.select().from(stockQuants).where(eq(stockQuants.lotId, rejected.id));
       expect(rejQuant[0]!.locationId).toBe(b.loc.red.id);
+
+      // Her iki lot (kabul + red) için de audit_log satırı üretilmeli
+      const acceptedAudits = await tx.select().from(auditLog).where(eq(auditLog.recordId, accepted.id));
+      const rejectedAudits = await tx.select().from(auditLog).where(eq(auditLog.recordId, rejected.id));
+      expect(acceptedAudits).toHaveLength(1);
+      expect(rejectedAudits).toHaveLength(1);
     });
   });
 

@@ -40,7 +40,8 @@ export function CreateCountDialog({ warehouses, locations }: { warehouses: Array
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button onClick={() => setOpen(true)}>
+      {/* Sözleşme: sayım ekranında dokunma hedefi ≥44px (docs/modules/depo.md kabul kriterleri) */}
+      <Button className="h-11 md:h-9" onClick={() => setOpen(true)}>
         <Plus className="size-4" /> Yeni sayım
       </Button>
       <DialogContent className="sm:max-w-md">

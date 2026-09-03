@@ -57,7 +57,7 @@ export function DataTableToolbar<TData>({
             value={globalFilter}
             onChange={(e) => table.setGlobalFilter(e.target.value)}
             placeholder={searchPlaceholder}
-            className="h-8 pl-8 text-[13px] md:text-[13px]"
+            className="h-11 pl-8 text-[13px] md:h-8 md:text-[13px]"
             aria-label="Tabloda ara"
           />
           {globalFilter ? (
@@ -81,7 +81,7 @@ export function DataTableToolbar<TData>({
         return (
           <DropdownMenu key={f.columnId}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className={cn('h-8 border-dashed text-[13px]', selected.size && 'border-solid')}>
+              <Button variant="outline" size="sm" className={cn('h-11 border-dashed text-[13px] md:h-8', selected.size && 'border-solid')}>
                 <ListFilter className="size-3.5" />
                 {f.title}
                 {selected.size ? (
@@ -126,7 +126,7 @@ export function DataTableToolbar<TData>({
       })}
 
       {hasColumnFilters ? (
-        <Button variant="ghost" size="sm" className="h-8 text-[13px]" onClick={() => table.resetColumnFilters()}>
+        <Button variant="ghost" size="sm" className="h-11 text-[13px] md:h-8" onClick={() => table.resetColumnFilters()}>
           Sıfırla <X className="size-3.5" />
         </Button>
       ) : null}

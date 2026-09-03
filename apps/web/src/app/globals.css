@@ -4,6 +4,17 @@
 /* Koyu tema: next-themes class stratejisi (<html class="dark">) */
 @custom-variant dark (&:is(.dark *));
 
+/* `hover:` varsayılan Tailwind davranışını (hover:hover) and (pointer:fine) ile sınırlar —
+   dokunmatik cihazlarda dokunuş sonrası "takılı kalan" hover durumunu önler. Tüm `hover:` sınıfları
+   (proje genelinde) bu tek tanımdan geçer; her kullanım yerini ayrı ayrı sarmalamaya gerek yok. */
+@custom-variant hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Tasarım token'ları                                                  */
 /* ------------------------------------------------------------------ */
@@ -163,7 +174,7 @@
     transition: transform 140ms var(--ease-out);
   }
   button:active:not(:disabled),
-  [role="button"]:active,
+  [role="button"]:not([aria-disabled="true"]):active,
   a[data-pressable]:active {
     transform: scale(0.97);
   }
@@ -196,6 +207,29 @@
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklch, var(--foreground) 18%, transparent) transparent;
+}
+/* Yatay taşan tablolar için kaydırma affordance'ı: kenarlarda ince gölge, yalnızca o yönde
+   gerçekten taşan içerik varken görünür (saf CSS — "cover" katmanı içerikle birlikte kayar,
+   altındaki "gölge" katmanının üstünü örter; overlay scrollbar'lı sistemlerde de çalışır). */
+@utility scroll-fade-x {
+  background-repeat: no-repeat;
+  background-color: var(--card);
+  background-image:
+    linear-gradient(to right, var(--card) 40%, transparent),
+    linear-gradient(to left, var(--card) 40%, transparent),
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 16%, transparent), transparent),
+    linear-gradient(to left, color-mix(in oklch, var(--foreground) 16%, transparent), transparent);
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
+  background-size:
+    24px 100%,
+    24px 100%,
+    10px 100%,
+    10px 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 /* Liste girişi: hafif yukarıdan belirme (sadece transform/opacity) */
 @utility enter-up {

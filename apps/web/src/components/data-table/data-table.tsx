@@ -263,8 +263,10 @@ export function DataTable<T>({
         total={table.getFilteredRowModel().rows.length}
       />
 
-      {/* Masaüstü tablo */}
-      <div className={cn('overflow-hidden rounded-lg border border-border/70 bg-card', !mobileTable && 'hidden md:block')}>
+      {/* Masaüstü tablo — contain-paint: kart içi taşan içeriğin ICB'ye (documentElement) sızmasını
+          engeller (bir sütunun min-content genişliği kart genişliğini aşsa bile sayfa yatay kaymaz;
+          kaydırma yalnızca aşağıdaki overflow-x-auto kapsayıcısında olur). */}
+      <div className={cn('contain-paint overflow-hidden rounded-lg border border-border/70 bg-card', !mobileTable && 'hidden md:block')}>
         {rows.length === 0 ? (
           <div>
             <table className="w-full">
@@ -284,7 +286,7 @@ export function DataTable<T>({
             itemContent={(_i, row) => rowCells(row)}
           />
         ) : (
-          <div className="scrollbar-thin overflow-x-auto">
+          <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>{headerRow()}</thead>
               <tbody>{rows.map(bodyRow)}</tbody>

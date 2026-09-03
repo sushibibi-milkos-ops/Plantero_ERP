@@ -85,7 +85,7 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
   return (
     <div className="mx-auto max-w-md space-y-5">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" onClick={() => router.push(`/depo/sevkiyat/${deliveryId}`)} className="h-9 px-2 text-muted-foreground">
+        <Button variant="ghost" size="sm" onClick={() => router.push(`/depo/sevkiyat/${deliveryId}`)} className="h-11 px-2 text-muted-foreground">
           <ArrowLeft className="size-4" /> {docNo}
         </Button>
         <span className="text-sm font-medium tabular-nums text-muted-foreground">{doneCount}/{lines.length} toplandı</span>
@@ -100,7 +100,7 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
         <div className="mb-1 text-xl font-semibold">{current.productName}</div>
         <div className="mb-4 font-mono text-sm text-muted-foreground">{current.sku}</div>
         <div className="flex flex-wrap items-center gap-2">
-          {current.lotNo ? <LotBadge lotNo={current.lotNo} id={current.lotId ?? undefined} className="h-7 px-2 text-[13px]" /> : <span className="text-sm text-muted-foreground">Lotsuz ürün</span>}
+          {current.lotNo ? <LotBadge lotNo={current.lotNo} id={current.lotId ?? undefined} className="h-11 px-3 text-[13px]" /> : <span className="text-sm text-muted-foreground">Lotsuz ürün</span>}
           {current.expiryDate ? <ExpiryBadge date={current.expiryDate} /> : null}
         </div>
         <div className="mt-4 grid grid-cols-2 gap-3 text-sm">

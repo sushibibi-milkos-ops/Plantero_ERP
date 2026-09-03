@@ -19,6 +19,7 @@ export function KpiCard({
   format = 'int',
   currency = 'TRY',
   suffix,
+  fractionDigits,
   delta,
   deltaLabel = 'geçen döneme göre',
   invertDelta = false,
@@ -26,6 +27,8 @@ export function KpiCard({
   icon: Icon,
   href,
   hint,
+  onClick,
+  active = false,
   className,
 }: {
   title: string;
@@ -34,6 +37,9 @@ export function KpiCard({
   currency?: string;
   /** Miktar birimi (`format='qty'` için) */
   suffix?: string;
+  /** Para KPI'ları için ondalık hane sayısı — bir KPI şeridindeki tüm kartlara aynı değer geçilmeli
+   *  (Stripe finans ekranlarında bir şerit asla karışık hassasiyet göstermez). Varsayılan 0. */
+  fractionDigits?: number;
   /** Yüzde puanı: 12.5 → +%12,5 */
   delta?: number | null;
   deltaLabel?: string;
@@ -44,12 +50,16 @@ export function KpiCard({
   icon?: LucideIcon | React.ReactElement;
   href?: string;
   hint?: string;
+  /** Kart bir seçilebilir filtre düğmesiyse (ör. SKT kovaları) tıklama işleyicisi */
+  onClick?: () => void;
+  /** `onClick` ile birlikte: kart şu an seçili mi (vurgulu çerçeve) */
+  active?: boolean;
   className?: string;
 }) {
   const num = typeof value === 'string' ? Number(value) : value;
   const nfFormat: NumberFlowFormat =
     format === 'money'
-      ? { style: 'currency', currency, maximumFractionDigits: num >= 100_000 ? 0 : 2, minimumFractionDigits: num >= 100_000 ? 0 : 2 }
+      ? { style: 'currency', currency, maximumFractionDigits: fractionDigits ?? 0, minimumFractionDigits: fractionDigits ?? 0 }
       : format === 'pct'
         ? { style: 'percent', maximumFractionDigits: 1 }
         : format === 'qty'
@@ -63,19 +73,19 @@ export function KpiCard({
 
   const body = (
     <>
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex min-h-[34px] items-start justify-between gap-2">
         <div className="text-[13px] font-medium text-muted-foreground">{title}</div>
         {Icon ? (
           isValidElement(Icon) ? (
             <span className="[&>svg]:size-4 [&>svg]:text-muted-foreground/70">{Icon}</span>
           ) : (
-            <Icon className="size-4 text-muted-foreground/70" strokeWidth={1.75} />
+            <Icon className="size-4 shrink-0 text-muted-foreground/70" strokeWidth={1.75} />
           )
         ) : null}
       </div>
       <div className="mt-2 flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <div className="num text-[26px] leading-none font-semibold tracking-tight tabular-nums md:text-[28px]">
+          <div className="truncate text-[22px] leading-none font-semibold tracking-tight tabular-nums">
             <NumberFlow value={displayValue} locales="tr-TR" format={nfFormat} suffix={suffix ? ` ${suffix}` : undefined} />
           </div>
           {delta !== undefined ? (
@@ -105,8 +115,9 @@ export function KpiCard({
   );
 
   const cls = cn(
-    'group relative block rounded-xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03)]',
-    href && 'hover:border-border hover:shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_20px_-12px_rgb(0_0_0/0.15)]',
+    'group relative block rounded-xl border border-border/70 bg-card p-4 text-left shadow-[0_1px_2px_rgb(0_0_0/0.03)]',
+    (href || onClick) && 'hover:border-border hover:shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_20px_-12px_rgb(0_0_0/0.15)]',
+    active && 'border-primary/60 ring-2 ring-primary/15',
     className,
   );
 
@@ -115,6 +126,13 @@ export function KpiCard({
       <Link href={href} className={cls} data-pressable>
         {body}
       </Link>
+    );
+  }
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={cls} data-pressable aria-pressed={active}>
+        {body}
+      </button>
     );
   }
   return <div className={cls}>{body}</div>;

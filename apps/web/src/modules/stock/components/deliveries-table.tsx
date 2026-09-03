@@ -22,11 +22,16 @@ export function DeliveriesTable({ deliveries }: { deliveries: DeliveryRow[] }) {
         meta: { mobile: 'hidden' },
         cell: ({ row }) => (row.original.salesOrderId ? <Link href={`/satis/siparisler/${row.original.salesOrderId}`} className="font-mono text-xs text-primary hover:underline" onClick={(e) => e.stopPropagation()}>{row.original.salesOrderDocNo}</Link> : '—'),
       },
-      { accessorKey: 'scheduledDate', header: 'Planlanan tarih', meta: { width: 130 }, cell: ({ row }) => (row.original.scheduledDate ? formatDate(row.original.scheduledDate) : '—') },
+      { accessorKey: 'scheduledDate', header: 'Planlanan tarih', meta: { width: 150 }, cell: ({ row }) => (row.original.scheduledDate ? formatDate(row.original.scheduledDate) : '—') },
       { accessorKey: 'carrier', header: 'Kargo', meta: { mobile: 'hidden' }, cell: ({ row }) => row.original.carrier ?? '—' },
     ],
     [],
   );
+
+  // Depo (tek depo, hep aynı değer), Kargo ve Planlanan tarih çoğu satırda boş/tek değerli —
+  // sütun genişliğinin çoğu boşa gidip 'Planlanan tarih' başlığı kesiliyordu (Linear yoğunluk ihlali).
+  // columnToggle zaten mevcut; varsayılan gizle, kullanıcı isterse sütun menüsünden açar.
+  const initialColumnVisibility = { warehouseCode: false, carrier: false, scheduledDate: false };
 
   const filters: DataTableFilter[] = [{ columnId: 'status', title: 'Durum', options: statusOptions('delivery') }];
 
@@ -39,6 +44,7 @@ export function DeliveriesTable({ deliveries }: { deliveries: DeliveryRow[] }) {
       searchPlaceholder="Belge no, müşteri ara…"
       filters={filters}
       initialSorting={[{ id: 'scheduledDate', desc: false }]}
+      initialColumnVisibility={initialColumnVisibility}
       emptyTitle="Henüz sevkiyat yok"
       emptyDescription="Satış siparişi onaylandığında irsaliye buradan oluşturulur."
     />

@@ -236,7 +236,7 @@ export async function getLotDetail(id: string) {
 /* /depo/mal-kabul                                                      */
 /* ==================================================================== */
 
-export type ReceiptRow = { id: string; docNo: string; status: string; partnerName: string | null; warehouseCode: string; lineCount: number; totalQty: string; supplierDeliveryNo: string | null; createdAt: Date; purchaseOrderId: string | null };
+export type ReceiptRow = { id: string; docNo: string; status: string; partnerName: string | null; warehouseCode: string; lineCount: number; totalValue: string; supplierDeliveryNo: string | null; createdAt: Date; purchaseOrderId: string | null };
 
 export async function listReceipts(): Promise<ReceiptRow[]> {
   const rows = await db
@@ -245,9 +245,14 @@ export async function listReceipts(): Promise<ReceiptRow[]> {
     .leftJoin(partners, eq(partners.id, receipts.partnerId))
     .innerJoin(warehouses, eq(warehouses.id, receipts.warehouseId))
     .orderBy(desc(receipts.createdAt));
-  const lineAgg = await db.select({ receiptId: receiptLines.receiptId, cnt: sql<string>`count(*)`, qty: sql<string>`coalesce(sum(${receiptLines.qty}), 0)` }).from(receiptLines).groupBy(receiptLines.receiptId);
+  // Miktar sütunu KG/ADET gibi farklı birimleri topluyor ve yanıltıcı olurdu (docs/modules/depo.md §3
+  // "toplam" der — miktar değil); bunun yerine para değerinde toplam gösteriyoruz.
+  const lineAgg = await db
+    .select({ receiptId: receiptLines.receiptId, cnt: sql<string>`count(*)`, value: sql<string>`coalesce(sum(${receiptLines.qty} * ${receiptLines.unitCost}), 0)` })
+    .from(receiptLines)
+    .groupBy(receiptLines.receiptId);
   const byReceipt = new Map(lineAgg.map((r) => [r.receiptId, r]));
-  return rows.map((r) => ({ id: r.r.id, docNo: r.r.docNo, status: r.r.status, partnerName: r.partnerName, warehouseCode: r.warehouseCode, lineCount: Number(byReceipt.get(r.r.id)?.cnt ?? 0), totalQty: byReceipt.get(r.r.id)?.qty ?? '0', supplierDeliveryNo: r.r.supplierDeliveryNo, createdAt: r.r.createdAt, purchaseOrderId: r.r.purchaseOrderId }));
+  return rows.map((r) => ({ id: r.r.id, docNo: r.r.docNo, status: r.r.status, partnerName: r.partnerName, warehouseCode: r.warehouseCode, lineCount: Number(byReceipt.get(r.r.id)?.cnt ?? 0), totalValue: byReceipt.get(r.r.id)?.value ?? '0', supplierDeliveryNo: r.r.supplierDeliveryNo, createdAt: r.r.createdAt, purchaseOrderId: r.r.purchaseOrderId }));
 }
 
 export async function getReceiptDetail(id: string) {

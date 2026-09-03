@@ -8,6 +8,7 @@ import { businessDate } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
+import { writeAudit } from '../audit/index.js';
 import { createLot, postStockMove } from './ledger.js';
 import { getSuppliersLocation, getQuarantineLocation, getRejectedLocation, resolveDefaultPutawayLocation } from './locations.js';
 import type { ActorCtx, DocumentOrigin } from '../types.js';
@@ -162,6 +163,7 @@ export async function receiveGoods(tx: DbOrTx, receiptId: string, ctx: ActorCtx)
         lotId = lot.id;
         acceptedLotId = lot.id;
         createdLotIds.push(lot.id);
+        await writeAudit(tx, { action: 'create', tableName: 'stock_lots', recordId: lot.id, summary: `Mal kabul lotu ${lot.lotNo} oluşturuldu (Mal kabul ${receipt.docNo})`, after: lot }, ctx);
       }
       const res = await postStockMove(tx, {
         kind: 'receipt', productId: product.id, lotId, fromLocationId: suppliersLoc.id, toLocationId,
@@ -193,6 +195,7 @@ export async function receiveGoods(tx: DbOrTx, receiptId: string, ctx: ActorCtx)
         }, ctx);
         rejLotId = rejLot.id;
         createdLotIds.push(rejLot.id);
+        await writeAudit(tx, { action: 'create', tableName: 'stock_lots', recordId: rejLot.id, summary: `Red lotu ${rejLot.lotNo} oluşturuldu (Mal kabul ${receipt.docNo})`, after: rejLot }, ctx);
       }
       const res = await postStockMove(tx, {
         kind: 'receipt', productId: product.id, lotId: rejLotId, fromLocationId: suppliersLoc.id, toLocationId: rejectedLoc.id,

@@ -17,6 +17,7 @@ export type ChainNode = {
 };
 
 const TYPE_TO_KIND: Record<string, StatusKind> = {
+  opportunity: 'opportunity',
   quotation: 'sales_order',
   sales_order: 'sales_order',
   delivery: 'delivery',
@@ -65,8 +66,10 @@ function ChainCard({ node, current }: { node: ChainNode; current: boolean }) {
 }
 
 /**
- * Belge zinciri: yukarı akış → mevcut belge → aşağı akış, yatay kaydırılabilir.
- * Birden çok aşağı akış belgesi olduğunda dikey yığılır.
+ * Belge zinciri: kronolojik sırada tek satırlık yatay akış (yukarı akış → mevcut belge → aşağı akış),
+ * kartlar arasında '›' ayracı, gerekirse yatay kaydırma. `getChain()` upstream'i mevcut belgeye en
+ * yakından en uzağa sıralar (depth artan) — ekranda soldan sağa kronolojik okunması için ters çevrilir
+ * (ör. FIRSAT → TEKLİF → SİPARİŞ → İRSALİYE(mevcut) → FATURA → TAHSİLAT).
  */
 export function DocumentChain({
   upstream,
@@ -80,32 +83,27 @@ export function DocumentChain({
   className?: string;
 }) {
   const Arrow = () => <ChevronRight className="size-4 shrink-0 self-center text-muted-foreground/60" aria-hidden />;
-  const Column = ({ nodes }: { nodes: ChainNode[] }) => (
-    <div className="flex flex-col gap-2">
-      {nodes.map((n) => (
-        <ChainCard key={`${n.type}-${n.id}`} node={n} current={false} />
-      ))}
-    </div>
-  );
+  const chronologicalUpstream = [...upstream].reverse();
 
-  // Yukarı akışı belge tipine göre sırala (teklif → sipariş → irsaliye …)
   return (
     <div className={cn('scrollbar-thin -mx-1 overflow-x-auto px-1 py-1', className)} role="navigation" aria-label="Belge zinciri">
-      <div className="flex items-start gap-2">
-        {upstream.length ? (
-          <>
-            <Column nodes={upstream} />
+      <div className="flex items-center gap-2">
+        {chronologicalUpstream.map((n) => (
+          <div key={`${n.type}-${n.id}`} className="flex items-center gap-2">
+            <ChainCard node={n} current={false} />
             <Arrow />
-          </>
-        ) : null}
+          </div>
+        ))}
         <ChainCard node={current} current />
         {downstream.length ? (
-          <>
-            <Arrow />
-            <Column nodes={downstream} />
-          </>
+          downstream.map((n) => (
+            <div key={`${n.type}-${n.id}`} className="flex items-center gap-2">
+              <Arrow />
+              <ChainCard node={n} current={false} />
+            </div>
+          ))
         ) : (
-          <div className="ml-2 self-center text-xs text-muted-foreground">Devam belgesi yok</div>
+          <div className="ml-1 shrink-0 self-center text-xs text-muted-foreground">Devam belgesi yok</div>
         )}
       </div>
     </div>

@@ -8,7 +8,11 @@ SELECT
   1::numeric(18, 4) AS expected, 0::numeric(18, 4) AS actual, 1::numeric(18, 4) AS diff
 FROM delivery_lines dl
 JOIN products p ON p.id = dl.product_id
+JOIN deliveries d ON d.id = dl.delivery_id
 WHERE p.is_lot_tracked = true AND dl.lot_id IS NULL
+  -- taslak (draft) irsaliye satırları henüz rezerve edilmemiş olabilir (stok/SKT yetersizliği);
+  -- bu kural yalnızca rezervasyon/sevkiyat akışına girmiş satırları kapsar
+  AND d.status IN ('reserved', 'picking', 'picked', 'shipped', 'delivered')
 
 UNION ALL
 

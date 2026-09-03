@@ -20,8 +20,8 @@ export function TransfersTable({ transfers }: { transfers: TransferRow[] }) {
       },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="transfer" /> },
       { accessorKey: 'lineCount', header: 'Satır', meta: { align: 'right', width: 80, mobile: 'hidden' } },
-      { accessorKey: 'scheduledDate', header: 'Planlanan tarih', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => (row.original.scheduledDate ? formatDate(row.original.scheduledDate) : '—') },
-      { accessorKey: 'createdAt', header: 'Oluşturma', meta: { width: 110 }, cell: ({ row }) => <span className="text-xs text-muted-foreground">{formatDate(row.original.createdAt)}</span> },
+      { accessorKey: 'scheduledDate', header: 'Planlanan tarih', meta: { width: 150, mobile: 'hidden' }, cell: ({ row }) => (row.original.scheduledDate ? formatDate(row.original.scheduledDate) : '—') },
+      { accessorKey: 'createdAt', header: 'Oluşturma', meta: { width: 130 }, cell: ({ row }) => <span className="text-xs text-muted-foreground">{formatDate(row.original.createdAt)}</span> },
     ],
     [],
   );

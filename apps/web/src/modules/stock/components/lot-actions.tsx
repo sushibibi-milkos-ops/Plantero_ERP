@@ -16,11 +16,15 @@ export function LotActions({
   quarantineQty,
   internalLocations,
   rejectedLocations,
+  canRelease,
 }: {
   lotId: string;
   quarantineQty: string;
   internalLocations: ComboboxOption[];
   rejectedLocations: ComboboxOption[];
+  /** `quality.release` izni VE lot 'karantina'da mı — yalnızca Serbest bırak/Reddet bu ikisine bağlı;
+   *  Etiket yazdır ve Taşı her lot durumunda mevcuttur (docs/modules/depo.md §2). */
+  canRelease: boolean;
 }) {
   const [releaseOpen, setReleaseOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
@@ -31,6 +35,8 @@ export function LotActions({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {canRelease ? (
+        <>
       <ConfirmDialog
         open={releaseOpen}
         onOpenChange={setReleaseOpen}
@@ -88,6 +94,8 @@ export function LotActions({
       <Button variant="outline" onClick={() => setRejectOpen(true)}>
         <XCircle className="size-4" /> Reddet
       </Button>
+        </>
+      ) : null}
 
       <Button variant="outline" asChild>
         <Link href={`/depo/etiket?lot=${lotId}`} target="_blank">

@@ -138,10 +138,15 @@ export function ReceiptForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="rounded-xl border border-border/70 bg-card p-4">
+        <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">Belge başlığı</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <FormSelect control={form.control} name="warehouseId" label="Depo" required options={warehouseOptions} />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {/* Tedarikçi ve Ürün ekle ile aynı seçim bileşeni (Combobox) — Select farklı bir
+                affordance (tek chevron) kullanıyordu, aynı formda iki farklı "seç" dili oluşuyordu. */}
+            <div className="space-y-1.5">
+              <FieldLabel required>Depo</FieldLabel>
+              <Controller control={form.control} name="warehouseId" render={({ field }) => <Combobox value={field.value} onChange={(v) => field.onChange(v ?? '')} options={warehouseOptions} placeholder="Depo seçin" clearable={false} />} />
+            </div>
             <div className="space-y-1.5">
               <FieldLabel>Tedarikçi</FieldLabel>
               <Controller control={form.control} name="partnerId" render={({ field }) => <Combobox value={field.value} onChange={field.onChange} options={supplierOptions} placeholder="Tedarikçi seçin" />} />
@@ -162,7 +167,7 @@ export function ReceiptForm({
                   value={barcode}
                   onChange={(e) => setBarcode(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleBarcode(); } }}
-                  placeholder="Barkod okut, Enter'a bas…"
+                  placeholder="Barkod okut…"
                   className="h-9 w-56 pl-8 font-mono text-[13px]"
                 />
               </div>

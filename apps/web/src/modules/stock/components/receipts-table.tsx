@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
-import { QtyCell } from '@/components/qty-cell';
+import { MoneyCell } from '@/components/money-cell';
 import { statusOptions } from '@/lib/status';
 import { formatDate } from '@/lib/format';
 import type { ReceiptRow } from '../queries';
@@ -16,7 +16,7 @@ export function ReceiptsTable({ receipts }: { receipts: ReceiptRow[] }) {
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 140, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="receipt" /> },
       { accessorKey: 'warehouseCode', header: 'Depo', meta: { width: 90, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono text-xs">{getValue<string>()}</span> },
       { accessorKey: 'lineCount', header: 'Satır', meta: { align: 'right', width: 80, mobile: 'hidden' } },
-      { accessorKey: 'totalQty', header: 'Toplam miktar', meta: { align: 'right', width: 130 }, cell: ({ row }) => <QtyCell value={row.original.totalQty} /> },
+      { accessorKey: 'totalValue', header: 'Toplam tutar', meta: { align: 'right', width: 140 }, cell: ({ row }) => <MoneyCell value={row.original.totalValue} /> },
       { accessorKey: 'supplierDeliveryNo', header: 'İrsaliye no', meta: { mobile: 'hidden' }, cell: ({ row }) => row.original.supplierDeliveryNo ?? '—' },
       { accessorKey: 'createdAt', header: 'Tarih', meta: { width: 110 }, cell: ({ row }) => <span className="text-xs text-muted-foreground">{formatDate(row.original.createdAt)}</span> },
     ],

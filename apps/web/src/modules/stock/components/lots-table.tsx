@@ -17,8 +17,8 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
       { accessorKey: 'productName', header: 'Ürün', meta: { mobile: 'subtitle' }, cell: ({ row }) => <span>{row.original.productName} <span className="font-mono text-xs text-muted-foreground">· {row.original.sku}</span></span> },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="lot" /> },
       { accessorKey: 'onHandQty', header: 'Eldeki', meta: { align: 'right', width: 110 }, cell: ({ row }) => <QtyCell value={row.original.onHandQty} uom={row.original.uomCode} /> },
-      { accessorKey: 'unitCost', header: 'Maliyet', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <MoneyCell value={row.original.unitCost} digits={4} /> },
-      { accessorKey: 'locationCount', header: 'Lokasyon', meta: { align: 'right', width: 90, mobile: 'hidden' } },
+      { accessorKey: 'unitCost', header: 'Maliyet', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <MoneyCell value={row.original.unitCost} /> },
+      { accessorKey: 'locationCount', header: 'Lokasyon', meta: { align: 'right', width: 110, mobile: 'hidden' } },
       {
         accessorKey: 'expiryDate',
         header: 'SKT',
@@ -44,6 +44,7 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
       searchPlaceholder="Lot no, ürün ara…"
       filters={filters}
       initialSorting={[{ id: 'expiryDate', desc: false }]}
+      initialColumnVisibility={{ supplierName: false }}
       emptyTitle="Henüz lot yok"
       emptyDescription="Mal kabul veya üretim çıktısı ile lot oluşur."
     />

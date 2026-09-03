@@ -43,7 +43,7 @@ export function UserMenu() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="ml-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="ml-1 flex size-11 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring/50 md:size-7"
           aria-label="Kullanıcı menüsü"
           data-testid="user-menu"
         >

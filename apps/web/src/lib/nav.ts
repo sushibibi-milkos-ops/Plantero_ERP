@@ -294,6 +294,7 @@ export const SUBPATH_LABELS: Record<string, string> = {
   duzenle: 'Düzenle',
   board: 'Pano',
   detay: 'Detay',
+  topla: 'Toplama',
 };
 
 /** İstemci tarafı izin denetleyicisi: admin rolü her şeyi görür, `*` joker izindir */

@@ -42,24 +42,33 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
         title={<span className="font-mono">{lot.lotNo}</span>}
         description={product ? `${product.p.name} · ${product.p.sku}` : undefined}
         actions={
-          canRelease ? (
-            <LotActions lotId={lot.id} quarantineQty={quarantineQty} internalLocations={internalOptions} rejectedLocations={rejectedOptions} />
-          ) : lot.status === 'quarantine' ? (
-            <span className="text-xs text-muted-foreground">Serbest bırakma/red için kalite yetkisi gerekir</span>
-          ) : (
-            <Link href={`/depo/etiket?lot=${lot.id}`} target="_blank" className="text-sm text-primary underline underline-offset-2">
-              Etiket yazdır
-            </Link>
-          )
+          <div className="flex flex-col items-end gap-1.5">
+            {/* Etiket yazdır / Taşı her lot durumunda mevcut; Serbest bırak / Reddet yalnızca
+                karantinadaki lotlarda ve quality.release izniyle (docs/modules/depo.md §2) */}
+            <LotActions lotId={lot.id} quarantineQty={quarantineQty} internalLocations={internalOptions} rejectedLocations={rejectedOptions} canRelease={canRelease} />
+            {!canRelease && lot.status === 'quarantine' ? (
+              <span className="text-xs text-muted-foreground">Serbest bırakma/red için kalite yetkisi gerekir</span>
+            ) : null}
+          </div>
         }
       >
-        <div className="flex flex-wrap items-center gap-2 text-sm">
-          <StatusBadge status={lot.status} kind="lot" size="md" />
-          <StatusBadge status={lot.origin} kind="lot_origin" size="md" />
-          {lot.expiryDate ? <ExpiryBadge date={lot.expiryDate} /> : null}
-          <span className="text-muted-foreground">Maliyet <MoneyCell value={lot.unitCost} digits={4} className="inline" /></span>
-          <span className="text-muted-foreground">İlk giriş {formatQty(lot.initialQty, product?.uomCode)}</span>
-          {lot.supplierLotNo ? <span className="text-muted-foreground">Tedarikçi lotu: {lot.supplierLotNo}</span> : null}
+        <div className="flex flex-col gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge status={lot.status} kind="lot" size="md" />
+            <StatusBadge status={lot.origin} kind="lot_origin" size="md" />
+            {lot.expiryDate ? <ExpiryBadge date={lot.expiryDate} /> : null}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
+            <span>Maliyet <MoneyCell value={lot.unitCost} className="inline" /></span>
+            <span aria-hidden>·</span>
+            <span>İlk giriş {formatQty(lot.initialQty, product?.uomCode)}</span>
+            {lot.supplierLotNo ? (
+              <>
+                <span aria-hidden>·</span>
+                <span>Tedarikçi lotu: {lot.supplierLotNo}</span>
+              </>
+            ) : null}
+          </div>
         </div>
       </PageHeader>
 

@@ -35,7 +35,10 @@ export function DeliveryActions({ deliveryId, status, canPick }: { deliveryId: s
         </Button>
       ) : null}
       {status === 'picked' || status === 'reserved' ? (
-        <Button onClick={() => run(() => shipDeliveryAction({ id: deliveryId }), 'Sevk edildi')} disabled={pending}>
+        // 'reserved'de "Toplama ekranı" zaten birincil aksiyon olarak gösteriliyor (yukarıda) —
+        // ikisi aynı ağırlıkta olursa hangisinin beklenen sıradaki adım olduğu belirsizleşir.
+        // 'picked'de Toplama ekranı gösterilmediği için Sevk et tek başına birincil kalır.
+        <Button variant={status === 'reserved' ? 'outline' : 'default'} onClick={() => run(() => shipDeliveryAction({ id: deliveryId }), 'Sevk edildi')} disabled={pending}>
           <Truck className="size-4" /> Sevk et
         </Button>
       ) : null}
