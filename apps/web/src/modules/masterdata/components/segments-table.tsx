@@ -135,14 +135,19 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
               ) : rows.length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">Aramayla eşleşen kayıt yok.</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-[13px]">
+                /* Kök neden (Tur 4 P1): `w-full` + sabit px genişlikler (inline `style`) tabloyu
+                   kapsayıcının %100'üne zorluyordu; table-layout:auto bu sabit toplamı korumak için
+                   "Etiket" sütununu eziyordu — 390px'te uzun bir etiket 7 satıra sarıp satırı ~160px'e
+                   çıkarıyordu. `min-w-[520px]`: tablo hiçbir zaman bu genişliğin altına sıkışmaz, dar
+                   ekranda gerçek yatay kaydırma devreye girer (data-table.tsx:311 ile aynı kök neden). */
+                <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
+                  <table className="min-w-[520px] border-collapse text-[13px]">
                     <thead>
                       <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                        <th className="h-9 px-3 text-left font-medium" style={{ width: CODE_COL_WIDTH }}>Kod</th>
-                        {hasContext ? <th className="h-9 px-3 text-left font-medium" style={{ width: CONTEXT_COL_WIDTH }}>Bağlam</th> : null}
-                        <th className="h-9 px-3 text-left font-medium">Etiket</th>
-                        {hasReserved ? <th className="h-9 px-3 text-center font-medium">Rezerve</th> : null}
+                        <th className="h-9 px-3 text-left font-medium whitespace-nowrap" style={{ width: CODE_COL_WIDTH }}>Kod</th>
+                        {hasContext ? <th className="h-9 px-3 text-left font-medium whitespace-nowrap" style={{ width: CONTEXT_COL_WIDTH }}>Bağlam</th> : null}
+                        <th className="h-9 px-3 text-left font-medium whitespace-nowrap">Etiket</th>
+                        {hasReserved ? <th className="h-9 px-3 text-center font-medium whitespace-nowrap">Rezerve</th> : null}
                       </tr>
                     </thead>
                     <tbody>
@@ -152,7 +157,7 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
                           {hasContext ? (
                             <td className="px-3 whitespace-nowrap text-muted-foreground">{r.context ? (PRODUCT_TYPE_LABELS[r.context] ?? r.context) : '—'}</td>
                           ) : null}
-                          <td className="px-3">{r.label}</td>
+                          <td className="px-3 whitespace-nowrap">{r.label}</td>
                           {hasReserved ? (
                             <td className="px-3 text-center">
                               {r.isReserved ? (

@@ -20,33 +20,33 @@ import { LOCATION_USAGE_LABELS } from '../product-labels';
 import { LocationLabelDialog } from './location-label-dialog';
 import type { LocationTreeNode } from '@plantero/core';
 
-// 'rejected' ve 'scrap' kavramsal olarak ikisi de "kötü" (danger) ama aynı listede yan yana durunca
-// aynı dolgulu kırmızıyı paylaşıp ayırt edilemiyorlardı (Tur 3 P1 bulgusu) — 'scrap' burada StatusBadge'in
-// paylaşılan sözlüğünü değil, aşağıdaki `UsageBadge`'in dolgusuz "subtle" dalını kullanır (bkz. orada).
-// 'inventory_loss' (sayım farkı) bir hata değil bir sapma — kendi rengi (warning/amber) verilir.
-const USAGE_TONE: Record<string, 'neutral' | 'warning' | 'danger' | 'primary' | 'muted' | 'info'> = {
-  internal: 'neutral', quarantine: 'warning', rejected: 'danger', production: 'primary',
-  supplier: 'muted', customer: 'muted', inventory_loss: 'warning', scrap: 'danger', transit: 'info', view: 'muted',
+// Tur 4 P1 bulgusu: her usage kendi hue'sunu taşıyan dolgulu StatusBadge kullanınca sütun tek ekranda
+// 4+ farklı renge dönüşüyordu (amber/mavi/kırmızı-dolgusuz/kırmızı-dolgulu/amber/yeşil) — sütun
+// gökkuşağa dönüp renk hiçbir anlam ayrımı taşımaz hale geliyordu. Artık TÜM varyantlar nötr dolgulu
+// gövde (bg-muted/40 + text-foreground/80) paylaşır; anlam yalnızca 6px'lik renkli noktadadır.
+// Dolgulu kırmızı (gerçek "engellenmiş" anlamı) yalnızca 'rejected' için saklanır — o TEK istisna
+// StatusBadge'in kendi 'danger' varyantını kullanmaya devam eder.
+const USAGE_DOT: Record<string, string> = {
+  quarantine: 'bg-warning', production: 'bg-success', supplier: 'bg-muted-foreground/60', customer: 'bg-muted-foreground/60',
+  inventory_loss: 'bg-warning', scrap: 'bg-destructive', transit: 'bg-info', view: 'bg-muted-foreground/60',
 };
 
 /** Data satırıyla başlık şeridinin tam aynı sütun genişliklerini paylaşması için ortak sabitler. */
-const COL = { badge: 'w-24 shrink-0', qty: 'w-28 shrink-0 pr-3 text-right', value: 'w-36 shrink-0 text-right' };
+const COL = { badge: 'w-24 shrink-0', qty: 'w-32 shrink-0 pr-3 text-right', value: 'w-36 shrink-0 text-right' };
 
 /** "Depo" (internal) = varsayılan kullanım; rozet yalnızca istisnalarda (karantina/red/hurda/…) gösterilir. */
 function UsageBadge({ usage }: { usage: string }) {
   if (usage === 'internal') return null;
-  if (usage === 'scrap') {
-    // Hurda: Red (rejected) ile aynı "danger" anlamını taşır ama aynı listede iki durum aynı dolgu
-    // rengini paylaşmasın diye dolgusuz — yalnızca nokta + metin (status-badge.tsx'teki work_order
-    // "subtle" desenine denk; paylaşılan bileşen değiştirilmediği için burada yerel olarak uygulanır).
-    return (
-      <span className="inline-flex h-5 shrink-0 items-center gap-1.5 rounded-full border border-transparent px-2 text-[11px] font-medium whitespace-nowrap text-destructive">
-        <span aria-hidden className="size-1.5 rounded-full bg-destructive" />
-        {LOCATION_USAGE_LABELS.scrap}
-      </span>
-    );
+  const label = LOCATION_USAGE_LABELS[usage] ?? usage;
+  if (usage === 'rejected') {
+    return <StatusBadge status={usage} label={label} tone="danger" size="sm" />;
   }
-  return <StatusBadge status={usage} label={LOCATION_USAGE_LABELS[usage] ?? usage} tone={USAGE_TONE[usage] ?? 'neutral'} size="sm" />;
+  return (
+    <span className="inline-flex h-5 shrink-0 items-center gap-1.5 rounded-full border border-transparent bg-muted/40 px-2 text-[11px] font-medium whitespace-nowrap text-foreground/80">
+      <span aria-hidden className={cn('size-1.5 rounded-full', USAGE_DOT[usage] ?? 'bg-muted-foreground/60')} />
+      {label}
+    </span>
+  );
 }
 
 function nodeSearchMatch(node: LocationTreeNode, needle: string): boolean {
@@ -148,10 +148,19 @@ function Node({
             <span className="min-w-0 truncate text-[11px] text-muted-foreground">{node.name}</span>
             {/* `num` + `gap-3`: miktar ve değer arasında sabit bir boşluk garanti eder — flex `gap`
                 yalnızca kutular arası boşluk bırakır, aralarında görünür bir ayraç yoksa (Tur 3 P1
-                bulgusu) iki tabular-nums string yan yana tek sayı gibi okunabiliyordu. */}
+                bulgusu) iki tabular-nums string yan yana tek sayı gibi okunabiliyordu. Tur 4 P1: başlık
+                şeridi 640px altında tamamen gizlendiği için hangi sayının miktar/değer olduğu hâlâ
+                belirsizdi — her sayının önüne 10px etiket eklendi (masaüstündeki başlık şeridiyle aynı
+                sözcükler: "Mik" / "₺"). */}
             <div className="num flex shrink-0 items-baseline gap-3 text-[12px]">
-              <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
-              <MoneyCell value={node.totalValue} />
+              <span className="inline-flex items-baseline gap-1">
+                <span className="text-[10px] font-normal text-muted-foreground">Mik</span>
+                <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
+              </span>
+              <span className="inline-flex items-baseline gap-1">
+                <span className="text-[10px] font-normal text-muted-foreground">Değer</span>
+                <MoneyCell value={node.totalValue} />
+              </span>
             </div>
           </div>
         </div>
@@ -259,7 +268,9 @@ export function LocationTree({ warehouseId, tree, canManage }: { warehouseId: st
         <span className="w-5 shrink-0" />
         <span className="min-w-0 flex-1">Kod / Ad</span>
         <span className={COL.badge}>Durum</span>
-        <span className={COL.qty}>Miktar (karma birim)</span>
+        {/* Tur 4 P2: "Miktar (karma birim)" 112px'lik sütuna sarıp iki satırlık başlığın h-9 kapsayıcıya
+            dikey nefes bırakmadan sığmasını zorluyordu (sütun 32'ye genişletildi, birim açıklaması title'a taşındı). */}
+        <span className={COL.qty} title="Karma birim (farklı UOM'lar birleşik gösterilir)">Miktar</span>
         <span className={COL.value}>Değer</span>
         {/* Etiket + (varsa) ekle simgeleriyle aynı toplam genişlik — satırlarla hizalansın diye */}
         <span className="shrink-0" style={{ width: canManage ? 64 : 28 }} />

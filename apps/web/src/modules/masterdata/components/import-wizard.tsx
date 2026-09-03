@@ -143,18 +143,20 @@ export function ImportWizard({ history = [] }: { history?: ImportHistoryRow[] })
                 </>
               )}
             </div>
-            {/* Birincil eylem artık dropzone'un içinde, alt kenarında — devre dışı gerekçesi yanında yazılı. */}
-            <div className="flex items-center justify-between gap-3 border-t border-border/60 bg-card px-4 py-3">
-              <p className="min-w-0 truncate text-[12px] text-muted-foreground">
+            {/* Birincil eylem artık dropzone'un içinde, alt kenarında — devre dışı gerekçesi yanında yazılı.
+                Tur 4 P1 bulgusu: 390px'te satır yatay kalıyordu, mesaj "Önce bir .xlsx do…" diye ellipsis'e
+                düşüyor ve buton sıkışıyordu — mobilde dikey yığın, mesaj tam satır, buton(lar) tam genişlik. */}
+            <div className="flex flex-col gap-2 border-t border-border/60 bg-card px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="min-w-0 text-[12px] text-muted-foreground sm:truncate">
                 {file ? 'Dosya seçildi — önizlemek için "Deneme çalıştır" ile devam edin.' : 'Önce bir .xlsx dosyası seçin.'}
               </p>
-              <div className="flex shrink-0 gap-2">
+              <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
                 {file ? (
-                  <Button variant="ghost" size="sm" className="max-md:h-11" onClick={reset} disabled={previewing}>
+                  <Button variant="ghost" size="sm" className="max-sm:w-full max-md:h-11" onClick={reset} disabled={previewing}>
                     Vazgeç
                   </Button>
                 ) : null}
-                <Button size="sm" className="max-md:h-11" onClick={runPreview} disabled={!file || previewing}>
+                <Button size="sm" className="max-sm:w-full max-md:h-11" onClick={runPreview} disabled={!file || previewing}>
                   {previewing ? <Loader2 className="size-4 animate-spin" /> : null}
                   Deneme çalıştır (önizleme)
                 </Button>

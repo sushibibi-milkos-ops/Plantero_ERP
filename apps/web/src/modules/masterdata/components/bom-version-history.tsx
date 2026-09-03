@@ -6,11 +6,12 @@ import { BOM_STATUS_LABELS } from '../product-labels';
 
 export type VersionRow = { id: string; code: string; version: number; status: string; unitCost: string };
 
+// Tur 4 P2: "Reçete detayı" artık DetailTabs kullanıyor (bkz. [id]/page.tsx) — bu bileşenin kendi
+// "Versiyon geçmişi" başlığı sekme etiketiyle ("Versiyonlar") tekrar ediyordu, kaldırıldı. Boş/tek-
+// versiyon durumu artık sayfa tarafında (EmptyState ile) ele alınır, burada sessizce null dönülmez.
 export function BomVersionHistory({ versions, currentId }: { versions: VersionRow[]; currentId: string }) {
-  if (versions.length <= 1) return null;
   return (
     <div>
-      <div className="mb-2 text-sm font-medium">Versiyon geçmişi</div>
       <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-[13px]">

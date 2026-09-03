@@ -273,7 +273,9 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
                     type="button"
                     title={`${o.code} — ${o.label}`}
                     onClick={() => form.setValue('bb', o.code.padStart(2, '0').slice(0, 2))}
-                    className="h-6 rounded-md bg-muted px-2 text-[12px] hover:bg-accent"
+                    // Tur 4 P2: 24px yükseklik 44px dokunma hedefi eşiğinin altındaydı — mobilde 32px'e
+                    // büyütülür, masaüstünde eski 24px'e döner.
+                    className="min-h-[32px] rounded-md bg-muted px-2 py-1.5 text-[12px] hover:bg-accent md:min-h-0 md:py-0"
                   >
                     <span className="font-mono">{o.code}</span> {o.label}
                   </button>
@@ -296,7 +298,9 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
                     type="button"
                     title={`${o.code} — ${o.label}`}
                     onClick={() => form.setValue('cc', o.code.padStart(2, '0').slice(0, 2))}
-                    className="h-6 rounded-md bg-muted px-2 text-[12px] hover:bg-accent"
+                    // Tur 4 P2: 24px yükseklik 44px dokunma hedefi eşiğinin altındaydı — mobilde 32px'e
+                    // büyütülür, masaüstünde eski 24px'e döner.
+                    className="min-h-[32px] rounded-md bg-muted px-2 py-1.5 text-[12px] hover:bg-accent md:min-h-0 md:py-0"
                   >
                     <span className="font-mono">{o.code}</span> {o.label}
                   </button>
@@ -399,22 +403,23 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
 
         <FormTextarea control={form.control} name="note" label="Not" rows={2} />
 
-        {/* `className` twMerge ile birleşir (cn/tailwind-merge) — `bg-background(/…)` ve `backdrop-blur-*`
-            aynı grupta olduğundan burada geçilenler FormActions'ın kendi `/95` + `backdrop-blur-md`'sini
-            EZER (paylaşılan form-actions.tsx dosyası değiştirilmedi, bkz. rapor "sharedComponentRequests").
-            Tur 3 P2 bulgusu: /95 hâlâ altındaki bölüm başlıklarını sızdırıyordu; burada tam opak + üstte
-            4px bir scrim (gradient) ile yumuşak geçiş sağlanır. */}
+        {/* `className` twMerge ile birleşir (cn/tailwind-merge) — üstte 4px'lik scrim (gradient) sızmayı
+            engeller (paylaşılan form-actions.tsx dosyası değiştirilmedi, bkz. rapor "sharedComponentRequests").
+            Tur 4 P1 bulgusu: 390px'te yardımcı metin ("Kimlik segmentlerini tamamlayın…") 3 satıra
+            sarıyor, `justify-end` düzeninde iki butona ~150px kalıp şerit ~64px'e çıkıyordu. Mobilde
+            dikey yığın (yardımcı metin ÜSTTE, tek satıra kırpılmış; butonlar ALTTA tam genişlik) —
+            ≥sm'de eski yatay/sağa-yaslı düzene döner. */}
         <FormActions
           pending={form.formState.isSubmitting}
           submitLabel="Ürünü oluştur"
           disabled={!skuComplete || skuState.conflict}
-          className="bg-background before:absolute before:-top-4 before:left-0 before:h-4 before:w-full before:bg-gradient-to-t before:from-background before:to-transparent md:bg-background backdrop-blur-none md:backdrop-blur-none"
+          className="flex-col items-stretch gap-2 before:absolute before:-top-4 before:left-0 before:h-4 before:w-full before:bg-gradient-to-t before:from-background before:to-transparent max-sm:[&>button]:w-full sm:flex-row sm:items-center sm:justify-end"
         >
           {/* CTA disabled iken neyin eksik olduğunu söyler — önceden yalnızca gri bir düğme vardı. */}
           {skuState.conflict ? (
-            <span className="text-[12px] text-[oklch(0.5_0.14_70)] dark:text-warning">Kod çakışıyor — segmentleri değiştirin</span>
+            <span className="text-[12px] text-[oklch(0.5_0.14_70)] line-clamp-1 dark:text-warning">Kod çakışıyor — segmentleri değiştirin</span>
           ) : !skuComplete ? (
-            <span className="text-[12px] text-muted-foreground">Kimlik segmentlerini tamamlayın (T·AA·BB·CC·PP)</span>
+            <span className="line-clamp-1 text-[12px] text-muted-foreground">Kimlik segmentlerini tamamlayın (T·AA·BB·CC·PP)</span>
           ) : null}
           <Button type="button" variant="ghost" onClick={() => router.back()}>
             Vazgeç

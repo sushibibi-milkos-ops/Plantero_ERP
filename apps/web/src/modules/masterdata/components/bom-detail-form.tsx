@@ -95,7 +95,10 @@ export function BomDetailForm({
   const materialCostNum = Number(rollup.materialCost);
 
   return (
-    <div className="space-y-4">
+    // Tur 4 P2: kök sarmalayıcıda max-w yoktu — KPI şeridi ve bileşen tablosu geniş ekranlarda 1400px'e
+    // yayılıp sütunlar arası ölü alan bırakıyordu (product-general-tab.tsx / partner-general-tab.tsx ile
+    // aynı üst sınır burada da uygulanır).
+    <div className="max-w-[1080px] space-y-4">
       {isDraft && canManage ? (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSave)} className="space-y-4">
@@ -156,22 +159,25 @@ export function BomDetailForm({
 
           {/* Kök neden (Tur 3 P0, aynı Tur 2'de data-table.tsx:330'da çözülen hata): `w-full` tabloyu
               kapsayıcının %100'üne zorlar, table-layout:auto bu sabit toplam genişliğe uymak için
-              hücreleri (whitespace-nowrap'e rağmen) ezer — yatay kaydırma hiç tetiklenmez. `min-w-full`
-              tablo hiçbir zaman %100'ün altına sıkışmaz ama içerik daha genişse doğal genişliğine büyür;
-              `scroll-fade-x` taşan içerik olduğunda kenarlarda kaydırma affordance'ı verir. */}
+              hücreleri ezer — yatay kaydırma hiç tetiklenmez. Tur 4 P1: `min-w-full` tek başına yetmedi —
+              hücrelerde `whitespace-nowrap` olmadığı için "Hurma Şurubu" gibi uzun bileşen adları yine de
+              2 satıra sarıyor, "% Pay" ekran dışında harf ortasından kesiliyordu. `min-w-[560px]` +
+              `whitespace-nowrap`: tablo her zaman doğal genişliğine büyür, hiçbir hücre sarmaz — dar
+              ekranda gerçek yatay kaydırma (`scroll-fade-x` affordance'ıyla) devreye girer. Birim Maliyet
+              VE % Pay (ikisi de ikincil/türetilmiş bilgi) yalnızca ≥sm görünür — mobilde SKU+Bileşen+
+              Miktar(+Fire%)(+Yan Ürün)+Tutar önceliklidir. */}
           <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
-            <table className="min-w-full border-collapse text-[13px]">
+            <table className="min-w-[560px] border-collapse text-[13px]">
               <thead>
                 <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                  <th className="h-9 px-3 text-left font-medium">SKU</th>
-                  <th className="h-9 px-3 text-left font-medium">Bileşen</th>
-                  <th className="h-9 px-3 text-right font-medium">Miktar</th>
-                  {hasScrap ? <th className="h-9 px-3 text-right font-medium">Fire %</th> : null}
-                  {hasByproduct ? <th className="h-9 px-3 text-center font-medium">Yan Ürün</th> : null}
-                  {/* 390px'te SKU+Bileşen+Miktar+Tutar+%Pay öncelikli — Birim Maliyet yalnızca ≥sm görünür. */}
-                  <th className="hidden h-9 px-3 text-right font-medium sm:table-cell">Birim Maliyet</th>
-                  <th className="h-9 px-3 text-right font-medium">Tutar</th>
-                  <th className="h-9 px-3 text-right font-medium">% Pay</th>
+                  <th className="h-9 px-3 text-left font-medium whitespace-nowrap">SKU</th>
+                  <th className="h-9 px-3 text-left font-medium whitespace-nowrap">Bileşen</th>
+                  <th className="h-9 px-3 text-right font-medium whitespace-nowrap">Miktar</th>
+                  {hasScrap ? <th className="h-9 px-3 text-right font-medium whitespace-nowrap">Fire %</th> : null}
+                  {hasByproduct ? <th className="h-9 px-3 text-center font-medium whitespace-nowrap">Yan Ürün</th> : null}
+                  <th className="hidden h-9 px-3 text-right font-medium whitespace-nowrap sm:table-cell">Birim Maliyet</th>
+                  <th className="h-9 px-3 text-right font-medium whitespace-nowrap">Tutar</th>
+                  <th className="hidden h-9 px-3 text-right font-medium whitespace-nowrap sm:table-cell">% Pay</th>
                 </tr>
               </thead>
               <tbody>
@@ -181,30 +187,32 @@ export function BomDetailForm({
                   const pct = materialCostNum > 0 ? (lineCostNum / materialCostNum) * 100 : 0;
                   return (
                     <tr key={l.line.id} className="h-9 border-b border-border/50 last:border-0">
-                      <td className="px-3 font-mono text-[12px]">{l.sku}</td>
-                      <td className="px-3">{l.name}</td>
-                      <td className="px-3 text-right">
+                      <td className="px-3 font-mono text-[12px] whitespace-nowrap">{l.sku}</td>
+                      <td className="max-w-[220px] truncate px-3 whitespace-nowrap" title={l.name}>
+                        {l.name}
+                      </td>
+                      <td className="px-3 text-right whitespace-nowrap">
                         <QtyCell value={l.line.qty} uom={l.uomCode} />
                       </td>
-                      {hasScrap ? <td className="num px-3 text-right text-muted-foreground">{formatPctFixed(l.line.scrapPct, 1)}</td> : null}
-                      {hasByproduct ? <td className="px-3 text-center text-muted-foreground">{l.line.isByproduct ? 'Evet' : ''}</td> : null}
-                      <td className="hidden px-3 text-right text-muted-foreground sm:table-cell">{cost ? <MoneyCell value={cost.unitCost} muted /> : '—'}</td>
-                      <td className="px-3 text-right">{cost ? <MoneyCell value={cost.lineCost} /> : '—'}</td>
-                      <td className="num px-3 text-right text-muted-foreground">{formatPctFixed(pct, 1)}</td>
+                      {hasScrap ? <td className="num px-3 text-right whitespace-nowrap text-muted-foreground">{formatPctFixed(l.line.scrapPct, 1)}</td> : null}
+                      {hasByproduct ? <td className="px-3 text-center whitespace-nowrap text-muted-foreground">{l.line.isByproduct ? 'Evet' : ''}</td> : null}
+                      <td className="hidden px-3 text-right whitespace-nowrap text-muted-foreground sm:table-cell">{cost ? <MoneyCell value={cost.unitCost} muted /> : '—'}</td>
+                      <td className="px-3 text-right whitespace-nowrap">{cost ? <MoneyCell value={cost.lineCost} /> : '—'}</td>
+                      <td className="num hidden px-3 text-right whitespace-nowrap text-muted-foreground sm:table-cell">{formatPctFixed(pct, 1)}</td>
                     </tr>
                   );
                 })}
               </tbody>
               <tfoot>
                 <tr className="h-9 border-t border-border/60 font-medium">
-                  <td className="px-3" colSpan={3 + (hasScrap ? 1 : 0) + (hasByproduct ? 1 : 0)}>
+                  <td className="px-3 whitespace-nowrap" colSpan={3 + (hasScrap ? 1 : 0) + (hasByproduct ? 1 : 0)}>
                     Toplam
                   </td>
                   <td className="hidden px-3 sm:table-cell" />
-                  <td className="px-3 text-right">
+                  <td className="px-3 text-right whitespace-nowrap">
                     <MoneyCell value={rollup.materialCost} />
                   </td>
-                  <td className="num px-3 text-right text-muted-foreground">{materialCostNum > 0 ? formatPctFixed(100, 1) : '—'}</td>
+                  <td className="num hidden px-3 text-right whitespace-nowrap text-muted-foreground sm:table-cell">{materialCostNum > 0 ? formatPctFixed(100, 1) : '—'}</td>
                 </tr>
               </tfoot>
             </table>

@@ -5,6 +5,7 @@ import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/da
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
+import { SubtleStatusBadge } from './subtle-status-badge';
 import { formatPctFixed } from '../format-pct';
 import type { BomListRow } from '../queries';
 import { BOM_STATUS_LABELS } from '../product-labels';
@@ -24,9 +25,15 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
       {
         accessorKey: 'status',
         header: 'Durum',
-        meta: { mobile: 'badge', width: 100 },
+        // Tur 4 P2: araç çubuğunda Durum filtresi vardı ama sütun `initialColumnVisibility` ile
+        // gizleniyordu — kullanıcı göremediği bir sütuna göre filtreliyordu ve sayfa alt başlığındaki
+        // "38 aktif" bilgisiyle satırlar tutarsızdı. Artık varsayılan görünür; 38/38 aktif olduğu için
+        // dolgusuz nokta rozeti kullanılır (products-table.tsx'teki aynı desen) — sütun boyunca
+        // kesintisiz dolgulu şerit oluşmaz.
+        meta: { mobile: 'badge', width: 90 },
         cell: ({ getValue }) => {
           const s = getValue<string>();
+          if (s === 'active') return <SubtleStatusBadge tone="success" label={BOM_STATUS_LABELS[s] ?? s} />;
           return <StatusBadge status={s} label={BOM_STATUS_LABELS[s] ?? s} kind="bom" />;
         },
       },
@@ -85,8 +92,6 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
       getRowId={(b) => b.id}
       searchPlaceholder="SKU ya da reçete kodu ara…"
       filters={filters}
-      // Durum neredeyse hep "Aktif" — sütun gürültüsü olmasın diye varsayılan gizli, filtre çipinden erişilir.
-      initialColumnVisibility={{ status: false }}
       initialSorting={[{ id: 'sku', desc: false }]}
       rowHref={(b) => `/ana-veri/receteler/${b.id}`}
       emptyTitle="Henüz reçete yok"

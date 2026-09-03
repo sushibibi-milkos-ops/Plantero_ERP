@@ -11,14 +11,16 @@ import { cn } from '@/lib/utils';
 import { PARTNER_KIND_LABELS, PAYMENT_TERM_LABELS } from '../product-labels';
 import type { getPartnerById, PartnerDocRow } from '../queries';
 
-/** Stripe tarzı KPI şeridi — bom-detail-form.tsx'teki ızgara deseniyle birebir aynı (hücreler eşit,
-    hairline ayraçlar dolgulu bir kutu içinde). Tutar nötr: bir alacak bakiyesi "iyi" anlamı taşımaz —
-    renk yalnızca gerçek risk sinyalinde (negatif/borç) kullanılır (Tur 3 P2 bulgusu). */
+/** Stripe tarzı KPI şeridi — bom-detail-form.tsx'teki ızgara deseniyle BİREBİR aynı anatomi (etiket
+    üstte küçük/muted uppercase, değer altta tabular, kapsayıcı bg-card). Tur 4 P1 bulgusu: önceden
+    değer üstte 2xl/semibold, etiket altta sentence-case, kapsayıcı bg-muted/10 idi — bom-detail-form'un
+    tam tersi bir anatomi taşıyordu, oysa yorum "aynı desen" diyordu. Tutar nötr: bir alacak bakiyesi
+    "iyi" anlamı taşımaz — renk yalnızca gerçek risk sinyalinde (negatif/borç) kullanılır (Tur 3 P2 bulgusu). */
 function Kpi({ label, value, tone }: { label: string; value: React.ReactNode; tone?: 'danger' }) {
   return (
     <div className="px-4 py-3">
-      <div className={cn('num text-2xl font-semibold tracking-tight', tone === 'danger' && 'text-destructive')}>{value}</div>
-      <div className="mt-0.5 text-[12px] text-muted-foreground">{label}</div>
+      <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">{label}</div>
+      <div className={cn('num text-[20px] leading-tight font-medium', tone === 'danger' && 'text-destructive')}>{value}</div>
     </div>
   );
 }
@@ -114,8 +116,8 @@ export function PartnerGeneralTab({
 
   return (
     <div className="max-w-[1080px] space-y-6">
-      {/* Stripe tarzı KPI şeridi — bom-detail-form.tsx'teki reçete maliyet şeridiyle aynı desen. */}
-      <div className={cn('grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 bg-muted/10 sm:divide-y-0', kpiCount === 4 ? 'sm:grid-cols-4' : 'sm:grid-cols-3')}>
+      {/* Stripe tarzı KPI şeridi — bom-detail-form.tsx'teki reçete maliyet şeridiyle aynı desen (Tur 4 P1: bg-card, bkz. Kpi() yorumu). */}
+      <div className={cn('grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 bg-card sm:divide-y-0', kpiCount === 4 ? 'sm:grid-cols-4' : 'sm:grid-cols-3')}>
         <Kpi label="Bakiye" value={formatMoney(partner.balance, partner.currency)} tone={balanceTone} />
         {creditUsagePct !== null ? <Kpi label="Kredi limiti kullanımı" value={formatPct(creditUsagePct)} /> : null}
         <Kpi label="Açık sipariş" value={openOrdersCount} />

@@ -5,6 +5,7 @@ import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/da
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
+import { SubtleStatusBadge } from './subtle-status-badge';
 import type { ProductListRow } from '../queries';
 import { PRODUCT_TYPE_LABELS, PRODUCT_TYPE_TONE } from '../product-labels';
 
@@ -70,7 +71,10 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
       {
         accessorKey: 'packaging',
         header: 'Ambalaj',
-        meta: { mobile: 'hidden', width: 100 },
+        // Tur 4 P1: aynı ada sahip birden çok SKU (ör. "Badem İçeceği 1 Litrelik UHT" ×4) yalnızca
+        // Ambalaj ile ayrışıyor — mobilde tamamen gizliyken 4 özdeş görünen kart oluşuyordu. SKU
+        // (subtitle) altında etiketsiz tek satır olarak kalır ("12 Adet").
+        meta: { mobile: 'meta', width: 100 },
         cell: ({ getValue }) => getValue<string | null>() ?? <span className="text-muted-foreground/50">—</span>,
       },
       {
@@ -83,11 +87,13 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
         accessorKey: 'status',
         header: 'Durum',
         // 92/100 aktif, 8/100 kullanım dışı — gerçek varyans taşıyor (BOM'daki sıfır-varyans sütunlarından
-        // farklı), sütun kalır. İki durum da aynı StatusBadge anatomisiyle basılır (Tur 3 P1 bulgusu:
-        // önceden aktif için çıplak nokta / pasif için tam pil — satır yüksekliği ve ağırlık tutarsızdı).
+        // farklı), sütun kalır. Tur 4 P1: 45/50 satır dolgulu yeşil "Aktif" taşıyordu — sütun boyunca
+        // kesintisiz yeşil şerit, renk hiçbir ayırt edici bilgi taşımıyordu. Olağan durum (Aktif) artık
+        // dolgusuz (yalnız nokta + metin); dolgulu rozet yalnızca istisnalara (Kullanım dışı) kalır.
         meta: { mobile: 'badge', width: 90 },
         cell: ({ getValue }) => {
           const s = getValue<string>();
+          if (s === 'active') return <SubtleStatusBadge tone="success" label="Aktif" />;
           // "Kullanım dışı" bir hata değil — paylaşılan sözlük (lib/status.ts) 'cancelled' için 'danger'
           // veriyor, burada nötr'e çevrilir (dosya ortak olduğu için değiştirilmedi, bkz. rapor).
           return <StatusBadge status={s} kind="product" tone={s === 'cancelled' ? 'muted' : undefined} />;
@@ -111,7 +117,11 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
     cols.push({
       accessorKey: 'listPrice',
       header: 'Satış Fiyatı',
-      meta: { align: 'right', width: 120, mobile: 'hidden' },
+      // Tur 4 P1: 390px'te tamamen düşüyordu — ürünün satış fiyatı mobilde hiçbir yerde görünmüyordu,
+      // kart başına tek alan (Eldeki Stok) kalıyordu. `mobile` bilinçli olarak boş bırakılır: partners-table
+      // 'balance'ı ve boms-table 'unitCost'u aynı şekilde etiketli alan satırına (Eldeki Stok ile yan
+      // yana) düşer — modül genelinde tek istisna olmaktan çıkarıldı.
+      meta: { align: 'right', width: 120 },
       cell: ({ getValue }) => <MoneyCell value={getValue<string>()} muted={getValue<string>() === '0'} />,
     });
     return cols;
