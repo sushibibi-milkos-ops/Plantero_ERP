@@ -90,15 +90,23 @@ export default async function PartnerDetailPage({ params, searchParams }: { para
 
   return (
     <>
+      {/* Tur 9/10 P1 bulgusu: başlık `<span className="inline-flex …">{ad}<StatusBadge/></span>` idi —
+          PageHeader'ın h1'i `truncate` (overflow-hidden + ellipsis + nowrap) taşıyor ama bu ellipsis
+          algoritması yalnızca h1'in DOĞRUDAN metin içeriğinde çalışır; içerik nested bir inline-flex
+          span (metin + rozet iki ayrı çocuk) olunca tarayıcı üç nokta basmadan ham kırpma yapıyor ve
+          390px'te StatusBadge tamamen görünüm dışına taşıyordu. Kök neden PageHeader'da değil (ortak
+          bileşen değiştirilmedi) — bu sayfanın başlığı yalnızca DÜZ METİN olacak şekilde yeniden
+          kuruldu (h1'in kendi `truncate`'i böylece gerçek "…" üretir), durum rozeti başlığın hemen
+          altına, açıklama satırına taşındı — her genişlikte normal metin akışıyla sarar, asla kırpılmaz. */}
       <PageHeader
         eyebrow={PARTNER_KIND_LABELS[partner.kind] ?? partner.kind}
-        title={
-          <span className="inline-flex items-center gap-2">
-            {partner.name}
+        title={partner.name}
+        description={
+          <span className="inline-flex flex-wrap items-center gap-2">
             <StatusBadge status={partner.isActive ? 'active' : 'inactive'} />
+            <span className="font-mono text-[12px]">{partner.code}</span>
           </span>
         }
-        description={<span className="font-mono text-[12px]">{partner.code}</span>}
         actions={canManage ? <PartnerEditSheet partner={partner} /> : undefined}
       />
       <DetailTabs tabs={tabs} defaultTab="genel" />

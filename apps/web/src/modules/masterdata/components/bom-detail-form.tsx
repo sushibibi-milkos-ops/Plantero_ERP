@@ -168,16 +168,24 @@ export function BomDetailForm({
               Tur 5 P0 bulgusu: 560px min-w 390px'te reçetenin ASIL bilgisini (Miktar+Tutar) ekran dışına
               itiyordu — kullanıcı yalnızca SKU (ekranın ~%40'ı) ve Bileşen adını görüyordu. SKU ikincil bir
               tanımlayıcı (Bileşen adı zaten birincil kimlik); Birim Maliyet VE % Pay ile aynı sınıfta artık
-              yalnızca ≥sm görünür — mobilde Bileşen+Miktar(+Fire%)(+Yan Ürün)+Tutar önceliklidir. */}
+              yalnızca ≥sm görünür — mobilde Bileşen+Miktar(+Fire%)(+Yan Ürün)+Tutar önceliklidir.
+              Tur 9/10 P1 bulgusu: sarmalayıcı `w-fit` (shrink-to-fit) idi — tablo üstteki KPI şeridinin
+              (1080px, `w-full`) sağ kenarına hiç ulaşmadan kendi içerik genişliğinde (527px) bitiyordu;
+              sayfanın sağ yarısı ve altı ~%50 boş kalıyordu. `w-fit` → `w-full`: sarmalayıcı artık üst
+              KPI şeridiyle aynı genişliği (max-w-[1080px] kapsayıcının tamamı) kaplar; içerik hâlâ
+              `min-w-[360px]`'in altına sıkışmaz ve gerektiğinde `overflow-x-auto` ile kayar. Tabloda
+              `whitespace-nowrap` OLMAYAN tek sütun olan "Bileşen"e `w-full` verildi — table-layout:auto'da
+              kalan tüm boşluğu o emer (diğer tüm sütunlar sayı/kod, doğal içerik genişliğinde sabit
+              kalır); `max-w-[220px] truncate` çok uzun adlarda hâlâ tek satırda "…" ile kesilmeyi garantiler. */}
           <div
-            className="scrollbar-thin scroll-fade-x w-fit max-w-full overflow-x-auto"
+            className="scrollbar-thin scroll-fade-x w-full overflow-x-auto"
             style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}
           >
             <table className="w-full min-w-[360px] border-collapse text-[13px]">
               <thead>
                 <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
                   <th className="hidden h-9 px-3 text-left font-medium whitespace-nowrap sm:table-cell">SKU</th>
-                  <th className="h-9 px-3 text-left font-medium whitespace-nowrap">Bileşen</th>
+                  <th className="h-9 w-full px-3 text-left font-medium whitespace-nowrap">Bileşen</th>
                   <th className="h-9 px-3 text-right font-medium whitespace-nowrap">Miktar</th>
                   {hasScrap ? <th className="h-9 px-3 text-right font-medium whitespace-nowrap">Fire %</th> : null}
                   {hasByproduct ? <th className="h-9 px-3 text-center font-medium whitespace-nowrap">Yan Ürün</th> : null}

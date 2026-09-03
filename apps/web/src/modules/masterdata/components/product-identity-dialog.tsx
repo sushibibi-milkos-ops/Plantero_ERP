@@ -34,7 +34,10 @@ export function ProductIdentityDialog({ productId, name, barcode }: { productId:
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => setOpen(true)}>
+      {/* Tur 9/10 P1 bulgusu: mobilde 172x32 — aynı başlık satırındaki "Düzenle" (44px'e çıkarılmış)
+          ile aynı satırda iki farklı dokunma hedefi yüksekliği. `max-md:h-11` diğer başlık eylemleriyle
+          (ör. segments-table.tsx AddSegmentButton) aynı kalıp — ≥md'de görsel yükseklik (h-8) korunur. */}
+      <Button variant="ghost" size="sm" className="max-md:h-11 text-muted-foreground" onClick={() => setOpen(true)}>
         <ShieldAlert className="size-3.5" /> Ad/barkod değiştir
       </Button>
       <DialogContent>

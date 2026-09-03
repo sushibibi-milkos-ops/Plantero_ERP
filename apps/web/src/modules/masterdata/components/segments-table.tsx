@@ -114,7 +114,7 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Kod ya da etiket ara…"
-          className="h-9 w-full rounded-md border border-border/60 bg-background pl-8 text-[13px] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:max-w-xs"
+          className="h-11 w-full rounded-md border border-border/60 bg-background pl-8 text-[13px] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:max-w-xs md:h-9"
         />
       </div>
 
@@ -142,17 +142,25 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
               ) : rows.length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">Aramayla eşleşen kayıt yok.</p>
               ) : (
-                /* Kök neden (Tur 4 P1): `w-full` + sabit px genişlikler (inline `style`) tabloyu
-                   kapsayıcının %100'üne zorluyordu; table-layout:auto bu sabit toplamı korumak için
-                   "Etiket" sütununu eziyordu — 390px'te uzun bir etiket 7 satıra sarıp satırı ~160px'e
-                   çıkarıyordu. `min-w-[340px]`: tablo hiçbir zaman bu genişliğin altına sıkışmaz (iki
-                   sütunlu "T" tablosu artık 390px'e sığar, kaydırma tetiklenmez), dar ekranda daha geniş
-                   tablolarda gerçek yatay kaydırma devreye girer (data-table.tsx:311 ile aynı kök neden).
-                   Tur 5 P1: `--scroll-fade-bg` sayfa zeminine (`var(--background)`) eşitlendi — varsayılan
+                /* Kök neden (Tur 4 P1): sabit px genişlikler (inline `style`) tabloyu kapsayıcının
+                   %100'üne zorluyordu; table-layout:auto bu sabit toplamı korumak için "Etiket" sütununu
+                   eziyordu — 390px'te uzun bir etiket 7 satıra sarıp satırı ~160px'e çıkarıyordu.
+                   `min-w-[340px]`: tablo hiçbir zaman bu genişliğin altına sıkışmaz (iki sütunlu "T"
+                   tablosu artık 390px'e sığar, kaydırma tetiklenmez), dar ekranda daha geniş tablolarda
+                   gerçek yatay kaydırma devreye girer (data-table.tsx:311 ile aynı kök neden). Tur 5 P1:
+                   `--scroll-fade-bg` sayfa zeminine (`var(--background)`) eşitlendi — varsayılan
                    `var(--card)` saf beyaz olduğundan, taşmayan (kaydırmasız) tablolarda dahi kapsayıcı
-                   genişliği tablo içeriğinden daha büyükse sağda opak beyaz bir dikdörtgen boyanıyordu. */
-                <div className="scrollbar-thin scroll-fade-x overflow-x-auto" style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}>
-                  <table className="min-w-[340px] border-collapse text-[13px]">
+                   genişliği tablo içeriğinden daha büyükse sağda opak beyaz bir dikdörtgen boyanıyordu.
+                   Tur 9/10 P1 bulgusu: sarmalayıcıda ve tabloda `w-full` YOKTU — tablo grid hücresinin
+                   tamamını değil, yalnızca kendi içeriğinin doğal genişliğini kaplıyordu (table-layout:auto
+                   + genişlik kısıtı yok = shrink-to-fit). Beş sözlük tablosu farklı içerik uzunluklarına
+                   sahip olduğundan her biri farklı bir sağ kenarda bitiyor, sayfa merdiven gibi
+                   kırılıyordu. `w-full` geri eklendi — Kod/Bağlam sütunları hâlâ sabit `style`
+                   genişliğinde kalır, `whitespace-nowrap` OLMAYAN tek sütun olan "Etiket"
+                   table-layout:auto'da kalan tüm boşluğu emer; böylece tüm tablolar aynı sağ kenarda
+                   (grid hücresinin sağı) biter. */
+                <div className="scrollbar-thin scroll-fade-x w-full overflow-x-auto" style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}>
+                  <table className="w-full min-w-[340px] border-collapse text-[13px]">
                     <thead>
                       <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
                         <th className="h-9 px-3 text-left font-medium whitespace-nowrap" style={{ width: CODE_COL_WIDTH }}>Kod</th>

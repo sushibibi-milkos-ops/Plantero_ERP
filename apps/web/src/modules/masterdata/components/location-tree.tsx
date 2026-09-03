@@ -112,10 +112,10 @@ function Node({
           <span className="hidden min-w-0 truncate text-[12px] text-muted-foreground sm:inline">{node.name}</span>
         </div>
         <span className={COL.badge}>{usageBadge}</span>
-        <span className={COL.qty}>
+        <span className={cn(COL.qty, 'text-[13px]')}>
           <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
         </span>
-        <span className={COL.value}>{Number(node.totalValue) === 0 ? <EmptyCell /> : <MoneyCell value={node.totalValue} />}</span>
+        <span className={cn(COL.value, 'text-[13px]')}>{Number(node.totalValue) === 0 ? <EmptyCell /> : <MoneyCell value={node.totalValue} />}</span>
         {/* Tur 5 P1 bulgusu: `opacity-0 group-hover:opacity-100` yalnızca fare hover'ında görünürdü —
             klavye (Tab) ve dokunmatik ekranlarda bu iki satır eylemi hiç erişilemezdi. Paylaşılan
             data-table/row-actions.tsx:32'deki korumalarla birebir aynı sınıf dizesi (ortak dosya
@@ -183,13 +183,18 @@ function Node({
                 değildi (yanındaki "Değer" tam yazılıyordu — tutarsız kısaltma) VE iki değer ortak bir
                 sağ raya yaslanmadığı için satırlar arasında karşılaştırılamıyordu — sabit genişlikli
                 `grid-cols-2` ile ikisi de kendi sütununda sağa yaslanır, aynı derinlikteki tüm satırlarda
-                aynı x'te durur. */}
-            <div className="grid w-52 shrink-0 grid-cols-2 gap-2 text-[12px]">
-              <span className="inline-flex items-baseline justify-end gap-1">
+                aynı x'te durur. Tur 9/10 P0 bulgusu: sabit 100px track genişliği 4+ haneli miktar/tutarda
+                (ör. "₺1.095.015,80" + "Değer" etiketi ≈122px) taşıp komşu hücrenin üzerine biniyordu —
+                grid iki sabit track'e böldüğü için taşan içerik gizlenmek yerine üst üste çiziliyordu.
+                `grid-cols-2` yerine dikey `flex-col items-end`: iki metrik artık alt alta, her satır
+                kendi genişliğine göre ölçülür (`w-52` sabiti kaldırıldı) ve `items-end` sağ kenarı ortak
+                rayda tutar — hiçbir genişlikte glif çakışması oluşmaz. */}
+            <div className="flex shrink-0 flex-col items-end gap-0.5 text-[12px]">
+              <span className="inline-flex items-baseline gap-1">
                 <span className="text-[10px] font-normal text-muted-foreground">Miktar</span>
                 <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
               </span>
-              <span className="inline-flex items-baseline justify-end gap-1">
+              <span className="inline-flex items-baseline gap-1">
                 <span className="text-[10px] font-normal text-muted-foreground">Değer</span>
                 {Number(node.totalValue) === 0 ? <EmptyCell className="num" /> : <MoneyCell value={node.totalValue} />}
               </span>
@@ -291,7 +296,7 @@ export function LocationTree({ warehouseId, tree, canManage }: { warehouseId: st
             onChange={(e) => setQ(e.target.value)}
             placeholder="Kod ya da ad ara…"
             aria-label="Lokasyon ara"
-            className="h-9 w-full rounded-md border border-border/60 bg-background pl-8 text-[13px] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:max-w-xs"
+            className="h-11 w-full rounded-md border border-border/60 bg-background pl-8 text-[13px] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:max-w-xs md:h-9"
           />
         </div>
       ) : null}

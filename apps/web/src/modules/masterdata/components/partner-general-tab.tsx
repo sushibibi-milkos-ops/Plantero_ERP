@@ -106,12 +106,19 @@ export function PartnerGeneralTab({
   }, [partner.creditLimit, partner.balance]);
 
   // Tur 5 P1 bulgusu: KPI şeridinde hiçbir karşılaştırma deltası yoktu (Stripe finans şeritleri her
-  // zaman "son 30 gün / önceki 30 gün" gibi bir trend taşır). Cari bazında bir bakiye geçmişi tablosu
-  // yok — "Açık sipariş"/"Açık fatura tutarı" için en yakın anlamlı yaklaşıklık, belge TARİHİNE göre
-  // son 30 gün içindeki aktiviteyi bir önceki 30 günle karşılaştırmaktır (durum anlık "açık" olsa da,
-  // trend olarak aktivite yönünü gösterir). Bakiye tek bir anlık değerdir, doğal bir "önceki dönem"i
-  // yoktur — delta yerine tonuyla (borç/alacak) bırakılır.
-  const { orderDelta, invoiceDelta } = useMemo(() => {
+  // zaman "son 30 gün / önceki 30 gün" gibi bir trend taşır). "Açık sipariş" sayısı için en yakın
+  // anlamlı yaklaşıklık, belge TARİHİNE göre son 30 gün içinde açılan sipariş SAYISINI bir önceki 30
+  // günle karşılaştırmaktır (durum anlık "açık" olsa da, trend olarak aktivite yönünü gösterir).
+  //
+  // Tur 9/10 P1 bulgusu: "Açık fatura tutarı" için aynı yaklaşıklık YANLIŞ sonuç veriyordu — KPI değeri
+  // AÇIK (ödenmemiş) fatura toplamı iken delta, son 30 gündeki TÜM fatura tutarını (ödenmiş dahil) bir
+  // önceki 30 günle kıyaslıyordu; iki sayı farklı metrikti. S-000005 gibi bir cari faturasını tahsil
+  // ettiğinde açık toplam 0'a düşüyor ama delta yine de +%100 basıyordu — sıfırın yanında yeşil artış
+  // rozeti yanıltıcıydı. Açık fatura toplamının kendi geçmiş anlık değeri (30 gün önceki "açık" durumu)
+  // olay bazlı durum geçmişi olmadan hesaplanamaz — o yüzden bu KPI için delta HİÇ hesaplanmıyor/
+  // basılmıyor (aşağıda `openInvoiceTotal` KPI'ına `delta` prop'u verilmiyor). Bakiye tek bir anlık
+  // değerdir, doğal bir "önceki dönem"i yoktur — delta yerine tonuyla (borç/alacak) bırakılır.
+  const orderDelta = useMemo(() => {
     const now = Date.now();
     const cutoff30 = now - 30 * DAY_MS;
     const cutoff60 = now - 60 * DAY_MS;
@@ -122,16 +129,8 @@ export function PartnerGeneralTab({
 
     const ordersLast30 = orders.filter((o) => inWindow(o.date, cutoff30, now)).length;
     const ordersPrev30 = orders.filter((o) => inWindow(o.date, cutoff60, cutoff30)).length;
-
-    const sumAmount = (rows: PartnerDocRow[]) => rows.reduce((acc, r) => acc.plus(new Decimal(r.amount || '0')), new Decimal(0));
-    const invLast30 = sumAmount(invoices.filter((i) => inWindow(i.date, cutoff30, now)));
-    const invPrev30 = sumAmount(invoices.filter((i) => inWindow(i.date, cutoff60, cutoff30)));
-
-    return {
-      orderDelta: pctDelta(ordersLast30, ordersPrev30),
-      invoiceDelta: pctDelta(invLast30.toNumber(), invPrev30.toNumber()),
-    };
-  }, [orders, invoices]);
+    return pctDelta(ordersLast30, ordersPrev30);
+  }, [orders]);
 
   const recentTx = useMemo(() => {
     const all = [
@@ -205,7 +204,18 @@ export function PartnerGeneralTab({
           hint={balanceNegative ? 'Borç' : 'Alacak'}
         />
         {creditUsagePct !== null ? <KpiCard variant="strip" title="Kredi limiti kullanımı" value={creditUsagePct} format="pct" /> : null}
-        <KpiCard variant="strip" title="Açık sipariş" value={openOrdersCount} format="int" delta={orderDelta ?? undefined} deltaLabel="önceki 30 gün" />
+        <KpiCard
+          variant="strip"
+          title="Açık sipariş"
+          value={openOrdersCount}
+          format="int"
+          delta={openOrdersCount !== 0 ? (orderDelta ?? undefined) : undefined}
+          deltaLabel="önceki 30 gün"
+        />
+        {/* Tur 9/10 P1 bulgusu — bkz. üstteki yorum: bu KPI'ın delta'sı yok. Gösterilen değer (açık/
+            ödenmemiş fatura toplamı) ile hesaplanabilecek tek delta (son 30 gün TÜM fatura hacmi) farklı
+            metrikler olduğu için, özellikle değer ₺0,00 iken yanıltıcı bir "+%100" rozeti basılmasın
+            diye bu KPI'a hiç delta verilmiyor. */}
         <KpiCard
           variant="strip"
           title="Açık fatura tutarı"
@@ -213,8 +223,6 @@ export function PartnerGeneralTab({
           format="money"
           currency={partner.currency}
           fractionDigits={2}
-          delta={invoiceDelta ?? undefined}
-          deltaLabel="önceki 30 gün"
         />
       </KpiStripRow>
 

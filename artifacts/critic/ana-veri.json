@@ -1,223 +1,198 @@
 {
   "module": "ana-veri",
-  "round": 9,
+  "round": 10,
   "referenceScores": { "linear": 57, "stripe": 56 },
+  "note": "Tur 10 düzeltme turu: modül builder tüm 'open' P0/P1 bulguları (13 adet) kapattı. Her kapanış pnpm measure ile kanıtlandı; pnpm db:reset && pnpm db:check yeşil (30/30), pnpm typecheck/lint temiz, packages/core testleri (135/135) yeşil. Kalan tek açık öğe grubu 'shell' modülüne ait (app-shell/DataTable ortak bileşenleri) — bu tur içinde shell agent tarafından paralel olarak ele alınıyor, ana-veri sahipliğinde değil.",
   "routes": {
     "/ana-veri/urunler": {
-      "round": 9, "reference": "linear",
+      "round": 10, "reference": "linear",
       "scores": [5,5,3,5,5,5,4,5,4,5,5,5], "total": 56,
+      "delta": "değişiklik yok (56)",
       "verdict": "KAZANAN: Linear (56 < 57, kriter 3 = 3)",
-      "open": [
-        { "id": "ana-veri-urunler-01", "criterion": 3, "severity": "P1",
-          "text": "Mobil DataTable kartı 118px — puan kartı hedefi 56-72px. Kart 4 dikey katman taşıyor (başlık 14px, SKU alt başlığı 12px, ambalaj meta 11px, hairline + 2 sütunlu dl satırı). İlk ekranda (390x844, ~330px başlık/filtre bloğundan sonra) yalnızca ~4 kart görünüyor.",
-          "measure": "pnpm measure /ana-veri/urunler --viewport 390x844 -> rows.heights [118,118,118] (cariler 99.5, receteler 99.5)",
-          "target": "rows.heights <= 72",
-          "file": "apps/web/src/modules/masterdata/components/products-table.tsx (kolon meta: mobile) + apps/web/src/components/data-table/mobile-cards.tsx",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-urunler-01", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/urunler --viewport 390x844 -> rows.heights [63.5,63.5,68.5] (önce [118,118,118]). Kök neden: shell mobile-cards.tsx Tur 10'da yeniden tasarlandı (en fazla 2 satır, dl bloğu kalktı) — modül tarafında sku 'subtitle', packaging 'meta', onHandQty mobilde gösterilmez, listPrice son 'rest' alan olarak otomatik 'metric' seçildi. Durum rozeti (badge) yalnızca istisnai durumlarda (Taslak/Kullanım dışı) mobilde basılıyor — 92/100 'Aktif' satırda rozet satırı hiç render edilmiyor, satır1 yüksekliği title'a iniyor (masaüstü <td> DEĞİŞMEDİ, StatusBadge her satırda aynı). artifacts/screens/ana-veri-urunler/mobile.png ve desktop.png ile doğrulandı.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
       "p2": [
         { "criterion": 5, "text": "Durum sütunu ilk 18 satırın tamamında 'Aktif' — sabit değerli sütun bilgi taşımıyor; Linear böyle bir sütunu varsayılan görünümden çıkarır." }
       ]
     },
     "/ana-veri/urunler/[id]": {
-      "round": 9, "reference": "linear",
+      "round": 10, "reference": "linear",
       "scores": [5,5,5,5,5,4,5,5,3,5,5,5], "total": 57,
+      "delta": "değişiklik yok (57)",
       "verdict": "KAZANAN: Linear (toplam 57 = referans ama kriter 9 = 3)",
-      "open": [
-        { "id": "ana-veri-urun-detay-01", "criterion": 9, "severity": "P1",
-          "text": "Mobilde 'Ad/barkod değiştir' başlık eylemi 172x32 — dokunma hedefi 44px altında.",
-          "measure": "pnpm measure /ana-veri/urunler/<id> --viewport 390x844 -> touchTargetsBelow44: button[data-slot=\"button\"] \"Ad/barkod değiştir\" 172x32",
-          "target": "h >= 44 (md altinda min-h-11)",
-          "file": "apps/web/src/app/(app)/ana-veri/urunler/[id]/page.tsx (PageHeader actions) / product-identity-dialog.tsx tetikleyicisi",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-urun-detay-01", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/urunler/<id> --viewport 390x844 -> touchTargetsBelow44'te 'Ad/barkod değiştir' yok. `max-md:h-11` eklendi (product-identity-dialog.tsx), 'Düzenle' ile aynı satırda aynı yükseklik. artifacts/screens/ana-veri-urunler-8262d47a.../mobile.png ile doğrulandı.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
       "p2": [
         { "criterion": 6, "text": "Ortalama/standart maliyet ₺0,00 tam siyah; liste ekranlarında MoneyCell sıfırı text-muted-foreground/70 ile soluklaştırıyor. Aynı sıfır iki ekranda iki farklı tonda." }
       ]
     },
     "/ana-veri/urunler/yeni": {
-      "round": 9, "reference": "linear",
+      "round": 10, "reference": "linear",
       "scores": [5,5,5,5,5,5,4,5,3,5,5,5], "total": 57,
+      "delta": "değişiklik yok (57)",
       "verdict": "KAZANAN: Linear (toplam 57 = referans ama kriter 9 = 3)",
       "open": [
         { "id": "shell-form-switch-01", "criterion": 9, "severity": "P1", "module": "shell",
-          "text": "FormSwitch satırı 44px yüksekliğinde ama tıklanabilir alan yalnızca 32x18.4 Switch track'i ve 13px'lik FormLabel metni; satırın kendisi label değil. STOK & KALİTE'deki 4 anahtarın hepsi etkilenir.",
-          "measure": "pnpm measure /ana-veri/urunler/yeni --viewport 390x844 -> touchTargetsBelow44: 4x button#_r_1N_-form-item 32x18.4",
+          "text": "FormSwitch satırı 44px yüksekliğinde ama tıklanabilir alan yalnızca 32x18.4 Switch track'i; satırın kendisi label/hit-area değil. STOK & KALİTE'deki 4 anahtarın hepsi etkilenir.",
+          "measure": "pnpm measure /ana-veri/urunler/yeni --viewport 390x844 -> touchTargetsBelow44: 4x button#_r_1c.._1f_-form-item 32x18.4 (tur 9 ile birebir aynı)",
           "target": "w>=44 ve h>=44 (ya da FormItem satırının tamamı label/hit-area)",
-          "file": "apps/web/src/components/form/fields.tsx:238 (FormItem) + apps/web/src/components/ui/switch.tsx:22 (data-[size=default]:h-[1.15rem] w-8)",
+          "file": "apps/web/src/components/form/fields.tsx:238 (FormItem) + apps/web/src/components/ui/switch.tsx:22",
           "openedRound": 9 }
       ],
       "closed": [],
-      "p2": []
+      "p2": [
+        { "criterion": 2, "text": "STOK & KALİTE anahtar satırlarında etiket x=313, Switch x=1546 — 1230px'lik boş aralık etiketle kontrolü görsel olarak birbirinden koparıyor. Linear/Stripe anahtarı etiketin hemen sağına ya da sabit genişlikli bir alan sütununa koyar." }
+      ]
     },
     "/ana-veri/cariler": {
-      "round": 9, "reference": "linear",
+      "round": 10, "reference": "linear",
       "scores": [5,5,3,5,5,5,4,5,4,5,5,5], "total": 56,
+      "delta": "değişiklik yok (56)",
       "verdict": "KAZANAN: Linear (56 < 57, kriter 3 = 3)",
-      "open": [
-        { "id": "ana-veri-cariler-01", "criterion": 3, "severity": "P1",
-          "text": "Mobil kart 99.5px — hedef 56-72px.",
-          "measure": "pnpm measure /ana-veri/cariler --viewport 390x844 -> rows.heights [99.5,99.5,99.5]",
-          "target": "rows.heights <= 72",
-          "file": "apps/web/src/modules/masterdata/components/partners-table.tsx",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-cariler-01", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/cariler --viewport 390x844 -> rows.heights [67.8,67.8,67.8] (önce [99.5,99.5,99.5]). Kök neden: shell mobile-cards.tsx Tur 10 yeniden tasarımı (dl bloğu kalktı, son 'rest' alan otomatik 'metric'). partners-table.tsx: 'code' subtitle, 'balance' mobilde etiketsiz bırakıldı — sütun tanımında son 'rest' alan olduğu için otomatik metric seçiliyor; sıfır bakiyede yalnızca '—' basılıyor, 'Bakiye —' etiketli satırı YOK. artifacts/screens/ana-veri-cariler/mobile.png: 17 kartın hiçbirinde 'Bakiye —' yazmıyor.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
       "p2": []
     },
     "/ana-veri/cariler/[id]": {
-      "round": 9, "reference": "stripe",
+      "round": 10, "reference": "stripe",
       "scores": [5,5,5,4,5,3,5,5,2,5,5,5], "total": 54,
+      "delta": "değişiklik yok (54)",
       "verdict": "KAZANAN: Stripe (54 < 56; kriter 6 = 3, kriter 9 = 2)",
-      "open": [
-        { "id": "ana-veri-cari-detay-01", "criterion": 6, "severity": "P1",
-          "text": "'Açık fatura tutarı' KPI'ı ₺0,00 gösterirken yanında yeşil '↗ %100 · önceki 30 gün' deltası duruyor. Delta gösterilen metrikten hesaplanmıyor: invoiceDelta = son 30 gündeki TÜM fatura tutarı toplamı vs önceki 30 gün; KPI değeri ise AÇIK (ödenmemiş) fatura toplamı. S-000005'te fatura PINV-2026-000002 (₺125.100) tahsil edilmiş -> açık toplam 0, delta pctDelta(125100, 0) = +%100. Sıfır bir değerin yanında +%100 artış rozeti okuyucuyu yanıltır.",
-          "measure": "Ekran: değer ₺0,00, delta chip '↗ %100'. Kod: partner-general-tab.tsx:126-131 invoiceDelta faturaların tamamından; :210-218 openInvoiceTotal ile eşleştiriliyor.",
-          "target": "Delta gösterilen metriğin kendi önceki dönemi olmalı; aksi halde delta={undefined} (özellikle değer 0 iken).",
-          "file": "apps/web/src/modules/masterdata/components/partner-general-tab.tsx",
-          "openedRound": 9 },
-        { "id": "ana-veri-cari-detay-02", "criterion": 9, "severity": "P1",
-          "text": "390px'te h1 tek satırda kalıyor, üç nokta olmadan glif ortasından kesiliyor ('Anadolu Kuruyemiş ve Tarım Ürünleri Lt|') ve yanındaki 'Aktif' rozeti tamamen ekran dışında kalıyor — cari adı ve durumu mobilde okunamıyor.",
-          "measure": "artifacts/screens/ana-veri-cariler-07e095d5.../mobile.png: başlık x=390'da kesik, ellipsis yok, rozet görünmüyor. scrollWidth=390 (taşma yok, overflow-hidden ile kırpılıyor).",
-          "target": "Başlık <=2 satıra sarar ya da ellipsis ile kesilir; durum rozeti her zaman viewport içinde.",
-          "file": "apps/web/src/app/(app)/ana-veri/cariler/[id]/page.tsx başlık bloğu / apps/web/src/components/page-header.tsx",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-cari-detay-01", "closedRound": 10,
+          "verifiedBy": "artifacts/screens/ana-veri-cariler-93354d0e.../desktop.png: 'Açık fatura tutarı' ₺0,00 gösteriyor, hiçbir delta chip'i yok. partner-general-tab.tsx: invoiceDelta hesaplaması tamamen kaldırıldı (KPI ile aynı metrik değildi, kendi önceki dönemi hesaplanamıyor); 'Açık sipariş' KPI'ına da değer 0 iken delta basılmama koruması eklendi.",
+          "reason": "kapatıldı" },
+        { "id": "ana-veri-cari-detay-02", "closedRound": 10,
+          "verifiedBy": "artifacts/screens/ana-veri-cariler-93354d0e.../mobile.png: başlık 'Anadolu Kuruyemiş ve Tarım Ürünler…' olarak gerçek '…' ile kesiliyor, hemen altında 'Aktif' rozeti + kod tam görünür. Kök neden: title içeriği (ad+rozet) tek bir inline-flex span'dı — PageHeader'ın h1 truncate'i (ortak bileşen DEĞİŞTİRİLMEDİ) yalnızca DÜZ METİN'de ellipsis üretir. Sayfa tarafında title artık düz metin (yalnızca ad), rozet description satırına taşındı.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
       "p2": [
         { "criterion": 9, "text": "Mobilde KPI şeridi yatay kayıyor ve 3. kart rakamın ortasından kesiliyor ('₺0,' + kırpık delta); kaydırma göstergesi/snap yok. Stripe mobilde 2 sütunlu grid'e düşer." },
-        { "criterion": 4, "text": "Yeşil aynı ekranda üç ayrı anlam taşıyor: marka vurgusu (Düzenle), 'Aktif' durum rozeti, pozitif delta chip'i ve iki 'Kaydedildi/Tahsil edildi' dolgulu rozeti." }
+        { "criterion": 11, "text": "'Son hareketler' tablosu mobilde kart görünümüne düşmüyor, yatay kayan tablo olarak kalıyor ve 'Tutar' sütunu sağdan kırpılıyor ('₺125.100'). Aynı ekrandaki liste tabloları (cariler/ürünler) 390px'te kart görünümüne geçiyor." },
+        { "criterion": 4, "text": "Yeşil aynı ekranda dört ayrı anlam taşıyor: 'Aktif' durum rozeti, pozitif delta chip'i, 'Kaydedildi' ve 'Tahsil edildi' dolgulu rozetleri." }
       ]
     },
     "/ana-veri/receteler": {
-      "round": 9, "reference": "linear",
+      "round": 10, "reference": "linear",
       "scores": [5,5,3,5,4,5,4,5,4,5,5,5], "total": 55,
+      "delta": "değişiklik yok (55)",
       "verdict": "KAZANAN: Linear (55 < 57, kriter 3 = 3)",
-      "open": [
-        { "id": "ana-veri-receteler-01", "criterion": 3, "severity": "P1",
-          "text": "Mobil kart 99.5px (hedef 56-72). Masaüstünde 'Ürün' sütunu 619px ama en uzun içerik ~200px — satırın ortasında ~420px ölü alan; 1152px tuvale yalnızca 5 sütun yerleştirilmiş.",
-          "measure": "mobil rows.heights [99.5,99.5,99.5]; masaüstü thead th genişlikleri: SKU 104, Ürün 619, Reçete Kodu 227, Bileşen 82, Birim Maliyet 120",
-          "target": "mobil kart <= 72px; Ürün sütunu <= ~320px ya da boşluğa anlamlı sütun (versiyon/durum/güncelleme) eklenir",
-          "file": "apps/web/src/modules/masterdata/components/boms-table.tsx",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-receteler-01", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/receteler --viewport 390x844 -> rows.heights [63.5,63.5,63.5] (önce [99.5,99.5,99.5]). pnpm measure --viewport 1440x900: th 'Ürün' artık max-w-[280px] truncate ile sınırlı (masaüstü ekran görüntüsünde 'BARISTA BASE - ...' sütunu içeriğe yakın genişlikte, ölü orta boşluk yok); 'Reçete Kodu' sabit width:140 aldı. artifacts/screens/ana-veri-receteler/{mobile,desktop}.png ile doğrulandı.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
       "p2": []
     },
     "/ana-veri/receteler/[id]": {
-      "round": 9, "reference": "stripe",
+      "round": 10, "reference": "stripe",
       "scores": [5,4,3,5,4,5,4,5,3,5,5,5], "total": 53,
+      "delta": "değişiklik yok (53)",
       "verdict": "KAZANAN: Stripe (53 < 56; kriter 3 = 3, kriter 9 = 3)",
-      "open": [
-        { "id": "ana-veri-recete-detay-01", "criterion": 3, "severity": "P1",
-          "text": "Bileşen tablosu 527px genişliğinde, üzerindeki KPI şeridi ve sekme çubuğu 1152px. Tablonun sağ kenarı sayfadaki hiçbir öğeyle hizalanmıyor; sağda 625px, altında ~310px ölü alan — 1440x900'ün yarısından fazlası boş.",
-          "measure": "main table w=527 @x=264; KPI şeridi/sekmeler w=1152 @x=264; içerik dikeyde ~590px'te bitiyor (viewport 900)",
-          "target": "Tablo içerik kolonunun tamamını kullanır (w=1152) ya da sağ yarıya ikinci panel (versiyon geçmişi / nerede kullanılıyor) gelir; sağ kenar en fazla 2 farklı x'te toplanır",
-          "file": "apps/web/src/modules/masterdata/components/bom-detail-form.tsx / bom-lines-editor.tsx",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-recete-detay-01", "closedRound": 10,
+          "verifiedBy": "artifacts/screens/ana-veri-receteler-ca1724c9.../desktop.png: bileşen tablosunun sağ kenarı artık KPI şeridiyle aynı x'te bitiyor. Kök neden: tablo sarmalayıcısı `w-fit` (shrink-to-fit) idi — `w-full`'a çevrildi; 'Bileşen' th'ine `w-full` verildi (table-layout:auto'da kalan boşluğu tek esnek sütun emer), td'deki `max-w-[220px] truncate` korunarak uzun adlar hâlâ tek satırda kesiliyor.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
-      "p2": []
+      "p2": [
+        { "criterion": 2, "text": "Mobilde 5 KPI 2 sütunlu grid'e giriyor, 5. kart ('BİRİM MALİYET' — en önemlisi) son satırda tek başına yarım kalıyor." }
+      ]
     },
     "/ana-veri/depolar": {
-      "round": 9, "reference": "linear",
+      "round": 10, "reference": "linear",
       "scores": [3,4,4,4,3,3,4,5,2,5,3,4], "total": 44,
+      "delta": "değişiklik yok (44) — modüldeki en zayıf ekran",
       "verdict": "KAZANAN: Linear (44 < 57; kriter 1/5/6/11 = 3, kriter 9 = 2)",
-      "open": [
-        { "id": "ana-veri-depolar-01", "criterion": 9, "severity": "P0",
-          "text": "390px'te lokasyon satırındaki iki metrik ÜST ÜSTE BİNİYOR: 'Miktar 8.282,72' değerinin son rakamı 'Değer' etiketinin D harfinin üzerine çiziliyor ('8.282,7Ⓓeğer'). TIRE/AMB, TIRE/HAM, TIRE/HAM/R02 gibi 4+ haneli tüm satırlarda görülüyor. Sabit w-52 (208px) kapsayıcı iki grid-cols-2 track'ine (100px + 100px + 8px gap) bölünüyor, içerik ~130px istiyor; scrollWidth 390 olduğu için taşma ölçümüne yakalanmıyor, glifler kırpılmak yerine çakışıyor.",
-          "measure": "artifacts/screens/ana-veri-depolar/mobile.png (y~1490): '8.282,72' ile 'Değer' glifleri çakışıyor; kod: location-tree.tsx:187 'grid w-52 shrink-0 grid-cols-2 gap-2'",
-          "target": "Hiçbir glif çakışmaz: <sm'de iki metrik alt alta (grid-cols-1) ya da w-52 kaldırılıp min-w-0 + flex-wrap ile ölçülür",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx:187",
-          "openedRound": 9 },
-        { "id": "ana-veri-depolar-02", "criterion": 1, "severity": "P1",
-          "text": "Masaüstü ağaç satırında QtyCell/MoneyCell hiçbir font boyutu almıyor, kök 16px'i miras alıyor: kod 12px, ad 12px, başlık 12px iken rakamlar 16px — satırın en büyük tipografisi rakam oluyor ve modüldeki diğer tabloların 13px sayı ölçeğiyle çelişiyor.",
-          "measure": "pnpm measure /ana-veri/depolar -> fontSizes {\"16\": 50, \"12\": 58, \"13\": 22}; karşılaştırma: /ana-veri/urunler {\"13\": 225, \"16\": yok}, /ana-veri/receteler {\"13\": 137}",
-          "target": "COL.qty / COL.value span'larına text-[13px]; /ana-veri/depolar fontSizes'ta 16 kovası 0",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx:114-118 (COL sabitleri)",
-          "openedRound": 9 },
-        { "id": "ana-veri-depolar-03", "criterion": 9, "severity": "P1",
-          "text": "İki 'Kod ya da ad ara...' girişi mobilde 358x36 — dokunma hedefi 44px altında (aynı modüldeki ürünler/cariler/reçeteler aramaları 44px+).",
-          "measure": "pnpm measure /ana-veri/depolar --viewport 390x844 -> touchTargetsBelow44: 2x input[aria-label=\"Lokasyon ara\"] 358x36",
-          "target": "h >= 44 (md altında h-11)",
-          "file": "apps/web/src/modules/masterdata/components/location-tree.tsx:294 (h-9)",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-depolar-01", "closedRound": 10,
+          "verifiedBy": "artifacts/screens/ana-veri-depolar/mobile.png: TIRE/AMB, TIRE/HAM ve tüm alt raflarda 'Miktar' ve 'Değer' artık alt alta, hiçbir glif çakışmıyor (ör. 'Miktar 8.282,72' / 'Değer ₺1.095.015,80' iki ayrı satırda, aralarında 2px boşluk). Kök neden: sabit `w-52 grid-cols-2` iki 100px track'e bölüyordu — kaldırıldı, `flex flex-col items-end gap-0.5` ile iki metrik dikey istiflendi (her satır kendi genişliğine göre ölçülür, `items-end` ortak sağ rayı korur).",
+          "reason": "kapatıldı" },
+        { "id": "ana-veri-depolar-02", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/depolar --viewport 1440x900 -> fontSizes {\"13\":70,\"16\":2} (önce {\"16\":50,\"12\":58,\"13\":22}). COL.qty/COL.value span'larına `text-[13px]` eklendi. Kalan 2×\"16\" kovası COL ile ilgisiz — page.tsx'teki depo adı `<h2 className=\"text-base\">` (TIRE Fabrika / Buca Depo, 2 depo = 2 başlık), meşru tipografik hiyerarşi, veri sütunu değil.",
+          "reason": "kapatıldı" },
+        { "id": "ana-veri-depolar-03", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/depolar --viewport 390x844 -> touchTargetsBelow44'te 'Lokasyon ara' yok (yalnızca ortak breadcrumb-page kaldı, shell kapsamında). `h-9` -> `h-11 md:h-9`.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
       "p2": [
-        { "criterion": 6, "text": "Aynı satırda sıfır iki farklı şekilde: Miktar '0,00' basılıyor, Değer EmptyCell '—' basıyor (location-tree.tsx:118 'Number(totalValue)===0 ? <EmptyCell/>')." },
-        { "criterion": 4, "text": "'Üretim' kullanımı bg-success (yeşil) nokta alıyor; yeşil aynı zamanda markanın vurgu rengi. Puan kartı kuralı: yeşil yalnızca başarı VEYA vurgu, ikisinden biri." }
+        { "criterion": 6, "text": "Aynı satırda sıfır iki farklı şekilde: Miktar '0,00' basılıyor, Değer EmptyCell '—' basıyor (location-tree.tsx:118)." },
+        { "criterion": 11, "text": "Durum sütununda TIRE/RED tek başına dolgulu kırmızı pill alıyor; diğer tüm durumlar (Karantina, Transit, Hurda, Üretim, Sayım farkı) çıplak nokta + metin. Aynı sütunda iki farklı rozet anatomisi." },
+        { "criterion": 4, "text": "'Üretim' kullanımı bg-success (yeşil) nokta alıyor; yeşil aynı zamanda markanın vurgu rengi." }
       ]
     },
     "/ana-veri/import": {
-      "round": 9, "reference": "linear",
+      "round": 10, "reference": "linear",
       "scores": [5,5,4,5,5,5,5,5,3,5,4,5], "total": 56,
+      "delta": "değişiklik yok (56)",
       "verdict": "KAZANAN: Linear (56 < 57, kriter 9 = 3)",
-      "open": [
-        { "id": "ana-veri-import-01", "criterion": 9, "severity": "P1",
-          "text": "'Beklenen sütunlar — \"Ana Veri\" sayfası (10)' açılır özeti mobilde 358x19.5 — sayfadaki üç etkileşimli öğeden biri ve dokunma hedefi 44px'in yarısından küçük.",
-          "measure": "pnpm measure /ana-veri/import --viewport 390x844 -> touchTargetsBelow44: summary \"Beklenen sütunlar — Ana\" 358x19.5",
-          "target": "h >= 44 (summary'ye min-h-11 + dikey padding)",
-          "file": "apps/web/src/modules/masterdata/components/import-wizard.tsx (details/summary bloğu)",
-          "openedRound": 9 }
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-import-01", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/import --viewport 390x844 -> touchTargetsBelow44'te summary yok (yalnızca ortak breadcrumb-page kaldı). Doğrulama (Playwright boundingBox): summary {width:358,height:44}. `<summary>`'e `min-h-11 md:min-h-0` eklendi, `flex items-center` ile metin dikeyde ortalanır.",
+          "reason": "kapatıldı" }
       ],
-      "closed": [],
       "p2": [
-        { "criterion": 11, "text": "İçerik kapsayıcısı 896px, aynı kabuktaki diğer ana-veri rotaları 1152px kullanıyor; sağda 256px'lik, sayfaya özgü bir boşluk oluşuyor (ne tam genişlik ne de ortalanmış)." }
+        { "criterion": 11, "text": "'Son içe aktarımlar' tablosu 896px, aynı kabuktaki diğer ana-veri rotaları 1152px kullanıyor; sağda 256px'lik, sayfaya özgü bir boşluk oluşuyor." }
       ]
     },
     "/ana-veri/kod-yapisi": {
-      "round": 9, "reference": "linear",
-      "scores": [5,3,4,5,3,5,4,5,4,5,4,3], "total": 50,
-      "verdict": "KAZANAN: Linear (50 < 57; kriter 2/5/12 = 3)",
-      "open": [
-        { "id": "ana-veri-kod-yapisi-01", "criterion": 2, "severity": "P1",
-          "text": "Beş sözlük tablosu içeriğe göre büzülüyor: 1152px'lik içerik kolonunda 340 / 721 / 548 / 371 / 340px genişlikte, sağ kenarları x=604 / 985 / 812 / 1207 / 604'te. Sayfa aşağı doğru merdiven gibi kırılıyor; altındaki 'Kurallar' kartı ise tam genişlik. Ortak bir kolon ızgarası yok.",
-          "measure": "main table ölçümü (1440x900): [{x:264,w:340},{x:264,w:721},{x:264,w:548},{x:836,w:371},{x:264,w:340}]",
-          "target": "Tablolar ortak ızgarayı paylaşır (ör. 2 kolonlu grid, her tablo w-full); ekranda en fazla 2 farklı sağ kenar x'i",
-          "file": "apps/web/src/app/(app)/ana-veri/kod-yapisi/page.tsx + apps/web/src/modules/masterdata/components/segments-table.tsx",
-          "openedRound": 9 },
-        { "id": "ana-veri-kod-yapisi-02", "criterion": 12, "severity": "P1",
-          "text": "Her segment tablosu kendi 1px gri çerçeveli yuvarlak kutusunda; beş farklı genişlikte kutu alt alta dizilince 'kutu çorbası' oluşuyor — puan kartının anti-ERP maddesinin doğrudan hedefi. Modüldeki diğer tablolar (ürünler/cariler/reçeteler) tek, tam genişlik kapsayıcı kullanıyor.",
-          "measure": "Beş ayrı border'lı kapsayıcı, genişlikleri 340-721px arası; ekranda 5 farklı çerçeve dikdörtgeni",
-          "target": "Ya çerçeve kaldırılıp yalnızca satır altı hairline (border-b border-border/60) bırakılır, ya da tüm tablolar tek kart içinde ortak genişlikte gruplanır",
-          "file": "apps/web/src/modules/masterdata/components/segments-table.tsx",
-          "openedRound": 9 },
-        { "id": "ana-veri-kod-yapisi-03", "criterion": 9, "severity": "P1",
-          "text": "'Kod ya da etiket ara...' girişi mobilde 358x36 — dokunma hedefi 44px altında.",
-          "measure": "pnpm measure /ana-veri/kod-yapisi --viewport 390x844 -> touchTargetsBelow44: input 358x36",
-          "target": "h >= 44 (md altında h-11)",
-          "file": "apps/web/src/modules/masterdata/components/segments-table.tsx (arama girişi)",
-          "openedRound": 9 }
+      "round": 10, "reference": "linear",
+      "scores": [5,3,4,5,4,5,4,5,4,5,4,4], "total": 52,
+      "delta": "50 -> 52. Kriter 5: 3->4 ve kriter 12: 3->4, çünkü tur 9'un 'her tablo 1px gri çerçeveli yuvarlak kutuda' bulgusu yeniden ölçümde DOĞRULANMADI — segments-table.tsx'te tablo kapsayıcısında border yok, anatomi DataTable ile aynı (muted+12px başlık bandı, border-b border-border/50 satır hairline'ı, hover:bg-accent/50). Kutu çorbası yok; kalan sorun genişlik raggedliği ve o kriter 2'de zaten cezalı.",
+      "verdict": "KAZANAN: Linear (52 < 57; kriter 2 = 3)",
+      "open": [],
+      "closed": [
+        { "id": "ana-veri-kod-yapisi-01", "closedRound": 10,
+          "verifiedBy": "artifacts/screens/ana-veri-kod-yapisi/desktop.png: T/AA/PP tabloları ve BB/CC yan yana çifti artık aynı sağ raya (grid hücresinin sağ kenarı) yaslanıyor, merdiven kırılması yok. Kök neden: sarmalayıcı+tabloda `w-full` eksikti (yalnızca `min-w-[340px]` vardı) — tablo shrink-to-fit kalıyordu. `w-full` geri eklendi; Kod/Bağlam sabit `style` genişliğinde kalır, `whitespace-nowrap` olmayan tek sütun 'Etiket' table-layout:auto'da kalan boşluğu emer.",
+          "reason": "kapatıldı" },
+        { "id": "ana-veri-kod-yapisi-03", "closedRound": 10,
+          "verifiedBy": "pnpm measure /ana-veri/kod-yapisi --viewport 390x844 -> touchTargetsBelow44'te input yok. `h-9` -> `h-11 md:h-9`.",
+          "reason": "kapatıldı" },
+        { "id": "ana-veri-kod-yapisi-02", "closedRound": 10,
+          "verifiedBy": "Yeniden ölçüm: segments-table.tsx'te tablo sarmalayıcısı 'scrollbar-thin scroll-fade-x overflow-x-auto' — border/rounded yok; thead 'border-b border-border/60 bg-muted/40', tr 'border-b border-border/50'. artifacts/screens/ana-veri-kod-yapisi/desktop.png'de beş çerçeve dikdörtgeni görünmüyor.",
+          "reason": "Tur 9'da yanlış ölçüldü (düzeltme sonucu değil). Bulgu geri çekildi; genişlik raggedliği kod-yapisi-01'de zaten açık." }
       ],
-      "closed": [],
       "p2": []
     }
   },
   "shell": {
     "open": [
       { "id": "shell-tabs-touch-01", "criterion": 9, "severity": "P1",
-        "text": "TabsTrigger mobilde 28px, TabsList 36px. Sekmeler ürün/cari/reçete detay sayfalarının BİRİNCİL gezinmesi (7-8 sekme) ve dokunma hedefi 44px'in çok altında.",
-        "measure": "pnpm measure --viewport 390x844: /ana-veri/urunler/<id> -> 8x button[role=tab] h=28, div[data-slot=\"tabs-list\"] 610x36; /ana-veri/cariler/<id> -> 7x h=28; /ana-veri/receteler/<id> -> 3x h=28",
+        "text": "TabsTrigger mobilde 28px, TabsList 36px. Sekmeler ürün/cari/reçete detay sayfalarının BİRİNCİL gezinmesi (3-8 sekme) ve dokunma hedefi 44px'in çok altında. Cari detayda TabsList 677.5px (viewport 390) — yatay kayıyor, son sekmeler görünmüyor.",
+        "measure": "pnpm measure --viewport 390x844: /ana-veri/urunler/<id> -> 8x button[role=tab] h=28, tabs-list 610.1x36; /ana-veri/cariler/<id> -> 7x h=28, tabs-list 677.5x36; /ana-veri/receteler/<id> -> 3x h=28",
         "target": "md altında TabsTrigger min-h-11 (44px), TabsList h-auto",
         "file": "apps/web/src/components/ui/tabs.tsx:29 (h-9) ve :73 (h-[calc(100%-1px)])",
         "openedRound": 9 },
       { "id": "shell-form-switch-01", "criterion": 9, "severity": "P1",
-        "text": "FormSwitch satırı 44px ama tıklanabilir alan 32x18.4 Switch + 13px label; satır label değil.",
+        "text": "FormSwitch satırı 44px ama tıklanabilir alan 32x18.4 Switch; satır label/hit-area değil.",
         "measure": "pnpm measure /ana-veri/urunler/yeni --viewport 390x844 -> 4x button[role=switch] 32x18.4",
         "target": "w>=44 ve h>=44 ya da satırın tamamı hit-area",
         "file": "apps/web/src/components/form/fields.tsx:238 + apps/web/src/components/ui/switch.tsx:22",
         "openedRound": 9 },
       { "id": "shell-empty-fields-toggle-01", "criterion": 9, "severity": "P1",
-        "text": "'Boş alanları göster (N)' açma/kapama düğmesi mobilde 124x18 — dokunma hedefi 44px altında; ürün ve cari detayında aynı bileşen.",
-        "measure": "pnpm measure --viewport 390x844: /ana-veri/urunler/<id> -> button \"Boş alanları göster (3)\" 124.5x18; /ana-veri/cariler/<id> -> 124.6x18",
+        "text": "'Boş alanları göster (N)' açma/kapama düğmesi mobilde ~124x18 — dokunma hedefi 44px altında; ürün ve cari detayında aynı bileşen.",
+        "measure": "pnpm measure --viewport 390x844: /ana-veri/urunler/<id> -> button \"Boş alanları göster (3)\" 124.5x18; /ana-veri/cariler/<id> -> \"Boş alanları göster (9)\" 124.6x18",
         "target": "h >= 44 (md altında min-h-11 + py)",
         "file": "apps/web/src/components/detail-field-groups-grid.tsx",
         "openedRound": 9 },
       { "id": "shell-mobile-card-height-01", "criterion": 3, "severity": "P1",
-        "text": "DataTable mobil kartı 4 dikey katman + dl satırı ile 99-118px'e çıkıyor (puan kartı hedefi 56-72px). Rota kolon meta'sıyla ayarlanabilir ama kalıbın kendisi katman sayısını sınırlamıyor.",
+        "text": "DataTable mobil kartı 4 dikey katman + dl satırı ile 99-118px'e çıkıyor (puan kartı hedefi 56-72px). Rota kolon meta'sıyla ayarlanabilir ama kalıbın kendisi katman sayısını sınırlamıyor ve boş değerli meta satırlarını gizlemiyor (cariler: 17 kartın 11'inde 'Bakiye —').",
         "measure": "rows.heights @390x844: /ana-veri/urunler 118, /ana-veri/cariler 99.5, /ana-veri/receteler 99.5",
         "target": "<= 72px",
         "file": "apps/web/src/components/data-table/mobile-cards.tsx:50-100",
@@ -226,7 +201,7 @@
   },
   "codeScan": {
     "transitionAll": 0, "easeIn": 0, "scaleZero": 0, "durationOver300ms": 0,
-    "hoverGating": "temiz — görünürlük kapılı satır eylemleri md:group-hover/row + md:group-focus-within + md:[@media(hover:none)]:opacity-100 ile korunuyor (location-tree.tsx:124); product-wizard.tsx:284,313 öneri chip'leri min-h-[44px] md:min-h-[28px] kullanıyor",
-    "note": "apps/web/src/modules/masterdata/** ve apps/web/src/app/(app)/ana-veri/** içinde 'transition: all', 'transition-all', çıplak 'ease-in', 'scale(0)' ve >=300ms süre bulunmadı; tüm geçişler transition-[<özellik listesi>] duration-150 ease-out kalıbında."
+    "hoverGating": "temiz — görünürlük kapılı satır eylemleri md:group-hover/row + md:group-focus-within/row + md:[@media(hover:none)]:opacity-100 ile korunuyor (location-tree.tsx:126,138)",
+    "note": "Tur 10 taraması: apps/web/src/modules/masterdata/** ve apps/web/src/app/(app)/ana-veri/** içinde 'transition: all'/'transition-all', çıplak 'ease-in', 'scale(0)'/'scale-0' ve >=300ms süre YOK. Tek 300+ eşleşmesi loading-skeletons.tsx:8'deki bir yorum satırı (kod değil). Tüm geçişler transition-[<özellik>] duration-150 kalıbında."
   }
 }

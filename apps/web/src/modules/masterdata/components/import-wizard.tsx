@@ -192,7 +192,10 @@ export function ImportWizard({ history = [] }: { history?: ImportHistoryRow[] })
                   — `[&::-webkit-details-marker]:hidden` yalnızca eski WebKit'i hedefler, modern Chromium'da
                   etkisizdi ve ok hem yerel üçgeni hem de aşağıdaki ChevronRight'ı birlikte gösteriyordu
                   (Tur 3 P1 bulgusu). ChevronRight — aynı katlama simgesi location-tree.tsx'te kullanılan. */}
-              <summary className="flex cursor-pointer list-none items-center gap-1 text-[13px] font-semibold text-muted-foreground select-none [&::-webkit-details-marker]:hidden">
+              {/* Tur 9/10 P1 bulgusu: mobilde 358x19.5 — sayfadaki üç etkileşimli öğeden biri, dokunma
+                  hedefi 44px'in yarısından küçüktü. `max-md:min-h-11` + `flex items-center`: kutu ≥44px,
+                  metin dikeyde ortalanır; ≥md'de eski kompakt yükseklik korunur. */}
+              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 text-[13px] font-semibold text-muted-foreground select-none md:min-h-0 [&::-webkit-details-marker]:hidden">
                 Beklenen sütunlar — &quot;Ana Veri&quot; sayfası ({EXPECTED_COLUMNS.length})
                 <ChevronRight className="size-3 transition-transform duration-150 ease-out group-open:rotate-90" />
               </summary>

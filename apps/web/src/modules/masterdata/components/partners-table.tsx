@@ -54,6 +54,11 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
         // Tur 5 P1 bulgusu: sıfır bakiye "₺0,00" olarak soluk basılıyordu — "Kanal" gibi gerçekten boş
         // alanlar em dash kullanırken aynı satırda iki farklı "boş" sözleşmesi (17 satırın 12'sinde)
         // okuyucuyu "hesaplanmış sıfır mı, veri yok mu" ikilemine sokuyordu. Sıfır artık em dash.
+        // Tur 9/10 P1 bulgusu: eskiden `mobile` boştu (varsayılan "rest" — hairline+padding'li ayrı bir
+        // satır, kartın ~üçte biri) VE 17 kartın 11'inde bu satırın tek içeriği "Bakiye —" idi. `mobile`
+        // yine kasıtlı olarak boş bırakılır — kod (subtitle) ile aynı satırın tek "metric"i olarak shell
+        // (`mobile-cards.tsx`, Tur 10) tarafından otomatik seçilir, ayrı satır AÇMAZ; sıfırda yalnızca
+        // "—" görünür ("Bakiye —" etiketli satırı değil).
         meta: { align: 'right', width: 130 },
         cell: ({ getValue }) => {
           const v = getValue<string>();

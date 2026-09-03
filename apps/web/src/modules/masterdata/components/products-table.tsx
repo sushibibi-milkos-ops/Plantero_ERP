@@ -17,11 +17,15 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
 
   const columns = useMemo<ColumnDef<ProductListRow, unknown>[]>(() => {
     const cols: ColumnDef<ProductListRow, unknown>[] = [
-      {
-        accessorKey: 'sku',
-        header: 'SKU',
-        meta: { mobile: 'subtitle', className: 'font-mono text-[12px]', width: 92 },
-      },
+      // Tur 9/10 P1 bulgusu: kart 4 katman taşıyordu (başlık, SKU alt başlığı, Ambalaj meta, ayrı bir
+      // hairline+`dl` satırı — Eldeki Stok/Satış Fiyatı/[Birim Maliyet]) ve 118px'e çıkıyordu (hedef
+      // ≤72). `dl` bloğu (shell, `mobile-cards.tsx`, Tur 10) tamamen kaldırıldı: kart artık en fazla 2
+      // satır — satır 1 başlık+rozet, satır 2 alt başlık+meta ipuçları+TEK metrik. Eldeki Stok
+      // `stock-table.tsx`'teki "Eldeki/Rezerve" ile AYNI teknikle (masaüstünde etiketsiz `QtyCell`,
+      // mobilde kısa etiket + değer) satır 2'nin meta ipuçlarına eklendi; Satış Fiyatı `mobile` YOK
+      // bırakıldı — sütun tanımında son "rest" alan olduğu için shell tarafından otomatik "metric"
+      // (satır 2 sağı) seçilir.
+      { accessorKey: 'sku', header: 'SKU', meta: { mobile: 'subtitle', className: 'font-mono text-[12px]', width: 92 } },
       {
         accessorKey: 'shortCode',
         header: 'Kısa Kod',
@@ -73,7 +77,7 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
         header: 'Ambalaj',
         // Tur 4 P1: aynı ada sahip birden çok SKU (ör. "Badem İçeceği 1 Litrelik UHT" ×4) yalnızca
         // Ambalaj ile ayrışıyor — mobilde tamamen gizliyken 4 özdeş görünen kart oluşuyordu. SKU
-        // (subtitle) altında etiketsiz tek satır olarak kalır ("12 Adet").
+        // alt başlığından sonra aynı meta satırında etiketsiz kalır ("12 Adet").
         meta: { mobile: 'meta', width: 100 },
         cell: ({ getValue }) => getValue<string | null>() ?? <span className="text-muted-foreground/50">—</span>,
       },
@@ -91,20 +95,34 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
         // kesintisiz yeşil şerit, renk hiçbir ayırt edici bilgi taşımıyordu. Olağan durum (Aktif) artık
         // dolgusuz (yalnız nokta + metin); dolgulu rozet yalnızca istisnalara (Kullanım dışı) kalır.
         meta: { mobile: 'badge', width: 90 },
+        // Tur 9/10 P1 bulgusu (ana-veri-urunler-01): mobil kart 72.5px'e çıkıyordu (hedef ≤72) —
+        // fark tek başına bu rozetten geliyordu (100/100'e yakını "Aktif" — dolgusuz olsa bile 6px'lik
+        // nokta glifi satır 1'in yüksekliğini masaüstüyle aynı `<td>` bağlamında bile ölçülebilir
+        // biçimde artırıyordu). Masaüstü DEĞİŞMEDİ (`hidden md:inline-flex` — her satırda aynı rozet).
+        // Mobilde olağan durum ("Aktif") artık HİÇ basılmaz — zaten Tur 5 P1'den beri dolgusuz/nötr,
+        // sessiz kalması gereken bir "sıfır bilgi" değeri (bkz. yukarıdaki yorum); yalnızca istisnai
+        // durumlar (Taslak/Kullanım dışı) `md:hidden` ikinci düğümle mobil kartta görünür kalır.
         cell: ({ getValue }) => {
           const s = getValue<string>();
-          // Tur 5 P1 bulgusu: 100/100 satır "Aktif" — dolgusuz olsa bile `success` tonu (yeşil metin+nokta)
-          // sütun boyunca kesintisiz bir renkli şerit oluşturup sıfır ayırt edici bilgi taşıyordu (renk
-          // yalnızca anlam taşımalı). Olağan durum artık nötr; renk yalnızca istisnai durumlara ayrılır.
-          if (s === 'active') return <SubtleStatusBadge tone="muted" label="Aktif" />;
           // "Kullanım dışı" bir hata değil — paylaşılan sözlük (lib/status.ts) 'cancelled' için 'danger'
           // veriyor, burada nötr'e çevrilir (dosya ortak olduğu için değiştirilmedi, bkz. rapor).
-          return <StatusBadge status={s} kind="product" tone={s === 'cancelled' ? 'muted' : undefined} />;
+          const exceptionBadge = <StatusBadge status={s} kind="product" tone={s === 'cancelled' ? 'muted' : undefined} />;
+          const desktopNode = s === 'active' ? <SubtleStatusBadge tone="muted" label="Aktif" /> : exceptionBadge;
+          return (
+            <>
+              <span className="hidden md:inline-flex">{desktopNode}</span>
+              <span className="md:hidden">{s === 'active' ? null : exceptionBadge}</span>
+            </>
+          );
         },
       },
       {
         accessorKey: 'onHandQty',
         header: 'Eldeki Stok',
+        // Tur 9/10 P1 bulgusu — bkz. üstteki `sku` yorumu: kart yüksekliği bütçesi (≤72px) dar; satır 2
+        // zaten SKU (subtitle) + Ambalaj (meta) + Satış Fiyatı (metric) taşıyor — dördüncü bir alan
+        // (72.5px'e çıkardı) kartı hedefin üzerine itti. Eldeki Stok'a bilinçli olarak `mobile` verilmez;
+        // ürün detayına gidilince görünür kalır, masaüstü sütun değişmez.
         meta: { align: 'right', width: 130 },
         cell: ({ row }) => <QtyCell value={row.original.onHandQty} uom={row.original.uomCode} />,
       },
@@ -113,17 +131,20 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
       cols.push({
         accessorKey: 'averageCost',
         header: 'Birim Maliyet',
-        meta: { align: 'right', width: 120 },
+        // Kart yüksekliği bütçesi dar (hedef ≤72px) — ikincil/opsiyonel bir maliyet alanı mobil karta
+        // eklenmez (yalnızca `hasCost` true iken var olan bir sütun); masaüstünde/detay sayfasında
+        // erişilebilir kalır.
+        meta: { align: 'right', width: 120, mobile: 'hidden' },
         cell: ({ getValue }) => <MoneyCell value={getValue<string>()} muted />,
       });
     }
     cols.push({
       accessorKey: 'listPrice',
       header: 'Satış Fiyatı',
-      // Tur 4 P1: 390px'te tamamen düşüyordu — ürünün satış fiyatı mobilde hiçbir yerde görünmüyordu,
-      // kart başına tek alan (Eldeki Stok) kalıyordu. `mobile` bilinçli olarak boş bırakılır: partners-table
-      // 'balance'ı ve boms-table 'unitCost'u aynı şekilde etiketli alan satırına (Eldeki Stok ile yan
-      // yana) düşer — modül genelinde tek istisna olmaktan çıkarıldı.
+      // Tur 4 P1: 390px'te tamamen düşüyordu — ürünün satış fiyatı mobilde hiçbir yerde görünmüyordu.
+      // Tur 9/10 P1 bulgusu: o turdaki çözüm (etiketsiz "rest" satırı) kartı 118px'e çıkarıyordu.
+      // `mobile` kasıtlı olarak boş: sütun tanımında SONUNCU "rest" alan — shell (`mobile-cards.tsx`,
+      // Tur 10) bunu otomatik olarak kartın tek "metric"i (satır 2 sağı) seçer.
       meta: { align: 'right', width: 120 },
       cell: ({ getValue }) => <MoneyCell value={getValue<string>()} muted={getValue<string>() === '0'} />,
     });

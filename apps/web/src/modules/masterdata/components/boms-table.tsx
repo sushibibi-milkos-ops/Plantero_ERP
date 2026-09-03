@@ -14,14 +14,32 @@ import { BOM_STATUS_LABELS } from '../product-labels';
 export function BomsTable({ boms }: { boms: BomListRow[] }) {
   const columns = useMemo<ColumnDef<BomListRow, unknown>[]>(
     () => [
-      { accessorKey: 'sku', header: 'SKU', meta: { className: 'font-mono text-[12px]', width: 104 } },
-      { accessorKey: 'productName', header: 'Ürün', meta: { mobile: 'title', className: 'font-medium' } },
+      // Tur 9/10 P1 bulgusu: masaüstünde `productName`/`code` hiçbiri `width`/max-genişlik taşımıyordu
+      // — table-layout:auto'da leftover 1152px, ikisi arasında orantısız bölüşülüyor (Ürün 619px,
+      // içeriğin ~3 katı), satır ortasında ~420px ölü alan bırakıyordu. `productName`'e
+      // `products-table.tsx`'teki "Ürün Adı" ile AYNI teknik (`max-w-[Npx] truncate`, `width` YOK —
+      // table-layout:auto içerik genişliğine göre serbest kalır ama görsel olarak sabit üst sınırda
+      // kırpılır); `code` sabit `width` aldı — artık yalnızca tek bir "esnek" sütun var, sağ kenarlar
+      // hizalanır. Mobil kart yüksekliği ayrıca (shell) `mobile-cards.tsx`'in Tur 10 yeniden tasarımıyla
+      // ≤72px'e indi — `sku` "meta" rolünde `code` (subtitle) ile aynı 2. satırda, `unitCost` sütun
+      // sırasında son "rest" alan olduğu için otomatik "metric" (sağ üstte) olarak seçilir.
+      { accessorKey: 'sku', header: 'SKU', meta: { mobile: 'meta', className: 'font-mono text-[12px]', width: 104 } },
+      {
+        accessorKey: 'productName',
+        header: 'Ürün',
+        meta: { mobile: 'title', className: 'max-w-[280px] truncate font-medium' },
+        cell: ({ getValue }) => (
+          <span className="block max-w-[280px] truncate" title={getValue<string>()}>
+            {getValue<string>()}
+          </span>
+        ),
+      },
       {
         accessorKey: 'code',
         header: 'Reçete Kodu',
         // Birincil tanımlayıcı (SKU'dan sonra ikinci kimlik alanı) — text-muted-foreground'dan biraz
         // daha koyu, salt "ikincil bilgi" gibi görünmesin diye (Tur 3 P1 bulgusu).
-        meta: { mobile: 'subtitle', className: 'font-mono text-[12px] text-foreground/80' },
+        meta: { mobile: 'subtitle', className: 'font-mono text-[12px] text-foreground/80', width: 140 },
       },
       {
         accessorKey: 'status',
@@ -81,6 +99,9 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
         // Tur 5 P1 bulgusu (partners-table.tsx ile aynı sözleşme): sıfır maliyet ile "veri yok" farklı
         // anlamlar — hesaplanmış gerçek bir sıfır değil, henüz maliyetlendirilmemiş demektir; em dash bu
         // belirsizliği çözer, soluk "₺0,00" çözmez.
+        // `mobile` kasıtlı olarak boş: sütun tanımında SONUNCU "rest" alan — `mobile-cards.tsx` (shell,
+        // Tur 10) bunu otomatik olarak kartın tek "metric"i (satır 2 sağı, kendi text-[13px] sarmalayıcısıyla)
+        // seçer.
         cell: ({ getValue }) => {
           const v = getValue<string>();
           return Number(v) === 0 ? <EmptyCell /> : <MoneyCell value={v} digits={2} />;
