@@ -420,20 +420,27 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
         {/* `className` twMerge ile birleşir (cn/tailwind-merge) — üstte 4px'lik scrim (gradient) sızmayı
             engeller (paylaşılan form-actions.tsx dosyası değiştirilmedi, bkz. rapor "sharedComponentRequests").
             Tur 4 P1 bulgusu: 390px'te yardımcı metin ("Kimlik segmentlerini tamamlayın…") 3 satıra
-            sarıyor, `justify-end` düzeninde iki butona ~150px kalıp şerit ~64px'e çıkıyordu. Mobilde
-            dikey yığın (yardımcı metin ÜSTTE, tek satıra kırpılmış; butonlar ALTTA tam genişlik) —
-            ≥sm'de eski yatay/sağa-yaslı düzene döner. */}
+            sarıyor, `justify-end` düzeninde iki butona ~150px kalıp şerit ~64px'e çıkıyordu — bu tur 5
+            (dikey yığın) düzeltmesi tek satıra indirmeyi başaramadı ve şerit 151px'e, "PP — Ambalaj"
+            alanının tamamen üstüne çıktı (Tur 11 P1 bulgusu). Kök neden: yardımcı metin + iki tam
+            genişlik buton üç ayrı satır. Artık mobilde yardımcı metin tamamen gizli (span'lerin kendi
+            `hidden sm:line-clamp-1` sınıfı) — SKU tamamlanma durumu zaten üstteki yapışkan önizleme
+            şeridinde (dolu/boş segment, "Boş kod"/"Çakışma" rozeti) görünüyor ve gönderim denemesinde
+            toast ile tekrarlanıyor; "Vazgeç"/"Ürünü oluştur" tek satırda yan yana (flex-1). Sonuç: tek
+            satır buton şeridi, pt-2/pb-2 ile 390x844'te ~61px (hedef <=64px), scroll=0'da hiçbir alanı
+            örtmüyor. ≥sm'de yardımcı metin + eski dolgu geri döner (masaüstü düzeni değişmedi). */}
         <FormActions
           pending={form.formState.isSubmitting}
           submitLabel="Ürünü oluştur"
           disabled={!skuComplete || skuState.conflict}
-          className="flex-col items-stretch gap-2 before:absolute before:-top-4 before:left-0 before:h-4 before:w-full before:bg-gradient-to-t before:from-background before:to-transparent max-sm:[&>button]:w-full sm:flex-row sm:items-center sm:justify-end"
+          className="gap-2 before:absolute before:-top-4 before:left-0 before:h-4 before:w-full before:bg-gradient-to-t before:from-background before:to-transparent max-sm:pt-2 max-sm:pb-2 max-sm:[&>button]:flex-1"
         >
-          {/* CTA disabled iken neyin eksik olduğunu söyler — önceden yalnızca gri bir düğme vardı. */}
+          {/* CTA disabled iken neyin eksik olduğunu söyler — masaüstünde görünür; mobilde şerit
+              yüksekliğini korumak için gizli (yukarıdaki not). */}
           {skuState.conflict ? (
-            <span className="text-[12px] text-[oklch(0.5_0.14_70)] line-clamp-1 dark:text-warning">Kod çakışıyor — segmentleri değiştirin</span>
+            <span className="hidden text-[12px] text-[oklch(0.5_0.14_70)] dark:text-warning sm:line-clamp-1">Kod çakışıyor — segmentleri değiştirin</span>
           ) : !skuComplete ? (
-            <span className="line-clamp-1 text-[12px] text-muted-foreground">Kimlik segmentlerini tamamlayın (T·AA·BB·CC·PP)</span>
+            <span className="hidden text-[12px] text-muted-foreground sm:line-clamp-1">Kimlik segmentlerini tamamlayın (T·AA·BB·CC·PP)</span>
           ) : null}
           <Button type="button" variant="ghost" onClick={() => router.back()}>
             Vazgeç

@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Form, FormText, FormSelect, FormCheckbox } from '@/components/form/fields';
 import { FormActions } from '@/components/form/form-actions';
-import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyCell } from '@/components/empty-cell';
@@ -26,12 +25,24 @@ import type { LocationTreeNode } from '@plantero/core';
 // 4+ farklı renge dönüşüyordu (amber/mavi/kırmızı-dolgusuz/kırmızı-dolgulu/amber/yeşil) — sütun
 // gökkuşağa dönüp renk hiçbir anlam ayrımı taşımaz hale geliyordu. Artık TÜM varyantlar nötr dolgulu
 // gövde (bg-muted/40 + text-foreground/80) paylaşır; anlam yalnızca 6px'lik renkli noktadadır.
-// Dolgulu kırmızı (gerçek "engellenmiş" anlamı) yalnızca 'rejected' için saklanır — o TEK istisna
-// StatusBadge'in kendi 'danger' varyantını kullanmaya devam eder.
+//
+// Tur 11 P1 bulgusu (ana-veri-depolar-04): 'production' burada `bg-success` (yeşil) — yeşil aynı
+// zamanda markanın vurgu/birincil eylem rengi (`--primary` ve `--success` `globals.css`'te aynı hue
+// 152'yi paylaşır). Depo kullanım tipi bir başarı durumu değil; artık `bg-info` (mavi) kullanır —
+// mevcut paletten, success/primary DIŞINDA, `transit` ile aynı hue olsa da (quarantine/inventory_loss
+// de zaten aynı amber'ı paylaşıyor, bu modülde önceden de kabul edilmiş bir örüntü) anlam yeşilin tek
+// sahibi (başarı/birincil eylem) olmasıyla korunur.
+//
+// Tur 11 P1 bulgusu (ana-veri-depolar-05): 'rejected' TEK BAŞINA dolgulu `StatusBadge` (bg-destructive/10
+// + border) kullanıyordu, sütundaki diğer 8 durum dolgusuz nokta+metin — sütunda iki farklı rozet
+// anatomisi. Artık 'rejected' de aynı dolgusuz nokta+metin anatomisini paylaşır (bkz. `UsageBadge`),
+// yalnızca nokta VE metin rengi `text-destructive`/`bg-destructive` ile ayrışır — anlam hâlâ net,
+// anatomi tek.
 const USAGE_DOT: Record<string, string> = {
-  quarantine: 'bg-warning', production: 'bg-success', supplier: 'bg-muted-foreground/60', customer: 'bg-muted-foreground/60',
-  inventory_loss: 'bg-warning', scrap: 'bg-destructive', transit: 'bg-info', view: 'bg-muted-foreground/60',
+  quarantine: 'bg-warning', production: 'bg-info', supplier: 'bg-muted-foreground/60', customer: 'bg-muted-foreground/60',
+  inventory_loss: 'bg-warning', scrap: 'bg-destructive', transit: 'bg-info', view: 'bg-muted-foreground/60', rejected: 'bg-destructive',
 };
+const USAGE_TEXT: Record<string, string> = { rejected: 'text-destructive' };
 
 /** Data satırıyla başlık şeridinin tam aynı sütun genişliklerini paylaşması için ortak sabitler. */
 // Tur 5 P1: qty 128px → 160px — görünür "Miktar (karma)" etiketi + bilgi ikonu artık tek satıra sığar
@@ -42,11 +53,8 @@ const COL = { badge: 'w-24 shrink-0', qty: 'w-40 shrink-0 pr-3 text-right', valu
 function UsageBadge({ usage }: { usage: string }) {
   if (usage === 'internal') return null;
   const label = LOCATION_USAGE_LABELS[usage] ?? usage;
-  if (usage === 'rejected') {
-    return <StatusBadge status={usage} label={label} tone="danger" size="sm" />;
-  }
   return (
-    <span className="inline-flex h-5 shrink-0 items-center gap-1.5 rounded-full border border-transparent bg-muted/40 px-2 text-[11px] font-medium whitespace-nowrap text-foreground/80">
+    <span className={cn('inline-flex h-5 shrink-0 items-center gap-1.5 rounded-full border border-transparent bg-muted/40 px-2 text-[11px] font-medium whitespace-nowrap', USAGE_TEXT[usage] ?? 'text-foreground/80')}>
       <span aria-hidden className={cn('size-1.5 rounded-full', USAGE_DOT[usage] ?? 'bg-muted-foreground/60')} />
       {label}
     </span>
@@ -112,9 +120,10 @@ function Node({
           <span className="hidden min-w-0 truncate text-[12px] text-muted-foreground sm:inline">{node.name}</span>
         </div>
         <span className={COL.badge}>{usageBadge}</span>
-        <span className={cn(COL.qty, 'text-[13px]')}>
-          <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
-        </span>
+        {/* Tur 11 P1 bulgusu (ana-veri-depolar-06): Miktar her zaman "0,00" (QtyCell) basıyordu, Değer
+            sıfırken EmptyCell "—" — aynı satırda sıfır iki farklı biçimde görünüyordu. Artık ikisi de
+            aynı kuralı paylaşır: sıfırsa EmptyCell. */}
+        <span className={cn(COL.qty, 'text-[13px]')}>{Number(node.totalQty) === 0 ? <EmptyCell /> : <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />}</span>
         <span className={cn(COL.value, 'text-[13px]')}>{Number(node.totalValue) === 0 ? <EmptyCell /> : <MoneyCell value={node.totalValue} />}</span>
         {/* Tur 5 P1 bulgusu: `opacity-0 group-hover:opacity-100` yalnızca fare hover'ında görünürdü —
             klavye (Tab) ve dokunmatik ekranlarda bu iki satır eylemi hiç erişilemezdi. Paylaşılan
@@ -174,31 +183,26 @@ function Node({
             {usageBadge}
           </div>
           <div className="flex items-baseline justify-between gap-2">
-            <span className="min-w-0 truncate text-[11px] text-muted-foreground">{node.name}</span>
-            {/* `num` + `gap-3`: miktar ve değer arasında sabit bir boşluk garanti eder — flex `gap`
-                yalnızca kutular arası boşluk bırakır, aralarında görünür bir ayraç yoksa (Tur 3 P1
-                bulgusu) iki tabular-nums string yan yana tek sayı gibi okunabiliyordu. Tur 4 P1: başlık
-                şeridi 640px altında tamamen gizlendiği için hangi sayının miktar/değer olduğu hâlâ
-                belirsizdi — her sayının önüne 10px etiket eklendi. Tur 5 P1 bulgusu: "Mik" bir sözcük
-                değildi (yanındaki "Değer" tam yazılıyordu — tutarsız kısaltma) VE iki değer ortak bir
-                sağ raya yaslanmadığı için satırlar arasında karşılaştırılamıyordu — sabit genişlikli
-                `grid-cols-2` ile ikisi de kendi sütununda sağa yaslanır, aynı derinlikteki tüm satırlarda
-                aynı x'te durur. Tur 9/10 P0 bulgusu: sabit 100px track genişliği 4+ haneli miktar/tutarda
-                (ör. "₺1.095.015,80" + "Değer" etiketi ≈122px) taşıp komşu hücrenin üzerine biniyordu —
-                grid iki sabit track'e böldüğü için taşan içerik gizlenmek yerine üst üste çiziliyordu.
-                `grid-cols-2` yerine dikey `flex-col items-end`: iki metrik artık alt alta, her satır
-                kendi genişliğine göre ölçülür (`w-52` sabiti kaldırıldı) ve `items-end` sağ kenarı ortak
-                rayda tutar — hiçbir genişlikte glif çakışması oluşmaz. */}
-            <div className="flex shrink-0 flex-col items-end gap-0.5 text-[12px]">
-              <span className="inline-flex items-baseline gap-1">
-                <span className="text-[10px] font-normal text-muted-foreground">Miktar</span>
-                <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
+            {/* Tur 11 P1 bulgusu (ana-veri-depolar-04): ad `text-[11px]` idi — mobilde gövde tipografisi
+                13px'e hiç ulaşmıyordu (masaüstünde aynı ad 12/13px). Artık 13px, masaüstü gövdesiyle
+                aynı kademe.
+                Tur 11 P1 bulgusu (ana-veri-depolar-08, "kurumsal-sıkıcı" kokusu): her satırda tekrar eden
+                "Miktar"/"Değer" 10px etiket çiftleri (2 depo × 22 satır = 44 etiket) kaldırıldı — sütun
+                anlamı artık `LocationTree`'nin gövdenin en üstünde BİR KEZ bastığı mobil ipucunda
+                (`MİKTAR · DEĞER`, aşağıda). Satırda yalnızca değerler kalır (Tur 3-10 tarihindeki "Mik"
+                kısaltması / grid-cols-2 taşması / glif çakışması denemeleri artık gereksiz — sabit
+                genişlikli iki-track ızgara yerine tek satırlık `flex items-baseline` yeterli, kırpılacak
+                uzun bir etiket yok).
+                Tur 11 P1 bulgusu (ana-veri-depolar-06): Miktar her zaman "0,00" basıyordu, Değer sıfırken
+                "—" — aynı satırda sıfır iki farklı biçimde. İkisi de artık aynı kuralı paylaşır. */}
+            <span className="min-w-0 truncate text-[13px] text-muted-foreground">{node.name}</span>
+            <span className="num flex shrink-0 items-baseline gap-1 text-[13px]">
+              {Number(node.totalQty) === 0 ? <EmptyCell /> : <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />}
+              <span aria-hidden className="text-muted-foreground/40">
+                ·
               </span>
-              <span className="inline-flex items-baseline gap-1">
-                <span className="text-[10px] font-normal text-muted-foreground">Değer</span>
-                {Number(node.totalValue) === 0 ? <EmptyCell className="num" /> : <MoneyCell value={node.totalValue} />}
-              </span>
-            </div>
+              {Number(node.totalValue) === 0 ? <EmptyCell /> : <MoneyCell value={node.totalValue} />}
+            </span>
           </div>
         </div>
       </div>
@@ -326,6 +330,13 @@ export function LocationTree({ warehouseId, tree, canManage }: { warehouseId: st
         {/* Etiket + (varsa) ekle simgeleriyle aynı toplam genişlik — satırlarla hizalansın diye */}
         <span className="shrink-0" style={{ width: canManage ? 64 : 28 }} />
       </div>
+      {/* Tur 11 P1 bulgusu (ana-veri-depolar-08): mobilde yukarıdaki başlık şeridi tamamen gizlenir
+          (`sm:flex`), sütun anlamı önceden HER satırda "Miktar"/"Değer" 10px etiketleriyle tekrarlanıyordu
+          (2 depo × 22 satır = 44 etiket). Sütun ipucu artık ağaç başına yalnızca BİR KEZ, sağ üstte —
+          satırlarda (bkz. `Node`) çıplak değerler kalır. */}
+      {tree.length > 0 ? (
+        <div className="mb-1 px-2 text-right text-[11px] font-medium tracking-wide text-muted-foreground/80 uppercase sm:hidden">Miktar · Değer</div>
+      ) : null}
       {filtered.length === 0 ? (
         <EmptyState compact title="Eşleşen lokasyon yok" description="Aramayı ya da yazımı değiştirmeyi deneyin." />
       ) : (

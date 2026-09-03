@@ -103,7 +103,11 @@ export default async function PartnerDetailPage({ params, searchParams }: { para
         title={partner.name}
         description={
           <span className="inline-flex flex-wrap items-center gap-2">
-            <StatusBadge status={partner.isActive ? 'active' : 'inactive'} />
+            {/* Tur 11 P1 bulgusu (ana-veri-cari-detay-03): "Aktif" `lib/status.ts`'te success (yeşil)
+                tonunda — sayfada zaten marka/birincil buton, "Kaydedildi" ve "Tahsil edildi" de yeşil
+                taşıyordu (4 ayrı anlam). `lib/status.ts` paylaşılan (değiştirilmedi); nötrleştirme bu
+                ÇAĞRI NOKTASINDA `tone` prop'uyla yapılır — "Pasif" zaten `muted` (değişmedi). */}
+            <StatusBadge status={partner.isActive ? 'active' : 'inactive'} tone={partner.isActive ? 'muted' : undefined} />
             <span className="font-mono text-[12px]">{partner.code}</span>
           </span>
         }
