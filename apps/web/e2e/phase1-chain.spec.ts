@@ -259,7 +259,12 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
 
     await operatorPinLogin(op);
 
-    await op.getByText('HAT3').click();
+    // "HAT3" metni ekranda iki kez geçer: hat kartının kod satırı (bkz. `getByRole('link', …)`)
+    // ve — yalnızca lg (≥1024px) kırılımında görünen — "Vardiya özeti" şeridindeki hat kodu
+    // (`apps/web/src/app/(operator)/operator/page.tsx`, satır ~166). İkisi de aynı anda DOM'da;
+    // bu kasıtlı bir tasarım (özet şerit CSS `lg:block` ile gizlenir), test hatası değil — bu
+    // yüzden gerçek kart bağlantısı erişilebilir isimle (`role="link"`) hedeflenir.
+    await op.getByRole('link', { name: /HAT3/ }).click();
     await op.waitForURL(/\/operator\//);
     await expect(op.getByRole('heading', { name: 'Oat Coffee Creamer' })).toBeVisible();
     await expect(op.getByText(ctx.woDocNo!)).toBeVisible();
@@ -329,8 +334,13 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
 
     await page.goto(`/uretim/is-emirleri/${ctx.woId}`);
     await page.getByRole('tab', { name: 'Maliyet' }).click();
-    await expect(page.getByText('Toplam maliyet')).toBeVisible();
-    await expect(page.getByText(/^%9[0-9]$/, { exact: true })).toBeVisible();
+    // "Verim" yüzdesi ekranda İKİ yerde aynı anda durur: sayfa başlığındaki her zaman görünen
+    // StatCell ve — sekme aktifken — Maliyet sekmesinin kendi "Verim" kutusu
+    // (`work-order-tabs.tsx`, satır ~213-215). Bu kasıtlı bir tekrar (tasarım), test hatası
+    // değil — bu yüzden aktif `tabpanel` içine daraltılır.
+    const costPanel = page.getByRole('tabpanel', { name: 'Maliyet' });
+    await expect(costPanel.getByText('Toplam maliyet')).toBeVisible();
+    await expect(costPanel.getByText(/^%9[0-9]$/, { exact: true })).toBeVisible();
   });
 
   test('Adım 3 — /satis/siparisler/yeni: toptan müşteri, Oat Coffee Creamer × 10, fiyat kaynağı rozeti → Onayla', async () => {
