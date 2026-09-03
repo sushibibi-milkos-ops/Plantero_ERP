@@ -19,6 +19,7 @@ function ProgressDot({ pct, label }: { pct: number; label: string }) {
   return (
     <span
       title={`${label}: %${pct}`}
+      aria-label={`${label === 'T' ? 'Teslim' : 'Fatura'}: yüzde ${pct}`}
       className={cn(
         'grid size-4 shrink-0 place-items-center rounded-full text-[9px] font-semibold tabular-nums',
         state === 'full' && 'bg-primary text-primary-foreground',
@@ -42,7 +43,9 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
         cell: ({ row }) => <span className="block max-w-44 truncate" title={row.original.partnerName}>{row.original.partnerName}</span>,
       },
       {
-        id: 'channelName', accessorFn: (r) => r.channelName, header: 'Kanal', meta: { width: 100, mobile: 'hidden' },
+        // Mobil kartta tamamen düşürülmek yerine ' · ' ile alt başlığın yanına eklenir (bkz.
+        // DataTableMobileCards `meta` rolü) — desktop'ta kanal bilgisi kartta hiç görünmüyordu.
+        id: 'channelName', accessorFn: (r) => r.channelName, header: 'Kanal', meta: { width: 100, mobile: 'meta' },
         cell: ({ row }) => (
           <span className="inline-flex max-w-full items-center gap-1.5">
             <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: row.original.channelColor ?? 'var(--muted-foreground)' }} />
@@ -59,7 +62,12 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
       cols.push(
         { id: 'externalOrderNo', accessorFn: (r) => r.externalOrderNo ?? '', header: 'Dış no', meta: { width: 100, mobile: 'hidden', className: 'font-mono text-xs' }, cell: ({ row }) => row.original.externalOrderNo ?? '—' },
         {
-          id: 'progress', header: 'İlerleme', enableSorting: false, meta: { width: 64, mobile: 'hidden' },
+          // Sütun başlığı sırasız olduğundan (enableSorting:false) DataTableColumnHeader'ın
+          // sıralanabilir sarmalayıcısını atlayıp özel bir başlık veriyoruz: `title` ile ipucu
+          // (60 satırda 2 harfli rozetin anlamı hiçbir yerde açıklanmıyordu).
+          id: 'progress',
+          header: () => <span title="T = teslim yüzdesi, F = fatura yüzdesi" className="cursor-help border-b border-dotted border-muted-foreground/40">İlerleme</span>,
+          enableSorting: false, meta: { width: 64, mobile: 'hidden' },
           cell: ({ row }) => (
             <div className="flex items-center gap-1">
               <ProgressDot pct={row.original.deliveredPct} label="T" />
@@ -67,12 +75,17 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
             </div>
           ),
         },
-        { id: 'netRevenue', accessorFn: (r) => r.netRevenue, header: 'Net ciro', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.netRevenue} currency={row.original.currency} /> },
+        // width 140: ₺999.999,99 (10 karakter, tabular-nums) + sağ iç boşluk sığar — 110px'te son
+        // hane sağdaki sabitlenmiş "Genel toplam" hücresinin opak zemininin altında kırpılıyordu.
+        { id: 'netRevenue', accessorFn: (r) => r.netRevenue, header: 'Net ciro', meta: { align: 'right', width: 140 }, cell: ({ row }) => <MoneyCell value={row.original.netRevenue} currency={row.original.currency} /> },
       );
     }
     cols.push({
+      // Sabitleme (sticky + opak zemin) yalnızca tablo gerçekten yatay taştığında DataTable
+      // tarafından uygulanır (meta.pinRight, bkz. data-table.tsx `scrollable` ölçümü) — taşmayan
+      // genişlikte başlıkta kaza eseri gri dikdörtgen bırakmaz.
       id: 'grandTotal', accessorFn: (r) => r.grandTotal, header: 'Genel toplam',
-      meta: { align: 'right', width: 120, className: 'sticky right-0 bg-card', headerClassName: 'sticky right-0 bg-muted/40' },
+      meta: { align: 'right', width: 120, pinRight: true },
       cell: ({ row }) => <MoneyCell value={row.original.grandTotal} currency={row.original.currency} />,
     });
     return cols;

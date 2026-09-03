@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   flexRender,
@@ -178,6 +178,34 @@ export function DataTable<T>({
   const rows = table.getRowModel().rows;
   const visibleCols = table.getVisibleLeafColumns();
   const filtered = Boolean(globalFilter) || columnFilters.length > 0;
+  const totalFiltered = table.getFilteredRowModel().rows.length;
+  // Tek sayfaya sığan bir sonuç kümesinde "Sayfa başına 50" seçici + "1–4 / 4" sayacı salt gürültü —
+  // tıklanamaz gezinme zaten DataTablePagination içinde gizleniyordu, şerit gösterme kararını burada
+  // (toplam <= geçerli sayfa boyutu) taşıyoruz ki 4 kayıtlık bir listede hiç sayfalama şeridi çizilmesin.
+  const showPagination = usePagination && totalFiltered > table.getState().pagination.pageSize;
+
+  // `meta.pinRight` sütunları (ör. "Genel toplam") yalnızca tablo GERÇEKTEN yatay taşarken
+  // sabitlenir — sabit width'li dar bir sütuna sürekli sticky + opak zemin uygulamak, taşma
+  // olmasa bile başlıkta/satırda kaza eseri bir dikdörtgen bırakıyordu (Tur 2 bulgusu). Kapsayıcının
+  // (`scrollWidth > clientWidth`) hem kendisi (pencere/kenar çubuğu genişlemesi) hem de içindeki
+  // <table> (sütun görünürlüğü, veri, arama sonucu değişince genişlik) izlenir.
+  const scrollWrapRef = useRef<HTMLDivElement>(null);
+  const [scrollable, setScrollable] = useState(false);
+  useEffect(() => {
+    const el = scrollWrapRef.current;
+    if (!el) {
+      setScrollable(false);
+      return;
+    }
+    const check = () => setScrollable(el.scrollWidth - el.clientWidth > 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    const tableEl = el.querySelector('table');
+    if (tableEl) ro.observe(tableEl);
+    return () => ro.disconnect();
+  }, [rows.length, visibleCols.length]);
+  const pinRightClass = (pin: boolean | undefined) => pin && scrollable && 'sticky right-0 bg-card';
 
   const headerRow = () => (
     <tr className="border-b border-border/60 bg-muted/40">
@@ -193,6 +221,7 @@ export function DataTable<T>({
                 'h-9 px-3 text-left align-middle text-[12px] font-medium whitespace-nowrap text-muted-foreground',
                 meta?.align === 'right' && 'text-right',
                 meta?.align === 'center' && 'text-center',
+                pinRightClass(meta?.pinRight),
                 meta?.headerClassName,
               )}
             >
@@ -214,6 +243,7 @@ export function DataTable<T>({
             'h-9 px-3 align-middle text-[13px] whitespace-nowrap',
             meta?.align === 'right' && 'text-right',
             meta?.align === 'center' && 'text-center',
+            pinRightClass(meta?.pinRight),
             meta?.className,
           )}
         >
@@ -275,7 +305,7 @@ export function DataTable<T>({
         filters={filters}
         columnToggle={columnToggle}
         extra={toolbarExtra}
-        total={table.getFilteredRowModel().rows.length}
+        total={totalFiltered}
       />
 
       {/* Masaüstü tablo — Linear tabloyu kutuya koymaz: sayfa zemininde yalnızca satır altı hairline
@@ -303,7 +333,7 @@ export function DataTable<T>({
             itemContent={(_i, row) => rowCells(row)}
           />
         ) : (
-          <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
+          <div ref={scrollWrapRef} className="scrollbar-thin scroll-fade-x overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>{headerRow()}</thead>
               <tbody>{rows.map(bodyRow)}</tbody>
@@ -328,7 +358,7 @@ export function DataTable<T>({
         </div>
       ) : null}
 
-      {usePagination ? <DataTablePagination table={table} /> : null}
+      {showPagination ? <DataTablePagination table={table} /> : null}
     </div>
   );
 }

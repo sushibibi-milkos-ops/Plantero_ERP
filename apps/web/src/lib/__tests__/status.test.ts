@@ -31,7 +31,9 @@ describe('lib/status — ton çakışması yok', () => {
     // dışı) ton taşıyabilir — aksi halde iki durum yine göz için aynı yeşil olur.
     const strongTones = [info('confirmed').tone, info('delivered').tone, info('invoiced').tone].filter((t) => t !== 'muted' && t !== 'neutral');
     expect(strongTones.length).toBeLessThanOrEqual(1);
-    expect(info('delivered').tone).toBe('success');
+    // Tur 2 bulgusu: bu üçlüdeki TEK güçlü ton en ileri aşamaya (invoiced) ait olmalı — Tur 1'de
+    // keyfi olarak `delivered`'a verilmişti ve "Faturalandı gri, Sevk edildi yeşil" ters okunuyordu.
+    expect(info('invoiced').tone).toBe('success');
   });
 
   it('opportunity: fırsat aşama kodları (seed/sales.ts STAGES ile birebir) Türkçe etiketlenir', () => {

@@ -99,14 +99,19 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
   // draft/sent/confirmed/invoiced/closed/lost "sessiz" gri ailesinde (muted/neutral, tekrar
   // serbest — henüz fiziksel bir şey olmamış ya da idari/kapanış durumları); accepted (mavi),
   // partially_delivered (amber), delivered (tek yeşil), cancelled (kırmızı) kendi rengini taşır.
+  // Tur 2 bulgusu: "Faturalandı" (invoiced) gri, "Sevk edildi" (delivered) yeşil görünüyordu — oysa
+  // faturalandı süreçte daha ileri bir aşama, en güçlü/"bitti" tonu daha ileri duruma ait olmalı.
+  // confirmed/delivered/invoiced üçlüsünde YİNE en fazla biri güçlü ton taşıyabilir (aksi halde
+  // Tur 1'deki üç-durum-aynı-yeşil çakışması geri döner, bkz. status.test.ts) — güçlü tonu
+  // `delivered`'dan `invoiced`'a taşıyoruz (delivered artık ara/nötr, invoiced tek "success").
   sales_order: {
     draft: { label: 'Taslak', tone: 'muted' },
     sent: { label: 'Teklif gönderildi', tone: 'neutral' },
     accepted: { label: 'Kabul edildi', tone: 'info' },
     confirmed: { label: 'Sipariş onaylı', tone: 'neutral' },
     partially_delivered: { label: 'Kısmen sevk', tone: 'warning' },
-    delivered: { label: 'Sevk edildi', tone: 'success' },
-    invoiced: { label: 'Faturalandı', tone: 'neutral' },
+    delivered: { label: 'Sevk edildi', tone: 'neutral' },
+    invoiced: { label: 'Faturalandı', tone: 'success' },
     closed: { label: 'Kapalı', tone: 'neutral' },
     cancelled: { label: 'İptal', tone: 'danger' },
     lost: { label: 'Kaybedildi', tone: 'neutral' },
