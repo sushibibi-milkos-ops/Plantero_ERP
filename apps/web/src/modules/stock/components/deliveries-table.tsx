@@ -23,14 +23,8 @@ function effectiveDate(r: DeliveryRow): string | null {
 }
 
 export function DeliveriesTable({ deliveries }: { deliveries: DeliveryRow[] }) {
-  // "Satır" neredeyse her satırda "1" taşıyordu — bilgi taşımayan bir sütun tabloyu genişletmemeli
-  // (stock-table.tsx'teki tek-değerli-sütun-düşürme kuralıyla aynı, Tur 3 P2 bulgusu). Gerçekten
-  // birden fazla satırlı belge varsa (≥2 farklı değer) sütun geri döner.
-  const showLineCount = useMemo(() => new Set(deliveries.map((d) => d.lineCount)).size > 1, [deliveries]);
-
   const columns = useMemo<ColumnDef<DeliveryRow, unknown>[]>(
-    () => {
-      const cols: ColumnDef<DeliveryRow, unknown>[] = [
+    () => [
       { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Belge no', meta: { mobile: 'title', className: 'font-mono' } },
       { accessorKey: 'partnerName', header: 'Müşteri', meta: { mobile: 'subtitle' } },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 140, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="delivery" /> },
@@ -65,18 +59,18 @@ export function DeliveriesTable({ deliveries }: { deliveries: DeliveryRow[] }) {
       // Lot maliyeti × toplanan miktar (SMM'in temeli); satış fiyatı değil (irsaliye bir depo belgesi).
       { accessorKey: 'value', header: 'Tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => (SHIPPED_STATUSES.has(row.original.status) ? <MoneyCell value={row.original.value} /> : <EmptyCell />) },
       { accessorKey: 'carrier', header: 'Kargo', meta: { mobile: 'hidden' }, cell: ({ row }) => row.original.carrier ?? '—' },
-      ];
-      if (showLineCount) {
-        cols.splice(4, 0, { accessorKey: 'lineCount', header: 'Satır', meta: { align: 'right', width: 44, mobile: 'hidden' } });
-      }
-      return cols;
-    },
-    [showLineCount],
+      // Kök neden (Tur 5 P2): önceki "≥2 farklı değer varsa göster" sezgisi sayfalama ile kırılıyordu —
+      // görünür sayfadaki TÜM satırlar "1" basabiliyordu (farklı değer başka bir sayfadaysa), sütun
+      // fiilen sıfır bilgi taşıyor ama ~90px yer kaplıyordu. Artık her zaman tanımlı ama varsayılan
+      // GİZLİ (warehouseCode/carrier ile aynı desen) — gerektiğinde sütun seçiciden açılır.
+      { accessorKey: 'lineCount', header: 'Satır', meta: { align: 'right', width: 44, mobile: 'hidden' } },
+    ],
+    [],
   );
 
-  // Depo (tek depo, hep aynı değer) ve Kargo çoğu satırda boş/tek değerli — varsayılan gizli,
-  // sütun menüsünden açılabilir. Sevk tarihi ve Tutar artık her zaman görünür (P1 bulgusu).
-  const initialColumnVisibility = { warehouseCode: false, carrier: false };
+  // Depo (tek depo, hep aynı değer), Kargo (çoğu satırda boş) ve Satır (Tur 5 P2 bulgusu) varsayılan
+  // gizli, sütun menüsünden açılabilir. Sevk tarihi ve Tutar her zaman görünür (P1 bulgusu).
+  const initialColumnVisibility = { warehouseCode: false, carrier: false, lineCount: false };
 
   const filters: DataTableFilter[] = [{ columnId: 'status', title: 'Durum', options: statusOptions('delivery') }];
 

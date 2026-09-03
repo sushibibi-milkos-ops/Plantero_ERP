@@ -2,7 +2,8 @@
 
 import { useMemo } from 'react';
 import { Lock } from 'lucide-react';
-import { DetailFieldGroups, type DetailFieldGroup } from '@/components/detail-fields';
+import type { DetailFieldGroup } from '@/components/detail-fields';
+import { DetailFieldGroupsGrid } from '@/components/detail-field-groups-grid';
 import { formatDate, formatMoney, formatPct } from '@/lib/format';
 
 const COST_METHOD_LABELS: Record<string, string> = { lot: 'Lot bazlı', average: 'Hareketli ortalama', standard: 'Standart maliyet' };
@@ -92,13 +93,14 @@ export function ProductGeneralTab({
 
   return (
     <div className="max-w-[1080px] space-y-6">
+      {/* Tur 5 P1 bulgusu: SKU üç kez tekrarlanıyordu — PageHeader description'ında, bu şeritte ("SKU: …")
+          ve aşağıdaki "Kayıt" grubunda ("Kısa kod: …"in yanında). 390px'te bu üç tekrar ilk ~350px dikey
+          alana sıkışıyordu. Şerit artık yalnızca gerçekte başka hiçbir yerde görünmeyen tek bilgiyi taşır:
+          kilit durumu + eski SKU (varsa). Güncel SKU zaten sayfa başlığında. */}
       <div className="rounded-lg border border-border/60 bg-muted/20 px-4 py-3">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px]">
           <span className="inline-flex items-center gap-1.5 text-muted-foreground">
             <Lock className="size-3" /> Ad ve barkod kilitli
-          </span>
-          <span>
-            SKU: <span className="font-mono">{p.sku}</span>
           </span>
           {p.oldSku ? (
             <span className="text-muted-foreground">
@@ -108,7 +110,7 @@ export function ProductGeneralTab({
         </div>
       </div>
 
-      <DetailFieldGroups groups={groups} />
+      <DetailFieldGroupsGrid groups={groups} />
 
       {p.note ? (
         <div>

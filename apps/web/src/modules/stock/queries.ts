@@ -417,13 +417,29 @@ export async function getTransferDetail(id: string) {
 /* /depo/sayim                                                          */
 /* ==================================================================== */
 
-export type CountRow = { id: string; docNo: string; status: string; warehouseCode: string; countDate: string; lineCount: number; varianceValue: string };
+// `systemValue` (Tur 5 P2): sayım farkı rengini bir tolerans eşiğine (|fark| / sistem değeri) göre
+// karar verebilmek için — varianceValue tek başına büyüklüğü (küçük bir depo için normal mi, yoksa
+// gerçek bir tutarsızlık mı olduğunu) anlatmaz. `count_lines.system_qty × unit_cost` toplamı sayım
+// anındaki referans stok değeridir (bkz. counts-table.tsx).
+export type CountRow = { id: string; docNo: string; status: string; warehouseCode: string; countDate: string; lineCount: number; varianceValue: string; systemValue: string };
 
 export async function listCounts(): Promise<CountRow[]> {
   const rows = await db.select({ c: stockCounts, warehouseCode: warehouses.code }).from(stockCounts).innerJoin(warehouses, eq(warehouses.id, stockCounts.warehouseId)).orderBy(desc(stockCounts.createdAt));
-  const lineAgg = await db.select({ countId: stockCountLines.countId, cnt: sql<string>`count(*)` }).from(stockCountLines).groupBy(stockCountLines.countId);
-  const byCount = new Map(lineAgg.map((r) => [r.countId, Number(r.cnt)]));
-  return rows.map((r) => ({ id: r.c.id, docNo: r.c.docNo, status: r.c.status, warehouseCode: r.warehouseCode, countDate: r.c.countDate, lineCount: byCount.get(r.c.id) ?? 0, varianceValue: r.c.varianceValue }));
+  const lineAgg = await db
+    .select({ countId: stockCountLines.countId, cnt: sql<string>`count(*)`, systemValue: sql<string>`coalesce(sum(${stockCountLines.systemQty} * ${stockCountLines.unitCost}), 0)` })
+    .from(stockCountLines)
+    .groupBy(stockCountLines.countId);
+  const byCount = new Map(lineAgg.map((r) => [r.countId, { cnt: Number(r.cnt), systemValue: r.systemValue }]));
+  return rows.map((r) => ({
+    id: r.c.id,
+    docNo: r.c.docNo,
+    status: r.c.status,
+    warehouseCode: r.warehouseCode,
+    countDate: r.c.countDate,
+    lineCount: byCount.get(r.c.id)?.cnt ?? 0,
+    varianceValue: r.c.varianceValue,
+    systemValue: byCount.get(r.c.id)?.systemValue ?? '0',
+  }));
 }
 
 export async function getCountDetail(id: string) {

@@ -221,8 +221,12 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
           </div>
         </div>
 
+        {/* Tur 5 P1 bulgusu: bölüm başlığı (h2) ve alan etiketi (FieldLabel, form/fields.tsx) aynı 13px
+            punto kullanıyordu — hiyerarşi yalnızca 600 vs 500 font-weight farkıyla kuruluyordu, 1440px'te
+            "Kimlik" ile "T — Tip" neredeyse aynı görsel ağırlıkta okunuyordu. Bölüm başlıkları artık
+            Stripe deseni: küçük/uppercase/tracked/muted — alan etiketleriyle hiçbir punto çakışması yok. */}
         <div>
-          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Kimlik</h2>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Kimlik</h2>
           {/* 12'lik ızgara — formun geri kalanıyla aynı desen (T=2, AA=3, BB=2, CC=2, PP=3). Önceden
               yalnızca bu bölüm sm:grid-cols-5 kullanıyordu; diğer bölümler md:grid-cols-12 — sayfa
               aşağı indikçe sütun sayısı 5→2→3→3→1 zıplıyor, alan sol kenarları hizalanmıyordu (Tur 3 P1). */}
@@ -274,10 +278,15 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
                     title={`${o.code} — ${o.label}`}
                     onClick={() => form.setValue('bb', o.code.padStart(2, '0').slice(0, 2))}
                     // Tur 4 P2: 24px yükseklik 44px dokunma hedefi eşiğinin altındaydı — mobilde 32px'e
-                    // büyütülür, masaüstünde eski 24px'e döner.
-                    className="min-h-[32px] rounded-md bg-muted px-2 py-1.5 text-[12px] hover:bg-accent md:min-h-0 md:py-0"
+                    // büyütüldü. Tur 5 P1 bulgusu: 32 < 44, hedef eşiğin altında kalmaya devam ediyordu
+                    // (düzeltme kendi yorumunda belgelediği hedefe ulaşmamıştı) — 44px'e çıkarıldı, ayrıca
+                    // klavyeyle chip'ler arası gezinirken hiç odak halkası yoktu, eklendi.
+                    className="min-h-[44px] rounded-md bg-muted px-2 py-1.5 text-[12px] hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none md:min-h-[28px] md:py-0"
                   >
-                    <span className="font-mono">{o.code}</span> {o.label}
+                    {/* Tur 5 P1 bulgusu: tek bir chip 790px genişliğe ulaşabiliyordu ("01-05 (Kahve)
+                        Orijin: 01 Guatemala · 02 Costa Rica · …") — pill içinde bir paragraf, taranabilir
+                        bir token değil. Tam metin zaten yukarıdaki `title`'da duruyor. */}
+                    <span className="font-mono">{o.code}</span> <span className="inline-block max-w-[220px] truncate align-bottom">{o.label}</span>
                   </button>
                 ))}
                 {bbOptions.length > 8 ? (
@@ -299,10 +308,11 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
                     title={`${o.code} — ${o.label}`}
                     onClick={() => form.setValue('cc', o.code.padStart(2, '0').slice(0, 2))}
                     // Tur 4 P2: 24px yükseklik 44px dokunma hedefi eşiğinin altındaydı — mobilde 32px'e
-                    // büyütülür, masaüstünde eski 24px'e döner.
-                    className="min-h-[32px] rounded-md bg-muted px-2 py-1.5 text-[12px] hover:bg-accent md:min-h-0 md:py-0"
+                    // büyütüldü. Tur 5 P1 bulgusu: 32 < 44, hedef eşiğin altında kalmaya devam ediyordu —
+                    // 44px'e çıkarıldı, klavye odak halkası eklendi (bkz. BB chip'inin aynı bulgusu).
+                    className="min-h-[44px] rounded-md bg-muted px-2 py-1.5 text-[12px] hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none md:min-h-[28px] md:py-0"
                   >
-                    <span className="font-mono">{o.code}</span> {o.label}
+                    <span className="font-mono">{o.code}</span> <span className="inline-block max-w-[220px] truncate align-bottom">{o.label}</span>
                   </button>
                 ))}
                 {ccOptions.length > 8 ? (
@@ -316,7 +326,7 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
         </div>
 
         <div>
-          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Sınıflandırma</h2>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Sınıflandırma</h2>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
             <div className="md:col-span-6">
               <FormText control={form.control} name="name" label="Ürün adı" required description="Oluşturulduktan sonra kilitlenir." />
@@ -337,7 +347,7 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
         </div>
 
         <div>
-          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Ambalaj & Barkod</h2>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Ambalaj & Barkod</h2>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
             <div className="md:col-span-4">
               <FormText control={form.control} name="packaging" label="Ambalaj etiketi" />
@@ -360,7 +370,7 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
         </div>
 
         <div>
-          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Stok & Kalite</h2>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Stok & Kalite</h2>
           {/* Dördü tek bir ayar grubunun üyesi — tek kap + hairline ayraç, dört ayrı kart değil.
               `rounded-none border-0` FormSwitch'in kendi kutusunu iptal eder (yalnızca burada, className
               üzerinden — paylaşılan form/fields.tsx dosyası değiştirilmedi); h-11 mobilde 44px dokunma hedefi verir. */}
@@ -384,13 +394,17 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
         </div>
 
         <div>
-          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Fiyat & Vergi</h2>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Fiyat & Vergi</h2>
+          {/* Tur 5 P1 bulgusu: KDV alanları düz `FormText` (sola yaslı serbest metin) iken Raf ömrü/
+              Min./Maks. stok `FormQty` (sağa yaslı, tabular-nums) kullanıyordu — aynı formda iki farklı
+              sayısal hizalama yönü. KDV artık aynı `FormQty` yolundan (birim son eki "%") geçer; hizalama
+              ve tabular-nums tek yerden gelir, tüm sayısal girişler aynı yönde okunur. */}
           <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
             <div className="md:col-span-4">
-              <FormText control={form.control} name="vatRate" label="Satış KDV %" inputMode="decimal" />
+              <FormQty control={form.control} name="vatRate" label="Satış KDV" uom="%" maxDigits={2} />
             </div>
             <div className="md:col-span-4">
-              <FormText control={form.control} name="purchaseVatRate" label="Alış KDV %" inputMode="decimal" />
+              <FormQty control={form.control} name="purchaseVatRate" label="Alış KDV" uom="%" maxDigits={2} />
             </div>
             <div className="md:col-span-4">
               <FormMoney control={form.control} name="supplierPrice" label="Tedarikçi fiyatı" />

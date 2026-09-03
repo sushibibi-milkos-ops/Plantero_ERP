@@ -73,10 +73,14 @@ export function DataTableMobileCards<T>({
                   // gerçek kod/belge no değeri zaten kendi hücresinde mono basılıyor (ör. LotBadge).
                   // Önceden burası mono, başlık (asıl belge no) sans basıyordu — mobilde mono/sans
                   // rolleri masaüstünün tam tersiydi (Tur 3 bulgusu).
-                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 truncate text-[11px] text-muted-foreground/70">
-                    {metaCells.map((c, i) => (
+                  // Kök neden (Tur 5 P1): "·" ayraç glifi ÖĞENİN KENDİ span'ının içindeydi — flex-wrap
+                  // sarmasında ayraç içerikle birlikte alt satıra düşüyordu ("Eldeki 60 ADET" / "· Rezerve
+                  // 0 ADET" gibi parçalı satırlar). Ayrıca aynı kapsayıcıda `truncate` (nowrap) ile
+                  // `flex-wrap` çelişiyordu — ölü kural. Glif tamamen kaldırıldı; ayrım artık yalnızca
+                  // 12px'lik yatay boşlukla kuruluyor (Linear kalıbı), `truncate` da kaldırıldı.
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground/70">
+                    {metaCells.map((c) => (
                       <span key={c.id} className="inline-flex items-center gap-1.5">
-                        {i > 0 ? <span aria-hidden>·</span> : null}
                         {flexRender(c.column.columnDef.cell, c.getContext())}
                       </span>
                     ))}

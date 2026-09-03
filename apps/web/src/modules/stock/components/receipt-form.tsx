@@ -171,26 +171,32 @@ export function ReceiptForm({
         </div>
 
         <div className="border-t border-border/60 pt-5">
-          {/* 390px'te barkod input'u (w-56 sabit) başlığı eziyordu — mobilde alt satıra iner, input
-              tam genişlik olur (Tur 3 P2 bulgusu). */}
-          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-[13px] font-semibold text-foreground">Satırlar</h2>
-            <div className="relative w-full sm:w-56">
-              <ScanBarcode className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                ref={barcodeRef}
-                value={barcode}
-                onChange={(e) => setBarcode(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleBarcode(); } }}
-                placeholder="Barkod okut…"
-                className="h-9 w-full pl-8 font-mono text-[13px]"
-              />
+          <h2 className="mb-3 text-[13px] font-semibold text-foreground">Satırlar</h2>
+          {/* Kök neden (Tur 5 P2): iki eşdeğer satır-ekleme yolu (arama ile ekle / barkod okut) iki
+              farklı hizadaydı — barkod input'u başlığın sağında bağlamsız biçimde yüzüyordu, hemen
+              altındaki "Ürün ekle" alanıyla hiçbir görsel grubu yoktu. Artık tek satırlık bir grid'de
+              eşleniyorlar: solda birincil yol (arama), sağda ikincil/hızlı yol (barkod) — aynı satır
+              hizasında, her ikisi de kendi etiketini taşır. 390px'te tek kolona düşer (Tur 3 P2
+              bulgusunun mobil davranışı korunur). */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="space-y-1.5">
+              <FieldLabel>Ürün ekle (arama ile)</FieldLabel>
+              <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
             </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <FieldLabel>Ürün ekle (arama ile)</FieldLabel>
-            <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
+            <div className="space-y-1.5">
+              <FieldLabel>Barkod</FieldLabel>
+              <div className="relative">
+                <ScanBarcode className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  ref={barcodeRef}
+                  value={barcode}
+                  onChange={(e) => setBarcode(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleBarcode(); } }}
+                  placeholder="Barkod okut…"
+                  className="h-11 w-full pl-8 font-mono text-[13px] md:h-9"
+                />
+              </div>
+            </div>
           </div>
 
           {form.formState.errors.lines?.message ? <p className="mt-2 text-xs text-destructive">{form.formState.errors.lines.message}</p> : null}
@@ -254,7 +260,7 @@ export function ReceiptForm({
                 title="Henüz satır yok"
                 description="Barkod okutun veya ürün arayarak satır ekleyin."
                 action={
-                  <Button type="button" variant="outline" size="sm" onClick={() => barcodeRef.current?.focus()}>
+                  <Button type="button" variant="outline" onClick={() => barcodeRef.current?.focus()}>
                     <ScanBarcode className="size-3.5" /> Barkod alanına git
                   </Button>
                 }

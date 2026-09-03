@@ -72,7 +72,12 @@ export function ScanScreen() {
     // başlıyor, Tur 4 P1 bulgusu). PageHeader'a geçildi, dikey ortalama kaldırıldı; okuma alanı
     // max-w-xl ile sınırlı (bir el terminali sütunu için 672px yeterden fazla, 1440px'te ~1000px ölü
     // alan bırakan max-w-2xl yerine).
-    <div className="mx-auto w-full max-w-xl space-y-5">
+    // Kök neden (Tur 5 P1): `mx-auto` bu ekranı modülün 12 rotasından TEK yatayda ortalanmış olanı
+    // yapıyordu, ama yalnızca yatayda — içerik yine üstte duruyor, 1440×900'de altında ~1160px boşluk
+    // kalıyordu (dikey ortalamak da pick-screen'in kasıtlı olarak reddettiği aynı "ölü alan" sorununu
+    // geri getirirdi, bkz. pick-screen.tsx). Çözüm: modülün geri kalanıyla aynı desene (receipt-form.tsx
+    // `max-w-3xl` gibi) dönmek — sabit genişlik korunur ama SOLA hizalı, `mx-auto` kaldırılır.
+    <div className="w-full max-w-xl space-y-5">
       <PageHeader title="Tara" description="Barkod, QR, lot ya da lokasyon kodu okutun" className="mb-0" />
       <div className="relative">
         <ScanLine className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-muted-foreground" />

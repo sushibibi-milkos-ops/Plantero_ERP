@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { ChevronRight, Plus, Search, Tag } from 'lucide-react';
+import { ChevronRight, Plus, Search, Tag, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Form, FormText, FormSelect, FormCheckbox } from '@/components/form/fields';
@@ -13,7 +13,9 @@ import { FormActions } from '@/components/form/form-actions';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
+import { EmptyCell } from '@/components/empty-cell';
 import { EmptyState } from '@/components/empty-state';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { createLocationAction } from '../actions';
 import { LOCATION_USAGE_LABELS } from '../product-labels';
@@ -32,7 +34,9 @@ const USAGE_DOT: Record<string, string> = {
 };
 
 /** Data satırıyla başlık şeridinin tam aynı sütun genişliklerini paylaşması için ortak sabitler. */
-const COL = { badge: 'w-24 shrink-0', qty: 'w-32 shrink-0 pr-3 text-right', value: 'w-36 shrink-0 text-right' };
+// Tur 5 P1: qty 128px → 160px — görünür "Miktar (karma)" etiketi + bilgi ikonu artık tek satıra sığar
+// (önceden yalnızca "Miktar" idi, birim uyarısı erişilemez bir `title`'daydı).
+const COL = { badge: 'w-24 shrink-0', qty: 'w-40 shrink-0 pr-3 text-right', value: 'w-36 shrink-0 text-right' };
 
 /** "Depo" (internal) = varsayılan kullanım; rozet yalnızca istisnalarda (karantina/red/hurda/…) gösterilir. */
 function UsageBadge({ usage }: { usage: string }) {
@@ -87,9 +91,12 @@ function Node({
 
   return (
     <div>
-      {/* ≥640px: tek satırlı tam sütunlu görünüm. 390px'te bunun yerine aşağıdaki iki satırlı kart kullanılır. */}
+      {/* ≥640px: tek satırlı tam sütunlu görünüm. 390px'te bunun yerine aşağıdaki iki satırlı kart kullanılır.
+          `group/row` (isimlendirilmiş): satır aksiyonu butonları bu isimle eşleşir (bkz. aşağıdaki
+          `md:group-hover/row:opacity-100` — data-table/row-actions.tsx'teki paylaşılan desenin aynısı,
+          Tur 5 P1 bulgusu: burada `group-hover` çıplak kullanılıyordu, klavye/dokunmatikte hiç erişilemiyordu). */}
       <div
-        className={cn('group hidden h-9 items-center gap-2 rounded-md px-2 hover:bg-accent/50 sm:flex', 'border-b border-border/50 last:border-0')}
+        className={cn('group/row hidden h-9 items-center gap-2 rounded-md px-2 hover:bg-accent/50 sm:flex', 'border-b border-border/50 last:border-0')}
         style={{ paddingLeft: depth * 20 + 8 }}
       >
         <button
@@ -108,23 +115,43 @@ function Node({
         <span className={COL.qty}>
           <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
         </span>
-        <span className={COL.value}>
-          <MoneyCell value={node.totalValue} />
-        </span>
-        <Button size="icon" variant="ghost" className="size-7 shrink-0 opacity-0 group-hover:opacity-100" onClick={() => setLabelOpen(true)} title="Etiket yazdır / barkod ata">
+        <span className={COL.value}>{Number(node.totalValue) === 0 ? <EmptyCell /> : <MoneyCell value={node.totalValue} />}</span>
+        {/* Tur 5 P1 bulgusu: `opacity-0 group-hover:opacity-100` yalnızca fare hover'ında görünürdü —
+            klavye (Tab) ve dokunmatik ekranlarda bu iki satır eylemi hiç erişilemezdi. Paylaşılan
+            data-table/row-actions.tsx:32'deki korumalarla birebir aynı sınıf dizesi (ortak dosya
+            değiştirilmedi, burada modül-yerel tekrarlanır — bkz. rapor "sharedComponentRequests"). */}
+        <Button
+          size="icon"
+          variant="ghost"
+          className="size-7 shrink-0 opacity-100 transition-opacity duration-150 data-[state=open]:opacity-100 md:opacity-0 md:group-hover/row:opacity-100 md:group-focus-within/row:opacity-100 md:focus-visible:opacity-100 md:[@media(hover:none)]:opacity-100"
+          onClick={() => setLabelOpen(true)}
+          title="Etiket yazdır / barkod ata"
+        >
           <Tag className="size-3.5" />
         </Button>
         <LocationLabelDialog open={labelOpen} onOpenChange={setLabelOpen} id={node.id} code={node.code} name={node.name} barcode={node.barcode} canManage={canManage} />
         {canManage ? (
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
-            <Button size="icon" variant="ghost" className="size-7 shrink-0 opacity-0 group-hover:opacity-100" onClick={() => setAddOpen(true)} title="Alt lokasyon ekle">
+            <Button
+              size="icon"
+              variant="ghost"
+              className="size-7 shrink-0 opacity-100 transition-opacity duration-150 data-[state=open]:opacity-100 md:opacity-0 md:group-hover/row:opacity-100 md:group-focus-within/row:opacity-100 md:focus-visible:opacity-100 md:[@media(hover:none)]:opacity-100"
+              onClick={() => setAddOpen(true)}
+              title="Alt lokasyon ekle"
+            >
               <Plus className="size-3.5" />
             </Button>
             <LocationFormDialog warehouseId={warehouseId} parentId={node.id} parentCode={node.code} onDone={() => setAddOpen(false)} />
           </Dialog>
         ) : null}
       </div>
-      {/* 390px: iki satırlı kart — satırın tamamı dokunma hedefi (chevron yalnızca görsel gösterge, ≥44px). */}
+      {/* 390px: iki satırlı kart — satırın tamamı dokunma hedefi (chevron yalnızca görsel gösterge, ≥44px).
+          Tur 5 P1 bulgusu: yaprak (alt düğümü olmayan) satırlarda chevron `invisible` ile gizleniyordu
+          ama `size-11` düzen alanını KAPLAMAYA devam ediyordu — `paddingLeft`'le (derinlik başına 20px)
+          birleşince 2. seviyede ~92px (390px'in ~%24'ü) ölü sol oluk oluşuyordu, "Ambalaj Depo…" gibi
+          adlar kırpılıyordu. Chevron artık yaprak satırlarda HİÇ render edilmiyor (yer kaplamıyor);
+          kutu size-11→size-7 küçültüldü (görsel gösterge, dokunma hedefi tüm satırdır); kaybolan
+          hizalama boşluğu `paddingLeft`'e telafi terimiyle geri eklendi. */}
       <div
         role={hasChildren ? 'button' : undefined}
         tabIndex={hasChildren ? 0 : undefined}
@@ -134,11 +161,13 @@ function Node({
           'flex min-h-11 items-center gap-2 border-b border-border/50 px-2 py-1.5 last:border-0 sm:hidden',
           hasChildren && 'cursor-pointer hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-none',
         )}
-        style={{ paddingLeft: depth * 20 + 8 }}
+        style={{ paddingLeft: depth * 20 + 8 + (hasChildren ? 0 : 28) }}
       >
-        <span className={cn('grid size-11 shrink-0 place-items-center rounded text-muted-foreground', !hasChildren && 'invisible')}>
-          <ChevronRight className={cn('size-3.5 transition-transform duration-150 ease-out', isOpen && 'rotate-90')} />
-        </span>
+        {hasChildren ? (
+          <span className="grid size-7 shrink-0 place-items-center rounded text-muted-foreground">
+            <ChevronRight className={cn('size-3.5 transition-transform duration-150 ease-out', isOpen && 'rotate-90')} />
+          </span>
+        ) : null}
         <div className="min-w-0 flex-1 space-y-0.5">
           <div className="flex items-center gap-2">
             <span className="shrink-0 font-mono text-[12px]">{node.code}</span>
@@ -150,16 +179,19 @@ function Node({
                 yalnızca kutular arası boşluk bırakır, aralarında görünür bir ayraç yoksa (Tur 3 P1
                 bulgusu) iki tabular-nums string yan yana tek sayı gibi okunabiliyordu. Tur 4 P1: başlık
                 şeridi 640px altında tamamen gizlendiği için hangi sayının miktar/değer olduğu hâlâ
-                belirsizdi — her sayının önüne 10px etiket eklendi (masaüstündeki başlık şeridiyle aynı
-                sözcükler: "Mik" / "₺"). */}
-            <div className="num flex shrink-0 items-baseline gap-3 text-[12px]">
-              <span className="inline-flex items-baseline gap-1">
-                <span className="text-[10px] font-normal text-muted-foreground">Mik</span>
+                belirsizdi — her sayının önüne 10px etiket eklendi. Tur 5 P1 bulgusu: "Mik" bir sözcük
+                değildi (yanındaki "Değer" tam yazılıyordu — tutarsız kısaltma) VE iki değer ortak bir
+                sağ raya yaslanmadığı için satırlar arasında karşılaştırılamıyordu — sabit genişlikli
+                `grid-cols-2` ile ikisi de kendi sütununda sağa yaslanır, aynı derinlikteki tüm satırlarda
+                aynı x'te durur. */}
+            <div className="grid w-52 shrink-0 grid-cols-2 gap-2 text-[12px]">
+              <span className="inline-flex items-baseline justify-end gap-1">
+                <span className="text-[10px] font-normal text-muted-foreground">Miktar</span>
                 <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
               </span>
-              <span className="inline-flex items-baseline gap-1">
+              <span className="inline-flex items-baseline justify-end gap-1">
                 <span className="text-[10px] font-normal text-muted-foreground">Değer</span>
-                <MoneyCell value={node.totalValue} />
+                {Number(node.totalValue) === 0 ? <EmptyCell className="num" /> : <MoneyCell value={node.totalValue} />}
               </span>
             </div>
           </div>
@@ -269,8 +301,22 @@ export function LocationTree({ warehouseId, tree, canManage }: { warehouseId: st
         <span className="min-w-0 flex-1">Kod / Ad</span>
         <span className={COL.badge}>Durum</span>
         {/* Tur 4 P2: "Miktar (karma birim)" 112px'lik sütuna sarıp iki satırlık başlığın h-9 kapsayıcıya
-            dikey nefes bırakmadan sığmasını zorluyordu (sütun 32'ye genişletildi, birim açıklaması title'a taşındı). */}
-        <span className={COL.qty} title="Karma birim (farklı UOM'lar birleşik gösterilir)">Miktar</span>
+            dikey nefes bırakmadan sığmasını zorluyordu — o turda uyarı `title`'a taşındı (sütun 32'ye
+            genişletildi). Tur 5 P1 bulgusu: `title` mobilde (dokunma) ve klavyeyle erişilemez, ekran
+            okuyucuda güvenilir okunmaz — TIRE/AMB gibi karma birimli satırlarda "24.270,00" hangi
+            birimde belirsiz kalıyordu. Gerçek `Tooltip` + görünür `Info` ikonuyla değiştirildi (odak ve
+            dokunmayla açılabilir); metin de artık başlıkta "(karma)" ekiyle görünür duruyor. */}
+        <span className={cn(COL.qty, 'inline-flex items-center justify-end gap-1')}>
+          Miktar (karma)
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button type="button" className="inline-flex shrink-0 text-muted-foreground/70 hover:text-foreground focus-visible:text-foreground focus-visible:outline-none" aria-label="Karma birim açıklaması">
+                <Info className="size-3" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Karma birim — farklı ölçü birimleri (KG, ADET…) tek toplamda birleşik gösterilir.</TooltipContent>
+          </Tooltip>
+        </span>
         <span className={COL.value}>Değer</span>
         {/* Etiket + (varsa) ekle simgeleriyle aynı toplam genişlik — satırlarla hizalansın diye */}
         <span className="shrink-0" style={{ width: canManage ? 64 : 28 }} />

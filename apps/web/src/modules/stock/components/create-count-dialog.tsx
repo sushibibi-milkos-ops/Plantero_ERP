@@ -13,7 +13,21 @@ import { createCountAction } from '../actions';
 
 type LocationOption = { id: string; code: string; usage: string; warehouseId: string | null };
 
-export function CreateCountDialog({ warehouses, locations }: { warehouses: Array<{ id: string; code: string; name: string }>; locations: LocationOption[] }) {
+export function CreateCountDialog({
+  warehouses,
+  locations,
+  trigger,
+}: {
+  warehouses: Array<{ id: string; code: string; name: string }>;
+  locations: LocationOption[];
+  /** Varsayılan tetikleyici (PageHeader birincil butonu) yerine özel bir tetikleyici — ör.
+   *  `NextStepHint`in "add item" satırı içindeki metin bağlantısı (Tur 5 P2 bulgusu). Düz bir
+   *  `ReactNode` (fonksiyon DEĞİL) — bu bileşen bir sunucu bileşeninden ('use client' olmayan
+   *  sayfa) çağrılıyor; bir render-prop fonksiyonu sunucu→istemci sınırını (RSC serileştirme)
+   *  ihlal ederdi ("Functions cannot be passed directly to Client Components"). Tıklama işleyicisi
+   *  bunun yerine burada, istemci tarafında, sarmalayıcı bir `<span>` üzerinden eklenir. */
+  trigger?: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   // Varsayılan depo: üretim tesisi (TIRE) — sayımların büyük çoğunluğu orada yapılır.
   const [warehouseId, setWarehouseId] = useState<string | null>(warehouses.find((w) => w.code === 'TIRE')?.id ?? warehouses[0]?.id ?? null);
@@ -40,10 +54,16 @@ export function CreateCountDialog({ warehouses, locations }: { warehouses: Array
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* Sözleşme: sayım ekranında dokunma hedefi ≥44px (docs/modules/depo.md kabul kriterleri) */}
-      <Button className="h-11 md:h-9" onClick={() => setOpen(true)}>
-        <Plus className="size-4" /> Yeni sayım
-      </Button>
+      {trigger ? (
+        <span className="contents" onClick={() => setOpen(true)}>
+          {trigger}
+        </span>
+      ) : (
+        // Sözleşme: sayım ekranında dokunma hedefi ≥44px (docs/modules/depo.md kabul kriterleri)
+        <Button className="h-11 md:h-9" onClick={() => setOpen(true)}>
+          <Plus className="size-4" /> Yeni sayım
+        </Button>
+      )}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Yeni sayım</DialogTitle>

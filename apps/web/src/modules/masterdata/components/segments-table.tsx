@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -85,9 +85,12 @@ export function AddSegmentButton({ canManage }: { canManage: boolean }) {
   );
 }
 
-/** Kod / Bağlam sütunları beş tabloda da aynı sabit genişlikte — "Etiket" hepsinde aynı x'te başlasın diye. */
-const CODE_COL_WIDTH = 110;
-const CONTEXT_COL_WIDTH = 120;
+/** Kod / Bağlam sütunları beş tabloda da aynı sabit genişlikte — "Etiket" hepsinde aynı x'te başlasın diye.
+    Tur 5 P1 bulgusu: 110/120px, iki sütunlu "T" tablosunda (Kod + Etiket) 390px genişliğin ~%28'ini
+    tüketip 520px'lik min-w ile birleşince gereksiz yatay kaydırma tetikliyordu — hiçbir iki sütunlu
+    tablo 390px'te kaydırma gerektirmemeli. Daraltıldı. */
+const CODE_COL_WIDTH = 64;
+const CONTEXT_COL_WIDTH = 96;
 
 export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
   const [q, setQ] = useState('');
@@ -116,10 +119,13 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
       </div>
 
       {/* Kök neden (Tur 3 P0): satırları hizalayan bir grid'de en uzun sütun (T, ~6 satır) diğer sütunun
-          (BB, ~20 satır) başlama y'sini belirliyordu — 1380px'e varan boş dikey alan. CSS çoklu sütun
-          (masonry benzeri): her blok kendi yüksekliğine göre akar, kısa bloklar boşluk bırakmaz.
-          `break-inside-avoid`: bir segment bloğu (başlık+tablo) sütun sınırında ikiye bölünmez. */}
-      <div className="columns-1 gap-6 lg:columns-2 [&>*]:mb-6 [&>*]:break-inside-avoid">
+          (BB, ~20 satır) başlama y'sini belirliyordu — 1380px'e varan boş dikey alan. Tur 5 P1 bulgusu:
+          onun çözümü olarak denenen CSS çoklu sütun (`columns-*`, masonry benzeri) sütunları DENGELEMEZ —
+          tarayıcı önce toplam yüksekliği hesaplar, içeriği sırayla doldurur; en uzun blok (AA, ~21 satır)
+          bir sütuna düşünce diğer sütun çok daha erken bitip ~700px ölü alan bırakıyordu. Gerçek bir grid'e
+          dönüldü: AA (en uzun blok, tüm diğerlerinin toplamına yakın) `lg:col-span-2` ile tam genişlikte
+          kendi satırında durur, kalan T/BB/CC/PP ikişerli dengeli sütunlara akar. */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {(['T', 'AA', 'BB', 'CC', 'PP'] as const).map((seg) => {
           const all = (grouped.get(seg) ?? []).slice().sort((a, b) => (a.context ?? '').localeCompare(b.context ?? '') || a.code.localeCompare(b.code));
           const rows = needle ? all.filter((r) => r.code.toLocaleLowerCase('tr-TR').includes(needle) || r.label.toLocaleLowerCase('tr-TR').includes(needle)) : all;
@@ -128,7 +134,8 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
           const hasContext = all.some((r) => r.context);
           const hasReserved = all.some((r) => r.isReserved);
           return (
-            <div key={seg}>
+            // AA (en uzun blok — bkz. üstteki grid yorumu) tam genişlikte kendi satırında durur.
+            <div key={seg} className={seg === 'AA' ? 'lg:col-span-2' : undefined}>
               <h2 className="mb-2 text-sm font-semibold">{SEGMENT_LABELS[seg]}</h2>
               {all.length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">Sözlükte kayıt yok.</p>
@@ -138,10 +145,14 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
                 /* Kök neden (Tur 4 P1): `w-full` + sabit px genişlikler (inline `style`) tabloyu
                    kapsayıcının %100'üne zorluyordu; table-layout:auto bu sabit toplamı korumak için
                    "Etiket" sütununu eziyordu — 390px'te uzun bir etiket 7 satıra sarıp satırı ~160px'e
-                   çıkarıyordu. `min-w-[520px]`: tablo hiçbir zaman bu genişliğin altına sıkışmaz, dar
-                   ekranda gerçek yatay kaydırma devreye girer (data-table.tsx:311 ile aynı kök neden). */
-                <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
-                  <table className="min-w-[520px] border-collapse text-[13px]">
+                   çıkarıyordu. `min-w-[340px]`: tablo hiçbir zaman bu genişliğin altına sıkışmaz (iki
+                   sütunlu "T" tablosu artık 390px'e sığar, kaydırma tetiklenmez), dar ekranda daha geniş
+                   tablolarda gerçek yatay kaydırma devreye girer (data-table.tsx:311 ile aynı kök neden).
+                   Tur 5 P1: `--scroll-fade-bg` sayfa zeminine (`var(--background)`) eşitlendi — varsayılan
+                   `var(--card)` saf beyaz olduğundan, taşmayan (kaydırmasız) tablolarda dahi kapsayıcı
+                   genişliği tablo içeriğinden daha büyükse sağda opak beyaz bir dikdörtgen boyanıyordu. */
+                <div className="scrollbar-thin scroll-fade-x overflow-x-auto" style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}>
+                  <table className="min-w-[340px] border-collapse text-[13px]">
                     <thead>
                       <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
                         <th className="h-9 px-3 text-left font-medium whitespace-nowrap" style={{ width: CODE_COL_WIDTH }}>Kod</th>
@@ -157,7 +168,11 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
                           {hasContext ? (
                             <td className="px-3 whitespace-nowrap text-muted-foreground">{r.context ? (PRODUCT_TYPE_LABELS[r.context] ?? r.context) : '—'}</td>
                           ) : null}
-                          <td className="px-3 whitespace-nowrap">{r.label}</td>
+                          {/* Kök neden (Tur 5 P0): `whitespace-nowrap` bu hücrede etiketi tek satıra
+                              zorluyordu; sarmalayıcı `overflow-x-auto` olduğu için taşan metin kelime
+                              ortasından sessizce kırpılıyordu (ellipsis/tooltip yok). Sarma serbest
+                              bırakıldı — hücre gerektiği kadar satıra döner, hiçbir karakter kaybolmaz. */}
+                          <td className="px-3">{r.label}</td>
                           {hasReserved ? (
                             <td className="px-3 text-center">
                               {r.isReserved ? (

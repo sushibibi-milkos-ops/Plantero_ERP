@@ -93,7 +93,10 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
         meta: { mobile: 'badge', width: 90 },
         cell: ({ getValue }) => {
           const s = getValue<string>();
-          if (s === 'active') return <SubtleStatusBadge tone="success" label="Aktif" />;
+          // Tur 5 P1 bulgusu: 100/100 satır "Aktif" — dolgusuz olsa bile `success` tonu (yeşil metin+nokta)
+          // sütun boyunca kesintisiz bir renkli şerit oluşturup sıfır ayırt edici bilgi taşıyordu (renk
+          // yalnızca anlam taşımalı). Olağan durum artık nötr; renk yalnızca istisnai durumlara ayrılır.
+          if (s === 'active') return <SubtleStatusBadge tone="muted" label="Aktif" />;
           // "Kullanım dışı" bir hata değil — paylaşılan sözlük (lib/status.ts) 'cancelled' için 'danger'
           // veriyor, burada nötr'e çevrilir (dosya ortak olduğu için değiştirilmedi, bkz. rapor).
           return <StatusBadge status={s} kind="product" tone={s === 'cancelled' ? 'muted' : undefined} />;

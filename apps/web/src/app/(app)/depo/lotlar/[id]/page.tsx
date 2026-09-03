@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { requirePermission, userCan } from '@/lib/auth';
 import { getLotDetail, listLocations } from '@/modules/stock/queries';
 import { LotActions } from '@/modules/stock/components/lot-actions';
-import { AlertTriangle } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
 import { StatusBadge } from '@/components/status-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
@@ -111,12 +110,12 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
               (() => {
                 const pct = consumedRatio.toDecimalPlaces(0);
                 const anomalous = pct.gt(100) || pct.lt(0);
+                // Kök neden (Tur 5 P2): tek bir olgu (tutarsızlık) için üç ayrı işaret üst üste
+                // biniyordu — uyarı ikonu + turuncu renk + yüzde. Tek sinyal yeterli: rengin kendisi
+                // (text-warning); ikon kaldırıldı, açıklama `title` tooltip'inde kalır.
                 return anomalous ? (
-                  <span
-                    className="ml-1 inline-flex items-center gap-1 text-warning"
-                    title="Kalan miktar ilk girişten fazla — transfer/düzeltme hareketlerini kontrol edin"
-                  >
-                    <AlertTriangle className="size-3" /> (%{pct.toString()})
+                  <span className="ml-1 text-warning" title="Kalan miktar ilk girişten fazla — transfer/düzeltme hareketlerini kontrol edin">
+                    (%{pct.toString()})
                   </span>
                 ) : (
                   <span className="text-muted-foreground"> (%{pct.toString()})</span>
@@ -149,7 +148,11 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
         </div>
       </dl>
 
-      <Tabs defaultValue="quants" className="gap-4">
+      {/* Kök neden (Tur 5 P2): varsayılan sekme "Eldeki stok" genellikle TEK satır (o anki quant) —
+          içerik 590px'te bitip altında ~660px öksüz boşluk kalıyordu. "Hareketler" bir lotun tüm
+          yaşam döngüsünü (kabul/üretim/tüketim/sevkiyat) listelediğinden neredeyse hiçbir zaman tek
+          satır değildir — varsayılan olarak dolu sekmeyle açılır. */}
+      <Tabs defaultValue="moves" className="gap-4">
         {/* 4'lü sekme şeridi 390px'e sığmıyordu — "İzlenebilirlik" sağ kenardan kesiliyor, yatay
             kaydırılabildiğine dair hiçbir gösterge yoktu (Tur 4 P1 bulgusu). `variant="line"` (Stripe
             tarzı altı çizgili sekme, ör. iş emri detayında da kullanılıyor) segment pilinden ~50px daha

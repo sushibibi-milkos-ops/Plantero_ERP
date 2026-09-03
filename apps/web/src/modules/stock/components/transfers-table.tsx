@@ -49,7 +49,11 @@ export function TransfersTable({ transfers }: { transfers: TransferRow[] }) {
       // "Oluşturma" yerine "Planlanan tarih" mobilde birincil meta alanı — mobilde tarih tamamen
       // gizliydi (Tur 4 P1 bulgusu). Güzergah'la aynı ("meta") rolde — tek satırda "GÜZERGAH · TARİH".
       { accessorKey: 'scheduledDate', header: 'Planlanan tarih', meta: { width: 150, mobile: 'meta' }, cell: ({ row }) => (row.original.scheduledDate ? formatDate(row.original.scheduledDate) : <span className="text-muted-foreground/60">—</span>) },
-      { accessorKey: 'createdAt', header: 'Oluşturma', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => <span className="text-xs text-muted-foreground">{formatDate(row.original.createdAt)}</span> },
+      // Kök neden (Tur 5 P2): varsayılan sıralama BU sütunda (initialSorting: createdAt) ama hücre
+      // `text-muted-foreground` ile en soluk sütundu — aktif sıralama sütunu tablodaki en düşük
+      // kontrastlı sütun OLAMAZ. Diğer tarih sütunuyla (Planlanan tarih) aynı tam kontrast metne
+      // döndürüldü.
+      { accessorKey: 'createdAt', header: 'Oluşturma', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => formatDate(row.original.createdAt) },
       ];
       if (showLineCount) {
         cols.splice(3, 0, { accessorKey: 'lineCount', header: 'Satır', meta: { align: 'right', width: 60, mobile: 'hidden' } });

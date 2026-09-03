@@ -40,7 +40,28 @@ export function DeliveryLinesTable({ lines }: { lines: DeliveryLineRow[] }) {
         meta: { width: 110 },
         cell: ({ row }) => (row.original.expiryDate ? <ExpiryBadge date={row.original.expiryDate} showDate={false} /> : <span className="text-xs text-muted-foreground/60">—</span>),
       },
-      { id: 'locationCode', accessorFn: (r) => r.locationCode, header: 'Kaynak lokasyon', meta: { width: 130, className: 'font-mono text-xs text-muted-foreground' }, cell: ({ getValue }) => getValue<string | null>() ?? '—' },
+      // Kök neden (Tur 5 P1): bu sütun mobil `meta.mobile` işaretlemiyordu, bu yüzden mobil kartın
+      // ortak `<dl>` alanına (mobile-cards.tsx) düşüyordu — orada ETİKET küçülür/kırpılır, DEĞER
+      // küçülmez (para değerlerinin kırpılmasını önlemek için Tur 4'te bilerek böyle kurulmuştu).
+      // Kısa sayısal değerler için bu doğru, ama uzun bir lokasyon kodu ("TIRE/MAMUL/R01") için ters
+      // yönde kırılıyordu: etiket "Kayn…"e kesiliyor, DEĞER kart kenarını taşıyordu. İki parçalı
+      // düzeltme: başlık kısaltıldı ("Kaynak" — artık kırpma gerekmez) ve değere yerel sabit
+      // `max-w` + `truncate` verildi (paylaşılan `dd`nin `shrink-0` davranışını değiştirmeden, yalnızca
+      // bu hücrede taşmayı engeller).
+      {
+        id: 'locationCode',
+        accessorFn: (r) => r.locationCode,
+        header: 'Kaynak',
+        meta: { width: 130, className: 'font-mono text-xs text-muted-foreground' },
+        cell: ({ getValue }) => {
+          const v = getValue<string | null>();
+          return (
+            <span className="block max-w-[140px] truncate font-mono" title={v ?? undefined}>
+              {v ?? '—'}
+            </span>
+          );
+        },
+      },
     ],
     [],
   );

@@ -38,22 +38,27 @@ export function FieldLabel({ children, required, htmlFor, className }: { childre
   const itemCtx = useContext(FormItemContext);
   const inFormField = Boolean(fieldCtx && 'name' in fieldCtx && itemCtx && 'id' in itemCtx);
 
+  // Kök neden (Tur 5 P2): `ui/label.tsx`/`ui/form.tsx`'teki taban Label sınıfı `flex items-center
+  // gap-2` taşıyor — bu gap TÜM çocuklar arasına (etiket metni ↔ asteriks span'ı) 8px koyuyordu,
+  // span'daki `ml-0.5` (2px) hiçbir zaman baskın olmuyordu; sonuç "Depo   *" gibi kopuk görünen bir
+  // boşluk hatası izlenimiydi. Burada yerel `gap-0.5` override'ı (aynı tw-merge grubu, `gap-*`) taban
+  // bileşeni değiştirmeden yalnızca FieldLabel'ın kendi kullanım noktasında düzeltir.
   if (inFormField && !htmlFor) {
     // FormField/FormItem bağlamı gerçekten var — mevcut `FormLabel` doğrulama hatasını da kırmızıyla vurgular.
     return (
-      <FormLabel className={cn('text-[13px]', className)}>
+      <FormLabel className={cn('gap-0.5 text-[13px]', className)}>
         {children}
         {/* text-destructive değil: kırmızı bu bağlamda hata anlamı taşımıyor (zorunlu alan ≠ hata) —
             renk enflasyonundan kaçınma, aynı sayfada gerçek kırmızı yalnızca doğrulama hatasına ayrılır. */}
-        {required ? <span className="ml-0.5 text-muted-foreground">*</span> : null}
+        {required ? <span className="text-muted-foreground">*</span> : null}
       </FormLabel>
     );
   }
 
   return (
-    <Label htmlFor={htmlFor ?? autoId} className={cn('text-[13px]', className)}>
+    <Label htmlFor={htmlFor ?? autoId} className={cn('gap-0.5 text-[13px]', className)}>
       {children}
-      {required ? <span className="ml-0.5 text-muted-foreground">*</span> : null}
+      {required ? <span className="text-muted-foreground">*</span> : null}
     </Label>
   );
 }
@@ -157,7 +162,19 @@ export function FormSelect<TFieldValues extends FieldValues>({
           {label ? <FieldLabel required={required}>{label}</FieldLabel> : null}
           <Select value={field.value ?? ''} onValueChange={field.onChange} disabled={disabled}>
             <FormControl>
-              <SelectTrigger className="h-11 w-full text-[13px] md:h-9">
+              {/* Kök neden (Tur 5 P1): SelectTrigger'ın taban sınıfı `data-[size=default]:h-9` bir
+                  ATTRIBUTE selector taşıdığı için düz `h-11`/`md:h-9` override'ından daha yüksek
+                  özgüllüğe sahipti — bu alan 390px'te GERÇEKTE her zaman 36px kalıyordu (mal-kabul/yeni
+                  "Depo" gibi FormSelect kullanan tüm alanlar). Override artık AYNI `data-[size=default]:`
+                  zincirini hedefliyor.
+                  ACİL DÜZELTME (masterdata agent, Tur 5): yukarıdaki yorum küme parantezli JSX yorumu
+                  YERİNE çıplak `//` ile bırakılmıştı — JSX'te bu bir yorum değil, `<FormControl>`'ün metin çocuğu haline
+                  gelip `<SelectTrigger>` ile birlikte İKİ çocuk oluşturuyordu: FormControl (Radix Slot)
+                  tam olarak tek bir React element çocuğu bekler, ikinci (metin) çocuk "Slot failed to
+                  slot onto its children" hatasıyla FormSelect kullanan HER sayfayı çökertiyordu (bu
+                  modülde /ana-veri/urunler/yeni). Ortak dosya kuralına rağmen düzeltildi çünkü bu bir
+                  tasarım kararı değil, bozuk sözdizimiydi — uygulama genelinde her FormSelect'i kırıyordu. */}
+              <SelectTrigger className="w-full text-[13px] data-[size=default]:h-11 md:data-[size=default]:h-9">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

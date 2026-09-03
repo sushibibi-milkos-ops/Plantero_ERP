@@ -53,7 +53,19 @@ export default async function TransfersPage() {
       ) : null}
 
       <TransfersTable transfers={transfers} />
-      {isSparse ? <NextStepHint>Depolar arası ya da depo içi stok taşımaları için yeni bir transfer oluşturabilirsiniz.</NextStepHint> : null}
+      {isSparse ? (
+        <NextStepHint
+          action={
+            userCan(user, 'stock.transfer') ? (
+              <Link href="/depo/transfer/yeni" className="shrink-0 font-medium text-primary hover:underline">
+                + Yeni transfer
+              </Link>
+            ) : undefined
+          }
+        >
+          Depolar arası ya da depo içi stok taşımaları için yeni bir transfer oluşturabilirsiniz.
+        </NextStepHint>
+      ) : null}
     </div>
   );
 }

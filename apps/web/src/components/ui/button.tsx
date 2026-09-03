@@ -30,7 +30,11 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline disabled:opacity-50",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        // h-11 md:h-9: 390px'te varsayılan boyut 36px'te kalıyordu — depo modülünün eldivenli/el
+        // terminalli kullanım bağlamında (mal kabul, sevkiyat, transfer, sayım "Yeni …" ve "Kabul
+        // et"/"Vazgeç" aksiyonları) WCAG 2.5.8/iOS 44px eşiğinin altına düşüyordu (Tur 5 P1 bulgusu).
+        // Masaüstünde (md+) yoğun tablo/form ekranlarında 36px korunur — Linear kalıbı.
+        default: "h-11 px-4 py-2 has-[>svg]:px-3 md:h-9",
         xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",

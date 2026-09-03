@@ -19,7 +19,12 @@ export function DataTablePagination<TData>({ table, pageSizes = [25, 50, 100] }:
       <div className="flex items-center gap-2">
         <span className="hidden sm:inline">Sayfa başına</span>
         <Select value={String(pageSize)} onValueChange={(v) => table.setPageSize(Number(v))}>
-          <SelectTrigger size="sm" className="h-11 w-[76px] text-xs md:h-7 md:w-[70px]" aria-label="Sayfa boyutu">
+          {/* Kök neden (Tur 5 P1): SelectTrigger'ın kendi taban sınıfı `data-[size=sm]:h-8` bir
+              ATTRIBUTE selector taşıdığı için düz `h-11`/`md:h-7` sınıflarından daha yüksek özgüllüğe
+              sahip — önceki override hiçbir zaman uygulanmıyordu, seçici 390px'te gerçekte 32px
+              kalıyordu (/depo/stok, /depo/skt). Override artık AYNI `data-[size=sm]:` zincirini
+              hedefliyor (mobilde 44px, masaüstünde native "sm" 32px). */}
+          <SelectTrigger size="sm" className="w-[76px] text-xs data-[size=sm]:h-11 md:w-[70px] md:data-[size=sm]:h-8" aria-label="Sayfa boyutu">
             {/* İlk boyanmada Radix'in kendi değer okuması birkaç saniye boş kutu bırakabiliyordu
                 (ekran görüntüsü aracı bunu bazen yakaladı, Tur 4 P2 bulgusu) — değer zaten elimizde
                 olduğundan doğrudan basılır, Radix'in iç render'ına bağımlı kalınmaz. */}

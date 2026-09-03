@@ -34,7 +34,9 @@ export function KpiCard({
   className,
 }: {
   title: string;
-  value: number | string;
+  /** `null`: hesaplanamaz/veri yok — "0" DEĞİL, dürüst bir "—" basılır (Tur 5 P1 bulgusu: "Ortalama
+   *  kabul süresi: 0 dk" veri yokken "tüm kabuller anında kapanıyor" diye okunuyordu). */
+  value: number | string | null;
   format?: KpiFormat;
   currency?: string;
   /** Miktar birimi (`format='qty'` için) */
@@ -66,7 +68,7 @@ export function KpiCard({
   stripCompact?: boolean;
   className?: string;
 }) {
-  const num = typeof value === 'string' ? Number(value) : value;
+  const num = value === null ? null : typeof value === 'string' ? Number(value) : value;
   const nfFormat: NumberFlowFormat =
     format === 'money'
       ? { style: 'currency', currency, maximumFractionDigits: fractionDigits ?? 0, minimumFractionDigits: fractionDigits ?? 0 }
@@ -75,14 +77,15 @@ export function KpiCard({
         : format === 'qty'
           ? { maximumFractionDigits: 1 }
           : { maximumFractionDigits: 0 };
-  const displayValue = format === 'pct' ? num / 100 : num;
+  const displayValue = num === null ? null : format === 'pct' ? num / 100 : num;
 
   const dir = delta === null || delta === undefined || delta === 0 ? 'flat' : delta > 0 ? 'up' : 'down';
   const good = dir === 'flat' ? null : invertDelta ? dir === 'down' : dir === 'up';
   const DeltaIcon = dir === 'up' ? ArrowUpRight : dir === 'down' ? ArrowDownRight : Minus;
   const isStrip = variant === 'strip';
 
-  const valueNode = <NumberFlow value={displayValue} locales="tr-TR" format={nfFormat} suffix={suffix ? ` ${suffix}` : undefined} />;
+  const valueNode =
+    displayValue === null ? <span className="text-muted-foreground/60">—</span> : <NumberFlow value={displayValue} locales="tr-TR" format={nfFormat} suffix={suffix ? ` ${suffix}` : undefined} />;
   const deltaNode =
     delta !== undefined ? (
       // flex-wrap: dar kartlarda (ör. bir şeritte 6 KPI) etiket satır sonuna kırpılmadan

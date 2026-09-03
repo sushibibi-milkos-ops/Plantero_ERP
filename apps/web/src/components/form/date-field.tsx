@@ -114,10 +114,10 @@ export function DateInput({
           <PopoverTrigger asChild>
             <button
               type="button"
-              // size-9 md:size-7: metin alanı gibi (h-11 md:h-9) 390px'te 44px'e yakın dokunma hedefi —
-              // eskiden sabit 28px'te kalıyordu, Input/Combobox ile aynı desenin dışındaydı (Tur 3
-              // bulgusu, P1).
-              className="grid size-9 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground md:size-7"
+              // size-11 md:size-9: metin alanı gibi (h-11 md:h-9) 390px'te GERÇEK 44px dokunma hedefi —
+              // önceki "size-9 md:size-7" mobilde hâlâ 36px'te kalıyordu (Tur 5 P1 bulgusu: mal-kabul/yeni
+              // takvim tetikleyicisi 36x36px ölçüldü).
+              className="grid size-11 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground md:size-9"
               aria-label="Takvim"
               disabled={disabled}
             >

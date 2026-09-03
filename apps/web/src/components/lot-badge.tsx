@@ -35,15 +35,17 @@ export function LotBadge({
   if (!lotNo) return <span className="text-xs text-muted-foreground">—</span>;
   const info = status ? getStatusInfo(status, 'lot') : null;
   const to = href ?? (id ? `/depo/lotlar/${id}` : undefined);
+  // Kök neden (Tur 5 P1): her lot no bordered/dolgulu bir pil içinde basılıyordu — 200 satırlık bir
+  // tabloda 200 çerçeve, Linear'ın "ID düz mono metin" kuralının tam tersi, saf görsel gürültü. Kabuk
+  // (border/bg/rounded) tamamen kaldırıldı: artık yalnızca mono metin + istisna durumunda nokta.
+  // Dokunma hedefi görsel kabuğa değil GÖRÜNMEZ dikey boşluğa bağlandı — bağlantılıyken (to) mobilde
+  // 44px yüksek bir hit-area, masaüstünde satır yüksekliğine göre doğal boyut.
   const inner = (
     <span
       title={info ? `${lotNo} · ${info.label}` : lotNo}
       className={cn(
-        'inline-flex h-5 items-center gap-1.5 rounded-md border border-border/70 bg-muted/40 px-1.5 font-mono text-[11px] tracking-tight whitespace-nowrap',
-        // Tıklanabilir lot rozetleri /depo/skt ve /depo/lotlar mobil listelerinde dokunma hedefi
-        // olarak kullanılıyordu (h-5 = 20px, 44px eşiğinin çok altında). Yalnızca bir bağlantıya
-        // sarıldığında (to) ve yalnızca mobilde büyütülür — masaüstü yoğunluğu değişmez.
-        to && ['hover:border-border hover:bg-muted', 'h-11 px-3 md:h-5 md:px-1.5'],
+        'inline-flex items-center gap-1.5 font-mono text-xs tracking-tight whitespace-nowrap',
+        to && 'h-11 md:h-auto',
         className,
       )}
     >

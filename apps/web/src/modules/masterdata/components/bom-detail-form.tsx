@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -161,16 +162,21 @@ export function BomDetailForm({
               kapsayıcının %100'üne zorlar, table-layout:auto bu sabit toplam genişliğe uymak için
               hücreleri ezer — yatay kaydırma hiç tetiklenmez. Tur 4 P1: `min-w-full` tek başına yetmedi —
               hücrelerde `whitespace-nowrap` olmadığı için "Hurma Şurubu" gibi uzun bileşen adları yine de
-              2 satıra sarıyor, "% Pay" ekran dışında harf ortasından kesiliyordu. `min-w-[560px]` +
+              2 satıra sarıyor, "% Pay" ekran dışında harf ortasından kesiliyordu. `min-w-[360px]` +
               `whitespace-nowrap`: tablo her zaman doğal genişliğine büyür, hiçbir hücre sarmaz — dar
-              ekranda gerçek yatay kaydırma (`scroll-fade-x` affordance'ıyla) devreye girer. Birim Maliyet
-              VE % Pay (ikisi de ikincil/türetilmiş bilgi) yalnızca ≥sm görünür — mobilde SKU+Bileşen+
-              Miktar(+Fire%)(+Yan Ürün)+Tutar önceliklidir. */}
-          <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
-            <table className="min-w-[560px] border-collapse text-[13px]">
+              ekranda gerçek yatay kaydırma (`scroll-fade-x` affordance'ıyla) devreye girer.
+              Tur 5 P0 bulgusu: 560px min-w 390px'te reçetenin ASIL bilgisini (Miktar+Tutar) ekran dışına
+              itiyordu — kullanıcı yalnızca SKU (ekranın ~%40'ı) ve Bileşen adını görüyordu. SKU ikincil bir
+              tanımlayıcı (Bileşen adı zaten birincil kimlik); Birim Maliyet VE % Pay ile aynı sınıfta artık
+              yalnızca ≥sm görünür — mobilde Bileşen+Miktar(+Fire%)(+Yan Ürün)+Tutar önceliklidir. */}
+          <div
+            className="scrollbar-thin scroll-fade-x w-fit max-w-full overflow-x-auto"
+            style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}
+          >
+            <table className="w-full min-w-[360px] border-collapse text-[13px]">
               <thead>
                 <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                  <th className="h-9 px-3 text-left font-medium whitespace-nowrap">SKU</th>
+                  <th className="hidden h-9 px-3 text-left font-medium whitespace-nowrap sm:table-cell">SKU</th>
                   <th className="h-9 px-3 text-left font-medium whitespace-nowrap">Bileşen</th>
                   <th className="h-9 px-3 text-right font-medium whitespace-nowrap">Miktar</th>
                   {hasScrap ? <th className="h-9 px-3 text-right font-medium whitespace-nowrap">Fire %</th> : null}
@@ -187,7 +193,7 @@ export function BomDetailForm({
                   const pct = materialCostNum > 0 ? (lineCostNum / materialCostNum) * 100 : 0;
                   return (
                     <tr key={l.line.id} className="h-9 border-b border-border/50 last:border-0">
-                      <td className="px-3 font-mono text-[12px] whitespace-nowrap">{l.sku}</td>
+                      <td className="hidden px-3 font-mono text-[12px] whitespace-nowrap sm:table-cell">{l.sku}</td>
                       <td className="max-w-[220px] truncate px-3 whitespace-nowrap" title={l.name}>
                         {l.name}
                       </td>
@@ -204,8 +210,14 @@ export function BomDetailForm({
                 })}
               </tbody>
               <tfoot>
+                {/* SKU artık mobilde `hidden` (bkz. thead/tbody) — sabit bir `colSpan` her iki kırılım
+                    noktasında da aynı anda doğru olamaz (gizli hücreler tablo sütun modelinden tamamen
+                    çıkar). Çözüm Birim Maliyet ile zaten kullanılan desenin aynısı: "Toplam" etiketi
+                    yalnızca her zaman görünür sütunları (Bileşen+Miktar+opsiyonel) kapsar, SKU için ayrı
+                    bir `hidden … sm:table-cell` yer tutucu hücre eklenir. */}
                 <tr className="h-9 border-t border-border/60 font-medium">
-                  <td className="px-3 whitespace-nowrap" colSpan={3 + (hasScrap ? 1 : 0) + (hasByproduct ? 1 : 0)}>
+                  <td className="hidden px-3 sm:table-cell" />
+                  <td className="px-3 whitespace-nowrap" colSpan={2 + (hasScrap ? 1 : 0) + (hasByproduct ? 1 : 0)}>
                     Toplam
                   </td>
                   <td className="hidden px-3 sm:table-cell" />

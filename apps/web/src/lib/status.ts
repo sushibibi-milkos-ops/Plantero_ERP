@@ -129,7 +129,7 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
     queued: { label: 'Kuyrukta', tone: 'warning' },
     sent: { label: 'GİB’e gönderildi', tone: 'info' },
     accepted: { label: 'Kabul', tone: 'success' },
-    rejected: { label: 'Red', tone: 'danger' },
+    rejected: { label: 'Reddedildi', tone: 'danger' },
     error: { label: 'Hata', tone: 'danger' },
   },
   payment: {
@@ -140,17 +140,19 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
   // Tur 4 P1 bulgusu: mavi ton depo modülünde iki farklı anlam taşıyordu — burada "Sevk edildi"
   // (depo tarafında fiilen bitmiş, başarılı) mavi, transfer kind'ında "Yolda" (gerçekten devam eden)
   // da mavi. Ton sözlüğü artık tek bir anlam eksenine sabit: terminal-başarılı = success (yeşil),
-  // devam eden = info (mavi), bekleyen = warning (amber), iptal = danger. "Sevk edildi" (depo'nun son
-  // eylemi) ve transfer'deki "Tamamlandı" artık aynı tonu (success) taşır. `delivered` (müşteri
-  // teslim onayı, sevk edildi'den sonraki AYRI bir adım) de success kalır — ikisi StatusBadge'de
-  // `subtle` mekanizmasıyla ayrışır (shipped = dolgusuz/subtle, delivered = dolgulu/tam vurgu; bkz.
-  // status-badge.tsx) — work_order kind'ındaki in_progress/finished ayrımıyla aynı kalıp.
+  // devam eden = info (mavi), bekleyen = warning (amber), iptal = danger.
+  // Tur 5 P2 düzeltmesi: "Sevk edildi"/"Teslim edildi" ayrımı artık StatusBadge'in `subtle`
+  // mekanizmasıyla (dolgu/dolgusuz) DEĞİL, tonla kuruluyor — "shipped" ile "delivered" ikisi de
+  // dolgulu pil basar ama farklı renk (shipped=primary, delivered=success). Önceki subtle kalıp bu
+  // ekranda hiç gerçekleşen bir ayrımı (delivered satırı) varsaymıştı: /depo/sevkiyat listesinde 27
+  // satırın 26'sı "shipped" ve tek bir "delivered" satırı yoktu — sonuç sistematik dolgusuzluktu,
+  // modül içindeki diğer tüm durum rozetleriyle (Mal Kabul/Transfer/Sayım) tutarsız bir anatomi.
   delivery: {
     draft: { label: 'Taslak', tone: 'muted' },
     reserved: { label: 'Rezerve', tone: 'warning' },
     picking: { label: 'Toplanıyor', tone: 'info' },
     picked: { label: 'Toplandı', tone: 'info' },
-    shipped: { label: 'Sevk edildi', tone: 'success' },
+    shipped: { label: 'Sevk edildi', tone: 'primary' },
     delivered: { label: 'Teslim edildi', tone: 'success' },
     cancelled: { label: 'İptal', tone: 'danger' },
   },
@@ -179,7 +181,10 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
   lot: {
     quarantine: { label: 'Karantina', tone: 'warning' },
     released: { label: 'Serbest', tone: 'success' },
-    rejected: { label: 'Red', tone: 'danger' },
+    // Tur 5 P1 bulgusu: 'Red' Türkçe UI kuralını ihlal ediyordu (dosyanın geri kalanı 'Reddedildi'
+    // diyor) — 'Karantina'/'Serbest' komşuluğunda İngilizce bir renk adı gibi okunuyordu. Durum
+    // sütunu kısaltmayı gerektirmeyecek genişlikte (130-200px).
+    rejected: { label: 'Reddedildi', tone: 'danger' },
     consumed: { label: 'Tüketildi', tone: 'neutral' },
     recalled: { label: 'Geri çağrıldı', tone: 'danger' },
     expired: { label: 'SKT geçti', tone: 'danger' },

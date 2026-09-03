@@ -64,7 +64,18 @@ export default async function PartnerDetailPage({ params, searchParams }: { para
     {
       value: 'genel',
       label: 'Genel',
-      content: <PartnerGeneralTab partner={partner} channelName={channelName} lastOrder={orders[0] ?? null} orders={orders} invoices={invoices} payments={payments} />,
+      content: (
+        <PartnerGeneralTab
+          partner={partner}
+          channelName={channelName}
+          lastOrder={orders[0] ?? null}
+          orders={orders}
+          invoices={invoices}
+          payments={payments}
+          addresses={addresses}
+          contacts={contacts}
+        />
+      ),
     },
     { value: 'adresler', label: 'Adresler', content: <PartnerAddressesTab partnerId={id} addresses={addresses} canManage={canManage} /> },
     { value: 'kisiler', label: 'Kişiler', content: <PartnerContactsTab partnerId={id} contacts={contacts} canManage={canManage} /> },

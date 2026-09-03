@@ -43,7 +43,12 @@ export function StatusBadge({
   dot?: boolean;
   className?: string;
 }) {
-  const info = getStatusInfo(status, kind);
+  // Kök neden (Tur 5 P1): `label` zaten çağıran tarafından geçilmişken burada koşulsuz
+  // `getStatusInfo(status, kind)` çağrılıyordu — sözlükte karşılığı olmayan durumlar (ör.
+  // product_kind: raw_material/packaging, location usage: internal) için render başına konsol
+  // uyarısı basılıyordu, etiket zaten override edildiği için görsel çıktı değişmiyordu ama
+  // /depo/stok'ta 26, /depo/lotlar'da 74 uyarı birikiyordu. `label` verilmişse sözlük hiç aranmaz.
+  const info = label != null ? { label, tone: tone ?? ('neutral' as StatusTone) } : getStatusInfo(status, kind);
   const resolvedTone = tone ?? info.tone;
   const t = TONE_CLASSES[resolvedTone];
   // `work_order` özel durumu: in_progress (primary) ve finished (success) globals.css'te aynı yeşil
@@ -52,12 +57,13 @@ export function StatusBadge({
   // dolgulu + nabız atan noktayla vurgulanır; tamamlanmış süreç dolgusuz (yalnızca metin + nokta) kalır
   // — aynı listede iki durum artık asla aynı arka plan rengini paylaşmaz.
   //
-  // `delivery` kind'ında aynı kalıp: "Sevk edildi" ve "Teslim edildi" artık ikisi de `success`
-  // (Tur 4 P1 — ton sözlüğü anlam eksenine sabitlendi, bkz. lib/status.ts) ama ayrı, ardışık iki
-  // adım — aynı satırda ikisi de dolgulu yeşil görünürse ayırt edilemez. "Sevk edildi" (depo'nun son
-  // eylemi, ama zincirin henüz son halkası değil) subtle/dolgusuz kalır; "Teslim edildi" (gerçek son
-  // halka, müşteri onayı) tam dolgulu vurguyu taşır.
-  const SUBTLE_STATUS: Partial<Record<string, Set<string>>> = { work_order: new Set(['finished']), delivery: new Set(['shipped']) };
+  // `delivery` kind'ında ARTIK subtle YOK (Tur 5 P2 düzeltmesi): "shipped" dolgusuz basılıyordu çünkü
+  // "Teslim edildi"den ayırt etme gerekçesiyle eklenmişti (Tur 4 P1), ama /depo/sevkiyat listesinde bu
+  // ayrım hiç gerçekleşmiyor — 27 satırın 26'sı "shipped", tek bir "delivered" satırı yok; sonuç modül
+  // içinde iki farklı rozet anatomisi (Mal Kabul/Transfer/Sayım dolgulu, Sevkiyat dolgusuz) ve saf
+  // tutarsızlık. Ayrım artık dolgu/dolgusuz yerine tondan kurulur: shipped=primary, delivered=success
+  // (lib/status.ts) — ikisi de dolgulu pil, ama farklı renk.
+  const SUBTLE_STATUS: Partial<Record<string, Set<string>>> = { work_order: new Set(['finished']) };
   const subtle = Boolean(kind && SUBTLE_STATUS[kind]?.has(status ?? ''));
   const pulseDot = kind === 'work_order' && status === 'in_progress';
   return (

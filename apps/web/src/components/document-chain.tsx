@@ -46,7 +46,10 @@ function ChainCard({ node, current }: { node: ChainNode; current: boolean }) {
       data-pressable
       aria-current={current ? 'true' : undefined}
       className={cn(
-        'flex w-44 shrink-0 snap-start flex-col gap-1.5 rounded-lg border bg-card p-2.5 text-left',
+        // w-[78vw] md:w-44: mobilde kart genişliği viewport'un ~%78'i — bir sonraki kartın kenarı
+        // her zaman ~22% "peek" olarak görünür kalır, bu da kaydırılabilir olduğunu ima eder (Tur 5
+        // P2 bulgusu — önceki sabit w-44, 390px'te ~2.2 kart sığdırıp kaydırma ipucusuz duruyordu).
+        'flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-lg border bg-card p-2.5 text-left md:w-44',
         current ? 'border-primary/50 ring-2 ring-primary/15' : 'border-border/70 hover:border-border hover:bg-accent/40',
       )}
     >
@@ -94,7 +97,10 @@ export function DocumentChain({
     // render eder; scroll-fade-x'in varsayılanı var(--card) (beyaz) olduğundan açık temada zeminle
     // (var(--background), #fafafa) eşleşmiyor ve soldurma pratikte görünmüyordu (Tur 4 P2 bulgusu).
     <div
-      className={cn('scrollbar-thin scroll-fade-x -mx-1 snap-x overflow-x-auto px-1 py-1', className)}
+      // Kök neden (Tur 5 P2): yalnızca `snap-x` (proximity) — momentum kaydırma bir kartın TAM
+      // ortasında durabiliyordu, kırpma/kaydırma göstergesi olmadan bozuk render izlenimi veriyordu.
+      // `snap-mandatory` kaydırmanın her zaman bir kart sınırında durmasını zorunlu kılar.
+      className={cn('scrollbar-thin scroll-fade-x -mx-1 snap-x snap-mandatory overflow-x-auto px-1 py-1', className)}
       style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}
       role="navigation"
       aria-label="Belge zinciri"
@@ -117,7 +123,7 @@ export function DocumentChain({
         ) : (
           // Önceden kartsız, hizasız düz metindi — zincirdeki kartlarla (w-44, aynı dikey konum) aynı
           // ölçüde kesikli çerçeveli bir "boş" kart, akışın bittiğini görsel olarak da belirtir.
-          <div className="flex w-44 shrink-0 snap-start items-center justify-center self-stretch rounded-lg border border-dashed border-border/70 p-2.5 text-center text-[11px] text-muted-foreground">
+          <div className="flex w-[78vw] shrink-0 snap-start items-center justify-center self-stretch rounded-lg border border-dashed border-border/70 p-2.5 text-center text-[11px] text-muted-foreground md:w-44">
             Devam belgesi yok
           </div>
         )}

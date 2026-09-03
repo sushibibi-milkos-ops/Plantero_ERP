@@ -5,6 +5,7 @@ import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/da
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
+import { EmptyCell } from '@/components/empty-cell';
 import { SubtleStatusBadge } from './subtle-status-badge';
 import { formatPctFixed } from '../format-pct';
 import type { BomListRow } from '../queries';
@@ -26,14 +27,16 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
         accessorKey: 'status',
         header: 'Durum',
         // Tur 4 P2: araç çubuğunda Durum filtresi vardı ama sütun `initialColumnVisibility` ile
-        // gizleniyordu — kullanıcı göremediği bir sütuna göre filtreliyordu ve sayfa alt başlığındaki
-        // "38 aktif" bilgisiyle satırlar tutarsızdı. Artık varsayılan görünür; 38/38 aktif olduğu için
-        // dolgusuz nokta rozeti kullanılır (products-table.tsx'teki aynı desen) — sütun boyunca
-        // kesintisiz dolgulu şerit oluşmaz.
-        meta: { mobile: 'badge', width: 90 },
+        // gizleniyordu — kullanıcı göremediği bir sütuna göre filtreliyordu. O turda çözüm sütunu
+        // varsayılan görünür yapmak, dolgusuz nokta rozeti kullanmaktı. Tur 5 P1 bulgusu: nötr tona
+        // çevrilmiş olsa bile (bkz. cell aşağıda) 38/38 satır "Aktif" olduğu için sütun sıfır ayırt
+        // edici bilgi taşıyor, sayfa alanını gerekçesiz tüketiyor (outputQty/expectedYieldPct'teki aynı
+        // desen). Toolbar'daki facet filtre TanStack table state üzerinde çalışır, sütun görünürlüğünden
+        // bağımsızdır — sütun varsayılan gizliyken de filtrelenebilir kalır, sütun seçiciden açılabilir.
+        meta: { mobile: 'badge', width: 90, defaultHidden: true },
         cell: ({ getValue }) => {
           const s = getValue<string>();
-          if (s === 'active') return <SubtleStatusBadge tone="success" label={BOM_STATUS_LABELS[s] ?? s} />;
+          if (s === 'active') return <SubtleStatusBadge tone="muted" label={BOM_STATUS_LABELS[s] ?? s} />;
           return <StatusBadge status={s} label={BOM_STATUS_LABELS[s] ?? s} kind="bom" />;
         },
       },
@@ -55,7 +58,11 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
       {
         accessorKey: 'cycleMinutes',
         header: 'Çevrim',
-        meta: { align: 'right', width: 80, mobile: 'hidden' },
+        // Tur 5 P1 bulgusu: seed verisinde 38/38 satır "45 dk" — sıfır varyanslı ikinci bir sütun, aynı
+        // satırda Durum ile birlikte ~200px yatay alan tüketip Reçete Kodu ile Durum arası boş şerit
+        // bırakıyordu. outputQty/expectedYieldPct'teki aynı desen: varsayılan gizli, gerçek varyans
+        // oluştuğunda (farklı süreli reçeteler eklendiğinde) sütun seçiciden hâlâ erişilebilir kalır.
+        meta: { align: 'right', width: 80, mobile: 'hidden', defaultHidden: true },
         cell: ({ getValue }) => {
           const v = getValue<number | null>();
           return v ? <span className="num text-muted-foreground">{v} dk</span> : <span className="text-muted-foreground/50">—</span>;
@@ -71,7 +78,13 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
         accessorKey: 'unitCost',
         header: 'Birim Maliyet',
         meta: { align: 'right', width: 120 },
-        cell: ({ getValue }) => <MoneyCell value={getValue<string>()} digits={2} />,
+        // Tur 5 P1 bulgusu (partners-table.tsx ile aynı sözleşme): sıfır maliyet ile "veri yok" farklı
+        // anlamlar — hesaplanmış gerçek bir sıfır değil, henüz maliyetlendirilmemiş demektir; em dash bu
+        // belirsizliği çözer, soluk "₺0,00" çözmez.
+        cell: ({ getValue }) => {
+          const v = getValue<string>();
+          return Number(v) === 0 ? <EmptyCell /> : <MoneyCell value={v} digits={2} />;
+        },
       },
     ],
     [],

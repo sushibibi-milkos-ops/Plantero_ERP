@@ -39,8 +39,13 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
 
   const columns = useMemo<ColumnDef<LotRow, unknown>[]>(
     () => [
-      { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot no', meta: { mobile: 'title' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} status={row.original.status} id={row.original.id} /> },
-      { accessorKey: 'productName', header: 'Ürün', meta: { mobile: 'subtitle' }, cell: ({ row }) => <span>{row.original.productName} <span className="font-mono text-xs text-muted-foreground">· {row.original.sku}</span></span> },
+      // Kök neden (Tur 5 P1): mobil kartta hiyerarşi tersti — lot no (teknik anahtar) başlık rolünü
+      // üstleniyor, satırın asıl anlamı olan ürün adı SKU ile aynı soluk gri alt satıra düşüyordu.
+      // Mobil ROLLERİ takas edildi (masaüstü sütun sırası DEĞİŞMEDİ — Lot no hâlâ ilk sütun): ürün
+      // adı artık `title` (14px font-medium, tam kontrast), lot no `subtitle` (LotBadge zaten
+      // kutusuz, salt font-mono text-xs — bkz. lot-badge.tsx).
+      { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot no', meta: { mobile: 'subtitle' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} status={row.original.status} id={row.original.id} /> },
+      { accessorKey: 'productName', header: 'Ürün', meta: { mobile: 'title' }, cell: ({ row }) => <span>{row.original.productName} <span className="font-mono text-xs text-muted-foreground">· {row.original.sku}</span></span> },
       {
         id: 'status',
         accessorFn: (r) => r.status,
@@ -156,7 +161,9 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
               onClick={() => setStatusFilter((f) => (f === s ? null : s))}
               aria-pressed={active}
               className={cn(
-                'inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-medium transition-colors',
+                // h-11 md:h-7: 390px'te 28px dokunma hedefi eşiğin altındaydı (Tur 5 P1 bulgusu) —
+                // masaüstünde yoğun çip şeridi (h-7) korunur.
+                'inline-flex h-11 items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-medium transition-colors md:h-7',
                 active ? 'border-primary/50 bg-primary/5 text-foreground' : 'border-border/60 text-muted-foreground hover:bg-accent/40 hover:text-foreground',
               )}
             >

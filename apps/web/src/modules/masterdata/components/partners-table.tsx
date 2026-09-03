@@ -4,13 +4,21 @@ import { useMemo } from 'react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
+import { EmptyCell } from '@/components/empty-cell';
 import type { PartnerListRow } from '../queries';
 import { PARTNER_KIND_LABELS } from '../product-labels';
 
 export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
   const columns = useMemo<ColumnDef<PartnerListRow, unknown>[]>(
     () => [
-      { accessorKey: 'code', header: 'Kod', meta: { className: 'font-mono text-[12px]', width: 100 } },
+      {
+        accessorKey: 'code',
+        header: 'Kod',
+        // Tur 5 P1 bulgusu: SKU'nun products-table.tsx'te aldığı 'subtitle' rolü burada hiç verilmemişti
+        // — mobil kartta kod, ad altında etiketsiz mono alt başlık yerine "Kod  S-000005" diye etiketli
+        // bir çift olarak beliriyordu (modül içi iki liste ekranı iki farklı kimlik biçimi konuşuyordu).
+        meta: { mobile: 'subtitle', className: 'font-mono text-[12px]', width: 100 },
+      },
       { accessorKey: 'name', header: 'Ad', meta: { mobile: 'title', className: 'font-medium' } },
       {
         accessorKey: 'kind',
@@ -43,8 +51,14 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
         header: 'Bakiye',
         // Pozitif bakiye nötr: alacak "iyi" bir olay değil, yalnızca "sıfırdan farklı" demek. Renk yalnızca
         // gerçek sinyalde kullanılır — negatif (borç) MoneyCell tarafından zaten kırmızı basılır.
+        // Tur 5 P1 bulgusu: sıfır bakiye "₺0,00" olarak soluk basılıyordu — "Kanal" gibi gerçekten boş
+        // alanlar em dash kullanırken aynı satırda iki farklı "boş" sözleşmesi (17 satırın 12'sinde)
+        // okuyucuyu "hesaplanmış sıfır mı, veri yok mu" ikilemine sokuyordu. Sıfır artık em dash.
         meta: { align: 'right', width: 130 },
-        cell: ({ getValue }) => <MoneyCell value={getValue<string>()} />,
+        cell: ({ getValue }) => {
+          const v = getValue<string>();
+          return Number(v) === 0 ? <EmptyCell /> : <MoneyCell value={v} />;
+        },
       },
       {
         accessorKey: 'supplierQualityScore',

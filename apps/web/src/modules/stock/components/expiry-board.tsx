@@ -112,12 +112,16 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
               title={BUCKET_LABELS[b]}
               value={t.count}
               format="int"
-              hint={formatMoney(t.qtyValue, 'TRY', { digits: 0 })}
+              // Kök neden (Tur 5 P2): boş kova için "₺0" basılıyordu — bir Stripe KPI'sında "veri yok"
+              // ile "gerçekten sıfır" aynı şey değildir; em-dash daha dürüst.
+              hint={t.count === 0 ? '—' : formatMoney(t.qtyValue, 'TRY', { digits: 0 })}
               active={active}
               onClick={() => setActiveBucket(active ? null : b)}
               // Değeri 0 olan kova (ör. "60-90 gün: 0") tam kontrastla basılıyordu — sayfadaki tek
               // gerçekten boş dilim, dolu dilimlerle aynı ağırlığı taşıyordu (Tur 4 P2 bulgusu).
-              className={t.count === 0 ? 'opacity-60' : undefined}
+              // Kendi sol ayracı (md:border-l) de kaldırılır — boş bir dilimin şeride tam bir bölüm
+              // gibi bir sınır çizmesi, dolu dilimlerle aynı ritmi taşıması yanlış sinyal verirdi.
+              className={t.count === 0 ? 'opacity-60 md:border-l-0' : undefined}
             />
           );
         })}
@@ -131,13 +135,12 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
         initialSorting={[{ id: 'expiryDate', desc: false }]}
         emptyTitle="Bu aralıkta SKT'si yaklaşan lot yok"
         rowActions={canScrap ? (r) => [{ label: 'Hurdaya ayır', icon: Trash2, destructive: true, onSelect: () => setScrapTarget(r) }] : undefined}
-        // Satır tonlaması artık KPI kovalarıyla AYNI eşiği kullanır (bkz. bucketOf — core) — önceden
-        // ExpiryBadge'in kendi 7 günlük eşiğine bağlıydı ve 8. satırdan itibaren tonsuz kalıyordu,
-        // oysa KPI "30 günden az" diyordu (Tur 4 P2 bulgusu: iki farklı eşik aynı sürekli değişkeni
-        // kodluyordu). 30-60 gün daha soluk (uyarı, henüz acil değil), 60-90 ve sonrası tonsuz.
-        rowClassName={(r) =>
-          r.bucket === 'expired' ? 'bg-destructive/8 hover:bg-destructive/12' : r.bucket === 'critical' ? 'bg-warning/8 hover:bg-warning/12' : r.bucket === 'warning' ? 'bg-warning/4 hover:bg-warning/8' : undefined
-        }
+        // Satır zemin tonu istisnayı işaretler, kuralı değil (Tur 5 P0 bulgusu): önceki sürüm
+        // "critical" (0-30 gün, satırların büyük kısmı) VE "warning" (30-60 gün) kovalarını da
+        // tintliyordu — 81 satırın 80'i amber zeminliydi, tek gerçek acil kayıt (SKT geçmiş) kalabalıkta
+        // kayboluyordu. Artık yalnızca "expired" zeminlenir; "critical" çok daha soluk bir iz taşır,
+        // "warning"/"notice" tamamen tonsuz — kalan sinyali ExpiryBadge (rozet) taşır.
+        rowClassName={(r) => (r.bucket === 'expired' ? 'bg-destructive/8 hover:bg-destructive/12' : r.bucket === 'critical' ? 'bg-warning/5 hover:bg-warning/8' : undefined)}
       />
 
       <ConfirmDialog

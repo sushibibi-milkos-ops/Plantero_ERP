@@ -10,6 +10,7 @@ import { LotBadge } from '@/components/lot-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { useFocusMode } from '@/components/app-shell/use-focus-mode';
 import { cn } from '@/lib/utils';
 import { scanCodeAction, confirmPickAction } from '../actions';
@@ -27,6 +28,7 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
   const [lines, setLines] = useState(initialLines);
   const [code, setCode] = useState('');
   const [pending, setPending] = useState(false);
+  const [confirmSkip, setConfirmSkip] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const pendingLines = useMemo(() => lines.filter((l) => Number(l.pickedQty) < Number(l.qty)), [lines]);
@@ -126,15 +128,26 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
           scaleX yalnızca compositor'da çalışır. Track bg-border kullanır ki 0/N durumunda da (dolgu
           gerçekten sıfır genişlikte) bir "iz" görünsün — önceki sürümde minimum %2 dolgu yapay olarak
           "toplama başlamış" izlenimi veriyordu, boş durumla 1 satır toplanmış durumu ayırt edilemiyordu
-          (Tur 4 P2 bulgusu). */}
+          (Tur 4 P2 bulgusu).
+          Kök neden (Tur 5 P2): %0'da (henüz hiç satır toplanmamışken) dolgu tam anlamıyla sıfır
+          genişlikte render oluyordu — track (bg-border) ile ayrımı hiç kalmıyor, düz bir ayraçtan
+          farksız görünüyordu, "durum çubuğu" olduğu belli olmuyordu. `min-w` doğrudan işe yaramaz
+          (transform yalnızca render zamanında ölçekler, layout genişliği zaten %100 — min-width
+          ölçeklenmiş boyuta uygulanmaz); bunun yerine oranın kendisi JS'te küçük bir tabana
+          (%2.5) kenetlenir — reflow tetiklemeden her zaman görünür bir iz bırakır. */}
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
         <div
           className="h-full origin-left rounded-full bg-primary transition-transform duration-200 ease-out"
-          style={{ transform: `scaleX(${lines.length ? doneCount / lines.length : 0})` }}
+          style={{ transform: `scaleX(${lines.length ? Math.max(doneCount / lines.length, 0.025) : 0})` }}
         />
       </div>
 
-      <div className={cn(hasQueue && 'lg:grid lg:grid-cols-[1fr_280px] lg:items-start lg:gap-6')}>
+      {/* Kök neden (Tur 5 P2): 2 kolonlu grid `hasQueue` (kuyrukta ≥1 öğe) ile tetikleniyordu — kuyrukta
+          TEK öğe varken bile 1440px'te sağda ~280px'lik bir kolon ayrılıyor, tek satırlık liste orada
+          asılı kalıyordu. Grid artık yalnızca kuyruk gerçekten kalabalıksa (>2 öğe) uygulanır; daha
+          küçük kuyruklar tek kolonda, ana akışın altında akar (aşağıdaki panel `hasQueue` ile hâlâ
+          ayrı gösterilir — yalnızca YAN YANA dizilme koşulu sıkılaştırıldı). */}
+      <div className={cn(pendingLines.length - 1 > 2 && 'lg:grid lg:grid-cols-[1fr_280px] lg:items-start lg:gap-6')}>
         <div className="space-y-5">
           <div className="rounded-2xl border border-border/70 bg-card p-5">
             <div className="mb-3 text-xs font-medium tracking-wide text-muted-foreground uppercase">Sıradaki satır</div>
@@ -142,10 +155,16 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
             <div className="mb-4 font-mono text-sm text-muted-foreground">{current.sku}</div>
             <div className="flex flex-wrap items-center gap-2">
               {current.lotNo ? (
-                // LotBadge varsayılan olarak dokunma hedefini yalnızca mobilde büyütür (md:h-5'e geri
-                // döner) — toplama ekranı masaüstü genişliğinde açılsa bile hep büyük dokunma hedefi
-                // istediğinden md: sınıfları burada açıkça ezilir.
-                <LotBadge lotNo={current.lotNo} id={current.lotId ?? undefined} className="h-11 px-3 text-[13px] md:h-11 md:px-3 md:text-[13px]" />
+                // LotBadge artık kabuksuz (yalnızca mono metin — Tur 5 P1). Bu ekranda tek başına
+                // duran lot rozeti, listedeki 200 tekrarlı çerçeve sorununun MUADİLİ değil — burada
+                // odak noktası tek bir belirgin dokunma hedefi olması gerekiyor, bu yüzden kabuk
+                // (border/bg/rounded) burada yerel olarak GERİ eklenir; md: sınıfları da masaüstünde
+                // hep büyük hedef istediğinden açıkça ezilir.
+                <LotBadge
+                  lotNo={current.lotNo}
+                  id={current.lotId ?? undefined}
+                  className="h-11 rounded-md border border-border/70 bg-muted/40 px-3 text-[13px] hover:border-border hover:bg-muted md:h-11 md:px-3 md:text-[13px]"
+                />
               ) : (
                 <span className="text-sm text-muted-foreground">Lotsuz ürün</span>
               )}
@@ -190,8 +209,11 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
                 (Tur 3 P2 bulgusu). Düz gövde metni gibi görünüyordu — çerçevesi/belirgin dokunma
                 hedefi yoktu; oysa bu STOK SAYIMINI ETKİLEYEN (kısmi sevkiyat) bir aksiyon (Tur 4 P2
                 bulgusu). Artık belirgin bir buton (h-11, destructive tonlu, hover'da dolgu). */}
+            {/* Kök neden (Tur 5 P2): "Satırı atla" yıkıcı bir eylem (kısmi sevkiyata yol açabilir) ama
+                tek tıkla, onaysız çalışıyordu — buton ağırlığı zaten destructive tonluydu, ama gerçek
+                bir onay adımı ekranda hiç görünmüyordu. `ConfirmDialog` ile sarmalandı. */}
             {hasQueue ? (
-              <Button variant="ghost" size="lg" className="h-11 w-full text-destructive/80 hover:bg-destructive/8 hover:text-destructive" onClick={skipCurrent} disabled={pending}>
+              <Button variant="ghost" size="lg" className="h-11 w-full text-destructive/80 hover:bg-destructive/8 hover:text-destructive" onClick={() => setConfirmSkip(true)} disabled={pending}>
                 Satırı atla — eksik/bulunamadı
               </Button>
             ) : null}
@@ -213,6 +235,19 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
         ) : null}
       </div>
       {lines.length === 0 ? <EmptyState compact title="Toplanacak satır yok" /> : null}
+
+      <ConfirmDialog
+        open={confirmSkip}
+        onOpenChange={setConfirmSkip}
+        title="Satırı atla"
+        description={current ? `${current.productName} sırada bekleyenlerin sonuna taşınır — henüz toplanmamış sayılır ve kısmi sevkiyata yol açabilir.` : undefined}
+        confirmLabel="Atla"
+        destructive
+        onConfirm={() => {
+          skipCurrent();
+          setConfirmSkip(false);
+        }}
+      />
     </div>
   );
 }

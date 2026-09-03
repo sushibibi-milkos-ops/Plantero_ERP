@@ -65,8 +65,11 @@ export default async function ReceiptsPage() {
           <KpiCard
             variant="strip"
             title="Ortalama kabul süresi"
-            value={avgLeadTimeHours === null ? 0 : showLeadInMinutes ? avgLeadTimeMinutes! : avgLeadTimeHours}
-            format={avgLeadTimeHours === null ? 'int' : showLeadInMinutes ? 'int' : 'qty'}
+            // Kök neden (Tur 5 P1): hesaplanamaz durumda `0` basılıyordu — kullanıcı bunu "tüm
+            // kabuller anında kapanıyor" diye okur, yanlış bilgi. `value={null}` artık dürüst bir
+            // "—" basar (bkz. kpi-card.tsx).
+            value={avgLeadTimeHours === null ? null : showLeadInMinutes ? avgLeadTimeMinutes! : avgLeadTimeHours}
+            format={showLeadInMinutes ? 'int' : 'qty'}
             suffix={avgLeadTimeHours === null ? undefined : showLeadInMinutes ? 'dk' : 'sa'}
             hint={avgLeadTimeHours === null ? 'Henüz kabul edilen belge yok' : undefined}
           />
@@ -74,7 +77,19 @@ export default async function ReceiptsPage() {
       ) : null}
 
       <ReceiptsTable receipts={receipts} />
-      {isSparse ? <NextStepHint>Tedarikçiden gelen sevkiyatları barkod okutarak hızlıca kabul edebilirsiniz.</NextStepHint> : null}
+      {isSparse ? (
+        <NextStepHint
+          action={
+            userCan(user, 'stock.receive') ? (
+              <Link href="/depo/mal-kabul/yeni" className="shrink-0 font-medium text-primary hover:underline">
+                + Yeni mal kabul
+              </Link>
+            ) : undefined
+          }
+        >
+          Tedarikçiden gelen sevkiyatları barkod okutarak hızlıca kabul edebilirsiniz.
+        </NextStepHint>
+      ) : null}
     </div>
   );
 }

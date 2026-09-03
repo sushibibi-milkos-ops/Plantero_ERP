@@ -43,15 +43,19 @@ const LEVEL_CLASS: Record<ExpiryLevel, string> = {
   urgent: 'bg-warning/12 text-warning',
   // Önceden tam doygun `bg-destructive` (beyaz metin) — sayfadaki ~20 diğer rozetin tamamı yumuşak
   // tint kullanırken tek başına en yüksek kontrastlı öğe oluyor, birden çok satırda görsel öncelik
-  // sırasını bozuyordu (Tur 3 bulgusu, Kokpit). Vurgu artık zeminde değil dolu kırmızı noktada
-  // (bkz. DOT_CLASS) — anatomi diğer rozetlerle birebir aynı kalır, yalnızca en acil durum
-  // (süresi geçmiş) noktanın kendisiyle ayrışır.
+  // sırasını bozuyordu (Tur 3 bulgusu, Kokpit). Yumuşak tint (Tur 5'ten itibaren TEK sinyal — bkz.
+  // DOT_CLASS'taki "dolgu XOR nokta" notu) anatomi diğer rozetlerle birebir aynı kalır, yalnızca
+  // rengiyle (destructive) en acil durumu (süresi geçmiş) ayırır.
   expired: 'bg-destructive/12 text-destructive',
 };
 
+// Kök neden (Tur 5 P1): "expired" hem dolgulu bir pil (LEVEL_CLASS: bg-destructive/12) HEM de ayrı
+// renkli bir nokta taşıyordu — aynı olgu (süresi geçti) için iki üst üste kodlama, tek satırda hem
+// "● 10 gün · 13.09.2026" hem zemin rengi. Tek kural: dolgu XOR nokta. `expired` zaten en güçlü
+// tekil sinyali (dolgu) taşıyor — nokta kaldırıldı, yalnızca dolgusuz `critical` seviyesi nokta
+// kullanır.
 const DOT_CLASS: Partial<Record<ExpiryLevel, string>> = {
   critical: 'bg-amber-600 dark:bg-amber-400',
-  expired: 'bg-destructive',
 };
 
 export const EXPIRY_LEVEL_LABELS: Record<ExpiryLevel, string> = {
