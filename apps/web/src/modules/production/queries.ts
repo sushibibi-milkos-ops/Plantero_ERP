@@ -93,9 +93,13 @@ export async function getWorkOrderKpis(): Promise<WorkOrderKpis> {
   const rows = await db.select().from(workOrders);
   const open = rows.filter((r) => !['closed', 'cancelled'].includes(r.status));
   const inProgress = rows.filter((r) => r.status === 'in_progress');
+  // Tur 12 P1 (uretim-hatlar-01): burada iki farklı "bugün" tanımı vardı — `todayIso` (Europe/Istanbul
+  // iş günü, businessDate) karşılaştırmalarda kullanılıyordu ama `finishedToday` UTC takvim gününe göre
+  // hesaplanan ayrı bir `today` kullanıyordu (CLAUDE.md kural 4: ekranda Europe/Istanbul). Aynı modülün
+  // /operator ekranı (getOperatorLineSummary, aşağıda) tamamen businessDate() kullanıyor; tek tanıma
+  // indirildi (producedValueToday şu an hiçbir ekranda render edilmiyor — ölü alan, yine de tutarlı olsun).
   const todayIso = businessDate(new Date());
-  const today = new Date().toISOString().slice(0, 10);
-  const finishedToday = rows.filter((r) => r.finishedAt && r.finishedAt.toISOString().slice(0, 10) === today);
+  const finishedToday = rows.filter((r) => r.finishedAt && businessDate(r.finishedAt) === todayIso);
   const withYield = rows.filter((r) => r.yieldPct !== null && D(r.yieldPct).gt(0));
   const avgYield = withYield.length ? sum(withYield.map((r) => r.yieldPct)).div(withYield.length) : D(0);
 
@@ -229,7 +233,12 @@ export type LineCardRow = {
 
 export async function listLineCards(): Promise<LineCardRow[]> {
   const lines = await listProductionLines();
-  const today = new Date().toISOString().slice(0, 10);
+  // Tur 12 P1 (uretim-hatlar-02): burada UTC takvim günü kullanılıyordu ("BUGÜN (HAT)"/"DOLULUK" ve
+  // 7 günlük sparkline aralığı), aşağıdaki tüm karşılaştırmalar (businessDate(...) === today) ise
+  // Europe/Istanbul iş gününe göreydi — aynı modüldeki /operator vardiya özeti (getOperatorLineSummary)
+  // businessDate(new Date()) kullanıyor. Saat 00:00-03:00 (UTC) Europe/Istanbul'da zaten yeni takvim
+  // günü olduğundan bu iki ekran aynı dakikada farklı "bugün"e bakıyordu (CLAUDE.md kural 4).
+  const today = businessDate(new Date());
   const out: LineCardRow[] = [];
   for (const line of lines) {
     const [active] = await db

@@ -24,6 +24,15 @@ import type { WorkOrderRow } from '../queries';
  * Tur 11 P1 (uretim-is-emirleri-02): mobil kartta sütun başlığı yok, dolayısıyla masaüstündeki
  * "birim → başlığa taşınır" kısayolu (`uniformUom`) burada birimi tamamen görünmez kılıyordu
  * ("90 / 0"). Mobil kart artık `uniformUom`'u yok sayıp birimi her zaman değerin yanında basar.
+ *
+ * Tur 12 P1 (uretim-is-emirleri-03): meta satırında yalnızca docNo span'i `truncate` taşıyordu —
+ * Tailwind'in `truncate` yardımcı sınıfı `overflow:hidden` de ekliyor, CSS'e göre bir flex öğesinin
+ * otomatik min-genişliği `overflow:visible` değilse sıfıra iner; bu yüzden satır daraldığında TÜM
+ * daralma (sağdaki miktar özeti satır genişliğine göre değiştiği için değişken kalan alan) tek
+ * başına docNo'ya biniyordu — HAT kodu ve ayraçlar sabit genişlikte kaldığı için hiç kırpılmıyordu,
+ * belge no ise 8 karttan 6'sında kırpılıyordu (bkz. ölçüm). Artık `truncate` docNo yerine tarihte:
+ * docNo ve HAT `shrink-0` ile hep tam basılır (ikisi de kısa/sabit uzunluklu, ayırt edici bilgi),
+ * daralma payını en düşük bilgi değerli alan olan tarih üstlenir.
  */
 function WorkOrderMobileCard({ wo }: { wo: WorkOrderRow }) {
   return (
@@ -33,12 +42,12 @@ function WorkOrderMobileCard({ wo }: { wo: WorkOrderRow }) {
         <StatusBadge status={wo.status} kind="work_order" />
       </div>
       <div className="mt-1 flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-1.5 truncate font-mono text-[11px] text-muted-foreground/70">
-          <span className="truncate">{wo.docNo}</span>
-          <span aria-hidden>·</span>
-          <span>{wo.lineCode}</span>
-          <span aria-hidden>·</span>
-          <span>{wo.plannedStart ? formatDate(wo.plannedStart) : '—'}</span>
+        <div className="flex min-w-0 items-center gap-1.5 font-mono text-[11px] text-muted-foreground/70">
+          <span className="shrink-0">{wo.docNo}</span>
+          <span aria-hidden className="shrink-0">·</span>
+          <span className="shrink-0">{wo.lineCode}</span>
+          <span aria-hidden className="shrink-0">·</span>
+          <span className="min-w-0 truncate">{wo.plannedStart ? formatDate(wo.plannedStart) : '—'}</span>
         </div>
         <span className="shrink-0 text-[13px] tabular-nums">
           <QtyCell value={wo.plannedQty} uom={wo.uomCode} className="inline-flex" /> / <QtyCell value={wo.producedQty} uom={wo.uomCode} className="inline-flex" />
