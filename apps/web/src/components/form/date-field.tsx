@@ -34,6 +34,10 @@ export function DateInput({
   className,
   fromDate,
   toDate,
+  id,
+  'aria-describedby': ariaDescribedBy,
+  'aria-label': ariaLabel,
+  'aria-invalid': ariaInvalid,
 }: {
   value: string | null | undefined;
   onChange: (iso: string | null) => void;
@@ -43,6 +47,11 @@ export function DateInput({
   className?: string;
   fromDate?: Date;
   toDate?: Date;
+  /** Bağımsız (FormField dışı) kullanımda bir `<label htmlFor>` ile eşleştirmek için — metin girişine iletilir. */
+  id?: string;
+  'aria-describedby'?: string;
+  'aria-label'?: string;
+  'aria-invalid'?: boolean;
 }) {
   const date = isoToDate(value);
   const [text, setText] = useState(date ? format(date, TR) : '');
@@ -70,6 +79,7 @@ export function DateInput({
   return (
     <div className={cn('relative flex items-center', className)}>
       <Input
+        id={id}
         value={text}
         onChange={(e) => setText(e.target.value)}
         onBlur={commitText}
@@ -82,6 +92,9 @@ export function DateInput({
         inputMode="numeric"
         placeholder={placeholder}
         disabled={disabled}
+        aria-describedby={ariaDescribedBy}
+        aria-label={ariaLabel}
+        aria-invalid={ariaInvalid}
         className="num h-9 pr-16 text-[13px] md:text-[13px]"
       />
       <div className="absolute right-1 flex items-center">

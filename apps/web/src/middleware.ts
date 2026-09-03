@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 const SESSION_COOKIE = 'plantero_session';
 
 /** Oturum gerektirmeyen yollar */
-const PUBLIC_PATHS = ['/login', '/api/health'];
+const PUBLIC_PATHS = ['/login', '/api/health', '/operator/giris'];
 
 function isPublic(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));

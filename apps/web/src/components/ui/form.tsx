@@ -164,4 +164,10 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  // `FieldLabel` (apps/web/src/components/form/fields.tsx) standalone kullanımı (bir <FormField>
+  // dışında, ör. Combobox/DateInput ile elle eşlenen alanlar) için — `useFormField()` bağlam dışında
+  // sessizce "undefined-form-item" üretir (varsayılan context değeri `{}` her zaman truthy), bu yüzden
+  // FieldLabel kendi bağlam kontrolünü bu ham context'lerle yapar.
+  FormItemContext,
+  FormFieldContext,
 }

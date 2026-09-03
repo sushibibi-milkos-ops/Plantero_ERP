@@ -27,6 +27,10 @@ export function Combobox({
   clearable = true,
   className,
   mono,
+  id,
+  'aria-describedby': ariaDescribedBy,
+  'aria-label': ariaLabel,
+  'aria-invalid': ariaInvalid,
 }: {
   value: string | null | undefined;
   onChange: (v: string | null) => void;
@@ -39,6 +43,13 @@ export function Combobox({
   clearable?: boolean;
   className?: string;
   mono?: boolean;
+  /** Bağımsız (FormField dışı) kullanımda bir `<label htmlFor>` ile eşleştirmek için — tetikleyici
+   *  köke iletilir; birlikte kullanılan `FieldLabel`'a aynı id verilmeli. */
+  id?: string;
+  'aria-describedby'?: string;
+  /** Görünür bir `<label>` yoksa erişilebilir ad (ör. bir tablo filtre çubuğundaki arama kutusu). */
+  'aria-label'?: string;
+  'aria-invalid'?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -71,8 +82,12 @@ export function Combobox({
       <PopoverTrigger asChild>
         <button
           type="button"
+          id={id}
           role="combobox"
           aria-expanded={open}
+          aria-describedby={ariaDescribedBy}
+          aria-label={ariaLabel}
+          aria-invalid={ariaInvalid}
           disabled={disabled}
           className={cn(
             'flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 text-left text-[13px] shadow-xs outline-none',

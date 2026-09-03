@@ -1,7 +1,9 @@
 'use client';
 
+import { useContext, useId } from 'react';
 import type { Control, FieldPath, FieldValues } from 'react-hook-form';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormFieldContext, FormItem, FormItemContext, FormLabel, FormMessage } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,14 +24,37 @@ export type BaseFieldProps<TFieldValues extends FieldValues> = {
   className?: string;
 };
 
-export function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
+/**
+ * Alan etiketi. `<FormField>` içinde kullanılırsa (ör. `FormText`) otomatik olarak o alana bağlanır.
+ * `<FormField>` dışında (bir `Combobox`/`DateInput`'u elle bir `<Controller>` ile eşleyen ekranlarda)
+ * kullanılıyorsa `htmlFor` ile eşleştirilen bileşenin `id`'sini açıkça vermek gerekir — verilmezse
+ * kendi ürettiği kararlı bir id'yi kullanır (önceki davranış: `ui/form.tsx`'in `useFormField()`'i,
+ * varsayılan context nesnesi `{}` her zaman doğru (truthy) kabul edildiği için sessizce
+ * `"undefined-form-item"` gibi hiçbir kontrole karşılık gelmeyen kırık bir id üretiyordu).
+ */
+export function FieldLabel({ children, required, htmlFor, className }: { children: React.ReactNode; required?: boolean; htmlFor?: string; className?: string }) {
+  const autoId = useId();
+  const fieldCtx = useContext(FormFieldContext);
+  const itemCtx = useContext(FormItemContext);
+  const inFormField = Boolean(fieldCtx && 'name' in fieldCtx && itemCtx && 'id' in itemCtx);
+
+  if (inFormField && !htmlFor) {
+    // FormField/FormItem bağlamı gerçekten var — mevcut `FormLabel` doğrulama hatasını da kırmızıyla vurgular.
+    return (
+      <FormLabel className={cn('text-[13px]', className)}>
+        {children}
+        {/* text-destructive değil: kırmızı bu bağlamda hata anlamı taşımıyor (zorunlu alan ≠ hata) —
+            renk enflasyonundan kaçınma, aynı sayfada gerçek kırmızı yalnızca doğrulama hatasına ayrılır. */}
+        {required ? <span className="ml-0.5 text-muted-foreground">*</span> : null}
+      </FormLabel>
+    );
+  }
+
   return (
-    <FormLabel className="text-[13px]">
+    <Label htmlFor={htmlFor ?? autoId} className={cn('text-[13px]', className)}>
       {children}
-      {/* text-destructive değil: kırmızı bu bağlamda hata anlamı taşımıyor (zorunlu alan ≠ hata) —
-          renk enflasyonundan kaçınma, aynı sayfada gerçek kırmızı yalnızca doğrulama hatasına ayrılır. */}
       {required ? <span className="ml-0.5 text-muted-foreground">*</span> : null}
-    </FormLabel>
+    </Label>
   );
 }
 
