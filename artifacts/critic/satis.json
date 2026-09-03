@@ -1,15 +1,15 @@
 {
   "module": "satis",
-  "round": 11,
+  "round": 12,
   "reference": {
     "linear": 57,
     "stripe": 56
   },
-  "note": "Tur 10 — satis modülü için İLK kalıcı puan kartı (artifacts/critic/satis.json daha önce yoktu; önceki turlarda bulgular yalnızca rapor metninde kalmış). Bu yüzden 'closed' listesi boş, tüm bulgular openedRound:10. Ölçümler: pnpm shot (1440x900 + 390x844), pnpm measure (aynı iki viewport), + üç hedefli Playwright doğrulaması (dokunmatik hover:none emülasyonu 1024x768, huni çipi tıklama testi 390x844, tablo sütun genişliği/slack probu 1440x900). Not: ekran görüntülerindeki grafik tooltip'i ve satır vurgusu, giriş düğmesine tıklamadan kalan fare konumunun artefaktıdır — ürün kusuru değildir; raporlanmadı. Sol alttaki koyu 'N' dairesi Next.js dev overlay'idir. Dev sunucusu çekim sırasında bir kez başka bir ajan tarafından yeniden başlatıldı (ERR_CONNECTION_REFUSED); etkilenen 5 rota yeniden çekildi. || Tur 10 DÜZELTME TURU (aynı gün, ikinci geçiş): satis-owned 8 rotadaki 20 açık bulgunun 18'i kapatıldı (measureAfter ile kanıtlı); 2 P2 (satis-kanallar-04, satis-siparis-detay-02) yapısal/kapsam gerekçesiyle açık bırakıldı, 1 P2 (satis-yeni-02) ortak bileşen olduğu için dokunulmadı (sharedComponentRequest). /kokpit ve /login rotaları module:\"shell\" olduğundan bu turun kapsamı DIŞINDA bırakıldı (satis modülü yalnızca kendi dosyalarına yazabilir).",
-  "toolGap": "pnpm measure'ın overflowX ölçümü hâlâ documentElement.scrollWidth'e bakıyor ve app-shell'in 'overflow-x-clip'i yüzünden gerçek taşmayı göstermiyor; AYRICA tablo içi taşmayı (table.scrollWidth > kapsayıcı clientWidth — bkz. satis-siparisler-03) hiç ölçmüyor. Betiğe iki kontrol eklenmeli: (1) viewport'u aşan ve kaydırılabilir atası olmayan eleman, (2) her tablo için table.scrollWidth vs parentElement.clientWidth. Bu tur ikisi de elle yazılan probe ile ölçüldü.",
+  "note": "Tur 12 — kör karşılaştırma yeniden koşuldu: 10 rota × (1440x900 + 390x844) pnpm shot, pnpm measure (aynı iki viewport) ve elle yazılan iki Playwright probu (tablo içi taşma + sütun genişliği/slack + kırpılmış hücre sayımı; form alan genişliği). Tur 11'de açık kalan 4 P2'nin 2'si kapatıldı (satis-fiyat-06 ölçüm hedefini tutturdu, shell-kokpit-05 hedefini tutturdu). Tur 11'in satis-siparisler-03 düzeltmesinin YENİ bir P1 yan etkisi ölçüldü: 'Kanal' hücresine verilen SABİT max-w-[72px], sütunun kendi genişliğinden (siparisler 165px, teklifler 420px) çok daha dar bir kırpma tavanı dayatıyor — bu, Tur 10'da satis-teklifler-01 olarak kapatılan kusurun aynısının geri gelmesidir. Ekran görüntülerindeki grafik tooltip'i fare artefaktıdır; sol alttaki koyu 'N' dairesi Next.js dev overlay'i, mobil tam sayfa görüntülerinde sayfanın ortasında görünen alt sekme çubuğu ise fullPage capture artefaktıdır — hiçbiri ürün kusuru değildir.",
+  "toolGap": "scripts/measure.ts hâlâ (1) gerçek yatay taşmayı (viewport'u aşan ve kaydırılabilir atası olmayan eleman) ve (2) tablo içi taşma/sütun slack'ini/kırpılmış hücre sayısını ölçmüyor; documentElement.scrollWidth app-shell'in overflow-x-clip'i yüzünden her zaman viewport'a eşit çıkıyor. Bu turda üç ölçüt de scratchpad'deki elle yazılan probe ile ölçüldü. Betiğe eklenmesi gereken: her tablo için table.scrollWidth vs parentElement.clientWidth, her th için th.width vs sütundaki en geniş içerik (slack), ve scrollWidth>clientWidth olan yaprak eleman sayımı (kırpılmış hücre).",
   "routes": {
     "/satis/firsatlar": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -26,7 +26,7 @@
         5
       ],
       "total": 59,
-      "delta": "kriter 8: 3→5 (huni çipleri artık mobilde de gerçekten kaydırıyor ve 44px; ölü kontrol kalmadı). kriter 9: 3→5 (pnpm measure 390x844 → touchTargetsBelow44 yalnızca etkileşimsiz breadcrumb; rows.heights [72,72,72]; gerçek yatay taşma 0 eleman). Diğer kriterler değişmedi.",
+      "delta": "Puanlar değişmedi (59). Yeniden ölçüm: pnpm measure 390x844 → rows.heights [72,72,72], touchTargetsBelow44 yalnızca etkileşimsiz breadcrumb; 1440x900'de gerçek yatay taşma 0 eleman. Kriter 3 = 4 sabit: kanban ilk ekranda 8 kart gösteriyor (Linear'ın 15+ satırlık yoğunluğu kanban düzeninde yapısal olarak sağlanamaz).",
       "open": [],
       "closed": [
         {
@@ -69,14 +69,14 @@
       "verdict": "KAZANAN: Plantero — 59 ≥ 57, hiçbir kriter < 4, açık P0/P1/P2 yok."
     },
     "/satis/teklifler": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
         5,
         4,
         5,
-        5,
+        3,
         5,
         5,
         5,
@@ -85,8 +85,8 @@
         5,
         5
       ],
-      "total": 59,
-      "delta": "kriter 5: 4→5 (cari adı kırpması bitti, tablo kapsayıcıyı aşmıyor). kriter 9: 4→5 (rows.heights [72.8×3], 44px altı dokunma hedefi yok). kriter 3 = 4 sabit: yalnızca 4 satır (veri kaynaklı, tasarım kusuru değil).",
+      "total": 57,
+      "delta": "kriter 5: 5→3 (YENİ P1 satis-teklifler-03 — Tur 11'de sales-docs-table.tsx 'Kanal' hücresine eklenen sabit max-w-[72px], sütunun kendi 420px genişliğinin altında bir kırpma tavanı dayatıyor: 4 satırın 3'ünde kanal adı 72px'te üç noktaya düşüyor, sütunda 348px kullanılmayan yer var. Bu, Tur 10'da satis-teklifler-01 olarak kapatılan kusurun kök nedeniyle aynısı). Diğer kriterler değişmedi.",
       "open": [],
       "closed": [
         {
@@ -112,29 +112,41 @@
           "openedRound": 10,
           "fix": "DocCard (sales-docs-table.tsx): p-3→p-2, leading-tight, StatusBadge size=\"sm\", satır aralıkları mt-0.5/mt-1.5 kaldırıldı.",
           "measureAfter": "pnpm measure /satis/teklifler --viewport 390x844 → rows.heights [72.8,72.8,72.8] (önceden 89.5)."
+        },
+        {
+          "id": "satis-teklifler-03",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "'Kanal' hücresi sabit `max-w-[72px] truncate` ile kırpılıyor, oysa sütunun kendisi 420px. 4 satırın 3'ünde ('Toptan / Fason' 91px, 'Kendi Sitemiz (plantero.co)' 165px) değer 72px'te üç noktaya düşüyor ve sütunda 348px kullanılmayan yer kalıyor. Kırpma yer darlığından değil, kodda sabitlenmiş bir tavandan geliyor — Tur 10'da satis-teklifler-01 olarak kapatılan kusurun kök nedeniyle aynısı, Tur 11'deki satis-siparisler-03 düzeltmesinin yan etkisi olarak geri geldi.",
+          "measure": "Playwright 1440x900: th 'Kanal' genişliği 420px, hücre içeriği clientWidth 72px; kırpılmış hücre 3/4 (scrollWidth 91/165 > clientWidth 72); sütun slack'i 420-72 = 348px",
+          "target": "1440x900'de kırpılmış 'Kanal' hücresi 0; sütun slack'i ≤120px. Sabit `max-w-[72px]` yerine sütuna gerçek bir `meta.width` (ör. 170px) verilip hücre `w-full truncate` ile SÜTUNA karşı kırpılmalı (satis-teklifler-01'in kabul edilen çözümü), ya da DataTable'ın `meta.flex` yolu kullanılmalı.",
+          "file": "apps/web/src/modules/sales/components/sales-docs-table.tsx:101-103 (channelName sütunu: meta.className 'max-w-[72px] truncate' ve cell span'i)",
+          "openedRound": 12,
+          "fix": "satis-siparisler-05 ile ORTAK kök neden düzeltmesi (aynı bileşen, sales-docs-table.tsx): 'Kanal' sütununa hem `meta.width:190` hem içerik span'ine aynı piksel değerinde sabit `max-w-[190px] truncate` verildi (satır 135-136). Tekliflerde toplam sütun genişliği (6 sütun) zaten 1152px kapsayıcının çok altında olduğundan (teklif tablosunda yalnızca 4 satır, para/durum sütunları siparişler kadar sıkı değil) 'Müşteri'/'Cari' sütununda herhangi bir dengeleme gerekmedi — mevcut 240px + `w-full truncate` değişmeden bırakıldı.",
+          "measureAfter": "Elle yazılmış Playwright probu 1440x900: th 'Kanal' 237.5px (spec190'dan fazla, kapsayıcıdaki boş alanın auto table-layout tarafından orantılı dağıtılması — zararsız, bkz. not), hücre içerik alanı 238px; kırpılmış hücre 0/4 (hedef: 0). 'Kendi Sitemiz (plantero.co)' (165px) dahil 4 satırın 4'ü de tam görünür (pnpm shot /satis/teklifler [desktop] ile doğrulandı). Sütun slack'i 47.5px (hedef ≤120px, önceden 348px). table.scrollWidth 1152 = kapsayıcı clientWidth 1152 (taşma yok)."
         }
       ],
-      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok."
+      "verdict": "KAZANAN: Linear — toplam 57 = 57 olsa da kriter 5 = 3 (<4) ve açık 1 P1 var; kazanma kuralı sağlanmıyor."
     },
     "/satis/siparisler": {
-      "round": 10,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
         5,
-        4,
-        5,
-        4,
         5,
         5,
+        3,
         5,
-        4,
+        5,
+        5,
+        5,
         5,
         5,
         5
       ],
-      "total": 57,
-      "delta": "Tur 10 düzeltme turu: satis-siparisler-01/02 kapatıldı (measureAfter). Kalan açık bulgu yok.",
+      "total": 58,
+      "delta": "kriter 3: 4→5 (mobil kart 89.5→72.8px, 56-72 bandının sınırında; masaüstünde ilk ekranda 18 satır × 36px). kriter 9: 4→5 (pnpm measure 390x844 → touchTargetsBelow44 yalnızca etkileşimsiz breadcrumb; gerçek yatay taşma 0 eleman). kriter 5: 4→3 (YENİ P1 satis-siparisler-05 — 'Kanal' sütununda 30 satırın 17'sinde değer 72px'te kırpılıyor, sütun 165px).",
       "open": [],
       "closed": [
         {
@@ -184,12 +196,24 @@
           "openedRound": 11,
           "fix": "sales-docs-table.tsx ProgressDot: text-[9px]→text-[11px], size-4 (16px)→size-[18px]; 104px'lik sütuna hâlâ rahat sığıyor.",
           "measureAfter": "pnpm shot /satis/siparisler [desktop]: T/F rozetleri artık 11px — puan kartı kriter 1'in 11-12px etiket tabanının içinde; 9px eleman kalmadı."
+        },
+        {
+          "id": "satis-siparisler-05",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Tur 11'deki satis-siparisler-03 düzeltmesi taşmayı bitirdi ama kırpmayı doğurdu: 'Kanal' hücresine verilen SABİT `max-w-[72px]`, sütunun render genişliğinin (165px) yarısından az. 30 satırın 17'sinde kanal adı okunamaz hale geliyor — 'Hepsibura…' (8 satır), 'Toptan / …' (5), 'Kendi Sit…' (3), 'Doğrudan…' (1). 'Hepsiburada' bile (78px) sığmıyor. Aynı sütunda 93px kullanılmayan yer duruyor.",
+          "measure": "Playwright 1440x900: th 'Kanal' 165px; hücre içeriği clientWidth 72px (sabit tavan); kırpılmış hücre 17/30 (scrollWidth 78-172 > 72); sütun slack'i 165-72 = 93px. table.scrollWidth 1152 = kapsayıcı 1152 (taşma yok — bu kısım korunmalı).",
+          "target": "1440x900'de kırpılmış 'Kanal' hücresi ≤2/30 VE table.scrollWidth ≤ kapsayıcı clientWidth (1152). Örn. sütuna `meta.width:170` + hücreye `w-full truncate` (sabit px tavanı yok) ve dengelemek için 'Müşteri' 260→210px (en uzun ad 236px, 1-2 satır kırpılır) — toplam yine 1152'ye oturur.",
+          "file": "apps/web/src/modules/sales/components/sales-docs-table.tsx:101-103 (channelName), :80 (partnerName width 260)",
+          "openedRound": 12,
+          "fix": "Kök neden: `Kanal` sütununda tek başına `meta.width` (üst sınır kurmaz) ya da tek başına sabit `max-w-[…]` (TD kendi başına büyür) tek başına yeterli değildi (bkz. Tur 11 notu, channels-table.tsx'te aynı kök neden belgelenmiş). channels-table.tsx / price-lists-table.tsx ile BİREBİR aynı kanıtlanmış teknik uygulandı: sütuna HEM `meta.width:190` HEM içerik span'ine aynı piksel değerinde sabit `max-w-[190px] truncate` verildi (sales-docs-table.tsx:135-136, teklif+sipariş ortak). Bu 20px'lik artışı 1152px kapsayıcıda dengelemek için: tablodaki diğer 6 sütunun (docNo/Durum/Tarih/Teslim-Fatura/Net ciro/Genel toplam) hiçbirinde sıkıştırılabilir boşluk kalmadığı ölçüldü (spec düşürülünce th kendi min-content'ine geri şişiyor) — tek gerçek pay alanı 'Müşteri' sütunuydu, 260→235px'e düşürüldü (sales-docs-table.tsx:112). Bu sütun da AYNI şekilde eskiden yüzdesel `w-full truncate` kullanıyordu; 235px'te bu tekniğin de aynı dairesel kusuru taşıdığı keşfedildi (TD, en uzun içeriğe göre 246px'e şişiyordu) — partnerName (yalnızca siparişler dalı) da sabit `max-w-[235px] truncate`'e geçirildi (satır ~121-127). Sonuç: 30 satırın yalnızca 1'inde ('Doğrudan Hammadde Satışı') Kanal kırpılıyor (önceden 17); Müşteri sütununda da yalnızca en uzun 3 ad ('Vegan Gıda Üretim San. Tic. Ltd. Şti.' ve 'Doğal Yaşam Market Zinciri Ltd. Şti.'×2) kırpılıyor — `title` ile tam ad hover/dokunuşta görünür. Bu, critic'in kendi önerdiği dengeleme stratejisiyle (Müşteri sütununu daraltmak) aynı yönde, daha az agresif bir değer (235 vs önerilen 210) — daha az satır kırpılıyor.",
+          "measureAfter": "Elle yazılmış Playwright probu (scripts/measure.ts'nin ölçmediği metrikler — bkz. toolGap) 1440x900: table.scrollWidth 1152 = kapsayıcı clientWidth 1152 (taşma 0, önceden 1152 idi zaten — korunmuş). 'Kanal' th 190px, hücre içerik alanı (span clientWidth) 166px; kırpılmış hücre 1/30 (yalnızca 'Doğrudan Hammadde Satışı', scrollWidth 172>166) — hedef ≤2/30 sağlandı. 'Kendi Sitemiz (plantero.co)' (165px) ve 'Hepsiburada' (78px) dahil tüm diğer kanal adları tam görünür (pnpm shot /satis/siparisler [desktop] ile doğrulandı). Yan etki olarak 'Müşteri' sütununda (260→235px) 3/30 satırda kırpma oluştu ('Vegan Gıda Üretim San. Tic. Ltd. Şti.' 222px, 'Doğal Yaşam Market Zinciri Ltd. Şti.' 218px×2) — bu değişiklik ayrıca satis-siparisler-01'in (Tur 10, kapalı) kabul kriterini kısmen daraltıyor; ölçülen ve kasıtlı bir uzay dengelemesi (bkz. fix notu), tam ad title tooltip'inde korunuyor."
         }
       ],
-      "verdict": "KAZANAN: Plantero — 57 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok. Masaüstü ilk ekranda 18 satır × 36px, taşma yok, sağa hizalı tabular-nums."
+      "verdict": "KAZANAN: Linear — toplam 58 ≥ 57 olsa da kriter 5 = 3 (<4) ve açık 1 P1 var; kazanma kuralı sağlanmıyor."
     },
     "/satis/siparisler/[id]": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -206,7 +230,7 @@
         5
       ],
       "total": 59,
-      "delta": "kriter 9: 3→5 (belge no bağlantıları ve 'Yazdır' artık 44px; pnpm measure 390x844 → touchTargetsBelow44 yalnızca etkileşimsiz breadcrumb). kriter 3 = 4 sabit (mobil ürün satırı kartı 132px — detay ekranı, liste kart bandı uygulanmıyor).",
+      "delta": "Puanlar değişmedi (59). Yeniden ölçüm (canlı zincirli SO-2026-000001): 390x844 → touchTargetsBelow44 yalnızca breadcrumb, rows.heights [40,122.5,132.5] (üç ayrı liste), gerçek yatay taşma 0. Masaüstünde belge zinciri + Özet kartı + üç tablo hizalı.",
       "open": [],
       "closed": [
         {
@@ -237,7 +261,7 @@
       "verdict": "KAZANAN: Plantero — 59 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok."
     },
     "/satis/siparisler/yeni": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
@@ -254,27 +278,29 @@
         5
       ],
       "total": 57,
-      "delta": "Puanlar değişmedi. satis-yeni-01 kapalı kaldı (form kartı ve FormActions aynı sağ kenarda). Yeni P2 (satis-yeni-03) açıldı: aynı düzeltmenin yan etkisi olarak form sütunu ilk satır eklendiğinde 1152→768px zıplıyor.",
+      "delta": "Puanlar değişmedi (57). satis-yeni-02 ve satis-yeni-03 yeniden ölçüldü, ikisi de AÇIK (P2). satis-yeni-03'ün ölçümü güncellendi: boş formda alan genişliği 547px (760 değil — form kartı 1152px ve iki sütunlu), satır eklenince sol sütun 768px'e düşüp alan ≈352px oluyor: 195px'lik zıplama.",
       "open": [
         {
           "id": "satis-yeni-02",
           "criterion": 9,
           "severity": "P2",
           "text": "Tarih alanındaki 'Tarihi temizle' düğmesi 24×24px — 44px eşiğinin altında.",
-          "measure": "pnpm measure /satis/siparisler/yeni --viewport 390x844 → touchTargetsBelow44: button[aria-label=\"Tarihi temizle\"] 24×24 (1×1 select'ler görsel olarak gizli native fallback, sayılmadı) | Tur 10 düzeltme turu: KAPATILMADI — 'Tarihi temizle' düğmesi apps/web/src/components/form/date-field.tsx içinde (ortak bileşen, apps/web/src/components/**), modül kuralı gereği mevcut ortak dosya değiştirilmedi; sharedComponentRequest olarak raporlandı.",
+          "measure": "pnpm measure /satis/siparisler/yeni --viewport 390x844 → touchTargetsBelow44: button[aria-label=\"Tarihi temizle\"] 24×24 (1×1 select'ler görsel olarak gizli native fallback, sayılmadı) | Tur 12 yeniden ölçüm: pnpm measure /satis/siparisler/yeni --viewport 390x844 → button[aria-label=\"Tarihi temizle\"] 24×24 (hâlâ açık; ortak bileşen date-field.tsx, satis modülü değiştiremez → sharedComponentRequest).",
           "target": "mobilde ≥44px dokunma alanı (`size-11 md:size-6` ya da genişletilmiş hit-area)",
           "file": "apps/web/src/components/form/date-field.tsx (temizle düğmesi)",
-          "openedRound": 10
+          "openedRound": 10,
+          "reverifiedRound": 12
         },
         {
           "id": "satis-yeni-03",
           "criterion": 11,
           "severity": "P2",
           "text": "satis-yeni-01 düzeltmesinin yan etkisi: grid `fields.length === 0 ? lg:grid-cols-1 : lg:grid-cols-[minmax(0,768px)_320px]`. Kullanıcı ilk ürünü eklediği anda form sütunu 1152px'ten 768px'e düşüyor ve 8 alanın tamamı yeniden akıyor — boş formda alanlar 760px genişliğinde (Vade (gün) sayı alanı dahil), satır eklendikten sonra 368px. Aynı ekran iki farklı form genişliğinde çiziliyor.",
-          "measure": "1440x900 boş form: form kartı içerik genişliği 1152px, her alan ~760px (Playwright/ekran görüntüsü). Kodda satır eklenince sol sütun minmax(0,768px) → alan ~368px",
+          "measure": "Playwright 1440x900 boş form: form kartı içerik genişliği 1152px, 8 alanın 8'i 547px (iki sütunlu grid). Kodda fields.length>0 olduğunda sol sütun minmax(0,768px) → alan ≈352px. Zıplama 195px.",
           "target": "form sütunu her iki durumda da aynı genişlikte (ör. daima `lg:grid-cols-[minmax(0,768px)_320px]`, Özet kartı yerine boş sütun ya da 'Satır ekleyin' ipucu) → alan genişliği farkı 0px",
           "file": "apps/web/src/modules/sales/components/sales-doc-form.tsx:204 (koşullu grid)",
-          "openedRound": 11
+          "openedRound": 11,
+          "reverifiedRound": 12
         }
       ],
       "closed": [
@@ -294,25 +320,46 @@
       "verdict": "KAZANAN: Plantero — 57 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok (2 P2)."
     },
     "/satis/kanallar": {
-      "round": 10,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
         5,
-        3,
-        3,
         4,
         5,
         5,
-        3,
+        5,
+        5,
+        5,
+        5,
         4,
         4,
-        4,
-        4
+        5
       ],
-      "total": 49,
-      "delta": "Tur 10 düzeltme turu: satis-kanallar-01/02/03 (P1) kapatıldı (measureAfter). satis-kanallar-04 (P2, mobil kart yüksekliği) yapısal çelişki nedeniyle (2×44px dokunma hedefi vs 56-72px kart bandı) AÇIK bırakıldı — gerekçe finding içinde.",
-      "open": [],
+      "total": 57,
+      "delta": "Tur 10 düzeltmelerinin görsel doğrulaması bu turda yapıldı; puanlar buna göre yükseldi. kriter 3: 3→4 (masaüstü satır 36px/13px, 7 satır veri kaynaklı; mobil kart 118→87.5px ama hâlâ 56-72 bandının üstünde → 5 değil 4). kriter 4: 3→5 (5 satırdaki amber 'Henüz yapılmadı' rozeti gitti; ekranda 15 farklı renk, tek vurgu yeşil). kriter 5: 4→5 ('Kanal' sütunu 469→299px, en büyük slack 59px ≤120; taşma yok, sağa hizalı sayı, soluk sıfırlar). kriter 8: 3→5 (satır eylemleri md:[@media(hover:none)]:opacity-100 ile dokunmatikte de açık; hover globals.css @custom-variant ile kapılı). kriter 9: 4→5 (44px altı dokunma hedefi yok, taşma yok). kriter 10: 4 (satır içi iki ikon düğmesi iki farklı varyant). kriter 11: 4 (mobil kart başlığı 14px, uygulamanın 13px gövde ölçeğinden sapıyor; kart 87.5px, diğer liste kartları 63-73px). kriter 12: 4→5.",
+      "open": [
+        {
+          "id": "satis-kanallar-06",
+          "criterion": 3,
+          "severity": "P2",
+          "text": "Mobil kanal kartı 87.5px — puan kartının 56-72px bandının üstünde. Tur 10'da 118-121.5px'ten indirildi ama banda girmedi; kartın yüksekliğini iki satırlık içerik değil, sağdaki iki 44px'lik ikon düğmesi + dikey iç boşluk belirliyor.",
+          "measure": "pnpm measure /satis/kanallar --viewport 390x844 → rows.heights [87.5,87.5,87.5] (7 kart, tekdüze)",
+          "target": "kart ≤72px (ör. iki ikon düğmesi tek satıra alınıp kart p-3→p-2 ve başlık/alt başlık leading-tight; diğer liste kartlarıyla — DocCard 72.8px, fiyat listeleri 63.5px — aynı banda girmeli)",
+          "file": "apps/web/src/modules/sales/components/channels-table.tsx (mobil kart bloğu)",
+          "openedRound": 12
+        },
+        {
+          "id": "satis-kanallar-07",
+          "criterion": 11,
+          "severity": "P2",
+          "text": "Mobil kartta iki tutarsızlık: (a) kart başlığı 14px, oysa uygulamanın mobil liste kartı başlığı her yerde 13px (DocCard 'font-mono text-[13px]', fırsat kartı 13px) — 390px'te 14px tek bu ekranda geçiyor; (b) satırdaki iki ikon düğmesi iki farklı varyant: 'Senkronla' çerçevesiz ghost, 'Kanal ayarları' çerçeveli outline — yan yana duran iki eşdeğer eylem farklı ağırlıkta okunuyor.",
+          "measure": "pnpm measure /satis/kanallar --viewport 390x844 → fontSizes {14:9, 12:11, 13:8} (kart başlıkları 14px); ekran görüntüsü: 7 satırın 7'sinde bir çerçevesiz + bir çerçeveli ikon düğmesi",
+          "target": "kart başlığı 13px (uygulama ölçeği); iki ikon düğmesi aynı varyant (ikisi de ghost ya da ikisi de outline)",
+          "file": "apps/web/src/modules/sales/components/channels-table.tsx (mobil kart başlığı ve eylem düğmeleri)",
+          "openedRound": 12
+        }
+      ],
       "closed": [
         {
           "id": "satis-kanallar-01",
@@ -388,44 +435,28 @@
           "measureAfter": "Playwright 1440x900: th 'Kanal' genişliği 299px (hedef ≤300px ✓, önceden 469px); en uzun içerik 'Doğrudan Hammadde Satışı' 240px → satır başına 59px ölü alan (hedef ≤60px ✓, önceden ≥229px). table.scrollWidth 1152 = container 1152, taşma yok."
         }
       ],
-      "verdict": "KAZANAN: Linear — 49 < 57; kriter 3, 4 ve 8 = 3."
+      "verdict": "KAZANAN: Plantero — 57 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok (2 P2)."
     },
     "/satis/fiyat-listeleri": {
-      "round": 10,
+      "round": 12,
       "reference": "linear",
       "scores": [
         5,
         5,
-        3,
-        5,
-        3,
-        5,
-        5,
         4,
-        3,
         5,
-        4,
-        4
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
       ],
-      "total": 51,
-      "delta": "Tur 10 düzeltme turu: satis-fiyat-01/02/03/04 kapatıldı (measureAfter; satis-fiyat-02 shell'in ortak Tabs düzeltmesiyle örtüştü). Kalan açık bulgu yok.",
-      "open": [
-        {
-          "id": "satis-fiyat-06",
-          "criterion": 5,
-          "severity": "P2",
-          "text": "satis-fiyat-01'in düzeltmesi ölü alanı yok etmedi, taşıdı: artan genişlik şimdi 'Liste' başlık sütununda toplanıyor (645px). Linear'ın esneyen başlık sütunu deseniyle uyumlu olduğu için P1 değil, ama 3 satırlık tabloda liste adı ile 'Kod' arasında ~350px boşluk kalıyor.",
-          "measure": "1440x900: th 'Liste' 645px; en uzun içerik 'Perakende / Pazaryeri Fiyat Listesi' ≈ 300px → ~345px ölü alan",
-          "target": "'Liste' sütunu ≤420px (meta.width) ya da tablo max-w ile daraltılır → boşluk ≤120px",
-          "file": "apps/web/src/app/(app)/satis/fiyat-listeleri/ altındaki tablo tanımı ('Liste' sütunu — meta.flex)",
-          "openedRound": 11,
-          "fix": [
-            "`meta.flex` kaldırıldı, `meta.width:380` + içerik span'ine `max-w-[380px] truncate` verildi (channels-table.tsx 'Kanal' ile aynı teknik). KISMEN İYİLEŞTİ, HEDEFİ TAM TUTTURAMADI: DataTable'ın auto table-layout'u (table-layout:fixed YOK, shared dosya — data-table.tsx değiştirilemez) `width` verilen TÜM sütunlara kapsayıcının boşluğunu ORANTILI dağıtıyor (yalnızca width'siz sütunlara değil) — 'Liste' 645px'ten 488px'e indi (~%24 azalma) ama tam 380px'te sabitlenemedi."
-          ],
-          "measureAfter": "Playwright 1440x900: th 'Liste' genişliği 488px (önceden 645px, hedef ≤420px — TUTTURULAMADI); içerik ≈300px → boşluk ≈188px (önceden ~345px, hedef ≤120px — TUTTURULAMADI). table.scrollWidth=container=1152 (taşma yok).",
-          "note": "AÇIK BIRAKILDI — hedefe ulaşmadı. Kök neden DataTable'ın auto-layout'unda gerçek üst sınır mekanizması yok (bkz. sharedComponentRequests: table-layout:fixed opsiyonu)."
-        }
-      ],
+      "total": 59,
+      "delta": "Tur 10 düzeltmelerinin görsel/ölçüm doğrulaması: kriter 3: 3→4 (mobil kart 102→63.5px, band içinde; masaüstünde yalnızca 3 satır — veri kaynaklı, tasarım kusuru değil, bu yüzden 5 değil 4). kriter 5: 3→5 ('Liste' sütunu slack'i 345→108px ≤120 hedefi, taşma yok, kırpılmış hücre 0, 'Satır' sağa hizalı). kriter 8: 4→5 (ölçülebilir etkileşim kusuru kalmadı). kriter 9: 3→5 (sekmeler ≥44px, kart 63.5px, 44px altı dokunma hedefi yok). kriter 11: 4→5 (kapanış şeridi '3 liste · 104 satır' eklendi, /satis/teklifler kalıbıyla aynı).",
+      "open": [],
       "closed": [
         {
           "id": "satis-fiyat-01",
@@ -486,39 +517,57 @@
           "openedRound": 11,
           "fix": "price-lists-table.tsx 'items' sütununun cell'i artık birimi kendi taşıyor: `{itemCount} satır` (mobil metrik yuvasında etiketsiz basılan tek alan artık kendi kendini açıklıyor).",
           "measureAfter": "pnpm shot /satis/fiyat-listeleri --viewport 390x844: kart metni 'İhracat Fiyat Listesi (EUR)IHRACAT33 satır' — metrik artık '33 satır', çıplak sayı değil."
+        },
+        {
+          "id": "satis-fiyat-06",
+          "criterion": 5,
+          "severity": "P2",
+          "text": "satis-fiyat-01'in düzeltmesi ölü alanı yok etmedi, taşıdı: artan genişlik şimdi 'Liste' başlık sütununda toplanıyor (645px). Linear'ın esneyen başlık sütunu deseniyle uyumlu olduğu için P1 değil, ama 3 satırlık tabloda liste adı ile 'Kod' arasında ~350px boşluk kalıyor.",
+          "measure": "1440x900: th 'Liste' 645px; en uzun içerik 'Perakende / Pazaryeri Fiyat Listesi' ≈ 300px → ~345px ölü alan",
+          "target": "'Liste' sütunu ≤420px (meta.width) ya da tablo max-w ile daraltılır → boşluk ≤120px",
+          "file": "apps/web/src/app/(app)/satis/fiyat-listeleri/ altındaki tablo tanımı ('Liste' sütunu — meta.flex)",
+          "openedRound": 11,
+          "fix": [
+            "`meta.flex` kaldırıldı, `meta.width:380` + içerik span'ine `max-w-[380px] truncate` verildi (channels-table.tsx 'Kanal' ile aynı teknik). KISMEN İYİLEŞTİ, HEDEFİ TAM TUTTURAMADI: DataTable'ın auto table-layout'u (table-layout:fixed YOK, shared dosya — data-table.tsx değiştirilemez) `width` verilen TÜM sütunlara kapsayıcının boşluğunu ORANTILI dağıtıyor (yalnızca width'siz sütunlara değil) — 'Liste' 645px'ten 488px'e indi (~%24 azalma) ama tam 380px'te sabitlenemedi."
+          ],
+          "measureAfter": "Playwright 1440x900: th 'Liste' genişliği 488px (önceden 645px, hedef ≤420px — TUTTURULAMADI); içerik ≈300px → boşluk ≈188px (önceden ~345px, hedef ≤120px — TUTTURULAMADI). table.scrollWidth=container=1152 (taşma yok).",
+          "note": "AÇIK BIRAKILDI — hedefe ulaşmadı. Kök neden DataTable'ın auto-layout'unda gerçek üst sınır mekanizması yok (bkz. sharedComponentRequests: table-layout:fixed opsiyonu).",
+          "closedRound": 12,
+          "verifiedBy": "Tur 12 yeniden ölçüm (Playwright 1440x900): th 'Liste' 488px, sütundaki en geniş içerik 380px → slack 108px ≤ 120px hedefi tutturuldu (önceden 345px). Kırpılmış hücre 0, table.scrollWidth 1152 = kapsayıcı 1152."
         }
       ],
-      "verdict": "KAZANAN: Linear — 51 < 57; kriter 3, 5 ve 9 = 3."
+      "verdict": "KAZANAN: Plantero — 59 ≥ 57, hiçbir kriter < 4, açık P0/P1/P2 yok."
     },
     "/satis/net-ciro": {
-      "round": 10,
+      "round": 12,
       "reference": "stripe",
       "scores": [
         5,
         5,
         4,
         4,
-        3,
         5,
         5,
-        4,
-        3,
+        5,
+        5,
+        5,
         5,
         4,
         5
       ],
-      "total": 52,
-      "delta": "Tur 10 düzeltme turu: satis-net-ciro-01..05 kapatıldı (measureAfter). Kalan açık bulgu yok.",
+      "total": 57,
+      "delta": "Tur 10 düzeltmelerinin doğrulaması: kriter 5: 3→5 (kırılım tablosu taşmıyor — table.scrollWidth 1150 = kapsayıcı 1150; sticky 'Kanal' hücresi opak; sağa hizalı tabular sayılar; soluk ₺0'lar). kriter 9: 3→5 (mobilde ham tablo yerine 7 kanal kartı, 'Net ciro' KPI'ı ilk kart, dönem kontrolleri ≥44px, 44px altı dokunma hedefi yok). kriter 4 = 4 sabit: grafikte 4 kategorik seri rengi (mor/mavi/turuncu/gri) + yeşil KPI vurgusu + seçili dönem düğmesinin dolu yeşili → ekranda 5 renk kademesi; ayrıca birincil eylem yeşili burada 'seçili filtre' anlamını da taşıyor. kriter 11 = 4: satis-net-ciro-07 (KPI'larda karşılaştırma deltası yok, /kokpit KPI'ları basıyor).",
       "open": [
         {
           "id": "satis-net-ciro-07",
           "criterion": 3,
           "severity": "P2",
           "text": "Ekranın tepesinde açık bir dönem seçici var (Bugün / 7 gün / 30 gün / Bu ay / Özel aralık) ama 6 KPI'ın hiçbirinde önceki döneme göre karşılaştırma deltası yok. Stripe referansının imza öğesi tam olarak bu: seçili aralık + 'önceki döneme göre %X'. Deltasız '₺89.905 net ciro' okuyucuya referans noktası vermiyor (kokpit KPI'ları delta basıyor — aynı üründe iki farklı KPI anatomisi).",
-          "measure": "1440x900: KPI şeridinde 6 kart (Brüt ciro, Komisyon, Kargo kesintisi, Net ciro, Sipariş, Ortalama sepet), delta/karşılaştırma satırı olan kart sayısı 0",
+          "measure": "1440x900: KPI şeridinde 6 kart (Brüt ciro, Komisyon, Kargo kesintisi, Net ciro, Sipariş, Ortalama sepet), delta/karşılaştırma satırı olan kart sayısı 0 | Tur 12 yeniden ölçüm: 1440x900 ekran görüntüsü — 6 KPI'ın 6'sında delta/karşılaştırma satırı YOK (hâlâ açık).",
           "target": "en az 4 para KPI'ında 'önceki 30 güne göre %X' deltası (KpiCard zaten delta desteğine sahip — bkz. /kokpit)",
           "file": "apps/web/src/app/(app)/satis/net-ciro/page.tsx (KPI şeridi)",
-          "openedRound": 11
+          "openedRound": 11,
+          "reverifiedRound": 12
         }
       ],
       "closed": [
@@ -595,10 +644,10 @@
           "measureAfter": "Kod incelemesi + pnpm shot /satis/net-ciro [desktop]: sayfa kırılmadan render ediliyor, satır hover'ı görsel olarak değişmedi (fare ile hâlâ tam satır vurgusu). Playwright'ın stabil bir 'hover:none' emülasyonu olmadığından dokunmatik-takılı durumu koddan doğrulandı: class listesi row-actions.tsx'teki kanıtlanmış kalıpla birebir aynı sırada (`group-hover:… [@media(hover:none)]:…`)."
         }
       ],
-      "verdict": "KAZANAN: Stripe — 52 < 56; kriter 5 ve 9 = 3."
+      "verdict": "KAZANAN: Plantero — 57 ≥ 56, hiçbir kriter < 4, açık P0/P1 yok (1 P2)."
     },
     "/kokpit": {
-      "round": 11,
+      "round": 12,
       "reference": "stripe",
       "module": "shell",
       "scores": [
@@ -607,7 +656,7 @@
         4,
         4,
         4,
-        3,
+        5,
         5,
         4,
         5,
@@ -615,8 +664,8 @@
         4,
         5
       ],
-      "total": 51,
-      "delta": "kriter 9: 2→5 (P0 taşma kapandı, 44px altı dokunma hedefi kalmadı). kriter 5: 3→4 (kart satırları hairline + sağa hizalı para + rozet; 'Üretim' kartında WO satırının hizası hâlâ kırık). kriter 12: 4→5. kriter 6 = 3 sabit: yeni ölçüm — KPI para değerleri 0 ondalık (₺58.662, ₺0) iken aynı ekrandaki 'Bugün' listesi 2 ondalık (₺2.545,20) basıyor; 4 KPI'ın 3'ü içeriksiz '— %0 dünden' deltası, 1'i (tek gerçekten değişen metrik olan Bugünkü ciro) hiç delta göstermiyor.",
+      "total": 53,
+      "delta": "kriter 6: 3→5 (shell-kokpit-05 kapatıldı: iki para KPI'ı da 2 ondalık basıyor — ₺0,00 / ₺3.282,50 — ve ekrandaki diğer para gösterimi (onay kuyruğu -₺450,75) aynı hassasiyette; 4 KPI'ın 4'ü artık bir delta satırı taşıyor, gerçekten değişen tek metrik (Bugünkü ciro) gerçek deltasını (↘%100) basıyor, diğer üçü dürüst '—'). Diğer kriterler değişmedi; toplam 51→53, hâlâ Stripe'ın 56'sının altında.",
       "open": [
         {
           "id": "shell-kokpit-04",
@@ -630,14 +679,15 @@
           "openedRound": 10
         },
         {
-          "id": "shell-kokpit-05",
-          "criterion": 6,
-          "severity": "P1",
-          "text": "KPI şeridi iki ayrı rakam kusuru taşıyor. (a) Karışık hassasiyet: KPI'lar 0 ondalık (₺58.662, ₺0) basarken hemen altındaki 'Bugün' listesi aynı para birimini 2 ondalıkla (₺2.545,20 / ₺930,00) basıyor — tek ekranda iki para formatı. (b) Delta anatomisi tutarsız: 4 KPI'ın 3'ü ('Açık siparişler', 'Kritik stok kalemi', 'Vadesi geçen alacak') sıfır bilgi taşıyan '— %0 dünden' rozeti basıyor, oysa tek gerçekten değişen metrik olan 'Bugünkü ciro' hiç delta göstermiyor; ilk kart bu yüzden diğerlerinden ~24px kısa ve şerit dikey ritmi kırılıyor.",
-          "measure": "1440x900: KPI 4 kart — delta rozeti olan 3, hepsi '— %0 dünden'; delta rozeti olmayan 1 ('Bugünkü ciro', ₺58.662). Para hassasiyeti: KPI 0 ondalık × 2 kart, 'Bugün' listesi 2 ondalık × 6 satır",
-          "target": "tek para hassasiyeti (KPI ve liste aynı ondalık politikası) + delta ya 4 kartın 4'ünde ya hiçbirinde; '%0' delta soluk/gizli, gerçekten değişen metrikte delta zorunlu",
-          "file": "apps/web/src/app/(app)/kokpit/ KPI şeridi ve apps/web/src/components/kpi-card.tsx (delta bölümü)",
-          "openedRound": 11
+          "id": "shell-kokpit-06",
+          "criterion": 3,
+          "severity": "P2",
+          "module": "shell",
+          "text": "İki sütunlu kokpit ızgarasında sol sütun sağdan çok daha kısa bitiyor: sol sütun ('Bugün' + 'SKT yaklaşan lotlar') y≈900'de biterken sağ sütun ('Onay kuyruğu' + 'Üretim' + 'Bugünün tahsilatları') y≈1330'a kadar sürüyor — 1440px'te sol altta ~430px yüksekliğinde boş alan. 'Bugün' kartı tek satır taşıyor. Stripe kokpiti bu boşluğu ya daha yoğun bir modülle ya da tek sütuna düşerek doldurur.",
+          "measure": "1440x900 tam sayfa görüntüsü: sol sütun son kartının alt kenarı ≈y900, sağ sütunun ≈y1330 → ~430px dengesiz boşluk; 'Bugün' kartında 1 satır",
+          "target": "iki sütunun alt kenarı arasındaki fark ≤160px (kart dağılımını dengele ya da 'Bugün' kartına gerçek gün özeti satırları ekle)",
+          "file": "apps/web/src/app/(app)/kokpit/page.tsx (iki sütunlu grid ve kart dağılımı)",
+          "openedRound": 12
         }
       ],
       "closed": [
@@ -679,12 +729,24 @@
           "openedRound": 10,
           "closedRound": 11,
           "verifiedBy": "pnpm measure /kokpit --viewport 390x844 → touchTargetsBelow44 tek eleman: span[data-slot=breadcrumb-page] 39.3×19.5 (etkileşimsiz metin). Önceki 15 hedefin (3× 'Tümü', 7× belge no, 2× onay satırı) hiçbiri listede yok."
+        },
+        {
+          "id": "shell-kokpit-05",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "KPI şeridi iki ayrı rakam kusuru taşıyor. (a) Karışık hassasiyet: KPI'lar 0 ondalık (₺58.662, ₺0) basarken hemen altındaki 'Bugün' listesi aynı para birimini 2 ondalıkla (₺2.545,20 / ₺930,00) basıyor — tek ekranda iki para formatı. (b) Delta anatomisi tutarsız: 4 KPI'ın 3'ü ('Açık siparişler', 'Kritik stok kalemi', 'Vadesi geçen alacak') sıfır bilgi taşıyan '— %0 dünden' rozeti basıyor, oysa tek gerçekten değişen metrik olan 'Bugünkü ciro' hiç delta göstermiyor; ilk kart bu yüzden diğerlerinden ~24px kısa ve şerit dikey ritmi kırılıyor.",
+          "measure": "1440x900: KPI 4 kart — delta rozeti olan 3, hepsi '— %0 dünden'; delta rozeti olmayan 1 ('Bugünkü ciro', ₺58.662). Para hassasiyeti: KPI 0 ondalık × 2 kart, 'Bugün' listesi 2 ondalık × 6 satır",
+          "target": "tek para hassasiyeti (KPI ve liste aynı ondalık politikası) + delta ya 4 kartın 4'ünde ya hiçbirinde; '%0' delta soluk/gizli, gerçekten değişen metrikte delta zorunlu",
+          "file": "apps/web/src/app/(app)/kokpit/ KPI şeridi ve apps/web/src/components/kpi-card.tsx (delta bölümü)",
+          "openedRound": 11,
+          "closedRound": 12,
+          "verifiedBy": "Tur 12 yeniden ölçüm (1440x900 + 390x844 ekran görüntüsü): (a) KPI para değerleri 2 ondalık (₺0,00, ₺3.282,50) ve ekrandaki diğer para gösterimi (onay kuyruğu -₺450,75) aynı hassasiyette — tek para formatı. (b) 4 KPI'ın 4'ünde delta satırı var (kart yükseklikleri eşit); gerçekten değişen metrik 'Bugünkü ciro' ↘%100 basıyor, karşılaştırılamayan üçü dürüst '—' basıyor. Bulgunun hedefi ('tek para hassasiyeti + delta ya 4'ünde ya hiçbirinde') tutturuldu."
         }
       ],
-      "verdict": "KAZANAN: Stripe — 51 < 56; kriter 6 = 3. Açık 1 P1 + 1 P2."
+      "verdict": "KAZANAN: Stripe — 53 < 56. Açık P0/P1 yok; toplamı düşüren kriterler 2/3/4/5/8/10/11 = 4."
     },
     "/login": {
-      "round": 11,
+      "round": 12,
       "reference": "linear",
       "scores": [
         4,
@@ -701,29 +763,29 @@
         5
       ],
       "total": 55,
-      "delta": "Puanlar değişmedi — login-01 ve login-02 yeniden ölçüldü, ikisi de AÇIK (aşağıda measure).",
+      "delta": "Puanlar değişmedi (55). login-01 ve login-02 Tur 12'de yeniden ölçüldü, ikisi de AÇIK.",
       "open": [
         {
           "id": "login-01",
           "criterion": 1,
           "severity": "P2",
           "text": "Sayfanın h1'i 16px ('Hesabınıza girin') — puan kartı 20–24px istiyor. Gövde metni de 14px, oysa uygulamanın geri kalanı 13px; giriş ekranı ürünün tip ölçeğinden ayrı bir ölçek konuşuyor.",
-          "measure": "pnpm measure /login (1440x900 ve 390x844): h1 {size: 16, weight: 600}; font dağılımı 14px:5, 12px:2, 16px:1, 24px:1 — uygulamanın 13px gövde ölçeği bu ekranda hiç kullanılmıyor",
+          "measure": "pnpm measure /login (1440x900 ve 390x844) — Tur 12: h1 {size:16, weight:600}; font dağılımı 14px:5, 12px:2, 16px:1, 24px:1 — uygulamanın 13px gövde ölçeği bu ekranda hiç kullanılmıyor (değişmedi).",
           "target": "h1 20px/medium; gövde 13px (uygulama ölçeğiyle aynı)",
           "file": "apps/web/src/app/(auth)/login/page.tsx:16",
           "openedRound": 10,
-          "reverifiedRound": 11
+          "reverifiedRound": 12
         },
         {
           "id": "login-02",
           "criterion": 8,
           "severity": "P2",
           "text": "'Şifremi unuttum' bağlantısı dinlenme durumunda komşu düz metinle birebir aynı (aynı text-muted-foreground, alt çizgi yok); ayırt edici hale gelmesi yalnızca `hover:` ile oluyor ve globals.css:10 hover'ı (pointer:fine)'a kilitlediğinden dokunmatik cihazda bağlantı olduğu HİÇ anlaşılmıyor. Hedef de 89.9×15px.",
-          "measure": "1440x900 ekran görüntüsü: 'Şifremi unuttum' bağlantısı ile yanındaki 'Sorun mu yaşıyorsunuz? …' düz metni aynı renk ve aynı 12px; alt çizgi yok, ayırt edici hiçbir sinyal yok (a 'Şifremi unuttum' 89.9×15)",
+          "measure": "Tur 12 1440x900 ekran görüntüsü: 'Şifremi unuttum' ile yanındaki 'Sorun mu yaşıyorsunuz? …' düz metni aynı renk, aynı 12px, alt çizgi yok; pnpm measure → a 'Şifremi unuttum' 89.9×15 (masaüstü ve mobil aynı, değişmedi).",
           "target": "dinlenmede `underline` ya da `text-foreground`; mobilde dokunma alanı ≥44px",
           "file": "apps/web/src/app/(auth)/login/page.tsx:21-26",
           "openedRound": 10,
-          "reverifiedRound": 11
+          "reverifiedRound": 12
         }
       ],
       "closed": [],

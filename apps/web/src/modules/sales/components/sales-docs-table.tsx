@@ -77,8 +77,29 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
         // Tur 10 P2 satis-teklifler-01/satis-siparisler-01: sabit `max-w-44` (176px) sütunun kendi
         // genişliğinden (200-205px) daha dar bir kırpma tavanı dayatıyordu — yer olduğu halde adlar
         // kırpılıyordu. `w-full truncate` artık hücrenin gerçek genişliğine (meta.width) karşı çalışır.
-        id: 'partnerName', accessorFn: (r) => r.partnerName, header: docType === 'quotation' ? 'Cari' : 'Müşteri', meta: { width: docType === 'quotation' ? 240 : 260, mobile: 'subtitle' },
-        cell: ({ row }) => <span className="block w-full truncate" title={row.original.partnerName}>{row.original.partnerName}</span>,
+        //
+        // Tur 12 P1 satis-siparisler-05: siparişlerde 260→235px'e düşürüldü ('Kanal' sütununa gerçek
+        // genişlik verebilmek için — bkz. aşağıdaki channelName notu). Bu tablodaki TÜM 8 sütun zaten
+        // kendi min-content tavanında (docNo/Durum/Tarih/Teslim-Fatura/Net ciro/Genel toplam'ın hiçbirinde
+        // sıkıştırılabilir boşluk yok — ölçüldü, meta.width düşürülünce th min-content'e geri şişiyor),
+        // yani 1152px kapsayıcıda 8 sütun arasında GERÇEKTEN paylaşılabilir tek yer burasıydı. 235px'te
+        // (içerik 211px) 30 satırın 27'sinde ad tam sığar; yalnızca en uzun 3 ad ("Vegan Gıda Üretim
+        // San. Tic. Ltd. Şti." 222px, "Doğal Yaşam Market Zinciri Ltd. Şti." 218px×2) kırpılır — `title`
+        // ile tam ad hover/dokunuşta görünür kalır.
+        //
+        // ÖNEMLİ (bu turda keşfedildi): `w-full truncate` (yüzdesel genişlik) auto table-layout'un
+        // min-content hesabında `channelName`'in eski `max-w-full` hatasıyla AYNI daireselliği taşıyor —
+        // TD spec'i (235) içeriğin gerçek ihtiyacından (ör. "Vegan…" 222+24=246) DÜŞÜK olduğunda tarayıcı
+        // yüzdesel span'i sınır kabul ETMİYOR, TD'yi 246'ya şişiriyor (ölçüldü). Kalıcı çözüm channelName
+        // ile birebir aynı: span'e TD ile AYNI piksel değerinde SABİT `max-w-[…]` verilir (yüzde değil) —
+        // bu, tarayıcının min-content hesabında span'in üst sınırını gerçekten tanımasını sağlar.
+        id: 'partnerName', accessorFn: (r) => r.partnerName, header: docType === 'quotation' ? 'Cari' : 'Müşteri', meta: { width: docType === 'quotation' ? 240 : 235, mobile: 'subtitle', className: docType === 'quotation' ? undefined : 'max-w-[235px] truncate' },
+        cell: ({ row }) =>
+          docType === 'quotation' ? (
+            <span className="block w-full truncate" title={row.original.partnerName}>{row.original.partnerName}</span>
+          ) : (
+            <span className="block max-w-[235px] truncate" title={row.original.partnerName}>{row.original.partnerName}</span>
+          ),
       },
       {
         // Mobil kartta tamamen düşürülmek yerine ' · ' ile alt başlığın yanına eklenir (bkz.
@@ -94,12 +115,26 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
         // yaptığı hücre içeriğinin KIRPILMAMIŞ min-content genişliğini (ör. "Doğrudan Hammadde Satışı"
         // ≈196px) sütun genişliği hesabına dahil ediyor ve td gerçekte 196px'e şişiyordu — tablo
         // toplamı 1152px kapsayıcıyı 30px aşıyor, en sağdaki para sütunu rakam ortasından kırpılıyordu.
-        // `max-w-full` (span'de) bu şişmeyi ENGELLEMEZ (üst sınırı hâlâ TD'nin kendisi — dairesel).
-        // Gerçek üst sınır yalnızca SABİT bir piksel `max-w-[…]` ile kurulur (bkz. products-table.tsx
-        // "Ürün Adı" ile aynı teknik) — `meta.width` KALDIRILDI, kırpma artık span'in kendi 72px'lik
-        // sabit üst sınırından geliyor (td 12px×2 iç boşluk + 72px içerik ≈ eski 100px hedefiyle aynı).
-        id: 'channelName', accessorFn: (r) => r.channelName, header: 'Kanal', meta: { mobile: 'meta', className: 'max-w-[72px] truncate' },
-        cell: ({ row }) => <span className="block max-w-[72px] truncate text-muted-foreground" title={row.original.channelName ?? undefined}>{row.original.channelName}</span>,
+        // O turda düzeltme `meta.width`'i tamamen kaldırıp span'e SABİT `max-w-[72px]` verdi — bu taşmayı
+        // durdurdu ama 72px, sütunun kendi render genişliğinden (siparişlerde 165px, tekliflerde 420px)
+        // çok daha dar bir kırpma tavanı dayattı: 30 satırın 17'sinde ("Hepsiburada" 78px bile) ve
+        // tekliflerin 4 satırının 3'ünde ("Kendi Sitemiz (plantero.co)" 165px) değer üç noktaya düşüyordu.
+        //
+        // Tur 12 P1 satis-siparisler-05 / satis-teklifler-03 (kök neden düzeltmesi): tek başına `meta.width`
+        // (üst sınır kurmaz — yukarıdaki Tur 11 notu) ve tek başına sabit `max-w` (`width` yokken auto
+        // table-layout kalan tüm boşluğu bu sütuna veriyor, span 72px'te kırpsa da TD/th kendi başına
+        // 165-420px'e şişip başka sütunlarda kullanılmayan yer bırakıyor — channels-table.tsx 'Kanal'
+        // sütununda AYNI kök neden Tur 11'de ayrıntılı belgelendi) TEK BAŞINA yeterli değil. Kalıcı çözüm
+        // (channels-table.tsx / price-lists-table.tsx ile aynı, kanıtlanmış teknik): TD'ye GERÇEK bir üst
+        // sınır için `meta.width` VE içerik span'ine BİREBİR aynı piksel değeriyle sabit `max-w-[…]`
+        // birlikte verilir. En uzun gerçek kanal adı "Doğrudan Hammadde Satışı" ≈196px, ikinci en uzun
+        // "Kendi Sitemiz (plantero.co)" 165px — 190px (içerik 166px) ikincisini tam gösterir, yalnızca
+        // nadir aşırı uzun HAMMADDE adını (siparişlerde 30 satırın 1'i, tekliflerde hiç yok) keser.
+        // 1152px kapsayıcıda bu 20px'lik artış yukarıdaki `partnerName` notunda açıklanan 235px'e
+        // düşürülerek dengelendi (siparişlerde) — teklifler tablosunda zaten bolca boşluk vardı, dengeye
+        // gerek kalmadı.
+        id: 'channelName', accessorFn: (r) => r.channelName, header: 'Kanal', meta: { width: 190, mobile: 'meta', className: 'max-w-[190px] truncate' },
+        cell: ({ row }) => <span className="block max-w-[190px] truncate text-muted-foreground" title={row.original.channelName ?? undefined}>{row.original.channelName}</span>,
       },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="sales_order" /> },
       {
