@@ -9,6 +9,7 @@ import { seedStock } from './stock.js';
 import { seedProduction } from './production.js';
 import { seedSales } from './sales.js';
 import { seedPurchasing, seedPurchasingBackfill } from './purchasing.js';
+import { seedFinancePayments } from './finance-payments.js';
 
 /**
  * Seed sırası — docs/ARCHITECTURE.md §11 genel akışı `... stock → production → sales → purchasing ...`
@@ -32,6 +33,11 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   { name: 'stock', run: seedStock },
   { name: 'production', run: seedProduction },
   { name: 'sales', run: seedSales },
+  // `finance-payments`: sales + tüm otomatik-faturalanan mal kabulleri (stock adımı) bittikten sonra —
+  // tüm faturalar (satış + alış) burada mevcuttur. `purchasing-backfill`'den ÖNCE: o adım yalnızca
+  // PO'suz mal kabulleri yamar, tahsilat/mutabakat verisiyle bağımlılığı yoktur (sıra bu yüzden serbest,
+  // ama modül sözleşmesi gereği belge akışının doğal sonunda — bkz. finance-payments.ts başlık yorumu).
+  { name: 'finance-payments', run: seedFinancePayments },
   { name: 'purchasing-backfill', run: seedPurchasingBackfill },
 ];
 

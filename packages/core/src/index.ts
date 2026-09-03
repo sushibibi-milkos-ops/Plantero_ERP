@@ -34,3 +34,5 @@ export * from './purchasing/invoicing.js';
 export * from './purchasing/orders.js';
 export * from './purchasing/replenishment.js';
 export * from './purchasing/whitelist.js';
+export * from './finance/payments.js';
+export * from './finance/bankReconciliation.js';
