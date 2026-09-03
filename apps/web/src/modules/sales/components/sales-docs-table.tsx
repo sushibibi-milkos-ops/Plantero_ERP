@@ -22,7 +22,7 @@ function ProgressDot({ pct, label }: { pct: number; label: string }) {
       title={`${label}: %${pct}`}
       aria-label={`${label === 'T' ? 'Teslim' : 'Fatura'}: yüzde ${pct}`}
       className={cn(
-        'grid size-4 shrink-0 place-items-center rounded-full text-[9px] font-semibold tabular-nums',
+        'grid size-[18px] shrink-0 place-items-center rounded-full text-[11px] font-semibold tabular-nums',
         state === 'full' && 'bg-primary text-primary-foreground',
         state === 'partial' && 'border border-primary text-primary',
         state === 'empty' && 'border border-border text-muted-foreground/40',
@@ -88,8 +88,18 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
         // tabloda gökkuşağı etkisi yapıyordu; ayrıca /satis/kanallar tablosu (channels-table.tsx) aynı
         // kanalları hiç noktasız, düz metin olarak gösteriyordu — aynı varlık iki ekranda iki farklı
         // temsile sahipti. İkisi de artık aynı gösterimi kullanıyor: düz, soluk metin.
-        id: 'channelName', accessorFn: (r) => r.channelName, header: 'Kanal', meta: { width: 100, mobile: 'meta' },
-        cell: ({ row }) => <span className="block max-w-full truncate text-muted-foreground">{row.original.channelName}</span>,
+        //
+        // Tur 11 P1 satis-siparisler-03 (kök neden): `meta.width:100` th/td'ye `width:100;min-width:100`
+        // veriyor ama üst sınır (max-width) yok — auto table-layout, `truncate`'in `white-space:nowrap`
+        // yaptığı hücre içeriğinin KIRPILMAMIŞ min-content genişliğini (ör. "Doğrudan Hammadde Satışı"
+        // ≈196px) sütun genişliği hesabına dahil ediyor ve td gerçekte 196px'e şişiyordu — tablo
+        // toplamı 1152px kapsayıcıyı 30px aşıyor, en sağdaki para sütunu rakam ortasından kırpılıyordu.
+        // `max-w-full` (span'de) bu şişmeyi ENGELLEMEZ (üst sınırı hâlâ TD'nin kendisi — dairesel).
+        // Gerçek üst sınır yalnızca SABİT bir piksel `max-w-[…]` ile kurulur (bkz. products-table.tsx
+        // "Ürün Adı" ile aynı teknik) — `meta.width` KALDIRILDI, kırpma artık span'in kendi 72px'lik
+        // sabit üst sınırından geliyor (td 12px×2 iç boşluk + 72px içerik ≈ eski 100px hedefiyle aynı).
+        id: 'channelName', accessorFn: (r) => r.channelName, header: 'Kanal', meta: { mobile: 'meta', className: 'max-w-[72px] truncate' },
+        cell: ({ row }) => <span className="block max-w-[72px] truncate text-muted-foreground" title={row.original.channelName ?? undefined}>{row.original.channelName}</span>,
       },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="sales_order" /> },
       {

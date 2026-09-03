@@ -23,8 +23,15 @@ export function PriceListsTable({ rows, products }: { rows: Row[]; products: Sel
         // Tur 10 P1 satis-fiyat-01 (kök: shell-datatable-slack-01): sabit width kaldırılıp `flex:true`
         // verildi — artan genişlik artık meta.width'i olmayan 'Geçerlilik' sütununa değil (393px ölü
         // alan) kasıtlı olarak büyümesi istenen 'Liste' adı sütununa akar.
-        id: 'name', accessorFn: (r) => r.name, header: 'Liste', meta: { flex: true, mobile: 'title' },
-        cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+        //
+        // Tur 11 P2 satis-fiyat-06: `flex:true` ölü alanı YOK ETMEDİ, TAŞIDI — artan genişlik hâlâ
+        // 'Liste'de toplanıyordu (645px, en uzun içerik ≈300px → ~345px boşluk), yalnızca hangi
+        // sütunda biriktiği değişmişti (satis-kanallar-03 ile aynı kök neden — `flex:true` üst SINIR
+        // koymaz, yalnızca DİĞER width'siz sütunları sıkıştırır). Sabit `meta.width` + eşleşen içerik
+        // `max-w-[…] truncate` üst sınırı gerçekten kurar (bkz. channels-table.tsx 'Kanal' ile aynı
+        // düzeltme — kanallar-03 kapatılırken doğrulanan teknik).
+        id: 'name', accessorFn: (r) => r.name, header: 'Liste', meta: { width: 380, mobile: 'title', className: 'max-w-[380px] truncate' },
+        cell: ({ row }) => <span className="block max-w-[380px] truncate font-medium" title={row.original.name}>{row.original.name}</span>,
       },
       {
         // Tur 10 P2 satis-fiyat-03: mobil karttaki tek meta ipucu para birimiydi, ama liste adı zaten
@@ -43,8 +50,15 @@ export function PriceListsTable({ rows, products }: { rows: Row[]; products: Sel
       },
       {
         // Sayaç: düz sağa hizalı rakam (Linear deseni) — eylem satır tıklamasında.
-        id: 'items', accessorFn: (r) => r.itemCount, header: 'Satır', meta: { align: 'right', width: 64, mobile: 'row' },
-        cell: ({ row }) => <span className="num tabular-nums">{row.original.itemCount}</span>,
+        //
+        // Tur 11 P2 satis-fiyat-05 (kök neden): `mobile:'row'` mobile-cards.tsx'in özel rollerinden
+        // (title/subtitle/badge/meta) biri DEĞİL — bu sütun sessizce `rest`e düşüyor ve tabloda TEK
+        // `rest` alanı olduğu için mobil kartın TEK metrik yuvasını dolduruyor, ama `cell` masaüstünde
+        // "Satır" başlığının altında anlamlı olan ÇIPLAK sayıyı basıyor (mobilde başlık yok — "33" ne
+        // olduğu belirsiz). Hücre artık birimi kendi taşıyor ("33 satır") — masaüstünde "Satır" başlığı
+        // altında hafif tekrar ama belirsizlik yok, mobilde tek başına anlamlı.
+        id: 'items', accessorFn: (r) => r.itemCount, header: 'Satır', meta: { align: 'right', width: 76, mobile: 'row' },
+        cell: ({ row }) => <span className="num tabular-nums">{row.original.itemCount} satır</span>,
       },
     ],
     [],

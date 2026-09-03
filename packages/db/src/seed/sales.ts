@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
 import {
   opportunityStages, opportunities, salesChannels, partners, products, warehouses, salesOrders,
-  channelSettlements, customerPrices, deliveries, priceLists, exchangeRates,
+  customerPrices, deliveries, priceLists, exchangeRates, bankAccounts,
 } from '../schema/index.js';
 import {
   D, SYSTEM_ACTOR, writeAudit,
@@ -12,6 +12,7 @@ import {
   ingestChannelOrders, type ChannelOrderInput,
   createOpportunity, moveOpportunity, addActivity, convertToQuotation,
   reserveFefo, confirmPick, shipDelivery,
+  createChannelSettlement, markChannelSettlementPaid,
 } from '@plantero/core';
 import { log, type SeedSummary } from './_helpers.js';
 
@@ -397,21 +398,44 @@ async function seedChannelSync(tx: DbOrTx, summary: SeedSummary): Promise<void> 
 /* 6) Kanal hakedişleri (channel_settlements)                           */
 /* ==================================================================== */
 
+/**
+ * Tur 11 P0 düzeltmesi: tutarlar artık `computeSettlementTotals` ile bu seed'in kendi ürettiği GERÇEK
+ * `sales_orders` toplamlarından hesaplanır (önceden sabit demo rakamlarıydı — 5 kata varan sapma).
+ * Trendyol dönemi kapanmış ve `markChannelSettlementPaid` ile GERÇEKTEN ödenmiş sayılır: bu, önce
+ * `finance/bankReconciliation.ts::importStatement` ile gerçek bir banka hareketi açar, sonra
+ * `finance/payments.ts::recordPayment` ile kanalın bağlı carisine (C-000001) tahsilat işler ve o banka
+ * hareketiyle eşleştirir — `channel_settlements.bank_transaction_id` artık her zaman dolu ve `paid_at`
+ * her zaman bugünden (`businessDate(new Date())`) ileri olamaz (servis bunu reddeder). Hepsiburada
+ * dönemi kasıtlı olarak `open` bırakılır — ekranların "beklenen hakediş" dalını da egzersiz eder.
+ */
 async function seedSettlements(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   const trendyol = await channelByCode(tx, 'TRENDYOL');
   const hepsiburada = await channelByCode(tx, 'HEPSIBURADA');
-  await tx.insert(channelSettlements).values([
-    {
-      channelId: trendyol.id, periodStart: '2026-08-01', periodEnd: '2026-08-15', grossSales: '148500.0000', commissions: '31185.0000',
-      shippingDeductions: '2250.0000', otherDeductions: '0.0000', returns: '2100.0000', netPayout: '112965.0000',
-      expectedPayoutDate: '2026-09-05', paidAt: '2026-09-05', status: 'paid',
-    },
-    {
-      channelId: hepsiburada.id, periodStart: '2026-08-16', periodEnd: '2026-08-31', grossSales: '96200.0000', commissions: '17316.0000',
-      shippingDeductions: '1800.0000', otherDeductions: '0.0000', returns: '1200.0000', netPayout: '75884.0000',
-      expectedPayoutDate: '2026-09-21', paidAt: null, status: 'open',
-    },
-  ]);
+  const [vkfTl] = await tx.select().from(bankAccounts).where(eq(bankAccounts.code, 'VKF-TIRE-TL')).limit(1);
+  if (!vkfTl) throw new Error('seed:sales — banka hesabı bulunamadı: VKF-TIRE-TL (accounting adımı sales\'ten önce çalışmalı)');
+
+  // Trendyol: yalnızca pazaryeri senkronundan gelen 3 sipariş (TY-SEED-001..003, 2026-08-15..08-22) —
+  // `markChannelSettlementPaid` net tutarı carinin AÇIK FATURALARINA tam allocate eder (I9); daha geniş
+  // bir dönem (ör. ayın tamamı) manuel Trendyol siparişlerinin faturalarını da kapsardı ve bunlardan
+  // bir kısmı `finance-payments.ts` seed adımının (sales'ten SONRA çalışır, bu modülün dosyası değil,
+  // değiştirilmedi) sabit INV-2026-000002..000005 tahsilat listesiyle çakışıp o adımı residual=0 bir
+  // faturayı tekrar tahsil etmeye çalıştığı için patlatırdı. Dar dönem bu çakışmayı yapısal olarak önler.
+  const paidSettlement = await createChannelSettlement(tx, {
+    channelId: trendyol.id, periodStart: '2026-08-15', periodEnd: '2026-08-22', expectedPayoutDate: '2026-09-12',
+  }, SYSTEM_ACTOR);
+  await auditCreate(tx, 'channel_settlements', paidSettlement.id, `Hakediş açıldı: Trendyol ${paidSettlement.periodStart}–${paidSettlement.periodEnd} (net ${paidSettlement.netPayout} TL)`);
+  if (D(paidSettlement.netPayout).gt(0)) {
+    const paidResult = await markChannelSettlementPaid(tx, paidSettlement.id, { paymentDate: '2026-09-02', bankAccountId: vkfTl.id }, SYSTEM_ACTOR);
+    await auditCreate(tx, 'channel_settlements', paidSettlement.id, `Hakediş ödendi: ${paidResult.paymentDocNo} ile tahsil edildi, banka hareketi ${paidResult.bankTransactionId}`);
+    await auditCreate(tx, 'payments', paidResult.paymentId, `Tahsilat ${paidResult.paymentDocNo} kanal hakedişinden (${paidSettlement.id}) oluştu`);
+  }
+
+  // Hepsiburada: ikinci yarı — henüz vadesi gelmemiş, `open` kalır (settlement_days=21 → beklenen 09-21).
+  const openSettlement = await createChannelSettlement(tx, {
+    channelId: hepsiburada.id, periodStart: '2026-08-16', periodEnd: '2026-08-31', expectedPayoutDate: '2026-09-21',
+  }, SYSTEM_ACTOR);
+  await auditCreate(tx, 'channel_settlements', openSettlement.id, `Hakediş açıldı: Hepsiburada ${openSettlement.periodStart}–${openSettlement.periodEnd} (net ${openSettlement.netPayout} TL, beklemede)`);
+
   summary.add('channel_settlements', 2);
 }
 

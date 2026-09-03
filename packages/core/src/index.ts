@@ -29,6 +29,7 @@ export * from './sales/pricing.js';
 export * from './sales/orders.js';
 export * from './sales/invoicing.js';
 export * from './sales/channels.js';
+export * from './sales/channelSettlements.js';
 export * from './sales/crm.js';
 export * from './purchasing/invoicing.js';
 export * from './purchasing/orders.js';

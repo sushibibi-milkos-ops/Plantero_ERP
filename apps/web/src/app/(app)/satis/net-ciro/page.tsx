@@ -135,7 +135,14 @@ export default async function NetRevenuePage({ searchParams }: { searchParams: P
             ) : (
               breakdown.map((r) => (
                 <tr key={r.channelId} className="group h-9 border-b border-border/50 last:border-0 hover:bg-accent/40">
-                  <td className="sticky left-0 z-10 bg-card px-3 font-medium group-hover:bg-accent/40">{r.channelName}</td>
+                  {/* Tur 11 P2 satis-net-ciro-06 (kök neden): `tr`nin `hover:bg-accent/40` globals.css'teki
+                      `@custom-variant hover` (hover:hover) and (pointer:fine)'a kilitli, ama sabitlenmiş bu
+                      hücrenin `group-hover:bg-accent/40`'ı Tailwind'in ÇIPLAK `group-hover` varyantı — o
+                      kapıdan geçmez. Dokunmatik ≥768px cihazda (iPad) bir dokunuş `:hover`'ı "takılı"
+                      bırakabilir: `tr` gated olduğu için vurgusuz kalır ama bu hücre kapısız olduğundan
+                      vurgulu takılı kalırdı (yarım vurgulu satır). `row-actions.tsx`'teki AYNI kaçış kalıbı:
+                      group-hover kuralından SONRA `[@media(hover:none)]:bg-card` ile geri alınır. */}
+                  <td className="sticky left-0 z-10 bg-card px-3 font-medium group-hover:bg-accent/40 [@media(hover:none)]:bg-card">{r.channelName}</td>
                   {/* text-right eklendi — <th> sağa yaslıyken <td> sola yaslı çiziliyordu, ondalık
                       ayraçları sütun genelinde hizasızdı (Tur 3 P0). Ayrıca 0 ondalık: üstteki KPI
                       şeridiyle aynı hassasiyet (Tur 3 bulgusu: KPI ₺98.193, tablo ₺22.222,87 karışık). */}

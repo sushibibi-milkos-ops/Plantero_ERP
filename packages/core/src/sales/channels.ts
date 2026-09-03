@@ -31,7 +31,7 @@ export type ChannelOrderInput = {
 };
 
 /** Kanala bağlı pazaryeri carisi (ör. C-000001 "Trendyol Pazaryeri") — `partners.defaultChannelId` ile eşlenir. */
-async function getChannelPartner(tx: DbOrTx, channelId: string): Promise<typeof partners.$inferSelect | null> {
+export async function getChannelPartner(tx: DbOrTx, channelId: string): Promise<typeof partners.$inferSelect | null> {
   const [row] = await tx.select().from(partners).where(and(eq(partners.defaultChannelId, channelId), inArray(partners.kind, ['customer', 'both']))).orderBy(partners.code).limit(1);
   return row ?? null;
 }

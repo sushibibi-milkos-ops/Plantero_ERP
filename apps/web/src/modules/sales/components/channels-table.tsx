@@ -23,11 +23,19 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         // Sabit `bg-primary` nokta: 7 satırın 7'sinde özdeş, hiçbir bilgi taşımıyordu (Tur 3 P2, saf
         // dekorasyon) — kaldırıldı. Gerçek durum bilgisi (aktif/pasif) zaten `isActive` üzerinden bir
         // yerde tutulmuyor; ileride eklenirse StatusBadge ile (renk = anlam) verilmeli, çıplak nokta değil.
-        // Tur 10 P1 satis-kanallar-03 (kök: shell-datatable-slack-01): `width` verilmemiş tek sütun
-        // artan genişliğin tamamını alıyordu (469px / içerik 173px). `flex:true` DataTable'a bu
-        // sütunun kasıtlı olarak esneyen sütun olduğunu işaretler, diğerleri width:1%'e sıkışır.
-        id: 'name', accessorFn: (r) => r.channel.name, header: 'Kanal', meta: { mobile: 'title', flex: true },
-        cell: ({ row }) => <span className="font-medium">{row.original.channel.name}</span>,
+        //
+        // Tur 11 P2 satis-kanallar-03 (YENİDEN AÇILDI — Tur 10'un `flex:true` düzeltmesi kanıtlanmadan
+        // kapatılmıştı). Kök neden #1: `meta.flex` yalnızca width'i OLMAYAN DİĞER sütunları `width:1%`'e
+        // sıkıştırır (data-table.tsx `hasFlexColumn`); bu tabloda width'i olmayan tek sütun zaten
+        // 'name'in KENDİSİYDİ, yani düzeltme kendi kendine hiçbir şey yapmadı. Kök neden #2 (ilk
+        // düzeltme denemesinde ortaya çıktı): `width` TAMAMEN kaldırıp yalnızca içerik `span`ine
+        // `max-w-[240px] truncate` vermek de yetmedi — auto table-layout, diğer 6 sütunun toplam
+        // genişliği (660px) kapsayıcıdan (1152px) 492px küçük olduğu için TÜM boşluğu width'siz TEK
+        // sütuna (Kanal) veriyor, span içeriği 240px'te kırpılsa bile TD 469px kalıyor (satır başına
+        // ~229px ölü alan — ölçülen sayı BİREBİR aynı kaldı). Gerçek üst sınır hem TD'ye (`meta.width`)
+        // hem içerik span'ine (`max-w-[…] truncate`, uzun adlarda hâlâ kırpma garantisi) verilmeli.
+        id: 'name', accessorFn: (r) => r.channel.name, header: 'Kanal', meta: { width: 240, mobile: 'title', className: 'max-w-[240px] truncate' },
+        cell: ({ row }) => <span className="block max-w-[240px] truncate font-medium" title={row.original.channel.name}>{row.original.channel.name}</span>,
       },
       {
         // mobile:'subtitle' (Tur 5 P2 bulgusu — önceden 'meta'): kanalın NE OLDUĞU (pazaryeri/site/
@@ -36,9 +44,6 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         id: 'kind', accessorFn: (r) => CHANNEL_KIND_LABELS[r.channel.kind] ?? r.channel.kind, header: 'Tip',
         meta: { width: 130, mobile: 'subtitle', className: 'text-muted-foreground' },
       },
-      // "Bugün" sütunu kaldırıldı (Tur 5 P2 bulgusu): 7 satırın 7'sinde ₺0,00 basıp tablodaki en geniş
-      // sütunu sıfır bilgiyle dolduruyordu — tek para sütunu "Bu ay" kalır.
-      { id: 'monthRevenue', header: 'Bu ay', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.monthRevenue} /> },
       {
         id: 'orderCount', accessorFn: (r) => r.orderCount, header: 'Sipariş (ay)', meta: { align: 'right', width: 100, mobile: 'hidden' },
         cell: ({ row }) => <span className={`num tabular-nums ${row.original.orderCount === 0 ? 'text-muted-foreground/70' : ''}`}>{row.original.orderCount}</span>,
@@ -51,12 +56,30 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         id: 'commissionPct', accessorFn: (r) => r.channel.commissionPct, header: 'Komisyon', meta: { align: 'right', width: 90 },
         cell: ({ row }) => <span className="num tabular-nums text-muted-foreground">{formatPct(row.original.channel.commissionPct, 0)}</span>,
       },
+      // "Bugün" sütunu kaldırıldı (Tur 5 P2 bulgusu): 7 satırın 7'sinde ₺0,00 basıp tablodaki en geniş
+      // sütunu sıfır bilgiyle dolduruyordu — tek para sütunu "Bu ay" kalır.
+      //
+      // Tur 11 P1 satis-kanallar-05 (kök neden b): `mobile-cards.tsx`'in TEK metrik yuvası `rest`
+      // dizisinin SONUNCUSUNU seçer (bkz. dosya üstü not) — `commissionPct` bu sütundan SONRA
+      // tanımlandığı için (sabit komisyon oranı, hiç değişmeyen) kartın tek sayısı hep O oluyordu,
+      // sayfanın asıl konusu olan "Bu ay" cirosu hiç görünmüyordu. Sıra artık ciro EN SONA gelecek
+      // şekilde: commissionPct hâlâ `rest`'te (masaüstünde görünür, mobilde metrik yuvasını kaybeder —
+      // "diğer rest alanları mobil kartta hiç gösterilmez" kuralı burada da geçerli) ama monthRevenue
+      // artık son sıradaki gerçek metrik.
+      { id: 'monthRevenue', header: 'Bu ay', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.monthRevenue} /> },
       {
         // mobile:'meta' (Tur 5 P2 bulgusu — önceden 'subtitle'): kanal TİPİ kimlik bilgisi olarak
         // kartın 2. satırına taşındı, son senkron zamanı etiketsiz tek satırlık "meta" konumuna iner —
         // masaüstünde de bu sütun listenin son sütunu, aynı düşük öncelik mobilde de korunur. Tam
         // tarih `title` tooltip'inde saklı.
-        id: 'lastSyncedAt', header: 'Son senkron', meta: { width: 150, mobile: 'meta', className: 'text-xs text-muted-foreground' },
+        //
+        // Tur 11 P1 satis-kanallar-05 (kök neden a): `accessorFn` YOKTU — sıralanamaz/filtrelenemez bir
+        // sütun (`enableSorting` da yok) olduğu için gereksiz sanılmıştı, ama `mobile-cards.tsx`'in
+        // `metaCells` filtresi `c.getValue()`'ya bakıyor ve accessorFn'siz bir sütunda bu her zaman
+        // `undefined` döner — `isEmptyValue` bunu "veri yok" sayıp satırı sessizce atıyordu (7 kartın
+        // 7'sinde de "son senkron" hiç görünmüyordu). accessorFn eklendi, sıralama/filtre davranışı
+        // değişmedi (ikisi de zaten kapalıydı).
+        id: 'lastSyncedAt', accessorFn: (r) => r.lastSyncedAt, header: 'Son senkron', meta: { width: 150, mobile: 'meta', className: 'text-xs text-muted-foreground' },
         cell: ({ row }) => {
           const { channel, lastSyncedAt, pendingErrors } = row.original;
           const syncSupported = CHANNEL_SYNC_SUPPORTED.has(channel.code);
