@@ -90,6 +90,14 @@ export function DeliveryLinesTable({ lines }: { lines: DeliveryLineRow[] }) {
       // Tur 11 P1 (devamı): mobilde `meta.mobile:'meta'` — artık `rest`in tek/sonuncu elemanı
       // "Toplanan" (toplanan/talep oranı) olur; lokasyon kodu satır 2'nin sol tarafına bağlam
       // ipucu olarak düşer.
+      // Tur 12 P1 düzeltmesi (depo-sevkiyat-id-02): aynı `cell` render'ı hem masaüstü tablo hücresinde
+      // hem mobil kartın satır-2 "meta" akışında (mobile-cards.tsx leftBits) kullanılıyor — `block` bir
+      // KUTU açar, mobil karttaki tek satırlık `whitespace-nowrap` metin akışını (o akış zaten kendi
+      // `text-ellipsis`ini uyguluyor) böler ve lokasyon kodu alt satıra düşüyordu (kart 82.3px). `block`
+      // + `max-w-[140px]` + kendi `truncate`i yalnızca masaüstü sütun genişliğini sınırlamak içindi;
+      // `md:` önekiyle yalnızca ≥768px'te (masaüstü tablo, mobil kart zaten `md:hidden` konteynerde)
+      // etkinleşir. <768px'te span düz `inline` kalır, kırpma tamamen üst akışın `text-ellipsis`ine
+      // bırakılır.
       {
         id: 'locationCode',
         accessorFn: (r) => r.locationCode,
@@ -98,7 +106,7 @@ export function DeliveryLinesTable({ lines }: { lines: DeliveryLineRow[] }) {
         cell: ({ getValue }) => {
           const v = getValue<string | null>();
           return (
-            <span className="block max-w-[140px] truncate font-mono" title={v ?? undefined}>
+            <span className="font-mono md:block md:max-w-[140px] md:truncate" title={v ?? undefined}>
               {v ?? '—'}
             </span>
           );
