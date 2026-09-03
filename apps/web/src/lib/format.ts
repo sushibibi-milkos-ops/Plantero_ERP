@@ -1,5 +1,5 @@
 import Decimal from 'decimal.js';
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceStrict } from 'date-fns';
 import { tr } from 'date-fns/locale';
 
 /**
@@ -123,7 +123,10 @@ export function relativeTime(v: DateLike, now?: Date): string {
   const base = now ?? new Date();
   const diff = Math.abs(base.getTime() - d.getTime());
   if (diff < 45_000) return 'az önce';
-  return formatDistanceToNowStrict(d, { addSuffix: true, locale: tr });
+  // `formatDistanceToNowStrict` her zaman gerçek `Date.now()` ile kıyaslar — `now` parametresini
+  // yok sayardı (test/gösterim amaçlı sabit bir `now` verildiğinde yanlış sonuç üretiyordu).
+  // `formatDistanceStrict(d, base, ...)` iki tarihi açıkça kıyaslar, `now` her zaman dikkate alınır.
+  return formatDistanceStrict(d, base, { addSuffix: true, locale: tr });
 }
 
 /** Tarihler arası gün farkı (takvim günü, İstanbul) — negatif = geçmiş */

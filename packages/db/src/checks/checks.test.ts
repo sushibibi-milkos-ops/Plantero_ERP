@@ -15,12 +15,13 @@ async function checkFiles(): Promise<string[]> {
 const FILES = await checkFiles();
 
 // Not: başlık "I1..I21" turdan kalma — I22 (üretim denormalize), I23/I24 (satın alma faturalama/sipariş
-// zinciri) ve I25 (GRNI bakiyesi) sonraki turlarda eklendi; dosya sayısı/aralığı buna göre güncellendi.
-describe('bütünlük kontrolleri (I1..I25) — sözdizimsel çalışırlık', () => {
-  it('checks/ altında tam olarak 25 kural dosyası var (01..25)', () => {
-    expect(FILES).toHaveLength(25);
+// zinciri), I25 (GRNI bakiyesi), I26 (kalite/lot dispozisyonu), I27 (lot durumu/lokasyon usage) ve I28
+// (iş emri malzeme/reçete formülü) sonraki turlarda eklendi; dosya sayısı/aralığı buna göre güncellendi.
+describe('bütünlük kontrolleri (I1..I28) — sözdizimsel çalışırlık', () => {
+  it('checks/ altında tam olarak 28 kural dosyası var (01..28)', () => {
+    expect(FILES).toHaveLength(28);
     const numbers = FILES.map((f) => Number(f.slice(0, 2))).sort((a, b) => a - b);
-    expect(numbers).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
+    expect(numbers).toEqual(Array.from({ length: 28 }, (_, i) => i + 1));
   });
 
   it('temel seed (core+uoms+masterdata+accounting+finance) üzerinde tüm kurallar hatasız çalışır ve 0 ihlal döner', async () => {

@@ -274,7 +274,11 @@ function BarcodeInput({ workOrderId, disabled, onFefoWarning, onSuccess }: { wor
         onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); submit(); } }}
         placeholder="Lot / barkod okutun, Enter'a basın…"
         disabled={disabled || pending}
-        className="h-14 pl-10 text-base font-mono"
+        // Not: paylaşılan Input bileşeninin `md:h-9` varsayılanı (>=768px) CSS kademesinde
+        // buradaki `h-14`den sonra geldiği için 1024×768 operatör tabletinde dokunma hedefini
+        // sessizce 36px'e düşürüyordu (`pnpm measure` ile ölçüldü). Paylaşılan dosyaya
+        // dokunmadan `!h-14` ile bu ekrana özgü zorunlu yükseklik veriyoruz.
+        className="!h-14 pl-10 text-base font-mono"
         autoComplete="off"
       />
       {pending ? <Loader2 className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground" /> : null}

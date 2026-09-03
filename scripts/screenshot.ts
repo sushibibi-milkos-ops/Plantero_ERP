@@ -2,26 +2,13 @@
  * Ekran görüntüsü aracı: `pnpm shot /route [--as admin] [--base http://localhost:3000]`
  * Giriş yapar, 1440×900 (desktop) ve 390×844 (mobile) görüntüleri
  * artifacts/screens/<slug>/{desktop,mobile}.png dosyalarına yazar.
- * Chromium ikilisi /opt/pw-browsers altından (glob ile) bulunur.
+ * Giriş, Chromium bulma ve RSC/iskelet bekleme sağlamlaştırmaları `scripts/lib/browser.ts`'de —
+ * `pnpm measure` ile paylaşılır, iki araç aynı sayfayı aynı koşullarda görür.
  */
-import { existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { chromium, type Browser, type Page } from '@playwright/test';
-
-const ACCOUNTS: Record<string, { email: string; password: string }> = {
-  admin: { email: 'admin@plantero.local', password: 'Plantero!2026' },
-  genel_mudur: { email: 'gm@plantero.local', password: 'Plantero!2026' },
-  muhasebe: { email: 'muhasebe@plantero.local', password: 'Plantero!2026' },
-  depo: { email: 'depo@plantero.local', password: 'Plantero!2026' },
-  uretim_operatoru: { email: 'operator@plantero.local', password: 'Plantero!2026' },
-  uretim_sefi: { email: 'uretim@plantero.local', password: 'Plantero!2026' },
-  satis: { email: 'satis@plantero.local', password: 'Plantero!2026' },
-  satin_alma: { email: 'satinalma@plantero.local', password: 'Plantero!2026' },
-  kalite: { email: 'kalite@plantero.local', password: 'Plantero!2026' },
-  bakim: { email: 'bakim@plantero.local', password: 'Plantero!2026' },
-  arge: { email: 'arge@plantero.local', password: 'Plantero!2026' },
-  ihracat: { email: 'ihracat@plantero.local', password: 'Plantero!2026' },
-};
+import type { Browser } from '@playwright/test';
+import { defaultBaseUrl, launchBrowser, openRoute, slugOf } from './lib/browser';
 
 const VIEWPORTS = {
   desktop: { width: 1440, height: 900, mobile: false },
@@ -31,7 +18,7 @@ const VIEWPORTS = {
 function parseArgs(argv: string[]) {
   let route = '/kokpit';
   let as = 'admin';
-  let base = process.env.PLAYWRIGHT_BASE_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+  let base = defaultBaseUrl();
   let full = true;
   let dark = false;
   for (let i = 0; i < argv.length; i++) {
@@ -47,41 +34,6 @@ function parseArgs(argv: string[]) {
   return { route, as, base: base.replace(/\/$/, ''), full, dark };
 }
 
-/** /ayarlar/kullanicilar → ayarlar-kullanicilar ; / → root */
-function slugOf(route: string): string {
-  const s = route
-    .split('?')[0]!
-    .replace(/^\/+|\/+$/g, '')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
-  return s || 'root';
-}
-
-function findChromium(): string | undefined {
-  const dir = process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers';
-  if (!existsSync(dir)) return undefined;
-  const candidates = readdirSync(dir)
-    .filter((d) => /^chromium-\d+$/.test(d))
-    .sort();
-  for (const c of candidates.reverse()) {
-    for (const rel of ['chrome-linux/chrome', 'chrome-linux64/chrome', 'chrome-mac/Chromium.app/Contents/MacOS/Chromium']) {
-      const bin = join(dir, c, rel);
-      if (existsSync(bin)) return bin;
-    }
-  }
-  return undefined;
-}
-
-async function login(page: Page, base: string, account: { email: string; password: string }, next: string) {
-  await page.goto(`${base}/login?next=${encodeURIComponent(next)}`, { waitUntil: 'networkidle' });
-  if (!page.url().includes('/login')) return; // zaten oturum var (olmamalı, context yeni)
-  await page.getByLabel('E-posta').fill(account.email);
-  await page.getByLabel('Şifre', { exact: true }).fill(account.password);
-  await page.getByTestId('login-submit').click();
-  await page.waitForURL((u) => !u.pathname.startsWith('/login'), { timeout: 60_000 });
-}
-
 async function shoot(browser: Browser, opts: ReturnType<typeof parseArgs>, kind: keyof typeof VIEWPORTS, outFile: string) {
   const vp = VIEWPORTS[kind];
   const ctx = await browser.newContext({
@@ -94,33 +46,9 @@ async function shoot(browser: Browser, opts: ReturnType<typeof parseArgs>, kind:
     colorScheme: opts.dark ? 'dark' : 'light',
   });
   const page = await ctx.newPage();
-  // Soğuk derleme (ilk istekte Next.js route'u derler) + RSC veri getirme 30s'in üstüne
-  // çıkabiliyor; varsayılan navigasyon timeout'unu büyütmezsek /ana-veri/receteler gibi
-  // rotalarda 'pnpm shot' sahte bir timeout hatasıyla düşüyordu.
-  page.setDefaultNavigationTimeout(120_000);
-  const account = ACCOUNTS[opts.as];
-  if (!account) throw new Error(`Bilinmeyen hesap: ${opts.as} (${Object.keys(ACCOUNTS).join(', ')})`);
-  if (!opts.route.startsWith('/login')) await login(page, opts.base, account, opts.route);
-  if (!page.url().startsWith(`${opts.base}${opts.route.split('?')[0]}`)) {
-    await page.goto(`${opts.base}${opts.route}`, { waitUntil: 'networkidle', timeout: 120_000 });
-  } else {
-    await page.waitForLoadState('networkidle', { timeout: 120_000 });
-  }
-  // 'networkidle' RSC akışının bittiğini garanti etmez: loading.tsx iskeletleri kendi
-  // aria-busy'sini gerçek içerik gelene dek taşır (bkz. data-table/skeleton.tsx ve
-  // modules/masterdata/components/loading-skeletons.tsx). Ekranı yalnızca son iskelet
-  // kaybolduğunda çekiyoruz — aksi halde artifact yanlış (gri baloncuklu) kanıt üretir.
-  //
-  // Yalnızca `[aria-busy]` (route-seviyeli loading.tsx) yeterli değildi — bileşen seviyeli
-  // `Skeleton` primitifi (`data-slot="skeleton"`, `.animate-pulse`) aria-busy sarmalayıcısı OLMADAN
-  // da kullanılabiliyor, ve dev modunda soğuk derleme 16-39sn sürebiliyor; ardışık `pnpm shot`
-  // çağrılarının yarısı loading iskeletini yakaladı (Tur 4 P2 bulgusu). İkisi birlikte beklenir,
-  // timeout 45sn'ye çıkarıldı (en yavaş gözlemlenen rota 39sn).
-  await page
-    .waitForFunction(() => document.querySelectorAll('[aria-busy], [data-slot="skeleton"], .animate-pulse').length === 0, null, { timeout: 45_000 })
-    .catch(() => {});
-  // Giriş animasyonları (enter-up 220ms) ve NumberFlow bitene dek bekle
-  await page.waitForTimeout(600);
+  // Soğuk derleme timeout'u, giriş, aria-busy + Skeleton beklemesi ve giriş animasyonu payı
+  // openRoute içinde (bkz. scripts/lib/browser.ts).
+  await openRoute(page, opts);
   await page.screenshot({ path: outFile, fullPage: opts.full, animations: 'disabled' });
   await ctx.close();
 }
@@ -131,8 +59,7 @@ async function main() {
   const outDir = resolve(process.cwd(), 'artifacts', 'screens', slug);
   mkdirSync(outDir, { recursive: true });
 
-  const executablePath = findChromium();
-  const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
+  const browser = await launchBrowser();
   try {
     for (const kind of ['desktop', 'mobile'] as const) {
       const file = join(outDir, `${kind}.png`);

@@ -19,7 +19,8 @@
     "db:reset": "pnpm --filter @plantero/db reset",
     "db:check": "pnpm --filter @plantero/db check",
     "db:studio": "pnpm --filter @plantero/db studio",
-    "shot": "tsx scripts/screenshot.ts"
+    "shot": "tsx scripts/screenshot.ts",
+    "measure": "tsx scripts/measure.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",
