@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import { Factory } from 'lucide-react';
+import { Factory, Lock } from 'lucide-react';
 import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import { Sparkline } from '@/components/sparkline';
 import { cn } from '@/lib/utils';
-import { formatQty } from '@/lib/format';
+import { formatQty, formatDate } from '@/lib/format';
 import { D } from '@plantero/core';
 import type { LineCardRow } from '../queries';
 
@@ -71,12 +72,31 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
             )}
 
             <div className="grid grid-cols-3 gap-2 border-t border-border/60 pt-3 text-center">
-              {/* "Bugün (hat)": hattın günlük toplam üretimi, hemen üstündeki aktif iş emri ilerlemesinden
-                  ayrı bir ölçüdür — "Bugün üretim" etiketi ikisini karıştırıyordu (Tur 2 bulgusu). */}
-              <Metric label="Bugün (hat)" value={<QtyCell value={line.todayProducedQty} uom={line.todayUomCode} className="justify-center text-sm font-semibold" />} />
+              {/* title: "Bugün (hat)" hattın günlük toplam üretimi mi yoksa aktif iş emrinki mi
+                  belirsizdi (Tur 3 bulgusu, P2) — üstteki aktif iş emri ilerlemesinden ayrı bir
+                  ölçü olduğu açıklama ile netleşir. */}
+              <Metric label="Bugün (hat)" value={<QtyCell value={line.todayProducedQty} uom={line.todayUomCode} className="justify-center text-sm font-semibold" />} title="Hattın bugünkü toplam üretimi (tüm iş emirleri)" />
               <Metric label="Doluluk" value={<span className="num text-sm font-semibold">{fillPct === null ? '—' : `%${fillPct}`}</span>} />
               <Metric label="Kapasite" value={<span className="num text-sm font-semibold">{line.capacityPerHour ? `${formatQty(line.capacityPerHour, undefined, { maxDigits: 0 })}/sa` : '—'}</span>} />
             </div>
+
+            {/* Son 7 gün + son kapatılan iş emri: 900px viewport'ta kartların altında ~%47 boş alan
+                kalıyordu (Tur 3 bulgusu, P2) — boşluk bilgiye çevrilir. */}
+            {line.sparkline.some((v) => v > 0) ? (
+              <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3">
+                <span className="text-[11px] tracking-wide text-muted-foreground uppercase">Son 7 gün</span>
+                <Sparkline data={line.sparkline} width={88} height={24} tone="muted" />
+              </div>
+            ) : null}
+            {line.lastClosedWorkOrder ? (
+              <div className="flex items-center gap-2 border-t border-border/60 pt-3 text-xs text-muted-foreground">
+                <Lock className="size-3.5 shrink-0" />
+                <span className="min-w-0 truncate">
+                  Son kapatılan: <span className="text-foreground">{line.lastClosedWorkOrder.productName}</span>
+                </span>
+                <span className="ml-auto shrink-0 font-mono text-[11px]">{formatDate(line.lastClosedWorkOrder.closedAt)}</span>
+              </div>
+            ) : null}
           </div>
         );
       })}
@@ -84,9 +104,9 @@ export function LineCards({ lines }: { lines: LineCardRow[] }) {
   );
 }
 
-function Metric({ label, value }: { label: string; value: React.ReactNode }) {
+function Metric({ label, value, title }: { label: string; value: React.ReactNode; title?: string }) {
   return (
-    <div>
+    <div title={title}>
       {/* text-[11px]: 10px okunabilirlik tabanının (Linear'da 11px) altındaydı (Tur 2 bulgusu). */}
       <div className="text-[11px] tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className="mt-0.5">{value}</div>

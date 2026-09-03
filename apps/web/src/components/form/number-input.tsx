@@ -110,7 +110,10 @@ export function NumberInput({
           setText(formatTrNumber(rounded, maxDigits, minDigits));
           onBlur?.();
         }}
-        className={cn('num h-9 text-right text-[13px] md:text-[13px]', prefix && 'pl-7', suffix && 'pr-12')}
+        // h-11 md:h-9: Input primitive'inin kendi varsayılanı yeterliydi ama burada satır içi
+        // `className` ile override edilip sabit h-9'a düşürülüyordu — Combobox/DateInput ile aynı
+        // 44px mobil dokunma hedefi deseni burada da uygulanır (Tur 3 bulgusu, P1).
+        className={cn('num h-11 text-right text-[13px] md:h-9 md:text-[13px]', prefix && 'pl-7', suffix && 'pr-12')}
       />
       {suffix ? <span className="pointer-events-none absolute right-2.5 text-[12px] text-muted-foreground">{suffix}</span> : null}
     </div>

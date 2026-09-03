@@ -114,7 +114,10 @@ export function DateInput({
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="grid size-7 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
+              // size-9 md:size-7: metin alanı gibi (h-11 md:h-9) 390px'te 44px'e yakın dokunma hedefi —
+              // eskiden sabit 28px'te kalıyordu, Input/Combobox ile aynı desenin dışındaydı (Tur 3
+              // bulgusu, P1).
+              className="grid size-9 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground md:size-7"
               aria-label="Takvim"
               disabled={disabled}
             >

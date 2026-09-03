@@ -2,7 +2,7 @@ import 'server-only';
 import { and, asc, desc, eq, inArray, gte, lte, isNull, isNotNull } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
 import { D, round2, toDb, sum, getChain, computeLineOeeForDay } from '@plantero/core';
-import { businessDate } from '@plantero/core/dates';
+import { businessDate, addDays } from '@plantero/core/dates';
 
 const {
   workOrders, workOrderMaterials, workOrderConsumptions, workOrderOutputs, workOrderScraps, workOrderEvents,
@@ -74,8 +74,8 @@ export async function listWorkOrders(): Promise<WorkOrderRow[]> {
 }
 
 export type WorkOrderKpis = {
-  openCount: number; openCountDelta: number | null;
-  inProgressCount: number; inProgressCountDelta: number | null;
+  openCount: number; openCountDelta: number | null; overdueCount: number;
+  inProgressCount: number; inProgressCountDelta: number | null; runningLines: number; totalLines: number;
   plannedValue: string; plannedValueDelta: number | null;
   producedValueToday: string;
   avgYieldPct: string; avgYieldPctDelta: number | null;
@@ -93,10 +93,19 @@ export async function getWorkOrderKpis(): Promise<WorkOrderKpis> {
   const rows = await db.select().from(workOrders);
   const open = rows.filter((r) => !['closed', 'cancelled'].includes(r.status));
   const inProgress = rows.filter((r) => r.status === 'in_progress');
+  const todayIso = businessDate(new Date());
   const today = new Date().toISOString().slice(0, 10);
   const finishedToday = rows.filter((r) => r.finishedAt && r.finishedAt.toISOString().slice(0, 10) === today);
   const withYield = rows.filter((r) => r.yieldPct !== null && D(r.yieldPct).gt(0));
   const avgYield = withYield.length ? sum(withYield.map((r) => r.yieldPct)).div(withYield.length) : D(0);
+
+  // Gecikmiş: açık iş emri, planlanan başlangıcı bugünden önce. "Üretimde" hangi hatlarda: kaç
+  // hattın şu an çalıştığı — bu ikisi eskiden birbirini tekrar eden dolgu ipuçlarıyla ("Açık iş emri
+  // 4 / 1 üretimde" ↔ "Üretimde 1 / 4 açık iş emri") gösteriliyordu, sıfır yeni bilgi (Tur 3
+  // bulgusu, P1) — burada her kart kendi gerçek ikincil ölçüsünü taşır.
+  const overdueCount = open.filter((r) => r.plannedStart && businessDate(r.plannedStart) < todayIso).length;
+  const totalLines = (await db.select({ id: productionLines.id }).from(productionLines).where(eq(productionLines.isActive, true))).length;
+  const runningLines = new Set(inProgress.map((r) => r.lineId)).size;
 
   // "Geçen döneme göre" delta'lar: kalıcı bir KPI geçmişi tablosu yok (şema dondurulmuş — bkz. rapor,
   // şema talepleri). Mevcut zaman damgalarından (createdAt/startedAt/finishedAt/closedAt) geriye dönük
@@ -118,8 +127,10 @@ export async function getWorkOrderKpis(): Promise<WorkOrderKpis> {
   return {
     openCount: open.length,
     openCountDelta: pctChange(open.length, openAsOfWeekAgo.length),
+    overdueCount,
     inProgressCount: inProgress.length,
     inProgressCountDelta: pctChange(inProgress.length, inProgressAsOfWeekAgo.length),
+    runningLines, totalLines,
     plannedValue: toDb(sum(open.map((r) => r.totalCost))),
     plannedValueDelta: pctChange(sum(open.map((r) => r.totalCost)), sum(openAsOfWeekAgo.map((r) => r.totalCost))),
     producedValueToday: toDb(sum(finishedToday.map((r) => r.totalCost))),
@@ -204,6 +215,10 @@ export type LineCardRow = {
   todayUomCode: string | null;
   oee: Awaited<ReturnType<typeof computeLineOeeForDay>>;
   lastDowntimeReason: string | null;
+  /** Son 7 günün üretilen değeri (₺, gün gün) — miktar değil değer: hat farklı birimde ürün
+   *  üretebildiğinden (todayUomCode ile aynı sorun) fiziksel miktar sparkline'ı yanıltıcı olurdu. */
+  sparkline: number[];
+  lastClosedWorkOrder: { docNo: string; productName: string; producedQty: string; uomCode: string; closedAt: Date } | null;
 };
 
 export async function listLineCards(): Promise<LineCardRow[]> {
@@ -223,11 +238,20 @@ export async function listLineCards(): Promise<LineCardRow[]> {
     const oee = await computeLineOeeForDay(db, line.id, today);
 
     const finishedRows = await db
-      .select({ finishedAt: workOrders.finishedAt, uomCode: uoms.code })
+      .select({ wo: workOrders, productName: products.name, uomCode: uoms.code })
       .from(workOrders)
+      .innerJoin(products, eq(products.id, workOrders.productId))
       .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
       .where(and(eq(workOrders.lineId, line.id), isNotNull(workOrders.finishedAt)));
-    const todayUomCodes = new Set(finishedRows.filter((r) => businessDate(r.finishedAt!) === today).map((r) => r.uomCode));
+    const todayUomCodes = new Set(finishedRows.filter((r) => businessDate(r.wo.finishedAt!) === today).map((r) => r.uomCode));
+
+    // 7 günlük değer sparkline'ı: eskiden kartın altında 900px viewport'un ~%47'si boş kalıyordu
+    // (Tur 3 bulgusu, P2) — hattın son bir haftasına dair gerçek bir eğri gösterir.
+    const last7Days = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6));
+    const sparkline = last7Days.map((d) => sum(finishedRows.filter((r) => businessDate(r.wo.finishedAt!) === d).map((r) => r.wo.totalCost)).toNumber());
+
+    const closedRows = finishedRows.filter((r) => r.wo.status === 'closed' && r.wo.closedAt).sort((a, b) => b.wo.closedAt!.getTime() - a.wo.closedAt!.getTime());
+    const lastClosed = closedRows[0];
 
     out.push({
       id: line.id, code: line.code, name: line.name, capacityPerHour: line.capacityPerHour, shiftMinutes: line.shiftMinutes,
@@ -236,6 +260,8 @@ export async function listLineCards(): Promise<LineCardRow[]> {
       todayUomCode: todayUomCodes.size === 1 ? Array.from(todayUomCodes)[0]! : null,
       oee,
       lastDowntimeReason: null,
+      sparkline,
+      lastClosedWorkOrder: lastClosed ? { docNo: lastClosed.wo.docNo, productName: lastClosed.productName, producedQty: lastClosed.wo.producedQty, uomCode: lastClosed.uomCode, closedAt: lastClosed.wo.closedAt! } : null,
     });
   }
   return out;
@@ -291,13 +317,50 @@ export async function listOperatorUsers(): Promise<OperatorUserRow[]> {
 
 export type OperatorWorkOrderDetail = NonNullable<Awaited<ReturnType<typeof getWorkOrderDetail>>>;
 
-/** Bu hattaki aktif (devam eden > duraklamış > serbest) iş emri — yoksa null */
+const LINE_ACTIVE_STATUSES = ['in_progress', 'paused', 'released'] as const;
+const LINE_STATUS_PRIORITY: Record<string, number> = { in_progress: 0, paused: 1, released: 2 };
+
+/**
+ * Bu hattaki açık (devam eden/duraklamış/serbest) iş emirleri, deterministik sırayla
+ * (öncelik: in_progress > paused > released; eşitlikte plannedStart artan, sonra docNo artan —
+ * SQL ORDER BY, tarihsizler Postgres varsayımıyla ASC'de sonda). `/operator` hat kartı rozeti ve
+ * `/operator/[lineId]` kuyruk ekranı bunu kullanır.
+ */
+export async function listOpenWorkOrdersForLine(lineId: string): Promise<LineQueueRow[]> {
+  const rows = await db
+    .select({ wo: workOrders, productName: products.name, uomCode: uoms.code })
+    .from(workOrders)
+    .innerJoin(products, eq(products.id, workOrders.productId))
+    .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
+    .where(and(eq(workOrders.lineId, lineId), inArray(workOrders.status, LINE_ACTIVE_STATUSES)))
+    .orderBy(asc(workOrders.plannedStart), asc(workOrders.docNo));
+  const sorted = rows
+    .map((r) => ({
+      id: r.wo.id, docNo: r.wo.docNo, status: r.wo.status, productName: r.productName, uomCode: r.uomCode,
+      plannedQty: r.wo.plannedQty, producedQty: r.wo.producedQty,
+      plannedStart: r.wo.plannedStart ? r.wo.plannedStart.toISOString().slice(0, 10) : null,
+    }))
+    .sort((a, b) => (LINE_STATUS_PRIORITY[a.status] ?? 9) - (LINE_STATUS_PRIORITY[b.status] ?? 9)); // stable — SQL sırasını önceliğe göre yalnızca yeniden gruplar
+  return sorted;
+}
+
+export type LineQueueRow = { id: string; docNo: string; status: string; productName: string; uomCode: string; plannedQty: string; producedQty: string; plannedStart: string | null };
+
+/**
+ * Bu hattaki tek anlamlı "aktif" iş emri — yoksa ya da birden fazla iş emri aynı öncelik
+ * kademesinde eşitse (ör. iki `released`) null döner: eskiden bu durumda hangi kaydın seçildiği
+ * sorgunun ORDER BY'sız, keyfi dönüş sırasına bağlıydı — operatör planlamacının serbest bıraktığı
+ * iş emrinden habersiz, önceki (yanlış) iş emrine karşı okutma/fire/bitir yapabiliyordu (Tur 3
+ * bulgusu, P0 — lot geri izleme ve miktar zinciri riski). Belirsiz durumda çağıran taraf
+ * (`/operator/[lineId]`) `listOpenWorkOrdersForLine` ile kuyruğu listeleyip operatöre seçtirir.
+ */
 export async function getActiveWorkOrderForLine(lineId: string): Promise<OperatorWorkOrderDetail | null> {
-  const rows = await db.select({ id: workOrders.id, status: workOrders.status }).from(workOrders).where(and(eq(workOrders.lineId, lineId), inArray(workOrders.status, ['in_progress', 'paused', 'released'])));
-  if (!rows.length) return null;
-  const priority: Record<string, number> = { in_progress: 0, paused: 1, released: 2 };
-  rows.sort((a, b) => (priority[a.status] ?? 9) - (priority[b.status] ?? 9));
-  return getWorkOrderDetail(rows[0]!.id);
+  const queue = await listOpenWorkOrdersForLine(lineId);
+  if (!queue.length) return null;
+  const top = queue[0]!;
+  const tiedWithTop = queue.filter((r) => (LINE_STATUS_PRIORITY[r.status] ?? 9) === (LINE_STATUS_PRIORITY[top.status] ?? 9));
+  if (tiedWithTop.length > 1) return null;
+  return getWorkOrderDetail(top.id);
 }
 
 export type LineOption = { id: string; code: string; name: string; capacityPerHour: string | null; shiftMinutes: number };

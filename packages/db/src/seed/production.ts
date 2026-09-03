@@ -178,7 +178,12 @@ async function runFinishedWorkOrder(tx: DbOrTx, def: { sku: string; plannedQty: 
 /** 1 devam eden iş emri: kısmi tüketim + duruş (mola) olayı, in_progress durumunda kalır */
 async function runInProgressWorkOrder(tx: DbOrTx, warehouseId: string, summary: SeedSummary): Promise<void> {
   const product = await productBySku(tx, '130010201'); // Strawberry Protein Mixi — HAT2
-  const startedAt = at(TODAY, '07:30');
+  // `at(TODAY, '07:30')` UTC 07:30 üretir — İstanbul'da 10:30. Seed günün herhangi bir saatinde
+  // çalıştırılabildiğinden (ör. 10:30 İstanbul'dan önce), bu sabit saat gerçek "şimdi"den ileride
+  // kalabiliyordu: operatör terminalinde SÜRE karosu çalışan bir kronometre yerine donmuş 00:00:00
+  // gösteriyordu (Tur 3 bulgusu, P2). Gerçek "şimdi"ye göre göreli bir geçmiş saat kullanılır — bu
+  // iş emri her koşulda gerçekten başlamış görünür.
+  const startedAt = addHours(new Date(), -4);
 
   const { workOrder, materials } = await createWorkOrder(tx, { productId: product.id, plannedQty: D(70), warehouseId, plannedStart: startedAt, origin: 'manual', note: 'Seed: devam eden parti' }, SYSTEM_ACTOR);
   await releaseWorkOrder(tx, workOrder.id, SYSTEM_ACTOR);

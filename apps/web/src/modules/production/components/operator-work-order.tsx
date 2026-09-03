@@ -22,7 +22,7 @@ import type { getWorkOrderDetail } from '../queries';
 
 type Detail = NonNullable<Awaited<ReturnType<typeof getWorkOrderDetail>>>;
 
-export function OperatorWorkOrder({ detail, lineCode }: { detail: Detail; lineCode: string }) {
+export function OperatorWorkOrder({ detail, lineCode, backHref = '/operator' }: { detail: Detail; lineCode: string; backHref?: string }) {
   const router = useRouter();
   const { wo, product, uomCode, materials, consumptions } = detail;
   const [pending, startTransition] = useTransition();
@@ -46,9 +46,13 @@ export function OperatorWorkOrder({ detail, lineCode }: { detail: Detail; lineCo
   };
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-4 pb-4">
+    // lg:max-w-5xl: operator/page.tsx (hat seçimi) Tur 2'de 1024×768 tablette lg:max-w-5xl'e
+    // çıkarılmıştı, bu ekran max-w-3xl'de (768px) kalmıştı — aynı terminalin iki sayfası iki farklı
+    // genişlikte açılıyordu, 12 malzemelik reçete tek kolonda 1421px'e uzayıp "Bitir" sonrası bağlamı
+    // ekran dışına itiyordu (Tur 3 bulgusu, P1).
+    <div className="mx-auto flex max-w-3xl flex-col gap-4 pb-4 lg:max-w-5xl">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="size-11 shrink-0" onClick={() => router.push('/operator')} aria-label="Hat seçimine dön">
+        <Button variant="ghost" size="icon" className="size-11 shrink-0" onClick={() => router.push(backHref)} aria-label="Geri dön">
           <ArrowLeft className="size-5" />
         </Button>
         <div className="min-w-0">
@@ -132,7 +136,7 @@ export function OperatorWorkOrder({ detail, lineCode }: { detail: Detail; lineCo
         remainingPlannedQty={new Decimal(wo.plannedQty).minus(new Decimal(wo.producedQty)).toFixed(4)}
         open={finishOpen}
         onOpenChange={setFinishOpen}
-        onDone={() => router.push('/operator')}
+        onDone={() => router.push(backHref)}
       />
     </div>
   );
@@ -158,8 +162,12 @@ function ElapsedTile({ startedAt, status }: { startedAt: Date | null; status: st
     return () => clearInterval(id);
   }, [status]);
 
-  const elapsed = startedAt && now ? Math.max(0, Math.floor((now.getTime() - startedAt.getTime()) / 1000)) : null;
-  const text = elapsed === null ? '--:--:--' : `${String(Math.floor(elapsed / 3600)).padStart(2, '0')}:${String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0')}:${String(elapsed % 60).padStart(2, '0')}`;
+  // Başlangıcı gelecekte olan bir iş emri (ör. seed tarihi terminal saatinden ileri kaldıysa) negatif
+  // farkı Math.max(0,...) ile 00:00:00'a sabitliyordu — çalışan bir kronometrenin sıfırda donmuş
+  // görünmesi operatörde "ekran donmuş" izlenimi bırakıyordu (Tur 3 bulgusu, P2).
+  const notStarted = Boolean(startedAt && now && startedAt.getTime() > now.getTime());
+  const elapsed = startedAt && now && !notStarted ? Math.floor((now.getTime() - startedAt.getTime()) / 1000) : null;
+  const text = notStarted ? 'Başlamadı' : elapsed === null ? '--:--:--' : `${String(Math.floor(elapsed / 3600)).padStart(2, '0')}:${String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0')}:${String(elapsed % 60).padStart(2, '0')}`;
 
   return (
     <div className="rounded-xl border border-border/70 bg-card p-3 text-center">
@@ -197,7 +205,9 @@ function MaterialsChecklist({ materials, uomFallback }: { materials: Detail['mat
   return (
     <div>
       <h2 className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">Reçete malzemeleri</h2>
-      <div className="space-y-2">
+      {/* lg:grid-cols-2: geniş terminalde (lg:max-w-5xl) 12 malzeme tek kolonda alt alta dizilip
+          sayfayı gereksiz uzatıyordu (Tur 3 bulgusu, P1) — 1024px+ ekranda 2 kolon. */}
+      <div className="space-y-2 lg:grid lg:grid-cols-2 lg:gap-x-3 lg:space-y-0 lg:[&>*]:mb-2">
         {real.map((m) => {
           const planned = new Decimal(m.m.plannedQty);
           const consumed = new Decimal(m.m.consumedQty);
@@ -207,9 +217,16 @@ function MaterialsChecklist({ materials, uomFallback }: { materials: Detail['mat
             <div key={m.m.id} className="rounded-lg border border-border/60 bg-card p-3">
               <div className="mb-1.5 flex items-center justify-between gap-2 text-sm">
                 <span className={cn('truncate', done && 'text-success')}>{m.productName}</span>
-                <span className="num shrink-0 text-xs text-muted-foreground">{consumed.toFixed(2)} / {planned.toFixed(2)} {m.uomCode ?? uomFallback}</span>
+                {/* tr-TR ayracı + tabular-nums: eskiden toFixed(2) İngilizce nokta basıyordu ("8.40 /
+                    21.00 KG") — aynı ekranda "Son tüketimler" bloğu (QtyCell) "8,4 KG" gösteriyordu,
+                    tek ekranda iki sayı sistemi (Tur 3 bulgusu, P0). */}
+                <span className="shrink-0 text-xs text-muted-foreground">
+                  <QtyCell value={m.m.consumedQty} maxDigits={3} className="inline-flex" /> / <QtyCell value={m.m.plannedQty} uom={m.uomCode ?? uomFallback} maxDigits={3} className="inline-flex" />
+                </span>
               </div>
-              <Progress value={pct} className={cn('h-1.5', done && '[&>div]:bg-success', pct === 0 && 'opacity-60')} />
+              {/* pct===0'da çubuk hiç render edilmez: opacity-60 düz gri bir çizgi bırakıyordu, 11
+                  malzemede aynı anlamsız çizgi ekranı dolduruyordu (Tur 3 bulgusu, P2). */}
+              {pct > 0 ? <Progress value={pct} className={cn('h-1.5', done && '[&>div]:bg-success')} /> : <div className="h-px w-full border-t border-dashed border-border/50" />}
             </div>
           );
         })}

@@ -51,11 +51,11 @@ export default async function WorkOrderDetailPage({ params }: { params: Promise<
           {operatorName ? <MetaField label="Operatör" value={operatorName} /> : null}
         </div>
 
-        {/* max-w-2xl: liste tablosunun bilinçli kutusuz-hairline anatomisiyle (data-table.tsx) çelişen
-            dış çerçeve kaldırıldı (yalnızca üst/alt hairline kalır); grid + StatCell'den flex-1
-            kaldırılınca hücreler içeriğine göre daralıyor — 2 istatistikte bile hücre başına 795px'lik
-            ölü bant kalmıyor (Tur 2 bulgusu). */}
-        <div className="mt-4 grid max-w-2xl grid-cols-2 divide-x divide-border/60 border-y border-border/60 sm:grid-cols-4">
+        {/* flex w-fit (grid ... grid-cols-4 idi): 4 sabit sütunlu ızgara, 2 hücre dolu kaldığında
+            (Fire=0, verim yok) 672px'e kadar ölü bant bırakıyordu — border-y/divide-x çizgileri
+            içerik olmayan hücrelerde de sürüyordu (Tur 2'de dış çerçeve kaldırıldı ama bu iç bant
+            kaldı, Tur 3 bulgusu, P1). flex ile şerit yalnızca dolu hücre kadar genişler. */}
+        <div className="mt-4 flex w-fit divide-x divide-border/60 border-y border-border/60">
           <StatCell label="Planlanan" value={<QtyCell value={wo.plannedQty} uom={uomCode} />} />
           {/* Üretilen miktar nötr bir gerçektir (iyi/kötü sinyali değil) — renk yalnızca Fire gibi
               gerçekten uyarı taşıyan hücrede kullanılır (renk enflasyonundan kaçınma). */}

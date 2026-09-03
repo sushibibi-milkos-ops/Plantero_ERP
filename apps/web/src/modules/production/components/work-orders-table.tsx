@@ -10,6 +10,39 @@ import { statusOptions } from '@/lib/status';
 import { formatDate } from '@/lib/format';
 import type { WorkOrderRow } from '../queries';
 
+/**
+ * Mobil kart: eskiden `DataTable`'ın varsayılan kart düzeni "kalan alanlar ≤2 ise dikey" kuralına
+ * takılıyordu — bu tabloda kalan alan tam olarak 2 (Planlanan, Üretilen), her ikisi de etiket
+ * üstte/değer altta 2 satır alıp kartı 130px'e şişiriyordu (8 kayıt 1040px, 390px'te 5 kayıt bile
+ * görünmüyordu — Tur 3 bulgusu, P1). Tek satırlık "Planlanan / Üretilen" özeti kartı ~92px'e indirir.
+ * Ortak `mobile-cards.tsx` değiştirilmedi — `DataTable`'ın zaten desteklediği `renderMobileCard` ile
+ * bu tabloya özel çizilir.
+ */
+function WorkOrderMobileCard({ wo, uniformUom }: { wo: WorkOrderRow; uniformUom: string | null | undefined }) {
+  return (
+    <div className="cursor-pointer rounded-lg border border-border/70 bg-card p-3 active:bg-accent/50">
+      <div className="flex items-start gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-[14px] font-medium">{wo.docNo}</div>
+          <div className="truncate text-xs text-muted-foreground">{wo.productName}</div>
+          <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 truncate font-mono text-[11px] text-muted-foreground/70">
+            <span>{wo.lineCode}</span>
+            <span aria-hidden>·</span>
+            <span>{wo.plannedStart ? formatDate(wo.plannedStart) : '—'}</span>
+          </div>
+        </div>
+        <StatusBadge status={wo.status} kind="work_order" />
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-2 border-t border-border/40 pt-2">
+        <span className="text-[11px] text-muted-foreground">Planlanan / Üretilen</span>
+        <span className="text-[13px]">
+          <QtyCell value={wo.plannedQty} uom={uniformUom ? undefined : wo.uomCode} className="inline-flex" /> / <QtyCell value={wo.producedQty} uom={uniformUom ? undefined : wo.uomCode} className="inline-flex" />
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function WorkOrdersTable({ workOrders }: { workOrders: WorkOrderRow[] }) {
   // /uretim/hatlar kartındaki hat başlığı buraya `?hat=HAT1` ile bağlanır — sayfa açılışında hat
   // sütununu ön filtreler (DataTable'ın kendi arama/filtre kutuları hâlâ değiştirilebilir).
@@ -72,6 +105,7 @@ export function WorkOrdersTable({ workOrders }: { workOrders: WorkOrderRow[] }) 
       initialColumnFilters={initialColumnFilters}
       emptyTitle="Henüz iş emri yok"
       emptyDescription="Üretim planlamak için “Yeni iş emri” ile başlayın."
+      renderMobileCard={(r) => <WorkOrderMobileCard wo={r} uniformUom={uniformUom} />}
     />
   );
 }
