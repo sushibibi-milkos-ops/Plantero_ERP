@@ -100,7 +100,12 @@ export function KpiCard({
           )}
         >
           <DeltaIcon className="size-3" />
-          {delta === null || delta === undefined ? '—' : `%${Math.abs(delta).toLocaleString('tr-TR', { maximumFractionDigits: 1 })}`}
+          {/* Kök neden (Tur 11 P1 shell-kokpit-kpi-delta-01): `delta===0` önceden "%0" basıyordu —
+              bölen yokken basılan dürüst "—" ile aynı duruma (hiçbir gerçek karşılaştırma yok/
+              anlamlı değil) görsel olarak FARKLI davranıyordu, oysa ikisi de aynı "sinyal yok"
+              bilgisini taşır (bkz. `dir`/`good` hesaplaması: 0 zaten null ile aynı 'flat'/muted
+              dala düşüyor, yalnızca metin farklıydı). Artık ikisi de aynı "—" basar. */}
+          {delta === null || delta === undefined || delta === 0 ? '—' : `%${Math.abs(delta).toLocaleString('tr-TR', { maximumFractionDigits: 1 })}`}
         </span>
         <span className="whitespace-nowrap text-muted-foreground">{deltaLabel}</span>
       </div>

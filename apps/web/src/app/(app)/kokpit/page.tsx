@@ -67,22 +67,27 @@ export default async function CockpitPage() {
   // MEVCUT tablolardaki gerçek iş tarihleriyle (orderDate/invoiceDate/moved_at <= dün) geriye dönük
   // türetilir — bu üçü BİRBİRİYLE aynı temeli (dün aynı saatteki gerçek durum) paylaştığından
   // /satis/net-ciro'daki "hepsi ya da hiçbiri" kuralı burada uygulanmaz: her KPI kendi payda/bölen
-  // durumuna göre bağımsız değerlendirilir (`deltaPct`: bölen sıfırsa `null`). "Bugünkü ciro" ayrı bir
-  // temel kullanır (postedAt — muhasebe kayıt anı, `getCockpitToday` listesiyle birebir aynı filtre,
-  // Tur 2 bulgusu) ve dün hiç fatura kesilmemişse (revenueDeltaPct === null) kendi başına `undefined`
-  // düşer; bu üçünü etkilemez — dördü FARKLI ölçümler, birinin payda sorunuyla diğer üçünü de
-  // susturmak "hepsi ya da hiçbiri" kuralının yanlış uygulanışı olurdu (o kural yalnızca AYNI
-  // karşılaştırma tabanını paylaşan bir KPI şeridi için anlamlıdır, bkz. net-ciro).
-  // İkon alanı tamamen kaldırıldı (Tur 4 P1 bulgusu): Banknote/ShoppingCart/AlertTriangle/Clock
-  // hiçbir bilgi taşımıyordu, başlıktaki metni birebir tekrarlıyordu ("ikon süs değildir" ihlali) —
-  // ayrıca `variant="card"` (1px çerçeve + 133px yükseklik) /satis/net-ciro'nun `variant="strip"`
-  // (kutusuz, ikonsuz, hairline'lı, 80px) anatomisiyle çelişiyordu; ürünün tek bir finans ekranı
-  // dili konuşması için burada da strip kullanılıyor.
-  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta?: number | null; deltaLabel?: string; invertDelta?: boolean; href: string; hint?: string }> = [
-    { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', delta: kpis.revenueDeltaPct ?? undefined, deltaLabel: 'dünden', href: '/satis/net-ciro' },
-    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', delta: kpis.openOrdersDeltaPct ?? undefined, deltaLabel: 'dünden', href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
-    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', delta: kpis.criticalStockDeltaPct ?? undefined, deltaLabel: 'dünden', invertDelta: true, href: '/satin-alma/kritik-stok' },
-    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', delta: kpis.overdueReceivableDeltaPct ?? undefined, deltaLabel: 'dünden', invertDelta: true, href: '/finans/tahsilat' },
+  // durumuna göre bağımsız değerlendirilir (`deltaPct`: bölen sıfırsa `null`).
+  // Kök neden (Tur 11 P1 shell-kokpit-kpi-delta-01): `?? undefined` her KPI'nin `null` deltasını
+  // (bölen yok/karşılaştırılamaz) sessizce BOŞ bir yer tutucuya çeviriyordu — tam da "Bugünkü ciro"
+  // için dün hiç fatura kesilmemişken oluyordu, yani ekrandaki TEK gerçekten değişebilen metrik
+  // hiç delta göstermiyor, buna karşılık diğer üç (yaklaşık/statik) KPI neredeyse her zaman "%0
+  // dünden" basıyordu — ikisi de aynı bilgiyi ("karşılaştırma yok/anlamlı değil") birbirinden
+  // farklı iki görünüme (boşluk vs. dolu rozet) sokuyordu, bu da şeritte dikey ritmi kırıyordu.
+  // Artık `null` KOŞULSUZ değere geçiriliyor (coalesce YOK) — KpiCard `delta` prop'u `undefined`
+  // DIŞINDA her şeyi (0 dahil, null dahil) bir rozet olarak basar; `null`/`0` ikisi de aynı soluk
+  // "—" rozetine düşer (bkz. kpi-card.tsx). Sonuç: dördü de HER ZAMAN bir delta satırı taşır, aynı
+  // yükseklikte durur — "meaningful" delta varsa renkli, yoksa/anlamsızsa tek tip soluk "—".
+  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta?: number | null; deltaLabel?: string; invertDelta?: boolean; href: string; hint?: string; fractionDigits?: number }> = [
+    // fractionDigits=2 (Tur 11 P1 shell-kokpit-kpi-delta-01/b): bu ikisi para KPI'sı ve hemen altındaki
+    // "Bugün" listesi AYNI ekranda MoneyCell ile 2 ondalık basıyor (₺2.545,20) — KPI'lar varsayılan
+    // 0 ondalığında kalırsa (₺58.662) tek ekranda iki para hassasiyeti çakışırdı. Diğer sayfalardaki
+    // (ör. /satis/net-ciro) 0-ondalık KPI şeridi kuralı burada geçerli DEĞİL çünkü orada hemen altında
+    // 2-ondalıklı bir belge listesi yok — kural "ekran başına TEK hassasiyet", sayfa geneli değil.
+    { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', fractionDigits: 2, delta: kpis.revenueDeltaPct, deltaLabel: 'dünden', href: '/satis/net-ciro' },
+    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', delta: kpis.openOrdersDeltaPct, deltaLabel: 'dünden', href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
+    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', delta: kpis.criticalStockDeltaPct, deltaLabel: 'dünden', invertDelta: true, href: '/satin-alma/kritik-stok' },
+    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', fractionDigits: 2, delta: kpis.overdueReceivableDeltaPct, deltaLabel: 'dünden', invertDelta: true, href: '/finans/tahsilat' },
   ];
 
   return (
@@ -100,6 +105,7 @@ export default async function CockpitPage() {
             title={k.title}
             value={k.value}
             format={k.format}
+            fractionDigits={k.fractionDigits}
             delta={k.delta}
             deltaLabel={k.deltaLabel}
             invertDelta={k.invertDelta}

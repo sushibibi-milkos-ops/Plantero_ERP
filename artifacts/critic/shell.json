@@ -1,7 +1,7 @@
 {
   "module": "shell",
-  "round": 10,
-  "note": "shell.json bu turda ilk kez oluşturuldu (önceki turlarda kritik bu modülü henüz kendi dosyasında puanlamamıştı — diğer modüllerin critic dosyalarında 'module: shell' etiketli iç içe bulgular vardı, ör. depo.json 'shell-page-header-01', 'shell-form-switch-01'). Bu tur, orkestratörün doğrudan verdiği kritik bulgu listesini kapatır; 12 kriterlik puanlama (scores/total) kritik'in kendi geçişinde eklenecek — builder puan uydurmaz. Her kapanış aşağıda `measureAfter` ile kanıtlanmıştır (pnpm measure + Playwright bounding-box doğrulaması, 390x844 mobil + 1440x900 masaüstü).",
+  "round": 11,
+  "note": "Tur 10 notu: shell.json bu turda ilk kez oluşturuldu (önceki turlarda kritik bu modülü henüz kendi dosyasında puanlamamıştı — diğer modüllerin critic dosyalarında 'module: shell' etiketli iç içe bulgular vardı, ör. depo.json 'shell-page-header-01', 'shell-form-switch-01'). Bu tur, orkestratörün doğrudan verdiği kritik bulgu listesini kapatır; 12 kriterlik puanlama (scores/total) kritik'in kendi geçişinde eklenecek — builder puan uydurmaz. Her kapanış aşağıda `measureAfter` ile kanıtlanmıştır (pnpm measure + Playwright bounding-box doğrulaması, 390x844 mobil + 1440x900 masaüstü). Tur 11 notu: bu turda da orkestratörün doğrudan verdiği 3 kritik bulgu (P1×2, P2×1) kapatıldı — hiçbiri bu dosyada önceden 'open' olarak kayıtlı değildi (orkestratör tarafından yeni tespit edilip doğrudan iletildi), bu yüzden kapanışları yeni route anahtarları altında `closedRound:11` ile eklendi. Tur 10'un kendi 'open' kalan 3 bulgusuna (shell-mobile-card-height-02, shell-datatable-slack-01, shell-shared-devserver-flake-01) bu turda dokunulmadı — orkestratörün Tur 11 mandatosu bunları içermiyordu.",
   "routes": {
     "/ana-veri/urunler/[id], /ana-veri/cariler/[id], /ana-veri/receteler/[id]": {
       "closed": [
@@ -129,6 +129,16 @@
           "fix": "href /finans/banka olarak düzeltildi (gerçek, çalışan mutabakat sayfası).",
           "measureAfter": "Kaynak doğrulaması: /muhasebe/mutabakat referansı queries.ts'te kalmadı (grep temiz); /finans/banka gerçek route (apps/web/src/app/(app)/finans/banka/page.tsx var).",
           "closedRound": 10
+        },
+        {
+          "id": "shell-kokpit-kpi-delta-01",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "KPI şeridi iki rakam kusuru taşıyordu: (a) KPI'lar 0 ondalık (₺58.662) basarken hemen altındaki 'Bugün' listesi aynı para birimini 2 ondalıkla (₺2.545,20) basıyordu — tek ekranda iki para hassasiyeti. (b) 4 KPI'ın 3'ü sıfır bilgili '— %0 dünden' rozeti basarken, tek gerçekten değişen metrik olan 'Bugünkü ciro' (dün hiç fatura kesilmemişse `revenueDeltaPct===null` → `?? undefined` ile SESSİZCE boş bir yer tutucuya düşüyordu) hiç delta göstermiyordu; ilk kart bu yüzden diğerlerinden kısa görünüp şeridin dikey ritmini kırıyordu.",
+          "file": "apps/web/src/components/kpi-card.tsx (delta bölümü), apps/web/src/app/(app)/kokpit/page.tsx (KPI şeridi)",
+          "fix": "page.tsx: KPIS dizisindeki 4 kartın `delta` alanı artık `kpis.xDeltaPct ?? undefined` DEĞİL, ham değer (`null` dahil) — KpiCard `delta!==undefined` olan her şeyi (0 ve null dahil) bir rozet olarak basıyor, bu yüzden dördü de HER ZAMAN bir delta satırı taşıyor (aynı yükseklik). İki para KPI'sına (Bugünkü ciro, Vadesi geçen alacak) `fractionDigits:2` eklendi — bu ekranda hemen altında 2-ondalıklı MoneyCell listesi olduğu için (diğer sayfalardaki 0-ondalık KPI şeridi kuralı burada geçerli değil, orada altında 2-ondalıklı bir belge listesi yok). kpi-card.tsx: `delta===0` artık `delta===null/undefined` ile AYNI dürüst '—' metnini basıyor (önceden '%0' basıyordu) — böylece yaklaşık/statik metriklerin anlamsız 'sıfır değişim' rozeti ile gerçekten karşılaştırılamayan metrik aynı görünüme sahip (tone zaten ikisinde de `bg-muted`, yalnızca metin farklıydı).",
+          "measureAfter": "Playwright probu (1440x900, /kokpit): 4 KPI kartının 4'ü de {height:80} ve delta metni dolu: 'Bugünkü ciro'→'%100 dünden' (gerçek değişim, kırmızı), 'Açık siparişler'/'Kritik stok kalemi'/'Vadesi geçen alacak'→'— dünden' (soluk, önceden '— %0 dünden'/boş karışımıydı). pnpm shot /kokpit (masaüstü+mobil): dört kart aynı taban çizgisinde, 'Bugünkü ciro' ₺0,00 ve 'Vadesi geçen alacak' ₺3.282,50 (2 ondalık) — hemen altındaki 'Bugün' listesiyle (MoneyCell, 2 ondalık) artık aynı hassasiyet.",
+          "closedRound": 11
         }
       ],
       "open": []
@@ -188,6 +198,36 @@
           "openedRound": 10
         }
       ]
+    },
+    "/depo/skt, /depo/mal-kabul (DataTable mobil kart satır-2)": {
+      "closed": [
+        {
+          "id": "shell-mobile-card-truncate-01",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Mobil kart satır-2 sol grubu metni elipssiz, glif ortasından kırpıyor ve metrikle arasında görünür boşluk bırakmıyordu — `truncate` dıştaki konteynere uygulanıyordu ama leftBits `inline-flex` sarmalayıcılar olduğu için `text-overflow:ellipsis` üretemiyordu. /depo/skt 390px kart 1-3: SKU '307020000' son '0' yarım kesik, lokasyon 'TIRE/HAM/R01/' yarım kesik, metrikle arası ~4px; /depo/mal-kabul 390px: 'Proteinsan Gıda Hammaddeleri Ltd. Şt' son glif yarım, '…' yok.",
+          "file": "apps/web/src/components/data-table/mobile-cards.tsx",
+          "fix": "Satır 2 sol grubu artık `flex` bir sarmalayıcı DEĞİL — tüm 'bit'ler (`·` ayraçlı) TEK bir düz (`min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap`) metin akışında basılıyor; kesme tek noktada, satır sonunda '…' ile oluyor. Dış satır (`flex items-baseline justify-between gap-2`) korunuyor — sol grup artık kendi genişliğine düzgün küçüldüğü için `gap-2` metric'e her zaman gerçek ≥8px bırakıyor.",
+          "measureAfter": "Playwright DOM probu (390x844): sol grup her iki rotada da `display:block; text-overflow:ellipsis; white-space:nowrap` — /depo/skt 5 karttan 2'si (Alkalize Kakao, Matcha Tozu) gerçekten taşıyor ve '…' ile kesiliyor, metrik boşluğu (`gapToMetric`) 5/5 kartta tam 8px; /depo/mal-kabul 5/5 kart taşıyor, 5/5'te `gapToMetric=8`. pnpm shot mobil ekran görüntüsünde 'Alkalize Kakao · 304030000 · TIRE/HAM/R…' ve 'Proteinsan Gıda Hammaddeleri Ltd. Şti. · 0…' düzgün '…' ile bitiyor, hiçbir glif yarım kesilmiyor, metrikle arada gözle görünür boşluk var.",
+          "closedRound": 11
+        }
+      ],
+      "open": []
+    },
+    "/depo/lotlar/[id] (İzlenebilirlik sekmesi)": {
+      "closed": [
+        {
+          "id": "shell-trace-quant-status-label-01",
+          "criterion": null,
+          "severity": "P2",
+          "text": "packages/core/src/lots/trace.ts (traceForward) `quant` (Eldeki stok) düğümüne gerçek bir belge durumu değil, lokasyon `usage` değerini (ör. 'internal', 'transit') `status` alanı olarak koyuyor. trace-graph.tsx bunu `<StatusBadge status={node.status} kind={undefined}>` ile render ederken `lib/status.ts` GENERIC sözlüğünde 'internal' bulamıyor: her render'da konsol uyarısı basıyor ve rozet '—' gösteriyordu.",
+          "file": "apps/web/src/components/trace-graph.tsx",
+          "fix": "trace-graph.tsx içine küçük bir yerel `QUANT_USAGE_LABELS` sözlüğü eklendi (paylaşılan bileşen bir modülün yerel `stock/labels.ts`/`masterdata/product-labels.ts` dosyasına bağımlı olmamalı — aynı enum, iki yerde zaten kopya tutuluyor). `node.kind==='quant'` olduğunda `StatusBadge`'e `label={QUANT_USAGE_LABELS[node.status] ?? node.status}` + `tone=\"neutral\"` geçiliyor — StatusBadge `label` verilince sözlüğe hiç bakmıyor (Tur 5 P1 düzeltmesindeki desenin bu yeni çağrı noktasına uygulanmış hali). Diğer node kind'ları (lot/work_order/receipt/delivery) davranışsal olarak değişmedi.",
+          "measureAfter": "Playwright: /depo/lotlar/017c55d6-087e-4a5c-8121-324ffc530a69 'İzlenebilirlik' sekmesi açıldı, tüm konsol mesajları toplandı — '[status] \"internal\" için Türkçe etiket tanımlı değil' uyarısı YOK (önceden her render'da basıyordu). 'Eldeki stok TIRE/AMB' düğümü artık 'Depo' rozeti gösteriyor (önceden 'internal' ham enumu ya da boş '—'). pnpm shot masaüstü görüntüsünde rozet doğrulandı.",
+          "closedRound": 11
+        }
+      ],
+      "open": []
     }
   }
 }

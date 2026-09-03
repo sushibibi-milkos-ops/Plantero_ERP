@@ -17,6 +17,28 @@ export type TraceNode = {
 };
 export type TraceEdge = { from: string; to: string; label?: string | null };
 
+/** `quant` (Eldeki stok) düğümünün `status` alanı gerçek bir belge durumu DEĞİL — `traceForward`
+ *  (packages/core/src/lots/trace.ts) buraya lokasyonun `usage` değerini (ör. 'internal', 'transit')
+ *  koyar. Kök neden (Tur 11 P2): `<StatusBadge status={node.status} kind={undefined}>` bu değeri
+ *  `lib/status.ts`'in GENERIC sözlüğünde arıyordu — 'internal'/'transit' orada yok, her render'da
+ *  konsol uyarısı basıp boş "—" gösteriyordu. Bu, `modules/stock/labels.ts` ve
+ *  `modules/masterdata/product-labels.ts`'teki `LOCATION_USAGE_LABELS` sözlüğüyle AYNI değer kümesi
+ *  (aynı enum, `locations.usage`) — ama bu bileşen paylaşılan `components/` altında olduğu için bir
+ *  modülün yerel sözlüğüne bağımlı olmamalı; kendi küçük kopyası burada tutulur (StatusBadge zaten
+ *  `label` verilince sözlüğe hiç bakmıyor — Tur 5 P1 düzeltmesindeki desenin aynısı). */
+const QUANT_USAGE_LABELS: Record<string, string> = {
+  internal: 'Depo',
+  quarantine: 'Karantina',
+  rejected: 'Red',
+  production: 'Üretim',
+  supplier: 'Tedarikçi (sanal)',
+  customer: 'Müşteri (sanal)',
+  inventory_loss: 'Sayım farkı',
+  scrap: 'Hurda',
+  transit: 'Transit',
+  view: 'Görünüm (gruplama)',
+};
+
 const KIND_META: Record<TraceNode['kind'], { icon: LucideIcon; label: string; cls: string }> = {
   lot: { icon: Tag, label: 'Lot', cls: 'text-primary bg-primary/10' },
   work_order: { icon: Factory, label: 'İş emri', cls: 'text-info bg-info/10' },
@@ -45,7 +67,13 @@ function NodeRow({ node, depth }: { node: TraceNode; depth: number }) {
       {node.sub ? <span className="hidden truncate text-xs text-muted-foreground sm:inline">{node.sub}</span> : null}
       <span className="ml-auto flex items-center gap-2">
         {node.qty !== null && node.qty !== undefined ? <span className="num text-xs">{formatQty(node.qty, node.uom)}</span> : null}
-        {node.status ? <StatusBadge status={node.status} kind={node.kind === 'lot' ? 'lot' : undefined} /> : null}
+        {node.status ? (
+          node.kind === 'quant' ? (
+            <StatusBadge status={node.status} label={QUANT_USAGE_LABELS[node.status] ?? node.status} tone="neutral" />
+          ) : (
+            <StatusBadge status={node.status} kind={node.kind === 'lot' ? 'lot' : undefined} />
+          )
+        ) : null}
       </span>
     </div>
   );

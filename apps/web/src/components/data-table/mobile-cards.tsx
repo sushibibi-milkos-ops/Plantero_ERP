@@ -101,13 +101,23 @@ export function DataTableMobileCards<T>({
               ))}
               {actions.length ? <DataTableRowActions row={row.original} actions={actions} /> : null}
             </div>
-            {/* Satır 2: alt başlık (+ meta ipuçları) solda, tek metrik sağda — kalıp burada durur. */}
+            {/* Satır 2: alt başlık (+ meta ipuçları) solda, tek metrik sağda — kalıp burada durur.
+                Kök neden (Tur 11 P1 shell-mobile-card-truncate-01): sol grup önceden `flex` bir
+                sarmalayıcıydı ve her "bit" kendi `inline-flex` span'ine sarılıyordu — `text-overflow:
+                ellipsis` yalnızca DÜZ (block/inline, flex/inline-flex DEĞİL) bir kutunun kendi metin
+                akışını keser; iç içe inline-flex'lerde tarayıcı "…" hiç basmadan glifi sert kesiyordu
+                (/depo/skt SKU "307020000" son "0" yarım, /depo/mal-kabul tedarikçi adı son harf yarım)
+                — ayrıca `justify-between gap-2` metric'e görünürde yalnızca ~4px bırakıyordu çünkü
+                taşan içerik konteynerin GENİŞLİĞİNİ zaten dolduruyordu. Sol grup artık TEK bir düz
+                (flex olmayan) metin akışı: tüm bit'ler ("·" ayraçlarıyla) aynı satırda yan yana basılır,
+                kesme tek noktada (grubun sonunda) "…" ile olur — `gap-2` artık metric'e gerçek ≥8px
+                boşluk bırakır çünkü sol grup kendi genişliğine (flex-1, min-w-0) düzgün küçülür. */}
             {leftBits.length || metric ? (
               <div className="mt-0.5 flex items-baseline justify-between gap-2">
-                <div className="flex min-w-0 items-center gap-1.5 truncate text-xs text-muted-foreground [&>*]:min-w-0 [&>*]:max-w-full [&>*]:truncate">
+                <div className="min-w-0 flex-1 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-muted-foreground">
                   {leftBits.map((b, i) => (
-                    <span key={b.key} className="inline-flex min-w-0 items-center gap-1.5 truncate">
-                      {i > 0 ? <span aria-hidden className="text-muted-foreground/40">·</span> : null}
+                    <span key={b.key}>
+                      {i > 0 ? <span aria-hidden className="text-muted-foreground/40"> · </span> : null}
                       {b.node}
                     </span>
                   ))}
