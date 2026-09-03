@@ -65,8 +65,14 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
   function goToStage(stageId: string) {
     setView('kanban');
     // Görünüm 'list' idiyse kanban ilk çizilsin diye kaydırmayı bir sonraki frame'e bırak.
+    // Tur 10 P1 satis-firsatlar-01: kanban 390px'te `hidden md:block` (DOM'da var, layout kutusu
+    // yok) olduğundan columnRefs'e scrollIntoView orada no-op'tu ve mobilde chip'in hiçbir görünür
+    // etkisi yoktu. Masaüstü kanban sütunu VE mobil gruplu listedeki (`md:hidden`) sticky aşama
+    // başlığı aynı anda hedeflenir — hangisi o an gerçekten layout'ta ise (display:none olan diğeri
+    // sessizce no-op kalır) o kayar; iki ayrı viewport dalı için ayrı kod yolu gerekmez.
     requestAnimationFrame(() => {
       columnRefs.current.get(stageId)?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      document.getElementById(`firsat-asama-${stageId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
 
@@ -104,13 +110,18 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
       <div className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-card px-4 py-2.5">
         {/* Sarınca (flex-wrap) "Kazanma oranı" önündeki border-l öksüz kalıyordu — tek satır, yatay
             kayan bir şeride sabitlendi (390px'te de başlık/filtre/görünüm satırı bozulmaz). */}
-        <div className="scrollbar-thin flex items-center gap-4 overflow-x-auto text-[13px] whitespace-nowrap">
+        {/* scroll-fade-x: Tur 10 P2 satis-firsatlar-02 — masaüstü kanban kabıyla (aşağıda) aynı
+            kaydırma ipucu; zemin bu kartın kendi bg-card'ı olduğundan --scroll-fade-bg varsayılanı
+            yeterli. */}
+        <div className="scrollbar-thin scroll-fade-x flex items-center gap-4 overflow-x-auto text-[13px] whitespace-nowrap">
           {funnel.stages.map((s) => (
             <button
               key={s.stageId}
               type="button"
               onClick={() => goToStage(s.stageId)}
-              className="flex shrink-0 items-baseline gap-1.5 rounded px-1 -mx-1 hover:bg-muted/70"
+              // Tur 10 P1 satis-firsatlar-01: 19.5px yükseklik 44px eşiğinin altındaydı — mobilde
+              // h-11, masaüstünde eski yoğun metin satırı (h-auto) korunur.
+              className="flex h-11 shrink-0 items-center gap-1.5 rounded px-1 -mx-1 hover:bg-muted/70 md:h-auto md:items-baseline"
               title={`${s.name} sütununa git`}
             >
               <span className="text-muted-foreground">{s.name}</span>
@@ -118,7 +129,7 @@ export function KanbanBoard({ stages, cards, funnel }: { stages: Stage[]; cards:
             </button>
           ))}
           {funnel.winRate !== null ? (
-            <div className="flex shrink-0 items-baseline gap-1.5 border-l border-border/60 pl-4">
+            <div className="flex h-11 shrink-0 items-center gap-1.5 border-l border-border/60 pl-4 md:h-auto md:items-baseline">
               <span className="text-muted-foreground">Kazanma oranı</span>
               <span className="font-mono font-medium tabular-nums text-success">%{funnel.winRate.toFixed(0)}</span>
             </div>

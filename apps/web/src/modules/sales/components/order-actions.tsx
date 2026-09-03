@@ -67,7 +67,9 @@ export function OrderActions({ id, status, hasDeliveries }: { id: string; status
       ) : null}
       {/* Belge zinciri sonuna gelmiş (faturalandı/iptal/kapalı) siparişte yukarıdaki eylemlerin
           hiçbiri koşulu sağlamaz — sayfa başlığı hiç eylemsiz kalmasın diye yazdırma her zaman var. */}
-      <Button size="sm" variant="outline" onClick={() => window.print()}>
+      {/* Tur 10 P1 satis-siparis-detay-01: h-11 md:h-8 — 32px, 44px dokunma eşiğinin altındaydı
+          (bkz. line-cards.tsx aynı kalıp). */}
+      <Button size="sm" variant="outline" className="h-11 md:h-8" onClick={() => window.print()}>
         <Printer className="size-3.5" /> Yazdır
       </Button>
     </div>

@@ -10,9 +10,14 @@ import { formatDate, formatMoney } from '@/lib/format';
 // bulgusu). --chart-5 (mor) TEK BAŞINA toplam net ciro için ayrılır (Tur 5 P1 bulgusu: 4 kanal da
 // dolgulu alan çizilince 27-30 Ağustos aralığında turuncu/mor dolgular üst üste binip çamurlu bir
 // blok oluşturuyor, hangi kanalın hangi tepeyi yaptığı okunamıyordu — Stripe'ın finans grafiği tek
-// bir seriye açık dolgu verir, gerisini dolgusuz ince çizgi bırakır). Kategorik kanal paleti bu
-// yüzden 3 renge iner (kırmızı VE mor hiç kullanılmaz): en büyük 2 kanal tekil çizgi, kalanı 'Diğer'.
-const CATEGORY_COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)'];
+// bir seriye açık dolgu verir, gerisini dolgusuz ince çizgi bırakır).
+// --chart-1 de aynı gerekçeyle (Tur 10 P2 satis-net-ciro-04) hiç kullanılmaz: --chart-1, --primary
+// ile BİREBİR AYNI oklch değeri (globals.css:83/99, hue 152) — en çok ciro yapan kanal (Trendyol)
+// kategorik #1 renk olarak yeşile düşünce, bu sayfadaki TEK `text-primary` vurgusu olan "Net ciro"
+// KPI değeriyle aynı ekranda iki farklı anlam (kanal kimliği vs marka vurgusu) taşıyordu. Kategorik
+// kanal paleti bu yüzden yeşil DE dahil hiçbir marka/anlam rengini kullanmaz: mavi + turuncu + nötr
+// gri (3. sırada, tipik olarak en küçük/tekil kalan kanal ya da 'Diğer' bucket'ı).
+const CATEGORY_COLORS = ['var(--chart-2)', 'var(--chart-3)', 'var(--muted-foreground)'];
 const TOTAL_COLOR = 'var(--chart-5)';
 const OTHER_CODE = '__OTHER__';
 

@@ -106,19 +106,22 @@ export function OpportunitiesMobileGroupedList({ rows, stages, onOpen }: { rows:
       {groups.map(({ stage, rows: stageRows }) => (
         <div key={stage.id}>
           {/* top-12: sayfa üst çubuğunun (h-12, sticky top-0) hemen altına sabitlenir — DataTable'ın
-              kendi thead sticky konumuyla aynı kalıp (bkz. data-table.tsx). */}
-          <div className="sticky top-12 z-10 flex items-center gap-1.5 bg-background/95 py-1.5 text-[12px] font-medium text-muted-foreground backdrop-blur-sm">
+              kendi thead sticky konumuyla aynı kalıp (bkz. data-table.tsx). id: Tur 10 P1
+              satis-firsatlar-01 — kanban-board.tsx'teki huni çipi mobilde bu başlığa kaydırır. */}
+          <div id={`firsat-asama-${stage.id}`} className="sticky top-12 z-10 flex items-center gap-1.5 bg-background/95 py-1.5 text-[12px] font-medium text-muted-foreground backdrop-blur-sm">
             {stage.name}
             <span className="rounded-full bg-muted px-1.5 py-px text-[11px] tabular-nums">{stageRows.length}</span>
           </div>
           <ul className="space-y-2 pt-1">
             {stageRows.map((r) => (
               <li key={r.id}>
+                {/* Tur 10 P2 satis-firsatlar-03: 87px → p-2.5 + line-clamp-1 ile ≤72px bandına. Başlık
+                    tek satıra düşse de cari adı (alt satır) zaten ayrım sağlıyor. */}
                 <button type="button" onClick={() => onOpen(r.id)} className="w-full text-left">
-                  <div className="rounded-lg border border-border/70 bg-card p-3 active:bg-accent/50">
-                    <div className="line-clamp-2 text-[13px] font-medium">{r.title}</div>
-                    <div className="truncate text-xs text-muted-foreground">{r.partnerName || <span className="text-muted-foreground/40">— cari bağlı değil</span>}</div>
-                    <div className="mt-1.5 flex items-center justify-between gap-2">
+                  <div className="rounded-lg border border-border/70 bg-card p-2 active:bg-accent/50">
+                    <div className="line-clamp-1 text-[13px] leading-tight font-medium">{r.title}</div>
+                    <div className="mt-0.5 truncate text-xs leading-tight text-muted-foreground">{r.partnerName || <span className="text-muted-foreground/40">— cari bağlı değil</span>}</div>
+                    <div className="mt-1 flex items-center justify-between gap-2 leading-tight">
                       <span className="flex items-baseline gap-1.5">
                         <MoneyCell value={r.expectedAmount} currency={r.currency} digits={0} className="text-[13px] font-semibold text-foreground" />
                         <span className="font-mono text-[11px] text-muted-foreground">%{r.probability}</span>

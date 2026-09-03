@@ -16,6 +16,7 @@ import { FormActions } from '@/components/form/form-actions';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
+import { cn } from '@/lib/utils';
 import { createSalesDocAction, resolvePriceAction } from '../actions';
 import { PRICE_SOURCE_LABELS } from '../labels';
 import type { SellableProductRow } from '../queries';
@@ -202,8 +203,13 @@ export function SalesDocForm({
             alan sağda kalıyor, Özet kartı sayfanın en altında göz yolunun dışında duruyordu. `lg:` ve
             üstünde iki sütuna ayrılır: sol 768px (Belge başlığı + Satırlar), sağ 320px (Özet, sticky —
             form doldurulurken toplamlar hep görünür kalır). `lg` altında (mobil/tablet) tek sütun,
-            max-w-3xl korunur. */}
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,768px)_320px] lg:items-start">
+            max-w-3xl korunur.
+            Tur 10 P2 satis-yeni-01: satır yokken Özet kartı hiç render edilmiyordu (fields.length===0
+            koşulu aşağıda) ama 320px'lik sağ sütun izi boş kalsa da grid'te duruyordu — form kartı
+            765px'te bitip FormActions (bu grid'in DIŞINDA, tam içerik genişliğinde) 320px sağda kalan
+            "Siparişi kaydet" ile hizasız görünüyordu. Sağ sütun yalnızca gerçekten dolduğunda (bir
+            satır eklendiğinde) rezerve edilir. */}
+        <div className={cn('grid gap-4 lg:items-start', fields.length > 0 ? 'lg:grid-cols-[minmax(0,768px)_320px]' : 'lg:grid-cols-1')}>
         <div className="max-w-3xl space-y-6 lg:max-w-none">
         {/* max-w-3xl: 1440px'te 4 sütuna yayılan form gövdesi alanlar arası 1200px göz yolu bırakıyordu —
             Stripe/Linear form gövdesini 640-768px ile sınırlar, burada 2 sütuna (4×2 satır) düşürüldü. */}

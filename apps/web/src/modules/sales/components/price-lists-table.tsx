@@ -20,19 +20,25 @@ export function PriceListsTable({ rows, products }: { rows: Row[]; products: Sel
         // Liste kodu (IHRACAT/PERAKENDE/TOPTAN) satır içi mono çip olmaktan çıkarıldı (Tur 5 P1
         // bulgusu): ad uzunlukları farklı olan satırlarda çipler üç ayrı x'te başlayıp sütunu
         // tırtıklı okutuyordu — artık kendi 110px'lik sütununda, tek bir x'te hizalı.
-        id: 'name', accessorFn: (r) => r.name, header: 'Liste', meta: { width: 360, mobile: 'title' },
+        // Tur 10 P1 satis-fiyat-01 (kök: shell-datatable-slack-01): sabit width kaldırılıp `flex:true`
+        // verildi — artan genişlik artık meta.width'i olmayan 'Geçerlilik' sütununa değil (393px ölü
+        // alan) kasıtlı olarak büyümesi istenen 'Liste' adı sütununa akar.
+        id: 'name', accessorFn: (r) => r.name, header: 'Liste', meta: { flex: true, mobile: 'title' },
         cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
       },
       {
-        id: 'code', accessorFn: (r) => r.code, header: 'Kod', meta: { width: 110, className: 'font-mono text-[11px] text-muted-foreground', mobile: 'hidden' },
+        // Tur 10 P2 satis-fiyat-03: mobil karttaki tek meta ipucu para birimiydi, ama liste adı zaten
+        // parantez içinde para birimini taşıyor ("İhracat Fiyat Listesi (EUR)") — kart aynı bilgiyi
+        // iki kez basıyordu. Kod (masaüstünde zaten gösterilen kimlik alanı) daha yeni bilgi taşır.
+        id: 'code', accessorFn: (r) => r.code, header: 'Kod', meta: { width: 110, className: 'font-mono text-[11px] text-muted-foreground', mobile: 'meta' },
       },
       // Boş "Kanal" sütunu kaldırıldı (Tur 5 P1 bulgusu): 3 fiyat listesinin 3'ü de tek bir kanala
       // değil, bir kanal GRUBUNA bağlı (channel_id null) — sütun ~370px kaplayıp 3 satırın 3'ünde de
       // '—' basıyordu, tablodaki en geniş sütun sıfır bilgi taşıyordu.
-      { id: 'currency', accessorFn: (r) => r.currency, header: 'Para birimi', meta: { width: 100, className: 'font-mono text-xs', mobile: 'meta' } },
+      { id: 'currency', accessorFn: (r) => r.currency, header: 'Para birimi', meta: { width: 100, className: 'font-mono text-xs', mobile: 'hidden' } },
       { id: 'includesVat', header: 'KDV', meta: { width: 80, mobile: 'hidden' }, cell: ({ row }) => (row.original.includesVat ? 'Dahil' : 'Hariç') },
       {
-        id: 'validity', header: 'Geçerlilik', meta: { mobile: 'hidden', className: 'text-xs text-muted-foreground' },
+        id: 'validity', header: 'Geçerlilik', meta: { width: 150, mobile: 'hidden', className: 'text-xs text-muted-foreground' },
         cell: ({ row }) => (row.original.validFrom ? formatDate(row.original.validFrom) : 'Süresiz') + (row.original.validTo ? ` → ${formatDate(row.original.validTo)}` : ''),
       },
       {

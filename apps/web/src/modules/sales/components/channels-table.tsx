@@ -23,7 +23,10 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         // Sabit `bg-primary` nokta: 7 satırın 7'sinde özdeş, hiçbir bilgi taşımıyordu (Tur 3 P2, saf
         // dekorasyon) — kaldırıldı. Gerçek durum bilgisi (aktif/pasif) zaten `isActive` üzerinden bir
         // yerde tutulmuyor; ileride eklenirse StatusBadge ile (renk = anlam) verilmeli, çıplak nokta değil.
-        id: 'name', accessorFn: (r) => r.channel.name, header: 'Kanal', meta: { mobile: 'title' },
+        // Tur 10 P1 satis-kanallar-03 (kök: shell-datatable-slack-01): `width` verilmemiş tek sütun
+        // artan genişliğin tamamını alıyordu (469px / içerik 173px). `flex:true` DataTable'a bu
+        // sütunun kasıtlı olarak esneyen sütun olduğunu işaretler, diğerleri width:1%'e sıkışır.
+        id: 'name', accessorFn: (r) => r.channel.name, header: 'Kanal', meta: { mobile: 'title', flex: true },
         cell: ({ row }) => <span className="font-medium">{row.original.channel.name}</span>,
       },
       {
@@ -55,12 +58,22 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         // tarih `title` tooltip'inde saklı.
         id: 'lastSyncedAt', header: 'Son senkron', meta: { width: 150, mobile: 'meta', className: 'text-xs text-muted-foreground' },
         cell: ({ row }) => {
-          const { lastSyncedAt, pendingErrors } = row.original;
+          const { channel, lastSyncedAt, pendingErrors } = row.original;
+          const syncSupported = CHANNEL_SYNC_SUPPORTED.has(channel.code);
           return (
             <span className="inline-flex items-center gap-1.5" title={lastSyncedAt ? formatDateTime(lastSyncedAt) : undefined}>
-              {/* "Henüz yapılmadı" nötr griden ayrışan sessiz bir uyarı tonu taşır (Tur 5 P2 bulgusu) —
-                  hiç senkronize olmamış bir kanal, "2 saat önce"den kalitatif olarak farklı bir durum. */}
-              {lastSyncedAt ? relativeTime(lastSyncedAt) : <StatusBadge status="pending" label="Henüz yapılmadı" tone="warning" size="sm" />}
+              {/* Tur 10 P1 satis-kanallar-01: amber "Henüz yapılmadı" senkron desteklemeyen kanalda
+                  (Toptan/Fason, İhracat, Kendi Sitemiz…) asla gerçekleşmeyecek bir olayı işaretliyordu —
+                  7 satırın 5'i amber basıyordu ama gerçek uyarı gereken satır 0'dı ("renk yalnızca
+                  anlam taşır" ihlali). Senkron desteklenmeyen kanalda rozet yerine soluk düz metin;
+                  amber yalnızca gerçekten senkronlanabilip HİÇ senkronlanmamış kanalda basılır. */}
+              {lastSyncedAt ? (
+                relativeTime(lastSyncedAt)
+              ) : syncSupported ? (
+                <StatusBadge status="pending" label="Henüz yapılmadı" tone="warning" size="sm" />
+              ) : (
+                <span className="text-muted-foreground/50">senkron yok</span>
+              )}
               {pendingErrors > 0 ? <StatusBadge status="error" label={`${pendingErrors} hata`} tone="danger" /> : null}
             </span>
           );
@@ -77,7 +90,13 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
           const { channel } = row.original;
           const syncSupported = CHANNEL_SYNC_SUPPORTED.has(channel.code);
           return (
-            <span className="inline-flex items-center gap-1 opacity-100 transition-opacity focus-within:opacity-100 group-hover/row:opacity-100 md:opacity-0">
+            // Tur 10 P1 satis-kanallar-02: `group-hover/row` Tailwind'in `hover` varyantı DEĞİL —
+            // globals.css:10'daki (hover:hover) sarmalaması ona uygulanmaz, dokunmatik ≥768px
+            // (tablet) cihazda düğmeler kalıcı görünmez ama pointer-events açık kalıyordu (görünmez
+            // ama basılabilir kontrol — kanal ayarları drawer'ına ulaşmanın tek yolu buydu). Ortak
+            // DataTableRowActions'taki (`row-actions.tsx:33`) `md:[@media(hover:none)]:opacity-100`
+            // kaçışıyla birebir aynı kalıp eklendi.
+            <span className="inline-flex items-center gap-1 opacity-100 transition-opacity focus-within:opacity-100 group-hover/row:opacity-100 md:opacity-0 md:[@media(hover:none)]:opacity-100">
               {syncSupported ? <ChannelSyncButton channelCode={channel.code as 'TRENDYOL' | 'HEPSIBURADA'} compact /> : null}
               <ChannelSettingsDrawer channel={channel} />
             </span>

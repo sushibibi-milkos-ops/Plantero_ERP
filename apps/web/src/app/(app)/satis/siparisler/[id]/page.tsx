@@ -75,7 +75,9 @@ export default async function SalesOrderDetailPage({ params }: { params: Promise
                   return (
                     <li key={d.id} className="space-y-1.5 p-3">
                       <div className="flex items-center justify-between gap-2">
-                        <Link href={`/depo/sevkiyat/${d.id}`} className="font-mono text-xs text-primary hover:underline">{d.docNo}</Link>
+                        {/* Tur 10 P1 satis-siparis-detay-01: mobilde belge zincirine geçmenin TEK yolu
+                            bu bağlantıydı, 16px yükseklikte 44px eşiğinin altındaydı. */}
+                        <Link href={`/depo/sevkiyat/${d.id}`} className="inline-flex h-11 items-center font-mono text-xs text-primary hover:underline md:h-auto">{d.docNo}</Link>
                         <StatusBadge status={d.status} kind="delivery" />
                       </div>
                       <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
@@ -132,7 +134,8 @@ export default async function SalesOrderDetailPage({ params }: { params: Promise
                 {invoices.map((inv) => (
                   <li key={inv.id} className="space-y-1.5 p-3">
                     <div className="flex items-center justify-between gap-2">
-                      <Link href={`/muhasebe/faturalar/${inv.id}`} className="font-mono text-xs text-primary hover:underline">{inv.docNo}</Link>
+                      {/* Tur 10 P1 satis-siparis-detay-01: aynı 44px dokunma düzeltmesi. */}
+                      <Link href={`/muhasebe/faturalar/${inv.id}`} className="inline-flex h-11 items-center font-mono text-xs text-primary hover:underline md:h-auto">{inv.docNo}</Link>
                       <StatusBadge status={inv.status} kind="invoice" />
                     </div>
                     <div className="text-xs text-muted-foreground">{formatDate(inv.invoiceDate)} · Vade {formatDate(inv.dueDate)}</div>

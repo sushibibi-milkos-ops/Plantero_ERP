@@ -23,7 +23,7 @@ export function SalesDocLines({ lines, currency, showProgress }: { lines: Detail
           satırda etiket-değer çiftleri olarak (grid-cols-2) — hiçbiri kırpılmaz. */}
       <ul className="divide-y divide-border/60 md:hidden">
         {lines.map((l) => (
-          <li key={l.line.id} className="space-y-2 p-3">
+          <li key={l.line.id} className="space-y-1.5 p-2.5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="truncate text-[13px] font-medium">{l.productName}</div>
@@ -34,13 +34,18 @@ export function SalesDocLines({ lines, currency, showProgress }: { lines: Detail
             <div className="text-xs text-muted-foreground">
               <QtyCell value={l.line.qty} uom={l.uomCode} className="justify-start" /> × <MoneyCell value={l.line.unitPrice} currency={currency} digits={2} className="inline text-muted-foreground" />
             </div>
-            <dl className="grid grid-cols-2 gap-x-3 gap-y-1 border-t border-border/40 pt-2 text-[12px]">
-              <div><dt className="text-[11px] text-muted-foreground">Kaynak</dt><dd>{l.line.priceSource ? <StatusBadge status={l.line.priceSource} label={PRICE_SOURCE_LABELS[l.line.priceSource] ?? l.line.priceSource} tone={l.line.priceSource === 'customer' ? 'primary' : l.line.priceSource === 'channel' ? 'info' : 'muted'} dot={false} /> : '—'}</dd></div>
-              <div><dt className="text-[11px] text-muted-foreground">İskonto</dt><dd className="font-mono tabular-nums">{Number(l.line.discountPct) > 0 ? formatPct(l.line.discountPct, 2) : '—'}</dd></div>
+            {/* Tur 10 P2 satis-siparis-detay-02: her `dt`/`dd` çifti ayrı satırda dikey istiflendiğinde
+                (etiket üstte, değer altta) 2×2 ızgara 4 satıra (~60px) çıkıyordu — "İrsaliyeler" gibi
+                tek satırlık kart tiplerine kıyasla kart yükseklikleri 40px↔177px arası aşırı
+                tekdüzesizdi. Etiket + değer artık AYNI satırda ("Kaynak  Elle girildi") — 2×2 ızgara
+                tek satır × 2 sütuna iner. */}
+            <dl className="grid grid-cols-2 gap-x-3 gap-y-1 border-t border-border/40 pt-1.5 text-[11px]">
+              <div className="flex items-center justify-between gap-1"><dt className="text-muted-foreground">Kaynak</dt><dd>{l.line.priceSource ? <StatusBadge status={l.line.priceSource} label={PRICE_SOURCE_LABELS[l.line.priceSource] ?? l.line.priceSource} tone={l.line.priceSource === 'customer' ? 'primary' : l.line.priceSource === 'channel' ? 'info' : 'muted'} dot={false} /> : '—'}</dd></div>
+              <div className="flex items-center justify-between gap-1"><dt className="text-muted-foreground">İskonto</dt><dd className="font-mono tabular-nums">{Number(l.line.discountPct) > 0 ? formatPct(l.line.discountPct, 2) : '—'}</dd></div>
               {showProgress ? (
                 <>
-                  <div><dt className="text-[11px] text-muted-foreground">Teslim</dt><dd><QtyCell value={l.line.deliveredQty} uom={l.uomCode} className="justify-start" /></dd></div>
-                  <div><dt className="text-[11px] text-muted-foreground">Fatura</dt><dd><QtyCell value={l.line.invoicedQty} uom={l.uomCode} className="justify-start" /></dd></div>
+                  <div className="flex items-center justify-between gap-1"><dt className="text-muted-foreground">Teslim</dt><dd><QtyCell value={l.line.deliveredQty} uom={l.uomCode} className="justify-end" /></dd></div>
+                  <div className="flex items-center justify-between gap-1"><dt className="text-muted-foreground">Fatura</dt><dd><QtyCell value={l.line.invoicedQty} uom={l.uomCode} className="justify-end" /></dd></div>
                 </>
               ) : null}
             </dl>

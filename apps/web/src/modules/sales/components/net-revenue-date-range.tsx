@@ -39,8 +39,9 @@ export function NetRevenueDateRange({ from, to, active }: { from: string; to: st
       <PopoverTrigger asChild>
         <button
           type="button"
+          // Tur 10 P1 satis-net-ciro-03: preset çipleriyle (net-ciro/page.tsx) aynı 44px mobil düzeltmesi.
           className={cn(
-            'inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[13px] font-medium',
+            'inline-flex h-11 items-center gap-1.5 rounded-md px-3 text-[13px] font-medium md:h-8',
             active ? 'bg-primary text-primary-foreground' : 'border border-border/70 bg-background hover:bg-accent',
           )}
         >

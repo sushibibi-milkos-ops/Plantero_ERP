@@ -43,17 +43,20 @@ function ProgressDot({ pct, label }: { pct: number; label: string }) {
  * karttan kaldırılır (sütun başlıkları mobilde gereksiz kroni).
  */
 function DocCard({ row, docType }: { row: SalesDocRow; docType: 'quotation' | 'order' }) {
+  // Tur 10 P2 satis-teklifler-02/satis-siparisler-02: 89.5px, puan kartının 56-72px bandının üstünde
+  // (30 sipariş ≈ 2685px kaydırma) — üç satırın hepsi `leading-tight` ile sıkıştırıldı, p-3→p-2.5,
+  // mt-1.5→mt-1.
   return (
-    <div className="cursor-pointer rounded-lg border border-border/70 bg-card p-3 active:bg-accent/50">
+    <div className="cursor-pointer rounded-lg border border-border/70 bg-card p-2 leading-tight active:bg-accent/50">
       <div className="flex items-center justify-between gap-2">
         <span className="truncate font-mono text-[13px] font-medium">{row.docNo}</span>
-        <StatusBadge status={row.status} kind="sales_order" />
+        <StatusBadge status={row.status} kind="sales_order" size="sm" />
       </div>
-      <div className="mt-0.5 truncate text-xs text-muted-foreground">
+      <div className="truncate text-xs text-muted-foreground">
         {row.partnerName}
         {row.channelName ? ` · ${row.channelName}` : ''}
       </div>
-      <div className="mt-1.5 flex items-baseline justify-between gap-2 text-[13px]">
+      <div className="mt-0.5 flex items-baseline justify-between gap-2 text-[13px]">
         <span className="shrink-0 text-[11px] text-muted-foreground">
           {formatDate(row.orderDate)}
           {docType === 'quotation' && row.validUntil ? ` · gçrl. ${formatDate(row.validUntil)}` : ''}
@@ -71,8 +74,11 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
     const cols: ColumnDef<SalesDocRow, unknown>[] = [
       { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Belge no', meta: { width: 120, mobile: 'title', className: 'font-mono' } },
       {
-        id: 'partnerName', accessorFn: (r) => r.partnerName, header: docType === 'quotation' ? 'Cari' : 'Müşteri', meta: { width: 200, mobile: 'subtitle' },
-        cell: ({ row }) => <span className="block max-w-44 truncate" title={row.original.partnerName}>{row.original.partnerName}</span>,
+        // Tur 10 P2 satis-teklifler-01/satis-siparisler-01: sabit `max-w-44` (176px) sütunun kendi
+        // genişliğinden (200-205px) daha dar bir kırpma tavanı dayatıyordu — yer olduğu halde adlar
+        // kırpılıyordu. `w-full truncate` artık hücrenin gerçek genişliğine (meta.width) karşı çalışır.
+        id: 'partnerName', accessorFn: (r) => r.partnerName, header: docType === 'quotation' ? 'Cari' : 'Müşteri', meta: { width: docType === 'quotation' ? 240 : 260, mobile: 'subtitle' },
+        cell: ({ row }) => <span className="block w-full truncate" title={row.original.partnerName}>{row.original.partnerName}</span>,
       },
       {
         // Mobil kartta tamamen düşürülmek yerine ' · ' ile alt başlığın yanına eklenir (bkz.

@@ -35,13 +35,15 @@ export default async function NetRevenuePage({ searchParams }: { searchParams: P
         title="Net Ciro"
         description={`${from} → ${to} · kanal komisyonu, kargo ve diğer kesintiler düşülmüş satış geliri`}
       >
+        {/* Tur 10 P1 satis-net-ciro-03: h-8 (32px) 44px eşiğinin altındaydı; bu 5 kontrol sayfanın
+            TEK filtresi. Masaüstünde eski yoğun h-8 korunur. */}
         <div className="flex flex-wrap items-center gap-2">
           {PRESETS.map((p) => (
             <Link
               key={p}
               href={`/satis/net-ciro?period=${p}`}
               className={cn(
-                'inline-flex h-8 items-center rounded-md px-3 text-[13px] font-medium',
+                'inline-flex h-11 items-center rounded-md px-3 text-[13px] font-medium md:h-8',
                 period === p ? 'bg-primary text-primary-foreground' : 'border border-border/70 bg-background hover:bg-accent',
               )}
             >
@@ -59,8 +61,12 @@ export default async function NetRevenuePage({ searchParams }: { searchParams: P
         <KpiCard variant="strip" title="Brüt ciro" value={current.grossRevenue} format="money" delta={deltas.gross ?? undefined} />
         <KpiCard variant="strip" title="Komisyon" value={current.commission} format="money" delta={deltas.commission ?? undefined} invertDelta />
         <KpiCard variant="strip" title="Kargo kesintisi" value={current.shipping} format="money" delta={deltas.shipping ?? undefined} invertDelta />
-        {/* Vurgu artık çerçeve değil, değerin kendisinde — kardeşleriyle aynı anatomi, tek görsel sinyal (renkli rakam). */}
-        <KpiCard variant="strip" title="Net ciro" value={current.netRevenue} format="money" delta={deltas.net ?? undefined} className="[&_.tabular-nums]:text-primary" />
+        {/* Vurgu artık çerçeve değil, değerin kendisinde — kardeşleriyle aynı anatomi, tek görsel sinyal (renkli rakam).
+            Tur 10 P1 satis-net-ciro-02: sayfanın başlık metriği mobil şeritte 4. sıradaydı (sol kenar
+            496px, 390px viewport'un 106px dışında) — ilk boyada hiç görünmüyordu. `order-first`
+            mobilde (kaydıran şeritte) ilk karta taşır; `md:order-none` masaüstünde mantıksal/DOM
+            sırasını (Brüt→Komisyon→Kargo→Net→Sipariş→Sepet) geri yükler. */}
+        <KpiCard variant="strip" title="Net ciro" value={current.netRevenue} format="money" delta={deltas.net ?? undefined} className="order-first [&_.tabular-nums]:text-primary md:order-none" />
         <KpiCard variant="strip" title="Sipariş" value={current.orderCount} format="int" delta={deltas.orderCount ?? undefined} />
         <KpiCard variant="strip" title="Ortalama sepet" value={current.avgBasket} format="money" delta={deltas.avgBasket ?? undefined} />
       </KpiStripRow>
@@ -74,13 +80,45 @@ export default async function NetRevenuePage({ searchParams }: { searchParams: P
         )}
       </div>
 
-      {/* scroll-fade-x: mobilde (kanal kırılımı yatay kayan ham tablo kalır) kaydırılabilir olduğuna
-          dair görsel ipucu yoktu (Tur 3 bulgusu) — DataTable'ın kendi masaüstü tablosuyla aynı utility. */}
-      <div className="mt-4 scrollbar-thin scroll-fade-x overflow-x-auto rounded-xl border border-border/70 bg-card">
+      {/* Tur 10 P1 satis-net-ciro-01: modüldeki TEK ham <table> DataTable değildi, mobilde kart
+          görünümüne hiç düşmüyordu — 952px'lik tablo 358px'lik kaba yatay kaydırmayla sığdırılıyordu
+          ve raporun varlık sebebi 'Net'/'Net marj %' sütunları ilk ekranda hiç görünmüyordu. Diğer
+          5 satış tablosunun hepsi DataTable'ın mobil kart kalıbına düşüyor — burada da aynı iki
+          katmanlı anatomi (başlık + metrik / meta satırı) elle kurulur: masaüstü ham tablo değişmez,
+          taşan sütun sayısı ve serbest biçimli hücreler DataTable'ın sütun modeline uymadığından. */}
+      <div className="mt-4 space-y-2 md:hidden">
+        {breakdown.length === 0 ? (
+          <div className="rounded-xl border border-border/70 bg-card py-10 text-center text-sm text-muted-foreground">Kayıt yok</div>
+        ) : (
+          breakdown.map((r) => (
+            <div key={r.channelId} className="rounded-lg border border-border/70 bg-card p-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="truncate text-[13px] font-medium">{r.channelName}</span>
+                <MoneyCell value={r.net} digits={0} className="shrink-0 text-[13px] font-medium text-foreground" />
+              </div>
+              <div className="mt-0.5 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                <span>Brüt <MoneyCell value={r.gross} digits={0} className="inline text-muted-foreground" /></span>
+                <span className="num tabular-nums">Net marj {formatPctFixed(r.netMarginPct)}</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* scroll-fade-x: masaüstünde kaydırılabilir olduğuna dair görsel ipucu (Tur 3 bulgusu) —
+          DataTable'ın kendi masaüstü tablosuyla aynı utility. Mobilde artık yukarıdaki kart listesi
+          devreye girdiğinden ham tablo `md:block` ile sınırlanır. */}
+      <div className="mt-4 hidden scrollbar-thin scroll-fade-x overflow-x-auto rounded-xl border border-border/70 bg-card md:block">
         <table className="w-full border-collapse text-[13px]">
           <thead>
             <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-              <th className="sticky left-0 z-10 h-9 bg-muted/40 px-3 text-left font-medium">Kanal</th>
+              {/* Tur 10 P2 satis-net-ciro-05: CSS tablo arka plan boyama sırası hücre bg'sini satır
+                  bg'sinin ÜZERİNE bindirir — sticky th kendi `bg-muted/40`'ını satırın `bg-muted/40`'ı
+                  üzerine ikinci kez uygulayınca alfa iki katına çıkıp başlık şeridi iki tonlu görünüyordu
+                  (sticky hücre RGB 248 vs satırın geri kalanı RGB 251). Tek opak katman — satırdaki TEK
+                  bg-muted/40 katmanıyla aynı görsel sonucu verir, ayrıca sticky'nin altından kayan
+                  içeriği de opak biçimde gizler. */}
+              <th className="sticky left-0 z-10 h-9 bg-[color-mix(in_oklch,var(--muted)_40%,var(--card))] px-3 text-left font-medium">Kanal</th>
               <th className="h-9 px-3 text-right font-medium">Brüt</th>
               <th className="h-9 px-3 text-right font-medium">Komisyon</th>
               <th className="h-9 px-3 text-right font-medium">Kargo</th>

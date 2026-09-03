@@ -13,6 +13,7 @@ export const dynamic = 'force-dynamic';
 export default async function PriceListsPage() {
   await requirePermission('sales.price');
   const [lists, customerPrices, customers, products] = await Promise.all([listPriceListsWithCounts(), listCustomerPrices(), listCustomers(), listSellableProducts()]);
+  const totalItems = lists.reduce((sum, l) => sum + l.itemCount, 0);
 
   return (
     <>
@@ -25,6 +26,14 @@ export default async function PriceListsPage() {
 
         <TabsContent value="lists" className="mt-3">
           <PriceListsTable rows={lists} products={products} />
+          {/* Kapanış şeridi (Tur 10 P2 satis-fiyat-04): /satis/teklifler'de zaten var olan kalıp
+              (aynı DataTable temelli ekran, dolu tablodan sonra ~700px boş bırakıp hiçbir kapanış
+              öğesi göstermiyordu) — modül içi tutarlılık için birebir aynı anatomi. */}
+          {lists.length > 0 ? (
+            <div className="mt-2 flex h-9 items-center justify-end border-t border-border/60 px-1 text-[13px] text-muted-foreground">
+              {lists.length} liste · {totalItems} satır
+            </div>
+          ) : null}
         </TabsContent>
 
         <TabsContent value="customer" className="mt-3 space-y-3">
