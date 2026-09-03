@@ -1,5 +1,6 @@
 import { Children, cloneElement, isValidElement, type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
+import { KpiCard } from './kpi-card';
 
 /**
  * `KpiCard variant="strip"` için sarmalayıcı: masaüstünde tek satır + dikey hairline'lar
@@ -28,8 +29,14 @@ export function KpiStripRow({ children, className }: { children: React.ReactNode
   // yüzen ~500px'lik boşluklar oluşuyordu (Tur 4 P1 bulgusu).
   const count = Children.count(children);
   const compact = count > 0 && count <= 3;
+  // Yalnızca gerçek `KpiCard` çocuklarına enjekte edilir — `Children.map`/`cloneElement` DOM'a
+  // duyarsızdır: yükleniyor iskeletlerinde (`loading.tsx`) aynı şeride konan çıplak `Skeleton`
+  // (`@/components/ui/skeleton`, `...props`'u doğrudan bir `<div>`'e yayar) `child.type` denetimi
+  // olmadan da klonlanır, `stripCompact` tanınmayan bir DOM özniteliği olarak sızar — React uyarısı
+  // ve geçersiz `<div stripcompact="true">` HTML çıktısı (bkz. rapor: /depo/mal-kabul, /depo/transfer,
+  // /depo/sevkiyat, /depo/sayim yükleniyor durumları, 3'ten az/eşit iskelet kartı olan her rota).
   const kids = compact
-    ? Children.map(children, (child) => (isValidElement<{ stripCompact?: boolean }>(child) ? cloneElement(child, { stripCompact: true }) : child))
+    ? Children.map(children, (child) => (isValidElement<{ stripCompact?: boolean }>(child) && child.type === KpiCard ? cloneElement(child, { stripCompact: true }) : child))
     : children;
 
   return (
