@@ -54,7 +54,9 @@ export default async function CountsPage() {
                 warehouses={warehouses}
                 locations={locations.map((l) => ({ id: l.id, code: l.code, usage: l.usage, warehouseId: l.warehouseId }))}
                 trigger={
-                  <button type="button" className="shrink-0 font-medium text-primary hover:underline">
+                  // Kök neden (Tur 10 P1 depo-sayim-01) — depo-transfer-01 ile aynı gerekçe: metin
+                  // yüksekliğinden ibaret tetikleyici 19.5px'ti, mobilde dokunma hedefi 44px altında.
+                  <button type="button" className="inline-flex min-h-11 shrink-0 items-center font-medium text-primary hover:underline md:min-h-0">
                     + Yeni sayım
                   </button>
                 }

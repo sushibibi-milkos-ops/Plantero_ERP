@@ -37,6 +37,12 @@ export default async function ReceiptsPage() {
   // (Tur 4 P2 bulgusu: anlamsız bir metrik). 1 saatin altında dakikaya düşülür.
   const avgLeadTimeMinutes = avgLeadTimeHours !== null ? Math.round(avgLeadTimeHours * 60) : null;
   const showLeadInMinutes = avgLeadTimeHours !== null && avgLeadTimeHours < 1;
+  // Kök neden (Tur 10 P1 depo-mal-kabul-01): önceki koruma yalnızca `avgLeadTimeHours === null`
+  // durumunu (hiç kabul yok) kapsıyordu. Seed'de `receivedAt = createdAt` olduğundan süre gerçekten
+  // 0'a yuvarlanıyor (null DEĞİL) — "0 dk" basılıyordu, kullanıcı bunu "tüm kabuller anında
+  // kapanıyor" diye okur, yanlış bilgi. Dakikaya yuvarlandığında 1'in altına düşen (< 30 sn) süre de
+  // artık "ölçülemez" sayılır — dürüst bir "—" + açıklayıcı ipucu basılır.
+  const measurable = avgLeadTimeHours !== null && avgLeadTimeMinutes !== null && avgLeadTimeMinutes >= 1;
   // Az kayıtlı listelerde (≤5) KPI şeridi + geniş tablo altında yüzlerce piksel boş kalıyor, sayfa
   // "yarım kalmış" görünüyordu (Tur 4 P2 bulgusu: 7 belgede ~700px boşluk). Bilgi zaten tabloda
   // olduğundan KPI şeridi gizlenir, içerik kabı daraltılır, tablo altına bağlamsal bir ipucu eklenir.
@@ -65,13 +71,21 @@ export default async function ReceiptsPage() {
           <KpiCard
             variant="strip"
             title="Ortalama kabul süresi"
-            // Kök neden (Tur 5 P1): hesaplanamaz durumda `0` basılıyordu — kullanıcı bunu "tüm
-            // kabuller anında kapanıyor" diye okur, yanlış bilgi. `value={null}` artık dürüst bir
-            // "—" basar (bkz. kpi-card.tsx).
-            value={avgLeadTimeHours === null ? null : showLeadInMinutes ? avgLeadTimeMinutes! : avgLeadTimeHours}
+            // Kök neden (Tur 5 P1, genişletildi Tur 10 P1): hesaplanamaz durumda `0` basılıyordu —
+            // kullanıcı bunu "tüm kabuller anında kapanıyor" diye okur, yanlış bilgi. `measurable`
+            // artık hem "hiç kabul yok" (null) hem "süre < 1 dk'ya yuvarlanıyor" (seed'de aynı
+            // işlemde kapanan belgeler) durumlarını kapsar; ikisinde de `value={null}` dürüst bir
+            // "—" basar (bkz. kpi-card.tsx), hint neden ölçülemediğini açıklar.
+            value={measurable ? (showLeadInMinutes ? avgLeadTimeMinutes! : avgLeadTimeHours!) : null}
             format={showLeadInMinutes ? 'int' : 'qty'}
-            suffix={avgLeadTimeHours === null ? undefined : showLeadInMinutes ? 'dk' : 'sa'}
-            hint={avgLeadTimeHours === null ? 'Henüz kabul edilen belge yok' : undefined}
+            suffix={measurable ? (showLeadInMinutes ? 'dk' : 'sa') : undefined}
+            hint={
+              avgLeadTimeHours === null
+                ? 'Henüz kabul edilen belge yok'
+                : !measurable
+                  ? 'Kabul aynı işlemde kapandığı için süre ölçülemiyor'
+                  : undefined
+            }
           />
         </KpiStripRow>
       ) : null}

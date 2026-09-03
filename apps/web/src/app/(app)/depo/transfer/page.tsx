@@ -57,7 +57,10 @@ export default async function TransfersPage() {
         <NextStepHint
           action={
             userCan(user, 'stock.transfer') ? (
-              <Link href="/depo/transfer/yeni" className="shrink-0 font-medium text-primary hover:underline">
+              // Kök neden (Tur 10 P1 depo-transfer-01): metin yüksekliğinden ibaret bağlantı 19.5px'ti
+              // — mobilde dokunma hedefi 44px'in çok altında. `min-h-11 items-center` masaüstünde
+              // `md:min-h-0` ile eski kompakt görünüme döner.
+              <Link href="/depo/transfer/yeni" className="inline-flex min-h-11 shrink-0 items-center font-medium text-primary hover:underline md:min-h-0">
                 + Yeni transfer
               </Link>
             ) : undefined

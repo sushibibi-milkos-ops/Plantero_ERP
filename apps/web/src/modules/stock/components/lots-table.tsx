@@ -44,7 +44,13 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
       // Mobil ROLLERİ takas edildi (masaüstü sütun sırası DEĞİŞMEDİ — Lot no hâlâ ilk sütun): ürün
       // adı artık `title` (14px font-medium, tam kontrast), lot no `subtitle` (LotBadge zaten
       // kutusuz, salt font-mono text-xs — bkz. lot-badge.tsx).
-      { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot no', meta: { mobile: 'subtitle' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} status={row.original.status} id={row.original.id} /> },
+      // Kök neden düzeltmesi (Tur 10 P1 depo-lotlar-01, kart yüksekliği): `id` verilince LotBadge
+      // kendi içine AYRI bir `<Link>` (ve dokunma hedefi için `h-11` — 44px) sarıyordu — satır zaten
+      // `rowHref` ile tıklanabilir/gezinilebilir olduğundan bu iç içe bağlantı tamamen gereksizdi,
+      // tek etkisi kartın 2. satırını (subtitle) 44px'e zorlamaktı (kart 88-93px'e çıkıyordu, hedef
+      // 56-72px). `id` kaldırıldı — LotBadge artık düz metin (lotNo + istisna durumunda nokta),
+      // gezinme satırın kendi `rowHref`'inden gelir.
+      { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot no', meta: { mobile: 'subtitle' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} status={row.original.status} /> },
       { accessorKey: 'productName', header: 'Ürün', meta: { mobile: 'title' }, cell: ({ row }) => <span>{row.original.productName} <span className="font-mono text-xs text-muted-foreground">· {row.original.sku}</span></span> },
       {
         id: 'status',
@@ -61,36 +67,33 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
           return <StatusBadge status={status} kind="lot" />;
         },
       },
-      // Lokasyon/Durum/Maliyet mobilde hiç yoktu (Tur 3 P1 bulgusu) — masaüstünde değişiklik yok,
-      // mobilde etiketli tek meta satırında toplanır (kart yüksekliği önceki dl grid'ine göre belirgin
-      // şekilde iner). Durum zaten ayrı bir rozet (badge) olarak üstte gösteriliyor.
+      // Kök neden düzeltmesi (Tur 10 P1 depo-lotlar-01) — stock-table.tsx ile aynı gerekçe: shell'in
+      // (Tur 10) yeniden tasarladığı mobil kartta artık ayrı bir "dl" (dt/dd) dalı yok; `mobile`
+      // rolü verilMEyen (varsayılan/"rest") TEK sütun otomatik olarak kartın 13px tabular-nums
+      // "metrik"i (satır 2 sağı) seçilir. Bir lot için en temel sayı Eldeki miktardır — `mobile` boş
+      // bırakılır; mobilde birim basılmaz (`QtyCell`'in ayrı `text-[11px]` birim düğümü 13px'lik
+      // metriğin kendisiyle aynı satırda 11px sayısını gereksiz yere şişiriyordu — masaüstünde
+      // değişmeden kalır). Maliyet mobil kartta artık gösterilmez (masaüstünde/detay sayfasında
+      // erişilebilir); Lokasyon kısa metin olduğundan meta ipucu olarak kalır (Durum zaten ayrı bir
+      // rozet).
       {
+        // `mobile` KASITLI olarak boş: sütun tanımında sonuncu "rest" alan — shell bunu otomatik
+        // olarak kartın tek "metric"i (satır 2 sağı, 13px tabular-nums) seçer.
         accessorKey: 'onHandQty',
         header: 'Eldeki',
-        meta: { align: 'right', width: 110, mobile: 'meta' },
+        meta: { align: 'right', width: 110 },
         cell: ({ row }) => (
           <>
             <span className="hidden md:inline-flex"><QtyCell value={row.original.onHandQty} uom={row.original.uomCode} /></span>
-            <span className="inline-flex items-baseline gap-1 md:hidden">
-              <span className="text-muted-foreground/70">Eldeki</span>
-              <QtyCell value={row.original.onHandQty} uom={row.original.uomCode} />
-            </span>
+            <span className="md:hidden"><QtyCell value={row.original.onHandQty} /></span>
           </>
         ),
       },
       {
         accessorKey: 'unitCost',
         header: 'Maliyet',
-        meta: { align: 'right', width: 110, mobile: 'meta' },
-        cell: ({ row }) => (
-          <>
-            <span className="hidden md:inline-flex"><MoneyCell value={row.original.unitCost} /></span>
-            <span className="inline-flex items-baseline gap-1 md:hidden">
-              <span className="text-muted-foreground/70">Maliyet</span>
-              <MoneyCell value={row.original.unitCost} />
-            </span>
-          </>
-        ),
+        meta: { align: 'right', width: 110, mobile: 'hidden' },
+        cell: ({ row }) => <MoneyCell value={row.original.unitCost} />,
       },
       {
         accessorKey: 'locationCount',

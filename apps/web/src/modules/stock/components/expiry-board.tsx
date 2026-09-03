@@ -32,10 +32,20 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
 
   const columns = useMemo<ColumnDef<ExpiryRow, unknown>[]>(
     () => [
-      { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot', meta: { mobile: 'title' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} id={row.original.lotId} /> },
+      // Kök neden düzeltmesi (Tur 10 P1 depo-skt-01, kart yüksekliği): `id` verilince LotBadge kendi
+      // içine AYRI bir `<Link>` (+ dokunma hedefi için `h-11`, 44px) sarıyordu — bu sütun `title`
+      // rolünde olduğundan kartın 1. satırını 44px'e zorluyor, kart 87.5px'e çıkıyordu (hedef
+      // 56-72px). Bu tabloda satır tıklamasının başka bir işlevi yoktu (`rowActions` dışında) — `id`
+      // kaldırmak yerine satırın KENDİSİ artık `rowHref` ile lot detayına gider (lots-table.tsx ile
+      // aynı desen), LotBadge düz metne döner.
+      { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot', meta: { mobile: 'title' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} /> },
       { accessorKey: 'productName', header: 'Ürün', meta: { mobile: 'subtitle' }, cell: ({ row }) => <span>{row.original.productName} <span className="font-mono text-xs text-muted-foreground">· {row.original.sku}</span></span> },
-      // Diğer depo tablolarıyla aynı kalıp (Tur 3 P1): masaüstünde değişiklik yok, mobilde tek etiketli
-      // meta satırında toplanır — ayrı `dl` satırları yerine kart yüksekliği düşürülür.
+      // Kök neden düzeltmesi (Tur 10 P1 depo-skt-01) — stock-table.tsx ile aynı gerekçe: shell'in
+      // (Tur 10) yeniden tasarladığı mobil kartta artık ayrı bir "dl" (dt/dd) dalı yok; `mobile` rolü
+      // verilMEyen (varsayılan/"rest") TEK sütun otomatik olarak kartın 13px tabular-nums "metrik"i
+      // (satır 2 sağı) seçilir. Bu panoda kullanıcının asıl karar vereceği sayı Değer (SKT'si yaklaşan
+      // stoğun parasal büyüklüğü — KPI şeridi de aynı sinyali verir); Miktar mobil kartta artık
+      // gösterilmez (masaüstünde erişilebilir). Lokasyon kısa metin olduğundan meta ipucu olarak kalır.
       {
         accessorKey: 'locationCode',
         header: 'Lokasyon',
@@ -43,37 +53,26 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
         cell: ({ row }) => (
           <>
             <span className="hidden font-mono text-xs md:inline">{row.original.locationCode}</span>
-            <span className="md:hidden">{row.original.locationCode}</span>
+            {/* text-[13px]: kartın 12px'lik varsayılan meta boyutundan biraz büyük — depo personeli
+                lokasyon kodunu hızla okumak zorunda, satırın diğer ekseninde zaten 13px'lik metrikle
+                (Değer) aynı görsel ağırlıkta durur. */}
+            <span className="text-[13px] md:hidden">{row.original.locationCode}</span>
           </>
         ),
       },
       {
         accessorKey: 'qty',
         header: 'Miktar',
-        meta: { align: 'right', width: 110, mobile: 'meta' },
-        cell: ({ row }) => (
-          <>
-            <span className="hidden md:inline-flex"><QtyCell value={row.original.qty} uom={row.original.uomCode} /></span>
-            <span className="inline-flex items-baseline gap-1 md:hidden">
-              <span className="text-muted-foreground/70">Miktar</span>
-              <QtyCell value={row.original.qty} uom={row.original.uomCode} />
-            </span>
-          </>
-        ),
+        meta: { align: 'right', width: 110, mobile: 'hidden' },
+        cell: ({ row }) => <QtyCell value={row.original.qty} uom={row.original.uomCode} />,
       },
       {
+        // `mobile` KASITLI olarak boş: sütun tanımında sonuncu "rest" alan — shell bunu otomatik
+        // olarak kartın tek "metric"i (satır 2 sağı, 13px tabular-nums) seçer.
         accessorKey: 'value',
         header: 'Değer',
-        meta: { align: 'right', width: 120, mobile: 'meta' },
-        cell: ({ row }) => (
-          <>
-            <span className="hidden md:inline-flex"><MoneyCell value={row.original.value} /></span>
-            <span className="inline-flex items-baseline gap-1 md:hidden">
-              <span className="text-muted-foreground/70">Değer</span>
-              <MoneyCell value={row.original.value} />
-            </span>
-          </>
-        ),
+        meta: { align: 'right', width: 120 },
+        cell: ({ row }) => <MoneyCell value={row.original.value} />,
       },
       // stock-table.tsx ile aynı kök nedenle (Tur 3 P1) genişletildi — geçmiş SKT'li satırlar bu panonun
       // tam odağı, tarihin kırpılması burada özellikle kabul edilemez. Masaüstünde değişiklik yok
@@ -134,6 +133,11 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
         searchPlaceholder="Lot, ürün ara…"
         initialSorting={[{ id: 'expiryDate', desc: false }]}
         emptyTitle="Bu aralıkta SKT'si yaklaşan lot yok"
+        // Kök neden düzeltmesi (Tur 10 P1 depo-skt-01): lot no hücresindeki gömülü `<Link>` kaldırıldı
+        // (yukarıdaki yorum) — gezinme artık satırın kendisinden (lots-table.tsx ile aynı desen).
+        // `rowActions` (Hurdaya ayır) kendi tetikleyicisinde `stopPropagation` çağırdığından ikisi
+        // çakışmaz.
+        rowHref={(r) => `/depo/lotlar/${r.lotId}`}
         rowActions={canScrap ? (r) => [{ label: 'Hurdaya ayır', icon: Trash2, destructive: true, onSelect: () => setScrapTarget(r) }] : undefined}
         // Satır zemin tonu istisnayı işaretler, kuralı değil (Tur 5 P0 bulgusu): önceki sürüm
         // "critical" (0-30 gün, satırların büyük kısmı) VE "warning" (30-60 gün) kovalarını da

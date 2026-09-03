@@ -11,7 +11,7 @@ import { ExpiryBadge } from '@/components/expiry-badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { PRODUCT_TYPE_LABELS, PRODUCT_TYPE_TONE } from '../labels';
+import { PRODUCT_TYPE_LABELS } from '../labels';
 import type { StockRow } from '../queries';
 
 /** `PRODUCT_TYPE_TONE`'daki tonların masaüstü nokta rengi — StatusBadge'in iç TONE_CLASSES'ı dışa
@@ -57,84 +57,66 @@ export function StockTable({ rows }: { rows: StockRow[] }) {
           accessorFn: (r) => r.type,
           header: 'Tip',
           meta: { width: 46, mobile: 'badge' },
-          // İkon çorbası değil ama rozet metni de ~60px alıyordu; masaüstünde yalnızca renkli nokta +
-          // native tooltip, mobilde (kartta yer bol) tam rozet — bkz. TYPE_DOT / PRODUCT_TYPE_LABELS.
+          // Tur 10 P1 depo-stok-01 (dolaylı yan etki): önceki sürüm masaüstünde nokta, mobilde TAM
+          // dolgulu rozet basıyordu ("mobilde kartta yer bol" gerekçesiyle) — StatusBadge varsayılanı
+          // 11px'tir ve 50 satırın tamamında göründüğünden sayfanın 11px sayımını (kartın asıl
+          // metriğinin 13px'ine karşı) tek başına ikiye katlıyordu; ayrıca artık kart bütçesi (shell,
+          // Tur 10) çok daha dar — "yer bol" öncülü artık geçerli değil. Nokta + native tooltip artık
+          // masaüstü/mobil FARKSIZ (bkz. TYPE_DOT / PRODUCT_TYPE_LABELS); tip zaten satıra dokununca
+          // açılan Sheet'te ve arama/filtre çubuğunda erişilebilir kalır.
           cell: ({ getValue }) => {
             const t = getValue<string>();
             const label = PRODUCT_TYPE_LABELS[t] ?? t;
             return (
-              <>
-                <span className="hidden items-center justify-center md:inline-flex" title={label}>
-                  <span aria-hidden className={cn('size-1.5 rounded-full', TYPE_DOT[t] ?? 'bg-muted-foreground/50')} />
-                  <span className="sr-only">{label}</span>
-                </span>
-                <span className="md:hidden">
-                  <StatusBadge status={t} label={label} tone={PRODUCT_TYPE_TONE[t] ?? 'neutral'} />
-                </span>
-              </>
+              <span className="inline-flex items-center justify-center" title={label}>
+                <span aria-hidden className={cn('size-1.5 rounded-full', TYPE_DOT[t] ?? 'bg-muted-foreground/50')} />
+                <span className="sr-only">{label}</span>
+              </span>
             );
           },
         },
-        // Rezerve ve SKT mobilde `hidden` idi — depo personelinin mobilde en çok baktığı iki alan
-        // masaüstünde bile görünmeden tabletlerde tamamen kayboluyordu (Tur 3 P1 bulgusu). Masaüstünde
-        // değişiklik yok (sağa hizalı `QtyCell`/`MoneyCell`); mobilde `mobile:'meta'` rolüyle tek,
-        // etiketsiz-değil-kısa-etiketli satırda toplanır ("Eldeki 180 KG · Rezerve 20 KG · …") — ayrı bir
-        // `dl` satırı yerine kartın tek meta satırına eklenir, kart yüksekliği ~155px'ten ~90-100px'e iner.
+        // Kök neden düzeltmesi (Tur 10 P1 depo-stok-01): 4 sayısal sütunun tamamı `mobile:'meta'`
+        // rolüyle basılıyordu — shell'in (Tur 10) yeniden tasarladığı mobil kart artık `meta` rolünü
+        // satır 2'nin SOL tarafına (etiketsiz-değil-kısa-etiketli, 12px) yerleştiriyor, "dl" (dt/dd)
+        // dalı artık YOK; kartın SAĞ ekseninde 13px tabular-nums'la yalnızca `mobile` rolü verilMEyen
+        // (varsayılan/"rest") TEK sütun otomatik "metrik" seçilir (bkz. mobile-cards.tsx, aynı desen
+        // products-table.tsx `listPrice`'ta kullanılıyor). Kullanıcının asıl karar vereceği sayı
+        // "Kullanılabilir" (eldekinden rezerveyi düşen, gerçekten sevk/satılabilir miktar) — bu yüzden
+        // `mobile` boş bırakılır ve tek metrik o olur (birim mobilde basılmaz — `QtyCell`'in ayrı
+        // `text-[11px]` birim düğümü, 13px'lik metriğin kendisiyle aynı satırda 11px sayısını
+        // gereksiz yere şişiriyordu; masaüstünde birim değişmeden kalır). "Eldeki"/"Rezerve"/"Değer"
+        // mobil kartta artık gösterilmez — masaüstünde ve satıra dokunulduğunda açılan lot/lokasyon
+        // dökümü Sheet'inde erişilebilir kalır (kart yükseklik bütçesi ≤72px, 56-72 hedef bandı).
         {
           accessorKey: 'qty',
           header: 'Eldeki',
-          meta: { align: 'right', width: 110, mobile: 'meta' },
-          cell: ({ row }) => (
-            <>
-              <span className="hidden md:inline-flex"><QtyCell value={row.original.qty} uom={row.original.uomCode} /></span>
-              <span className="inline-flex items-baseline gap-1 md:hidden">
-                <span className="text-muted-foreground/70">Eldeki</span>
-                <QtyCell value={row.original.qty} uom={row.original.uomCode} />
-              </span>
-            </>
-          ),
+          meta: { align: 'right', width: 110, mobile: 'hidden' },
+          cell: ({ row }) => <QtyCell value={row.original.qty} uom={row.original.uomCode} />,
         },
         {
           accessorKey: 'reserved',
           header: 'Rezerve',
-          meta: { align: 'right', width: 100, mobile: 'meta' },
-          cell: ({ row }) => (
-            <>
-              <span className="hidden md:inline-flex"><QtyCell value={row.original.reserved} uom={row.original.uomCode} /></span>
-              <span className="inline-flex items-baseline gap-1 md:hidden">
-                <span className="text-muted-foreground/70">Rezerve</span>
-                <QtyCell value={row.original.reserved} uom={row.original.uomCode} />
-              </span>
-            </>
-          ),
+          meta: { align: 'right', width: 100, mobile: 'hidden' },
+          cell: ({ row }) => <QtyCell value={row.original.reserved} uom={row.original.uomCode} />,
         },
         {
+          // `mobile` KASITLI olarak boş: sütun tanımında sonuncu "rest" alan — shell bunu otomatik
+          // olarak kartın tek "metric"i (satır 2 sağı, 13px tabular-nums) seçer.
           accessorKey: 'available',
           header: 'Kullanılabilir',
-          meta: { align: 'right', width: 120, mobile: 'meta' },
+          meta: { align: 'right', width: 120 },
           cell: ({ row }) => (
             <>
               <span className="hidden md:inline-flex"><QtyCell value={row.original.available} uom={row.original.uomCode} /></span>
-              <span className="inline-flex items-baseline gap-1 md:hidden">
-                <span className="text-muted-foreground/70">Kullan.</span>
-                <QtyCell value={row.original.available} uom={row.original.uomCode} />
-              </span>
+              <span className="md:hidden"><QtyCell value={row.original.available} /></span>
             </>
           ),
         },
         {
           accessorKey: 'value',
           header: 'Değer',
-          meta: { align: 'right', width: 130, mobile: 'meta' },
-          cell: ({ row }) => (
-            <>
-              <span className="hidden md:inline-flex"><MoneyCell value={row.original.value} /></span>
-              <span className="inline-flex items-baseline gap-1 md:hidden">
-                <span className="text-muted-foreground/70">Değer</span>
-                <MoneyCell value={row.original.value} />
-              </span>
-            </>
-          ),
+          meta: { align: 'right', width: 130, mobile: 'hidden' },
+          cell: ({ row }) => <MoneyCell value={row.original.value} />,
         },
         {
           accessorKey: 'nearestExpiryDate',
@@ -189,8 +171,14 @@ export function StockTable({ rows }: { rows: StockRow[] }) {
         emptyTitle="Stok kaydı yok"
         emptyDescription="Mal kabul yapıldıkça burada listelenecek."
         toolbarExtra={
-          <label className="flex h-8 items-center gap-2 rounded-md border border-border/70 px-2.5 text-[13px]">
-            <Switch checked={onlyCritical} onCheckedChange={setOnlyCritical} className="scale-90" />
+          // Kök neden düzeltmesi (Tur 10 P1 depo-stok-02): `h-8` (32px) sarmalayıcı + `scale-90`
+          // dönüşümü Switch'in kökünü (ui/switch.tsx'in Tur 10'da eklediği mobilde 44×44'lük dokunma
+          // hedefini) 39.6×39.6'ya küçültüyordu — `scale-90` transform, `getBoundingClientRect()`'in
+          // gördüğü GERÇEK boyutu de küçültür. `scale-90` kaldırıldı (masaüstünde görünüm birebir aynı
+          // kalır — track/thumb kökten ayrı bir `<span>`'de sabit boyutludur, kökün ölçeğine bağlı
+          // değildir); label mobilde `h-11` (≥44px) olur, masaüstünde eski kompakt `h-8`'e döner.
+          <label className="flex h-11 items-center gap-2 rounded-md border border-border/70 px-2.5 text-[13px] md:h-8">
+            <Switch checked={onlyCritical} onCheckedChange={setOnlyCritical} />
             <span>Sadece kritik</span>
           </label>
         }
