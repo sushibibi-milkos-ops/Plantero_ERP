@@ -1,16 +1,42 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
 import { LotBadge } from '@/components/lot-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { MoneyCell } from '@/components/money-cell';
-import { statusOptions } from '@/lib/status';
+import { cn } from '@/lib/utils';
+import { getStatusInfo, statusOptions } from '@/lib/status';
 import type { LotRow } from '../queries';
 
+// Depo lotlarının ezici çoğunluğu `released` (ör. 200'de 195) — Linear kuralı yalnızca istisnayı
+// rozetler, normali değil. Bu ikisi kullanıldığı her yerde (durum sütunu + varsayılan sıralama)
+// aynı liste (Tur 4 P1 bulgusu: "Serbest" rozeti 50/50 satırda tekrar edip göz için bilgi taşımayı
+// bırakıyordu — sütun ~230px genişlikte hiç sinyal vermeden gidiyordu).
+const EXCEPTION_LOT_STATUSES = new Set(['quarantine', 'rejected', 'recalled', 'expired']);
+
 export function LotsTable({ lots }: { lots: LotRow[] }) {
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+  // Başlıktaki "195 serbest · 3 karantinada · 2 red" özeti artık tıklanabilir çip — statik metin
+  // hiçbir işlev taşımıyordu (Tur 4 P1 bulgusu suggestedFix).
+  const counts = useMemo(() => {
+    const c = new Map<string, number>();
+    for (const l of lots) c.set(l.status, (c.get(l.status) ?? 0) + 1);
+    return c;
+  }, [lots]);
+  const chipOrder = useMemo(() => {
+    const seen = new Set<string>();
+    const order: string[] = [];
+    for (const s of ['quarantine', 'rejected', 'released', 'consumed', 'recalled', 'expired']) if (counts.has(s)) { order.push(s); seen.add(s); }
+    for (const s of counts.keys()) if (!seen.has(s)) order.push(s);
+    return order;
+  }, [counts]);
+
+  const data = useMemo(() => (statusFilter ? lots.filter((l) => l.status === statusFilter) : lots), [lots, statusFilter]);
+
   const columns = useMemo<ColumnDef<LotRow, unknown>[]>(
     () => [
       { id: 'lotNo', accessorFn: (r) => r.lotNo, header: 'Lot no', meta: { mobile: 'title' }, cell: ({ row }) => <LotBadge lotNo={row.original.lotNo} status={row.original.status} id={row.original.id} /> },
@@ -20,18 +46,14 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
         accessorFn: (r) => r.status,
         header: 'Durum',
         meta: { width: 96, mobile: 'badge' },
-        // Linear kuralı: renk yalnızca istisna taşır — ama başlığı olan bir sütun asla içeriksiz kalamaz
-        // (Tur 3 P0: "Durum" boş hücreyle 195/200 satırda render ediliyordu, ~230px genişlik hiç bilgi
-        // taşımadan gidiyordu). `released` artık sessiz/nötr bir rozet alır (bg-muted, dolgusuz nokta
-        // yok sayılacak kadar düşük kontrast) — karantina/red gibi gerçek istisnalar hâlâ renkli
-        // (warning/danger) kalıp göze çarpar, yalnızca "normal" durum bağırmayı bırakır.
+        // Tur 3'te "released" nötr/muted bir rozet aldı ama 50/50 satırda AYNI nötr rozet yine
+        // tekrar ediyordu — sessiz de olsa bir rozet, göz için hâlâ "her satırda bir şey var"
+        // gürültüsü taşıyordu (Tur 4 P1 bulgusu, hedef: rozetli satır oranı ≤%25). Linear yalnızca
+        // istisnayı rozetler: karantina/red/geri çağrıldı/SKT geçti dışında hiçbir şey basılmaz.
         cell: ({ getValue }) => {
           const status = getValue<string>();
-          return status === 'released' ? (
-            <StatusBadge status={status} kind="lot" tone="muted" size="sm" className="h-5 text-[11px]" />
-          ) : (
-            <StatusBadge status={status} kind="lot" />
-          );
+          if (!EXCEPTION_LOT_STATUSES.has(status)) return null;
+          return <StatusBadge status={status} kind="lot" />;
         },
       },
       // Lokasyon/Durum/Maliyet mobilde hiç yoktu (Tur 3 P1 bulgusu) — masaüstünde değişiklik yok,
@@ -90,7 +112,16 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
         // dd.MM.yyyy" 150px'te kırpılıyordu; masaüstünde 228px'e genişletildi. Mobilde (SKT kartta hiç
         // yoktu) sağ üstte kısa rozet olarak (`showDate={false}`) gösterilir.
         meta: { width: 228, mobile: 'badge' },
-        sortingFn: (a, b) => (a.original.expiryDate ?? '').localeCompare(b.original.expiryDate ?? ''),
+        // Varsayılan sıralama artık önce istisnaları öne getirir (karantina/red/geri çağrıldı/SKT
+        // geçti), sonra SKT'ye göre — 195 "serbest" satır arasında kaybolan 5 istisna en üstte
+        // görünür (Tur 4 P1 bulgusu suggestedFix: "varsayılan sıralamayı istisnalar öne gelecek
+        // şekilde kur"). Kullanıcı başlığa tıklayıp yine yalnızca SKT'ye göre sıralayabilir.
+        sortingFn: (a, b) => {
+          const pa = EXCEPTION_LOT_STATUSES.has(a.original.status) ? 0 : 1;
+          const pb = EXCEPTION_LOT_STATUSES.has(b.original.status) ? 0 : 1;
+          if (pa !== pb) return pa - pb;
+          return (a.original.expiryDate ?? '').localeCompare(b.original.expiryDate ?? '');
+        },
         cell: ({ row }) =>
           row.original.expiryDate ? (
             <>
@@ -111,17 +142,44 @@ export function LotsTable({ lots }: { lots: LotRow[] }) {
   ];
 
   return (
-    <DataTable
-      columns={columns}
-      data={lots}
-      getRowId={(l) => l.id}
-      rowHref={(l) => `/depo/lotlar/${l.id}`}
-      searchPlaceholder="Lot no, ürün ara…"
-      filters={filters}
-      initialSorting={[{ id: 'expiryDate', desc: false }]}
-      initialColumnVisibility={{ supplierName: false }}
-      emptyTitle="Henüz lot yok"
-      emptyDescription="Mal kabul veya üretim çıktısı ile lot oluşur."
-    />
+    <>
+      {/* Başlıktaki statik "195 serbest · 3 karantinada · 2 red" metni tıklanabilir çipe çevrildi
+          (Tur 4 P1 bulgusu suggestedFix) — aynı bilgi artık bir eylem de taşıyor. */}
+      <div className="mb-3 flex flex-wrap gap-1.5">
+        {chipOrder.map((s) => {
+          const info = getStatusInfo(s, 'lot');
+          const active = statusFilter === s;
+          return (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setStatusFilter((f) => (f === s ? null : s))}
+              aria-pressed={active}
+              className={cn(
+                'inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-medium transition-colors',
+                active ? 'border-primary/50 bg-primary/5 text-foreground' : 'border-border/60 text-muted-foreground hover:bg-accent/40 hover:text-foreground',
+              )}
+            >
+              <span aria-hidden className={cn('size-1.5 rounded-full', active ? 'bg-primary' : 'bg-muted-foreground/50')} />
+              {info.label}
+              <span className="tabular-nums text-muted-foreground">{counts.get(s)}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <DataTable
+        columns={columns}
+        data={data}
+        getRowId={(l) => l.id}
+        rowHref={(l) => `/depo/lotlar/${l.id}`}
+        searchPlaceholder="Lot no, ürün ara…"
+        filters={filters}
+        initialSorting={[{ id: 'expiryDate', desc: false }]}
+        initialColumnVisibility={{ supplierName: false }}
+        emptyTitle={statusFilter ? 'Bu durumda lot yok' : 'Henüz lot yok'}
+        emptyDescription={statusFilter ? undefined : 'Mal kabul veya üretim çıktısı ile lot oluşur.'}
+      />
+    </>
   );
 }

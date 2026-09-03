@@ -10,18 +10,12 @@ export const dynamic = 'force-dynamic';
 export default async function LotsPage() {
   await requirePermission('stock.view');
   const lots = await listLots();
-  const released = lots.filter((l) => l.status === 'released').length;
-  const quarantine = lots.filter((l) => l.status === 'quarantine').length;
-  // Önceki sayaç yalnızca serbest + karantina veriyordu — 200 lotun 2'si red iken 195+3=198≠200,
-  // fark sessizce kayboluyordu. Red de sayılır.
-  const rejected = lots.filter((l) => l.status === 'rejected').length;
 
   return (
     <>
-      <PageHeader
-        title="Lotlar"
-        description={`${lots.length} lot · ${released} serbest · ${quarantine} karantinada${rejected ? ` · ${rejected} red` : ''}`}
-      />
+      {/* Durum kırılımı ("195 serbest · 3 karantinada · 2 red") artık burada statik metin değil —
+          LotsTable'ın kendi tıklanabilir durum çipi şeridinde (Tur 4 P1 bulgusu suggestedFix). */}
+      <PageHeader title="Lotlar" description={`${lots.length} lot`} />
       <LotsTable lots={lots} />
     </>
   );

@@ -5,7 +5,7 @@ import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/da
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { statusOptions } from '@/lib/status';
-import { formatDate } from '@/lib/format';
+import { formatDateTime } from '@/lib/format';
 import type { ReceiptRow } from '../queries';
 
 export function ReceiptsTable({ receipts }: { receipts: ReceiptRow[] }) {
@@ -28,8 +28,11 @@ export function ReceiptsTable({ receipts }: { receipts: ReceiptRow[] }) {
         // Bu tabloda ayrı bir "planlanan"/"audit" tarihi yok — "Tarih" tek ve birincil tarih (kardeş
         // ekranlardaki "Sevk tarihi"/"Planlanan tarih" ile eşdeğer), ama önceden ikincil/audit tarihi
         // gibi soluk gri basılıyordu — aynı veri tipi tablolar arası farklı kontrastta görünüyordu
-        // (Tur 3 P2 bulgusu). Birincil tarih kuralı: normal kontrast (text-foreground).
-        { accessorKey: 'createdAt', header: 'Tarih', meta: { width: 110 }, cell: ({ row }) => formatDate(row.original.createdAt) },
+        // (Tur 3 P2 bulgusu). Birincil tarih kuralı: normal kontrast (text-foreground). Saat eklendi
+        // (yalnızca gün) — aynı gün içinde birden çok belge geldiğinde (Tur 4 P2 bulgusu: 7 belgenin
+        // tamamı aynı günde) sütun hiç ayrıştırıcı bilgi taşımıyordu; saat "Ortalama kabul süresi"
+        // KPI'sını da (bkz. mal-kabul/page.tsx) anlamlı kılar.
+        { accessorKey: 'createdAt', header: 'Tarih', meta: { width: 150 }, cell: ({ row }) => formatDateTime(row.original.createdAt) },
       ];
       if (showWarehouseColumn) {
         cols.splice(3, 0, { accessorKey: 'warehouseCode', header: 'Depo', meta: { width: 90, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono text-xs">{getValue<string>()}</span> });

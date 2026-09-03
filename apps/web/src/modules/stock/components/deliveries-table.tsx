@@ -5,9 +5,16 @@ import Link from 'next/link';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
+import { EmptyCell } from '@/components/empty-cell';
 import { statusOptions } from '@/lib/status';
 import { formatDate } from '@/lib/format';
 import type { DeliveryRow } from '../queries';
+
+/** Tutar yalnızca fiilen sevk edildikten sonra oluşur (SMM lot maliyeti × sevk edilen miktar). Sevk
+ *  edilmemiş (rezerve/toplanıyor/toplandı) satırlarda "₺0,00" basmak yanlış bilgi verir — tutar sıfır
+ *  değil, henüz OLUŞMAMIŞ (Tur 4 P1 bulgusu: aynı satırda "Sevk tarihi" doğru şekilde "—" basarken
+ *  "Tutar" "₺0,00" basıyordu — tek bir boş-değer idiomu olmalı). */
+const SHIPPED_STATUSES = new Set(['shipped', 'delivered']);
 
 /** Sıralama/gösterim için tek bir "sevk tarihi": planlanan tarih varsa o, yoksa (seed verisinde
  *  `scheduledDate` hiç doldurulmamış — gerçek tarih yalnızca `shippedAt`'te) fiilen sevk edildiği an. */
@@ -32,7 +39,11 @@ export function DeliveriesTable({ deliveries }: { deliveries: DeliveryRow[] }) {
         accessorKey: 'salesOrderDocNo',
         header: 'Sipariş',
         meta: { mobile: 'hidden' },
-        cell: ({ row }) => (row.original.salesOrderId ? <Link href={`/satis/siparisler/${row.original.salesOrderId}`} className="font-mono text-xs text-primary hover:underline" onClick={(e) => e.stopPropagation()}>{row.original.salesOrderDocNo}</Link> : '—'),
+        // Vurgu (primary/yeşil) rengi ürün eylemlerine ayrılmıştı; belge bağlantısı da aynı rengi
+        // taşıyınca durum rozetinin (mavi) yanında iki farklı "renk anlamı" karışıyordu (Tur 4 P1
+        // bulgusu: "tek vurgu rengi" kuralı bozuluyordu). Bağlantı artık normal metin + alt çizgi;
+        // renk yalnızca StatusBadge'de kalır.
+        cell: ({ row }) => (row.original.salesOrderId ? <Link href={`/satis/siparisler/${row.original.salesOrderId}`} className="font-mono text-xs text-foreground underline-offset-2 hover:underline" onClick={(e) => e.stopPropagation()}>{row.original.salesOrderDocNo}</Link> : '—'),
       },
       // Sevk/planlanan tarih hiç gösterilmiyordu — 27 satırlık bir listede sıralanamaz/filtrelenemez
       // haldeydi. Kardeş ekran /depo/mal-kabul'de "Tarih" zaten var; tutarlılık için burada da varsayılan
@@ -52,7 +63,7 @@ export function DeliveriesTable({ deliveries }: { deliveries: DeliveryRow[] }) {
       },
       // Tutar da hiç yoktu (kardeş ekran /depo/mal-kabul'de "Toplam tutar" var) — modül içi tutarsızlık.
       // Lot maliyeti × toplanan miktar (SMM'in temeli); satış fiyatı değil (irsaliye bir depo belgesi).
-      { accessorKey: 'value', header: 'Tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => <MoneyCell value={row.original.value} /> },
+      { accessorKey: 'value', header: 'Tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => (SHIPPED_STATUSES.has(row.original.status) ? <MoneyCell value={row.original.value} /> : <EmptyCell />) },
       { accessorKey: 'carrier', header: 'Kargo', meta: { mobile: 'hidden' }, cell: ({ row }) => row.original.carrier ?? '—' },
       ];
       if (showLineCount) {

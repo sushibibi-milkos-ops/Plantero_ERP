@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
+import { NextStepHint } from '@/components/next-step-hint';
 import { ZERO, D, toDb } from '@plantero/core';
 
 export const metadata: Metadata = { title: 'Transfer' };
@@ -21,9 +22,13 @@ export default async function TransfersPage() {
   const monthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   const completedThisMonth = transfers.filter((t) => t.status === 'done' && t.createdAt.toISOString().slice(0, 7) === monthPrefix).length;
   const transferredValue = toDb(transfers.filter((t) => t.status !== 'cancelled').reduce((a, t) => a.plus(D(t.value)), ZERO));
+  // Az kayıtlı listelerde (≤5) KPI şeridi + geniş tablo altında yüzlerce piksel boş kalıyor, sayfa
+  // "yarım kalmış" görünüyordu (Tur 4 P2 bulgusu: 3 transferde ~900px boşluk). Bilgi zaten tabloda
+  // olduğundan KPI şeridi gizlenir, içerik kabı daraltılır, tablo altına bağlamsal bir ipucu eklenir.
+  const isSparse = transfers.length <= 5;
 
   return (
-    <>
+    <div className={isSparse ? 'max-w-5xl' : undefined}>
       <PageHeader
         title="Transfer"
         description={`${transfers.length} transfer${inTransit ? ` · ${inTransit} yolda` : ''}`}
@@ -39,13 +44,16 @@ export default async function TransfersPage() {
       />
 
       {/* Kardeş ekranlarla aynı KPI anatomisi — tek satır + geniş boşluktan ibaret görünmesin (Tur 2). */}
-      <KpiStripRow>
-        <KpiCard variant="strip" title="Yolda" value={inTransit} format="int" />
-        <KpiCard variant="strip" title="Bu ay tamamlanan" value={completedThisMonth} format="int" />
-        <KpiCard variant="strip" title="Transfer edilen değer" value={transferredValue} format="money" />
-      </KpiStripRow>
+      {!isSparse ? (
+        <KpiStripRow>
+          <KpiCard variant="strip" title="Yolda" value={inTransit} format="int" />
+          <KpiCard variant="strip" title="Bu ay tamamlanan" value={completedThisMonth} format="int" />
+          <KpiCard variant="strip" title="Transfer edilen değer" value={transferredValue} format="money" />
+        </KpiStripRow>
+      ) : null}
 
       <TransfersTable transfers={transfers} />
-    </>
+      {isSparse ? <NextStepHint>Depolar arası ya da depo içi stok taşımaları için yeni bir transfer oluşturabilirsiniz.</NextStepHint> : null}
+    </div>
   );
 }

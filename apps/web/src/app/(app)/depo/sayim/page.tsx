@@ -6,6 +6,7 @@ import { CreateCountDialog } from '@/modules/stock/components/create-count-dialo
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
+import { NextStepHint } from '@/components/next-step-hint';
 import { ZERO, D, toDb } from '@plantero/core';
 
 export const metadata: Metadata = { title: 'Sayım' };
@@ -17,9 +18,13 @@ export default async function CountsPage() {
   const active = counts.filter((c) => !['posted', 'cancelled'].includes(c.status)).length;
   // varianceValue işaretli (fazla/eksik) — |fark| toplamı gösterilir, birbirini götürmesin diye.
   const totalVarianceValue = toDb(counts.reduce((a, c) => a.plus(D(c.varianceValue).abs()), ZERO));
+  // Az kayıtlı listelerde (≤5) KPI şeridi + geniş tablo altında yüzlerce piksel boş kalıyor, sayfa
+  // "yarım kalmış" görünüyordu (Tur 4 P2 bulgusu: 1 sayımda ~950px boşluk). Bilgi zaten tabloda
+  // olduğundan KPI şeridi gizlenir, içerik kabı daraltılır, tablo altına bağlamsal bir ipucu eklenir.
+  const isSparse = counts.length <= 5;
 
   return (
-    <>
+    <div className={isSparse ? 'max-w-5xl' : undefined}>
       <PageHeader
         title="Sayım"
         description={`${counts.length} sayım oturumu${active ? ` · ${active} aktif` : ''}`}
@@ -30,13 +35,16 @@ export default async function CountsPage() {
           taşımıyordu). "Son sayım tarihi" yerine "Toplam sayım": KpiCard/NumberFlow sayısal değer
           bekler, ham tarih metnini bu bileşende göstermenin temiz bir yolu yok — sayım tarihi zaten
           tablonun kendi sütununda görünür. */}
-      <KpiStripRow>
-        <KpiCard variant="strip" title="Açık oturum" value={active} format="int" />
-        <KpiCard variant="strip" title="Toplam fark değeri" value={totalVarianceValue} format="money" />
-        <KpiCard variant="strip" title="Toplam sayım" value={counts.length} format="int" />
-      </KpiStripRow>
+      {!isSparse ? (
+        <KpiStripRow>
+          <KpiCard variant="strip" title="Açık oturum" value={active} format="int" />
+          <KpiCard variant="strip" title="Toplam fark değeri" value={totalVarianceValue} format="money" />
+          <KpiCard variant="strip" title="Toplam sayım" value={counts.length} format="int" />
+        </KpiStripRow>
+      ) : null}
 
       <CountsTable counts={counts} />
-    </>
+      {isSparse ? <NextStepHint>Depo ya da lokasyon bazında yeni bir sayım oturumu başlatarak fiziksel stok doğrulaması yapabilirsiniz.</NextStepHint> : null}
+    </div>
   );
 }

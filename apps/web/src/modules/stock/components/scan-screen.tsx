@@ -9,14 +9,44 @@ import { Button } from '@/components/ui/button';
 import { LotBadge } from '@/components/lot-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { MoneyCell } from '@/components/money-cell';
-import { EmptyState } from '@/components/empty-state';
+import { PageHeader } from '@/components/page-header';
+import { cn } from '@/lib/utils';
 import { scanCodeAction } from '../actions';
 import type { ScanResult } from '@plantero/core';
+
+/** Son okutmaların özet satırı (yalnızca bu oturumda, sekme kapanınca kaybolur — kalıcı geçmiş
+ *  için ayrı bir tablo/sorgu gerekir, bu ekranın kapsamı dışında). */
+type HistoryEntry = { key: string; code: string; label: string; icon: typeof Package; found: boolean };
+
+function summarize(res: ScanResult): { label: string; icon: typeof Package; found: boolean } {
+  if (res.kind === 'not_found') return { label: res.code, icon: SearchX, found: false };
+  if (res.kind === 'product') return { label: res.product.name, icon: Package, found: true };
+  if (res.kind === 'lot') return { label: res.lot.lotNo, icon: Tag, found: true };
+  return { label: res.location.code, icon: MapPin, found: true };
+}
+
+/** Boş/bekleme durumu için sade panel — önceki `EmptyState` (border-dashed) "sürükle-bırak alanı"
+ *  izlenimi veriyordu, oysa burada gösterilen bir durum panosu (Tur 4 P1 bulgusu). Dolu, düz
+ *  kenarlıklı bir kutuya çevrildi; yükseklik 350px'ten ~160px'e indi. */
+function ScanPanel({ icon: Icon, title, description }: { icon: typeof ScanLine; title: string; description: string }) {
+  return (
+    <div className="flex min-h-[160px] flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-muted/30 px-6 py-8 text-center">
+      <div className="grid size-11 place-items-center rounded-full bg-muted text-muted-foreground">
+        <Icon className="size-5" strokeWidth={1.75} />
+      </div>
+      <div className="space-y-1">
+        <div className="text-[15px] font-medium">{title}</div>
+        <div className="mx-auto max-w-sm text-[13px] text-muted-foreground">{description}</div>
+      </div>
+    </div>
+  );
+}
 
 export function ScanScreen() {
   const [code, setCode] = useState('');
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function onScan() {
@@ -32,18 +62,18 @@ export function ScanScreen() {
       return;
     }
     setResult(res.data);
+    const { label, icon, found } = summarize(res.data);
+    setHistory((prev) => [{ key: `${Date.now()}-${value}`, code: value, label, icon, found }, ...prev].slice(0, 5));
   }
 
   return (
-    // Önceki sürüm `mx-auto max-w-md` ile sabitlenmişti — 1440px'te ~1000px, 1024px el terminalinde
-    // ~570px ölü gri alan kalıyordu (pick-screen.tsx ile aynı kök neden, Tur 3 P1 bulgusu). Sayfa artık
-    // kendi başlığını taşır (eski `PageHeader` kaldırıldı — sola dayalı başlık + ortalanmış kart iki
-    // farklı eksen yaratıyordu) ve içerikle birlikte dikeyde ortalanır.
-    <div className="mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-md flex-col justify-center space-y-5 py-6 md:min-h-[calc(100dvh-3rem)] lg:max-w-2xl">
-      <div>
-        <h1 className="text-lg font-semibold tracking-tight">Tara</h1>
-        <p className="text-sm text-muted-foreground">Barkod, QR, lot ya da lokasyon kodu okutun</p>
-      </div>
+    // Önceki sürüm `mx-auto max-w-md` + `justify-center` ile dikeyde ortalanıyordu — masaüstünde
+    // başlıktan önce 289px, mobilde 251px ölü alan bırakıyordu (diğer 11 depo ekranı içeriğe ~100px'te
+    // başlıyor, Tur 4 P1 bulgusu). PageHeader'a geçildi, dikey ortalama kaldırıldı; okuma alanı
+    // max-w-xl ile sınırlı (bir el terminali sütunu için 672px yeterden fazla, 1440px'te ~1000px ölü
+    // alan bırakan max-w-2xl yerine).
+    <div className="mx-auto w-full max-w-xl space-y-5">
+      <PageHeader title="Tara" description="Barkod, QR, lot ya da lokasyon kodu okutun" className="mb-0" />
       <div className="relative">
         <ScanLine className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -63,9 +93,9 @@ export function ScanScreen() {
       </div>
 
       {!result ? (
-        <EmptyState icon={ScanLine} title="Okutmayı bekliyor" description="El terminaliyle barkod okutun ya da lot/lokasyon kodunu yazıp Enter'a basın." />
+        <ScanPanel icon={ScanLine} title="Okutmayı bekliyor" description="El terminaliyle barkod okutun ya da lot/lokasyon kodunu yazıp Enter'a basın." />
       ) : result.kind === 'not_found' ? (
-        <EmptyState icon={SearchX} title="Sonuç bulunamadı" description={`"${result.code}" için eşleşme yok.`} />
+        <ScanPanel icon={SearchX} title="Sonuç bulunamadı" description={`"${result.code}" için eşleşme yok.`} />
       ) : result.kind === 'product' ? (
         <div className="space-y-4 rounded-2xl border border-border/70 bg-card p-5">
           <div className="flex items-center gap-3">
@@ -126,6 +156,26 @@ export function ScanScreen() {
           </div>
         </div>
       )}
+
+      {/* Son okutmalar — önceden bu ekranda hiç okutma geçmişi yoktu (Tur 4 P1 bulgusu). Yalnızca bu
+          oturumda tutulur (sayfa yenilenince sıfırlanır), kalıcı bir kayıt değildir. */}
+      {history.length > 0 ? (
+        <div>
+          <div className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">Son okutmalar</div>
+          <ul className="space-y-1">
+            {history.map((h) => (
+              <li key={h.key} className="flex items-center gap-2.5 rounded-lg border border-border/60 px-3 py-2 text-sm">
+                <span className={cn('grid size-6 shrink-0 place-items-center rounded-full', h.found ? 'bg-muted text-muted-foreground' : 'bg-destructive/10 text-destructive')}>
+                  <h.icon className="size-3.5" />
+                </span>
+                <span className="min-w-0 flex-1 truncate">{h.label}</span>
+                {!h.found ? <span className="shrink-0 text-xs text-muted-foreground">bulunamadı</span> : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <div className="text-center">
         {/* Önceki `size="sm"` 32px'lik dokunma hedefi veriyordu (44px eşiğinin altında) — operatör
             ekranındaki tek çıkış yolu (Tur 3 P2 bulgusu). */}

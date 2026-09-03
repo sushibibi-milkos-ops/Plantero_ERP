@@ -18,9 +18,13 @@ export default async function DeliveryDetailPage({ params }: { params: Promise<{
   const detail = await getDeliveryDetail(id);
   if (!detail) notFound();
   const { delivery, partner, warehouse, lines, chain } = detail;
+  // Az satırlı belgelerde (≤5) sınırsız genişlikte bir sayfa altında yüzlerce piksel boş kalıyordu
+  // (Tur 4 P2 bulgusu: 2 satırda ~650px boşluk). Belge zinciri (varsa) genişlikten faydalanabildiği
+  // için yalnızca satır sayısı azsa daraltılır.
+  const isSparse = lines.length <= 5;
 
   return (
-    <>
+    <div className={isSparse ? 'max-w-5xl' : undefined}>
       {/* Önceki sürüm 4 satıra yayılıyordu (eyebrow "SEVKİYAT" / belge no / müşteri·depo ayrı satırda /
           rozet ayrı satırda) ve ~150px dikey yer kaplıyordu. Eyebrow kaldırıldı (rota zaten breadcrumb'ta
           "Sevkiyat" gösteriyor); belge no + durum rozeti aynı satıra alındı; müşteri·depo tek açıklama
@@ -53,6 +57,6 @@ export default async function DeliveryDetailPage({ params }: { params: Promise<{
       ) : null}
 
       <DeliveryLinesTable lines={lines} />
-    </>
+    </div>
   );
 }

@@ -20,7 +20,10 @@ export function DataTablePagination<TData>({ table, pageSizes = [25, 50, 100] }:
         <span className="hidden sm:inline">Sayfa başına</span>
         <Select value={String(pageSize)} onValueChange={(v) => table.setPageSize(Number(v))}>
           <SelectTrigger size="sm" className="h-11 w-[76px] text-xs md:h-7 md:w-[70px]" aria-label="Sayfa boyutu">
-            <SelectValue />
+            {/* İlk boyanmada Radix'in kendi değer okuması birkaç saniye boş kutu bırakabiliyordu
+                (ekran görüntüsü aracı bunu bazen yakaladı, Tur 4 P2 bulgusu) — değer zaten elimizde
+                olduğundan doğrudan basılır, Radix'in iç render'ına bağımlı kalınmaz. */}
+            <SelectValue>{pageSize}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {pageSizes.map((s) => (

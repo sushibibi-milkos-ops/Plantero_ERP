@@ -11,6 +11,7 @@ import { ExpiryBadge } from '@/components/expiry-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
 import { useFocusMode } from '@/components/app-shell/use-focus-mode';
+import { cn } from '@/lib/utils';
 import { scanCodeAction, confirmPickAction } from '../actions';
 
 export type PickLine = {
@@ -103,32 +104,37 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
     );
   }
 
+  // Sağ kolon (280px) yalnızca sırada bekleyen ≥2 satır varken render edilir — ama `lg:grid-cols-
+  // [1fr_280px]` sabitti, boş kolonda bile 280px'lik ölü alan ayrılıyordu (Tur 4 P2 bulgusu). Grid
+  // yalnızca gerçekten iki kolon gerektiğinde uygulanır.
+  const hasQueue = pendingLines.length > 1;
+
   return (
-    // Önceki sürüm `mx-auto max-w-md` ile sabitlenmişti — 1440px depo terminalinde ~1000px, 1024px
-    // el terminalinde ~570px ölü gri alan kalıyordu ve içerik dikeyde ortalanmıyordu (Tur 3 P1
-    // bulgusu). `lg:` kırılımında iki kolona geçilir (sol: sıradaki satır + tarama, sağ: sırada
-    // bekleyen liste) ve tüm blok dikeyde ortalanır; 375-1024px arası (operatör el terminali) tek
-    // kolon olarak kalır, davranış değişmez.
-    <div className="mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-md flex-col justify-center gap-5 md:min-h-[calc(100dvh-3rem)] lg:max-w-3xl">
+    // Önceki sürüm dikeyde ortalanıyordu — masaüstünde başlığın üstünde 173px ölü alan bırakıyordu
+    // (diğer depo ekranları içeriğe ~100px'te başlar, Tur 4 P2 bulgusu). Mobilde operatör ekranının
+    // "elde tek bakışta" hissi için üstte bir miktar boşluk korunur (küçük pt), masaüstünde ise
+    // sayfanın gerçek başlangıcına yakın (pt-10).
+    <div className="mx-auto flex w-full max-w-md flex-col gap-5 pt-4 md:pt-10 lg:max-w-3xl">
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="sm" onClick={() => router.push(`/depo/sevkiyat/${deliveryId}`)} className="h-11 px-2 text-muted-foreground">
-          <ArrowLeft className="size-4" /> {docNo}
+          <ArrowLeft className="size-5" /> {docNo}
         </Button>
         <span className="text-sm font-medium tabular-nums text-muted-foreground">{doneCount}/{lines.length} toplandı</span>
       </div>
 
       {/* transform: scaleX yerine width — width bir layout property'dir ve her adımda reflow tetikler.
-          scaleX yalnızca compositor'da çalışır. 0/N durumunda dolgu tamamen görünmez oluyordu (soluk
-          gri bir ayraç sanılıyordu); minimum %2 dolgu bırakılır. Track de bg-muted yerine biraz daha
-          belirgin bg-border kullanır ki boş haldeyken de bir "iz" görünsün. */}
+          scaleX yalnızca compositor'da çalışır. Track bg-border kullanır ki 0/N durumunda da (dolgu
+          gerçekten sıfır genişlikte) bir "iz" görünsün — önceki sürümde minimum %2 dolgu yapay olarak
+          "toplama başlamış" izlenimi veriyordu, boş durumla 1 satır toplanmış durumu ayırt edilemiyordu
+          (Tur 4 P2 bulgusu). */}
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
         <div
           className="h-full origin-left rounded-full bg-primary transition-transform duration-200 ease-out"
-          style={{ transform: `scaleX(${Math.max(doneCount / lines.length, lines.length ? 0.02 : 0)})` }}
+          style={{ transform: `scaleX(${lines.length ? doneCount / lines.length : 0})` }}
         />
       </div>
 
-      <div className="lg:grid lg:grid-cols-[1fr_280px] lg:items-start lg:gap-6">
+      <div className={cn(hasQueue && 'lg:grid lg:grid-cols-[1fr_280px] lg:items-start lg:gap-6')}>
         <div className="space-y-5">
           <div className="rounded-2xl border border-border/70 bg-card p-5">
             <div className="mb-3 text-xs font-medium tracking-wide text-muted-foreground uppercase">Sıradaki satır</div>
@@ -173,22 +179,26 @@ export function PickScreen({ deliveryId, docNo, initialLines }: { deliveryId: st
                 disabled={pending}
                 className="h-14 pl-11 text-base font-mono"
               />
+              {/* Operatör için sessiz bir klavye ipucu — barkod alanı zaten autoFocus, Enter'ın
+                  "Onayla" ile eşdeğer olduğu açık değildi (Tur 4 P2 bulgusu). */}
+              <div className="mt-1.5 pl-0.5 text-[11px] text-muted-foreground">Enter ile onayla</div>
             </div>
             <Button size="lg" className="h-14 w-full text-base" onClick={handleScan} disabled={pending}>
               <CheckCircle2 className="size-5" /> Onayla
             </Button>
             {/* Eksik/bulunamayan lotta operatörün yapabileceği hiçbir şey yoktu — akış kilitleniyordu
-                (Tur 3 P2 bulgusu). İkincil eylem satırı sıradan çıkarır, toplama akışını bozmadan
-                devam etmeyi sağlar. */}
-            {pendingLines.length > 1 ? (
-              <Button variant="ghost" size="sm" className="h-11 w-full text-muted-foreground" onClick={skipCurrent} disabled={pending}>
+                (Tur 3 P2 bulgusu). Düz gövde metni gibi görünüyordu — çerçevesi/belirgin dokunma
+                hedefi yoktu; oysa bu STOK SAYIMINI ETKİLEYEN (kısmi sevkiyat) bir aksiyon (Tur 4 P2
+                bulgusu). Artık belirgin bir buton (h-11, destructive tonlu, hover'da dolgu). */}
+            {hasQueue ? (
+              <Button variant="ghost" size="lg" className="h-11 w-full text-destructive/80 hover:bg-destructive/8 hover:text-destructive" onClick={skipCurrent} disabled={pending}>
                 Satırı atla — eksik/bulunamadı
               </Button>
             ) : null}
           </div>
         </div>
 
-        {pendingLines.length > 1 ? (
+        {hasQueue ? (
           <div className="mt-5 pt-2 lg:mt-0 lg:pt-0">
             <div className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">Sırada bekleyen ({pendingLines.length - 1})</div>
             <ul className="space-y-1.5">

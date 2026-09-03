@@ -81,7 +81,14 @@ export function DataTableToolbar<TData>({
         return (
           <DropdownMenu key={f.columnId}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className={cn('h-11 border-dashed text-[13px] md:h-8', selected.size && 'border-solid')}>
+              {/* Kesikli (dashed) kenarlık web'de "boş/sürükle-bırak/placeholder" idiomudur — burada
+                  aktif bir filtre kontrolü, yanlış sinyal veriyordu (Tur 4 P2 bulgusu). Düz kenarlık +
+                  seçiliyken hafif vurgu (aynı dilde arama alanı/`h-9`). */}
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn('h-11 border border-border/70 bg-card text-[13px] md:h-8', selected.size && 'border-primary/40 bg-primary/5')}
+              >
                 <ListFilter className="size-3.5" />
                 {f.title}
                 {selected.size ? (

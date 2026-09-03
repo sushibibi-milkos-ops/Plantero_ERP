@@ -137,12 +137,20 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
     posted: { label: 'Kaydedildi', tone: 'success' },
     cancelled: { label: 'İptal', tone: 'danger' },
   },
+  // Tur 4 P1 bulgusu: mavi ton depo modülünde iki farklı anlam taşıyordu — burada "Sevk edildi"
+  // (depo tarafında fiilen bitmiş, başarılı) mavi, transfer kind'ında "Yolda" (gerçekten devam eden)
+  // da mavi. Ton sözlüğü artık tek bir anlam eksenine sabit: terminal-başarılı = success (yeşil),
+  // devam eden = info (mavi), bekleyen = warning (amber), iptal = danger. "Sevk edildi" (depo'nun son
+  // eylemi) ve transfer'deki "Tamamlandı" artık aynı tonu (success) taşır. `delivered` (müşteri
+  // teslim onayı, sevk edildi'den sonraki AYRI bir adım) de success kalır — ikisi StatusBadge'de
+  // `subtle` mekanizmasıyla ayrışır (shipped = dolgusuz/subtle, delivered = dolgulu/tam vurgu; bkz.
+  // status-badge.tsx) — work_order kind'ındaki in_progress/finished ayrımıyla aynı kalıp.
   delivery: {
     draft: { label: 'Taslak', tone: 'muted' },
     reserved: { label: 'Rezerve', tone: 'warning' },
-    picking: { label: 'Toplanıyor', tone: 'primary' },
-    picked: { label: 'Toplandı', tone: 'primary' },
-    shipped: { label: 'Sevk edildi', tone: 'info' },
+    picking: { label: 'Toplanıyor', tone: 'info' },
+    picked: { label: 'Toplandı', tone: 'info' },
+    shipped: { label: 'Sevk edildi', tone: 'success' },
     delivered: { label: 'Teslim edildi', tone: 'success' },
     cancelled: { label: 'İptal', tone: 'danger' },
   },
@@ -161,7 +169,8 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
   },
   count: {
     draft: { label: 'Taslak', tone: 'muted' },
-    counting: { label: 'Sayılıyor', tone: 'primary' },
+    // "devam eden" — delivery/transfer'daki aynı eksenle tutarlı (Tur 4 P1 bulgusu).
+    counting: { label: 'Sayılıyor', tone: 'info' },
     review: { label: 'İncelemede', tone: 'warning' },
     approved: { label: 'Onaylandı', tone: 'success' },
     posted: { label: 'Kaydedildi', tone: 'success' },

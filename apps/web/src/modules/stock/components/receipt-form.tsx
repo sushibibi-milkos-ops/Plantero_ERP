@@ -138,13 +138,21 @@ export function ReceiptForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      {/* 390px altında yapışkan aksiyon çubuğu (FormActions, bkz. aşağıda) + mobil alt gezinme çubuğu
+          üst üste biniyordu — "Henüz satır yok" boş durumu çubuğun altında yarısı kesik kalıyordu
+          (Tur 4 P1 bulgusu). İçeriğe iki çubuk kadar (56px aksiyon + 64px alt nav + nefes payı) alt
+          boşluk ayrıldı; masaüstünde çubuk statik olduğundan gerek yok. */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
         {/* Önceki sürüm iki bölümü 1px çerçeveli kutuya alıyordu (klasik ERP formu); bölüm başlığı da
             (`text-sm text-muted-foreground`, normal ağırlık) alan etiketlerinden (`text-[13px]
             font-medium`, tam kontrast) daha zayıf basılıyordu — hiyerarşi tersti (Tur 3 P2 bulgusu).
             Kutular kaldırıldı, bölümler ince bir üst hairline ile ayrılır; başlık artık daha büyük
-            ağırlıkta (font-semibold, tam kontrast) alan etiketlerinin üstünde durur. */}
-        <div className="w-full">
+            ağırlıkta (font-semibold, tam kontrast) alan etiketlerinin üstünde durur.
+            `max-w-3xl`: sınırsız form kolonu 1440px'te ~1600px içerik alanına yayılıyor, "Tedarikçi
+            irsaliye no" gibi ~10 karakterlik bir alan 800px'lik kutu oluyordu (Tur 4 P1 bulgusu, en
+            belirgin "kurumsal-sıkıcı ERP" kokusu). Yalnızca başlık alanları sınırlanır — "Satırlar"
+            bölümü (aşağıda, satır başına 6 sütunlu ızgara) tam genişlikte kalır. */}
+        <div className="max-w-3xl">
           <h2 className="mb-3 text-[13px] font-semibold text-foreground">Belge başlığı</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {/* Tedarikçi ve Ürün ekle ile aynı seçim bileşeni (Combobox) — Select farklı bir

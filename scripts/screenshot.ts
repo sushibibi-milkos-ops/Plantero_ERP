@@ -110,8 +110,14 @@ async function shoot(browser: Browser, opts: ReturnType<typeof parseArgs>, kind:
   // aria-busy'sini gerçek içerik gelene dek taşır (bkz. data-table/skeleton.tsx ve
   // modules/masterdata/components/loading-skeletons.tsx). Ekranı yalnızca son iskelet
   // kaybolduğunda çekiyoruz — aksi halde artifact yanlış (gri baloncuklu) kanıt üretir.
+  //
+  // Yalnızca `[aria-busy]` (route-seviyeli loading.tsx) yeterli değildi — bileşen seviyeli
+  // `Skeleton` primitifi (`data-slot="skeleton"`, `.animate-pulse`) aria-busy sarmalayıcısı OLMADAN
+  // da kullanılabiliyor, ve dev modunda soğuk derleme 16-39sn sürebiliyor; ardışık `pnpm shot`
+  // çağrılarının yarısı loading iskeletini yakaladı (Tur 4 P2 bulgusu). İkisi birlikte beklenir,
+  // timeout 45sn'ye çıkarıldı (en yavaş gözlemlenen rota 39sn).
   await page
-    .waitForFunction(() => document.querySelectorAll('[aria-busy]').length === 0, null, { timeout: 120_000 })
+    .waitForFunction(() => document.querySelectorAll('[aria-busy], [data-slot="skeleton"], .animate-pulse').length === 0, null, { timeout: 45_000 })
     .catch(() => {});
   // Giriş animasyonları (enter-up 220ms) ve NumberFlow bitene dek bekle
   await page.waitForTimeout(600);

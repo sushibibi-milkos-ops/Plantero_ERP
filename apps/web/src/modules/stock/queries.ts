@@ -343,7 +343,15 @@ export async function getDeliveryDetail(id: string) {
 /* /depo/transfer                                                       */
 /* ==================================================================== */
 
-export type TransferRow = { id: string; docNo: string; status: string; fromWarehouseCode: string; toWarehouseCode: string; lineCount: number; scheduledDate: string | null; createdAt: Date; value: string };
+export type TransferRow = {
+  id: string; docNo: string; status: string; fromWarehouseCode: string; toWarehouseCode: string;
+  /** İlk satırın lokasyon kodları — depo içi transferlerde güzergah bunlarla gösterilir (bkz.
+   *  transfers-table.tsx routeLabel): "TIRE → TIRE" ambar bazında hiçbir bilgi taşımıyordu (Tur 4
+   *  P1 bulgusu). Çok satırlı transferlerde satırlar farklı lokasyon çiftleri taşıyabilir; ilk satır
+   *  temsili gösterilir (aynı kalıp transfer-lines-table.tsx'te satır bazında zaten tam görünür). */
+  fromLocationCode: string; toLocationCode: string;
+  lineCount: number; scheduledDate: string | null; createdAt: Date; value: string;
+};
 
 export async function listTransfers(): Promise<TransferRow[]> {
   const fromWh = db.select({ id: warehouses.id, code: warehouses.code }).from(warehouses).as('from_wh');
@@ -356,6 +364,18 @@ export async function listTransfers(): Promise<TransferRow[]> {
     .orderBy(desc(transfers.createdAt));
   const lineAgg = await db.select({ transferId: transferLines.transferId, cnt: sql<string>`count(*)` }).from(transferLines).groupBy(transferLines.transferId);
   const byTransfer = new Map(lineAgg.map((r) => [r.transferId, Number(r.cnt)]));
+  const fromLoc = db.select({ id: locations.id, code: locations.code }).from(locations).as('from_loc');
+  const toLoc = db.select({ id: locations.id, code: locations.code }).from(locations).as('to_loc');
+  const lineLocRows = await db
+    .select({ transferId: transferLines.transferId, sequence: transferLines.sequence, fromCode: fromLoc.code, toCode: toLoc.code })
+    .from(transferLines)
+    .innerJoin(fromLoc, eq(fromLoc.id, transferLines.fromLocationId))
+    .innerJoin(toLoc, eq(toLoc.id, transferLines.toLocationId))
+    .orderBy(asc(transferLines.sequence));
+  const routeByTransfer = new Map<string, { fromLocationCode: string; toLocationCode: string }>();
+  for (const r of lineLocRows) {
+    if (!routeByTransfer.has(r.transferId)) routeByTransfer.set(r.transferId, { fromLocationCode: r.fromCode, toLocationCode: r.toCode });
+  }
   // Transfer defterde değersizdir (hesap değişmez) ama KPI amaçlı taşınan mal değerini göstermek için
   // lot maliyeti (lotluysa) / ürün ortalama maliyeti (lotsuzsa) × miktar ile bilgilendirici bir toplam
   // hesaplanır — muhasebe kaydı değil, yalnızca "ne kadarlık mal yolda" özetidir.
@@ -366,7 +386,14 @@ export async function listTransfers(): Promise<TransferRow[]> {
     .leftJoin(products, eq(products.id, transferLines.productId))
     .groupBy(transferLines.transferId);
   const valueByTransfer = new Map(valueAgg.map((r) => [r.transferId, r.value]));
-  return rows.map((r) => ({ id: r.t.id, docNo: r.t.docNo, status: r.t.status, fromWarehouseCode: r.fromCode, toWarehouseCode: r.toCode, lineCount: byTransfer.get(r.t.id) ?? 0, scheduledDate: r.t.scheduledDate, createdAt: r.t.createdAt, value: valueByTransfer.get(r.t.id) ?? '0' }));
+  return rows.map((r) => {
+    const route = routeByTransfer.get(r.t.id);
+    return {
+      id: r.t.id, docNo: r.t.docNo, status: r.t.status, fromWarehouseCode: r.fromCode, toWarehouseCode: r.toCode,
+      fromLocationCode: route?.fromLocationCode ?? r.fromCode, toLocationCode: route?.toLocationCode ?? r.toCode,
+      lineCount: byTransfer.get(r.t.id) ?? 0, scheduledDate: r.t.scheduledDate, createdAt: r.t.createdAt, value: valueByTransfer.get(r.t.id) ?? '0',
+    };
+  });
 }
 
 export async function getTransferDetail(id: string) {

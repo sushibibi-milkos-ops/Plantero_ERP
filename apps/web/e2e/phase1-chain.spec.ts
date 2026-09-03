@@ -50,6 +50,18 @@ async function comboboxSelect(page: Page, triggerText: string, search: string, o
   await expect(page.getByPlaceholder('Ara…')).toHaveCount(0);
 }
 
+/**
+ * `DataTable` (`src/components/data-table/data-table.tsx`) her satırı DOM'da İKİ KEZ tutar: bir
+ * masaüstü `<table>` (`hidden md:block`) ve bir mobil kart listesi (`md:hidden`) — ikisi de aynı anda
+ * DOM'dadır, yalnızca CSS media query ile gizlenir (bkz. rapor). Bu yüzden DataTable içeren sayfalarda
+ * `getByText(..., { exact: true })` iki eşleşme bulup strict-mode ihlaline düşer. Playwright'ın kendi
+ * `visible` filtresiyle o an ekranda GERÇEKTEN görünen kopyaya daraltılır — CSS sınıfına bağlı kırılgan
+ * bir seçici değil, Playwright'ın hesapladığı gerçek görünürlük durumu kullanılır.
+ */
+function visibleText(page: Page, text: string, exact = true) {
+  return page.getByText(text, { exact }).filter({ visible: true });
+}
+
 /** gg.aa.yyyy biçiminde bugün + gün ofseti. */
 function trDate(offsetDays: number): string {
   const d = new Date();
@@ -76,9 +88,9 @@ async function fillDateField(page: Page, labelExact: string, value: string) {
 }
 
 /**
- * Operatör terminaline PIN ile giriş yapar. KIRIK (K1): `/operator/giris` oturumsuz erişilemiyor
- * (bkz. Adım 2 testindeki not) — bu yüzden burada önce normal e-posta/şifre girişi yapılıp bir
- * oturum kurulur, ardından `/operator/giris`'e gidilip PIN akışı tamamlanır.
+ * Operatör terminaline PIN ile giriş yapar. `/operator/giris` `middleware.ts` `PUBLIC_PATHS`
+ * listesinde olduğu için oturumsuz (temiz bir tarayıcı bağlamından) doğrudan erişilebilir —
+ * saha operatörünün ofis e-posta/şifresine ihtiyacı yoktur.
  */
 async function operatorPinLogin(page: Page) {
   await page.goto('/operator/giris');
@@ -132,9 +144,10 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
     await page.waitForURL(/\/depo\/mal-kabul\/[0-9a-f-]{36}$/);
     ctx.receiptId = page.url().split('/').pop()!;
 
-    // Ekranda: lot rozeti + lokasyon
-    await expect(page.getByText(supplierLotNo, { exact: true })).toBeVisible();
-    await expect(page.getByText('TIRE/HAM/R01/A')).toBeVisible();
+    // Ekranda: lot rozeti + lokasyon (bkz. visibleText — ReceiptLinesTable bir DataTable, satır
+    // DOM'da masaüstü+mobil olmak üzere iki kez durur)
+    await expect(visibleText(page, supplierLotNo)).toBeVisible();
+    await expect(visibleText(page, 'TIRE/HAM/R01/A')).toBeVisible();
 
     ctx.rawLotNo = supplierLotNo;
   });
@@ -202,7 +215,8 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
     await page.goto('/depo/stok');
     await page.getByPlaceholder('Ürün, SKU ara…').fill('301060000');
     await page.getByText('Yulaf', { exact: true }).first().click();
-    await expect(page.getByText(ctx.rawLotNo!, { exact: true })).toBeVisible();
+    // /depo/stok satır kırılımı da bir DataTable (stock-table.tsx) — bkz. visibleText.
+    await expect(visibleText(page, ctx.rawLotNo!)).toBeVisible();
     await page.keyboard.press('Escape');
   });
 
@@ -237,19 +251,11 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
   });
 
   test('Adım 2 — /operator: PIN 1234 → HAT3 → Başlat → Okut (FEFO dışı onay + karantina engeli) → Fire 1 → Bitir 19', async ({ browser }) => {
+    // Tamamen oturumsuz, temiz bir tarayıcı bağlamı: saha operatörü ofis e-posta/şifresi
+    // olmadan doğrudan PIN terminaline girebilmeli (`/operator/giris` middleware.ts
+    // PUBLIC_PATHS içinde).
     const opCtx = await browser.newContext();
     const op = await opCtx.newPage();
-
-    // KIRIK (K1): oturumsuz bir terminalde /operator/giris'e gidilince /login'e yönlendiriliyor —
-    // (operator-auth) layout'unun kendi yorumu "oturum gerekmeden erişilebilir" der ama
-    // middleware.ts PUBLIC_PATHS listesi bu yolu içermiyor. Bu, saha operatörünün ofis
-    // e-posta/şifresi olmadan PIN terminaline hiç giremeyeceği anlamına gelir. Kanıtlanır,
-    // sonra akışın geri kalanını doğrulayabilmek için AYNI bağlamda önce normal admin girişi
-    // yapılıp (bir oturum kurulup) /operator/giris'e tekrar gidilir — bu gerçek kullanım değil,
-    // yalnızca zincirin geri kalanını test edebilmek için bir atlatma.
-    await op.goto('/operator/giris');
-    await expect(op).toHaveURL(/\/login\?next=%2Foperator%2Fgiris/);
-    await loginAs(op, 'admin');
 
     await operatorPinLogin(op);
 
@@ -404,7 +410,8 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
     `);
     expect(earlierAvailable, `FEFO ihlali: ${earlierAvailable} lotu ${expectedLotNo} lotundan daha erken SKT'li ve kullanılabilirken atlandı`).toBeNull();
 
-    await expect(page.getByText(expectedLotNo!, { exact: true })).toBeVisible();
+    // /depo/sevkiyat/[id] satır kırılımı da bir DataTable (delivery-lines-table.tsx) — bkz. visibleText.
+    await expect(visibleText(page, expectedLotNo!)).toBeVisible();
 
     await page.getByRole('link', { name: 'Toplama ekranı' }).click();
     await page.waitForURL(/\/topla$/);
@@ -619,8 +626,7 @@ test.describe('Mobil/Tablet geçişler', () => {
     const ctxB = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     const page = await ctxB.newPage();
 
-    // K1 atlatması (bkz. ana akış Adım 2): PIN ekranına doğrudan gitmeden önce bir oturum kurulur.
-    await loginAs(page, 'admin');
+    // Oturumsuz, temiz bağlam — /operator/giris doğrudan erişilebilir olmalı.
     await page.goto('/operator/giris');
     await expect(page.getByRole('button', { name: /Üretim Operatörü/ })).toBeVisible();
 

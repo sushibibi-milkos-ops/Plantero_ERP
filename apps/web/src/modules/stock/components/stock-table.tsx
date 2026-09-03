@@ -41,8 +41,12 @@ export function StockTable({ rows }: { rows: StockRow[] }) {
           header: 'Ürün',
           meta: { mobile: 'title' },
           cell: ({ row }) => (
-            <span className="flex items-center gap-2">
-              <span className="font-medium">{row.original.name}</span>
+            // min-w-0 + iç `truncate`: dış sarmalayıcı flex olduğundan (nokta rozetiyle paylaşılıyor)
+            // `truncate` doğrudan bu span'a verilirse tarayıcı üç nokta basamıyordu — ürün adı sert
+            // kırpılıyordu ("%100 Oat Chocolate Spredab…", Tur 4 P1 bulgusu). Ad kendi metin
+            // düğümünde, ayrı bir `truncate` alır; nokta rozeti `shrink-0` ile sabit kalır.
+            <span className="flex min-w-0 items-center gap-2">
+              <span className="truncate font-medium">{row.original.name}</span>
               {row.original.isCritical ? <span className="size-1.5 shrink-0 rounded-full bg-destructive" title="Kritik stok (min. seviye altı)" /> : null}
             </span>
           ),

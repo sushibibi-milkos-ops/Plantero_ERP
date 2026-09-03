@@ -76,8 +76,23 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
         ),
       },
       // stock-table.tsx ile aynı kök nedenle (Tur 3 P1) genişletildi — geçmiş SKT'li satırlar bu panonun
-      // tam odağı, tarihin kırpılması burada özellikle kabul edilemez.
-      { id: 'expiryDate', accessorFn: (r) => r.expiryDate, header: 'SKT', meta: { width: 228, mobile: 'badge' }, cell: ({ row }) => <ExpiryBadge date={row.original.expiryDate} /> },
+      // tam odağı, tarihin kırpılması burada özellikle kabul edilemez. Masaüstünde değişiklik yok
+      // (tam rozet, tarihle birlikte). Mobilde tam rozet ('10 gün önce doldu · 24.08.2026', ~230px)
+      // tek başına kartın başlık sütununu (lot no + ürün + lokasyon + değer) 94px'e sıkıştırıyordu —
+      // hepsi rozetin altında kırpılıyordu (Tur 4 P0 bulgusu). stock-table.tsx/lots-table.tsx'teki
+      // aynı kalıpla mobilde yalnızca kısa gün rozeti (`showDate={false}`, ör. "10g") gösterilir.
+      {
+        id: 'expiryDate',
+        accessorFn: (r) => r.expiryDate,
+        header: 'SKT',
+        meta: { width: 228, mobile: 'badge' },
+        cell: ({ row }) => (
+          <>
+            <span className="hidden md:inline-flex"><ExpiryBadge date={row.original.expiryDate} /></span>
+            <span className="md:hidden"><ExpiryBadge date={row.original.expiryDate} showDate={false} /></span>
+          </>
+        ),
+      },
     ],
     [],
   );
@@ -100,6 +115,9 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
               hint={formatMoney(t.qtyValue, 'TRY', { digits: 0 })}
               active={active}
               onClick={() => setActiveBucket(active ? null : b)}
+              // Değeri 0 olan kova (ör. "60-90 gün: 0") tam kontrastla basılıyordu — sayfadaki tek
+              // gerçekten boş dilim, dolu dilimlerle aynı ağırlığı taşıyordu (Tur 4 P2 bulgusu).
+              className={t.count === 0 ? 'opacity-60' : undefined}
             />
           );
         })}
@@ -113,6 +131,13 @@ export function ExpiryBoard({ buckets, canScrap }: { buckets: ExpiryBuckets; can
         initialSorting={[{ id: 'expiryDate', desc: false }]}
         emptyTitle="Bu aralıkta SKT'si yaklaşan lot yok"
         rowActions={canScrap ? (r) => [{ label: 'Hurdaya ayır', icon: Trash2, destructive: true, onSelect: () => setScrapTarget(r) }] : undefined}
+        // Satır tonlaması artık KPI kovalarıyla AYNI eşiği kullanır (bkz. bucketOf — core) — önceden
+        // ExpiryBadge'in kendi 7 günlük eşiğine bağlıydı ve 8. satırdan itibaren tonsuz kalıyordu,
+        // oysa KPI "30 günden az" diyordu (Tur 4 P2 bulgusu: iki farklı eşik aynı sürekli değişkeni
+        // kodluyordu). 30-60 gün daha soluk (uyarı, henüz acil değil), 60-90 ve sonrası tonsuz.
+        rowClassName={(r) =>
+          r.bucket === 'expired' ? 'bg-destructive/8 hover:bg-destructive/12' : r.bucket === 'critical' ? 'bg-warning/8 hover:bg-warning/12' : r.bucket === 'warning' ? 'bg-warning/4 hover:bg-warning/8' : undefined
+        }
       />
 
       <ConfirmDialog

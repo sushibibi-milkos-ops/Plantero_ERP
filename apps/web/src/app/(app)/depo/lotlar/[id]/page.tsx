@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { requirePermission, userCan } from '@/lib/auth';
 import { getLotDetail, listLocations } from '@/modules/stock/queries';
 import { LotActions } from '@/modules/stock/components/lot-actions';
+import { AlertTriangle } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
 import { StatusBadge } from '@/components/status-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
@@ -103,7 +104,25 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
           <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Kalan / İlk giriş</dt>
           <dd className="mt-0.5 text-[13px] tabular-nums">
             {formatQty(onHandQty.toFixed(4), product?.uomCode)} / {formatQty(lot.initialQty, product?.uomCode)}
-            {consumedRatio ? <span className="text-muted-foreground"> (%{consumedRatio.toDecimalPlaces(0).toString()})</span> : null}
+            {consumedRatio ? (
+              // %100'ü aşan bir oran (kalan > ilk giriş) bir veri tutarsızlığı sinyalidir (transfer/
+              // düzeltme fazlası vb.) — önceden nötr/soluk metinle basılıyor, hiçbir görsel uyarı
+              // taşımıyordu (Tur 4 P2 bulgusu). 0-100 arası nötr kalır, dışındaki her değer amber.
+              (() => {
+                const pct = consumedRatio.toDecimalPlaces(0);
+                const anomalous = pct.gt(100) || pct.lt(0);
+                return anomalous ? (
+                  <span
+                    className="ml-1 inline-flex items-center gap-1 text-warning"
+                    title="Kalan miktar ilk girişten fazla — transfer/düzeltme hareketlerini kontrol edin"
+                  >
+                    <AlertTriangle className="size-3" /> (%{pct.toString()})
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground"> (%{pct.toString()})</span>
+                );
+              })()
+            ) : null}
           </dd>
         </div>
         <div>
@@ -131,11 +150,15 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
       </dl>
 
       <Tabs defaultValue="quants" className="gap-4">
-        <TabsList>
-          <TabsTrigger value="quants">Eldeki stok</TabsTrigger>
-          <TabsTrigger value="moves">Hareketler</TabsTrigger>
-          <TabsTrigger value="quality">Kalite kontrol</TabsTrigger>
-          <TabsTrigger value="trace">İzlenebilirlik</TabsTrigger>
+        {/* 4'lü sekme şeridi 390px'e sığmıyordu — "İzlenebilirlik" sağ kenardan kesiliyor, yatay
+            kaydırılabildiğine dair hiçbir gösterge yoktu (Tur 4 P1 bulgusu). `variant="line"` (Stripe
+            tarzı altı çizgili sekme, ör. iş emri detayında da kullanılıyor) segment pilinden ~50px daha
+            az yer kaplar; kalan taşma için `overflow-x-auto` + sağ kenarda soldurma (mask) eklendi. */}
+        <TabsList variant="line" className="w-full flex-nowrap justify-start overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,#000_calc(100%-20px),transparent)]">
+          <TabsTrigger value="quants" className="shrink-0 px-3 text-[13px]">Eldeki stok</TabsTrigger>
+          <TabsTrigger value="moves" className="shrink-0 px-3 text-[13px]">Hareketler</TabsTrigger>
+          <TabsTrigger value="quality" className="shrink-0 px-3 text-[13px]">Kalite kontrol</TabsTrigger>
+          <TabsTrigger value="trace" className="shrink-0 px-3 text-[13px]">İzlenebilirlik</TabsTrigger>
         </TabsList>
 
         <TabsContent value="quants">

@@ -30,6 +30,7 @@ export function KpiCard({
   onClick,
   active = false,
   variant = 'card',
+  stripCompact = false,
   className,
 }: {
   title: string;
@@ -59,6 +60,10 @@ export function KpiCard({
    *  çerçevesiz/gölgesiz, sabit 80px yükseklik; masaüstünde `KpiStripRow` ile sarmalanıp dikey
    *  hairline'larla ayrılır, mobilde kendi küçük kartına (140×72) döner (bkz. `kpi-strip.tsx`). */
   variant?: 'card' | 'strip';
+  /** `KpiStripRow` 3 ya da daha az kart taşırken enjekte eder: masaüstünde `flex-1` yerine sabit
+   *  min genişlik kullanılır — aksi halde az sayıda kart 1600px'lik şeride yayılıp aralarında
+   *  ~500px'lik anlamsız boşluklar oluşturuyordu (Tur 4 P1 bulgusu). */
+  stripCompact?: boolean;
   className?: string;
 }) {
   const num = typeof value === 'string' ? Number(value) : value;
@@ -75,13 +80,14 @@ export function KpiCard({
   const dir = delta === null || delta === undefined || delta === 0 ? 'flat' : delta > 0 ? 'up' : 'down';
   const good = dir === 'flat' ? null : invertDelta ? dir === 'down' : dir === 'up';
   const DeltaIcon = dir === 'up' ? ArrowUpRight : dir === 'down' ? ArrowDownRight : Minus;
+  const isStrip = variant === 'strip';
 
   const valueNode = <NumberFlow value={displayValue} locales="tr-TR" format={nfFormat} suffix={suffix ? ` ${suffix}` : undefined} />;
   const deltaNode =
     delta !== undefined ? (
       // flex-wrap: dar kartlarda (ör. bir şeritte 6 KPI) etiket satır sonuna kırpılmadan
       // taşar — tek satırda `truncate` yerine bu, hiçbir karakteri kesmez (Tur 1 bulgusu).
-      <div className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
+      <div className={cn('flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs', isStrip ? 'mt-1' : 'mt-2')}>
         <span
           className={cn(
             'inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-px font-medium tabular-nums',
@@ -96,10 +102,15 @@ export function KpiCard({
         <span className="whitespace-nowrap text-muted-foreground">{deltaLabel}</span>
       </div>
     ) : hint ? (
-      <div className="mt-2 truncate text-xs text-muted-foreground">{hint}</div>
-    ) : null;
-
-  const isStrip = variant === 'strip';
+      <div className={cn('truncate text-muted-foreground', isStrip ? 'mt-1 text-[11px]' : 'mt-2 text-xs')}>{hint}</div>
+    ) : (
+      // Tur 4 P2 bulgusu: delta VE hint ikisi de yokken hiçbir yer ayrılmıyordu — bir şeritte
+      // (ör. /satis/net-ciro: 6 KPI'nin 5'i deltasız, /kokpit: 4'ün 1'i) taban çizgileri kayıyor,
+      // tek dolu delta cipi seride tek başına asılı kalıp hangi metriğe ait olduğu belirsizleşiyordu.
+      // Sabit yükseklikte boş (aria-hidden) bir yer tutucu, seridteki tüm kartları aynı taban
+      // çizgisinde tutar — delta chip'inin (text-xs, py-px) ve hint satırının gerçek yüksekliğiyle eşit.
+      <div className={isStrip ? 'mt-1 h-[15px]' : 'mt-2 h-[18px]'} aria-hidden />
+    );
 
   const body = isStrip ? (
     // Stripe tarzı yoğun satır: ikon yok (etiketin tek satıra sığması için alan ikona değil metne
@@ -108,7 +119,7 @@ export function KpiCard({
     <>
       <div className="truncate text-xs font-medium text-muted-foreground">{title}</div>
       <div className="mt-1 truncate text-[19px] leading-none font-semibold tracking-tight tabular-nums">{valueNode}</div>
-      {hint && delta === undefined ? <div className="mt-1 truncate text-[11px] text-muted-foreground">{hint}</div> : deltaNode}
+      {deltaNode}
     </>
   ) : (
     <>
@@ -138,10 +149,17 @@ export function KpiCard({
     'group relative block text-left',
     isStrip
       ? [
-          // Masaüstü: çerçevesiz/gölgesiz, sabit 80px — dış ayraçlar `KpiStripRow`'un divide-x'inden
-          // gelir. Mobil: kendi küçük kartı (140×72), yatay kaydırma şeridinde snap-start.
-          'h-[72px] w-[140px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2',
-          'md:h-20 md:w-auto md:flex-1 md:shrink md:snap-align-none md:rounded-none md:border-0 md:bg-transparent md:px-4 md:py-3',
+          // Mobil: kendi küçük kartı (152×72 — 140'ta uzun başlıklar aşırı kırpılıyordu, Tur 4 P1),
+          // yatay kaydırma şeridinde snap-start.
+          'h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2',
+          // Masaüstü: çerçevesiz/gölgesiz taban + SOL kenarlıkla dikey hairline (`divide-x` kaldırıldı —
+          // `md:border-0` onu her zaman sıfırlıyordu, ikisi aynı anda tanımlıyken kazanan üretilen
+          // CSS'in kaynak sırasına bağlıydı ve pratikte hiç ayraç görünmüyordu, Tur 4 P1 bulgusu).
+          // İlk kart kenarlıksız (`md:first:border-l-0`).
+          'md:h-20 md:w-auto md:snap-align-none md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:border-border/60 md:first:border-l-0 md:bg-transparent md:px-4 md:py-3',
+          // `stripCompact`: 3 ya da daha az kart — sabit min genişlik, esnek büyümez (aksi halde
+          // birkaç kart 1600px şeride yayılır). Aksi halde eskisi gibi `flex-1`.
+          stripCompact ? 'md:min-w-[196px] md:shrink-0 md:flex-none md:grow-0' : 'md:flex-1 md:shrink',
         ]
       : 'rounded-xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03)]',
     (href || onClick) && (isStrip ? 'hover:bg-accent/40 md:hover:bg-accent/30' : 'hover:border-border hover:shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_20px_-12px_rgb(0_0_0/0.15)]'),

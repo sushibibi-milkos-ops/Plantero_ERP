@@ -25,17 +25,23 @@ export function MoneyCell({
   const s = value === null || value === undefined || value === '' ? '0' : String(value);
   const neg = s.trim().startsWith('-');
   const zero = /^-?0*(\.0*)?$/.test(s.trim());
+  // `signed` yalnızca sayım farkı gibi İSTİSNA bir değeri gösterirken kullanılır — işaret ne
+  // olursa olsun bu bir normal para hücresi değildir. Önceden yalnızca negatif kırmızıydı; pozitif
+  // fark ("+₺360,00") tamamen nötr siyahtı, oysa fazlalık da eksiklik kadar bir uyarı sinyali
+  // taşımalı (Tur 4 P2 bulgusu). Eksik = destructive (kırmızı), fazla = warning (amber), sıfır nötr.
+  const positiveSigned = signed && !neg && !zero;
   const text = formatMoney(s, currency, { digits });
   return (
     <span
       className={cn(
         'num inline-block text-right whitespace-nowrap',
         neg && 'text-destructive',
+        positiveSigned && 'text-warning',
         (zero || muted) && 'text-muted-foreground/70',
         className,
       )}
     >
-      {signed && !neg && !zero ? '+' : ''}
+      {positiveSigned ? '+' : ''}
       {text}
     </span>
   );
