@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { requirePermission, userCan } from '@/lib/auth';
 import { PageHeader } from '@/components/page-header';
 import { listSkuSegments } from '@/modules/masterdata/queries';
-import { SegmentsTable } from '@/modules/masterdata/components/segments-table';
+import { SegmentsTable, AddSegmentButton } from '@/modules/masterdata/components/segments-table';
 
 export const metadata: Metadata = { title: 'Kod Yapısı' };
 export const dynamic = 'force-dynamic';
@@ -14,8 +14,12 @@ export default async function CodeStructurePage() {
 
   return (
     <>
-      <PageHeader title="Kod Yapısı" description="Konuşan kod (SKU) segment sözlüğü — T·AA·BB·CC·PP" />
-      <SegmentsTable segments={segments} canManage={canManage} />
+      <PageHeader
+        title="Kod Yapısı"
+        description="Konuşan kod (SKU) segment sözlüğü — T·AA·BB·CC·PP"
+        actions={canManage ? <AddSegmentButton canManage={canManage} /> : undefined}
+      />
+      <SegmentsTable segments={segments} />
     </>
   );
 }

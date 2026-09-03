@@ -24,6 +24,9 @@ const USAGE_TONE: Record<string, 'neutral' | 'warning' | 'danger' | 'primary' | 
   supplier: 'muted', customer: 'muted', inventory_loss: 'danger', scrap: 'danger', transit: 'info', view: 'muted',
 };
 
+/** Data satırıyla başlık şeridinin tam aynı sütun genişliklerini paylaşması için ortak sabitler. */
+const COL = { badge: 'w-24 shrink-0', qty: 'w-24 shrink-0 text-right', value: 'w-28 shrink-0 text-right' };
+
 function Node({ node, depth, warehouseId, canManage }: { node: LocationTreeNode; depth: number; warehouseId: string; canManage: boolean }) {
   const [open, setOpen] = useState(depth < 1);
   const [addOpen, setAddOpen] = useState(false);
@@ -32,7 +35,11 @@ function Node({ node, depth, warehouseId, canManage }: { node: LocationTreeNode;
 
   return (
     <div>
-      <div className={cn('group flex h-10 items-center gap-2 rounded-md px-2 hover:bg-accent/50', 'border-b border-border/40 last:border-0')} style={{ paddingLeft: depth * 20 + 8 }}>
+      {/* ≥640px: tek satırlı tam sütunlu görünüm. 390px'te bunun yerine aşağıdaki iki satırlı kart kullanılır. */}
+      <div
+        className={cn('group hidden h-9 items-center gap-2 rounded-md px-2 hover:bg-accent/50 sm:flex', 'border-b border-border/40 last:border-0')}
+        style={{ paddingLeft: depth * 20 + 8 }}
+      >
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
@@ -40,27 +47,55 @@ function Node({ node, depth, warehouseId, canManage }: { node: LocationTreeNode;
         >
           <ChevronRight className={cn('size-3.5 transition-transform duration-150 ease-out', open && 'rotate-90')} />
         </button>
-        <span className="min-w-0 flex-1 truncate font-mono text-[12px]">{node.code}</span>
-        <span className="hidden truncate text-[12px] text-muted-foreground sm:inline">{node.name}</span>
-        <StatusBadge status={node.usage} label={LOCATION_USAGE_LABELS[node.usage] ?? node.usage} tone={USAGE_TONE[node.usage] ?? 'neutral'} size="sm" />
-        <span className="w-24 text-right">
-          <QtyCell value={node.totalQty} maxDigits={1} />
+        {/* Kod + ad tek flex kolonu olarak — başlıktaki "Kod / Ad" tekli sütununa denk düşsün diye */}
+        <div className="flex min-w-0 flex-1 items-baseline gap-2">
+          <span className="shrink-0 font-mono text-[12px]">{node.code}</span>
+          <span className="hidden min-w-0 truncate text-[12px] text-muted-foreground sm:inline">{node.name}</span>
+        </div>
+        <span className={COL.badge}>
+          <StatusBadge status={node.usage} label={LOCATION_USAGE_LABELS[node.usage] ?? node.usage} tone={USAGE_TONE[node.usage] ?? 'neutral'} size="sm" />
         </span>
-        <span className="w-28 text-right">
-          <MoneyCell value={node.totalValue} muted />
+        <span className={COL.qty}>
+          <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
         </span>
-        <Button size="icon" variant="ghost" className="size-7 opacity-0 group-hover:opacity-100" onClick={() => setLabelOpen(true)} title="Etiket yazdır / barkod ata">
+        <span className={COL.value}>
+          <MoneyCell value={node.totalValue} />
+        </span>
+        <Button size="icon" variant="ghost" className="size-7 shrink-0 opacity-0 group-hover:opacity-100" onClick={() => setLabelOpen(true)} title="Etiket yazdır / barkod ata">
           <Tag className="size-3.5" />
         </Button>
         <LocationLabelDialog open={labelOpen} onOpenChange={setLabelOpen} id={node.id} code={node.code} name={node.name} barcode={node.barcode} canManage={canManage} />
         {canManage ? (
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
-            <Button size="icon" variant="ghost" className="size-7 opacity-0 group-hover:opacity-100" onClick={() => setAddOpen(true)} title="Alt lokasyon ekle">
+            <Button size="icon" variant="ghost" className="size-7 shrink-0 opacity-0 group-hover:opacity-100" onClick={() => setAddOpen(true)} title="Alt lokasyon ekle">
               <Plus className="size-3.5" />
             </Button>
             <LocationFormDialog warehouseId={warehouseId} parentId={node.id} parentCode={node.code} onDone={() => setAddOpen(false)} />
           </Dialog>
         ) : null}
+      </div>
+      {/* 390px: iki satırlı düzen — 1. satır kod (tam görünür) + rozet, 2. satır ad + miktar/değer */}
+      <div className={cn('flex items-center gap-2 border-b border-border/40 px-2 py-1.5 last:border-0 sm:hidden')} style={{ paddingLeft: depth * 20 + 8 }}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className={cn('grid size-5 shrink-0 place-items-center rounded text-muted-foreground', !hasChildren && 'invisible')}
+        >
+          <ChevronRight className={cn('size-3.5 transition-transform duration-150 ease-out', open && 'rotate-90')} />
+        </button>
+        <div className="min-w-0 flex-1 space-y-0.5">
+          <div className="flex items-center gap-2">
+            <span className="shrink-0 font-mono text-[12px]">{node.code}</span>
+            <StatusBadge status={node.usage} label={LOCATION_USAGE_LABELS[node.usage] ?? node.usage} tone={USAGE_TONE[node.usage] ?? 'neutral'} size="sm" />
+          </div>
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="min-w-0 truncate text-[11px] text-muted-foreground">{node.name}</span>
+            <div className="flex shrink-0 items-baseline gap-2 text-[12px]">
+              <QtyCell value={node.totalQty} minDigits={2} maxDigits={2} />
+              <MoneyCell value={node.totalValue} />
+            </div>
+          </div>
+        </div>
       </div>
       {open && hasChildren ? (
         <div>
@@ -125,28 +160,31 @@ function LocationFormDialog({ warehouseId, parentId, parentCode, onDone }: { war
   );
 }
 
-export function LocationTree({ warehouseId, tree, canManage }: { warehouseId: string; tree: LocationTreeNode[]; canManage: boolean }) {
-  const [rootAddOpen, setRootAddOpen] = useState(false);
+/** Bölüm başlığına (depo adı satırına) taşınan "kök lokasyon ekle" — LocationTree'nin başlık şeridinden ayrıldı. */
+export function AddRootLocationButton({ warehouseId, canManage }: { warehouseId: string; canManage: boolean }) {
+  const [open, setOpen] = useState(false);
+  if (!canManage) return null;
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
+        <Plus className="size-4" /> Kök lokasyon ekle
+      </Button>
+      <LocationFormDialog warehouseId={warehouseId} onDone={() => setOpen(false)} />
+    </Dialog>
+  );
+}
 
+export function LocationTree({ warehouseId, tree, canManage }: { warehouseId: string; tree: LocationTreeNode[]; canManage: boolean }) {
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <div className="flex h-9 items-center gap-2 px-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-          <span className="w-5" />
-          <span className="flex-1">Kod / Ad</span>
-          <span className="w-[76px] text-center">Durum</span>
-          <span className="w-24 text-right">Miktar</span>
-          <span className="w-28 text-right">Değer</span>
-          <span className="w-7" />
-        </div>
-        {canManage ? (
-          <Dialog open={rootAddOpen} onOpenChange={setRootAddOpen}>
-            <Button size="sm" variant="outline" onClick={() => setRootAddOpen(true)}>
-              <Plus className="size-4" /> Kök lokasyon ekle
-            </Button>
-            <LocationFormDialog warehouseId={warehouseId} onDone={() => setRootAddOpen(false)} />
-          </Dialog>
-        ) : null}
+      <div className="hidden h-9 w-full items-center gap-2 px-2 text-[11px] font-medium tracking-wide text-muted-foreground uppercase sm:flex">
+        <span className="w-5 shrink-0" />
+        <span className="min-w-0 flex-1">Kod / Ad</span>
+        <span className={COL.badge}>Durum</span>
+        <span className={COL.qty}>Miktar</span>
+        <span className={COL.value}>Değer</span>
+        {/* Etiket + (varsa) ekle simgeleriyle aynı toplam genişlik — satırlarla hizalansın diye */}
+        <span className="shrink-0" style={{ width: canManage ? 64 : 28 }} />
       </div>
       <div className="rounded-lg border border-border/70 bg-card p-1">
         {tree.map((n) => (
@@ -156,4 +194,3 @@ export function LocationTree({ warehouseId, tree, canManage }: { warehouseId: st
     </div>
   );
 }
-

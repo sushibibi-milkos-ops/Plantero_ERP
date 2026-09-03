@@ -15,8 +15,11 @@ export function DataTableColumnHeader<TData, TValue>({
   className?: string;
 }) {
   const align = column.columnDef.meta?.align;
+  // Başlık metni asla kırpılmaz — sütun genişliğini gövde hücreleri belirler (whitespace-nowrap),
+  // dar sütunlar meta.width ile açıkça genişletilir; aksi halde "Kalite Skoru" gibi başlıklar kesilip
+  // altındaki dar gövde ile tutarsız görünürdü.
   if (!column.getCanSort() || column.columnDef.meta?.noSort) {
-    return <span className={cn('block truncate', align === 'right' && 'text-right', className)}>{title}</span>;
+    return <span className={cn('block whitespace-nowrap', align === 'right' && 'text-right', className)}>{title}</span>;
   }
   const sorted = column.getIsSorted();
   const Icon = sorted === 'asc' ? ArrowUp : sorted === 'desc' ? ArrowDown : ChevronsUpDown;
@@ -25,7 +28,7 @@ export function DataTableColumnHeader<TData, TValue>({
       type="button"
       onClick={column.getToggleSortingHandler()}
       className={cn(
-        'group/th -mx-1.5 inline-flex h-7 max-w-full items-center gap-1 rounded px-1.5 text-left select-none',
+        'group/th -mx-1.5 inline-flex h-7 max-w-full items-center gap-1 rounded px-1.5 text-left whitespace-nowrap select-none',
         'hover:bg-muted/70 hover:text-foreground',
         align === 'right' && 'flex-row-reverse',
         sorted && 'text-foreground',
@@ -33,7 +36,7 @@ export function DataTableColumnHeader<TData, TValue>({
       )}
       aria-sort={sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : 'none'}
     >
-      <span className="truncate">{title}</span>
+      <span className="whitespace-nowrap">{title}</span>
       <Icon className={cn('size-3 shrink-0', sorted ? 'text-primary' : 'text-muted-foreground/50 group-hover/th:text-muted-foreground')} />
     </button>
   );

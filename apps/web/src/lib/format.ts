@@ -50,8 +50,8 @@ export function formatInt(v: NumberLike): string {
   return formatQty(v, undefined, { maxDigits: 0 });
 }
 
-/** %12,5 — girdi yüzde puanıdır (12.5 → %12,5) */
-export function formatPct(v: NumberLike, digits = 1): string {
+/** %12,5 — girdi yüzde puanıdır (12.5 → %12,5). Tek tip: tr-TR ayracı, en fazla `digits` ondalık, gereksiz sıfır yok. */
+export function formatPct(v: NumberLike, digits = 2): string {
   const plain = toPlain(new Decimal(toPlain(v)).div(100), digits + 2);
   const nf = new Intl.NumberFormat(LOCALE, {
     style: 'percent',

@@ -1,4 +1,4 @@
-import { and, eq, like, ne } from 'drizzle-orm';
+import { and, asc, eq, like, ne } from 'drizzle-orm';
 import { products, productBarcodes, productCategories, skuSegments, type DbOrTx } from '@plantero/db';
 import { DomainError, NotFoundError, ValidationError } from '../auth/errors.js';
 
@@ -131,22 +131,30 @@ export async function suggestShortCode(
   return `${base}${String(max + 1).padStart(2, '0')}`;
 }
 
-/** Barkod ile ürün arama: ana barkod, koli barkodu, ek barkodlar (product_barcodes). */
+/**
+ * Barkod ile ürün arama: ana barkod, koli barkodu, ek barkodlar (product_barcodes).
+ * Excel kaynaklı veride aynı barkodu paylaşan birden çok SKU olabilir (ör. 2x/6x paket varyantları —
+ * GS1 kuralına göre her ambalaj boyutuna ayrı EAN gerekirdi ama kaynak veri öyle değil ve normalize
+ * edilmez, bkz. `findBarcodeConflicts`). Bu durumda seçim `orderBy(sku)` ile deterministik kılınır —
+ * sıralamasız `limit(1)` çağrı çağrıya farklı satır dönebilir, bu da tarama akışında (mal kabul/sayım)
+ * yanlış SKU'ya hareket yazılmasına yol açabilirdi.
+ */
 export async function findByBarcode(
   tx: DbOrTx,
   code: string,
 ): Promise<{ product: typeof products.$inferSelect; matchKind: 'unit' | 'case' | 'extra' } | null> {
   const c = code.trim();
   if (!c) return null;
-  const [byUnit] = await tx.select().from(products).where(eq(products.barcode, c)).limit(1);
+  const [byUnit] = await tx.select().from(products).where(eq(products.barcode, c)).orderBy(asc(products.sku)).limit(1);
   if (byUnit) return { product: byUnit, matchKind: 'unit' };
-  const [byCase] = await tx.select().from(products).where(eq(products.caseBarcode, c)).limit(1);
+  const [byCase] = await tx.select().from(products).where(eq(products.caseBarcode, c)).orderBy(asc(products.sku)).limit(1);
   if (byCase) return { product: byCase, matchKind: 'case' };
   const [extra] = await tx
     .select({ product: products, kind: productBarcodes.kind })
     .from(productBarcodes)
     .innerJoin(products, eq(products.id, productBarcodes.productId))
     .where(eq(productBarcodes.barcode, c))
+    .orderBy(asc(products.sku))
     .limit(1);
   if (extra) return { product: extra.product, matchKind: 'extra' };
   return null;

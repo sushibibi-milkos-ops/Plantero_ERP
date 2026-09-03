@@ -48,7 +48,7 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
       {
         accessorKey: 'supplierQualityScore',
         header: 'Kalite Skoru',
-        meta: { align: 'right', width: 110, mobile: 'hidden' },
+        meta: { align: 'right', width: 120, mobile: 'hidden' },
         cell: ({ getValue }) => {
           const v = getValue<string | null>();
           return v ? <span className="num">{Number(v).toFixed(0)}</span> : <span className="text-muted-foreground/50">—</span>;
@@ -57,8 +57,14 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
       {
         accessorKey: 'isActive',
         header: 'Durum',
+        // Aktif = varsayılan; gürültü yaratmasın diye rozet yalnızca pasif için gösterilir.
         meta: { mobile: 'badge', width: 90 },
-        cell: ({ getValue }) => <StatusBadge status={getValue<boolean>() ? 'active' : 'inactive'} />,
+        cell: ({ getValue }) =>
+          getValue<boolean>() ? (
+            <span className="inline-block size-1.5 rounded-full bg-success" aria-label="Aktif" title="Aktif" />
+          ) : (
+            <StatusBadge status="inactive" />
+          ),
       },
     ],
     [],

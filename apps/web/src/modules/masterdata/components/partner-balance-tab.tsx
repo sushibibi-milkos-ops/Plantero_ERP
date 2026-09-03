@@ -12,30 +12,32 @@ function DocList({ title, kind, rows, currency }: { title: string; kind: 'sales_
         <EmptyState compact title="Kayıt yok" description="Bu cari için henüz belge oluşturulmadı." />
       ) : (
         <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
-          <table className="w-full border-collapse text-[13px]">
-            <thead>
-              <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                <th className="h-9 px-3 text-left font-medium">Belge No</th>
-                <th className="h-9 px-3 text-left font-medium">Tarih</th>
-                <th className="h-9 px-3 text-left font-medium">Durum</th>
-                <th className="h-9 px-3 text-right font-medium">Tutar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.docNo} className="h-9 border-b border-border/50 last:border-0">
-                  <td className="px-3 font-mono text-[12px]">{r.docNo}</td>
-                  <td className="px-3 text-muted-foreground">{formatDate(r.date)}</td>
-                  <td className="px-3">
-                    <StatusBadge status={r.status} kind={kind === 'sales_order' ? 'sales_order' : kind === 'invoice' ? 'invoice' : 'payment'} />
-                  </td>
-                  <td className="px-3 text-right">
-                    <MoneyCell value={r.amount} currency={r.currency || currency} />
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-[13px]">
+              <thead>
+                <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
+                  <th className="h-9 px-3 text-left font-medium">Belge No</th>
+                  <th className="h-9 px-3 text-left font-medium">Tarih</th>
+                  <th className="h-9 px-3 text-left font-medium">Durum</th>
+                  <th className="h-9 px-3 text-right font-medium">Tutar</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.docNo} className="h-9 border-b border-border/50 last:border-0">
+                    <td className="px-3 font-mono text-[12px]">{r.docNo}</td>
+                    <td className="px-3 text-muted-foreground">{formatDate(r.date)}</td>
+                    <td className="px-3">
+                      <StatusBadge status={r.status} kind={kind === 'sales_order' ? 'sales_order' : kind === 'invoice' ? 'invoice' : 'payment'} />
+                    </td>
+                    <td className="px-3 text-right">
+                      <MoneyCell value={r.amount} currency={r.currency || currency} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

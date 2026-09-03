@@ -55,42 +55,44 @@ export function BomLinesEditor({
   return (
     <div className="space-y-3">
       <div className="overflow-hidden rounded-lg border border-border/70">
-        <table className="w-full border-collapse text-[13px]">
-          <thead>
-            <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-              <th className="h-9 px-2 text-left font-medium">Bileşen</th>
-              <th className="h-9 px-2 text-right font-medium">Miktar</th>
-              <th className="h-9 px-2 text-right font-medium">Fire %</th>
-              <th className="h-9 px-2 text-center font-medium">Yan Ürün</th>
-              <th className="h-9 px-2 text-right font-medium">Satır Maliyeti</th>
-              <th className="h-9 px-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {fields.map((field, i) => (
-              <tr key={field.id} className="h-11 border-b border-border/50 last:border-0">
-                <td className="px-2 py-1 align-middle">
-                  <FormCombobox control={control} name={`${name}.${i}.productId`} options={options} placeholder="Bileşen seçin" mono className="w-64" />
-                </td>
-                <td className="px-2 py-1 align-middle">
-                  <FormQty control={control} name={`${name}.${i}.qty`} maxDigits={4} className="w-28" />
-                </td>
-                <td className="px-2 py-1 align-middle">
-                  <FormQty control={control} name={`${name}.${i}.scrapPct`} maxDigits={2} className="w-20" />
-                </td>
-                <td className="px-2 py-1 text-center align-middle">
-                  <FormCheckbox control={control} name={`${name}.${i}.isByproduct`} className="justify-center" />
-                </td>
-                <td className="num px-2 py-1 text-right align-middle whitespace-nowrap">{formatMoney(String(lineCosts[i] ?? 0))}</td>
-                <td className="px-2 py-1 text-right align-middle">
-                  <Button type="button" size="icon" variant="ghost" className="size-7" onClick={() => remove(i)}>
-                    <Trash2 className="size-3.5" />
-                  </Button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-[13px]">
+            <thead>
+              <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
+                <th className="h-9 px-2 text-left font-medium">Bileşen</th>
+                <th className="h-9 px-2 text-right font-medium">Miktar</th>
+                <th className="h-9 px-2 text-right font-medium">Fire %</th>
+                <th className="h-9 px-2 text-center font-medium">Yan Ürün</th>
+                <th className="h-9 px-2 text-right font-medium">Satır Maliyeti</th>
+                <th className="h-9 px-2" />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {fields.map((field, i) => (
+                <tr key={field.id} className="h-11 border-b border-border/50 last:border-0">
+                  <td className="px-2 py-1 align-middle">
+                    <FormCombobox control={control} name={`${name}.${i}.productId`} options={options} placeholder="Bileşen seçin" mono className="w-64" />
+                  </td>
+                  <td className="px-2 py-1 align-middle">
+                    <FormQty control={control} name={`${name}.${i}.qty`} maxDigits={4} className="w-28" />
+                  </td>
+                  <td className="px-2 py-1 align-middle">
+                    <FormQty control={control} name={`${name}.${i}.scrapPct`} maxDigits={2} className="w-20" />
+                  </td>
+                  <td className="px-2 py-1 text-center align-middle">
+                    <FormCheckbox control={control} name={`${name}.${i}.isByproduct`} className="justify-center" />
+                  </td>
+                  <td className="num px-2 py-1 text-right align-middle whitespace-nowrap">{formatMoney(String(lineCosts[i] ?? 0))}</td>
+                  <td className="px-2 py-1 text-right align-middle">
+                    <Button type="button" size="icon" variant="ghost" className="size-7" onClick={() => remove(i)}>
+                      <Trash2 className="size-3.5" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <Button type="button" variant="outline" size="sm" onClick={() => append({ productId: '', qty: '1', scrapPct: '0', isByproduct: false })}>

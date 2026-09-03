@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { products } from '@plantero/db';
 import {
   isValidEan13, parseSku, validateSku, suggestNextSku, suggestShortCode, abbreviate,
-  createProduct, updateProduct, findByBarcode,
+  createProduct, updateProduct, findByBarcode, findBarcodeConflicts,
 } from './products.js';
 import { withRollback, seedBase, suffix } from '../__tests__/helpers.js';
 
@@ -96,6 +96,22 @@ describe('masterdata/products — SKU ve barkod', () => {
       expect(found?.product.id).toBe(b.raw.id);
       expect(found?.matchKind).toBe('unit');
       expect(await findByBarcode(tx, 'yok-boyle-bir-kod')).toBeNull();
+    });
+  });
+
+  it('findByBarcode: aynı barkodu paylaşan birden çok SKU olduğunda deterministik olarak en küçük SKU döner (Excel kaynaklı çakışma normalize edilmez)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const barcode = `891${suffix()}`;
+      const [big] = await tx.insert(products).values({ sku: `399999${suffix().slice(-3)}`, name: `6x Paket ${b.s}`, type: 'finished', uomId: b.kg.id, barcode }).returning();
+      const [small] = await tx.insert(products).values({ sku: `199999${suffix().slice(-3)}`, name: `2x Paket ${b.s}`, type: 'finished', uomId: b.kg.id, barcode }).returning();
+      // sku sözlük sırasına göre en küçüğü ('1...') her çağrıda tutarlı biçimde döner — random limit(1) değil.
+      for (let i = 0; i < 3; i++) {
+        const found = await findByBarcode(tx, barcode);
+        expect(found?.product.sku).toBe(small!.sku < big!.sku ? small!.sku : big!.sku);
+      }
+      const conflicts = await findBarcodeConflicts(tx, barcode);
+      expect(conflicts.map((c) => c.sku).sort()).toEqual([big!.sku, small!.sku].sort());
     });
   });
 });

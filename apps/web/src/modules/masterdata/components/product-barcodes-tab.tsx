@@ -139,36 +139,38 @@ export function ProductBarcodesTab({
         <EmptyState compact title="Barkod yok" description="Bu ürünün ana barkodu tanımlı değil." />
       ) : (
         <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
-          <table className="w-full border-collapse text-[13px]">
-            <thead>
-              <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                <th className="h-9 px-3 text-left font-medium">Barkod</th>
-                <th className="h-9 px-3 text-left font-medium">Tür</th>
-                <th className="h-9 px-3 text-left font-medium">Doğrulama</th>
-                <th className="h-9 px-3 text-left font-medium">Not</th>
-                <th className="h-9 px-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} className={cn('h-9 border-b border-border/50 last:border-0')}>
-                  <td className="px-3 font-mono text-[12px]">{r.barcode}</td>
-                  <td className="px-3 text-muted-foreground">{KIND_LABELS[r.kind] ?? r.kind}</td>
-                  <td className="px-3">
-                    <BarcodeStatus code={r.barcode} />
-                  </td>
-                  <td className="px-3 text-muted-foreground">{r.note ?? '—'}</td>
-                  <td className="px-3 text-right">
-                    {r.removable && canManage ? (
-                      <Button size="icon" variant="ghost" className="size-7" onClick={() => onRemove(r.id)}>
-                        <Trash2 className="size-3.5" />
-                      </Button>
-                    ) : null}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-[13px]">
+              <thead>
+                <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
+                  <th className="h-9 px-3 text-left font-medium">Barkod</th>
+                  <th className="h-9 px-3 text-left font-medium">Tür</th>
+                  <th className="h-9 px-3 text-left font-medium">Doğrulama</th>
+                  <th className="h-9 px-3 text-left font-medium">Not</th>
+                  <th className="h-9 px-3" />
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.id} className={cn('h-9 border-b border-border/50 last:border-0')}>
+                    <td className="px-3 font-mono text-[12px]">{r.barcode}</td>
+                    <td className="px-3 text-muted-foreground">{KIND_LABELS[r.kind] ?? r.kind}</td>
+                    <td className="px-3">
+                      <BarcodeStatus code={r.barcode} />
+                    </td>
+                    <td className="px-3 text-muted-foreground">{r.note ?? '—'}</td>
+                    <td className="px-3 text-right">
+                      {r.removable && canManage ? (
+                        <Button size="icon" variant="ghost" className="size-7" onClick={() => onRemove(r.id)}>
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      ) : null}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

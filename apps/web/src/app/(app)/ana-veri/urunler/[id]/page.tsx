@@ -55,15 +55,18 @@ export default async function ProductDetailPage({ params, searchParams }: { para
 
   const conflicts = p.barcode ? await findBarcodeConflicts(db, p.barcode, p.id) : [];
 
+  // Sıralı değil paralel: N reçete için N ayrı bekleme yerine tek Promise.all (sayfa yükleme süresi ~N kat düşer).
   const unitCostsByBom: Record<string, string> = {};
-  for (const b of boms) {
-    try {
-      const rollup = await getBomCostRollup(b.id);
-      unitCostsByBom[b.id] = rollup.unitCost;
-    } catch {
-      unitCostsByBom[b.id] = '0';
-    }
-  }
+  await Promise.all(
+    boms.map(async (b) => {
+      try {
+        const rollup = await getBomCostRollup(b.id);
+        unitCostsByBom[b.id] = rollup.unitCost;
+      } catch {
+        unitCostsByBom[b.id] = '0';
+      }
+    }),
+  );
 
   const supplierOptions = partners
     .filter((pt) => pt.kind === 'supplier' || pt.kind === 'both')

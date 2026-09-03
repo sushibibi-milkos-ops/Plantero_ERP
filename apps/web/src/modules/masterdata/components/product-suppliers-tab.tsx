@@ -78,32 +78,34 @@ export function ProductSuppliersTab({ productId, suppliers, supplierOptions, can
         <EmptyState compact title="Tedarikçi yok" description="Bu ürün için henüz bir tedarikçi tanımlı değil." />
       ) : (
         <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
-          <table className="w-full border-collapse text-[13px]">
-            <thead>
-              <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                <th className="h-9 px-3 text-left font-medium">Tedarikçi</th>
-                <th className="h-9 px-3 text-right font-medium">Fiyat</th>
-                <th className="h-9 px-3 text-right font-medium">Tedarik Süresi</th>
-                <th className="h-9 px-3 text-right font-medium">Min. Sipariş</th>
-                <th className="h-9 px-3 text-center font-medium">Tercih</th>
-              </tr>
-            </thead>
-            <tbody>
-              {suppliers.map((s) => (
-                <tr key={s.sp.id} className="h-9 border-b border-border/50 last:border-0">
-                  <td className="px-3">
-                    {s.partnerName} <span className="font-mono text-[11px] text-muted-foreground">({s.partnerCode})</span>
-                  </td>
-                  <td className="px-3 text-right">
-                    <MoneyCell value={s.sp.price} currency={s.sp.currency} />
-                  </td>
-                  <td className="px-3 text-right text-muted-foreground">{s.sp.leadTimeDays} gün</td>
-                  <td className="px-3 text-right text-muted-foreground">{formatQty(s.sp.minOrderQty)}</td>
-                  <td className="px-3 text-center">{s.sp.isPreferred ? <Star className="mx-auto size-3.5 fill-primary text-primary" /> : null}</td>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-[13px]">
+              <thead>
+                <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
+                  <th className="h-9 px-3 text-left font-medium">Tedarikçi</th>
+                  <th className="h-9 px-3 text-right font-medium">Fiyat</th>
+                  <th className="h-9 px-3 text-right font-medium">Tedarik Süresi</th>
+                  <th className="h-9 px-3 text-right font-medium">Min. Sipariş</th>
+                  <th className="h-9 px-3 text-center font-medium">Tercih</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {suppliers.map((s) => (
+                  <tr key={s.sp.id} className="h-9 border-b border-border/50 last:border-0">
+                    <td className="px-3">
+                      {s.partnerName} <span className="font-mono text-[11px] text-muted-foreground">({s.partnerCode})</span>
+                    </td>
+                    <td className="px-3 text-right">
+                      <MoneyCell value={s.sp.price} currency={s.sp.currency} />
+                    </td>
+                    <td className="px-3 text-right text-muted-foreground">{s.sp.leadTimeDays} gün</td>
+                    <td className="px-3 text-right text-muted-foreground">{formatQty(s.sp.minOrderQty)}</td>
+                    <td className="px-3 text-center">{s.sp.isPreferred ? <Star className="mx-auto size-3.5 fill-primary text-primary" /> : null}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

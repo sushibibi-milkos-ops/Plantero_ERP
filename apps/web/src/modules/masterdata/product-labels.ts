@@ -11,7 +11,8 @@ export const PRODUCT_TYPE_LABELS: Record<string, string> = {
 };
 
 export const PRODUCT_TYPE_TONE: Record<string, 'primary' | 'info' | 'neutral' | 'warning' | 'muted'> = {
-  finished: 'primary',
+  // Taksonomi değeridir (marka rengiyle karıştırılmasın) — yeşil/primary yalnızca "durum" anlamına ayrılır.
+  finished: 'neutral',
   semi_finished: 'info',
   raw_material: 'neutral',
   packaging: 'neutral',

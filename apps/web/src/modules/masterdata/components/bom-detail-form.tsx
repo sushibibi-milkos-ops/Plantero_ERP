@@ -13,6 +13,7 @@ import { FormActions } from '@/components/form/form-actions';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
+import { formatPct } from '@/lib/format';
 import { BomLinesEditor, type ComponentCandidate } from './bom-lines-editor';
 import { updateBomDraftAction, activateBomAction, archiveBomAction, createBomVersionAction } from '../actions';
 import { BOM_STATUS_LABELS } from '../product-labels';
@@ -122,6 +123,9 @@ export function BomDetailForm({
   const expectedYieldPct = form.watch('expectedYieldPct');
   const overheadPerBatch = form.watch('overheadPerBatch');
   const overheadPerUnit = form.watch('overheadPerUnit');
+  // Tümü sıfır/boş olan sütunlar okuma modunda render edilmez.
+  const hasScrap = lines.some((l) => Number(l.line.scrapPct) !== 0);
+  const hasByproduct = lines.some((l) => l.line.isByproduct);
 
   return (
     <div className="space-y-4">
@@ -184,7 +188,7 @@ export function BomDetailForm({
               <QtyCell value={bom.outputQty} uom={bom.outputUomCode ?? undefined} />
             </div>
             <div>
-              <span className="text-muted-foreground">Verim: </span>%{bom.expectedYieldPct}
+              <span className="text-muted-foreground">Verim: </span>{formatPct(bom.expectedYieldPct)}
             </div>
             <div>
               <span className="text-muted-foreground">Malzeme: </span>
@@ -201,30 +205,32 @@ export function BomDetailForm({
           </div>
 
           <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
-            <table className="w-full border-collapse text-[13px]">
-              <thead>
-                <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                  <th className="h-9 px-3 text-left font-medium">SKU</th>
-                  <th className="h-9 px-3 text-left font-medium">Bileşen</th>
-                  <th className="h-9 px-3 text-right font-medium">Miktar</th>
-                  <th className="h-9 px-3 text-right font-medium">Fire %</th>
-                  <th className="h-9 px-3 text-center font-medium">Yan Ürün</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lines.map((l) => (
-                  <tr key={l.line.id} className="h-9 border-b border-border/50 last:border-0">
-                    <td className="px-3 font-mono text-[12px]">{l.sku}</td>
-                    <td className="px-3">{l.name}</td>
-                    <td className="px-3 text-right">
-                      <QtyCell value={l.line.qty} uom={l.uomCode} />
-                    </td>
-                    <td className="px-3 text-right text-muted-foreground">%{l.line.scrapPct}</td>
-                    <td className="px-3 text-center text-muted-foreground">{l.line.isByproduct ? 'Evet' : ''}</td>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-[13px]">
+                <thead>
+                  <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
+                    <th className="h-9 px-3 text-left font-medium">SKU</th>
+                    <th className="h-9 px-3 text-left font-medium">Bileşen</th>
+                    <th className="h-9 px-3 text-right font-medium">Miktar</th>
+                    {hasScrap ? <th className="h-9 px-3 text-right font-medium">Fire %</th> : null}
+                    {hasByproduct ? <th className="h-9 px-3 text-center font-medium">Yan Ürün</th> : null}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {lines.map((l) => (
+                    <tr key={l.line.id} className="h-9 border-b border-border/50 last:border-0">
+                      <td className="px-3 font-mono text-[12px]">{l.sku}</td>
+                      <td className="px-3">{l.name}</td>
+                      <td className="px-3 text-right">
+                        <QtyCell value={l.line.qty} uom={l.uomCode} />
+                      </td>
+                      {hasScrap ? <td className="px-3 text-right text-muted-foreground">{formatPct(l.line.scrapPct)}</td> : null}
+                      {hasByproduct ? <td className="px-3 text-center text-muted-foreground">{l.line.isByproduct ? 'Evet' : ''}</td> : null}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

@@ -67,9 +67,12 @@ export function DataTableMobileCards<T>({
               {actions.length ? <DataTableRowActions row={row.original} actions={actions} /> : null}
             </div>
             {rest.length ? (
-              <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[13px]">
+              // Tek ayraç kartın tam genişliğinde: her öğeye ayrı border-t vermek yerine (grid-cols-2'de
+              // tek elemanlı son satırda kartın yalnızca yarısını kaplayan "kırık" bir çizgiye yol açardı)
+              // <dl>'nin kendisine üstten tek bir hairline veriliyor.
+              <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-border/40 pt-2 text-[13px]">
                 {rest.map((c) => (
-                  <div key={c.id} className="flex min-w-0 items-baseline justify-between gap-2 border-t border-border/40 pt-1.5">
+                  <div key={c.id} className="flex min-w-0 items-baseline justify-between gap-2">
                     <dt className="truncate text-[11px] text-muted-foreground">{headerLabel(row, c.column.id)}</dt>
                     <dd className="truncate text-right">{flexRender(c.column.columnDef.cell, c.getContext())}</dd>
                   </div>

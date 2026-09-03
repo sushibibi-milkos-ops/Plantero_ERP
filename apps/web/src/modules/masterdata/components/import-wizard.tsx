@@ -4,19 +4,35 @@ import { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { FileSpreadsheet, Upload, Lock, ArrowRight, AlertTriangle, CheckCircle2, Loader2, RotateCcw, PlusCircle, PencilLine } from 'lucide-react';
+import { FileSpreadsheet, Upload, Lock, ArrowRight, AlertTriangle, CheckCircle2, Loader2, RotateCcw, PlusCircle, PencilLine, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { EmptyState } from '@/components/empty-state';
+import { formatDateTime } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { previewImportAction, applyImportAction, type ImportPreview } from '../actions';
+import type { ImportHistoryRow } from '../queries';
 
 type Step = 'select' | 'preview' | 'done';
 type ApplyResult = { created: number; updated: number; unchanged: number; conflicts: unknown[] };
 
+/** `packages/db/src/import/anaveri.ts`'in beklediği "Ana Veri" sayfası başlıkları — şablonla birebir aynı olmalı. */
+const EXPECTED_COLUMNS: { name: string; example: string }[] = [
+  { name: 'SKU', example: '110010001' },
+  { name: 'Kısa Kod', example: 'PLT-BDM-1' },
+  { name: 'Ürün Adı', example: 'Badem Bazı 1L' },
+  { name: 'Kategori 1 / 2 / 3', example: 'Bitkisel Süt Konsantreleri → Badem' },
+  { name: 'Ambalaj / Adet', example: '1 Adet' },
+  { name: 'Barkod (EAN-13) / Koli Barkodu', example: '8683529780001' },
+  { name: 'Durum', example: 'Aktif' },
+  { name: 'Lokasyon', example: 'Tire/R01-A1' },
+  { name: 'Miktar', example: '120' },
+  { name: 'Eski SKU / Not', example: '(opsiyonel)' },
+];
+
 /** Ana Veri Excel içe aktarım sihirbazı: dosya → önizleme (diff: eski → yeni, korunacak alanlar kilitli) → uygula. */
-export function ImportWizard() {
+export function ImportWizard({ history = [] }: { history?: ImportHistoryRow[] }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState<Step>('select');
@@ -137,6 +153,47 @@ export function ImportWizard() {
               {previewing ? <Loader2 className="size-4 animate-spin" /> : null}
               Deneme çalıştır (önizleme)
             </Button>
+          </div>
+
+          {/* Bağlam: hangi sütunlar bekleniyor + önceki içe aktarımlar — sihirbaz artık bağlamsız değil */}
+          <div className="grid grid-cols-1 gap-4 border-t border-border/60 pt-4 sm:grid-cols-2">
+            <div>
+              <h3 className="mb-2 text-[13px] font-semibold">Beklenen sütunlar — &quot;Ana Veri&quot; sayfası</h3>
+              <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
+                <table className="w-full border-collapse text-[12px]">
+                  <tbody>
+                    {EXPECTED_COLUMNS.map((c) => (
+                      <tr key={c.name} className="h-9 border-b border-border/40 last:border-0">
+                        <td className="w-1/2 px-3 font-medium">{c.name}</td>
+                        <td className="px-3 text-muted-foreground">{c.example}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div>
+              <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-semibold">
+                <History className="size-3.5 text-muted-foreground" /> Son içe aktarımlar
+              </h3>
+              {history.length === 0 ? (
+                <div className="rounded-lg border border-dashed border-border/70 px-3 py-4 text-center text-[12px] text-muted-foreground">
+                  Henüz içe aktarım yapılmadı.
+                </div>
+              ) : (
+                <ul className="space-y-1.5">
+                  {history.map((h) => (
+                    <li key={h.id} className="rounded-lg border border-border/70 bg-card px-3 py-2 text-[12px]">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <span className="text-muted-foreground">{formatDateTime(h.at)}</span>
+                        <span className="truncate text-muted-foreground">{h.userEmail ?? '—'}</span>
+                      </div>
+                      <p className="mt-0.5 truncate">{h.summary}</p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       ) : null}

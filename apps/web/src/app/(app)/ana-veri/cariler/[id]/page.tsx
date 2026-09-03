@@ -56,7 +56,11 @@ export default async function PartnerDetailPage({ params, searchParams }: { para
   const productOptions = componentProducts.map((p) => ({ value: p.id, label: `${p.sku} — ${p.name}`, keywords: [p.sku] }));
 
   const tabs: ProductTabDef[] = [
-    { value: 'genel', label: 'Genel', content: <PartnerGeneralTab partner={partner} channelName={channelName} lastOrder={orders[0] ?? null} /> },
+    {
+      value: 'genel',
+      label: 'Genel',
+      content: <PartnerGeneralTab partner={partner} channelName={channelName} lastOrder={orders[0] ?? null} orders={orders} invoices={invoices} payments={payments} />,
+    },
     { value: 'adresler', label: 'Adresler', content: <PartnerAddressesTab partnerId={id} addresses={addresses} canManage={canManage} /> },
     { value: 'kisiler', label: 'Kişiler', content: <PartnerContactsTab partnerId={id} contacts={contacts} canManage={canManage} /> },
     { value: 'bakiye', label: 'Bakiye & Hareketler', content: <PartnerBalanceTab balance={partner.balance} currency={partner.currency} orders={orders} invoices={invoices} payments={payments} /> },

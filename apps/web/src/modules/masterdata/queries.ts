@@ -197,6 +197,19 @@ export async function listAuditFor(tableName: string, recordId: string, limit = 
   return db.select().from(auditLog).where(and(eq(auditLog.tableName, tableName), eq(auditLog.recordId, recordId))).orderBy(desc(auditLog.at)).limit(limit);
 }
 
+export type ImportHistoryRow = { id: string; at: string; userEmail: string | null; summary: string | null; after: unknown };
+
+/** Ana Veri Excel içe aktarım sihirbazının geçmişi — `applyImportAction`'ın düştüğü audit satırları. */
+export async function listImportHistory(limit = 10): Promise<ImportHistoryRow[]> {
+  const rows = await db
+    .select({ id: auditLog.id, at: auditLog.at, userEmail: auditLog.userEmail, summary: auditLog.summary, after: auditLog.after })
+    .from(auditLog)
+    .where(and(eq(auditLog.tableName, 'products'), eq(auditLog.action, 'import')))
+    .orderBy(desc(auditLog.at))
+    .limit(limit);
+  return rows.map((r) => ({ ...r, at: String(r.at) }));
+}
+
 /* ==================================================================== */
 /* Kategoriler / SKU segmentleri / UOM'lar                              */
 /* ==================================================================== */

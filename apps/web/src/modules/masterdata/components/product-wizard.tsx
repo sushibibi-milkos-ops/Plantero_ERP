@@ -221,107 +221,151 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-          <FormSelect
-            control={form.control}
-            name="t"
-            label="T — Tip"
-            options={Object.entries(TYPE_BY_T).map(([code, m]) => ({ value: code, label: `${code} — ${m.label}` }))}
-          />
-          <FormSelect
-            control={form.control}
-            name="aa"
-            label="AA — Aile"
-            placeholder={aaOptions.length ? 'Seçin' : 'Sözlükte yok — elle girin'}
-            options={aaOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
-          />
-          <FormText control={form.control} name="bb" label="BB — Bileşen" mono placeholder="01" />
-          <FormText control={form.control} name="cc" label="CC — Varyant" mono placeholder="00" />
-          <FormSelect
-            control={form.control}
-            name="pp"
-            label="PP — Ambalaj"
-            options={ppOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
-          />
-        </div>
-        {bbOptions.length ? (
-          <div className="-mt-3 flex flex-wrap gap-1.5">
-            <span className="text-[11px] text-muted-foreground">Sözlükten BB önerileri:</span>
-            {bbOptions.slice(0, 8).map((o) => (
-              <button
-                key={o.code}
-                type="button"
-                onClick={() => form.setValue('bb', o.code.padStart(2, '0').slice(0, 2))}
-                className="rounded-full border border-border/60 px-2 py-0.5 text-[11px] text-muted-foreground hover:border-primary/50 hover:text-primary"
-              >
-                {o.code} {o.label}
-              </button>
-            ))}
-          </div>
-        ) : null}
-        {ccOptions.length ? (
-          <div className="-mt-3 flex flex-wrap gap-1.5">
-            <span className="text-[11px] text-muted-foreground">Sözlükten CC önerileri:</span>
-            {ccOptions.slice(0, 8).map((o) => (
-              <button
-                key={o.code}
-                type="button"
-                onClick={() => form.setValue('cc', o.code.padStart(2, '0').slice(0, 2))}
-                className="rounded-full border border-border/60 px-2 py-0.5 text-[11px] text-muted-foreground hover:border-primary/50 hover:text-primary"
-              >
-                {o.code} {o.label}
-              </button>
-            ))}
-          </div>
-        ) : null}
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <FormText control={form.control} name="name" label="Ürün adı" required description="Oluşturulduktan sonra kilitlenir." />
-          <FormText control={form.control} name="shortCode" label="Kısa kod (öneri)" mono description="Otomatik önerilir, değiştirilebilir." />
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <FormText control={form.control} name="category1" label="Kategori 1" />
-          <FormText control={form.control} name="category2" label="Kategori 2" />
-          <FormText control={form.control} name="category3" label="Kategori 3" />
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <FormText control={form.control} name="packaging" label="Ambalaj etiketi" />
-          <FormQty control={form.control} name="packQty" label="Ambalaj içi adet" maxDigits={0} />
-          <FormSelect control={form.control} name="uomId" label="Ölçü birimi" options={uoms.map((u) => ({ value: u.id, label: `${u.code} — ${u.name}` }))} required />
-        </div>
-
         <div>
-          <FormText control={form.control} name="barcode" label="Barkod (EAN-13)" mono />
-          {barcode ? (
-            <p className={`mt-1 text-[12px] ${barcodeValid ? 'text-success' : 'text-muted-foreground'}`}>
-              {barcode.length === 13 ? (barcodeValid ? 'Checksum geçerli' : 'Checksum hatalı — yine de kaydedilebilir') : `${barcode.length}/13 hane`}
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Kimlik</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+            <FormSelect
+              control={form.control}
+              name="t"
+              label="T — Tip"
+              options={Object.entries(TYPE_BY_T).map(([code, m]) => ({ value: code, label: `${code} — ${m.label}` }))}
+            />
+            <FormSelect
+              control={form.control}
+              name="aa"
+              label="AA — Aile"
+              placeholder={aaOptions.length ? 'Seçin' : 'Sözlükte yok — elle girin'}
+              options={aaOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
+            />
+            <FormText control={form.control} name="bb" label="BB — Bileşen" mono placeholder="01" />
+            <FormText control={form.control} name="cc" label="CC — Varyant" mono placeholder="00" />
+            <FormSelect
+              control={form.control}
+              name="pp"
+              label="PP — Ambalaj"
+              options={ppOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
+            />
+          </div>
+          {/* Sözlük önerileri: tek tıkla dolduran kısa token'lar. Uzun etiketler chip metaforunu kırmasın diye kırpılır. */}
+          {bbOptions.length ? (
+            <p className="mt-2 text-[12px] text-muted-foreground">
+              Sözlükten BB önerileri:{' '}
+              {bbOptions.slice(0, 8).map((o, i) => (
+                <span key={o.code}>
+                  {i > 0 ? ' · ' : ''}
+                  <button
+                    type="button"
+                    title={`${o.code} — ${o.label}`}
+                    onClick={() => form.setValue('bb', o.code.padStart(2, '0').slice(0, 2))}
+                    className="max-w-[160px] truncate align-bottom underline decoration-dotted underline-offset-2 hover:text-primary"
+                  >
+                    {o.code} {o.label}
+                  </button>
+                </span>
+              ))}
+            </p>
+          ) : null}
+          {ccOptions.length ? (
+            <p className="mt-1 text-[12px] text-muted-foreground">
+              Sözlükten CC önerileri:{' '}
+              {ccOptions.slice(0, 8).map((o, i) => (
+                <span key={o.code}>
+                  {i > 0 ? ' · ' : ''}
+                  <button
+                    type="button"
+                    title={`${o.code} — ${o.label}`}
+                    onClick={() => form.setValue('cc', o.code.padStart(2, '0').slice(0, 2))}
+                    className="max-w-[160px] truncate align-bottom underline decoration-dotted underline-offset-2 hover:text-primary"
+                  >
+                    {o.code} {o.label}
+                  </button>
+                </span>
+              ))}
             </p>
           ) : null}
         </div>
 
-        <div className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 p-3 sm:grid-cols-4">
-          <FormSwitch control={form.control} name="isLotTracked" label="Lot takipli" />
-          <FormSwitch control={form.control} name="isPurchasable" label="Satın alınabilir" />
-          <FormSwitch control={form.control} name="isSellable" label="Satılabilir" />
-          <FormSwitch control={form.control} name="isManufactured" label="Üretilebilir" />
+        <div>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Sınıflandırma</h2>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
+            <div className="md:col-span-6">
+              <FormText control={form.control} name="name" label="Ürün adı" required description="Oluşturulduktan sonra kilitlenir." />
+            </div>
+            <div className="md:col-span-6">
+              <FormText control={form.control} name="shortCode" label="Kısa kod (öneri)" mono description="Otomatik önerilir, değiştirilebilir." />
+            </div>
+            <div className="md:col-span-4">
+              <FormText control={form.control} name="category1" label="Kategori 1" />
+            </div>
+            <div className="md:col-span-4">
+              <FormText control={form.control} name="category2" label="Kategori 2" />
+            </div>
+            <div className="md:col-span-4">
+              <FormText control={form.control} name="category3" label="Kategori 3" />
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-          <FormText control={form.control} name="vatRate" label="Satış KDV %" inputMode="decimal" />
-          <FormText control={form.control} name="purchaseVatRate" label="Alış KDV %" inputMode="decimal" />
-          <FormQty control={form.control} name="shelfLifeDays" label="Raf ömrü" uom="gün" maxDigits={0} />
+        <div>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Ambalaj & Barkod</h2>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
+            <div className="md:col-span-4">
+              <FormText control={form.control} name="packaging" label="Ambalaj etiketi" />
+            </div>
+            <div className="md:col-span-4">
+              <FormQty control={form.control} name="packQty" label="Ambalaj içi adet" maxDigits={0} />
+            </div>
+            <div className="md:col-span-4">
+              <FormSelect control={form.control} name="uomId" label="Ölçü birimi" options={uoms.map((u) => ({ value: u.id, label: `${u.code} — ${u.name}` }))} required />
+            </div>
+            <div className="md:col-span-12">
+              <FormText control={form.control} name="barcode" label="Barkod (EAN-13)" mono />
+              {barcode ? (
+                <p className={`mt-1 text-[12px] ${barcodeValid ? 'text-success' : 'text-muted-foreground'}`}>
+                  {barcode.length === 13 ? (barcodeValid ? 'Checksum geçerli' : 'Checksum hatalı — yine de kaydedilebilir') : `${barcode.length}/13 hane`}
+                </p>
+              ) : null}
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <FormQty control={form.control} name="minQty" label="Min. stok" />
-          <FormQty control={form.control} name="maxQty" label="Maks. stok" />
+        <div>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Stok & Kalite</h2>
+          <div className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 p-3 sm:grid-cols-4">
+            <FormSwitch control={form.control} name="isLotTracked" label="Lot takipli" />
+            <FormSwitch control={form.control} name="isPurchasable" label="Satın alınabilir" />
+            <FormSwitch control={form.control} name="isSellable" label="Satılabilir" />
+            <FormSwitch control={form.control} name="isManufactured" label="Üretilebilir" />
+          </div>
+          <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-12">
+            <div className="md:col-span-4">
+              <FormQty control={form.control} name="shelfLifeDays" label="Raf ömrü" uom="gün" maxDigits={0} />
+            </div>
+            <div className="md:col-span-4">
+              <FormQty control={form.control} name="minQty" label="Min. stok" />
+            </div>
+            <div className="md:col-span-4">
+              <FormQty control={form.control} name="maxQty" label="Maks. stok" />
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <FormCombobox control={form.control} name="preferredSupplierId" label="Tercih edilen tedarikçi (opsiyonel)" options={supplierOptions} placeholder="Tedarikçi seçin" />
-          <FormMoney control={form.control} name="supplierPrice" label="Tedarikçi fiyatı" />
+        <div>
+          <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Fiyat & Vergi</h2>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
+            <div className="md:col-span-4">
+              <FormText control={form.control} name="vatRate" label="Satış KDV %" inputMode="decimal" />
+            </div>
+            <div className="md:col-span-4">
+              <FormText control={form.control} name="purchaseVatRate" label="Alış KDV %" inputMode="decimal" />
+            </div>
+            <div className="md:col-span-4">
+              <FormMoney control={form.control} name="supplierPrice" label="Tedarikçi fiyatı" />
+            </div>
+            <div className="md:col-span-12">
+              <FormCombobox control={form.control} name="preferredSupplierId" label="Tercih edilen tedarikçi (opsiyonel)" options={supplierOptions} placeholder="Tedarikçi seçin" />
+            </div>
+          </div>
         </div>
 
         <FormTextarea control={form.control} name="note" label="Not" rows={2} />

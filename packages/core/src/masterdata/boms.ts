@@ -1,4 +1,4 @@
-import { and, desc, eq, gt, ne } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, ne } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import type { DbOrTx } from '@plantero/db';
 import { boms, bomLines, products, stockLots, stockQuants, supplierProducts } from '@plantero/db';
@@ -184,6 +184,67 @@ export async function resolveComponentUnitCost(tx: DbOrTx, productId: string): P
   return { unitCost: ZERO, source: 'none' };
 }
 
+type ComponentCost = { unitCost: Decimal; source: 'lot_avg' | 'average_cost' | 'supplier_price' | 'standard_cost' | 'none' };
+
+/**
+ * `resolveComponentUnitCost`'un toplu (N+1'siz) hâli: bir reçetenin tüm satırları için tek seferde
+ * en fazla 3 sorguda maliyet çözer (satır sayısı × 3 sorgu yerine). `rollupBomCost` bunu kullanır;
+ * tek ürün için hâlâ `resolveComponentUnitCost` çağrılabilir (ör. tekil tahminler).
+ */
+async function resolveComponentUnitCosts(tx: DbOrTx, productIds: string[]): Promise<Map<string, ComponentCost>> {
+  const ids = Array.from(new Set(productIds));
+  const result = new Map<string, ComponentCost>();
+  if (ids.length === 0) return result;
+
+  const onHandRows = await tx
+    .select({ productId: stockQuants.productId, qty: stockQuants.qty, unitCost: stockLots.unitCost })
+    .from(stockQuants)
+    .innerJoin(stockLots, eq(stockLots.id, stockQuants.lotId))
+    .where(and(inArray(stockQuants.productId, ids), gt(stockQuants.qty, '0')));
+  const onHandByProduct = new Map<string, { qty: Decimal; value: Decimal }>();
+  for (const r of onHandRows) {
+    const cur = onHandByProduct.get(r.productId) ?? { qty: ZERO, value: ZERO };
+    cur.qty = cur.qty.plus(D(r.qty));
+    cur.value = cur.value.plus(D(r.qty).mul(D(r.unitCost)));
+    onHandByProduct.set(r.productId, cur);
+  }
+  for (const [productId, oh] of onHandByProduct) {
+    if (!oh.qty.isZero()) result.set(productId, { unitCost: oh.value.div(oh.qty), source: 'lot_avg' });
+  }
+
+  const remaining = ids.filter((id) => !result.has(id));
+  const productRows = remaining.length
+    ? await tx.select({ id: products.id, averageCost: products.averageCost, standardCost: products.standardCost }).from(products).where(inArray(products.id, remaining))
+    : [];
+  const productById = new Map(productRows.map((p) => [p.id, p]));
+  for (const id of remaining) {
+    const p = productById.get(id);
+    if (p && !D(p.averageCost).isZero()) result.set(id, { unitCost: D(p.averageCost), source: 'average_cost' });
+  }
+
+  const needSupplier = remaining.filter((id) => !result.has(id));
+  const supplierRows = needSupplier.length
+    ? await tx
+        .select({ productId: supplierProducts.productId, price: supplierProducts.price })
+        .from(supplierProducts)
+        .where(and(inArray(supplierProducts.productId, needSupplier), eq(supplierProducts.isPreferred, true)))
+    : [];
+  const supplierByProduct = new Map<string, string>();
+  for (const r of supplierRows) if (!supplierByProduct.has(r.productId)) supplierByProduct.set(r.productId, r.price);
+  for (const id of needSupplier) {
+    const price = supplierByProduct.get(id);
+    if (price !== undefined) result.set(id, { unitCost: D(price), source: 'supplier_price' });
+  }
+
+  for (const id of ids) {
+    if (result.has(id)) continue;
+    const p = productById.get(id);
+    if (p && !D(p.standardCost).isZero()) result.set(id, { unitCost: D(p.standardCost), source: 'standard_cost' });
+    else result.set(id, { unitCost: ZERO, source: 'none' });
+  }
+  return result;
+}
+
 export type BomCostLine = {
   lineId: string;
   productId: string;
@@ -217,10 +278,12 @@ export async function rollupBomCost(tx: DbOrTx, bomId: string): Promise<BomCostR
     .where(eq(bomLines.bomId, bomId))
     .orderBy(bomLines.sequence);
 
+  const costs = await resolveComponentUnitCosts(tx, rows.map((r) => r.line.productId));
+
   let materialCost = ZERO;
   const lines: BomCostLine[] = [];
   for (const r of rows) {
-    const { unitCost, source } = await resolveComponentUnitCost(tx, r.line.productId);
+    const { unitCost, source } = costs.get(r.line.productId) ?? { unitCost: ZERO, source: 'none' as const };
     const consumedQty = D(r.line.qty).mul(D(1).plus(D(r.line.scrapPct).div(100)));
     const lineCost = consumedQty.mul(unitCost);
     materialCost = r.line.isByproduct ? materialCost.minus(D(r.line.qty).mul(unitCost)) : materialCost.plus(lineCost);

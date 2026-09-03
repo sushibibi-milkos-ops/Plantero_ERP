@@ -4,7 +4,7 @@ import { db } from '@plantero/db';
 import { requirePermission, userCan } from '@/lib/auth';
 import { PageHeader } from '@/components/page-header';
 import { listWarehouses } from '@/modules/masterdata/queries';
-import { LocationTree } from '@/modules/masterdata/components/location-tree';
+import { LocationTree, AddRootLocationButton } from '@/modules/masterdata/components/location-tree';
 import { EmptyState } from '@/components/empty-state';
 
 export const metadata: Metadata = { title: 'Depolar' };
@@ -25,11 +25,14 @@ export default async function WarehousesPage() {
         <div className="space-y-8">
           {warehouses.map((w, i) => (
             <section key={w.id}>
-              <div className="mb-2">
-                <h2 className="text-base font-semibold">{w.name}</h2>
-                <p className="text-[12px] text-muted-foreground">
-                  {w.code} {w.address ? `· ${w.address}` : ''} {w.isProduction ? '· Üretim yapılıyor' : ''}
-                </p>
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <h2 className="text-base font-semibold">{w.name}</h2>
+                  <p className="text-[12px] text-muted-foreground">
+                    {w.code} {w.address ? `· ${w.address}` : ''} {w.isProduction ? '· Üretim yapılıyor' : ''}
+                  </p>
+                </div>
+                <AddRootLocationButton warehouseId={w.id} canManage={canManage} />
               </div>
               <LocationTree warehouseId={w.id} tree={trees[i] ?? []} canManage={canManage} />
             </section>

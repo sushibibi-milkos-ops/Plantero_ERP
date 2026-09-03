@@ -15,7 +15,7 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
       {
         accessorKey: 'sku',
         header: 'SKU',
-        meta: { mobile: 'title', className: 'font-mono text-[12px]', width: 104 },
+        meta: { mobile: 'subtitle', className: 'font-mono text-[12px]', width: 104 },
       },
       {
         accessorKey: 'shortCode',
@@ -23,26 +23,30 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
         meta: { mobile: 'hidden', className: 'font-mono text-[12px] text-muted-foreground', width: 120 },
         cell: ({ getValue }) => getValue<string | null>() ?? <span className="text-muted-foreground/50">—</span>,
       },
-      { accessorKey: 'name', header: 'Ürün Adı', meta: { mobile: 'subtitle', className: 'font-medium' } },
+      { accessorKey: 'name', header: 'Ürün Adı', meta: { mobile: 'title', className: 'font-medium' } },
       {
         id: 'category',
         accessorFn: (r) => r.category2 ?? r.category1 ?? '',
         header: 'Kategori',
-        meta: { mobile: 'hidden' },
+        meta: { mobile: 'hidden', width: 200 },
         cell: ({ row }) => {
           const r = row.original;
-          const parts = [r.category2, r.category3].filter(Boolean);
-          return parts.length ? (
-            <span className="truncate text-[12px] text-muted-foreground">{parts.join(' → ')}</span>
-          ) : (
-            <span className="text-muted-foreground/50">—</span>
+          // Yalnızca en alt seviye gösterilir; tam yol (kategori1 → 2 → 3) title'da durur.
+          const leaf = r.category3 ?? r.category2 ?? r.category1;
+          if (!leaf) return <span className="text-muted-foreground/50">—</span>;
+          const fullPath = [r.category1, r.category2, r.category3].filter(Boolean).join(' → ');
+          return (
+            <span className="block truncate text-[12px] text-muted-foreground" title={fullPath}>
+              {leaf}
+            </span>
           );
         },
       },
       {
         accessorKey: 'type',
         header: 'Tip',
-        meta: { mobile: 'badge', width: 110 },
+        // Mobil kartta yalnızca tek rozet olsun diye gizli — masaüstünde görünür.
+        meta: { mobile: 'hidden', width: 110 },
         cell: ({ getValue }) => {
           const t = getValue<string>();
           return <StatusBadge status={t} label={PRODUCT_TYPE_LABELS[t] ?? t} tone={PRODUCT_TYPE_TONE[t] ?? 'neutral'} />;
@@ -63,8 +67,13 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
       {
         accessorKey: 'status',
         header: 'Durum',
+        // Aktif = varsayılan durum, gürültü yaratmasın diye rozet yalnızca pasif/arşiv için gösterilir.
         meta: { mobile: 'badge', width: 90 },
-        cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="product" />,
+        cell: ({ getValue }) => {
+          const s = getValue<string>();
+          if (s === 'active') return <span className="inline-block size-1.5 rounded-full bg-success" aria-label="Aktif" title="Aktif" />;
+          return <StatusBadge status={s} kind="product" />;
+        },
       },
       {
         accessorKey: 'onHandQty',
