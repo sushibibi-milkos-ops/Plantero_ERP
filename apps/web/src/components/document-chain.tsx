@@ -45,7 +45,7 @@ function ChainCard({ node, current }: { node: ChainNode; current: boolean }) {
       data-pressable
       aria-current={current ? 'true' : undefined}
       className={cn(
-        'flex w-44 shrink-0 flex-col gap-1.5 rounded-lg border bg-card p-2.5 text-left',
+        'flex w-44 shrink-0 snap-start flex-col gap-1.5 rounded-lg border bg-card p-2.5 text-left',
         current ? 'border-primary/50 ring-2 ring-primary/15' : 'border-border/70 hover:border-border hover:bg-accent/40',
       )}
     >
@@ -86,7 +86,9 @@ export function DocumentChain({
   const chronologicalUpstream = [...upstream].reverse();
 
   return (
-    <div className={cn('scrollbar-thin -mx-1 overflow-x-auto px-1 py-1', className)} role="navigation" aria-label="Belge zinciri">
+    // scroll-fade-x + snap-x: mobilde sert kesiliyor, kaydırılabilir olduğuna dair hiçbir ipucu yoktu
+    // (fade/snap/peek yok) — kanban-board.tsx aynı sorunu bu ikisiyle çözmüştü (Tur 3 P1).
+    <div className={cn('scrollbar-thin scroll-fade-x -mx-1 snap-x overflow-x-auto px-1 py-1', className)} role="navigation" aria-label="Belge zinciri">
       <div className="flex items-center gap-2">
         {chronologicalUpstream.map((n) => (
           <div key={`${n.type}-${n.id}`} className="flex items-center gap-2">
@@ -105,7 +107,7 @@ export function DocumentChain({
         ) : (
           // Önceden kartsız, hizasız düz metindi — zincirdeki kartlarla (w-44, aynı dikey konum) aynı
           // ölçüde kesikli çerçeveli bir "boş" kart, akışın bittiğini görsel olarak da belirtir.
-          <div className="flex w-44 shrink-0 items-center justify-center self-stretch rounded-lg border border-dashed border-border/70 p-2.5 text-center text-[11px] text-muted-foreground">
+          <div className="flex w-44 shrink-0 snap-start items-center justify-center self-stretch rounded-lg border border-dashed border-border/70 p-2.5 text-center text-[11px] text-muted-foreground">
             Devam belgesi yok
           </div>
         )}

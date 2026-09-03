@@ -20,6 +20,16 @@ describe('formatMoney', () => {
   it('büyük tutarlarda hassasiyet kaybı yok', () => {
     expect(formatMoney('123456789012345.6789')).toBe('₺123.456.789.012.345,68');
   });
+  // Tur 3 P2 bulgusu: Intl'in `style:'currency'+notation:'compact'` ikilisi ICU sürümüne göre
+  // sembolü sona düşürebiliyordu ("16 B ₺") — sayfadaki her yerdeki sembol-önde biçimle çelişiyordu
+  // (net-ciro grafiği Y ekseni). Sembol artık manuel olarak sayının önüne (negatifte işaretten
+  // sonra) sabitleniyor, ICU'nun kısaltma yerleşimine bağımlı değil.
+  it('compact: sembol her zaman önde (₺ sonda değil) — Intl "B"/"Mn" öncesine daralmayan boşluk (NBSP) koyar', () => {
+    expect(formatMoney(16000, 'TRY', { compact: true })).toBe('₺16 B');
+    expect(formatMoney(-16000, 'TRY', { compact: true })).toBe('-₺16 B');
+    expect(formatMoney(2500000, 'TRY', { compact: true })).toBe('₺2,5 Mn');
+    expect(formatMoney(16000, 'TRY', { compact: true }).startsWith('₺')).toBe(true);
+  });
 });
 
 describe('formatQty / formatInt', () => {

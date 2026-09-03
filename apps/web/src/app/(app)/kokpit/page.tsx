@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 
 function Section({ title, href, children, className }: { title: string; href?: string; children: React.ReactNode; className?: string }) {
   return (
-    <section className={cn('min-w-0 rounded-xl border border-border/70 bg-card', className)}>
+    <section className={cn('min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card', className)}>
       <header className="flex h-11 items-center justify-between border-b border-border/60 px-4">
         <h2 className="text-[13px] font-semibold">{title}</h2>
         {href ? (
@@ -72,9 +72,14 @@ export default async function CockpitPage() {
     <>
       <PageHeader eyebrow={`${greeting()}, ${first}`} title="Kokpit" description={`${formatDateLong(new Date())} · Tire tesisi özeti`} />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {/* grid-cols-2 sabit (sm eşiği değil): 640px altında (390px mobil) tek sütuna düşüp 4 kart
+          ~440px yükseklik kaplıyor, gerçek içerik (Bugün listesi) katlamanın tamamen altında
+          kalıyordu (Tur 3 P1). h-full + kart sarmalayıcısı: "Açık siparişler" tek satırlık `hint`
+          taşıdığından kardeşlerinden 24px uzun kalıyordu — grid satırı `stretch` olsa da içerideki
+          KpiCard kendi auto-height'ini koruyordu; h-full ikisine de zincirlenince satır boyunca eşitlenir. */}
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {KPIS.map((k, i) => (
-          <div key={k.title} className="enter-up" style={{ animationDelay: `${i * 40}ms` }}>
+          <div key={k.title} className="enter-up h-full" style={{ animationDelay: `${i * 40}ms` }}>
             <KpiCard
               title={k.title}
               value={k.value}
@@ -84,6 +89,7 @@ export default async function CockpitPage() {
               icon={<k.icon strokeWidth={1.75} />}
               href={k.href}
               hint={k.hint}
+              className="h-full"
             />
           </div>
         ))}
@@ -103,7 +109,7 @@ export default async function CockpitPage() {
             <ul className="divide-y divide-border/50">
               {today.map((t) => (
                 <li key={`${t.k}-${t.no}`} className="flex flex-col gap-1 px-4 py-2.5 text-[13px] sm:h-11 sm:flex-row sm:items-center sm:gap-3 sm:py-0">
-                  <div className="flex items-center justify-between gap-3 sm:contents">
+                  <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
                     <span className="flex min-w-0 items-center gap-2 sm:contents">
                       <span className="shrink-0 text-xs text-muted-foreground sm:w-20">{t.kind}</span>
                       <Link href={t.href} className="truncate font-mono text-xs hover:underline sm:w-36 sm:shrink-0">{t.no}</Link>
@@ -129,7 +135,7 @@ export default async function CockpitPage() {
             <ul className="divide-y divide-border/50">
               {expiring.map((e) => (
                 <li key={e.id} className="flex flex-col gap-1 px-4 py-2.5 text-[13px] sm:h-11 sm:flex-row sm:items-center sm:gap-3 sm:py-0">
-                  <div className="flex items-center justify-between gap-3 sm:contents">
+                  <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
                     <span className="flex min-w-0 items-center gap-2 sm:contents">
                       <CalendarClock className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
                       <LotBadge lotNo={e.lotNo} status="released" />
@@ -178,19 +184,27 @@ export default async function CockpitPage() {
               const pct = l.activeWorkOrder && planned > 0 ? Math.min(100, Math.round((produced / planned) * 100)) : 0;
               return (
                 <div key={l.id}>
-                  <div className="mb-1.5 flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                     <span className="inline-flex items-center gap-2 font-medium">
                       <Factory className="size-4 text-muted-foreground" strokeWidth={1.75} /> {l.name}
                     </span>
-                    {l.activeWorkOrder ? <StatusBadge status={l.activeWorkOrder.status} kind="work_order" /> : <span className="text-xs text-muted-foreground">Boşta</span>}
+                    {/* Boşta hat: aynı rozet dili (StatusBadge, "Üretimde" ile aynı anatomi) — düz gri
+                        metin iki farklı gösterim dili yaratıyordu (Tur 3 bulgusu). İlerleme çubuğu ve
+                        "%0" da hatta iş emri yokken hiç render edilmez — hep boş/dolmayan bir çubuk
+                        render hatası gibi okunuyordu; gerçekten aktif olan hatlarda ilerleme kalır. */}
+                    {l.activeWorkOrder ? <StatusBadge status={l.activeWorkOrder.status} kind="work_order" /> : <StatusBadge status="idle" label="Boşta" tone="muted" />}
                   </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
-                  </div>
-                  <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
-                    <span className="font-mono">{l.activeWorkOrder?.docNo ?? '—'}</span>
-                    <span className="tabular-nums">%{pct}</span>
-                  </div>
+                  {l.activeWorkOrder ? (
+                    <>
+                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                      </div>
+                      <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
+                        <span className="font-mono">{l.activeWorkOrder.docNo}</span>
+                        <span className="tabular-nums">%{pct}</span>
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               );
             })}

@@ -62,7 +62,11 @@ export function DataTableMobileCards<T>({
                   <div className="truncate text-xs text-muted-foreground">{flexRender(subtitle.column.columnDef.cell, subtitle.getContext())}</div>
                 ) : null}
                 {metaCells.length ? (
-                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 truncate font-mono text-[11px] text-muted-foreground/70">
+                  // font-mono kaldırıldı: bu satır düz etiketler taşıyor (kanal adı, ürün tipi…) —
+                  // gerçek kod/belge no değeri zaten kendi hücresinde mono basılıyor (ör. LotBadge).
+                  // Önceden burası mono, başlık (asıl belge no) sans basıyordu — mobilde mono/sans
+                  // rolleri masaüstünün tam tersiydi (Tur 3 bulgusu).
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 truncate text-[11px] text-muted-foreground/70">
                     {metaCells.map((c, i) => (
                       <span key={c.id} className="inline-flex items-center gap-1.5">
                         {i > 0 ? <span aria-hidden>·</span> : null}
@@ -83,14 +87,16 @@ export function DataTableMobileCards<T>({
               // Tek ayraç kartın tam genişliğinde: her öğeye ayrı border-t vermek yerine (grid-cols-2'de
               // tek elemanlı son satırda kartın yalnızca yarısını kaplayan "kırık" bir çizgiye yol açardı)
               // <dl>'nin kendisine üstten tek bir hairline veriliyor.
-              // 2 alanlı kartlarda grid-cols-2 + justify-between yarım sütunun (~165px) iki ucuna
-              // etiket/değeri savuruyordu ("Eldeki   15 ADET   SKT        —" tek satır gibi okunuyordu) —
-              // 2 veya daha az alanda tek sütuna düşülür ve her hücre dikey (etiket üstte, değer altta) kurulur.
-              <dl className={cn('mt-2 grid gap-x-3 gap-y-1.5 border-t border-border/40 pt-2 text-[13px]', rest.length <= 2 ? 'grid-cols-1' : 'grid-cols-2')}>
+              // Kök neden (Tur 3 P1): önceki sürüm her alanı DİKEY kuruyordu (etiket üstte, değer
+              // altta) — alan başına iki satır harcayınca /satis/teklifler kartı 390px'te ~290px'e,
+              // /satis/siparisler ~185px'e çıkıyordu (referansın 2-3 katı). Artık her hücre TEK satır:
+              // etiket solda, değer sağda (items-baseline justify-between) — daima 2 sütun (alan sayısı
+              // ne olursa olsun), 20px'lik tek satırlık alanlar.
+              <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-border/40 pt-2 text-[13px]">
                 {rest.map((c) => (
-                  <div key={c.id} className="flex min-w-0 flex-col gap-0.5">
-                    <dt className="truncate text-[11px] text-muted-foreground">{headerLabel(row, c.column.id)}</dt>
-                    <dd className="truncate text-[13px] tabular-nums">{flexRender(c.column.columnDef.cell, c.getContext())}</dd>
+                  <div key={c.id} className="flex min-w-0 items-baseline justify-between gap-2">
+                    <dt className="shrink-0 truncate text-[11px] text-muted-foreground">{headerLabel(row, c.column.id)}</dt>
+                    <dd className="min-w-0 truncate text-right text-[13px] tabular-nums">{flexRender(c.column.columnDef.cell, c.getContext())}</dd>
                   </div>
                 ))}
               </dl>

@@ -24,7 +24,9 @@ export function ChannelSyncButton({ channelCode, compact = false }: { channelCod
   // Linear tabloya göre çok gösterişli. Diğer yerlerde (kanal ayarları vb.) tam metinli buton kalır.
   if (compact) {
     return (
-      <Button variant="ghost" size="icon-sm" onClick={sync} disabled={pending} title="Şimdi senkronize et" aria-label="Şimdi senkronize et">
+      // max-md:size-11: kanal ayarları düğmesiyle aynı bulgu — mobil kartta doğrudan render edilen
+      // ikon butonu 44px dokunma hedefinin altındaydı (Tur 3 P1).
+      <Button variant="ghost" size="icon-sm" className="max-md:size-11" onClick={sync} disabled={pending} title="Şimdi senkronize et" aria-label="Şimdi senkronize et">
         <RefreshCw className={pending ? 'size-3.5 animate-spin' : 'size-3.5'} />
       </Button>
     );

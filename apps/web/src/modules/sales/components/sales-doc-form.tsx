@@ -202,7 +202,7 @@ export function SalesDocForm({
             Stripe/Linear form gövdesini 640-768px ile sınırlar, burada 2 sütuna (4×2 satır) düşürüldü. */}
         <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Belge başlığı</h2>
-          <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <FieldLabel required>Cari</FieldLabel>
               <Controller control={form.control} name="partnerId" render={({ field }) => <Combobox value={field.value} onChange={(v) => field.onChange(v ?? '')} options={partnerOptions} placeholder="Müşteri seçin" />} />
@@ -222,7 +222,10 @@ export function SalesDocForm({
           </div>
         </div>
 
-        <div className="rounded-xl border border-border/70 bg-card p-4">
+        {/* max-w-3xl: "Belge başlığı" kartıyla aynı genişlik — önceden bu kart doğal içerik genişliğine
+            (satır grid'i) uzayıp ~1600px'e kadar yayılıyor, üstteki kart ~768px'te bitiyordu (Tur 3 P2,
+            aynı sayfada iki farklı kap genişliği). */}
+        <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
           <div className="mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-2">
             <h2 className="text-[13px] font-semibold text-foreground">Satırlar</h2>
           </div>
@@ -275,7 +278,7 @@ export function SalesDocForm({
         </div>
 
         {fields.length > 0 ? (
-          <div className="rounded-xl border border-border/70 bg-card p-4">
+          <div className="max-w-3xl rounded-xl border border-border/70 bg-card p-4">
             <h2 className="mb-3 border-b border-border/60 pb-2 text-[13px] font-semibold text-foreground">Özet</h2>
             <dl className="ml-auto grid max-w-xs grid-cols-2 gap-y-1.5 text-[13px]">
               <dt className="text-muted-foreground">Ara toplam</dt><dd className="text-right"><MoneyCell value={totals.subtotal.toFixed(2)} /></dd>

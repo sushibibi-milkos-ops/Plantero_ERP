@@ -4,9 +4,12 @@ import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatDate, formatMoney } from '@/lib/format';
 
-// Tasarım token'larında yalnızca 5 grafik rengi tanımlı (globals.css --chart-1..5) — yeni renk
-// uydurmak yerine 5'ten fazla kanalda en büyük 4'ü tekil seri, kalanını 'Diğer' altında toplarız.
-const CHART_COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)'];
+// Tasarım token'larında 5 grafik rengi tanımlı (globals.css --chart-1..5) ama --chart-4 kırmızıya
+// yakın (oklch hue 20) — bu sayfadaki negatif delta rozetleri de kırmızı, kategorik bir seri
+// (ör. Hepsiburada) kırmızıya düşünce "olumsuzluk" anlamı yanlışlıkla bir kanala yapışıyordu (Tur 3
+// bulgusu). Yeni token uydurmak yerine --chart-4 kategorik paletten çıkarıldı: en büyük 3 kanal tekil
+// seri, kalanı 'Diğer' altında toplanır (4 renk yeterli — kırmızı hiçbir zaman kullanılmaz).
+const CHART_COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-5)'];
 const OTHER_CODE = '__OTHER__';
 
 type SeriesRow = Record<string, string | number>;
@@ -110,7 +113,10 @@ export function NetRevenueChart({ series, channels }: { series: SeriesRow[]; cha
           {plotChannels.map((c, i) => (
             <Area
               key={c.code}
-              type="monotone"
+              // linear (monotone değil): günlük ciro noktaları arasında var olmayan ara değerler
+              // uyduran çan eğrileri çizmez — kesikli, ani sıçrayan gerçek günlük seri için doğru
+              // yorum "noktalar arası düz çizgi"dir (Tur 3 bulgusu, dataviz disiplini).
+              type="linear"
               dataKey={c.code}
               name={c.name}
               stackId="net"

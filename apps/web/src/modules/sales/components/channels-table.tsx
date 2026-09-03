@@ -23,13 +23,11 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
   const columns = useMemo<ColumnDef<ChannelCardRow, unknown>[]>(
     () => [
       {
+        // Sabit `bg-primary` nokta: 7 satırın 7'sinde özdeş, hiçbir bilgi taşımıyordu (Tur 3 P2, saf
+        // dekorasyon) — kaldırıldı. Gerçek durum bilgisi (aktif/pasif) zaten `isActive` üzerinden bir
+        // yerde tutulmuyor; ileride eklenirse StatusBadge ile (renk = anlam) verilmeli, çıplak nokta değil.
         id: 'name', accessorFn: (r) => r.channel.name, header: 'Kanal', meta: { mobile: 'title' },
-        cell: ({ row }) => (
-          <span className="inline-flex items-center gap-2 font-medium">
-            <span className="size-1.5 shrink-0 rounded-full bg-primary" />
-            {row.original.channel.name}
-          </span>
-        ),
+        cell: ({ row }) => <span className="font-medium">{row.original.channel.name}</span>,
       },
       {
         id: 'kind', accessorFn: (r) => CHANNEL_KIND_LABELS[r.channel.kind] ?? r.channel.kind, header: 'Tip',
@@ -60,7 +58,10 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
       {
         // Linear satırında eylem yalnızca hover/focus'ta belirir — 7 satırın sağ 300px'inde sürekli
         // dolu buton kalıcı gürültüydü. Mobilde (kart, hover yok) her zaman görünür kalır.
-        id: 'actions', header: '', enableSorting: false, meta: { align: 'right', width: 80, mobile: 'row', label: 'İşlem' },
+        // mobile: 'badge' (row değil): kart başlığının sağına, rozetlerle aynı satıra taşınır — ayrı
+        // bir "İşlem" tam satırı harcamaz (Tur 3 P1: 44px düğmeler + tam satır etiket, kart yüksekliğini
+        // gereksiz büyütüyordu).
+        id: 'actions', header: '', enableSorting: false, meta: { align: 'right', width: 80, mobile: 'badge', label: 'İşlem' },
         cell: ({ row }) => {
           const { channel } = row.original;
           const syncSupported = CHANNEL_SYNC_SUPPORTED.has(channel.code);

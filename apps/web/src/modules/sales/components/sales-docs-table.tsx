@@ -61,7 +61,9 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
       cols.push({ id: 'validUntil', accessorFn: (r) => r.validUntil, header: 'Geçerlilik', meta: { width: 100, mobile: 'hidden' }, cell: ({ row }) => (row.original.validUntil ? formatDate(row.original.validUntil) : <EmptyCell />) });
     } else {
       cols.push(
-        { id: 'externalOrderNo', accessorFn: (r) => r.externalOrderNo ?? '', header: 'Dış no', meta: { width: 100, mobile: 'hidden', className: 'font-mono text-xs' }, cell: ({ row }) => row.original.externalOrderNo || <EmptyCell /> },
+        // defaultHidden: 30 satırın 24'ünde değer em-dash (sütun seçiciden açılabilir kalır) — 1440px'te
+        // taşan tabloda en sağdaki "Genel toplam" büyük ölçüde boş bir sütuna kırpılıyordu (Tur 3 P2).
+        { id: 'externalOrderNo', accessorFn: (r) => r.externalOrderNo ?? '', header: 'Dış no', meta: { width: 100, mobile: 'hidden', defaultHidden: true, className: 'font-mono text-xs' }, cell: ({ row }) => row.original.externalOrderNo || <EmptyCell /> },
         {
           // Sütun başlığı sırasız olduğundan (enableSorting:false) DataTableColumnHeader'ın
           // sıralanabilir sarmalayıcısını atlayıp özel bir başlık veriyoruz: `title` ile ipucu

@@ -41,7 +41,9 @@ export function ChannelSettingsDrawer({ channel }: { channel: typeof salesChanne
   return (
     <Drawer open={open} onOpenChange={setOpen} direction="right">
       <DrawerTrigger asChild>
-        <Button variant="outline" size="icon-sm" aria-label="Kanal ayarları">
+        {/* max-md:size-11: mobil kartta bu buton doğrudan (DataTableRowActions'ın 44px düzeltmesini
+            baypas ederek) render ediliyor — 32px masaüstü yoğunluğu, 44px mobil dokunma hedefi (Tur 3 P1). */}
+        <Button variant="outline" size="icon-sm" className="max-md:size-11" aria-label="Kanal ayarları">
           <Settings2 className="size-3.5" />
         </Button>
       </DrawerTrigger>

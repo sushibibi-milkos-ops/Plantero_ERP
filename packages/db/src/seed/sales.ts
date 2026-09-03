@@ -35,6 +35,33 @@ import { log, type SeedSummary } from './_helpers.js';
 
 const TODAY = new Date().toISOString().slice(0, 10);
 
+/**
+ * Kanal rengi — modül sözleşmesi (docs/modules/satis.md §Ekranlar) "kanal rozeti (renkli)" ister,
+ * ama `sales_channels.color` (masterdata şemasında var, satırı `masterdata.ts` seed'i oluşturuyor)
+ * hiçbir yerde doldurulmuyordu: her kanal `null` → ekrandaki nokta her satırda aynı gri renge
+ * düşüyor, sıfır bilgi taşıyordu (Tur 3 P2 bulgusu). Masterdata seed'i (başka modülün dosyası)
+ * değiştirilmeden, yalnızca bu modülün seed'inde var olan satırların `color` alanı güncellenir —
+ * `is_sellable` bayrağı için yukarıdaki "ÖNEMLİ varsayım" ile aynı desen (veri, şema/masterdata
+ * dosyası değil). Idempotent (UPDATE, satır sayısını değiştirmez) — `existing` erken çıkışından
+ * ÖNCE çağrılır ki tekrar `db:seed` çalıştırıldığında da (yeni sipariş/fırsat üretilmese bile) renk
+ * güncel kalsın.
+ */
+const CHANNEL_COLORS: Record<string, string> = {
+  TRENDYOL: '#f97316',
+  HEPSIBURADA: '#eab308',
+  SITE: '#22c55e',
+  TOPTAN: '#64748b',
+  MIGROS: '#db2777',
+  IHRACAT: '#0ea5e9',
+  HAMMADDE: '#78716c',
+};
+
+async function seedChannelColors(tx: DbOrTx): Promise<void> {
+  for (const [code, color] of Object.entries(CHANNEL_COLORS)) {
+    await tx.update(salesChannels).set({ color }).where(eq(salesChannels.code, code));
+  }
+}
+
 async function auditCreate(tx: DbOrTx, tableName: string, recordId: string, summary: string): Promise<void> {
   await writeAudit(tx, { action: 'create', tableName, recordId, summary }, SYSTEM_ACTOR);
 }
@@ -407,6 +434,8 @@ async function seedExchangeRates(tx: DbOrTx, summary: SeedSummary): Promise<void
 /* ==================================================================== */
 
 export async function seedSales(tx: DbOrTx, summary: SeedSummary): Promise<void> {
+  await seedChannelColors(tx);
+
   const [existing] = await tx.select({ id: opportunities.id }).from(opportunities).limit(1);
   if (existing) {
     log('sales', 'zaten dolu, atlanıyor (idempotent)');

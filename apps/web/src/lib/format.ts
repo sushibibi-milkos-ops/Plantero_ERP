@@ -20,16 +20,27 @@ function toPlain(v: NumberLike, dp?: number): string {
   return dp === undefined ? d.toFixed() : d.toFixed(dp, Decimal.ROUND_HALF_UP);
 }
 
-/** ₺1.234,56 — para birimi sembolü Intl'den (TRY → ₺, EUR → €, USD → $) */
+/** ₺1.234,56 — para birimi sembolü Intl'den (TRY → ₺, EUR → €, USD → $)
+ *  `compact`: Intl'in `style:'currency'+notation:'compact'` ikilisi ICU sürümüne göre sembolü
+ *  sona düşürebiliyordu ("16 B ₺") — sayfadaki her yerdeki sembol-önde biçimle ("₺98.193")
+ *  çelişiyordu (grafik Y ekseni, Tur 3 bulgusu). Sembol her zaman ayrı alınıp sayının önüne
+ *  (negatifte işaretin sonrasına) sabit eklenir; ICU'nun kısaltma yerleşimine bağımlı değildir. */
 export function formatMoney(v: NumberLike, currency = 'TRY', opts: { digits?: number; compact?: boolean } = {}): string {
   const digits = opts.digits ?? 2;
   const plain = toPlain(v, digits);
+  if (opts.compact) {
+    const symbol = new Intl.NumberFormat(LOCALE, { style: 'currency', currency, currencyDisplay: 'narrowSymbol' })
+      .formatToParts(0)
+      .find((p) => p.type === 'currency')?.value ?? '';
+    const numPart = new Intl.NumberFormat(LOCALE, { notation: 'compact', minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(plain as unknown as number);
+    const neg = numPart.startsWith('-');
+    return `${neg ? '-' : ''}${symbol}${neg ? numPart.slice(1) : numPart}`;
+  }
   const nf = new Intl.NumberFormat(LOCALE, {
     style: 'currency',
     currency,
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
-    ...(opts.compact ? { notation: 'compact' as const, minimumFractionDigits: 0, maximumFractionDigits: 1 } : {}),
   });
   return nf.format(plain as unknown as number);
 }

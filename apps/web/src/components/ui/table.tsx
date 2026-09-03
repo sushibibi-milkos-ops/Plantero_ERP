@@ -69,8 +69,13 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
+      // h-9 + text-[12px] + text-muted-foreground: paylaşılan DataTable'ın kendi başlığıyla (bkz.
+      // data-table.tsx headerRow) birebir aynı sözleşme. Önceden h-10/14px/font-medium/text-foreground
+      // ile gövde metniyle aynı boyda, DAHA koyu basıyordu — sipariş detayı gibi bu ham
+      // shadcn Table'ı kullanan ekranlarda sütun başlığı veriden daha baskın çıkıp hiyerarşi ters
+      // dönüyordu (Tur 3 bulgusu, iki farklı tablo dili).
       className={cn(
-        "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "h-9 px-2 text-left align-middle text-[12px] font-medium whitespace-nowrap text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
       )}
       {...props}
