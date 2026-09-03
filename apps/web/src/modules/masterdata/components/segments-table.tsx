@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { Plus, Lock } from 'lucide-react';
+import { Plus, Lock, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Form, FormText, FormSelect, FormCheckbox } from '@/components/form/fields';
@@ -50,7 +50,7 @@ export function AddSegmentButton({ canManage }: { canManage: boolean }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)} className="max-md:h-11">
         <Plus className="size-4" /> Kod ekle
       </Button>
       <DialogContent>
@@ -85,7 +85,14 @@ export function AddSegmentButton({ canManage }: { canManage: boolean }) {
   );
 }
 
+/** Kod / Bağlam sütunları beş tabloda da aynı sabit genişlikte — "Etiket" hepsinde aynı x'te başlasın diye. */
+const CODE_COL_WIDTH = 96;
+const CONTEXT_COL_WIDTH = 132;
+
 export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
+  const [q, setQ] = useState('');
+  const needle = q.trim().toLocaleLowerCase('tr-TR');
+
   const grouped = useMemo(() => {
     const g = new Map<string, SkuSegmentOption[]>();
     for (const s of segments) {
@@ -97,35 +104,50 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
   }, [segments]);
 
   return (
-    <div className="space-y-6">
-      {(['T', 'AA', 'BB', 'CC', 'PP'] as const).map((seg) => {
-        const rows = (grouped.get(seg) ?? []).slice().sort((a, b) => (a.context ?? '').localeCompare(b.context ?? '') || a.code.localeCompare(b.code));
-        // Tümü '—' olan "Bağlam" ya da tümü boş olan "Rezerve" sütunları bu bölümde render edilmez —
-        // başlığı olup tek bir değeri olmayan bir sütun anlamsız gürültüdür.
-        const hasContext = rows.some((r) => r.context);
-        const hasReserved = rows.some((r) => r.isReserved);
-        return (
-          <div key={seg}>
-            <h2 className="mb-2 text-sm font-semibold">{SEGMENT_LABELS[seg]}</h2>
-            {rows.length === 0 ? (
-              <p className="text-[13px] text-muted-foreground">Sözlükte kayıt yok.</p>
-            ) : (
-              <div className="overflow-hidden rounded-lg bg-card">
+    <div className="max-w-[760px] space-y-6">
+      <div className="relative">
+        <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Kod ya da etiket ara…"
+          className="h-9 w-full rounded-md border border-border/60 bg-background pl-8 text-[13px] outline-none placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:max-w-xs"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {(['T', 'AA', 'BB', 'CC', 'PP'] as const).map((seg) => {
+          const all = (grouped.get(seg) ?? []).slice().sort((a, b) => (a.context ?? '').localeCompare(b.context ?? '') || a.code.localeCompare(b.code));
+          const rows = needle ? all.filter((r) => r.code.toLocaleLowerCase('tr-TR').includes(needle) || r.label.toLocaleLowerCase('tr-TR').includes(needle)) : all;
+          // Tümü '—' olan "Bağlam" ya da tümü boş olan "Rezerve" sütunları bu bölümde render edilmez —
+          // başlığı olup tek bir değeri olmayan bir sütun anlamsız gürültüdür.
+          const hasContext = all.some((r) => r.context);
+          const hasReserved = all.some((r) => r.isReserved);
+          return (
+            <div key={seg}>
+              <h2 className="mb-2 text-sm font-semibold">{SEGMENT_LABELS[seg]}</h2>
+              {all.length === 0 ? (
+                <p className="text-[13px] text-muted-foreground">Sözlükte kayıt yok.</p>
+              ) : rows.length === 0 ? (
+                <p className="text-[13px] text-muted-foreground">Aramayla eşleşen kayıt yok.</p>
+              ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-[13px]">
                     <thead>
                       <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
-                        <th className="h-9 px-3 text-left font-medium">Kod</th>
-                        {hasContext ? <th className="h-9 px-3 text-left font-medium">Bağlam</th> : null}
+                        <th className="h-9 px-3 text-left font-medium" style={{ width: CODE_COL_WIDTH }}>Kod</th>
+                        {hasContext ? <th className="h-9 px-3 text-left font-medium" style={{ width: CONTEXT_COL_WIDTH }}>Bağlam</th> : null}
                         <th className="h-9 px-3 text-left font-medium">Etiket</th>
                         {hasReserved ? <th className="h-9 px-3 text-center font-medium">Rezerve</th> : null}
                       </tr>
                     </thead>
                     <tbody>
                       {rows.map((r) => (
-                        <tr key={`${r.segment}-${r.context}-${r.code}`} className="h-9 border-b border-border/50 last:border-0">
-                          <td className="px-3 font-mono text-[12px]">{r.code}</td>
-                          {hasContext ? <td className="px-3 text-muted-foreground">{r.context ? (PRODUCT_TYPE_LABELS[r.context] ?? r.context) : '—'}</td> : null}
+                        <tr key={`${r.segment}-${r.context}-${r.code}`} className="h-9 border-b border-border/50 last:border-0 hover:bg-accent/50">
+                          <td className="px-3 font-mono text-[12px] whitespace-nowrap">{r.code}</td>
+                          {hasContext ? (
+                            <td className="px-3 whitespace-nowrap text-muted-foreground">{r.context ? (PRODUCT_TYPE_LABELS[r.context] ?? r.context) : '—'}</td>
+                          ) : null}
                           <td className="px-3">{r.label}</td>
                           {hasReserved ? (
                             <td className="px-3 text-center">
@@ -141,11 +163,11 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
                     </tbody>
                   </table>
                 </div>
-              </div>
-            )}
-          </div>
-        );
-      })}
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       <div className="rounded-lg border border-border/60 bg-muted/20 p-4 text-[13px] text-muted-foreground">
         <h3 className="mb-1 font-medium text-foreground">Kurallar</h3>

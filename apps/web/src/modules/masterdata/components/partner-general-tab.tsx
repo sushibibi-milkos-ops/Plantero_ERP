@@ -5,7 +5,7 @@ import Decimal from 'decimal.js';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
-import { formatDate, formatPct } from '@/lib/format';
+import { formatDate, formatMoney, formatPct } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { PARTNER_KIND_LABELS, PAYMENT_TERM_LABELS } from '../product-labels';
 import type { getPartnerById, PartnerDocRow } from '../queries';
@@ -79,9 +79,9 @@ export function PartnerGeneralTab({
 
   type FieldRow = { label: string; value: unknown; node: React.ReactNode };
 
+  // "Durum" burada tekrar edilmez — sayfa başlığındaki rozet zaten aynı bilgiyi taşıyor.
   const identity: FieldRow[] = [
     { label: 'Tip', value: PARTNER_KIND_LABELS[partner.kind] ?? partner.kind, node: PARTNER_KIND_LABELS[partner.kind] ?? partner.kind },
-    { label: 'Durum', value: partner.isActive ? 'active' : 'inactive', node: <StatusBadge status={partner.isActive ? 'active' : 'inactive'} /> },
     { label: 'VKN / TCKN', value: partner.taxNumber, node: partner.taxNumber ?? '—' },
     { label: 'Vergi dairesi', value: partner.taxOffice, node: partner.taxOffice ?? '—' },
     { label: 'e-Fatura mükellefi', value: true, node: partner.isEInvoiceRegistered ? 'Evet' : 'Hayır' },
@@ -120,12 +120,14 @@ export function PartnerGeneralTab({
 
   return (
     <div className="space-y-6">
-      {/* Stripe tarzı KPI şeridi — bu sekmenin manşet sayıları */}
+      {/* Stripe tarzı KPI şeridi — bu sekmenin manşet sayıları. Düz formatMoney kullanılır (MoneyCell'in
+          "sıfırsa soluklaştır" mantığı burada devre dışı): aynı satırdaki üç değer aynı kuralla basılır,
+          sıfır olmaları dışında aralarında görsel bir fark yaratılmaz. */}
       <div className="flex flex-wrap divide-x divide-border/60 rounded-lg border border-border/60 bg-muted/10">
-        <Kpi label="Bakiye" value={<MoneyCell value={partner.balance} currency={partner.currency} className="text-2xl" />} tone={balanceTone} />
+        <Kpi label="Bakiye" value={formatMoney(partner.balance, partner.currency)} tone={balanceTone} />
         {creditUsagePct !== null ? <Kpi label="Kredi limiti kullanımı" value={formatPct(creditUsagePct)} /> : null}
         <Kpi label="Açık sipariş" value={openOrdersCount} />
-        <Kpi label="Açık fatura tutarı" value={<MoneyCell value={openInvoiceTotal.toFixed(4)} currency={partner.currency} className="text-2xl" />} />
+        <Kpi label="Açık fatura tutarı" value={formatMoney(openInvoiceTotal.toFixed(4), partner.currency)} />
       </div>
 
       <div className="space-y-4">

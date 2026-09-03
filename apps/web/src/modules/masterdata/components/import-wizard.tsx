@@ -96,92 +96,85 @@ export function ImportWizard({ history = [] }: { history?: ImportHistoryRow[] })
     <div className="space-y-6">
       {step === 'select' ? (
         <div className="space-y-4">
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragOver(false);
-              pickFile(e.dataTransfer.files?.[0] ?? null);
-            }}
-            onClick={() => inputRef.current?.click()}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') inputRef.current?.click();
-            }}
-            className={cn(
-              'flex min-h-44 cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors',
-              dragOver ? 'border-primary bg-primary/5' : 'border-border/70 hover:border-primary/40 hover:bg-muted/30',
-            )}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept=".xlsx"
-              className="hidden"
-              onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
-            />
-            {file ? (
-              <>
-                <FileSpreadsheet className="size-8 text-primary" strokeWidth={1.5} />
-                <div>
-                  <p className="text-sm font-medium">{file.name}</p>
-                  <p className="text-[12px] text-muted-foreground">{(file.size / 1024).toFixed(0)} KB — hazır</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <Upload className="size-8 text-muted-foreground" strokeWidth={1.5} />
-                <div>
-                  <p className="text-sm font-medium">Excel dosyasını buraya sürükleyin</p>
-                  <p className="text-[12px] text-muted-foreground">veya tıklayıp seçin — Plantero_AnaVeri_KonusanKod.xlsx formatı (&quot;Ana Veri&quot; + &quot;Kod Yapısı&quot; sayfaları)</p>
-                </div>
-              </>
-            )}
-          </div>
-          <div className="flex justify-end gap-2">
-            {file ? (
-              <Button variant="ghost" onClick={reset} disabled={previewing}>
-                Vazgeç
-              </Button>
-            ) : null}
-            <Button onClick={runPreview} disabled={!file || previewing}>
-              {previewing ? <Loader2 className="size-4 animate-spin" /> : null}
-              Deneme çalıştır (önizleme)
-            </Button>
-          </div>
-
-          {/* Bağlam: hangi sütunlar bekleniyor + önceki içe aktarımlar — sihirbaz artık bağlamsız değil */}
-          <div className="grid grid-cols-1 gap-4 border-t border-border/60 pt-4 sm:grid-cols-2">
-            <div>
-              <h3 className="mb-2 text-[13px] font-semibold">Beklenen sütunlar — &quot;Ana Veri&quot; sayfası</h3>
-              <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
-                <table className="w-full border-collapse text-[12px]">
-                  <tbody>
-                    {EXPECTED_COLUMNS.map((c) => (
-                      <tr key={c.name} className="h-9 border-b border-border/40 last:border-0">
-                        <td className="w-1/2 px-3 font-medium">{c.name}</td>
-                        <td className="px-3 text-muted-foreground">{c.example}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* Dashed border yalnızca gerçek bir bırakma hedefi için: kartın üst kısmı (sürükle/tıkla-seç).
+              Alt kenardaki eylem şeridi dashed alanın DIŞINDA — oraya bir şey bırakılamaz, düz hairline. */}
+          <div className={cn('overflow-hidden rounded-xl border-2 border-dashed transition-colors', dragOver ? 'border-primary bg-primary/5' : 'border-border/70')}>
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(true);
+              }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOver(false);
+                pickFile(e.dataTransfer.files?.[0] ?? null);
+              }}
+              onClick={() => inputRef.current?.click()}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') inputRef.current?.click();
+              }}
+              className="flex min-h-44 cursor-pointer flex-col items-center justify-center gap-3 px-6 py-10 text-center hover:bg-muted/30"
+            >
+              <input
+                ref={inputRef}
+                type="file"
+                accept=".xlsx"
+                className="hidden"
+                onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
+              />
+              {file ? (
+                <>
+                  <FileSpreadsheet className="size-8 text-primary" strokeWidth={1.5} />
+                  <div>
+                    <p className="text-sm font-medium">{file.name}</p>
+                    <p className="text-[12px] text-muted-foreground">{(file.size / 1024).toFixed(0)} KB — hazır</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Upload className="size-8 text-muted-foreground" strokeWidth={1.5} />
+                  <div>
+                    <p className="text-sm font-medium">Excel dosyasını buraya sürükleyin</p>
+                    <p className="text-[12px] text-muted-foreground">veya tıklayıp seçin — Plantero_AnaVeri_KonusanKod.xlsx formatı (&quot;Ana Veri&quot; + &quot;Kod Yapısı&quot; sayfaları)</p>
+                  </div>
+                </>
+              )}
+            </div>
+            {/* Birincil eylem artık dropzone'un içinde, alt kenarında — devre dışı gerekçesi yanında yazılı. */}
+            <div className="flex items-center justify-between gap-3 border-t border-border/60 bg-card px-4 py-3">
+              <p className="min-w-0 truncate text-[12px] text-muted-foreground">
+                {file ? 'Dosya seçildi — önizlemek için "Deneme çalıştır" ile devam edin.' : 'Önce bir .xlsx dosyası seçin.'}
+              </p>
+              <div className="flex shrink-0 gap-2">
+                {file ? (
+                  <Button variant="ghost" size="sm" className="max-md:h-11" onClick={reset} disabled={previewing}>
+                    Vazgeç
+                  </Button>
+                ) : null}
+                <Button size="sm" className="max-md:h-11" onClick={runPreview} disabled={!file || previewing}>
+                  {previewing ? <Loader2 className="size-4 animate-spin" /> : null}
+                  Deneme çalıştır (önizleme)
+                </Button>
               </div>
             </div>
+          </div>
+
+          {/* Bağlam: önceki içe aktarımlar öne çıkar; hangi sütunlar bekleniyor sıkça bakılmayan bir
+              referans — varsayılan kapalı <details>, açıldığında yoğun (h-9) satırlarla. */}
+          <div className="space-y-4 border-t border-border/60 pt-4">
             <div>
               <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-semibold">
                 <History className="size-3.5 text-muted-foreground" /> Son içe aktarımlar
               </h3>
               {history.length === 0 ? (
-                <div className="rounded-lg border border-dashed border-border/70 px-3 py-4 text-center text-[12px] text-muted-foreground">
+                <div className="rounded-lg border border-border/70 px-3 py-4 text-center text-[12px] text-muted-foreground">
                   Henüz içe aktarım yapılmadı.
                 </div>
               ) : (
-                <ul className="space-y-1.5">
+                <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                   {history.map((h) => (
                     <li key={h.id} className="rounded-lg border border-border/70 bg-card px-3 py-2 text-[12px]">
                       <div className="flex items-baseline justify-between gap-2">
@@ -194,6 +187,26 @@ export function ImportWizard({ history = [] }: { history?: ImportHistoryRow[] })
                 </ul>
               )}
             </div>
+            <details className="group">
+              <summary className="cursor-pointer text-[13px] font-semibold text-muted-foreground select-none [&::-webkit-details-marker]:hidden">
+                <span className="inline-flex items-center gap-1">
+                  Beklenen sütunlar — &quot;Ana Veri&quot; sayfası ({EXPECTED_COLUMNS.length})
+                  <ArrowRight className="size-3 transition-transform duration-150 ease-out group-open:rotate-90" />
+                </span>
+              </summary>
+              <div className="mt-2 border-t border-border/60">
+                <table className="w-full border-collapse text-[12px]">
+                  <tbody>
+                    {EXPECTED_COLUMNS.map((c) => (
+                      <tr key={c.name} className="h-9 border-b border-border/50 last:border-0">
+                        <td className="w-1/2 px-3 font-medium">{c.name}</td>
+                        <td className="px-3 text-muted-foreground">{c.example}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </details>
           </div>
         </div>
       ) : null}

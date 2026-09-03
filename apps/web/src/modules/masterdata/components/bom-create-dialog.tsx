@@ -57,7 +57,7 @@ export function BomCreateDialog({ productOptions, candidates }: { productOptions
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)} className="max-md:h-11">
         <Plus className="size-4" /> Yeni reçete
       </Button>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">

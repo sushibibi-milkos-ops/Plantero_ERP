@@ -23,12 +23,12 @@ export default async function ProductsPage() {
         actions={
           canManage ? (
             <>
-              <Button variant="outline" asChild>
+              <Button variant="outline" asChild className="max-md:h-11">
                 <Link href="/ana-veri/import">
                   <FileUp className="size-4" /> Excel&apos;den içe aktar
                 </Link>
               </Button>
-              <Button asChild>
+              <Button asChild className="max-md:h-11">
                 <Link href="/ana-veri/urunler/yeni">
                   <Plus className="size-4" /> Yeni ürün
                 </Link>

@@ -448,6 +448,9 @@ export type BomListRow = {
   productName: string;
   outputQty: string;
   outputUomCode: string;
+  expectedYieldPct: string;
+  cycleMinutes: number | null;
+  lineCount: number;
   unitCost: string;
 };
 
@@ -533,6 +536,15 @@ export async function listBoms(): Promise<BomListRow[]> {
 
   const unitCosts = await batchEstimateBomUnitCosts(rows.map((r) => r.b.id));
 
+  const lineCountRows = rows.length
+    ? await db
+        .select({ bomId: bomLines.bomId, n: sql<string>`count(*)` })
+        .from(bomLines)
+        .where(inArray(bomLines.bomId, rows.map((r) => r.b.id)))
+        .groupBy(bomLines.bomId)
+    : [];
+  const lineCountByBom = new Map(lineCountRows.map((r) => [r.bomId, Number(r.n)]));
+
   return rows.map((r) => ({
     id: r.b.id,
     code: r.b.code,
@@ -544,6 +556,9 @@ export async function listBoms(): Promise<BomListRow[]> {
     productName: r.productName,
     outputQty: r.b.outputQty,
     outputUomCode: r.outputUomCode ?? '',
+    expectedYieldPct: r.b.expectedYieldPct,
+    cycleMinutes: r.b.cycleMinutes,
+    lineCount: lineCountByBom.get(r.b.id) ?? 0,
     unitCost: unitCosts.get(r.b.id) ?? '0',
   }));
 }

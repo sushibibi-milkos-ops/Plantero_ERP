@@ -1,11 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Eye } from 'lucide-react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
-import { cn } from '@/lib/utils';
 import type { PartnerListRow } from '../queries';
 import { PARTNER_KIND_LABELS } from '../product-labels';
 
@@ -33,22 +31,21 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
         id: 'term',
         accessorFn: (r) => (r.paymentTermKind === 'cash' ? 'Peşin' : `${r.paymentTermDays} gün`),
         header: 'Vade',
-        meta: { mobile: 'hidden', width: 100 },
+        meta: { mobile: 'hidden', width: 84 },
       },
       {
         accessorKey: 'balance',
         header: 'Bakiye',
-        meta: { align: 'right', width: 130 },
-        cell: ({ getValue }) => {
-          const v = getValue<string>();
-          const n = Number(v);
-          return <MoneyCell value={v} className={cn(n > 0 && 'text-success', n < 0 && 'text-destructive')} />;
-        },
+        // Pozitif bakiye nötr: alacak "iyi" bir olay değil, yalnızca "sıfırdan farklı" demek. Renk yalnızca
+        // gerçek sinyalde kullanılır — negatif (borç) MoneyCell tarafından zaten kırmızı basılır.
+        meta: { align: 'right', width: 120 },
+        cell: ({ getValue }) => <MoneyCell value={getValue<string>()} />,
       },
       {
         accessorKey: 'supplierQualityScore',
         header: 'Kalite Skoru',
-        meta: { align: 'right', width: 120, mobile: 'hidden' },
+        // Yalnızca tedarikçilerde dolu — nadiren bakılır, dar ekranda taşan sütun; varsayılan gizli.
+        meta: { align: 'right', width: 120, mobile: 'hidden', defaultHidden: true },
         cell: ({ getValue }) => {
           const v = getValue<string | null>();
           return v ? <span className="num">{Number(v).toFixed(0)}</span> : <span className="text-muted-foreground/50">—</span>;
@@ -58,7 +55,7 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
         accessorKey: 'isActive',
         header: 'Durum',
         // Aktif = varsayılan; gürültü yaratmasın diye rozet yalnızca pasif için gösterilir.
-        meta: { mobile: 'badge', width: 90 },
+        meta: { mobile: 'badge', width: 48 },
         cell: ({ getValue }) =>
           getValue<boolean>() ? (
             <span className="inline-block size-1.5 rounded-full bg-success" aria-label="Aktif" title="Aktif" />
@@ -85,7 +82,6 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
       rowHref={(p) => `/ana-veri/cariler/${p.id}`}
       emptyTitle="Henüz cari yok"
       emptyDescription="Yeni bir müşteri ya da tedarikçi ekleyin."
-      rowActions={(p) => [{ label: 'Görüntüle', icon: Eye, href: `/ana-veri/cariler/${p.id}` }]}
     />
   );
 }

@@ -331,11 +331,14 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
 
         <div>
           <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Stok & Kalite</h2>
-          <div className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 p-3 sm:grid-cols-4">
-            <FormSwitch control={form.control} name="isLotTracked" label="Lot takipli" />
-            <FormSwitch control={form.control} name="isPurchasable" label="Satın alınabilir" />
-            <FormSwitch control={form.control} name="isSellable" label="Satılabilir" />
-            <FormSwitch control={form.control} name="isManufactured" label="Üretilebilir" />
+          {/* Dördü tek bir ayar grubunun üyesi — tek kap + hairline ayraç, dört ayrı kart değil.
+              `rounded-none border-0` FormSwitch'in kendi kutusunu iptal eder (yalnızca burada, className
+              üzerinden — paylaşılan form/fields.tsx dosyası değiştirilmedi); h-11 mobilde 44px dokunma hedefi verir. */}
+          <div className="divide-y divide-border/50 rounded-lg border border-border/60">
+            <FormSwitch control={form.control} name="isLotTracked" label="Lot takipli" className="h-11 rounded-none border-0 px-3 py-0" />
+            <FormSwitch control={form.control} name="isPurchasable" label="Satın alınabilir" className="h-11 rounded-none border-0 px-3 py-0" />
+            <FormSwitch control={form.control} name="isSellable" label="Satılabilir" className="h-11 rounded-none border-0 px-3 py-0" />
+            <FormSwitch control={form.control} name="isManufactured" label="Üretilebilir" className="h-11 rounded-none border-0 px-3 py-0" />
           </div>
           <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-12">
             <div className="md:col-span-4">

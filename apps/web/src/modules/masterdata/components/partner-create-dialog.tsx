@@ -44,7 +44,7 @@ export function PartnerCreateDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)} className="max-md:h-11">
         <Plus className="size-4" /> Yeni cari
       </Button>
       <DialogContent>

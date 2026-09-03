@@ -73,8 +73,10 @@ export function ProductGeneralTab({ product, uomName }: { product: { p: Record<s
       {
         title: 'Fiyat & Vergi',
         fields: [
-          { label: 'Ortalama maliyet', value: true, node: formatMoney(p.averageCost, undefined, { digits: 4 }) },
-          { label: 'Standart maliyet', value: true, node: formatMoney(p.standardCost, undefined, { digits: 4 }) },
+          // Ekranda tüm para alanları tek biçim: ₺0,00. Ham 4 haneli değer title/tooltip'te durur
+          // (4 hane yalnızca hesap/mutabakat ekranlarına ait, detay özetine değil).
+          { label: 'Ortalama maliyet', value: true, node: <span title={formatMoney(p.averageCost, undefined, { digits: 4 })}>{formatMoney(p.averageCost)}</span> },
+          { label: 'Standart maliyet', value: true, node: <span title={formatMoney(p.standardCost, undefined, { digits: 4 })}>{formatMoney(p.standardCost)}</span> },
           { label: 'Liste fiyatı', value: true, node: formatMoney(p.listPrice) },
           { label: 'Satış KDV', value: true, node: formatPct(p.vatRate) },
           { label: 'Alış KDV', value: true, node: formatPct(p.purchaseVatRate) },
@@ -95,7 +97,7 @@ export function ProductGeneralTab({ product, uomName }: { product: { p: Record<s
   const hiddenCount = groups.reduce((acc, g) => acc + g.fields.filter((f) => !f.value).length, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-[880px] space-y-6">
       <div className="rounded-lg border border-border/60 bg-muted/20 px-4 py-3">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px]">
           <span className="inline-flex items-center gap-1.5 text-muted-foreground">
@@ -119,7 +121,7 @@ export function ProductGeneralTab({ product, uomName }: { product: { p: Record<s
           return (
             <div key={g.title} className="space-y-3">
               <GroupHeading>{g.title}</GroupHeading>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-3">
                 {visible.map((f) => (
                   <Field key={f.label} label={f.label} empty={!f.value}>
                     {f.node}
