@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -88,7 +89,16 @@ export function DocumentChain({
   return (
     // scroll-fade-x + snap-x: mobilde sert kesiliyor, kaydırılabilir olduğuna dair hiçbir ipucu yoktu
     // (fade/snap/peek yok) — kanban-board.tsx aynı sorunu bu ikisiyle çözmüştü (Tur 3 P1).
-    <div className={cn('scrollbar-thin scroll-fade-x -mx-1 snap-x overflow-x-auto px-1 py-1', className)} role="navigation" aria-label="Belge zinciri">
+    // --scroll-fade-bg: var(--background) — DocumentChain'in tüm kullanım yerleri (sipariş/teklif/
+    // mal kabul/sevkiyat/iş emri detayı) bu şeridi kart içinde değil doğrudan sayfa zemininde
+    // render eder; scroll-fade-x'in varsayılanı var(--card) (beyaz) olduğundan açık temada zeminle
+    // (var(--background), #fafafa) eşleşmiyor ve soldurma pratikte görünmüyordu (Tur 4 P2 bulgusu).
+    <div
+      className={cn('scrollbar-thin scroll-fade-x -mx-1 snap-x overflow-x-auto px-1 py-1', className)}
+      style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}
+      role="navigation"
+      aria-label="Belge zinciri"
+    >
       <div className="flex items-center gap-2">
         {chronologicalUpstream.map((n) => (
           <div key={`${n.type}-${n.id}`} className="flex items-center gap-2">

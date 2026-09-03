@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Banknote, ShoppingCart, AlertTriangle, Clock, Factory, CalendarClock, CheckSquare, ArrowRight, Wallet } from 'lucide-react';
+import { Factory, CalendarClock, CheckSquare, ArrowRight, Wallet } from 'lucide-react';
 import { requirePermission } from '@/lib/auth';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
+import { KpiStripRow } from '@/components/kpi-strip';
 import { StatusBadge } from '@/components/status-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { LotBadge } from '@/components/lot-badge';
@@ -61,39 +62,41 @@ export default async function CockpitPage() {
   // rozeti basmasını engeller ve ipucu metni (`hint`) görünür kalır (Tur 2 bulgusu). "Bugünkü ciro"
   // için de dün hiç fatura kesilmemişse (`revenueDeltaPct === null`, bölen sıfır) `?? undefined` ile
   // aynı kurala tabi tutulur — `null` geçmek de aynı gri rozeti basardı.
-  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta?: number | null; deltaLabel?: string; icon: typeof Banknote; href: string; hint?: string }> = [
-    { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', delta: kpis.revenueDeltaPct ?? undefined, deltaLabel: 'dünden', icon: Banknote, href: '/satis/net-ciro' },
-    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', icon: ShoppingCart, href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
-    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', icon: AlertTriangle, href: '/satin-alma/kritik-stok' },
-    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', icon: Clock, href: '/finans/tahsilat-takibi' },
+  // İkon alanı tamamen kaldırıldı (Tur 4 P1 bulgusu): Banknote/ShoppingCart/AlertTriangle/Clock
+  // hiçbir bilgi taşımıyordu, başlıktaki metni birebir tekrarlıyordu ("ikon süs değildir" ihlali) —
+  // ayrıca `variant="card"` (1px çerçeve + 133px yükseklik) /satis/net-ciro'nun `variant="strip"`
+  // (kutusuz, ikonsuz, hairline'lı, 80px) anatomisiyle çelişiyordu; ürünün tek bir finans ekranı
+  // dili konuşması için burada da strip kullanılıyor.
+  const KPIS: Array<{ title: string; value: number | string; format: 'money' | 'int'; delta?: number | null; deltaLabel?: string; href: string; hint?: string }> = [
+    { title: 'Bugünkü ciro', value: kpis.revenueToday, format: 'money', delta: kpis.revenueDeltaPct ?? undefined, deltaLabel: 'dünden', href: '/satis/net-ciro' },
+    { title: 'Açık siparişler', value: kpis.openOrders, format: 'int', href: '/satis/siparisler', hint: kpis.readyToShip > 0 ? `${kpis.readyToShip} sevkiyata hazır` : undefined },
+    { title: 'Kritik stok kalemi', value: kpis.criticalStockCount, format: 'int', href: '/satin-alma/kritik-stok' },
+    { title: 'Vadesi geçen alacak', value: kpis.overdueReceivable, format: 'money', href: '/finans/tahsilat-takibi' },
   ];
 
   return (
     <>
       <PageHeader eyebrow={`${greeting()}, ${first}`} title="Kokpit" description={`${formatDateLong(new Date())} · Tire tesisi özeti`} />
 
-      {/* grid-cols-2 sabit (sm eşiği değil): 640px altında (390px mobil) tek sütuna düşüp 4 kart
-          ~440px yükseklik kaplıyor, gerçek içerik (Bugün listesi) katlamanın tamamen altında
-          kalıyordu (Tur 3 P1). h-full + kart sarmalayıcısı: "Açık siparişler" tek satırlık `hint`
-          taşıdığından kardeşlerinden 24px uzun kalıyordu — grid satırı `stretch` olsa da içerideki
-          KpiCard kendi auto-height'ini koruyordu; h-full ikisine de zincirlenince satır boyunca eşitlenir. */}
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-        {KPIS.map((k, i) => (
-          <div key={k.title} className="enter-up h-full" style={{ animationDelay: `${i * 40}ms` }}>
-            <KpiCard
-              title={k.title}
-              value={k.value}
-              format={k.format}
-              delta={k.delta}
-              deltaLabel={k.deltaLabel}
-              icon={<k.icon strokeWidth={1.75} />}
-              href={k.href}
-              hint={k.hint}
-              className="h-full"
-            />
-          </div>
+      {/* KpiStripRow + variant="strip": /satis/net-ciro ile aynı KPI dili (kutusuz, ikonsuz, dikey
+          hairline, sabit 80px/72px) — önceki `variant="card"` grid'i (260×133px, çerçeveli, dekoratif
+          ikonlu) kaldırıldı; kazanılan dikey alan masaüstünde ~53px, mobilde şerit yatay kaydırılır
+          (Tur 4 P1 bulgusu). */}
+      <KpiStripRow>
+        {KPIS.map((k) => (
+          <KpiCard
+            key={k.title}
+            title={k.title}
+            value={k.value}
+            format={k.format}
+            delta={k.delta}
+            deltaLabel={k.deltaLabel}
+            href={k.href}
+            hint={k.hint}
+            variant="strip"
+          />
         ))}
-      </div>
+      </KpiStripRow>
 
       {/* İki bağımsız dikey akış (grid yerine flex sütun) — CSS grid'in örtük satır hizalaması
           "Bugün + SKT" (2 kart) ile "Onay kuyruğu + Üretim + Bugünün tahsilatları" (3 kart)

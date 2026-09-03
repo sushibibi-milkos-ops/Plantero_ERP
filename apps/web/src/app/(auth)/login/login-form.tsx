@@ -18,15 +18,26 @@ export function LoginForm({ next }: { next?: string }) {
     <form action={action} className="space-y-4" noValidate>
       {next ? <input type="hidden" name="next" value={next} /> : null}
 
-      {state?.error && !state.fieldErrors ? (
-        <div
-          role="alert"
-          className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
-        >
-          <AlertCircle className="mt-0.5 size-4 shrink-0" />
-          <span>{state.error}</span>
-        </div>
-      ) : null}
+      {/* Kosullu render yerine daima 44px'lik bir bolge ayrilir (Tur 4 P2 bulgusu): hata kutusu
+          formun UZERINE eklendiginde E-posta/Sifre alanlari ve "Giris yap" butonu ~46px asagi
+          kayiyordu — kullanici hatayi tam okurken tikladigi yer yerinden oynuyordu. Icerik kosullu
+          dolar, yer her zaman ayrilir; hatasiz durumda kutu gorunmez (border/bg yok) ama yuksekligi
+          korunur. */}
+      <div
+        role="alert"
+        aria-live="polite"
+        className={cn(
+          'flex min-h-11 items-start gap-2 rounded-md border px-3 py-2 text-sm',
+          state?.error && !state.fieldErrors ? 'border-destructive/30 bg-destructive/5 text-destructive' : 'border-transparent',
+        )}
+      >
+        {state?.error && !state.fieldErrors ? (
+          <>
+            <AlertCircle className="mt-0.5 size-4 shrink-0" />
+            <span>{state.error}</span>
+          </>
+        ) : null}
+      </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="email">E-posta</Label>

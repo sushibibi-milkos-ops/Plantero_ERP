@@ -46,13 +46,13 @@ export function SalesDocsTable({ rows, docType }: { rows: SalesDocRow[]; docType
       {
         // Mobil kartta tamamen düşürülmek yerine ' · ' ile alt başlığın yanına eklenir (bkz.
         // DataTableMobileCards `meta` rolü) — desktop'ta kanal bilgisi kartta hiç görünmüyordu.
+        // Renkli nokta kaldırıldı (Tur 4 P2 bulgusu): 7 kanal 7 farklı hue kullanıyordu, renk burada
+        // anlam değil kimlik taşıyordu ve monokrom + tek vurgu rengi disiplinini kırıp 30 satırlık
+        // tabloda gökkuşağı etkisi yapıyordu; ayrıca /satis/kanallar tablosu (channels-table.tsx) aynı
+        // kanalları hiç noktasız, düz metin olarak gösteriyordu — aynı varlık iki ekranda iki farklı
+        // temsile sahipti. İkisi de artık aynı gösterimi kullanıyor: düz, soluk metin.
         id: 'channelName', accessorFn: (r) => r.channelName, header: 'Kanal', meta: { width: 100, mobile: 'meta' },
-        cell: ({ row }) => (
-          <span className="inline-flex max-w-full items-center gap-1.5">
-            <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: row.original.channelColor ?? 'var(--muted-foreground)' }} />
-            <span className="truncate">{row.original.channelName}</span>
-          </span>
-        ),
+        cell: ({ row }) => <span className="block max-w-full truncate text-muted-foreground">{row.original.channelName}</span>,
       },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="sales_order" /> },
       { id: 'orderDate', accessorFn: (r) => r.orderDate, header: 'Tarih', meta: { width: 90 }, cell: ({ row }) => formatDate(row.original.orderDate) },

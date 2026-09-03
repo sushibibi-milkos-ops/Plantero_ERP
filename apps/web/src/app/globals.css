@@ -224,11 +224,15 @@
    gerçekten taşan içerik varken görünür (saf CSS — "cover" katmanı içerikle birlikte kayar,
    altındaki "gölge" katmanının üstünü örter; overlay scrollbar'lı sistemlerde de çalışır). */
 @utility scroll-fade-x {
+  /* --scroll-fade-bg: varsayılan var(--card) (kanban gibi kart zemininde duran kullanımlar için) —
+     zemini var(--card) OLMAYAN bir sarmalayıcı (ör. sayfa zemininde duran document-chain.tsx) kendi
+     --scroll-fade-bg'ini enjekte eder, aksi halde soldurma maskesi zeminle eşleşmeyip görünmez kalır
+     (Tur 4 P2 bulgusu: /satis/siparisler/[id] içinde açık temada --card beyaz, --background #fafafa). */
   background-repeat: no-repeat;
-  background-color: var(--card);
+  background-color: var(--scroll-fade-bg, var(--card));
   background-image:
-    linear-gradient(to right, var(--card) 40%, transparent),
-    linear-gradient(to left, var(--card) 40%, transparent),
+    linear-gradient(to right, var(--scroll-fade-bg, var(--card)) 40%, transparent),
+    linear-gradient(to left, var(--scroll-fade-bg, var(--card)) 40%, transparent),
     linear-gradient(to right, color-mix(in oklch, var(--foreground) 16%, transparent), transparent),
     linear-gradient(to left, color-mix(in oklch, var(--foreground) 16%, transparent), transparent);
   background-position:

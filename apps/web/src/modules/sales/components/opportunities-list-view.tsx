@@ -20,7 +20,12 @@ export function OpportunitiesListView({ rows, stages, onOpen }: { rows: Opportun
         const stage = stageById.get(row.original.stageId);
         return <StatusBadge status={row.original.stageId} label={stage?.name ?? '—'} tone={stage?.isWon ? 'success' : stage?.isLost ? 'danger' : 'info'} />;
       } },
-      { id: 'expectedAmount', accessorFn: (r) => r.expectedAmount, header: 'Beklenen tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => <MoneyCell value={row.original.expectedAmount} currency={row.original.currency} /> },
+      {
+        // digits={0}: kanban kartıyla (opportunity-card.tsx) aynı hassasiyet — görünüm anahtarına
+        // basınca aynı fırsatın tutarı "₺45.000" ↔ "₺45.000,00" arasında değişmemeli; fırsat tutarı
+        // zaten tahmini bir büyüklük, kuruş hassasiyeti taşımıyor (Tur 4 P1 bulgusu). Genişlik
+        // 130 → 110: ondalıksız gösterimde 130px gereğinden fazla boşluk bırakıyordu.
+        id: 'expectedAmount', accessorFn: (r) => r.expectedAmount, header: 'Beklenen tutar', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.expectedAmount} currency={row.original.currency} digits={0} /> },
       { id: 'probability', accessorFn: (r) => r.probability, header: 'Olasılık', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ row }) => `%${row.original.probability}` },
       { id: 'nextActivityDate', accessorFn: (r) => r.nextActivityDate ?? '', header: 'Sonraki aktivite', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => (row.original.nextActivityDate ? formatDate(row.original.nextActivityDate) : '—') },
     ],

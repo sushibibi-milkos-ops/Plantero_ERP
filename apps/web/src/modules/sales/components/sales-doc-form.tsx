@@ -299,9 +299,18 @@ export function SalesDocForm({
           </div>
         ) : null}
 
+        {/* Satır sayacı artık mobilde de görünür (önceden `hidden ... sm:flex` ile 390px'te tamamen
+            gizliydi) — "Kaydet" butonu `fields.length === 0` iken pasif olduğunda kullanıcının NEDENİNİ
+            görebileceği tek yer tam da bu sayaçtı (Tur 4 P1 bulgusu). FormActions (ortak bileşen)
+            `flex-wrap` taşımadığı için 390px'te "Vazgeç" + "Siparişi kaydet" düğmeleriyle aynı satırda
+            sıkışıyor — uzun bir "N satır · en az bir satır ekleyin" metni burada iki parçaya bölünüp
+            kelimelerin ortasından kırpılıyordu. Bunun yerine sayaç sıfırken AYNI kısa slotta doğrudan
+            eylem metnine döner ("Satır ekleyin") — hem durumu hem nedeni tek satırda, kırpılmadan
+            anlatır. `aria-live` ile değişiklik ekran okuyucuya da bildirilir. */}
         <FormActions submitLabel={docType === 'quotation' ? 'Teklifi kaydet' : 'Siparişi kaydet'} onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={fields.length === 0}>
-          <span className="hidden items-center gap-1 text-xs text-muted-foreground sm:flex">
-            <ListPlus className="size-3.5" /> {fields.length} satır
+          <span className="flex items-center gap-1 text-xs whitespace-nowrap text-muted-foreground" aria-live="polite">
+            <ListPlus className="size-3.5 shrink-0" />
+            {fields.length > 0 ? `${fields.length} satır` : 'Satır ekleyin'}
           </span>
         </FormActions>
       </form>
