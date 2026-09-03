@@ -36,7 +36,11 @@ const lineSchema = z.object({
 
 const schema = z.object({
   warehouseId: z.string().uuid('Depo seçin'),
-  partnerId: z.string().uuid().optional().nullable(),
+  // P0 düzeltme (docs/INVARIANTS.md I24, tur 7 bulgusu): tedarikçi artık zorunlu — PO'suz gelen her
+  // kabul `receiveGoods()` içinde tedarikçisi üzerinden geriye dönük bir siparişe bağlanır; tedarikçisiz
+  // kabulün bağlanacağı hiçbir sipariş olamayacağından core bunu reddeder (bkz. receipts.ts). Alan
+  // burada zorunlu kılınarak kullanıcı o hatayı sunucudan görmeden önce engellenir.
+  partnerId: z.string().uuid('Tedarikçi seçin'),
   supplierDeliveryNo: z.string().optional().nullable(),
   supplierDeliveryDate: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
@@ -83,7 +87,7 @@ export function ReceiptForm({
       // Varsayılan depo: üretim tesisi (TIRE) — mal kabul neredeyse her zaman orada yapılır;
       // depo listesi koda göre alfabetik geldiği için (BUCA < TIRE) ilk öğeye güvenmiyoruz.
       warehouseId: initialWarehouseId ?? warehouses.find((w) => w.code === 'TIRE')?.id ?? warehouses[0]?.id ?? '',
-      partnerId: initialPartnerId ?? null,
+      partnerId: initialPartnerId ?? '',
       supplierDeliveryNo: '',
       supplierDeliveryDate: '',
       note: '',
@@ -191,8 +195,9 @@ export function ReceiptForm({
               <Controller control={form.control} name="warehouseId" render={({ field }) => <Combobox value={field.value} onChange={(v) => field.onChange(v ?? '')} options={warehouseOptions} placeholder="Depo seçin" clearable={false} />} />
             </div>
             <div className="space-y-1.5">
-              <FieldLabel>Tedarikçi</FieldLabel>
-              <Controller control={form.control} name="partnerId" render={({ field }) => <Combobox value={field.value} onChange={field.onChange} options={supplierOptions} placeholder="Tedarikçi seçin" />} />
+              <FieldLabel required>Tedarikçi</FieldLabel>
+              <Controller control={form.control} name="partnerId" render={({ field }) => <Combobox value={field.value} onChange={(v) => field.onChange(v ?? '')} options={supplierOptions} placeholder="Tedarikçi seçin" clearable={false} />} />
+              {form.formState.errors.partnerId ? <p className="text-xs text-destructive">{form.formState.errors.partnerId.message}</p> : null}
             </div>
             <FormText control={form.control} name="supplierDeliveryNo" label="Tedarikçi irsaliye no" />
             <FormDate control={form.control} name="supplierDeliveryDate" label="İrsaliye tarihi" />

@@ -12,6 +12,7 @@ import { writeAudit } from '../audit/index.js';
 import { createLot, postStockMove } from './ledger.js';
 import { getSuppliersLocation, getQuarantineLocation, getRejectedLocation, resolveDefaultPutawayLocation } from './locations.js';
 import { createPurchaseInvoiceFromReceipt } from '../purchasing/invoicing.js';
+import { createRetroactivePurchaseOrderForReceipt } from '../purchasing/orders.js';
 import type { ActorCtx, DocumentOrigin } from '../types.js';
 
 /**
@@ -116,6 +117,10 @@ export type ReceiveGoodsResult = ReceiptWithLines & { createdLotIds: string[] };
  * Mal kabulü işler: her satır için (kabul edilen kısım + red kısmı ayrı lot) `createLot` + `postStockMove(kind:'receipt')`.
  * QC gerektiren ürün karantinaya giderse `qc_checks` bekleyen kaydı açılır. PO satırı varsa `receivedQty` günceller
  * ve `document_links(purchase_order→receipt)` kurar.
+ * SÖZLEŞME (docs/INVARIANTS.md I17): yan etkilerden (`stock_lots`, otomatik retro `purchase_orders`,
+ * otomatik `invoices`) doğan audit satırlarını burası kendi yazar (`writeAudit`) — ama `receipts`
+ * tablosunun kendi create/post audit'ini YAZMAZ, bunu çağıran katman üretir (web: `withAudit`, seed:
+ * `writeAudit`). Bu fonksiyonu wrapper'sız doğrudan çağırmak `receipts` için I17'yi ihlal eder.
  */
 export async function receiveGoods(tx: DbOrTx, receiptId: string, ctx: ActorCtx): Promise<ReceiveGoodsResult> {
   const [receipt] = await tx.select().from(receipts).where(eq(receipts.id, receiptId)).for('update');
@@ -222,9 +227,36 @@ export async function receiveGoods(tx: DbOrTx, receiptId: string, ctx: ActorCtx)
     }
   }
 
+  /**
+   * PO zinciri güvenlik ağı (P0 düzeltme — docs/INVARIANTS.md I24, tur 7 bulgusu): `receipt-form.tsx`'te
+   * sipariş seçimi opsiyoneldi ve `receiveGoods()`'un PO'suz kalan bir kabulü geriye dönük bağlayan bir
+   * eşleniği yoktu — bu yüzden canlı `/depo/mal-kabul/yeni` akışından PO'suz girilen her kabul I24'ü
+   * (receipts.purchase_order_id NOT NULL) anında ihlal ediyordu; yalnızca `seed/purchasing.ts`'teki
+   * `seedPurchasingBackfill` adımı (tek seferlik, `db:reset` sonrası) bunu kapatıyordu. Artık
+   * `createPurchaseInvoiceFromReceipt`'in I23/I25 için yaptığı "her mal kabulde otomatik" modelin
+   * eşleniği burada da var: PO'suz kalan (ve tedarikçisi olan) her mal kabul, aynı transaction içinde
+   * `createRetroactivePurchaseOrderForReceipt` ile hemen bağlanır (approved+sent, satırlar tam alınmış
+   * olarak işaretlenir) — SAP B1'deki "irsaliyeden geriye dönük sipariş" karşılığı. Tedarikçisiz kabul
+   * (partnerId de yok) PO'suz kalamayacağından reddedilir (receipt-form.tsx artık Tedarikçi'yi zorunlu
+   * kılıyor, ama core kendi başına da bu kuralı korur — sözleşme #2: server action'lar formu güvenmez).
+   */
+  let purchaseOrderId = receipt.purchaseOrderId;
+  if (!purchaseOrderId) {
+    if (!receipt.partnerId) {
+      throw new ValidationError('Tedarikçisiz mal kabul bir siparişe bağlanamaz (docs/INVARIANTS.md I24) — tedarikçi seçin veya bir siparişten kabul edin', { receiptId });
+    }
+    const retroPo = await createRetroactivePurchaseOrderForReceipt(tx, receiptId, ctx);
+    purchaseOrderId = retroPo.id;
+    await writeAudit(tx, {
+      action: 'create', tableName: 'purchase_orders', recordId: retroPo.id,
+      summary: `Sipariş ${retroPo.docNo}, PO'suz mal kabul ${receipt.docNo} için canlı akışta otomatik oluşturuldu (I24)`,
+      after: retroPo,
+    }, ctx);
+  }
+
   let wasOnTime: boolean | null = null;
-  if (receipt.purchaseOrderId) {
-    const [po] = await tx.select().from(purchaseOrders).where(eq(purchaseOrders.id, receipt.purchaseOrderId)).limit(1);
+  if (purchaseOrderId) {
+    const [po] = await tx.select().from(purchaseOrders).where(eq(purchaseOrders.id, purchaseOrderId)).limit(1);
     if (po?.expectedDate) wasOnTime = businessDate(receivedAt) <= po.expectedDate;
     if (po) {
       const poLines = await tx.select().from(purchaseOrderLines).where(eq(purchaseOrderLines.orderId, po.id));

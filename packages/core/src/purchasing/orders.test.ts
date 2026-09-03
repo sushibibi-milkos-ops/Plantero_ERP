@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { invoices, receiptLines } from '@plantero/db';
+import { invoices, receiptLines, purchaseOrders } from '@plantero/db';
 import {
   createPurchaseOrder, approvePurchaseOrder, rejectPurchaseOrder, markPurchaseOrderSent, cancelPurchaseOrder,
   recomputePurchaseOrderStatus, getOpenPoQtyByProduct, createRetroactivePurchaseOrderForReceipt,
@@ -93,29 +93,30 @@ describe('purchasing/orders', () => {
     });
   });
 
-  it('PO\'suz mal kabul için geriye dönük PO oluşturur ve zaten var olan faturayı bağlar (I24 kapatma yardımcısı)', async () => {
+  it('PO\'suz mal kabulde receiveGoods() canlı akışta otomatik geriye dönük PO kurar ve faturaya bağlar (I24 — tur 7 P0 düzeltmesi)', async () => {
     await withRollback(async (tx) => {
       const b = await seedBase(tx);
+      // receiveGoods() artık (docs/INVARIANTS.md I24 — canlı akış güvenlik ağı) purchaseOrderId
+      // verilmeden gelen, tedarikçisi olan her kabulü aynı transaction içinde otomatik bağlar —
+      // createRetroactivePurchaseOrderForReceipt'i elle çağırmaya gerek kalmadan.
       const { receipt } = await createAndReceive(tx, {
         warehouseId: b.wh.id, partnerId: b.supplier.id, origin: 'manual',
         lines: [{ productId: b.raw.id, qty: d(40), uomId: b.kg.id, unitCost: d(300), disposition: 'released' }],
       }, ctx);
-      expect(receipt.purchaseOrderId).toBeNull();
-      const [invoiceBefore] = await tx.select().from(invoices).where(eq(invoices.receiptId, receipt.id));
-      expect(invoiceBefore).toBeDefined();
+      expect(receipt.purchaseOrderId).not.toBeNull();
 
-      const po = await createRetroactivePurchaseOrderForReceipt(tx, receipt.id, ctx);
-      expect(po.status).toBe('invoiced');
+      const [po] = await tx.select().from(purchaseOrders).where(eq(purchaseOrders.id, receipt.purchaseOrderId!));
+      expect(po!.status).toBe('invoiced');
 
       const [receiptRow] = await tx.select().from(receiptLines).where(eq(receiptLines.receiptId, receipt.id));
       expect(receiptRow!.purchaseOrderLineId).not.toBeNull();
 
       const [invoiceAfter] = await tx.select().from(invoices).where(eq(invoices.receiptId, receipt.id));
-      expect(invoiceAfter!.purchaseOrderId).toBe(po.id);
+      expect(invoiceAfter!.purchaseOrderId).toBe(po!.id);
 
-      // İdempotent: tekrar çağrıldığında aynı PO döner, ikinci bir PO oluşturmaz
+      // İdempotent: yardımcı elle tekrar çağrılırsa aynı PO'yu döner, ikinci bir PO oluşturmaz
       const again = await createRetroactivePurchaseOrderForReceipt(tx, receipt.id, ctx);
-      expect(again.id).toBe(po.id);
+      expect(again.id).toBe(po!.id);
     });
   });
 });

@@ -59,7 +59,13 @@ async function reindex(tx: DbOrTx, order: typeof purchaseOrders.$inferSelect): P
   });
 }
 
-/** Yeni PO — satırlardan toplamları hesaplar, dizi numarası atar, belge indeksine yazar. */
+/**
+ * Yeni PO — satırlardan toplamları hesaplar, dizi numarası atar, belge indeksine yazar.
+ * SÖZLEŞME (docs/INVARIANTS.md I17): bu fonksiyon `purchase_orders` için audit_log satırı YAZMAZ —
+ * audit yalnızca çağıran katmanda (web: `withAudit`, seed: `writeAudit`) üretilir. Bu fonksiyonu
+ * `withAudit`/`writeAudit` olmadan doğrudan çağırmak (ör. tek seferlik script, konsol, ad-hoc test)
+ * I17'yi anında ihlal eder — üründe eksik değil, çağıranda eksik audit'tir.
+ */
 export async function createPurchaseOrder(tx: DbOrTx, input: CreatePurchaseOrderInput, ctx: ActorCtx): Promise<PurchaseOrderWithLines> {
   if (!input.lines.length) throw new ValidationError('En az bir satır gerekli');
   const [partner] = await tx.select().from(partners).where(eq(partners.id, input.partnerId)).limit(1);
