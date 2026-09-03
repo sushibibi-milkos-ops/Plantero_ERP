@@ -5,7 +5,7 @@ import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/da
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
-import { formatPct } from '@/lib/format';
+import { formatPctFixed } from '../format-pct';
 import type { BomListRow } from '../queries';
 import { BOM_STATUS_LABELS } from '../product-labels';
 
@@ -17,7 +17,9 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
       {
         accessorKey: 'code',
         header: 'Reçete Kodu',
-        meta: { mobile: 'subtitle', className: 'font-mono text-[12px] text-muted-foreground' },
+        // Birincil tanımlayıcı (SKU'dan sonra ikinci kimlik alanı) — text-muted-foreground'dan biraz
+        // daha koyu, salt "ikincil bilgi" gibi görünmesin diye (Tur 3 P1 bulgusu).
+        meta: { mobile: 'subtitle', className: 'font-mono text-[12px] text-foreground/80' },
       },
       {
         accessorKey: 'status',
@@ -31,14 +33,17 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
       {
         accessorKey: 'outputQty',
         header: 'Çıktı',
-        meta: { align: 'right', width: 100 },
+        // 38 satırın 38'i de "1 ADET" — sıfır varyanslı sütun, sıfır bilgi taşıyor (SQL kanıtı: Tur 3
+        // P1 bulgusu). Varsayılan gizli, sütun seçiciden açılabilir.
+        meta: { align: 'right', width: 100, defaultHidden: true },
         cell: ({ row }) => <QtyCell value={row.original.outputQty} uom={row.original.outputUomCode} />,
       },
       {
         accessorKey: 'expectedYieldPct',
         header: 'Verim',
-        meta: { align: 'right', width: 80, mobile: 'hidden' },
-        cell: ({ getValue }) => <span className="num text-muted-foreground">{formatPct(getValue<string>())}</span>,
+        // Aynı şekilde 38/38 satır "%97" — sıfır varyans, varsayılan gizli.
+        meta: { align: 'right', width: 80, mobile: 'hidden', defaultHidden: true },
+        cell: ({ getValue }) => <span className="num text-muted-foreground">{formatPctFixed(getValue<string>(), 1)}</span>,
       },
       {
         accessorKey: 'cycleMinutes',
@@ -78,7 +83,7 @@ export function BomsTable({ boms }: { boms: BomListRow[] }) {
       columns={columns}
       data={boms}
       getRowId={(b) => b.id}
-      searchPlaceholder="SKU, ürün adı ya da reçete kodu ara…"
+      searchPlaceholder="SKU ya da reçete kodu ara…"
       filters={filters}
       // Durum neredeyse hep "Aktif" — sütun gürültüsü olmasın diye varsayılan gizli, filtre çipinden erişilir.
       initialColumnVisibility={{ status: false }}

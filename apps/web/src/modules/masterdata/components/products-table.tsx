@@ -82,12 +82,15 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
       {
         accessorKey: 'status',
         header: 'Durum',
-        // Aktif = varsayılan durum, gürültü yaratmasın diye rozet yalnızca pasif/arşiv için gösterilir.
+        // 92/100 aktif, 8/100 kullanım dışı — gerçek varyans taşıyor (BOM'daki sıfır-varyans sütunlarından
+        // farklı), sütun kalır. İki durum da aynı StatusBadge anatomisiyle basılır (Tur 3 P1 bulgusu:
+        // önceden aktif için çıplak nokta / pasif için tam pil — satır yüksekliği ve ağırlık tutarsızdı).
         meta: { mobile: 'badge', width: 90 },
         cell: ({ getValue }) => {
           const s = getValue<string>();
-          if (s === 'active') return <span className="inline-block size-1.5 rounded-full bg-success" aria-label="Aktif" title="Aktif" />;
-          return <StatusBadge status={s} kind="product" />;
+          // "Kullanım dışı" bir hata değil — paylaşılan sözlük (lib/status.ts) 'cancelled' için 'danger'
+          // veriyor, burada nötr'e çevrilir (dosya ortak olduğu için değiştirilmedi, bkz. rapor).
+          return <StatusBadge status={s} kind="product" tone={s === 'cancelled' ? 'muted' : undefined} />;
         },
       },
       {
@@ -140,7 +143,7 @@ export function ProductsTable({ products }: { products: ProductListRow[] }) {
       columns={columns}
       data={products}
       getRowId={(p) => p.id}
-      searchPlaceholder="Ad, SKU, barkod ya da kısa kod ara…"
+      searchPlaceholder="Ad, SKU ya da barkod ara…"
       filters={filters}
       initialSorting={[{ id: 'sku', desc: false }]}
       rowHref={(p) => `/ana-veri/urunler/${p.id}`}

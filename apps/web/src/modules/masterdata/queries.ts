@@ -1,4 +1,5 @@
 import 'server-only';
+import type Decimal from 'decimal.js';
 import { alias } from 'drizzle-orm/pg-core';
 import { and, asc, desc, eq, gt, inArray, sql } from 'drizzle-orm';
 import { db, schema, type ParsedProduct } from '@plantero/db';
@@ -36,6 +37,31 @@ export type ProductListRow = {
   isLotTracked: boolean;
 };
 
+/**
+ * Ürün tablosundaki `list_price` kolonu neredeyse hiç kullanılmıyor (100 üründen 1'i dolu) — asıl satış
+ * fiyatı `price_list_items`'ta, fiyat listesi bazında tutuluyor. Ekranlarda "Satış Fiyatı"/"Liste fiyatı"
+ * için perakende (varsayılan) fiyat listesi kullanılır (Tur 3 P1 bulgusu — SQL kanıtı: 100|1 vs 104 satır).
+ */
+async function getDefaultPriceListId(): Promise<string | null> {
+  const [row] = await db.select({ id: priceLists.id }).from(priceLists).where(eq(priceLists.code, 'PERAKENDE')).limit(1);
+  return row?.id ?? null;
+}
+
+/** Aynı üründe birden çok miktar kademesi (minQty) olabilir — ekranda taban (en düşük minQty) fiyat gösterilir. */
+async function getDefaultPriceByProduct(priceListId: string): Promise<Map<string, string>> {
+  const rows = await db
+    .select({ productId: priceListItems.productId, price: priceListItems.price, minQty: priceListItems.minQty })
+    .from(priceListItems)
+    .where(eq(priceListItems.priceListId, priceListId));
+  const out = new Map<string, { price: string; minQty: Decimal }>();
+  for (const r of rows) {
+    const mq = D(r.minQty);
+    const existing = out.get(r.productId);
+    if (!existing || mq.lt(existing.minQty)) out.set(r.productId, { price: r.price, minQty: mq });
+  }
+  return new Map([...out].map(([productId, v]) => [productId, v.price]));
+}
+
 /** Ürün listesi: tüm depolar toplam eldeki stok + birim maliyet + satış fiyatı ile. */
 export async function listProducts(): Promise<ProductListRow[]> {
   const onHand = await db
@@ -43,6 +69,9 @@ export async function listProducts(): Promise<ProductListRow[]> {
     .from(stockQuants)
     .groupBy(stockQuants.productId);
   const onHandByProduct = new Map(onHand.map((r) => [r.productId, r.qty]));
+
+  const defaultPriceListId = await getDefaultPriceListId();
+  const listPriceByProduct = defaultPriceListId ? await getDefaultPriceByProduct(defaultPriceListId) : new Map<string, string>();
 
   const rows = await db
     .select({ p: products, uomCode: uoms.code })
@@ -65,12 +94,17 @@ export async function listProducts(): Promise<ProductListRow[]> {
     uomCode: r.uomCode,
     onHandQty: onHandByProduct.get(r.p.id) ?? '0',
     averageCost: r.p.averageCost,
-    listPrice: r.p.listPrice,
+    listPrice: listPriceByProduct.get(r.p.id) ?? r.p.listPrice,
     isLotTracked: r.p.isLotTracked,
   }));
 }
 
 export async function getProductById(id: string) {
+  // NOT: `p.listPrice` burada bilerek fiyat listesiyle EZİLMEZ — bu satır aynı zamanda
+  // ProductEditSheet'in form varsayılan değeri (`components/product-edit-sheet.tsx:71`); türetilmiş bir
+  // değer yazılırsa kullanıcı ilgisiz bir alanı kaydettiğinde perakende fiyatı sessizce `products.list_price`
+  // kolonuna yazılırdı. Ekranda gösterilecek "gerçek" liste fiyatı `getProductDefaultListPrice`/
+  // `priceItems`'tan ayrı bir prop olarak taşınır (bkz. urunler/[id]/page.tsx, product-general-tab.tsx).
   const [row] = await db
     .select({ p: products, uomCode: uoms.code, uomName: uoms.name })
     .from(products)

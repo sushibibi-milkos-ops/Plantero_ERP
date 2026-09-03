@@ -16,11 +16,11 @@ export default async function NewProductPage() {
     .map((p) => ({ value: p.id, label: `${p.name} (${p.code})` }));
 
   return (
-    <>
+    // PageHeader gövdeyle aynı sarmalayıcının İÇİNDE — önceden başlık 1152px'e, gövde max-w-3xl (768px)'e
+    // yayılıyordu, sağ kenar tırtıklı duruyordu (Tur 3 P1 bulgusu).
+    <div className="max-w-[1080px]">
       <PageHeader title="Yeni ürün" description="Konuşan kod sihirbazı — segmentleri seçtikçe SKU canlı önizlenir." />
-      <div className="max-w-3xl">
-        <ProductWizard segments={segments} uoms={uoms} supplierOptions={supplierOptions} />
-      </div>
-    </>
+      <ProductWizard segments={segments} uoms={uoms} supplierOptions={supplierOptions} />
+    </div>
   );
 }

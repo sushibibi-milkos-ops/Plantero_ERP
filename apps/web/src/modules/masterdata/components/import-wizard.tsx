@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { FileSpreadsheet, Upload, Lock, ArrowRight, AlertTriangle, CheckCircle2, Loader2, RotateCcw, PlusCircle, PencilLine, History } from 'lucide-react';
+import { FileSpreadsheet, Upload, Lock, ArrowRight, ChevronRight, AlertTriangle, CheckCircle2, Loader2, RotateCcw, PlusCircle, PencilLine, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -170,9 +170,7 @@ export function ImportWizard({ history = [] }: { history?: ImportHistoryRow[] })
                 <History className="size-3.5 text-muted-foreground" /> Son içe aktarımlar
               </h3>
               {history.length === 0 ? (
-                <div className="rounded-lg border border-border/70 px-3 py-4 text-center text-[12px] text-muted-foreground">
-                  Henüz içe aktarım yapılmadı.
-                </div>
+                <EmptyState compact icon={History} title="Henüz içe aktarım yapılmadı" description="İlk .xlsx dosyasını yükleyip deneme çalıştırın." />
               ) : (
                 <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                   {history.map((h) => (
@@ -188,11 +186,13 @@ export function ImportWizard({ history = [] }: { history?: ImportHistoryRow[] })
               )}
             </div>
             <details className="group">
-              <summary className="cursor-pointer text-[13px] font-semibold text-muted-foreground select-none [&::-webkit-details-marker]:hidden">
-                <span className="inline-flex items-center gap-1">
-                  Beklenen sütunlar — &quot;Ana Veri&quot; sayfası ({EXPECTED_COLUMNS.length})
-                  <ArrowRight className="size-3 transition-transform duration-150 ease-out group-open:rotate-90" />
-                </span>
+              {/* `list-none`: Chromium <summary>'nin yerel ▶ üçgenini (::marker, list-style tabanlı) siler
+                  — `[&::-webkit-details-marker]:hidden` yalnızca eski WebKit'i hedefler, modern Chromium'da
+                  etkisizdi ve ok hem yerel üçgeni hem de aşağıdaki ChevronRight'ı birlikte gösteriyordu
+                  (Tur 3 P1 bulgusu). ChevronRight — aynı katlama simgesi location-tree.tsx'te kullanılan. */}
+              <summary className="flex cursor-pointer list-none items-center gap-1 text-[13px] font-semibold text-muted-foreground select-none [&::-webkit-details-marker]:hidden">
+                Beklenen sütunlar — &quot;Ana Veri&quot; sayfası ({EXPECTED_COLUMNS.length})
+                <ChevronRight className="size-3 transition-transform duration-150 ease-out group-open:rotate-90" />
               </summary>
               <div className="mt-2 border-t border-border/60">
                 <table className="w-full border-collapse text-[12px]">

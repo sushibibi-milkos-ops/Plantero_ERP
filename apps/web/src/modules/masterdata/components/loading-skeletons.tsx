@@ -1,5 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTableSkeleton } from '@/components/data-table';
+import { cn } from '@/lib/utils';
 
 /**
  * Rota bazlı `loading.tsx` iskeletleri — genel (app)/loading.tsx (4 eşit baloncuk) ile hiç örtüşmeyen,
@@ -45,9 +46,17 @@ export function DetailPageSkeleton({ tabs = 5, kpis = 4, rows = 6 }: { tabs?: nu
         </div>
       ) : null}
       {kpis > 0 ? (
-        <div className="flex divide-x divide-border/60 rounded-lg border border-border/60 bg-muted/10">
+        // Gerçek KPI şeritleriyle (bom-detail-form.tsx, partner-general-tab.tsx) aynı anatomi: 390px'te
+        // grid-cols-2, ≥sm'de hücre sayısı kadar sütun + hairline ayraç — önceden `flex divide-x`
+        // kullanıyordu, hücre sayısı değiştiğinde (ör. 3 KPI'lık cari şeridi) gerçek düzenle örtüşmüyordu.
+        <div
+          className={cn(
+            'grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 bg-muted/10 sm:divide-y-0',
+            kpis <= 2 ? 'sm:grid-cols-2' : kpis === 3 ? 'sm:grid-cols-3' : kpis === 4 ? 'sm:grid-cols-4' : 'sm:grid-cols-5',
+          )}
+        >
           {Array.from({ length: kpis }).map((_, i) => (
-            <div key={i} className="flex-1 space-y-2 px-4 py-3">
+            <div key={i} className="space-y-2 px-4 py-3">
               <Skeleton className="h-7 w-20" />
               <Skeleton className="h-3 w-16" />
             </div>

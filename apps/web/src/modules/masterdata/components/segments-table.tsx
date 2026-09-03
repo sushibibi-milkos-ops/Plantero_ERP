@@ -86,8 +86,8 @@ export function AddSegmentButton({ canManage }: { canManage: boolean }) {
 }
 
 /** Kod / Bağlam sütunları beş tabloda da aynı sabit genişlikte — "Etiket" hepsinde aynı x'te başlasın diye. */
-const CODE_COL_WIDTH = 96;
-const CONTEXT_COL_WIDTH = 132;
+const CODE_COL_WIDTH = 110;
+const CONTEXT_COL_WIDTH = 120;
 
 export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
   const [q, setQ] = useState('');
@@ -104,7 +104,7 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
   }, [segments]);
 
   return (
-    <div className="max-w-[760px] space-y-6">
+    <div className="max-w-[1120px] space-y-6">
       <div className="relative">
         <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
         <input
@@ -115,7 +115,11 @@ export function SegmentsTable({ segments }: { segments: SkuSegmentOption[] }) {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Kök neden (Tur 3 P0): satırları hizalayan bir grid'de en uzun sütun (T, ~6 satır) diğer sütunun
+          (BB, ~20 satır) başlama y'sini belirliyordu — 1380px'e varan boş dikey alan. CSS çoklu sütun
+          (masonry benzeri): her blok kendi yüksekliğine göre akar, kısa bloklar boşluk bırakmaz.
+          `break-inside-avoid`: bir segment bloğu (başlık+tablo) sütun sınırında ikiye bölünmez. */}
+      <div className="columns-1 gap-6 lg:columns-2 [&>*]:mb-6 [&>*]:break-inside-avoid">
         {(['T', 'AA', 'BB', 'CC', 'PP'] as const).map((seg) => {
           const all = (grouped.get(seg) ?? []).slice().sort((a, b) => (a.context ?? '').localeCompare(b.context ?? '') || a.code.localeCompare(b.code));
           const rows = needle ? all.filter((r) => r.code.toLocaleLowerCase('tr-TR').includes(needle) || r.label.toLocaleLowerCase('tr-TR').includes(needle)) : all;

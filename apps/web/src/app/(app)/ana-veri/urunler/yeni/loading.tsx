@@ -3,7 +3,7 @@ import { PageHeaderSkeleton } from '@/modules/masterdata/components/loading-skel
 
 export default function Loading() {
   return (
-    <div aria-busy className="max-w-3xl space-y-6">
+    <div aria-busy className="max-w-[1080px] space-y-6">
       <PageHeaderSkeleton />
       <Skeleton className="h-14 rounded-lg" />
       {Array.from({ length: 4 }).map((_, i) => (

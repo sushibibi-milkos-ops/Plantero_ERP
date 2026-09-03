@@ -14,7 +14,9 @@ export default async function AnaVeriImportPage() {
   const history = await listImportHistory();
 
   return (
-    <>
+    // PageHeader gövdeyle aynı sarmalayıcının İÇİNDE — önceden başlık 1152px'e, gövde max-w-4xl'e
+    // (896px) yayılıyordu, sağ kenar tırtıklı duruyordu (Tur 3 P1 bulgusu, urunler/yeni ile aynı desen).
+    <div className="max-w-4xl">
       <PageHeader
         title="Excel'den İçe Aktarım"
         description="Ana Veri Excel'ini (Plantero_AnaVeri_KonusanKod.xlsx) yükleyin — önce önizleme (diff), sonra uygulama. Ürün adı ve barkod her zaman korunur; mevcut kayıtların üzerine yazılmaz."
@@ -26,9 +28,7 @@ export default async function AnaVeriImportPage() {
           </Button>
         }
       />
-      <div className="max-w-4xl">
-        <ImportWizard history={history} />
-      </div>
-    </>
+      <ImportWizard history={history} />
+    </div>
   );
 }

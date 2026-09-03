@@ -72,8 +72,17 @@ export default async function ProductDetailPage({ params, searchParams }: { para
     .filter((pt) => pt.kind === 'supplier' || pt.kind === 'both')
     .map((pt) => ({ value: pt.id, label: `${pt.name} (${pt.code})` }));
 
+  // products.list_price neredeyse hep 0 — asıl satış fiyatı price_list_items'ta, fiyat listesi bazında
+  // (Tur 3 P1 bulgusu). Zaten sayfaya çekilmiş `priceItems`'tan perakende (varsayılan) fiyat türetilir;
+  // getProductById'nin döndürdüğü `p.listPrice` KASITLI olarak dokunulmaz (o, ProductEditSheet'in form
+  // varsayılanıdır — bkz. queries.ts:getProductById yorumu).
+  const perakendeItems = priceItems.filter((r) => r.listCode === 'PERAKENDE');
+  const defaultListPrice = perakendeItems.length
+    ? perakendeItems.reduce((min, r) => (Number(r.item.minQty) < Number(min.item.minQty) ? r : min)).item.price
+    : null;
+
   const tabs: ProductTabDef[] = [
-    { value: 'genel', label: 'Genel', content: <ProductGeneralTab product={product} uomName={uomName} /> },
+    { value: 'genel', label: 'Genel', content: <ProductGeneralTab product={product} uomName={uomName} defaultListPrice={defaultListPrice} /> },
     {
       value: 'barkodlar',
       label: 'Barkodlar',

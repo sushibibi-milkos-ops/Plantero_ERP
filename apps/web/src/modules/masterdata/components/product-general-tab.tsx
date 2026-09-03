@@ -1,27 +1,22 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Lock } from 'lucide-react';
+import { DetailFieldGroups, type DetailFieldGroup } from '@/components/detail-fields';
 import { formatDate, formatMoney, formatPct } from '@/lib/format';
-import { cn } from '@/lib/utils';
-
-function Field({ label, children, empty }: { label: string; children: React.ReactNode; empty?: boolean }) {
-  return (
-    <div className={cn('space-y-0.5', empty && 'opacity-60')}>
-      <div className="text-[12px] text-muted-foreground">{label}</div>
-      <div className="text-[13px]">{children}</div>
-    </div>
-  );
-}
-
-function GroupHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="border-t border-border/60 pt-3 text-[13px] font-semibold">{children}</h3>;
-}
 
 const COST_METHOD_LABELS: Record<string, string> = { lot: 'Lot bazlı', average: 'Hareketli ortalama', standard: 'Standart maliyet' };
 
-export function ProductGeneralTab({ product, uomName }: { product: { p: Record<string, unknown> }; uomName: string }) {
-  const [showEmpty, setShowEmpty] = useState(false);
+export function ProductGeneralTab({
+  product,
+  uomName,
+  defaultListPrice,
+}: {
+  product: { p: Record<string, unknown> };
+  uomName: string;
+  /** Varsayılan (perakende) fiyat listesinden türetilen satış fiyatı — bkz. urunler/[id]/page.tsx. */
+  defaultListPrice?: string | null;
+}) {
   const p = product.p as {
     sku: string; shortCode: string | null; name: string; barcode: string | null; caseBarcode: string | null;
     type: string; status: string; category1: string | null; category2: string | null; category3: string | null;
@@ -77,7 +72,7 @@ export function ProductGeneralTab({ product, uomName }: { product: { p: Record<s
           // (4 hane yalnızca hesap/mutabakat ekranlarına ait, detay özetine değil).
           { label: 'Ortalama maliyet', value: true, node: <span title={formatMoney(p.averageCost, undefined, { digits: 4 })}>{formatMoney(p.averageCost)}</span> },
           { label: 'Standart maliyet', value: true, node: <span title={formatMoney(p.standardCost, undefined, { digits: 4 })}>{formatMoney(p.standardCost)}</span> },
-          { label: 'Liste fiyatı', value: true, node: formatMoney(p.listPrice) },
+          { label: 'Liste fiyatı', value: true, node: formatMoney(defaultListPrice ?? p.listPrice) },
           { label: 'Satış KDV', value: true, node: formatPct(p.vatRate) },
           { label: 'Alış KDV', value: true, node: formatPct(p.purchaseVatRate) },
           { label: 'GTİP', value: p.hsCode, node: p.hsCode ?? '—' },
@@ -91,13 +86,12 @@ export function ProductGeneralTab({ product, uomName }: { product: { p: Record<s
           { label: 'Son güncelleme', value: true, node: formatDate(p.updatedAt) },
         ],
       },
-    ],
-    [p, uomName],
+    ] satisfies DetailFieldGroup[],
+    [p, uomName, defaultListPrice],
   );
-  const hiddenCount = groups.reduce((acc, g) => acc + g.fields.filter((f) => !f.value).length, 0);
 
   return (
-    <div className="max-w-[880px] space-y-6">
+    <div className="max-w-[1080px] space-y-6">
       <div className="rounded-lg border border-border/60 bg-muted/20 px-4 py-3">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px]">
           <span className="inline-flex items-center gap-1.5 text-muted-foreground">
@@ -114,33 +108,7 @@ export function ProductGeneralTab({ product, uomName }: { product: { p: Record<s
         </div>
       </div>
 
-      <div className="space-y-4">
-        {groups.map((g) => {
-          const visible = g.fields.filter((f) => showEmpty || f.value);
-          if (visible.length === 0) return null;
-          return (
-            <div key={g.title} className="space-y-3">
-              <GroupHeading>{g.title}</GroupHeading>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-3">
-                {visible.map((f) => (
-                  <Field key={f.label} label={f.label} empty={!f.value}>
-                    {f.node}
-                  </Field>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-        {hiddenCount > 0 ? (
-          <button
-            type="button"
-            onClick={() => setShowEmpty((s) => !s)}
-            className="text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground"
-          >
-            {showEmpty ? 'Boş alanları gizle' : `Boş alanları göster (${hiddenCount})`}
-          </button>
-        ) : null}
-      </div>
+      <DetailFieldGroups groups={groups} />
 
       {p.note ? (
         <div>

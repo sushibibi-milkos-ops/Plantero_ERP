@@ -15,30 +15,35 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
       {
         accessorKey: 'kind',
         header: 'Tip',
+        // Tip bir durum değil, bir kategori — renk yalnızca Durum ekseninde kalsın diye tek nötr tona
+        // indirildi (Tur 3 P1 bulgusu: müşteri/mavi + tedarikçi/yeşil, "aktif" rozetiyle aynı yeşili
+        // paylaşıp anlam eksenini karıştırıyordu).
         meta: { mobile: 'badge', width: 150 },
         cell: ({ getValue }) => {
           const k = getValue<string>();
-          return <StatusBadge status={k} label={PARTNER_KIND_LABELS[k] ?? k} tone={k === 'customer' ? 'info' : k === 'supplier' ? 'primary' : 'neutral'} />;
+          return <StatusBadge status={k} label={PARTNER_KIND_LABELS[k] ?? k} tone="neutral" dot={false} />;
         },
       },
       {
         accessorKey: 'channelName',
         header: 'Kanal',
-        meta: { mobile: 'hidden' },
+        // Genişlik sabitlenmemişse (table-layout:auto) içerik uzunluğuna göre orantısız büyüyüp bir
+        // sonraki sütunle arada boş şerit bırakabiliyordu (Tur 3 P1 bulgusu).
+        meta: { mobile: 'hidden', width: 180 },
         cell: ({ getValue }) => getValue<string | null>() ?? <span className="text-muted-foreground/50">—</span>,
       },
       {
         id: 'term',
         accessorFn: (r) => (r.paymentTermKind === 'cash' ? 'Peşin' : `${r.paymentTermDays} gün`),
         header: 'Vade',
-        meta: { mobile: 'hidden', width: 84 },
+        meta: { mobile: 'hidden', width: 90 },
       },
       {
         accessorKey: 'balance',
         header: 'Bakiye',
         // Pozitif bakiye nötr: alacak "iyi" bir olay değil, yalnızca "sıfırdan farklı" demek. Renk yalnızca
         // gerçek sinyalde kullanılır — negatif (borç) MoneyCell tarafından zaten kırmızı basılır.
-        meta: { align: 'right', width: 120 },
+        meta: { align: 'right', width: 130 },
         cell: ({ getValue }) => <MoneyCell value={getValue<string>()} />,
       },
       {
@@ -54,8 +59,10 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
       {
         accessorKey: 'isActive',
         header: 'Durum',
-        // Aktif = varsayılan; gürültü yaratmasın diye rozet yalnızca pasif için gösterilir.
-        meta: { mobile: 'badge', width: 48 },
+        // Seed verisinde 17/17 cari aktif — sütun sıfır bilgi taşıyor (bkz. boms-table.tsx'teki aynı
+        // desen). Varsayılan gizli, sütun seçiciden açılabilir; pasif bir cari olursa satır zaten
+        // `rowClassName` ile soluklaşarak görünür (Tur 3 P1 bulgusu).
+        meta: { mobile: 'badge', width: 90, defaultHidden: true },
         cell: ({ getValue }) =>
           getValue<boolean>() ? (
             <span className="inline-block size-1.5 rounded-full bg-success" aria-label="Aktif" title="Aktif" />
@@ -80,6 +87,7 @@ export function PartnersTable({ partners }: { partners: PartnerListRow[] }) {
       filters={filters}
       initialSorting={[{ id: 'name', desc: false }]}
       rowHref={(p) => `/ana-veri/cariler/${p.id}`}
+      rowClassName={(p) => (!p.isActive ? 'opacity-60' : undefined)}
       emptyTitle="Henüz cari yok"
       emptyDescription="Yeni bir müşteri ya da tedarikçi ekleyin."
     />

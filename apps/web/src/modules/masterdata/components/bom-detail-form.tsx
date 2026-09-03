@@ -9,7 +9,7 @@ import { FormQty, FormMoney } from '@/components/form/money-qty';
 import { FormActions } from '@/components/form/form-actions';
 import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
-import { formatPct } from '@/lib/format';
+import { formatPctFixed } from '../format-pct';
 import type { BomCostLine } from '@plantero/core';
 import { BomLinesEditor, type ComponentCandidate } from './bom-lines-editor';
 import { updateBomDraftAction } from '../actions';
@@ -132,7 +132,7 @@ export function BomDetailForm({
             </div>
             <div className="px-4 py-3">
               <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Verim</div>
-              <div className="num text-[20px] leading-tight font-medium">{formatPct(bom.expectedYieldPct)}</div>
+              <div className="num text-[20px] leading-tight font-medium">{formatPctFixed(bom.expectedYieldPct, 1)}</div>
             </div>
             <div className="px-4 py-3">
               <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Malzeme</div>
@@ -154,8 +154,13 @@ export function BomDetailForm({
             </div>
           </div>
 
-          <div className="scrollbar-thin overflow-x-auto">
-            <table className="w-full border-collapse text-[13px]">
+          {/* Kök neden (Tur 3 P0, aynı Tur 2'de data-table.tsx:330'da çözülen hata): `w-full` tabloyu
+              kapsayıcının %100'üne zorlar, table-layout:auto bu sabit toplam genişliğe uymak için
+              hücreleri (whitespace-nowrap'e rağmen) ezer — yatay kaydırma hiç tetiklenmez. `min-w-full`
+              tablo hiçbir zaman %100'ün altına sıkışmaz ama içerik daha genişse doğal genişliğine büyür;
+              `scroll-fade-x` taşan içerik olduğunda kenarlarda kaydırma affordance'ı verir. */}
+          <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
+            <table className="min-w-full border-collapse text-[13px]">
               <thead>
                 <tr className="border-b border-border/60 bg-muted/40 text-[12px] text-muted-foreground">
                   <th className="h-9 px-3 text-left font-medium">SKU</th>
@@ -163,7 +168,8 @@ export function BomDetailForm({
                   <th className="h-9 px-3 text-right font-medium">Miktar</th>
                   {hasScrap ? <th className="h-9 px-3 text-right font-medium">Fire %</th> : null}
                   {hasByproduct ? <th className="h-9 px-3 text-center font-medium">Yan Ürün</th> : null}
-                  <th className="h-9 px-3 text-right font-medium">Birim Maliyet</th>
+                  {/* 390px'te SKU+Bileşen+Miktar+Tutar+%Pay öncelikli — Birim Maliyet yalnızca ≥sm görünür. */}
+                  <th className="hidden h-9 px-3 text-right font-medium sm:table-cell">Birim Maliyet</th>
                   <th className="h-9 px-3 text-right font-medium">Tutar</th>
                   <th className="h-9 px-3 text-right font-medium">% Pay</th>
                 </tr>
@@ -180,24 +186,25 @@ export function BomDetailForm({
                       <td className="px-3 text-right">
                         <QtyCell value={l.line.qty} uom={l.uomCode} />
                       </td>
-                      {hasScrap ? <td className="px-3 text-right text-muted-foreground">{formatPct(l.line.scrapPct)}</td> : null}
+                      {hasScrap ? <td className="num px-3 text-right text-muted-foreground">{formatPctFixed(l.line.scrapPct, 1)}</td> : null}
                       {hasByproduct ? <td className="px-3 text-center text-muted-foreground">{l.line.isByproduct ? 'Evet' : ''}</td> : null}
-                      <td className="px-3 text-right text-muted-foreground">{cost ? <MoneyCell value={cost.unitCost} muted /> : '—'}</td>
+                      <td className="hidden px-3 text-right text-muted-foreground sm:table-cell">{cost ? <MoneyCell value={cost.unitCost} muted /> : '—'}</td>
                       <td className="px-3 text-right">{cost ? <MoneyCell value={cost.lineCost} /> : '—'}</td>
-                      <td className="num px-3 text-right text-muted-foreground">{formatPct(pct, 1)}</td>
+                      <td className="num px-3 text-right text-muted-foreground">{formatPctFixed(pct, 1)}</td>
                     </tr>
                   );
                 })}
               </tbody>
               <tfoot>
                 <tr className="h-9 border-t border-border/60 font-medium">
-                  <td className="px-3" colSpan={4 + (hasScrap ? 1 : 0) + (hasByproduct ? 1 : 0)}>
+                  <td className="px-3" colSpan={3 + (hasScrap ? 1 : 0) + (hasByproduct ? 1 : 0)}>
                     Toplam
                   </td>
+                  <td className="hidden px-3 sm:table-cell" />
                   <td className="px-3 text-right">
                     <MoneyCell value={rollup.materialCost} />
                   </td>
-                  <td className="num px-3 text-right text-muted-foreground">{materialCostNum > 0 ? formatPct(100, 1) : '—'}</td>
+                  <td className="num px-3 text-right text-muted-foreground">{materialCostNum > 0 ? formatPctFixed(100, 1) : '—'}</td>
                 </tr>
               </tfoot>
             </table>

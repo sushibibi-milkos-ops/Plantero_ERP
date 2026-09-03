@@ -33,23 +33,28 @@ export default async function PartnerDetailPage({ params, searchParams }: { para
   const user = await requirePermission('masterdata.view');
   const canManage = userCan(user, 'masterdata.manage');
 
-  const partner = await getPartnerById(id);
-  if (!partner) notFound();
-
-  const isSupplierKind = partner.kind === 'supplier' || partner.kind === 'both';
-  const isCustomerKind = partner.kind === 'customer' || partner.kind === 'both';
-
-  const [addresses, contacts, customerPrices, supplierProducts, orders, invoices, payments, audit, channels, componentProducts] = await Promise.all([
+  // `getPartnerById` diğer sekiz sorguyla PARALEL çalışır — önceden ayrı `await`lenip sonra 10 sorguluk
+  // Promise.all beklenirdi (11 sıralı adım); yalnızca müşteri/tedarikçi'ye özel iki sorgu partner.kind'e
+  // bağımlı olduğu için ayrı bir ikinci Promise.all'da kalır (Tur 3 P1 bulgusu — algılanan yükleniyor süresi).
+  const [partner, addresses, contacts, orders, invoices, payments, audit, channels, componentProducts] = await Promise.all([
+    getPartnerById(id),
     listPartnerAddresses(id),
     listPartnerContacts(id),
-    isCustomerKind ? listPartnerCustomerPrices(id) : Promise.resolve([]),
-    isSupplierKind ? listPartnerSupplierProducts(id) : Promise.resolve([]),
     listPartnerOrders(id),
     listPartnerInvoices(id),
     listPartnerPayments(id),
     listAuditFor('partners', id),
     listChannels(),
     listBomComponentCandidates(),
+  ]);
+  if (!partner) notFound();
+
+  const isSupplierKind = partner.kind === 'supplier' || partner.kind === 'both';
+  const isCustomerKind = partner.kind === 'customer' || partner.kind === 'both';
+
+  const [customerPrices, supplierProducts] = await Promise.all([
+    isCustomerKind ? listPartnerCustomerPrices(id) : Promise.resolve([]),
+    isSupplierKind ? listPartnerSupplierProducts(id) : Promise.resolve([]),
   ]);
 
   const channelName = channels.find((c) => c.id === partner.defaultChannelId)?.name ?? null;

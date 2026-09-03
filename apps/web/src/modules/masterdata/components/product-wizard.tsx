@@ -223,65 +223,91 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
 
         <div>
           <h2 className="mb-3 border-t border-border/60 pt-4 text-[13px] font-semibold">Kimlik</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-            <FormSelect
-              control={form.control}
-              name="t"
-              label="T — Tip"
-              options={Object.entries(TYPE_BY_T).map(([code, m]) => ({ value: code, label: `${code} — ${m.label}` }))}
-            />
-            <FormSelect
-              control={form.control}
-              name="aa"
-              label="AA — Aile"
-              placeholder={aaOptions.length ? 'Seçin' : 'Sözlükte yok — elle girin'}
-              options={aaOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
-            />
-            <FormText control={form.control} name="bb" label="BB — Bileşen" mono placeholder="01" />
-            <FormText control={form.control} name="cc" label="CC — Varyant" mono placeholder="00" />
-            <FormSelect
-              control={form.control}
-              name="pp"
-              label="PP — Ambalaj"
-              options={ppOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
-            />
+          {/* 12'lik ızgara — formun geri kalanıyla aynı desen (T=2, AA=3, BB=2, CC=2, PP=3). Önceden
+              yalnızca bu bölüm sm:grid-cols-5 kullanıyordu; diğer bölümler md:grid-cols-12 — sayfa
+              aşağı indikçe sütun sayısı 5→2→3→3→1 zıplıyor, alan sol kenarları hizalanmıyordu (Tur 3 P1). */}
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
+            <div className="md:col-span-2">
+              <FormSelect
+                control={form.control}
+                name="t"
+                label="T — Tip"
+                options={Object.entries(TYPE_BY_T).map(([code, m]) => ({ value: code, label: `${code} — ${m.label}` }))}
+              />
+            </div>
+            <div className="md:col-span-3">
+              <FormSelect
+                control={form.control}
+                name="aa"
+                label="AA — Aile"
+                placeholder={aaOptions.length ? 'Seçin' : 'Sözlükte yok — elle girin'}
+                options={aaOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <FormText control={form.control} name="bb" label="BB — Bileşen" mono placeholder="01" />
+            </div>
+            <div className="md:col-span-2">
+              <FormText control={form.control} name="cc" label="CC — Varyant" mono placeholder="00" />
+            </div>
+            <div className="md:col-span-3">
+              <FormSelect
+                control={form.control}
+                name="pp"
+                label="PP — Ambalaj"
+                options={ppOptions.map((o) => ({ value: o.code, label: `${o.code} — ${o.label}` }))}
+              />
+            </div>
           </div>
-          {/* Sözlük önerileri: tek tıkla dolduran kısa token'lar. Uzun etiketler chip metaforunu kırmasın diye kırpılır. */}
+          {/* Sözlük önerileri: tek tıkla dolduran chip'ler. Önceden ' · ' ile ayrılmış tek bir <p> içinde
+              `max-w-[160px] truncate` ile kelime ortasından kesiliyordu — 8 kırpık linkten oluşan okunamaz
+              bir duvar (Tur 3 P1 bulgusu, en belirgin "kurumsal-sıkıcı ERP" kokusu). Artık tam metin taşıyan
+              sarmalı chip'ler; 8'den fazlası varsa kalan sayı ayrı bir bilgi chip'inde özetlenir. */}
           {bbOptions.length ? (
-            <p className="mt-2 text-[12px] text-muted-foreground">
-              Sözlükten BB önerileri:{' '}
-              {bbOptions.slice(0, 8).map((o, i) => (
-                <span key={o.code}>
-                  {i > 0 ? ' · ' : ''}
+            <div className="mt-3">
+              <div className="mb-1.5 text-[12px] text-muted-foreground">Sözlükten BB önerileri</div>
+              <div className="flex flex-wrap gap-1.5">
+                {bbOptions.slice(0, 8).map((o) => (
                   <button
+                    key={o.code}
                     type="button"
                     title={`${o.code} — ${o.label}`}
                     onClick={() => form.setValue('bb', o.code.padStart(2, '0').slice(0, 2))}
-                    className="max-w-[160px] truncate align-bottom underline decoration-dotted underline-offset-2 hover:text-primary"
+                    className="h-6 rounded-md bg-muted px-2 text-[12px] hover:bg-accent"
                   >
-                    {o.code} {o.label}
+                    <span className="font-mono">{o.code}</span> {o.label}
                   </button>
-                </span>
-              ))}
-            </p>
+                ))}
+                {bbOptions.length > 8 ? (
+                  <span className="inline-flex h-6 items-center rounded-md bg-muted/60 px-2 text-[12px] text-muted-foreground">
+                    +{bbOptions.length - 8} daha
+                  </span>
+                ) : null}
+              </div>
+            </div>
           ) : null}
           {ccOptions.length ? (
-            <p className="mt-1 text-[12px] text-muted-foreground">
-              Sözlükten CC önerileri:{' '}
-              {ccOptions.slice(0, 8).map((o, i) => (
-                <span key={o.code}>
-                  {i > 0 ? ' · ' : ''}
+            <div className="mt-2">
+              <div className="mb-1.5 text-[12px] text-muted-foreground">Sözlükten CC önerileri</div>
+              <div className="flex flex-wrap gap-1.5">
+                {ccOptions.slice(0, 8).map((o) => (
                   <button
+                    key={o.code}
                     type="button"
                     title={`${o.code} — ${o.label}`}
                     onClick={() => form.setValue('cc', o.code.padStart(2, '0').slice(0, 2))}
-                    className="max-w-[160px] truncate align-bottom underline decoration-dotted underline-offset-2 hover:text-primary"
+                    className="h-6 rounded-md bg-muted px-2 text-[12px] hover:bg-accent"
                   >
-                    {o.code} {o.label}
+                    <span className="font-mono">{o.code}</span> {o.label}
                   </button>
-                </span>
-              ))}
-            </p>
+                ))}
+                {ccOptions.length > 8 ? (
+                  <span className="inline-flex h-6 items-center rounded-md bg-muted/60 px-2 text-[12px] text-muted-foreground">
+                    +{ccOptions.length - 8} daha
+                  </span>
+                ) : null}
+              </div>
+            </div>
           ) : null}
         </div>
 
@@ -373,7 +399,23 @@ export function ProductWizard({ segments, uoms, supplierOptions }: { segments: S
 
         <FormTextarea control={form.control} name="note" label="Not" rows={2} />
 
-        <FormActions pending={form.formState.isSubmitting} submitLabel="Ürünü oluştur" disabled={!skuComplete || skuState.conflict}>
+        {/* `className` twMerge ile birleşir (cn/tailwind-merge) — `bg-background(/…)` ve `backdrop-blur-*`
+            aynı grupta olduğundan burada geçilenler FormActions'ın kendi `/95` + `backdrop-blur-md`'sini
+            EZER (paylaşılan form-actions.tsx dosyası değiştirilmedi, bkz. rapor "sharedComponentRequests").
+            Tur 3 P2 bulgusu: /95 hâlâ altındaki bölüm başlıklarını sızdırıyordu; burada tam opak + üstte
+            4px bir scrim (gradient) ile yumuşak geçiş sağlanır. */}
+        <FormActions
+          pending={form.formState.isSubmitting}
+          submitLabel="Ürünü oluştur"
+          disabled={!skuComplete || skuState.conflict}
+          className="bg-background before:absolute before:-top-4 before:left-0 before:h-4 before:w-full before:bg-gradient-to-t before:from-background before:to-transparent md:bg-background backdrop-blur-none md:backdrop-blur-none"
+        >
+          {/* CTA disabled iken neyin eksik olduğunu söyler — önceden yalnızca gri bir düğme vardı. */}
+          {skuState.conflict ? (
+            <span className="text-[12px] text-[oklch(0.5_0.14_70)] dark:text-warning">Kod çakışıyor — segmentleri değiştirin</span>
+          ) : !skuComplete ? (
+            <span className="text-[12px] text-muted-foreground">Kimlik segmentlerini tamamlayın (T·AA·BB·CC·PP)</span>
+          ) : null}
           <Button type="button" variant="ghost" onClick={() => router.back()}>
             Vazgeç
           </Button>
