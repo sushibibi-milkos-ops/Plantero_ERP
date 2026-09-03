@@ -32,6 +32,9 @@ Next.js 15 App Router + TypeScript strict + Tailwind v4 + shadcn/ui, PostgreSQL 
 - Kurumsal-sıkıcı ERP görünümü YASAK: ağır gri çerçeveler, sıkışık default tablolar, ikon çorbası, her yerde border yok. Beyaz alan, tipografik hiyerarşi, ince ayraçlar (`border-border/60`), yumuşak gölge yerine ince kontrast.
 - Her sayfa `PageHeader` (başlık + açıklama + aksiyonlar) ile başlar, `DataTable` ortak bileşenini kullanır (`apps/web/src/components/data-table`), formlar `react-hook-form + zod`, hata/başarı geri bildirimi sonner ile.
 
+## Puan kartı düzeltmeleri
+Görsel düzeltme turunda yalnızca `artifacts/critic/<modul>.json` içindeki `open` bulguları kapat (kök neden; ortak bileşen kaynaklıysa `shell` sahibi düzeltir), her kapanışı `scripts/measure.ts` ölçümüyle kanıtla ve dosyadaki bulguya `measureAfter` yaz. Yeni tasarım keşfi yapma; puan kartındaki kriter hedeflerine (docs/DESIGN-SCORECARD.md) odaklan.
+
 ## Çalışma yöntemi
 1. Görev promptundaki ekran ve servis listesini bir kontrol listesine çevir.
 2. Önce `packages/core` servislerini yaz (saf fonksiyonlar + db işlemleri), birim testini yaz, çalıştır.
