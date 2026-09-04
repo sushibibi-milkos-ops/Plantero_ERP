@@ -9,4 +9,8 @@ export default defineConfig({
     exclude: ['e2e/**', 'node_modules/**', '.next/**'],
     environment: 'node',
   },
+  // .tsx birim testleri (jsdom) için: tsconfig 'jsx: preserve' Next içindir, vitest'te otomatik runtime kullanılır
+  esbuild: {
+    jsx: 'automatic',
+  },
 });

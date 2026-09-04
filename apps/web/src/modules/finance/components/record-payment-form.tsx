@@ -153,7 +153,8 @@ export function RecordPaymentForm({
    * taşımalı — aksi halde alan hatası verip GÖNDERMEYİ DURDURUR. Eskiden geçersiz/boş tutar
    * `Object.entries(selected).filter(...)` ile SESSİZCE atlanıyordu: kullanıcı bir faturayı
    * işaretlemiş görünse de, satırın tutarı boşsa/ayrıştırılamıyorsa tahsis dizisine hiç girmiyor,
-   * ödeme "tahsissiz avans" olarak kaydediliyordu (bkz. AllocationAmountInput dosya başı — kök
+   * ödeme "tahsissiz avans" olarak kaydediliyordu (kök neden: ortak `NumberInput` odak yarışı — bkz.
+   * apps/web/src/components/form/number-input.tsx `toFocusText`; e2e: e2e/number-input-focus.spec.ts —
    * neden ve kanıt). `parseMoneyInput` (apps/web/src/lib/format.ts) hem tr-TR hem kanonik biçimi
    * kabul eden TEK ayrıştırıcıdır; burada da aynı fonksiyon kullanılır.
    */
