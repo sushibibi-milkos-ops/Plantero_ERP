@@ -17,7 +17,11 @@ import { createDunningDraftAction, approveAndSendDunningAction } from '../dunnin
 import type { DueInvoiceDto } from '../dunning-queries';
 
 const LEVEL_LABEL: Record<number, string> = { 1: 'Nazik hatırlatma', 2: 'Vade geçti', 3: 'Sert hatırlatma', 4: 'İhtar' };
-const LEVEL_TONE: Record<number, 'neutral' | 'info' | 'warning' | 'danger'> = { 1: 'neutral', 2: 'info', 3: 'warning', 4: 'danger' };
+// Kriter 4 kök neden düzeltmesi (Tur 4, P1 — finans-dunning-10): SEVİYE rozeti ('info' tonuyla)
+// TON sütunundan bağımsız 4. bir renk ailesi ekliyordu — ekranda toplam 5 rozet tonu. SEVİYE artık
+// yalnızca gecikme ciddiyetini taşıyan TEK sistem: 1-2 nötr, 3 uyarı, 4 (30+ gün) tehlike — "N gün"
+// metninin kırmızısıyla (>30 gün) aynı anlam ailesinde.
+const LEVEL_TONE: Record<number, 'neutral' | 'warning' | 'danger'> = { 1: 'neutral', 2: 'neutral', 3: 'warning', 4: 'danger' };
 const SENDABLE_STATUS = new Set(['draft', 'pending_approval', 'approved']);
 
 type DraftSeed = { id: string; docNo: string; partnerName: string; channel: string; subject: string | null; body: string };
@@ -59,7 +63,7 @@ function SendDialog({ seed, generate, onClose }: { seed: DraftSeed | null; gener
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2"><Sparkles className="size-4 text-primary" />Hatırlatma taslağı</DialogTitle>
           </DialogHeader>
-          <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground">
+          <div className="flex items-center justify-center gap-2 py-10 text-[13px] text-muted-foreground">
             <Loader2 className="size-4 animate-spin" /> Taslak üretiliyor…
           </div>
         </DialogContent>
@@ -154,10 +158,10 @@ export function DunningTable({ due, actions }: { due: DueInvoiceDto[]; actions: 
           return (
             <li key={r.id} className="rounded-lg border border-border/70 bg-card p-3">
               <div className="flex items-center justify-between gap-2">
-                <div className="min-w-0 truncate text-[14px] leading-5 font-medium">{r.partnerName}</div>
+                <div className="min-w-0 truncate text-[13px] leading-5 font-medium">{r.partnerName}</div>
                 <StatusBadge status={String(r.level)} label={LEVEL_LABEL[r.level]} tone={LEVEL_TONE[r.level]} />
               </div>
-              <div className="mt-0.5 truncate text-xs text-muted-foreground">
+              <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
                 {r.docNo} <span aria-hidden className="text-muted-foreground/40"> · </span> vade {formatDate(r.dueDate)}
               </div>
               <div className="mt-2 grid grid-cols-2 gap-2 text-[13px]">
@@ -167,17 +171,17 @@ export function DunningTable({ due, actions }: { due: DueInvoiceDto[]; actions: 
                 </div>
                 <div>
                   <div className="text-[11px] text-muted-foreground uppercase">Bakiye</div>
-                  <div className="font-mono tabular-nums">{formatMoney(r.residual, r.currency, { digits: 2 })}</div>
+                  <div className="font-mono tabular-nums">{formatMoney(r.residual, r.currency, { digits: 0 })}</div>
                 </div>
               </div>
-              <div className="mt-2 text-xs text-muted-foreground">Son hatırlatma: {r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</div>
+              <div className="mt-2 text-[11px] text-muted-foreground">Son hatırlatma: {r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</div>
               <div className="mt-2.5">
                 {existing && SENDABLE_STATUS.has(existing.status) ? (
                   <Button size="sm" variant="outline" className="h-11 w-full" onClick={() => setReviewing({ id: existing.id, docNo: r.docNo, partnerName: r.partnerName, channel: existing.channel, subject: existing.subject, body: existing.body })}>
                     <Eye className="size-3.5" /> İncele ve gönder
                   </Button>
                 ) : existing ? (
-                  <span className="text-xs text-muted-foreground">Gönderildi</span>
+                  <span className="text-[11px] text-muted-foreground">Gönderildi</span>
                 ) : (
                   <Button size="sm" variant="outline" className="h-11 w-full" onClick={() => setCreatingFor(r)}>
                     <Sparkles className="size-3.5" /> Taslak oluştur
@@ -206,24 +210,39 @@ export function DunningTable({ due, actions }: { due: DueInvoiceDto[]; actions: 
           <tbody>
             {due.map((r) => {
               const existing = r.hasDraft ? findExisting(r.id, r.level) : undefined;
+              // Kriter 5 kök neden düzeltmesi (Tur 4, P1 — finans-dunning-11): satır başına birincil
+              // ağırlıkta bir Buton, satır yüksekliğini 34px'ten 49px'e çıkarıyor ve İŞLEM sütununu
+              // sürekli görünen bir eylem duvarına çeviriyordu. Linear kalıbı: satır eylemi ghost +
+              // küçük boyuta iner, yalnızca satır hover/focus'ında belirir — satır yüksekliği sabit
+              // kalır (mobil kartta tam genişlik buton korunur, bkz. yukarıdaki `<ul>`).
               return (
-                <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
+                <tr key={r.id} className="group border-b border-border/40 last:border-0 hover:bg-muted/30">
                   <td className="px-3 py-2 whitespace-nowrap">{r.partnerName}</td>
-                  <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{r.docNo}</td>
+                  <td className="px-3 py-2 font-mono text-[11px] whitespace-nowrap">{r.docNo}</td>
                   <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{formatDate(r.dueDate)}</td>
                   <td className={cn('px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums', r.daysOverdue > 30 && 'text-destructive')}>{r.daysOverdue} gün</td>
-                  <td className="px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(r.residual, r.currency, { digits: 2 })}</td>
+                  <td className="px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(r.residual, r.currency, { digits: 0 })}</td>
                   <td className="px-3 py-2 whitespace-nowrap"><StatusBadge status={String(r.level)} label={LEVEL_LABEL[r.level]} tone={LEVEL_TONE[r.level]} /></td>
                   <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</td>
                   <td className="px-3 py-2 text-right whitespace-nowrap">
                     {existing && SENDABLE_STATUS.has(existing.status) ? (
-                      <Button size="sm" variant="outline" onClick={() => setReviewing({ id: existing.id, docNo: r.docNo, partnerName: r.partnerName, channel: existing.channel, subject: existing.subject, body: existing.body })}>
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        className="opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
+                        onClick={() => setReviewing({ id: existing.id, docNo: r.docNo, partnerName: r.partnerName, channel: existing.channel, subject: existing.subject, body: existing.body })}
+                      >
                         <Eye className="size-3.5" /> İncele ve gönder
                       </Button>
                     ) : existing ? (
-                      <span className="text-xs text-muted-foreground">Gönderildi</span>
+                      <span className="text-[11px] text-muted-foreground">Gönderildi</span>
                     ) : (
-                      <Button size="sm" variant="outline" onClick={() => setCreatingFor(r)}>
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        className="opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
+                        onClick={() => setCreatingFor(r)}
+                      >
                         <Sparkles className="size-3.5" /> Taslak oluştur
                       </Button>
                     )}
@@ -287,7 +306,7 @@ export function DunningHistoryList({ actions }: { actions: DunningHistoryRow[] }
             const Icon = CHANNEL_ICON[a.channel] ?? Mail;
             return (
               <tr key={a.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
-                <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{a.invoiceDocNo}</td>
+                <td className="px-3 py-2 font-mono text-[11px] whitespace-nowrap">{a.invoiceDocNo}</td>
                 <td className="px-3 py-2 whitespace-nowrap">{a.partnerName}</td>
                 <td className="px-3 py-2 whitespace-nowrap">{LEVEL_LABEL[a.level] ?? a.level}</td>
                 <td className="px-3 py-2 whitespace-nowrap"><span className="inline-flex items-center gap-1.5 text-muted-foreground"><Icon className="size-3.5" />{a.channel === 'email' ? 'E-posta' : 'WhatsApp'}</span></td>

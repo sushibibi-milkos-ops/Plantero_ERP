@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { db } from '@plantero/db';
 import { createDunningDraft, approveDunningDraft, recordDunningSendResult, levelForDaysOverdue, hasDunningActionForLevel, type DunningLevel } from '@plantero/core';
+import { businessDate } from '@plantero/core/dates';
 import { draftDunningMessage, type DunningTone } from '@plantero/ai';
 // Not: '@plantero/integrations' barrel'ı (index.ts) pdf/render.ts üzerinden playwright-core'u da
 // re-export eder; bu server action dosyası client referans grafiğine dahil olduğundan barrel yerine
@@ -29,7 +30,11 @@ export const createDunningDraftAction = withAudit('finance.createDunningDraft', 
   const row = await getInvoiceForDraft(input.invoiceId);
   if (!row) throw new Error('Fatura bulunamadı');
 
-  const daysOverdue = Math.max(0, Math.floor((Date.now() - new Date(`${row.inv.dueDate}T00:00:00Z`).getTime()) / 86_400_000));
+  // findDueInvoices (packages/core/src/finance/dunning.ts) ile BİREBİR aynı gün-sınırı mantığı:
+  // Europe/Istanbul takvim gününe göre businessDate() — ham Date.now() kullanılırsa gün ortasında
+  // (~00:00-21:00 UTC) ekran ile bu eylemin hesapladığı seviye farklılaşabilir (Tur 4 P1 bulgusu).
+  const todayIso = businessDate(new Date());
+  const daysOverdue = Math.max(0, Math.floor((new Date(`${todayIso}T00:00:00Z`).getTime() - new Date(`${row.inv.dueDate}T00:00:00Z`).getTime()) / 86_400_000));
   const level = levelForDaysOverdue(daysOverdue) as DunningLevel;
   if (await hasDunningActionForLevel(db, input.invoiceId, level)) throw new Error(`Bu fatura için ${level}. seviye hatırlatma zaten oluşturulmuş`);
 

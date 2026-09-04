@@ -35,7 +35,7 @@ export default async function LoanDetailPage({ params }: { params: Promise<{ id:
         {/* Kriter 9 kök neden düzeltmesi (Tur 3, P1 finans-krediler-detay-02): geri bağlantısı 64x16px
             — 44px dokunma hedefinin çok altında. `-my-4 py-4` dokunma alanını görsel boyutu
             değiştirmeden büyütür (py-3/40px yetersiz kaldığı için py-4/48px'e çıkarıldı). */}
-        <Link href="/finans/krediler" className="-my-4 inline-flex items-center gap-1.5 py-4 text-xs text-muted-foreground hover:text-foreground">
+        <Link href="/finans/krediler" className="-my-4 inline-flex items-center gap-1.5 py-4 text-[11px] text-muted-foreground hover:text-foreground">
           <ArrowLeft className="size-3.5" /> Krediler
         </Link>
       </div>
@@ -49,13 +49,16 @@ export default async function LoanDetailPage({ params }: { params: Promise<{ id:
       <KpiStripRow>
         <KpiCard variant="strip" title="Kalan anapara" value={loan.remainingPrincipal} format="money" />
         <KpiCard variant="strip" title="Aylık taksit" value={loan.monthlyInstallment} format="money" />
+        {/* Kriter 11 kök neden düzeltmesi (Tur 4, P1 — finans-krediler-detay-05): iki kart birebir
+            aynı yardımcı metni ("N taksit toplam") basıyordu — Ödenen taksit kartı artık tamamlanma
+            yüzdesini gösterir, ayırt edici bilgi taşır. */}
         <KpiCard variant="strip" title="Kalan taksit" value={loan.remainingInstallments} format="int" hint={`${installments.length} taksit toplam`} />
-        <KpiCard variant="strip" title="Ödenen taksit" value={paidCount} format="int" hint={`${installments.length} taksit toplam`} />
+        <KpiCard variant="strip" title="Ödenen taksit" value={paidCount} format="int" hint={installments.length > 0 ? `takvimin %${Math.round((paidCount / installments.length) * 100)}'i` : '—'} />
       </KpiStripRow>
 
       <div className="mb-3 flex items-center justify-between">
         <div className="text-[13px] font-semibold">Amortisman takvimi</div>
-        <div className="text-xs text-muted-foreground">Aylık faiz: <span className="font-mono tabular-nums text-foreground">{formatPctFixed(loan.monthlyRatePct)}</span></div>
+        <div className="text-[11px] text-muted-foreground">Aylık faiz: <span className="font-mono tabular-nums text-foreground">{formatPctFixed(loan.monthlyRatePct)}</span></div>
       </div>
       <LoanInstallmentsTable installments={installments} />
     </>

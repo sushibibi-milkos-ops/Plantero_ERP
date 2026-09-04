@@ -22,8 +22,10 @@ const xTick = { fontSize: 11, fill: 'var(--muted-foreground)' };
 const tickFmt = (v: string) => formatDate(`${v}-01`).slice(3);
 const moneyTick = (v: number) => formatMoney(v, 'TRY', { digits: 0, compact: true });
 
-/** 1/2/5×10ⁿ'e yuvarlanmış "nice" adım — eşit aralıklı eksen tick'leri için (kriter 6). */
-function niceStep(rawStep: number): number {
+/** 1/2/5×10ⁿ'e yuvarlanmış "nice" adım — eşit aralıklı eksen tick'leri için (kriter 6).
+ * `forecast-panel.tsx` (aynı modül) da aynı işlevi kullanır — tek kaynak, farklı grafiklerde tekrar
+ * uydurulmuş "nice tick" mantığı olmasın diye burada export edilir. */
+export function niceStep(rawStep: number): number {
   if (!Number.isFinite(rawStep) || rawStep <= 0) return 1;
   const exp = Math.floor(Math.log10(rawStep));
   const base = rawStep / 10 ** exp;
@@ -32,7 +34,7 @@ function niceStep(rawStep: number): number {
 }
 
 /** 5 eşit aralıklı, yuvarlak tick — 0'ı her zaman kapsar (ör. ₺0/₺700B/₺1,4Mn/₺2,1Mn/₺2,8Mn). */
-function niceTicks(values: number[], targetCount = 5): number[] {
+export function niceTicks(values: number[], targetCount = 5): number[] {
   const min = Math.min(0, ...values);
   const max = Math.max(0, ...values);
   if (max === min) return [0];
