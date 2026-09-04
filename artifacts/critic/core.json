@@ -1,7 +1,7 @@
 {
   "module": "core",
-  "round": 15,
-  "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I35, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz.",
+  "round": 16,
+  "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I36, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz.",
   "findings": [
     {
       "id": "core-bankrecon-audit-01",
@@ -17,10 +17,42 @@
       "fix": "writeAudit çağrısı postStockMove/postJournalEntry örüntüsünde CORE katmanına taşındı: importStatement (her içe aktarılan bank_transactions satırı için 'create'), runReconciliation (auto_applied + suggested dallarının ürettiği her reconciliation_matches satırı için 'create'), approveMatch ('approve'), rejectMatch ('reject'), manualMatch ('create'). Aynı kök nedenden etkilenen packages/core/src/sales/channelSettlements.ts::markChannelSettlementPaid (doğrudan reconciliation_matches insert eden ikinci bir CORE çağrı yolu) de aynı örüntüyle düzeltildi.",
       "measureAfter": "pnpm db:reset && pnpm db:check → I17 GEÇTİ, 0 ihlal (35/35 kural GEÇTİ). Regresyon koruması: packages/core/src/finance/bankReconciliation.test.ts (7 test, her fonksiyon için auditLog satırı doğrulanıyor) ve packages/core/src/sales/channelSettlements.test.ts güncellendi; pnpm --filter @plantero/core exec vitest run → 33 dosya / 148 test GEÇTİ; pnpm typecheck, pnpm lint temiz.",
       "verifiedBy": "pnpm db:check (SQL ölçüm — I17), vitest birim testleri"
+    },
+    {
+      "id": "core-export-shipment-gap-01",
+      "module": "core",
+      "severity": "P1",
+      "rule": "I36",
+      "file": "packages/db/src/schema/export.ts",
+      "route": "/ihracat/sevkiyatlar",
+      "status": "closed",
+      "closedRound": 16,
+      "description": "İhracat sevkiyat/belge zinciri (packages/core/src/export/**, apps/web/src/modules/export/**, apps/web/src/app/(app)/ihracat/**, packages/db/src/seed/export.ts) hiç yazılmamıştı; nav.ts + status.ts bu modülü var sayıp /ihracat/* linkleri üretiyordu ama hepsi 404 idi. SO-2026-000023 (kanal=IHRACAT, EUR, status='invoiced', faturası+tahsilatı+kur farkı fişi tam) hiçbir export_shipments kaydına bağlı değildi.",
+      "measureBefore": "pnpm db:reset && pnpm db:check → I36 İHLAL, 1 ihlal (export_so_missing_shipment: SO-2026-000023, checks/36_export_shipment_gap.sql); export_shipments/export_documents/export_packages 0 satır.",
+      "fix": "I24/I31 örüntüsü tekrarlandı: packages/core/src/export/{etgb,documents,shipments}.ts (createFromOrder, ensureDocumentSet/updateExportDocument, generateProforma/linkDelivery/buildPackingList/advanceToCustoms/markShipped/markShipmentDelivered/linkInvoice/closeShipment/cancelShipment, checkEtgbLimit/resolveRegime — 300kg/15.000 EUR ETGB limiti) yazıldı ve packages/core/src/index.ts'e eklendi; apps/web/src/modules/export/{actions.ts,queries.ts,components/*} + apps/web/src/app/(app)/ihracat/{sevkiyatlar,sevkiyatlar/[id],sevkiyatlar/yeni,belgeler,kurlar} ekranları yazıldı (DataTable/PageHeader/KpiCard/StatusBadge/DocumentChain/Tabs ortak bileşenleri, recharts kur grafiği); packages/db/src/seed/export.ts SO-2026-000023'ü geriye dönük EXP-2026-000001'e (kapanmış, ETGB, mevcut kur farkı fişine dokunmadan) bağladı, ayrıca 2 yeni ihracat siparişinden EXP-2026-000002 (standart rejim, gümrükte, 16.800 EUR — ETGB limiti bilerek aşılarak otomatik rejim düşüşü egzersiz edildi) ve EXP-2026-000003 (taslak) üretti; seed/index.ts SEED_STEPS'e 'export' adımı bank'tan sonra, purchasing-backfill'den önce eklendi.",
+      "measureAfter": "pnpm db:reset && pnpm db:check → I36 GEÇTİ, 0 ihlal (36/36 kural GEÇTİ). Regresyon koruması: packages/core/src/export/{etgb,shipments}.test.ts (13 test — tam zincir, ETGB limit aşımı oluşturmada ve buildPackingList'te otomatik standart düşüşü, hata yolları); pnpm --filter @plantero/core exec vitest run → 41 dosya / 207 test GEÇTİ; pnpm typecheck, pnpm lint (tüm paketler) temiz. /ihracat/sevkiyatlar, /ihracat/sevkiyatlar/[id] (3 sevkiyat, tüm durumlar: kapalı/gümrükte/taslak), /ihracat/belgeler, /ihracat/kurlar `pnpm shot` ile çekildi ve gerçek veriyle doğrulandı (Read ile görsel kontrol).",
+      "verifiedBy": "pnpm db:check (SQL ölçüm — I36), vitest birim testleri, pnpm shot + Read (görsel doğrulama)"
+    },
+    {
+      "id": "core-db-concurrency-note-01",
+      "module": "core",
+      "severity": "P2",
+      "rule": "docs/INVARIANTS.md — Tur 11 ortak bulgu",
+      "file": "docs/INVARIANTS.md",
+      "route": null,
+      "status": "closed",
+      "closedRound": 16,
+      "description": "Test koşusu sırasında pg_stat_activity'de bu oturumun bağlantıları dışında ek aktif bağlantı ve bu akışın üretmediği (başka bir oturumun ürettiği) journal_entries satırları gözlendi — Tur 11'in belgelediği örüntünün tekrarı; paylaşılan Postgres'e eşzamanlı başka bir oturum yazıyor olabilir.",
+      "measureBefore": "N/A — kod hatası değil, ortam gözlemi (SQL kontrolü yok, docs/INVARIANTS.md 'Tur 11 ortak bulgu' zaten aynı sınıf gözlemi belgeliyor).",
+      "fix": "Kod değişikliği yapılmadı (öneri yalnızca çalışma yöntemi): tüm ölçümler tek bir kesintisiz `pnpm db:reset && pnpm db:check` zincirinde alındı (ara adımlar arasında başka komut çalıştırılmadan), Tur 11'in önerdiği yöntemle tutarlı. docs/INVARIANTS.md'ye bu turun gözlemini ve ek bir öneriyi (ağır çok-adımlı entegrasyon testlerini ayrı bir 'serial' vitest projesinde --pool=forks --poolOptions.forks.singleFork ile izole etmek — bu turda UYGULANMADI, yalnızca öneri olarak not edildi) belgeleyen bir bölüm eklendi.",
+      "measureAfter": "pnpm db:reset && pnpm db:check → 36/36 kural GEÇTİ, 0 ihlal (tek kesintisiz zincirde alındı). pnpm --filter @plantero/core exec vitest run → 41 dosya / 207 test GEÇTİ.",
+      "verifiedBy": "pnpm db:check (tek kesintisiz db:reset && db:check zinciri), docs/INVARIANTS.md güncellemesi"
     }
   ],
   "open": [],
   "closed": [
-    { "id": "core-bankrecon-audit-01", "closedRound": 15, "verifiedBy": "pnpm db:check — I17 0 ihlal" }
+    { "id": "core-bankrecon-audit-01", "closedRound": 15, "verifiedBy": "pnpm db:check — I17 0 ihlal" },
+    { "id": "core-export-shipment-gap-01", "closedRound": 16, "verifiedBy": "pnpm db:check — I36 0 ihlal" },
+    { "id": "core-db-concurrency-note-01", "closedRound": 16, "verifiedBy": "pnpm db:check — tek kesintisiz zincirde 36/36 GEÇTİ" }
   ]
 }

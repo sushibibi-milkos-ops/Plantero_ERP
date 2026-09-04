@@ -12,6 +12,7 @@ import { seedPurchasing, seedPurchasingBackfill } from './purchasing.js';
 import { seedFinancePayments } from './finance-payments.js';
 import { seedAccountingDocs } from './accounting-docs.js';
 import { seedBank } from './bank.js';
+import { seedExport } from './export.js';
 import { seedFinanceProjections } from './finance-projections.js';
 
 /**
@@ -46,6 +47,11 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   // SONRA (tüm faturalar + ilk banka ekstresi zaten mevcut olmalı), `purchasing-backfill`'den ÖNCE.
   { name: 'accounting-docs', run: seedAccountingDocs },
   { name: 'bank', run: seedBank },
+  // `export`: `sales`'in ürettiği ihracat siparişinin (SO-2026-000023) fatura+tahsilat+kur farkı
+  // zinciri `finance-payments`'ten sonra tamamlanmış olmalı (kapanmış sevkiyat geriye dönük buna
+  // bağlanır) — `purchasing-backfill`'den ÖNCE (kendi ürettiği irsaliyelerin PO'suz mal kabul
+  // riski yok, sıra bu yüzden esnek ama modül sözleşmesi gereği belge akışının doğal sonunda).
+  { name: 'export', run: seedExport },
   { name: 'purchasing-backfill', run: seedPurchasingBackfill },
   // `finance-projections`: EN SONDA — 36 aylık nakit akışı projeksiyonunu (3 senaryo) kalıcı hale
   // getirir ve bütçe/nakit akışı "gerçekleşen" alanlarını muhasebeden (TÜM yukarıdaki adımların

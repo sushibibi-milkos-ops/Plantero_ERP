@@ -46,3 +46,6 @@ export * from './finance/cashflow.js';
 export * from './finance/budget.js';
 export * from './finance/dunning.js';
 export * from './finance/forecast.js';
+export * from './export/etgb.js';
+export * from './export/documents.js';
+export * from './export/shipments.js';
