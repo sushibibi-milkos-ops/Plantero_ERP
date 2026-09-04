@@ -1,9 +1,128 @@
 'use client';
 
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { flexRender, type Table } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { DataTableRowActions } from './row-actions';
 import type { RowAction } from './types';
+
+// SSR sırasında useLayoutEffect konsola uyarı basar (DOM yok) — istemci tarafında layout-öncesi
+// (boyamadan önce, titreşimsiz) çalışması gerektiği için yalnızca tarayıcıda gerçek layout effect,
+// sunucuda no-op'a (useEffect, hiç çalışmaz çünkü bu bileşen zaten yalnızca tarayıcıda hidrasyon
+// sonrası ölçüm yapar) düşer.
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+/** `formatDate` çıktısı (CLAUDE.md kural 8: her yerde dd.MM.yyyy) — bir meta bit'in metni bu
+ *  desenle BAŞLIYORSA "tarih" sayılır. */
+const DATE_PREFIX = /^\d{2}\.\d{2}\.\d{4}/;
+
+function isDateLikeNode(node: React.ReactNode): boolean | null {
+  if (typeof node === 'string') return DATE_PREFIX.test(node);
+  if (typeof node === 'number') return false;
+  return null; // düz metin değil (ör. tarih + gecikme rozeti birlikte) — DOM'dan okunacak
+}
+
+/**
+ * Mobil kart satır-2 meta zinciri ("· bit · bit"): alan yetmezse bit'ler TEK TEK, TAMAMEN
+ * düşürülür — asla yarım/harf-ortası kesilmez (Tur 4 P2 kök neden düzeltmesi,
+ * shell-mobile-card-meta-clip-02). Önceki kalım tüm bit'leri TEK bir `text-ellipsis` metin
+ * akışında birleştiriyordu: taşma her zaman akışın SONUNDA kesiliyordu — bu bit'lerin çoğunda
+ * (tarih İLK bit olacak şekilde yazılmış tablolarda) doğru davranıyordu ama tarihin İKİNCİ/SON
+ * bit olduğu tablolarda (ör. tahsilat "Yön · Tarih") tarihin kendisini "03.09.202…" diye
+ * yarım kesiyordu. Artık bit'ler ayrı ayrı ölçülür: taşma varsa EN SONDAKİ "tarih-olmayan" bit
+ * (metni dd.MM.yyyy ile başlamayan) tamamen kaldırılır — tarih metni bulunan bit'ler bu düşürme
+ * için ADAY SAYILMAZ, yalnızca gerçekten hiçbir tarih-olmayan bit kalmayınca (nadir) döngü durur.
+ */
+function MetaChain({ items, leadingSeparator }: { items: { key: string; node: React.ReactNode }[]; leadingSeparator: boolean }) {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const itemRefs = useRef(new Map<string, HTMLSpanElement>());
+  // Tek kalan (düşürülemeyen, tarih içeren) bir bit KENDİ İÇİNDE karma içerik taşıyorsa (ör.
+  // "tarih + gecikme rozeti" TEK meta hücresinde, invoices-table.tsx) ve hâlâ sığmıyorsa, o
+  // hücrenin alt öğeleri üzerinde uygulanan imperatif `display:none` — React'ın kendi render'ı
+  // DEĞİL, bu yüzden itemsKey değişince (satır verisi değişti) elle geri alınmalı.
+  const shrunkElsRef = useRef<HTMLElement[]>([]);
+  const itemsKey = items.map((it) => it.key).join('|');
+  const [hiddenKeys, setHiddenKeys] = useState<ReadonlySet<string>>(() => new Set());
+
+  // Satır içeriği değiştiyse (farklı satır/veri) önceki gizleme kararlarını (üst seviye bit +
+  // alt-öğe) unut.
+  useIsoLayoutEffect(() => {
+    setHiddenKeys(new Set());
+    shrunkElsRef.current.forEach((el) => el.style.removeProperty('display'));
+    shrunkElsRef.current = [];
+  }, [itemsKey]);
+
+  useIsoLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    if (container.scrollWidth <= container.clientWidth) return;
+    const visible = items.filter((it) => !hiddenKeys.has(it.key));
+    for (let i = visible.length - 1; i >= 0; i--) {
+      const it = visible[i]!;
+      const known = isDateLikeNode(it.node);
+      const dateLike = known ?? DATE_PREFIX.test((itemRefs.current.get(it.key)?.textContent ?? '').replace(/^\s*·\s*/, ''));
+      if (dateLike) continue;
+      const key = it.key;
+      setHiddenKeys((prev) => {
+        const next = new Set(prev);
+        next.add(key);
+        return next;
+      });
+      return;
+    }
+    // Üstteki döngü hiçbir "tarih-olmayan" ÜST SEVİYE bit bulamadı — genelde tek, karma bir
+    // meta hücresi kaldığı içindir (ör. dueDate hücresi kendi içinde `<span>tarih</span><span>N
+    // gün gecikti</span>` taşır, invoices-table.tsx). Tek bit tamamen düşürülürse TARİH DE
+    // giderdi — bunun yerine o bit'in KENDİ alt öğeleri sondan başlayarak tek tek (bütün olarak,
+    // yarım değil) gizlenir; tarih her zaman en soldaki/en derindeki dal olduğundan bu adım asla
+    // tarihi silmez, yalnızca yanındaki ikincil rozet/metni kaldırır.
+    if (visible.length === 1) {
+      const rootEl = itemRefs.current.get(visible[0]!.key);
+      let guard = 0;
+      while (rootEl && container.scrollWidth > container.clientWidth && guard < 8) {
+        guard++;
+        let node: Element = rootEl;
+        let hidOne = false;
+        for (let depth = 0; depth < 8; depth++) {
+          const kids = Array.from(node.children).filter((c) => (c as HTMLElement).style.display !== 'none') as HTMLElement[];
+          if (kids.length > 1) {
+            const last = kids[kids.length - 1]!;
+            last.style.display = 'none';
+            shrunkElsRef.current.push(last);
+            hidOne = true;
+            break;
+          } else if (kids.length === 1) {
+            node = kids[0]!;
+          } else {
+            break;
+          }
+        }
+        if (!hidOne) break;
+      }
+    }
+    // `text-ellipsis` (aşağıdaki className) bir son çare olarak devrede kalır — yukarıdaki adımlar
+    // tükenip hâlâ sığmıyorsa (çok nadir) en azından "…" ile işaretlenir, harf ortası kesilmez.
+  }, [hiddenKeys, items, itemsKey]);
+
+  const visibleItems = items.filter((it) => !hiddenKeys.has(it.key));
+
+  return (
+    <span ref={containerRef} className="max-w-[55%] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap">
+      {visibleItems.map((it, i) => (
+        <span
+          key={it.key}
+          ref={(el) => {
+            if (el) itemRefs.current.set(it.key, el);
+            else itemRefs.current.delete(it.key);
+          }}
+        >
+          {leadingSeparator || i > 0 ? <span aria-hidden className="text-muted-foreground/40"> · </span> : null}
+          {it.node}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 /** Hücrenin ham (accessor) değeri gerçekten boş mu — `getValue()` render edilmiş düğümden değil
  *  KAYNAK veriden okur, bu yüzden "—" gösteren bir hücre bile (ör. sıfır bakiye) burada boş SAYILMAZ:
@@ -132,23 +251,21 @@ export function DataTableMobileCards<T>({
                     </span>
                   ) : null}
                   {metaCells.length ? (
-                    // `max-w-[55%]` (Tur 16 ek düzeltme, ölçümle bulundu): alt başlık YOKSA
-                    // (ör. /muhasebe/banka mutabakat listesi — tarih + karşı taraf adı ikisi de
-                    // 'meta', 'subtitle' yok) meta zinciri TEK başına satırın tamamını serbestçe
-                    // kaplayıp metrik (tutar) sütununu eziyordu (Playwright bbox: metaRight >
-                    // metricLeft, 11 karttan 2'sinde). Üst sınır meta zincirinin normal tek-tarih
-                    // durumunda (< 55%) hiçbir şeyi değiştirmez — yalnızca uzun ikinci/üçüncü meta
-                    // bit'i (serbest metin, ör. karşı taraf adı) taşarsa devreye girer ve o KENDİSİ
-                    // kırpılır; bit'ler tarih-önce sırayla yazıldığından (bkz. sütun tanımları)
-                    // kırpma her zaman SONDAKİ (daha az kritik) bit'i keser, tarihi değil.
-                    <span className="max-w-[55%] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                      {metaCells.map((c, i) => (
-                        <span key={c.id}>
-                          {subtitle || i > 0 ? <span aria-hidden className="text-muted-foreground/40"> · </span> : null}
-                          {flexRender(c.column.columnDef.cell, c.getContext())}
-                        </span>
-                      ))}
-                    </span>
+                    // `max-w-[55%]` (Tur 16): alt başlık YOKSA (ör. /muhasebe/banka mutabakat listesi
+                    // — tarih + karşı taraf adı ikisi de 'meta', 'subtitle' yok) meta zinciri TEK
+                    // başına satırın tamamını serbestçe kaplayıp metrik (tutar) sütununu ezmesin diye
+                    // üst sınır konur. Bit'lerin KENDİSİ artık `MetaChain` ölçüp tek tek düşürüyor
+                    // (Tur 4 P2 kök neden düzeltmesi, shell-mobile-card-meta-clip-02 — bkz. bileşen
+                    // yorumu): eski kalıp tüm bit'leri TEK `text-ellipsis` akışında birleştirip
+                    // taşmayı akışın SONUNDA harf-ortası kesiyordu; tarihin İKİNCİ/SON bit olduğu
+                    // tablolarda (ör. tahsilat "Yön · Tarih") bizzat TARİHİ "03.09.202…" diye
+                    // yarım basıyordu. `MetaChain` bit'leri metinlerine göre tanır: dd.MM.yyyy ile
+                    // başlayan bit'ler düşürme adayı SAYILMAZ, yalnızca tarih-olmayan bit'ler (ör.
+                    // "Tahsilat"/"Ödeme" yön etiketi) alan yetmezse TAMAMEN kaldırılır.
+                    <MetaChain
+                      items={metaCells.map((c) => ({ key: c.id, node: flexRender(c.column.columnDef.cell, c.getContext()) }))}
+                      leadingSeparator={Boolean(subtitle)}
+                    />
                   ) : null}
                 </div>
                 {metric ? (

@@ -84,8 +84,23 @@ export function KpiCard({
   const DeltaIcon = dir === 'up' ? ArrowUpRight : dir === 'down' ? ArrowDownRight : Minus;
   const isStrip = variant === 'strip';
 
+  // Kök neden (Tur 4 P1 shell k6 — finans-dunning-05): sıfır KPI değerleri ("₺0", "0") tam
+  // kontrastta basılıyordu; dolu ve boş (sıfır) durum görsel olarak ayrışmıyordu (ör.
+  // /finans/tahsilat-takibi'de "61-90 gün: ₺0" tıpkı dolu bir tutar gibi göze çarpıyordu).
+  // Tek yerde (ortak bileşen) soluklaştırılır — tüm modüllere yayılır.
+  const isZero = num === 0;
   const valueNode =
-    displayValue === null ? <span className="text-muted-foreground/60">—</span> : <NumberFlow value={displayValue} locales="tr-TR" format={nfFormat} suffix={suffix ? ` ${suffix}` : undefined} />;
+    displayValue === null ? (
+      <span className="text-muted-foreground/60">—</span>
+    ) : (
+      <NumberFlow
+        value={displayValue}
+        locales="tr-TR"
+        format={nfFormat}
+        suffix={suffix ? ` ${suffix}` : undefined}
+        className={isZero ? 'text-muted-foreground' : undefined}
+      />
+    );
   const deltaNode =
     delta !== undefined ? (
       // flex-wrap: dar kartlarda (ör. bir şeritte 6 KPI) etiket satır sonuna kırpılmadan

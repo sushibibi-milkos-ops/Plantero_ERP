@@ -1,4 +1,6 @@
-import type { CSSProperties } from 'react';
+'use client';
+
+import { useEffect, useRef, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -88,6 +90,18 @@ export function DocumentChain({
 }) {
   const Arrow = () => <ChevronRight className="size-4 shrink-0 self-center text-muted-foreground/60" aria-hidden />;
   const chronologicalUpstream = [...upstream].reverse();
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const currentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Kök neden (Tur 4 P2 shell-document-chain-current-clip-01): yatay kaydırıcı mount'ta her zaman
+    // sola dayalı açılıyordu — upstream düğüm sayısı fazlaysa AKTİF (mevcut görüntülenen) belge kartı
+    // sağdan kırpık geliyordu; kullanıcı baktığı belgeyi ilk boyamada tam göremiyordu. `scrollIntoView`
+    // animasyonsuz (`behavior:'auto'` — konumlandırma, giriş animasyonu değil) yalnızca gerektiği kadar
+    // (`inline:'nearest'`) kaydırır; zaten görünürdeyse hiçbir şey yapmaz. `block:'nearest'` sayfa
+    // düzeyinde dikey kaydırmayı engeller (yalnızca kartın kendi yatay kaydırıcısı hareket eder).
+    currentRef.current?.scrollIntoView({ behavior: 'auto', inline: 'nearest', block: 'nearest' });
+  }, []);
 
   return (
     // scroll-fade-x + snap-x: mobilde sert kesiliyor, kaydırılabilir olduğuna dair hiçbir ipucu yoktu
@@ -104,6 +118,7 @@ export function DocumentChain({
       style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}
       role="navigation"
       aria-label="Belge zinciri"
+      ref={scrollerRef}
     >
       <div className="flex items-center gap-2">
         {chronologicalUpstream.map((n) => (
@@ -112,7 +127,9 @@ export function DocumentChain({
             <Arrow />
           </div>
         ))}
-        <ChainCard node={current} current />
+        <div ref={currentRef}>
+          <ChainCard node={current} current />
+        </div>
         {downstream.length ? (
           downstream.map((n) => (
             <div key={`${n.type}-${n.id}`} className="flex items-center gap-2">
