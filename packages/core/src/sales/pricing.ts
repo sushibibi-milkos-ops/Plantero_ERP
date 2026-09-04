@@ -9,7 +9,8 @@ import { businessDate } from '../dates.js';
  * Öncelik: müşteri özel fiyat (customer_prices) > fiyat listesi (kanal fiyat listesi dahil) > ürün liste fiyatı.
  */
 
-export type PriceSource = 'customer' | 'channel' | 'list' | 'manual';
+/** 'free': elle 0 (veya altı) birim fiyatlı satır, yalnızca açık "ücretsiz/numune" bayrağıyla kabul edilir (bkz. sales/orders.ts buildLine). */
+export type PriceSource = 'customer' | 'channel' | 'list' | 'manual' | 'free';
 
 export type ResolvedPrice = { unitPrice: Decimal; source: PriceSource; currency: string };
 

@@ -13,6 +13,7 @@ export const PRICE_SOURCE_LABELS: Record<string, string> = {
   channel: 'Kanal listesi',
   list: 'Liste fiyatı',
   manual: 'Elle girildi',
+  free: 'Ücretsiz / numune',
 };
 
 export const CHANNEL_KIND_LABELS: Record<string, string> = {

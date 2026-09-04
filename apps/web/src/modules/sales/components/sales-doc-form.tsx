@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Trash2, PackagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { Form, FormText, FormSelect, FieldLabel } from '@/components/form/fields';
 import { FormMoney, FormQty } from '@/components/form/money-qty';
 import { FormDate } from '@/components/form/date-field';
@@ -21,14 +23,26 @@ import { createSalesDocAction, resolvePriceAction } from '../actions';
 import { PRICE_SOURCE_LABELS } from '../labels';
 import type { SellableProductRow } from '../queries';
 
-const lineSchema = z.object({
-  productId: z.string().uuid('Ürün seçin'),
-  qty: z.string().min(1, 'Miktar girin'),
-  uomId: z.string().uuid().optional().nullable(),
-  unitPrice: z.string().min(1, 'Fiyat girin'),
-  discountPct: z.string().optional(),
-  priceSource: z.string().optional(),
-});
+const lineSchema = z
+  .object({
+    productId: z.string().uuid('Ürün seçin'),
+    qty: z.string().min(1, 'Miktar girin'),
+    uomId: z.string().uuid().optional().nullable(),
+    unitPrice: z.string().min(1, 'Fiyat girin'),
+    discountPct: z.string().optional(),
+    priceSource: z.string().optional(),
+    /** Ücretsiz/numune işaretlenmeden 0 (veya boş) birim fiyat kabul edilmez — fiyat çözümü
+     * bitmeden (rozet gelmeden) "Kaydet"e basılırsa satır hâlâ ilk değeri (0) taşıyabilir; bu
+     * durumda kaydetmeden ÖNCE burada engellenir (sunucu da aynı kuralı ayrıca uygular). */
+    isFree: z.boolean().optional(),
+  })
+  .superRefine((line, ctx) => {
+    if (line.isFree) return;
+    const price = Number(line.unitPrice);
+    if (!Number.isFinite(price) || price <= 0) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Birim fiyat sıfır olamaz (ücretsiz/numune ise işaretleyin)', path: ['unitPrice'] });
+    }
+  });
 
 const schema = z.object({
   partnerId: z.string().uuid('Cari seçin'),
@@ -144,19 +158,56 @@ export function SalesDocForm({
 
   const effectivePriceListId = priceListId && priceListId !== 'none' ? priceListId : null;
 
+  // Fiyat çözümü (resolvePriceAction) asenkron: satır eklenir eklenmez geçici bir tahmini fiyat
+  // (ürün liste fiyatı / '0') gösterilir, gerçek fiyat (müşteri özel > kanal/liste > liste fiyatı)
+  // sunucudan dönene kadar rozet gelmez. Bu pencerede "Kaydet"e basılırsa satır sessizce 0 ₺ ile
+  // kaydolup fatura oluşturmada "Fiş tutarı sıfır olamaz" ile düşüyordu — çözümleme süren satır
+  // sayısı burada tutulur, "Kaydet" bu sayı > 0 iken devre dışı kalır (bkz. FormActions altta).
+  const [resolvingIndices, setResolvingIndices] = useState<Set<number>>(new Set());
+  const resolvingCount = resolvingIndices.size;
+
   async function resolveLinePrice(index: number, productId: string, qty: string) {
     if (!partnerId || !qty || Number(qty) <= 0) return;
-    const res = await resolvePriceAction({ productId, partnerId, priceListId: effectivePriceListId, qty });
-    if (res.ok) {
-      const current = form.getValues(`lines.${index}`);
-      update(index, { ...current, unitPrice: res.data.unitPrice, priceSource: res.data.source });
+    if (form.getValues(`lines.${index}.isFree`)) return; // ücretsiz/numune satırlarda otomatik fiyat çözümü atlanır
+    setResolvingIndices((prev) => (prev.has(index) ? prev : new Set(prev).add(index)));
+    try {
+      const res = await resolvePriceAction({ productId, partnerId, priceListId: effectivePriceListId, qty });
+      // Yanıt dönene kadar kullanıcı satırı ücretsiz işaretlemiş olabilir — o zaman elle girdiği
+      // (muhtemelen 0) fiyatın üzerine yazılmaz.
+      if (res.ok && !form.getValues(`lines.${index}.isFree`)) {
+        const current = form.getValues(`lines.${index}`);
+        update(index, { ...current, unitPrice: res.data.unitPrice, priceSource: res.data.source });
+      }
+    } finally {
+      setResolvingIndices((prev) => {
+        if (!prev.has(index)) return prev;
+        const next = new Set(prev);
+        next.delete(index);
+        return next;
+      });
     }
   }
 
   function addLine(product: SellableProductRow) {
     const idx = fields.length;
-    append({ productId: product.id, qty: '1', uomId: product.uomId, unitPrice: product.listPrice || '0', discountPct: '0', priceSource: 'list' });
+    append({ productId: product.id, qty: '1', uomId: product.uomId, unitPrice: product.listPrice || '0', discountPct: '0', priceSource: 'list', isFree: false });
     void resolveLinePrice(idx, product.id, '1');
+  }
+
+  /** `remove` satır indekslerini kaydırır — bekleyen fiyat çözümü kayıtlarının (resolvingIndices)
+   * silinen satırdan sonraki indeksleri de aynı şekilde kaydırılmazsa "Kaydet" ya gereksiz yere
+   * kilitli kalır ya da hâlâ çözümlenmekte olan başka bir satırı serbest gösterir. */
+  function removeLine(index: number) {
+    setResolvingIndices((prev) => {
+      if (prev.size === 0) return prev;
+      const next = new Set<number>();
+      for (const i of prev) {
+        if (i === index) continue;
+        next.add(i > index ? i - 1 : i);
+      }
+      return next;
+    });
+    remove(index);
   }
 
   const channel = channelById.get(channelId);
@@ -182,11 +233,17 @@ export function SalesDocForm({
   }, [watchedLines, productById, channel, docType]);
 
   async function onSubmit(values: FormValues) {
+    // Buton fiyat çözümü sürerken zaten pasif (bkz. FormActions altta) — bu ikinci kontrol yalnızca
+    // savunma amaçlı (ör. Enter tuşu ile tetiklenen bir gönderim penceresi).
+    if (resolvingCount > 0) {
+      toast.error('Fiyat çözümleniyor, lütfen bekleyin.');
+      return;
+    }
     const res = await createSalesDocAction({
       docType, partnerId: values.partnerId, channelId: values.channelId, warehouseId: values.warehouseId, priceListId: values.priceListId && values.priceListId !== 'none' ? values.priceListId : null,
       opportunityId: opportunityId ?? null, orderDate: values.orderDate, validUntil: values.validUntil || null, requestedDeliveryDate: values.requestedDeliveryDate || null,
       customerRef: values.customerRef || null, paymentTermDays: values.paymentTermDays ? Number(values.paymentTermDays) : undefined, note: values.note || null,
-      lines: values.lines.map((l) => ({ productId: l.productId, qty: l.qty, uomId: l.uomId, unitPrice: l.unitPrice, discountPct: l.discountPct })),
+      lines: values.lines.map((l) => ({ productId: l.productId, qty: l.qty, uomId: l.uomId, unitPrice: l.unitPrice, discountPct: l.discountPct, isFree: l.isFree })),
     });
     if (res.ok) {
       toast.success(`${docType === 'quotation' ? 'Teklif' : 'Sipariş'} kaydedildi: ${res.data.docNo}`);
@@ -260,10 +317,21 @@ export function SalesDocForm({
                       <div className="truncate text-sm font-medium">{product?.name ?? '—'}</div>
                       <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
                         {product?.sku}
-                        {line?.priceSource ? <StatusBadge status={line.priceSource} label={PRICE_SOURCE_LABELS[line.priceSource] ?? line.priceSource} tone={line.priceSource === 'customer' ? 'primary' : line.priceSource === 'channel' ? 'info' : 'muted'} dot={false} /> : null}
+                        {/* Fiyat çözümü sürerken rozet yerine bekleme etiketi — kullanıcı "neden Kaydet
+                            pasif" sorusunu satır düzeyinde de görsün (bkz. resolveLinePrice üstteki not). */}
+                        {resolvingIndices.has(index) ? (
+                          <StatusBadge status="resolving" label="Fiyat çözümleniyor…" tone="muted" dot={false} />
+                        ) : line?.priceSource ? (
+                          <StatusBadge
+                            status={line.priceSource}
+                            label={PRICE_SOURCE_LABELS[line.priceSource] ?? line.priceSource}
+                            tone={line.priceSource === 'customer' ? 'primary' : line.priceSource === 'channel' ? 'info' : line.priceSource === 'free' ? 'warning' : 'muted'}
+                            dot={false}
+                          />
+                        ) : null}
                       </div>
                     </div>
-                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} aria-label="Satırı sil" className="size-8 shrink-0 text-muted-foreground hover:text-destructive">
+                    <Button type="button" variant="ghost" size="icon" onClick={() => removeLine(index)} aria-label="Satırı sil" className="size-8 shrink-0 text-muted-foreground hover:text-destructive">
                       <Trash2 className="size-4" />
                     </Button>
                   </div>
@@ -280,6 +348,35 @@ export function SalesDocForm({
                       </div>
                     </div>
                   </div>
+                  {/* Gerçekten ücretsiz numune/promosyon dışında 0 ₺ satır kaydedilemez (zod + sunucu
+                      buildLine ikisi de zorlar) — kasıtlı 0 fiyat burada açıkça işaretlenir. Ortak
+                      `FormCheckbox` yerine elle `Controller` kullanılır: `onCheckedChange` içinde AYNI
+                      olay işleyicisinde `form.trigger` çağrılır — aynı satırdaki "Birim fiyat sıfır
+                      olamaz" hatası (unitPrice alanında) bu kutu işaretlenince senkron temizlenir.
+                      `useEffect` + `watch('lines')` tabanlı bir çözüm bu formda güvenilir değildi:
+                      dizi elemanı yerinde güncellendiğinde referans değişmeyebiliyor, bağımlı efekt
+                      hiç yeniden çalışmıyordu — kullanıcı kutuyu işaretlese de eski hata ekranda asılı
+                      kalıyordu. */}
+                  <Controller
+                    control={form.control}
+                    name={`lines.${index}.isFree`}
+                    render={({ field }) => (
+                      <div className="mt-2 flex items-start gap-2.5">
+                        <Checkbox
+                          id={`${field.name}-checkbox`}
+                          checked={Boolean(field.value)}
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked);
+                            void form.trigger(`lines.${index}.unitPrice`);
+                          }}
+                          className="mt-0.5"
+                        />
+                        <Label htmlFor={`${field.name}-checkbox`} className="text-[13px] font-normal">
+                          Ücretsiz / numune (0 ₺ birim fiyata izin ver)
+                        </Label>
+                      </div>
+                    )}
+                  />
                 </div>
               );
             })}
@@ -332,11 +429,20 @@ export function SalesDocForm({
             metin 11px'e düşürüldü, `mr-auto` ile düğmelerden görsel olarak ayrıştırıldı. Ortak
             FormActions/Button bileşenleri (apps/web/src/components) değiştirilmeden `title`
             özniteliği bir üst sarmalayıcıya konur — düğmenin kendi `title`'ı yoksa tarayıcı en yakın
-            atadaki `title`'ı gösterir, disabled düğme üzerinde hover ile NEDEN görünür olur. */}
-        <div title={fields.length === 0 ? 'En az bir satır ekleyin' : undefined}>
-          <FormActions submitLabel={docType === 'quotation' ? 'Teklifi kaydet' : 'Siparişi kaydet'} onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={fields.length === 0}>
+            atadaki `title`'ı gösterir, disabled düğme üzerinde hover ile NEDEN görünür olur.
+            Fiyat çözümü (resolvePrice) asenkron biter — rozet/satır fiyatı gelmeden "Kaydet"e
+            basılırsa satır 0 ₺ ile sessizce kaydolup fatura oluşturmada reddediliyordu; buton
+            resolvingCount > 0 iken de aynı desenle pasif tutulur ve nedeni "Fiyat çözümleniyor…"
+            etiketiyle anlatılır (bkz. resolveLinePrice üstteki not). */}
+        <div title={fields.length === 0 ? 'En az bir satır ekleyin' : resolvingCount > 0 ? 'Fiyat çözümü bekleniyor' : undefined}>
+          <FormActions
+            submitLabel={resolvingCount > 0 ? 'Fiyat çözümleniyor…' : docType === 'quotation' ? 'Teklifi kaydet' : 'Siparişi kaydet'}
+            onCancel={() => router.back()}
+            pending={form.formState.isSubmitting}
+            disabled={fields.length === 0 || resolvingCount > 0}
+          >
             <span className="mr-auto text-[11px] whitespace-nowrap text-muted-foreground" aria-live="polite">
-              {fields.length > 0 ? `${fields.length} satır` : 'Satır ekleyin'}
+              {fields.length === 0 ? 'Satır ekleyin' : resolvingCount > 0 ? 'Fiyat çözümleniyor…' : `${fields.length} satır`}
             </span>
           </FormActions>
         </div>

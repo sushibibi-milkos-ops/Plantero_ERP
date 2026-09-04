@@ -158,4 +158,35 @@ describe('sales/orders — sipariş → onay → sevk → fatura', () => {
       expect(untouched.status).toBe('draft');
     });
   });
+
+  // Kök neden: istemcide fiyat çözümü (resolvePrice) asenkron tamamlanır; rozet gelmeden "Kaydet"e
+  // basılırsa satır hâlâ ilk (tahmini) 0 ₺ değerini taşıyabiliyordu. Bu durumda kaydedilen sipariş
+  // grand_total=0 oluyor ve faturalandırmada postJournalEntry "Fiş tutarı sıfır olamaz" ile
+  // reddediyordu. buildLine artık elle (manuel) girilen 0 (veya altı) birim fiyatı `isFree`
+  // bayrağı olmadan reddeder — istemci + sunucu aynı kuralı iki kez uygular (savunma derinliği).
+  it('elle 0 birim fiyat isFree olmadan reddedilir; isFree ile kabul edilir ve priceSource=free olur', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await ensureSalesJournal(tx);
+      const channel = await seedChannel(tx, b);
+
+      await expect(
+        createSalesDoc(tx, {
+          docType: 'order', partnerId: b.customer.id, channelId: channel.id, warehouseId: b.wh.id, orderDate: today(), currency: 'TRY',
+          lines: [{ productId: b.finished.id, qty: d(5), unitPrice: d(0) }],
+        }, ctx),
+      ).rejects.toMatchObject({ code: 'VALIDATION' });
+
+      const { order, lines } = await createSalesDoc(tx, {
+        docType: 'order', partnerId: b.customer.id, channelId: channel.id, warehouseId: b.wh.id, orderDate: today(), currency: 'TRY',
+        lines: [{ productId: b.finished.id, qty: d(5), unitPrice: d(0), isFree: true }],
+      }, ctx);
+      expect(lines[0]!.priceSource).toBe('free');
+      expect(lines[0]!.unitPrice).toBe('0.0000');
+      expect(order.grandTotal).toBe('0.0000');
+
+      // updateLines aynı kuralı uygular (taslak sipariş satırları elle 0 fiyatla değiştirilemez)
+      await expect(updateLines(tx, order.id, [{ productId: b.finished.id, qty: d(5), unitPrice: d(0) }], ctx)).rejects.toMatchObject({ code: 'VALIDATION' });
+    });
+  });
 });

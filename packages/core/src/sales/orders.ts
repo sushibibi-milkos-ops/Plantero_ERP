@@ -27,6 +27,13 @@ export type SalesLineInput = {
   unitPrice?: Decimal | null;
   discountPct?: Decimal | null;
   description?: string | null;
+  /**
+   * Elle 0 birim fiyatlı satır yalnızca bu bayrakla kabul edilir (ör. ücretsiz numune) — aksi halde
+   * fiyat çözümlemesi tamamlanmadan kaydedilen satırlar (istemci hâlâ asenkron `resolvePrice`
+   * bekliyorken) sessizce 0 ₺ olarak kaydolup faturalandırmada "Fiş tutarı sıfır olamaz" ile
+   * patlıyordu. `priceSource` bu durumda 'free' olur.
+   */
+  isFree?: boolean;
 };
 
 export type CreateSalesDocInput = {
@@ -85,7 +92,10 @@ async function buildLine(
   let priceSource: PriceSource;
   if (input.unitPrice !== undefined && input.unitPrice !== null) {
     unitPrice = round4(D(input.unitPrice));
-    priceSource = 'manual';
+    if (unitPrice.lte(0) && !input.isFree) {
+      throw new ValidationError('Birim fiyat sıfır olamaz (ücretsiz/numune satır ise işaretleyin)', { productId: input.productId });
+    }
+    priceSource = input.isFree ? 'free' : 'manual';
   } else {
     const resolved = await resolvePrice(tx, { productId: input.productId, partnerId: ctx.partnerId, priceListId: ctx.priceListId, qty, asOf: ctx.orderDate });
     unitPrice = resolved.unitPrice;

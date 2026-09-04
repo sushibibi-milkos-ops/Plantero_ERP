@@ -589,6 +589,10 @@ test.describe('Negatifler', () => {
     await comboboxSelect(page, 'Ürün ara ve ekle…', '110010003', /3x Badem Bazı/);
     await page.getByLabel(/^Miktar/).fill(hugeQty);
     await page.keyboard.press('Tab');
+    // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve sunucu
+    // artık bunu ValidationError ile reddediyor (bkz. packages/core/src/sales/orders.ts buildLine) —
+    // "Siparişi kaydet"e basmadan önce fiyat kaynağı rozetinin gelmesi beklenir (Adım 3 ile aynı desen).
+    await expect(page.getByText(/^(Müşteri özel|Kanal listesi|Liste fiyatı|Elle girildi)$/)).toBeVisible({ timeout: 10_000 });
     await page.getByRole('button', { name: 'Siparişi kaydet' }).click();
     await page.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
     const orderId = page.url().split('/').pop()!;
@@ -643,6 +647,10 @@ test.describe('Negatifler', () => {
     await comboboxSelect(page, 'Ürün ara ve ekle…', '110010002', /2x Badem Bazı/);
     await page.getByLabel(/^Miktar/).fill(String(orderQty));
     await page.keyboard.press('Tab');
+    // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve sunucu
+    // artık bunu ValidationError ile reddediyor (bkz. packages/core/src/sales/orders.ts buildLine) —
+    // "Siparişi kaydet"e basmadan önce fiyat kaynağı rozetinin gelmesi beklenir (Adım 3 ile aynı desen).
+    await expect(page.getByText(/^(Müşteri özel|Kanal listesi|Liste fiyatı|Elle girildi)$/)).toBeVisible({ timeout: 10_000 });
     await page.getByRole('button', { name: 'Siparişi kaydet' }).click();
     await page.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
     const orderId = page.url().split('/').pop()!;
@@ -696,6 +704,10 @@ test.describe('Negatifler', () => {
     await comboboxSelect(page, 'Ürün ara ve ekle…', '110020001', /FINDIK BAZI/);
     await page.getByLabel(/^Miktar/).fill(String(orderQty));
     await page.keyboard.press('Tab');
+    // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve sunucu
+    // artık bunu ValidationError ile reddediyor (bkz. packages/core/src/sales/orders.ts buildLine) —
+    // "Siparişi kaydet"e basmadan önce fiyat kaynağı rozetinin gelmesi beklenir (Adım 3 ile aynı desen).
+    await expect(page.getByText(/^(Müşteri özel|Kanal listesi|Liste fiyatı|Elle girildi)$/)).toBeVisible({ timeout: 10_000 });
     await page.getByRole('button', { name: 'Siparişi kaydet' }).click();
     await page.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
     const orderId = page.url().split('/').pop()!;

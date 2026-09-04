@@ -113,6 +113,8 @@ const lineSchema = z.object({
   unitPrice: z.string().optional().nullable(),
   discountPct: z.string().optional().nullable(),
   description: z.string().trim().optional().nullable(),
+  /** Ücretsiz/numune satır — 0 birim fiyata yalnızca bu bayrakla izin verilir (bkz. buildLine). */
+  isFree: z.boolean().optional(),
 });
 
 const resolvePriceSchema = z.object({ productId: z.string().uuid(), partnerId: z.string().uuid(), priceListId: z.string().uuid().optional().nullable(), qty: z.string().min(1) });
@@ -149,6 +151,7 @@ function toLineInputs(lines: z.infer<typeof createSalesDocSchema>['lines']): Sal
   return lines.map((l) => ({
     productId: l.productId, qty: D(l.qty), uomId: l.uomId || null,
     unitPrice: l.unitPrice ? D(l.unitPrice) : null, discountPct: l.discountPct ? D(l.discountPct) : null, description: l.description || null,
+    isFree: l.isFree ?? false,
   }));
 }
 
