@@ -58,6 +58,41 @@ export const VIRTUAL_USAGES: readonly LocationUsage[] = ['production', 'customer
 
 const isStocked = (u: LocationUsage) => STOCKED_USAGES.includes(u);
 
+/**
+ * Yevmiye fiş açıklamasında hareket türü — Türkçe UI kuralı (CLAUDE.md) İngilizce enum'un çıplak
+ * basılmasını yasaklar. Kök neden (tur 2 P1 muhasebe-yevmiye-03): açıklama üretici `input.kind`
+ * enum değerini ("delivery", "receipt"…) doğrudan parantez içine basıyordu — /muhasebe/yevmiye'de
+ * 50 satırın 50'sinde Türkçe cümle ortasında çıplak İngilizce enum görünüyordu.
+ */
+const STOCK_MOVE_KIND_LABELS: Record<StockMoveKind, string> = {
+  receipt: 'mal kabul',
+  delivery: 'sevkiyat',
+  transfer: 'transfer',
+  consumption: 'sarf',
+  production: 'üretim çıktısı',
+  byproduct: 'yan ürün çıktısı',
+  scrap: 'fire',
+  count_gain: 'sayım fazlası',
+  count_loss: 'sayım eksiği',
+  quarantine_release: 'karantina serbest',
+  quarantine_reject: 'karantina red',
+  return_in: 'iade girişi',
+  return_out: 'iade çıkışı',
+  opening: 'açılış',
+  recall_return: 'geri çağırma iadesi',
+};
+
+/**
+ * Fiş açıklamasındaki miktar — TR ondalık (virgül) + gereksiz sıfırlar atılmış, binlik nokta ayraçlı.
+ * Kök neden (tur 2 P1 muhasebe-yevmiye-03): `toDb(qty)` numeric(18,4)'ün ham 4 ondalığını basıyordu
+ * ("10.0000") — apps/web/src/lib/format.ts'teki aynı Decimal→Intl kalıbı burada tekrarlanır.
+ */
+function formatQtyTr(qty: Decimal): string {
+  const fixed = qty.toFixed(4);
+  const trimmed = fixed.includes('.') ? fixed.replace(/0+$/, '').replace(/\.$/, '') : fixed;
+  return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 4 }).format(trimmed as unknown as number);
+}
+
 /** Lot maliyetini belirleyen (orijin) hareket türleri */
 const LOT_ORIGIN_KINDS: readonly StockMoveKind[] = ['receipt', 'production', 'byproduct', 'opening'];
 /** Red/geri çağrılmış/süresi dolmuş lotun yapabileceği hareketler */
@@ -326,7 +361,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
       ledger: 'both',
       journalCode: journalCodeForMove(input.kind),
       entryDate: movedAt,
-      description: `Stok hareketi ${moveNo} (${input.kind}): ${product.name}${lot ? ` [${lot.lotNo}]` : ''} ${toDb(qty)}`,
+      description: `Stok hareketi ${moveNo} (${STOCK_MOVE_KIND_LABELS[input.kind]}): ${product.name}${lot ? ` [${lot.lotNo}]` : ''} ${formatQtyTr(qty)}`,
       refType: 'stock_move',
       refId: moveId,
       refNo: moveNo,
@@ -343,7 +378,7 @@ export async function postStockMove(tx: DbOrTx, input: StockMoveInput, ctx: Acto
     action: 'post',
     tableName: 'stock_moves',
     recordId: moveId,
-    summary: `Stok hareketi ${moveNo} (${input.kind}): ${product.name}${lot ? ` [${lot.lotNo}]` : ''} ${toDb(qty)} ${from.code} → ${to.code}`,
+    summary: `Stok hareketi ${moveNo} (${STOCK_MOVE_KIND_LABELS[input.kind]}): ${product.name}${lot ? ` [${lot.lotNo}]` : ''} ${formatQtyTr(qty)} ${from.code} → ${to.code}`,
     after: { kind: input.kind, productId: product.id, lotId: lotKey, qty: toDb(qty), unitCost: toDb(unitCost), value: toDb(value), overheadValue: overhead ? toDb(overhead) : null, refType: input.refType, refId: input.refId, journalEntryIds },
   }, ctx);
 

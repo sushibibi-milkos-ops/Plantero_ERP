@@ -49,11 +49,19 @@ export function ManualJournalForm({
   }, [accounts]);
   const partnerOptions = useMemo(() => partners.map((p) => ({ value: p.id, label: p.name, description: p.code })), [partners]);
 
-  const totals = useMemo(() => {
-    const debit = round4(sum(lines.map((l) => D(l.debit || 0))));
-    const credit = round4(sum(lines.map((l) => D(l.credit || 0))));
-    return { debit, credit, diff: debit.minus(credit) };
-  }, [lines]);
+  // KÖK NEDEN (kanıtlandı — tur 2 P1, ek bulgu): `useMemo(() => …, [lines])` — react-hook-form'un
+  // `watch()`'u dizi/nesne yollarında YENİ bir referans DEĞİL, AYNI (mutasyona uğramış) referansı
+  // döndürür (doğrulandı: art arda `form.watch('lines')` çağrıları arasında `Object.is` → true,
+  // içerik farklı olsa bile). `useMemo`'nun bağımlılık karşılaştırması referans eşitliğine (Object.is)
+  // dayandığından `[lines]` HİÇBİR ZAMAN "değişti" saymıyordu — `totals` ilk (boş) render'da hesaplanıp
+  // sonsuza dek donuyordu. DOM'da (NumberInput'un kendi yerel `text` state'i sayesinde) doğru değer
+  // görünse de, `balanced` hep `false` kalıyor, "Fişi kaydet" kalıcı olarak disabled kalıyordu.
+  // Satır sayısı en fazla birkaç onlarca olduğundan memoizasyonun performans faydası da yok — düz
+  // hesaplama (her render'da çalışır, her zaman GÜNCEL `lines` içeriğini okur) kök nedeni ortadan
+  // kaldırır, "doğru bağımlılık" aramaktan daha güvenli.
+  const totalDebit = round4(sum(lines.map((l) => D(l.debit || 0))));
+  const totalCredit = round4(sum(lines.map((l) => D(l.credit || 0))));
+  const totals = { debit: totalDebit, credit: totalCredit, diff: totalDebit.minus(totalCredit) };
   const balanced = totals.diff.isZero() && totals.debit.gt(0);
 
   async function onSubmit(values: FormValues) {
@@ -70,12 +78,16 @@ export function ManualJournalForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <FormSelect control={form.control} name="ledger" label="Defter" required options={[{ value: 'both', label: 'VUK + UFRS (ikisi)' }, { value: 'VUK', label: 'Yalnızca VUK' }, { value: 'UFRS', label: 'Yalnızca UFRS' }]} />
-          <FormSelect control={form.control} name="journalCode" label="Yevmiye" required options={journalOptions} />
-          <FormDate control={form.control} name="entryDate" label="Tarih" required />
+        {/* max-w-3xl (tur 2 P1 muhasebe-tahsilat-yeni-01 ile aynı kök neden/desen): yalnızca başlık
+            alanları sınırlanır, aşağıdaki "Satırlar" tablosu (6 sütun) tam genişlikte kalır. */}
+        <div className="max-w-3xl space-y-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <FormSelect control={form.control} name="ledger" label="Defter" required options={[{ value: 'both', label: 'VUK + UFRS (ikisi)' }, { value: 'VUK', label: 'Yalnızca VUK' }, { value: 'UFRS', label: 'Yalnızca UFRS' }]} />
+            <FormSelect control={form.control} name="journalCode" label="Yevmiye" required options={journalOptions} />
+            <FormDate control={form.control} name="entryDate" label="Tarih" required />
+          </div>
+          <FormText control={form.control} name="description" label="Açıklama" required />
         </div>
-        <FormText control={form.control} name="description" label="Açıklama" required />
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">

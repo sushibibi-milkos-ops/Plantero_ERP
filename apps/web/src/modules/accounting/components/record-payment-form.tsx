@@ -168,7 +168,12 @@ export function RecordPaymentForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* max-w-3xl (tur 2 P1 muhasebe-tahsilat-yeni-01 kök nedeni): sınırsız 2 kolonlu ızgara
+            1152px içerik alanına yayılıyordu, tek bir "Yön" select'i 568px genişliğe çıkıyordu —
+            modülün geri kalanı ve diğer tüm modüller (receipt-form.tsx, order-form.tsx,
+            sales-doc-form.tsx) formu max-w-3xl (768px) ile sınırlar; muhasebe formları bu
+            konvansiyonun dışındaydı. */}
+        <div className="max-w-3xl grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormSelect
             control={form.control}
             name="direction"
@@ -195,7 +200,10 @@ export function RecordPaymentForm({
         <div className="space-y-2 rounded-lg border border-border/60 p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <FieldLabel>Faturaya tahsis</FieldLabel>
-            <Button type="button" variant="outline" size="sm" onClick={autoDistribute} disabled={!openInvoices.length || totalAmount.lte(0)}>
+            {/* w-full h-11 mobilde (tur 2 P1 muhasebe-tahsilat-yeni-02 kök nedeni): 237.8×32px —
+                dokunma hedefi eşiğinin (44px) altındaydı. sm:w-auto sm:h-9: masaüstünde eski kompakt
+                boyuta döner. */}
+            <Button type="button" variant="outline" size="sm" onClick={autoDistribute} disabled={!openInvoices.length || totalAmount.lte(0)} className="h-11 w-full sm:h-9 sm:w-auto">
               <Wand2 className="size-3.5" /> Otomatik dağıt (en eski önce)
             </Button>
           </div>

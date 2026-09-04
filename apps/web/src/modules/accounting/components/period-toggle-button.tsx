@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Lock, Unlock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { closeFiscalPeriodAction, openFiscalPeriodAction } from '../actions';
 
-export function PeriodToggleButton({ code, isClosed }: { code: string; isClosed: boolean }) {
+export function PeriodToggleButton({ code, isClosed, className }: { code: string; isClosed: boolean; className?: string }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [pending, setPending] = useState(false);
@@ -25,7 +26,7 @@ export function PeriodToggleButton({ code, isClosed }: { code: string; isClosed:
   }
 
   return (
-    <Button variant="outline" size="sm" onClick={toggle} disabled={pending}>
+    <Button variant="outline" size="sm" onClick={toggle} disabled={pending} className={cn(className)}>
       {pending ? <Loader2 className="size-3.5 animate-spin" /> : isClosed ? <Unlock className="size-3.5" /> : <Lock className="size-3.5" />}
       {isClosed ? 'Yeniden aç' : 'Kapat'}
     </Button>

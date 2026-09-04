@@ -312,7 +312,6 @@ export const SUBPATH_LABELS: Record<string, string> = {
   topla: 'Toplama',
   cariler: 'Cariler',
   ekstre: 'Ekstre',
-  'gider-yeni': 'Gider faturası',
 };
 
 /** İstemci tarafı izin denetleyicisi: admin rolü her şeyi görür, `*` joker izindir */

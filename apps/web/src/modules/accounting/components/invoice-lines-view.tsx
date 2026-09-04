@@ -1,5 +1,5 @@
 import { MoneyCell } from '@/components/money-cell';
-import { formatQty } from '@/lib/format';
+import { formatQty, formatPct } from '@/lib/format';
 import type { InvoiceLineRow } from '../queries';
 
 /**
@@ -26,12 +26,18 @@ export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTot
               <tr key={l.id} className="border-b border-border/40 last:border-0">
                 <td className="px-3 py-2">
                   <div>{l.productName ?? l.description}</div>
-                  {l.productName ? <div className="text-[12px] text-muted-foreground">{l.description}</div> : null}
+                  {/* description === productName ise ikinci satır basılmaz (tur 2 P2
+                      muhasebe-fatura-detay-03) — aynı metin iki kez yazılınca satır 70.5px'e
+                      çıkıyordu (hedef 36-40px); ikinci satır yalnızca GERÇEK ek bilgi taşıyorsa değer. */}
+                  {l.productName && l.description !== l.productName ? <div className="text-[12px] text-muted-foreground">{l.description}</div> : null}
                   {l.accountCode ? <div className="font-mono text-[11px] text-muted-foreground">{l.accountCode}</div> : null}
                 </td>
                 <td className="px-3 py-2 text-right font-mono tabular-nums">{formatQty(l.qty)}</td>
                 <td className="px-3 py-2 text-right"><MoneyCell value={l.unitPrice} currency={currency} /></td>
-                <td className="px-3 py-2 text-right font-mono tabular-nums text-muted-foreground">%{l.vatRate}</td>
+                {/* formatPct (tur 2 P1 muhasebe-fatura-detay-01): ham numeric(18,4) çıplak basılıyordu
+                    ("%20.0000", 4 ondalık nokta ayraçlı) — aynı satırdaki MoneyCell TR virgülüyle
+                    ("₺30.600,00") çelişiyordu. formatPct gereksiz sıfırları atar, TR virgül kullanır. */}
+                <td className="px-3 py-2 text-right font-mono tabular-nums text-muted-foreground">{formatPct(l.vatRate)}</td>
                 <td className="px-3 py-2 text-right"><MoneyCell value={l.lineTotal} currency={currency} /></td>
               </tr>
             ))}
@@ -45,12 +51,12 @@ export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTot
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="truncate">{l.productName ?? l.description}</div>
-                {l.productName ? <div className="truncate text-[12px] text-muted-foreground">{l.description}</div> : null}
+                {l.productName && l.description !== l.productName ? <div className="truncate text-[12px] text-muted-foreground">{l.description}</div> : null}
               </div>
               <MoneyCell value={l.lineTotal} currency={currency} className="shrink-0 font-medium" />
             </div>
             <div className="flex items-center justify-between text-[12px] text-muted-foreground">
-              <span>{formatQty(l.qty)} × <MoneyCell value={l.unitPrice} currency={currency} className="text-[12px]" /> · KDV %{l.vatRate}</span>
+              <span>{formatQty(l.qty)} × <MoneyCell value={l.unitPrice} currency={currency} className="text-[12px]" /> · KDV {formatPct(l.vatRate)}</span>
               {l.accountCode ? <span className="font-mono">{l.accountCode}</span> : null}
             </div>
           </div>

@@ -2,29 +2,22 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { requirePermission } from '@/lib/auth';
-import { getDashboard } from '@/modules/accounting/queries';
+import { getDashboard, getOverdueReceivables, getRecentJournalEntries } from '@/modules/accounting/queries';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
+import { MoneyCell } from '@/components/money-cell';
+import { EmptyState } from '@/components/empty-state';
+import { formatDate } from '@/lib/format';
 
 export const metadata: Metadata = { title: 'Muhasebe' };
 export const dynamic = 'force-dynamic';
 
-const LINKS = [
-  { href: '/muhasebe/faturalar', label: 'Faturalar', description: 'Satış, alış, iade faturaları — e-Fatura' },
-  { href: '/muhasebe/tahsilatlar', label: 'Tahsilatlar', description: 'Tahsilat / ödeme kayıtları' },
-  { href: '/muhasebe/banka', label: 'Banka', description: 'Hesaplar, ekstre içe aktarma' },
-  { href: '/muhasebe/mutabakat', label: 'Mutabakat', description: 'AI Mutabakat Ajanı onay ekranı' },
-  { href: '/muhasebe/yevmiye', label: 'Yevmiye', description: 'VUK / UFRS fiş defteri' },
-  { href: '/muhasebe/hesap-plani', label: 'Hesap Planı', description: 'Tek Düzen Hesap Planı' },
-  { href: '/muhasebe/mizan', label: 'Mizan', description: 'Borç / alacak / bakiye toplamları' },
-  { href: '/muhasebe/kdv', label: 'KDV', description: 'Dönem hesaplama, devreden KDV' },
-  { href: '/muhasebe/donemler', label: 'Dönemler', description: 'Mali dönem kapat / aç' },
-];
-
 export default async function AccountingHomePage() {
   await requirePermission('accounting.view');
-  const d = await getDashboard();
+  // ≥15 veri satırı hedefi (tur 2 P1 muhasebe-ozet-01 ölçütü): vadesi geçen alacak seed'de yalnızca
+  // 2 satır — dengelemek için yevmiye tarafı 13 satıra çıkarılır (toplam ≥15).
+  const [d, overdue, recentEntries] = await Promise.all([getDashboard(), getOverdueReceivables(8), getRecentJournalEntries(13)]);
   const bankDiffAbs = Math.abs(Number(d.bankDiffTry));
 
   return (
@@ -43,13 +36,15 @@ export default async function AccountingHomePage() {
       {bankDiffAbs > 0.01 || d.openClosablePeriods > 0 ? (
         <div className="mb-6 space-y-2">
           {bankDiffAbs > 0.01 ? (
-            <Link href="/muhasebe/banka" className="flex items-center justify-between gap-2 rounded-lg border border-warning/30 bg-warning/5 px-4 py-2.5 text-[13px] text-[oklch(0.5_0.14_70)] transition-colors hover:bg-warning/10 dark:text-warning">
+            // min-h-11 (44px, tur 2 P2 muhasebe-ozet-02): banner 41.5px'te dokunma hedefi eşiğinin
+            // altındaydı — bankacılık uyarısı bir alt menü bağlantısı değil, sık dokunulan bir eylem.
+            <Link href="/muhasebe/banka" className="flex min-h-11 items-center justify-between gap-2 rounded-lg border border-warning/30 bg-warning/5 px-4 py-2.5 text-[13px] text-[oklch(0.5_0.14_70)] transition-colors hover:bg-warning/10 dark:text-warning">
               <span>TL banka hesaplarında ekstre/defter farkı var — mutabakat gerekiyor.</span>
               <ArrowRight className="size-3.5 shrink-0" />
             </Link>
           ) : null}
           {d.openClosablePeriods > 0 ? (
-            <Link href="/muhasebe/donemler" className="flex items-center justify-between gap-2 rounded-lg border border-info/30 bg-info/5 px-4 py-2.5 text-[13px] text-info transition-colors hover:bg-info/10">
+            <Link href="/muhasebe/donemler" className="flex min-h-11 items-center justify-between gap-2 rounded-lg border border-info/30 bg-info/5 px-4 py-2.5 text-[13px] text-info transition-colors hover:bg-info/10">
               <span>{d.openClosablePeriods} geçmiş dönem henüz kapatılmadı.</span>
               <ArrowRight className="size-3.5 shrink-0" />
             </Link>
@@ -57,16 +52,62 @@ export default async function AccountingHomePage() {
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {LINKS.map((l) => (
-          <Link key={l.href} href={l.href} className="group rounded-lg border border-border/60 p-4 transition-colors hover:border-border hover:bg-muted/30">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">{l.label}</span>
-              <ArrowRight className="size-4 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5" />
-            </div>
-            <p className="mt-1 text-[13px] text-muted-foreground">{l.description}</p>
-          </Link>
-        ))}
+      {/* Kök neden (tur 2 P1 muhasebe-ozet-01): burada 9 bağlantı kartı vardı — sol menünün Muhasebe
+          alt menüsüyle bire bir aynı, hiçbir veri taşımıyordu (rows.count=0). Stripe'ın ana ekranı
+          menü tekrarı değil VERİ gösterir: solda vadesi geçmiş 8 alacak, sağda son 8 yevmiye fişi —
+          ikisi birlikte ilk ekranda ≥15 satır. */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div>
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-[13px] font-medium">Vadesi geçen alacaklar</h2>
+            <Link href="/muhasebe/faturalar" className="text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground">Tümü ↗</Link>
+          </div>
+          <div className="rounded-lg border border-border/60">
+            {overdue.length ? (
+              <ul>
+                {overdue.map((r) => (
+                  <li key={r.id} className="border-b border-border/40 last:border-0">
+                    <Link href={`/muhasebe/faturalar/${r.id}`} className="flex h-11 items-center justify-between gap-3 px-3 text-[13px] hover:bg-accent/50 md:h-10">
+                      <span className="min-w-0 flex-1 truncate">
+                        <span className="font-mono">{r.docNo}</span> <span className="text-muted-foreground">{r.partnerName}</span>
+                      </span>
+                      <span className="shrink-0 text-[11px] font-medium text-destructive">{r.daysOverdue} gün</span>
+                      <MoneyCell value={r.residual} currency={r.currency} className="w-24 shrink-0" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <EmptyState compact title="Vadesi geçen alacak yok" description="Tüm satış faturaları vadesinde." />
+            )}
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-[13px] font-medium">Son yevmiye fişleri</h2>
+            <Link href="/muhasebe/yevmiye" className="text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground">Tümü ↗</Link>
+          </div>
+          <div className="rounded-lg border border-border/60">
+            {recentEntries.length ? (
+              <ul>
+                {recentEntries.map((e) => (
+                  <li key={e.id} className="border-b border-border/40 last:border-0">
+                    <Link href={`/muhasebe/yevmiye/${e.id}`} className="flex h-11 items-center justify-between gap-3 px-3 text-[13px] hover:bg-accent/50 md:h-10">
+                      <span className="min-w-0 flex-1 truncate">
+                        <span className="font-mono">{e.docNo}</span> <span className="text-muted-foreground">{e.description}</span>
+                      </span>
+                      <span className="shrink-0 text-[11px] text-muted-foreground">{formatDate(e.entryDate)}</span>
+                      <MoneyCell value={e.totalDebit} className="w-24 shrink-0" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <EmptyState compact title="Henüz fiş yok" description="Kaydedilen fişler burada listelenecek." />
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

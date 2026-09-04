@@ -36,6 +36,8 @@ export type StatusKind =
   | 'journal_entry'
   | 'bank_tx'
   | 'recon_match'
+  | 'vat_period'
+  | 'fiscal_period'
   | 'approval'
   | 'notification'
   | 'product'
@@ -357,6 +359,19 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
     running: { label: 'Çalışıyor', tone: 'primary' },
     done: { label: 'Tamamlandı', tone: 'success' },
     failed: { label: 'Başarısız', tone: 'danger' },
+  },
+  // Tur 2 P1 muhasebe-kdv-03 / muhasebe-donemler-03: bu iki durum önceden düz renkli metindi
+  // (`text-success`/muted `<span>`), modülün geri kalanındaki her tabloda durum StatusBadge'ti —
+  // aynı modülde iki farklı durum anatomisi. Eklenen dictionary kaydı bu tutarsızlığın kök nedenini
+  // kapatır: artık kdv/page.tsx ve fiscal-periods-table.tsx de aynı StatusBadge'i kullanabilir.
+  vat_period: {
+    open: { label: 'Açık', tone: 'muted' },
+    declared: { label: 'Hesaplandı', tone: 'info' },
+    paid: { label: 'Ödendi', tone: 'success' },
+  },
+  fiscal_period: {
+    open: { label: 'Açık', tone: 'info' },
+    closed: { label: 'Kapalı', tone: 'muted' },
   },
 };
 

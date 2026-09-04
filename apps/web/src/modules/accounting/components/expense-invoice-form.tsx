@@ -43,11 +43,15 @@ export function ExpenseInvoiceForm({ suppliers, expenseAccounts }: { suppliers: 
   const supplierOptions = useMemo(() => suppliers.map((s) => ({ value: s.id, label: s.name, description: s.code })), [suppliers]);
   const accountOptions = useMemo(() => expenseAccounts.map((a) => ({ value: a.code, label: `${a.code} — ${a.name}` })), [expenseAccounts]);
 
-  const totals = useMemo(() => {
-    const subtotal = round4(sum(lines.map((l) => D(l.amount || 0))));
-    const vat = round4(sum(lines.map((l) => D(l.amount || 0).mul(D(l.vatRate || 0)).div(100))));
-    return { subtotal, vat, grand: subtotal.plus(vat) };
-  }, [lines]);
+  // Aynı kök neden manual-journal-form.tsx'te kanıtlandı (tur 2 P1 ek bulgu): react-hook-form'un
+  // `watch('lines')`'ı dizi yollarında AYNI (mutasyona uğramış) referansı döndürüyor — `useMemo`'nun
+  // `[lines]` bağımlılığı hiçbir zaman değişti sayılmıyor, toplamlar ilk (boş) render'da donuyordu.
+  // Bu ekranda `balanced` gibi bir gönderim engeli yok ama önizleme (Ara toplam/KDV/Genel toplam)
+  // kullanıcıya YANLIŞ (hep ₺0,00) bir özet gösteriyordu. Düz hesaplama (memoizasyon gereksiz —
+  // satır sayısı azdır) her render'da güncel `lines` içeriğini okur.
+  const subtotal = round4(sum(lines.map((l) => D(l.amount || 0))));
+  const vat = round4(sum(lines.map((l) => D(l.amount || 0).mul(D(l.vatRate || 0)).div(100))));
+  const totals = { subtotal, vat, grand: subtotal.plus(vat) };
 
   async function onSubmit(values: FormValues) {
     const res = await createExpenseInvoiceAction(values);
@@ -62,7 +66,10 @@ export function ExpenseInvoiceForm({ suppliers, expenseAccounts }: { suppliers: 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* max-w-3xl (tur 2 P1 muhasebe-tahsilat-yeni-01 ile aynı kök neden/desen — receipt-form.tsx
+            konvansiyonu): yalnızca başlık alanları sınırlanır, aşağıdaki "Satırlar" tablosu tam
+            genişlikte kalır. */}
+        <div className="max-w-3xl grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormCombobox control={form.control} name="partnerId" label="Tedarikçi" required options={supplierOptions} placeholder="Tedarikçi seçin…" searchPlaceholder="Ara…" />
           <FormText control={form.control} name="supplierInvoiceNo" label="Tedarikçi fatura no (opsiyonel)" />
           <FormDate control={form.control} name="invoiceDate" label="Fatura tarihi" required />

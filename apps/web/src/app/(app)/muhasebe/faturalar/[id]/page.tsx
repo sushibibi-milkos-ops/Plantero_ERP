@@ -67,16 +67,20 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-[13px] text-destructive">e-Belge hatası: {invoice.eInvoiceError}</div>
       ) : null}
 
+      {/* Tam genişlik (1152px), grid'in DIŞINDA (tur 2 P1 muhasebe-fatura-detay-02 kök nedeni):
+          önceden `lg:col-span-2` dar sol koluna (768px) sıkıştırılıyordu — 4 düğümlü zincirin son
+          düğümü (mevcut belge!) kırpılıyordu. Zincir tek satır kart dizisi, formların/tabloların
+          aksine sağ kolonla genişlik paylaşmasına gerek yok. */}
+      {(chain.upstream.length || chain.downstream.length) ? (
+        <div className="mb-6">
+          <div className="mb-2 text-[13px] font-medium text-muted-foreground">Belge zinciri</div>
+          <DocumentChain upstream={chain.upstream} current={current} downstream={chain.downstream} />
+        </div>
+      ) : null}
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <InvoiceLinesView lines={lines} currency={invoice.currency} subtotal={invoice.subtotal} vatTotal={invoice.vatTotal} grandTotal={invoice.grandTotal} />
-
-          {(chain.upstream.length || chain.downstream.length) ? (
-            <div>
-              <div className="mb-2 text-[13px] font-medium text-muted-foreground">Belge zinciri</div>
-              <DocumentChain upstream={chain.upstream} current={current} downstream={chain.downstream} />
-            </div>
-          ) : null}
         </div>
 
         <div className="space-y-4">

@@ -59,6 +59,44 @@ export async function getDashboard(): Promise<AccountingDashboard> {
   };
 }
 
+/** UUID biçimi (v1-v5) — geçersiz `id` (ör. `/muhasebe/faturalar/yeni` gibi bir metin rota segmentinin
+ *  yanlışlıkla `[id]` dinamik rotasına düşmesi) veritabanına gitmeden `null` döner; sayfa `notFound()`
+ *  çağırır. Kök neden (tur 2 P0 muhasebe-faturalar-yeni-01): önceden `id='yeni'` doğrudan Postgres'e
+ *  gidiyor, sorgu tip hatasıyla patlıyor ve hata sınırı ham SQL'i (dev derlemesinde) ekrana basıyordu. */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function isUuid(v: string): boolean {
+  return UUID_RE.test(v);
+}
+
+/** Vadesi geçmiş 8 satış faturası — /muhasebe özet ekranı (en gecikmiş önce). */
+export type OverdueReceivableRow = { id: string; docNo: string; partnerName: string; dueDate: string; daysOverdue: number; residual: string; currency: string };
+export async function getOverdueReceivables(limit = 8): Promise<OverdueReceivableRow[]> {
+  const today = new Date().toISOString().slice(0, 10);
+  const rows = await db
+    .select({ i: invoices, partnerName: partners.name })
+    .from(invoices)
+    .innerJoin(partners, eq(partners.id, invoices.partnerId))
+    .where(and(eq(invoices.kind, 'sales'), inArray(invoices.status, ['posted', 'partially_paid']), sql`${invoices.dueDate} < current_date`))
+    .orderBy(asc(invoices.dueDate))
+    .limit(limit);
+  return rows.map((r) => ({
+    id: r.i.id, docNo: r.i.docNo, partnerName: r.partnerName, dueDate: r.i.dueDate, currency: r.i.currency, residual: r.i.residual,
+    daysOverdue: Math.round((new Date(today).getTime() - new Date(r.i.dueDate).getTime()) / 86_400_000),
+  }));
+}
+
+/** Son 8 kaydedilmiş VUK yevmiye fişi — /muhasebe özet ekranı. */
+export type RecentJournalEntryRow = { id: string; docNo: string; description: string; entryDate: string; totalDebit: string };
+export async function getRecentJournalEntries(limit = 8): Promise<RecentJournalEntryRow[]> {
+  const rows = await db
+    .select({ e: journalEntries })
+    .from(journalEntries)
+    .where(and(eq(journalEntries.ledger, 'VUK'), eq(journalEntries.status, 'posted')))
+    .orderBy(desc(journalEntries.entryDate), desc(journalEntries.createdAt))
+    .limit(limit);
+  return rows.map((r) => ({ id: r.e.id, docNo: r.e.docNo, description: r.e.description, entryDate: r.e.entryDate, totalDebit: r.e.totalDebit }));
+}
+
 /* ==================================================================== */
 /* /muhasebe/faturalar                                                  */
 /* ==================================================================== */
@@ -97,6 +135,7 @@ export type InvoiceDetail = {
 };
 
 export async function getInvoiceDetail(id: string): Promise<InvoiceDetail | null> {
+  if (!isUuid(id)) return null;
   const [invoice] = await db.select().from(invoices).where(eq(invoices.id, id)).limit(1);
   if (!invoice) return null;
   const [partner] = await db.select().from(partners).where(eq(partners.id, invoice.partnerId)).limit(1);
@@ -252,7 +291,12 @@ export async function listReconciliationQueue(): Promise<ReconciliationQueueItem
 
 export type ReconciliationSummary = { suggestedTotal: number; autoAppliedToday: number; approvedToday: number };
 export async function getReconciliationSummaryToday(): Promise<ReconciliationSummary> {
-  const [suggested] = await db.select({ cnt: sql<string>`count(*)` }).from(reconciliationMatches).where(eq(reconciliationMatches.status, 'suggested'));
+  // Kök neden (tur 2 P1 muhasebe-banka-03 / muhasebe-mutabakat-02): `count(*)` her EŞLEŞMEyi
+  // (reconciliation_matches) sayıyordu — bir banka hareketinin birden fazla adayı (öneri) olabilir,
+  // onay ekranında ise hareket başına TEK kart gösterilir. Sonuç: banner "12 hareket onay bekliyor"
+  // diyor, kuyrukta (listReconciliationQueue, hareket bazlı gruplu) 7 kart görünüyordu.
+  // `count(distinct bank_transaction_id)` kuyruktaki gerçek kart sayısıyla birebir eşleşir.
+  const [suggested] = await db.select({ cnt: sql<string>`count(distinct ${reconciliationMatches.bankTransactionId})` }).from(reconciliationMatches).where(eq(reconciliationMatches.status, 'suggested'));
   const [autoToday] = await db.select({ cnt: sql<string>`count(*)` }).from(reconciliationMatches).where(and(eq(reconciliationMatches.status, 'auto_applied'), sql`${reconciliationMatches.decidedAt} >= current_date`));
   const [approvedToday] = await db.select({ cnt: sql<string>`count(*)` }).from(reconciliationMatches).where(and(eq(reconciliationMatches.status, 'approved'), sql`${reconciliationMatches.decidedAt} >= current_date`));
   return { suggestedTotal: Number(suggested?.cnt ?? 0), autoAppliedToday: Number(autoToday?.cnt ?? 0), approvedToday: Number(approvedToday?.cnt ?? 0) };
@@ -295,6 +339,7 @@ export type JournalLineRow = { id: string; accountCode: string; accountName: str
 export type JournalEntryDetail = { entry: typeof journalEntries.$inferSelect; journalCode: string; lines: JournalLineRow[]; twin: { id: string; ledger: string } | null };
 
 export async function getJournalEntryDetail(id: string): Promise<JournalEntryDetail | null> {
+  if (!isUuid(id)) return null;
   const [entry] = await db.select().from(journalEntries).where(eq(journalEntries.id, id)).limit(1);
   if (!entry) return null;
   const [journal] = await db.select({ code: journals.code }).from(journals).where(eq(journals.id, entry.journalId)).limit(1);

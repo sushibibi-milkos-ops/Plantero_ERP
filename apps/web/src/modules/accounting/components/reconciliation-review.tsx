@@ -9,11 +9,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Combobox } from '@/components/form/combobox';
 import { NumberInput } from '@/components/form/number-input';
-import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
 import { formatDate } from '@/lib/format';
 import { D, toDb } from '@plantero/core/money';
 import { approveReconciliationMatchAction, rejectReconciliationMatchAction, manualReconciliationMatchAction } from '../actions';
+import { SignedAmount } from './signed-amount';
 import type { ReconciliationQueueItem, ReconciliationCandidateView } from '../queries';
 
 const KIND_LABELS: Record<string, string> = {
@@ -29,15 +29,17 @@ function candidateSummary(c: ReconciliationCandidateView): string {
   return KIND_LABELS[c.kind] ?? c.kind;
 }
 
-function ConfidenceBar({ value }: { value: number }) {
+function ConfidenceBar({ value, className }: { value: number; className?: string }) {
   const pct = Math.round(value * 100);
   const tone = pct >= 92 ? 'bg-success' : pct >= 70 ? 'bg-info' : 'bg-warning';
   return (
-    <div className="flex items-center gap-2">
-      <div className="h-1.5 w-24 overflow-hidden rounded-full bg-muted">
+    <div className={`flex items-center gap-2 ${className ?? ''}`}>
+      {/* w-16 (mobilde) → w-24 (sm+): 390px'te sabit w-24 çubuk + 106px düğme + kırpılmayan sol metin
+          bloğu birlikte satırı 390px'in dışına itiyordu (tur 2 P0 muhasebe-mutabakat-01). */}
+      <div className="h-1.5 w-16 shrink-0 overflow-hidden rounded-full bg-muted sm:w-24">
         <div className={`h-full rounded-full ${tone}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="font-mono text-[12px] tabular-nums text-muted-foreground">%{pct}</span>
+      <span className="shrink-0 font-mono text-[12px] tabular-nums text-muted-foreground">%{pct}</span>
     </div>
   );
 }
@@ -161,7 +163,7 @@ export function ReconciliationReview({
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="truncate text-[13px] font-medium">{item.description}</span>
-                <MoneyCell value={item.amount} currency={item.currency} signed className="shrink-0 text-[13px]" />
+                <SignedAmount value={item.amount} currency={item.currency} className="shrink-0 text-[13px]" />
               </div>
               <div className="flex items-center justify-between gap-2 text-[12px] text-muted-foreground">
                 <span>{formatDate(item.txDate)} · {item.bankAccountCode}</span>
@@ -180,7 +182,7 @@ export function ReconciliationReview({
                 <div className="text-[15px] font-medium">{current.description}</div>
                 <div className="text-[13px] text-muted-foreground">{formatDate(current.txDate)} · {current.bankAccountCode}{current.counterpartyName ? ` · ${current.counterpartyName}` : ''}</div>
               </div>
-              <MoneyCell value={current.amount} currency={current.currency} signed className="text-base" />
+              <SignedAmount value={current.amount} currency={current.currency} className="text-base" />
             </div>
 
             {bestCandidate ? (
@@ -198,15 +200,20 @@ export function ReconciliationReview({
               <div className="mb-4">
                 <div className="mb-1.5 text-[12px] font-medium text-muted-foreground">Alternatif adaylar</div>
                 <div className="space-y-1.5">
+                  {/* flex-col sm:flex-row (tur 2 P0 muhasebe-mutabakat-01 kök nedeni): sabit genişlikli
+                      güven çubuğu + 106px düğme + küçülmeyen sol metin bloğu tek satırda 390px'i
+                      zorluyordu — "Bunu onayla" düğmesi viewport'un tamamen dışına taşıyordu (app-shell
+                      taşmayı kırptığı için yatay kaydırmayla da erişilemiyordu). Mobilde iki satıra
+                      ayrılır: üstte metin (min-w-0 + truncate), altta güven çubuğu + tam genişlik düğme. */}
                   {current.candidates.slice(1).map((c) => (
-                    <div key={c.matchId} className="flex items-center justify-between gap-2 rounded-md border border-border/50 px-3 py-2 text-[13px]">
-                      <div>
+                    <div key={c.matchId} className="flex flex-col gap-2 rounded-md border border-border/50 px-3 py-2 text-[13px] sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0 truncate">
                         <span className="mr-2 text-muted-foreground">{KIND_LABELS[c.kind] ?? c.kind}</span>
                         {candidateSummary(c)}
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between gap-2 sm:justify-end">
                         <ConfidenceBar value={Number(c.confidence)} />
-                        <Button variant="ghost" size="sm" onClick={() => approve(c.matchId)} disabled={busy}>Bunu onayla</Button>
+                        <Button variant="ghost" size="sm" onClick={() => approve(c.matchId)} disabled={busy} className="h-9 shrink-0">Bunu onayla</Button>
                       </div>
                     </div>
                   ))}

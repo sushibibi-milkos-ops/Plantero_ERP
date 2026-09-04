@@ -36,7 +36,7 @@ export default async function InvoicesPage() {
         actions={
           userCan(user, 'accounting.invoice') ? (
             <Button asChild>
-              <Link href="/muhasebe/faturalar/gider-yeni">
+              <Link href="/muhasebe/faturalar/yeni">
                 <Plus className="size-4" /> Gider faturası
               </Link>
             </Button>
