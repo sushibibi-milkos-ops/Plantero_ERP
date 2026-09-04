@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -18,6 +18,11 @@ export type ChainNode = {
   amount?: string | number | null;
   partnerName?: string | null;
 };
+
+// SSR sırasında useLayoutEffect konsola uyarı basar (DOM yok) — istemci tarafında boyamadan ÖNCE
+// (titreşimsiz) kaydırma konumunu yazmak için gerçek layout effect, sunucuda no-op'a düşer
+// (mobile-cards.tsx'teki useIsoLayoutEffect ile aynı desen).
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 const TYPE_TO_KIND: Record<string, StatusKind> = {
   opportunity: 'opportunity',
@@ -93,14 +98,33 @@ export function DocumentChain({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const currentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Kök neden (Tur 4 P2 shell-document-chain-current-clip-01): yatay kaydırıcı mount'ta her zaman
-    // sola dayalı açılıyordu — upstream düğüm sayısı fazlaysa AKTİF (mevcut görüntülenen) belge kartı
-    // sağdan kırpık geliyordu; kullanıcı baktığı belgeyi ilk boyamada tam göremiyordu. `scrollIntoView`
-    // animasyonsuz (`behavior:'auto'` — konumlandırma, giriş animasyonu değil) yalnızca gerektiği kadar
-    // (`inline:'nearest'`) kaydırır; zaten görünürdeyse hiçbir şey yapmaz. `block:'nearest'` sayfa
-    // düzeyinde dikey kaydırmayı engeller (yalnızca kartın kendi yatay kaydırıcısı hareket eder).
-    currentRef.current?.scrollIntoView({ behavior: 'auto', inline: 'nearest', block: 'nearest' });
+  useIsoLayoutEffect(() => {
+    // Kök neden (Tur 4 P2 shell-document-chain-current-clip-01, yeniden açıldı Tur 18
+    // shell-document-chain-current-clip-02): yatay kaydırıcı mount'ta her zaman sola dayalı
+    // açılıyordu — upstream düğüm sayısı fazlaysa AKTİF (mevcut görüntülenen) belge kartı sağdan
+    // kırpık geliyordu. Tur 17'de eklenen `currentRef.current?.scrollIntoView(...)` (behavior:'auto')
+    // ETKİSİZDİ, Tur 18'in İLK denemesi (`el.scrollLeft` DOĞRUDAN, keyfi bir piksel hedefine —
+    // "sağ kenar + 8px pay") de ETKİSİZ ÇIKTI: `snap-x snap-mandatory` yalnızca kaydırma
+    // JESTLERİNDEN sonra değil, `scroll-snap-type` her devrede olduğunda (sınıf zaten mount'ta
+    // uygulanmış olsa da) geçerli DEĞİLSE en yakın GEÇERLİ snap noktasına döner — keyfi bir hedef
+    // hiçbir zaman geçerli bir nokta OLMADIĞINDAN tarayıcı onu listenin BAŞINA (scrollLeft≈0) geri
+    // düzeltiyordu (1440x900'de ölçüldü: hedef 68 yazıldı, final scrollLeft=4). Kalıcı çözüm: hedef
+    // olarak yalnızca GEÇERLİ bir snap noktası (her kartın kendi `.snap-start` sol kenarı) seçilir —
+    // AKTİF kartı hâlâ TAM gösteren (`right ≤ target + clientWidth`) noktalar arasından en SAĞDAKİ
+    // (önceki belgelerden mümkün olduğunca fazlasını bağlamda tutan). Bu, zaten "kendi en yakın
+    // geçerli snap noktası" olduğundan tarayıcı bunu bir daha ASLA geri almaz.
+    const el = scrollerRef.current;
+    const cur = currentRef.current;
+    if (!el || !cur) return;
+    // AKTİF kartın sağ kenarının kaydırıcının görünür sağ kenarını GEÇMEMESİ için gereken EN KÜÇÜK
+    // scrollLeft değeri: scrollLeft + clientWidth ≥ right ⟺ scrollLeft ≥ right - clientWidth.
+    const minLeft = cur.offsetLeft + cur.offsetWidth - el.clientWidth;
+    const snapPoints = Array.from(el.querySelectorAll<HTMLElement>('.snap-start')).map((n) => n.offsetLeft);
+    // Bu eşiği KARŞILAYAN (≥) geçerli snap noktaları arasından EN KÜÇÜĞÜ seçilir — bu hem AKTİF
+    // kartı tam gösterir hem de öncesindeki belgelerden mümkün olduğunca fazlasını bağlamda tutar.
+    const candidates = snapPoints.filter((p) => p >= minLeft - 0.5);
+    const target = candidates.length ? Math.min(...candidates) : cur.offsetLeft;
+    el.scrollLeft = Math.max(0, Math.min(target, el.scrollWidth - el.clientWidth));
   }, []);
 
   return (
@@ -111,10 +135,21 @@ export function DocumentChain({
     // render eder; scroll-fade-x'in varsayılanı var(--card) (beyaz) olduğundan açık temada zeminle
     // (var(--background), #fafafa) eşleşmiyor ve soldurma pratikte görünmüyordu (Tur 4 P2 bulgusu).
     <div
-      // Kök neden (Tur 5 P2): yalnızca `snap-x` (proximity) — momentum kaydırma bir kartın TAM
-      // ortasında durabiliyordu, kırpma/kaydırma göstergesi olmadan bozuk render izlenimi veriyordu.
-      // `snap-mandatory` kaydırmanın her zaman bir kart sınırında durmasını zorunlu kılar.
-      className={cn('scrollbar-thin scroll-fade-x -mx-1 snap-x snap-mandatory overflow-x-auto px-1 py-1', className)}
+      className={cn(
+        // relative: `cur.offsetLeft` / `.snap-start` öğelerinin `offsetLeft`i (yukarıdaki effect)
+        // yalnızca EN YAKIN KONUMLANDIRILMIŞ atanın (offsetParent) padding kutusuna göre doğru sonuç
+        // verir — bu kaydırıcı önceden konumsuzdu, offsetParent DOM ağacında çok daha yukarıya (ör.
+        // <body>) sıçrayıp ölçümü anlamsızlaştırırdı.
+        'relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto px-1 py-1',
+        // Kök neden (Tur 5 P2): yalnızca `snap-x` (proximity) — momentum kaydırma bir kartın TAM
+        // ortasında durabiliyordu, kırpma/kaydırma göstergesi olmadan bozuk render izlenimi
+        // veriyordu. `snap-mandatory` kaydırmanın her zaman bir kart sınırında durmasını zorunlu
+        // kılar; yukarıdaki effect artık hedefini HER ZAMAN geçerli bir snap noktasından seçtiği
+        // için (Tur 18 P1 shell-document-chain-current-clip-02) bu sınıfın mount'tan itibaren
+        // devrede olması güvenli — tarayıcının "düzelteceği" bir uyumsuzluk hiç oluşmuyor.
+        'snap-x snap-mandatory',
+        className,
+      )}
       style={{ '--scroll-fade-bg': 'var(--background)' } as CSSProperties}
       role="navigation"
       aria-label="Belge zinciri"

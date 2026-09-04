@@ -84,7 +84,19 @@ function MetaChain({ items, leadingSeparator }: { items: { key: string; node: Re
         let node: Element = rootEl;
         let hidOne = false;
         for (let depth = 0; depth < 8; depth++) {
-          const kids = Array.from(node.children).filter((c) => (c as HTMLElement).style.display !== 'none') as HTMLElement[];
+          // `aria-hidden="true"` atlanır: bu, bit'in kendi "·" ayracı (aşağıdaki render'da, satır
+          // ~119) — bit İÇERİĞİ değil. Kök neden (Tur 18 P1 shell-mobile-card-meta-chain-drop-01):
+          // ayracı filtrelemeden `rootEl`in çocukları sayılınca ayraç + tek gerçek içerik (ör.
+          // invoices-table.tsx dueDate hücresinin <tarih><gecikme rozeti> sarmalayıcısı) birlikte
+          // `kids.length===2` (>1) sayılıyor, algoritma SONUNCUYU (o TEK içerik sarmalayıcısının
+          // TAMAMINI — tarihi de rozeti de) tek seferde `display:none` yapıyordu; geriye yalnızca
+          // sahipsiz bir "·" kalıyordu. Ayraç filtrelenince rootEl'in TEK gerçek çocuğu bulunur
+          // (kids.length===1) ve İÇİNE inilir — gizleme ancak bir sonraki (gerçekten çok-çocuklu)
+          // seviyede, o düğümün SON çocuğunda (ör. yalnızca rozet) olur; tarih hiçbir zaman ayraçla
+          // birlikte toptan silinmez, bu da aynı zamanda sahipsiz ayracı da imkânsız kılar.
+          const kids = Array.from(node.children).filter(
+            (c) => (c as HTMLElement).style.display !== 'none' && c.getAttribute('aria-hidden') !== 'true',
+          ) as HTMLElement[];
           if (kids.length > 1) {
             const last = kids[kids.length - 1]!;
             last.style.display = 'none';
