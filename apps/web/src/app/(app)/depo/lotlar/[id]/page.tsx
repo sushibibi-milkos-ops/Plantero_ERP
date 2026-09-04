@@ -87,11 +87,22 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
           <dt className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Giriş belgesi</dt>
           <dd className="mt-0.5 text-[13px]">
             {originReceipt ? (
-              <Link href={`/depo/mal-kabul/${originReceipt.id}`} className="code text-primary underline-offset-2 hover:underline">
+              // Kök neden (Tur 14 P1 depo-lotlar-id-04): çıplak metin bağlantısı satır yüksekliğine
+              // sıkışıyordu (~17px) — 44px dokunma eşiğinin altında ve lottan kaynak belgeye gitmenin
+              // mobildeki tek yolu. detail-field-groups-grid.tsx'teki dokunma-yastığı kalıbı (Tur 10
+              // shell-empty-fields-toggle-01) burada dikey yastıkla uygulandı: -my-3 + min-h-11 masaüstü
+              // görünümü değiştirmeden (md:my-0 md:min-h-0) mobilde dokunma alanını büyütür.
+              <Link
+                href={`/depo/mal-kabul/${originReceipt.id}`}
+                className="code -my-3 inline-flex min-h-11 items-center text-primary underline-offset-2 hover:underline md:my-0 md:min-h-0"
+              >
                 {originReceipt.docNo}
               </Link>
             ) : originWorkOrder ? (
-              <Link href={`/uretim/is-emirleri/${originWorkOrder.id}`} className="code text-primary underline-offset-2 hover:underline">
+              <Link
+                href={`/uretim/is-emirleri/${originWorkOrder.id}`}
+                className="code -my-3 inline-flex min-h-11 items-center text-primary underline-offset-2 hover:underline md:my-0 md:min-h-0"
+              >
                 {originWorkOrder.docNo}
               </Link>
             ) : (
@@ -203,7 +214,13 @@ export default async function LotDetailPage({ params }: { params: Promise<{ id: 
               <TraceGraph nodes={forward.nodes} edges={forward.edges} rootId={forward.rootId} />
             </div>
           </div>
-          <Link href={`/kalite/izlenebilirlik?lot=${lot.id}`} className="text-sm text-primary underline underline-offset-2">
+          {/* Aynı dokunma-yastığı kalıbı (bkz. yukarıdaki Giriş belgesi bağlantısı) — sekme pasif
+              olduğu için ölçüme girmiyor ama kök neden aynı: çıplak metin bağlantısı satır
+              yüksekliğine sıkışıyordu. */}
+          <Link
+            href={`/kalite/izlenebilirlik?lot=${lot.id}`}
+            className="-my-3 inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-2 md:my-0 md:min-h-0"
+          >
             Kalite modülünde detaylı izlenebilirlik / geri çağırma simülasyonu →
           </Link>
         </TabsContent>
