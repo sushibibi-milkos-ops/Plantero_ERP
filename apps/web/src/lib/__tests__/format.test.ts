@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Decimal from 'decimal.js';
-import { formatMoney, formatQty, formatInt, formatPct, formatDate, formatDateTime, relativeTime, daysUntil, initials, slugify } from '../format';
+import { formatMoney, formatQty, formatInt, formatPct, formatDate, formatDateTime, relativeTime, daysUntil, initials, slugify, parseMoneyInput } from '../format';
 
 describe('formatMoney', () => {
   it('TRY: ₺1.234,56 (tr-TR)', () => {
@@ -77,6 +77,41 @@ describe('tarih', () => {
     expect(daysUntil('2026-10-02T00:00:00Z', now)).toBe(30);
     expect(daysUntil('2026-09-01T00:00:00Z', now)).toBe(-1);
     expect(daysUntil(null, now)).toBeNull();
+  });
+});
+
+// Tur 14, P0: /finans/tahsilat/yeni "çift tahsilat engeli" kusurunun kök nedeni — bkz.
+// apps/web/src/lib/format.ts (parseMoneyInput) ve
+// apps/web/src/modules/finance/components/allocation-amount-input.tsx dosya başı yorumları.
+describe('parseMoneyInput', () => {
+  it('tr-TR biçimi: nokta binlik, virgül ondalık', () => {
+    expect(parseMoneyInput('1.020,00')).toBe('1020');
+    expect(parseMoneyInput('920,00')).toBe('920');
+    expect(parseMoneyInput('1.234.567,89')).toBe('1234567.89');
+    expect(parseMoneyInput('0,5')).toBe('0.5');
+  });
+  it('kanonik/API biçimi: noktalı ondalık, binlik ayraç yok', () => {
+    expect(parseMoneyInput('1020.00')).toBe('1020');
+    expect(parseMoneyInput('1020')).toBe('1020');
+    expect(parseMoneyInput('919.9999')).toBe('919.9999');
+  });
+  it('boş/geçersiz → null (sessizce 0 değil)', () => {
+    expect(parseMoneyInput('')).toBeNull();
+    expect(parseMoneyInput(null)).toBeNull();
+    expect(parseMoneyInput(undefined)).toBeNull();
+    expect(parseMoneyInput('-')).toBeNull();
+    expect(parseMoneyInput('abc')).toBeNull();
+  });
+  it('bozuk/birleşmiş metin (odak-yarışı sonucu) → null, asla yanlış yorumlanmaz', () => {
+    // Kök neden kanıtı: paylaşılan NumberInput'ta odak anındaki yeniden biçimlenme ile
+    // otomasyon/gerçek kullanıcı yazımı çakışınca "919,9999" + "1020,00" birleşip
+    // "919,99991020,00" gibi ayrıştırılamaz bir metin üretiyordu (prod trace kanıtı, rapor).
+    expect(parseMoneyInput('919,99991020,00')).toBeNull();
+    expect(parseMoneyInput('1.020.00')).toBeNull();
+    expect(parseMoneyInput('1,020,00')).toBeNull();
+  });
+  it('₺ öneki ve boşluk temizlenir', () => {
+    expect(parseMoneyInput('₺ 1.020,00')).toBe('1020');
   });
 });
 

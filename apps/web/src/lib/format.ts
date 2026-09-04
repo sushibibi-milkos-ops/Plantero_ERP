@@ -72,6 +72,44 @@ export function formatPct(v: NumberLike, digits = 2): string {
   return nf.format(plain as unknown as number);
 }
 
+/**
+ * Ortak para girişi ayrıştırıcı (tur 14, P0 — `/finans/tahsilat/yeni` çift tahsilat kusuru).
+ * Hem tr-TR ekran biçimini ("1.020,00" — nokta binlik, virgül ondalık) hem de kanonik/API
+ * biçimini ("1020.00" — noktalı ondalık, binlik ayraç yok) kabul eder; geçersiz/bozuk metinde
+ * (ör. odak/otomasyon yarışından doğan "919,99991020,00" gibi birleşmiş metin) `null` döner.
+ *
+ * Kök neden (kanıtlandı, packages/core/src/finance/payments.ts / RecordPaymentForm): paylaşılan
+ * `NumberInput` (apps/web/src/components/form/number-input.tsx, ORTAK — bu modül değiştiremez)
+ * odaklanınca metni `value` prop'undan (tam hassasiyet, numeric(18,4) → 4 ondalık, ör. "919.9999")
+ * yeniden kurar; bu, o ana kadar ekranda görünen 2 ondaklı biçimden ("920,00") FARKLI uzunlukta
+ * bir metindir. Programatik/otomatik doldurma (Playwright `fill`, bazı IME/otomasyon akışları)
+ * odak olayı ile asıl yazma arasına bu yeniden biçimlenmeyi sıkıştırabiliyor; sonuç, eski ve yeni
+ * metnin BİRLEŞTİĞİ ayrıştırılamaz bir dize. Eskiden bu durumda ilgili tahsis satırı SESSİZCE
+ * düşüyordu (tutar '' oluyordu, checkbox işaretli kalsa da tahsis dizisine hiç girmiyordu) —
+ * kullanıcı bir faturayı tahsis ediyormuş gibi görünürken ödeme tahsissiz (avans) kaydediliyordu.
+ * Bu fonksiyon + RecordPaymentForm.onSubmit artık bu durumu bir alan hatasına çeviriyor (bkz. rapor).
+ */
+export function parseMoneyInput(raw: string | null | undefined): string | null {
+  if (raw === null || raw === undefined) return null;
+  const s = raw.replace(/[\s₺€$%]/g, '').trim();
+  if (s === '' || s === '-') return null;
+  const hasComma = s.includes(',');
+  // Virgül varsa tr-TR: nokta binlik ayraç (silinir), virgül ondalık (noktaya çevrilir).
+  // Virgül yoksa kanonik: metin olduğu gibi ondalık noktalı sayı olarak değerlendirilir.
+  const normalized = hasComma ? s.replace(/\./g, '').replace(',', '.') : s;
+  if (!/^-?\d*(\.\d*)?$/.test(normalized) || normalized === '' || normalized === '.' || normalized === '-') return null;
+  // Tek bir ondalık ayraçtan fazlası (ör. hem binlik hem ondalık nokta karışmış, ya da yarışın
+  // birleştirdiği "919.99991020.00" gibi bir metin) kalmışsa geçersiz say — sessizce yanlış
+  // yorumlamaktansa reddetmek daha güvenli.
+  if ((normalized.match(/\./g)?.length ?? 0) > 1) return null;
+  try {
+    const d = new Decimal(normalized);
+    return d.isFinite() ? d.toFixed() : null;
+  } catch {
+    return null;
+  }
+}
+
 type DateLike = Date | string | number | null | undefined;
 
 function toDate(v: DateLike): Date | null {

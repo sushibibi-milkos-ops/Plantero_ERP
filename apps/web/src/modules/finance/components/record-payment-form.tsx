@@ -15,9 +15,9 @@ import { FormMoney } from '@/components/form/money-qty';
 import { FormDate } from '@/components/form/date-field';
 import { FormCombobox } from '@/components/form/combobox';
 import { FormActions } from '@/components/form/form-actions';
-import { NumberInput } from '@/components/form/number-input';
 import { MoneyCell } from '@/components/money-cell';
-import { formatDate } from '@/lib/format';
+import { formatDate, parseMoneyInput } from '@/lib/format';
+import { AllocationAmountInput } from './allocation-amount-input';
 // NOT: '@plantero/core' barrel'ı server-only kod da re-export eder (ör. auth/session.ts → node:crypto);
 // bir client component'te bu barrel'dan DEĞER import etmek webpack client derlemesini kırar
 // ("UnhandledSchemeError: node:crypto"). Yalnızca saf `money.ts` alt yolundan içe aktar.
@@ -148,8 +148,29 @@ export function RecordPaymentForm({
     setSelected(next);
   }
 
+  /**
+   * (Tur 14, P0) İşaretli (checkbox açık) her satır GEÇERLİ, sıfırdan büyük bir tahsis tutarı
+   * taşımalı — aksi halde alan hatası verip GÖNDERMEYİ DURDURUR. Eskiden geçersiz/boş tutar
+   * `Object.entries(selected).filter(...)` ile SESSİZCE atlanıyordu: kullanıcı bir faturayı
+   * işaretlemiş görünse de, satırın tutarı boşsa/ayrıştırılamıyorsa tahsis dizisine hiç girmiyor,
+   * ödeme "tahsissiz avans" olarak kaydediliyordu (bkz. AllocationAmountInput dosya başı — kök
+   * neden ve kanıt). `parseMoneyInput` (apps/web/src/lib/format.ts) hem tr-TR hem kanonik biçimi
+   * kabul eden TEK ayrıştırıcıdır; burada da aynı fonksiyon kullanılır.
+   */
   async function onSubmit(values: FormValues) {
-    const allocations = Object.entries(selected).filter(([, v]) => D(v || 0).gt(0)).map(([invoiceId, amt]) => ({ invoiceId, amount: amt }));
+    const checkedIds = Object.keys(selected);
+    const allocations: { invoiceId: string; amount: string }[] = [];
+    for (const id of checkedIds) {
+      const parsed = parseMoneyInput(selected[id]);
+      if (parsed === null || D(parsed).lte(0)) {
+        const inv = openInvoices.find((o) => o.id === id);
+        const msg = `${inv?.docNo ?? 'Seçili fatura'} için tahsis tutarı geçersiz. Satırı düzeltin veya işaretini kaldırın.`;
+        form.setError('amount', { type: 'manual', message: msg });
+        toast.error(msg);
+        return;
+      }
+      allocations.push({ invoiceId: id, amount: parsed });
+    }
     const res = await recordPaymentAction({ ...values, bankAccountId: values.method === 'cash' ? null : values.bankAccountId || null, allocations });
     if (res.ok) {
       toast.success(`${values.direction === 'inbound' ? 'Tahsilat' : 'Ödeme'} kaydedildi: ${res.data.docNo}`);
@@ -223,12 +244,11 @@ export function RecordPaymentForm({
                         <td className="py-2 text-muted-foreground">{formatDate(inv.dueDate)}</td>
                         <td className="py-2 text-right"><MoneyCell value={inv.residual} currency={inv.currency} /></td>
                         <td className="py-2">
-                          <NumberInput
+                          <AllocationAmountInput
                             value={selected[inv.id] ?? ''}
                             onChange={(v) => setAmountFor(inv.id, v ?? '')}
                             disabled={!checked}
-                            maxDigits={2}
-                            minDigits={2}
+                            ariaLabel={`${inv.docNo} için tahsis edilecek para miktarı`}
                             className="ml-auto w-32"
                           />
                         </td>
