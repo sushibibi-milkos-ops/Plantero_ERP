@@ -1,6 +1,6 @@
 {
   "module": "core",
-  "round": 17,
+  "round": 18,
   "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I36, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz.",
   "findings": [
     {
@@ -63,6 +63,21 @@
       "fix": "checks.test.ts içindeki RULE_COUNT sabiti 36'dan 37'ye güncellendi (yalnızca test dosyası — uygulama/SQL kodu değişmedi, hiçbir kural gevşetilmedi); dosya başındaki I22..I36 açıklama yorumuna I37 (yevmiye ters kayıt koruması) eklendi.",
       "measureAfter": "pnpm --filter @plantero/db exec vitest run src/checks/checks.test.ts → PASS, 39/39 test (37 kural × şema doğrulaması + 2 genel test). pnpm db:reset && pnpm db:check (tek kesintisiz zincir) → 37/37 kural GEÇTİ, 0 ihlal. pnpm --filter @plantero/db exec vitest run (tüm paket) → 2 dosya / 45 test GEÇTİ. pnpm --filter @plantero/core test → 41 dosya / 210 test GEÇTİ (izole çalıştırma; workspace-genelinde ilk 'pnpm test' denemesinde eşzamanlı başka bir oturumun db:reset'i yüzünden 'relation accounts does not exist' ile 3 dosya geçici olarak kırıldı — docs/INVARIANTS.md 'Tur 11 ortak bulgu' örüntüsünün tekrarı, kod hatası değil; izole yeniden çalıştırmada 210/210 yeşil). pnpm typecheck, pnpm lint (tüm paketler) temiz.",
       "verifiedBy": "pnpm --filter @plantero/db exec vitest run (birim testi), pnpm db:check (SQL ölçüm — I37 dahil 37/37)"
+    },
+    {
+      "id": "core-wait-for-schema-sentinel-gap-01",
+      "module": "core",
+      "severity": "P1",
+      "rule": "N/A (gate script güvenilirliği — pnpm db:reset)",
+      "file": "packages/db/src/wait-for-schema.ts",
+      "route": "pnpm db:reset",
+      "status": "closed",
+      "closedRound": 18,
+      "description": "`scripts/gate.sh phase2` sırasında `pnpm db:reset` exit code 1 ile başarısız oldu: `drizzle-kit push --force` tüm tabloları (113+) oluşturduğunu bildirdi, ancak `wait-for-schema.ts` yalnızca 4 ERKEN sentinel tabloyu (roles/permissions/sequences/users — seed zincirinin ilk core adımının yazdıkları) doğruladığı için, push ile seed'in açtığı yeni bağlantı arasındaki 'bağlantılar arası görünürlük farkı' geç/FK-ağır bir tablo olan `work_orders` için henüz kapanmamışken seed başladı; `packages/db/src/seed/production.ts:220`'deki `select \"id\" from \"work_orders\"` sorgusu `relation \"work_orders\" does not exist` ile patladı ve pipeline production adımında durdu (sales/finance-payments/accounting-docs/bank/export/purchasing-backfill/finance-projections hiç çalışmadı). Dosyanın kendi başlık yorumunda tarif edilen sınıfın (tur 8 P2), sentinel seti eksik olduğu için hâlâ yakalanabildiğinin kanıtıydı.",
+      "measureBefore": "Bildirilen bulguda: `pnpm db:reset` exit code 1, `relation \"work_orders\" does not exist` (production.ts:220), pipeline production adımında durdu. Kod incelemesi doğruladı: SENTINEL_TABLES = ['roles','permissions','sequences','users'] — 113+ tablodan yalnızca 4'ü, hepsi seed'in ilk core adımında ERKEN yazılanlar; work_orders gibi geç/FK-ağır tablolar hiç doğrulanmıyordu.",
+      "fix": "wait-for-schema.ts elle seçilmiş 4 sentinelden, Drizzle şemasında (`schema/index.ts`'in re-export ettiği TÜM 14 dosya) tanımlı HER `pgTable`'ı programatik toplayan bir yaklaşıma geçirildi: `collectExpectedTableNames()` (`is(value, PgTable)` + `getTableName`, drizzle-orm) şu an 113 tabloyu (work_orders dahil) topluyor ve `unnest(...)` sorgusu artık bunların TAMAMININ push sonrası taze bir bağlantıdan görünür olduğunu doğruluyor — yeni bir tablo şemaya eklendiğinde bu dosya elle güncellenmeden otomatik kapsanır. Import hatasına karşı MIN_EXPECTED_TABLES=50 alt sınır güvencesi eklendi (Object.values(schema) sessizce boş dönerse açıkça patlar). `collectExpectedTableNames`/`MIN_EXPECTED_TABLES` export edildi ve main() çağrısı yalnızca dosya doğrudan script olarak çalıştırılınca (`import.meta.url === file://process.argv[1]`) tetiklenecek şekilde korundu — böylece birim testi gerçek bir DB bağlantısı açmadan/`process.exit` çağırmadan toplama mantığını doğrulayabiliyor. Kök neden yalnızca bu dosyada; şema/seed dosyalarına dokunulmadı.",
+      "measureAfter": "pnpm --filter @plantero/db typecheck ve pnpm --filter @plantero/db lint temiz. Yeni regresyon testi packages/db/src/wait-for-schema.test.ts (2 test: >=50 tablo + work_orders/work_order_consumptions/work_order_outputs/stock_lots/stock_moves/journal_entries/export_shipments dahil) → pnpm --filter @plantero/db exec vitest run → 3 dosya / 49 test GEÇTİ. Tek kesintisiz zincir: `pnpm db:reset && pnpm db:check` → tüm seed adımları (core→...→production→sales→...→finance-projections) HATASIZ tamamlandı, `[db:wait-for-schema] şema hazır (1. deneme, 27ms) — Drizzle şemasındaki 113 tablonun tamamı görünür.` loglandı, ardından db:check → 39/39 kural GEÇTİ, 0 ihlal. pnpm --filter @plantero/core exec vitest run → 41 dosya / 210 test GEÇTİ. pnpm typecheck ve pnpm lint (tüm workspace) temiz.",
+      "verifiedBy": "pnpm db:reset (uçtan uca, tek kesintisiz zincirde production dahil tüm seed adımları başarılı), pnpm db:check (39/39 kural GEÇTİ), packages/db/src/wait-for-schema.test.ts (birim testi)"
     }
   ],
   "open": [],
@@ -70,6 +85,7 @@
     { "id": "core-bankrecon-audit-01", "closedRound": 15, "verifiedBy": "pnpm db:check — I17 0 ihlal" },
     { "id": "core-export-shipment-gap-01", "closedRound": 16, "verifiedBy": "pnpm db:check — I36 0 ihlal" },
     { "id": "core-db-concurrency-note-01", "closedRound": 16, "verifiedBy": "pnpm db:check — tek kesintisiz zincirde 36/36 GEÇTİ" },
-    { "id": "core-checks-test-rule-count-01", "closedRound": 17, "verifiedBy": "pnpm --filter @plantero/db exec vitest run — 45/45 test GEÇTİ; pnpm db:check — 37/37 kural GEÇTİ" }
+    { "id": "core-checks-test-rule-count-01", "closedRound": 17, "verifiedBy": "pnpm --filter @plantero/db exec vitest run — 45/45 test GEÇTİ; pnpm db:check — 37/37 kural GEÇTİ" },
+    { "id": "core-wait-for-schema-sentinel-gap-01", "closedRound": 18, "verifiedBy": "pnpm db:reset uçtan uca (production dahil) başarılı; pnpm db:check — 39/39 kural GEÇTİ" }
   ]
 }
