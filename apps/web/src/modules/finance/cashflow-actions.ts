@@ -57,6 +57,10 @@ const updateAssumptionSchema = z.object({ key: z.string().min(1), value: z.strin
 export const updateAssumptionAction = withAudit('finance.updateAssumption', async (raw: z.infer<typeof updateAssumptionSchema>) => {
   await requirePermission('finance.manage');
   const input = updateAssumptionSchema.parse(raw);
+  // `weighted_margin_pct` artık motorda KULLANILMAZ (kanal tablosundan türetilir — bkz.
+  // `deriveWeightedMarginPct`, P0 kök neden düzeltmesi); yazılmasına izin vermek sonuçsuz bir
+  // değişikliğe izin verip kullanıcıyı yanıltır.
+  if (input.key === 'weighted_margin_pct') throw new Error('Ağırlıklı marj artık kanal tablosundan otomatik hesaplanır — bu alan elle düzenlenemez');
   const [before] = await db.select().from(cashflowAssumptions).where(eq(cashflowAssumptions.key, input.key)).limit(1);
   if (!before) throw new Error(`Bilinmeyen varsayım: ${input.key}`);
   await db.update(cashflowAssumptions).set({ value: input.value, updatedAt: new Date() }).where(eq(cashflowAssumptions.key, input.key));

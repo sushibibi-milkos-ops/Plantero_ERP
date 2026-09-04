@@ -124,6 +124,8 @@ export type CashflowLine = {
   openingCash: Decimal;
   closingCash: Decimal;
   breakEvenRevenue: Decimal;
+  /** Excel satır 50 "Sadece kredi taksitlerinin gerektirdiği ciro" (taksit ÷ ağırlıklı marj) */
+  loanOnlyRevenue: Decimal;
 };
 
 /** Tek bir dönem için hedef ciro (Excel satır 49) — `computeCashflowProjection` ve `getSensitivity` paylaşır */
@@ -132,6 +134,44 @@ function breakEvenFormula(opts: { fixedExpensesMag: Decimal; loanInterestMag: De
   if (!denom.gt(0)) return ZERO;
   const numerator = opts.loanPrincipalMag.plus(opts.cashBuffer).plus(opts.fixedExpensesMag.plus(opts.loanInterestMag).mul(ONE.minus(opts.taxRate)));
   return numerator.div(denom);
+}
+
+/**
+ * Excel satır 50 "Sadece kredi taksitlerinin gerektirdiği ciro" (taksit ÷ ağırlıklı marj) —
+ * `=IF(Varsayımlar!$B$5>0,(-B36-B41)/Varsayımlar!$B$5,0)`. `breakEvenFormula` ile aynı `marginWeighted`
+ * girdisini paylaşır (bkz. `deriveWeightedMarginPct` yorumu — kök neden düzeltmesi burada da geçerli).
+ */
+function loanOnlyRevenueFormula(loanInterestMag: Decimal, loanPrincipalMag: Decimal, marginWeighted: Decimal): Decimal {
+  if (!marginWeighted.gt(0)) return ZERO;
+  return loanInterestMag.plus(loanPrincipalMag).div(marginWeighted);
+}
+
+/**
+ * Excel `Varsayımlar!C37` — kanal cirolarıyla ağırlıklı ortalama katkı marjı (yüzde birimi, 0-100):
+ * `=SUMPRODUCT(B33:B36,C33:C36)/SUM(B33:B36)`. `Varsayımlar!$B$5` (=C37) HER ZAMAN bu statik kanal
+ * tablosundan türetilir — dönem/senaryo/büyüme/override'dan etkilenmez (satır 49/50 formülleri de
+ * `$B$5`'i sabit referans olarak kullanır, o ayın kendi cirosunu değil).
+ *
+ * KÖK NEDEN NOTU (P0 düzeltmesi — Eyl 2026 hedef ciro 0,95 TL sapması): `cashflow_assumptions.value`
+ * kolonu `numeric(18,4)` (şema dondurulmuş, packages/db/src/schema/_common.ts `qty()`) — Excel'in tam
+ * hassasiyetli, periyodik ondalıklı sonucunu (0,496969696969697…) 4 haneye yuvarlar (49,6970 ↔ 49,69696969696970).
+ * Bu ~0,00003 puanlık fark `breakEvenFormula`'nın paydasında (~0,373) bölünerek ~30 kat büyütülüyor ve
+ * Eyl 2026 hedef cirosunda 0,95 TL, "sadece taksit cirosu" satırında ~1,86 TL sapmaya yol açıyordu
+ * (kanıt: bkz. proje raporu / commit mesajı — Python/Decimal ile Excel formül zinciri hücre hücre
+ * doğrulandı, DB'deki `weighted_margin_pct=49.6970` değeriyle üretilen sonuç raporlanan hatalı
+ * 1.560.716,5295 TL ile ±0,0001 TL içinde eşleşiyor). `channel_assumptions.monthlyRevenue`/
+ * `contributionMarginPct` ise `numeric(18,4)` olsa da Excel'deki girdi değerleri zaten tam sayı/kesirsiz
+ * (775000,0000 TL, %40,0000 vb.) — bu yüzden kayıpsız TAŞINABİLİR. Çözüm: ağırlıklı marjı DB'nin
+ * yuvarlanmış `weighted_margin_pct` alanından OKUMAK yerine, Excel'in kendi formülü gibi HER ZAMAN
+ * kanal tablosundan TÜRETMEK — `assumptions.weightedMarginPct` alanı artık hesaplamada KULLANILMAZ
+ * (yalnızca DB'de saklı bilgi amaçlı bir alan olarak kalır; `/finans` "Varsayımlar" drawer'ından da
+ * kaldırıldı — düzenlenmesi artık hesaba hiçbir etki yapmaz, kanal tablosu tek kaynak).
+ */
+export function deriveWeightedMarginPct(channels: ChannelAssumptionInput[]): Decimal {
+  const totalRevenue = sum(channels.map((c) => c.monthlyRevenue));
+  if (!totalRevenue.gt(0)) return ZERO;
+  const weighted = sum(channels.map((c) => c.monthlyRevenue.mul(c.contributionMarginPct)));
+  return weighted.div(totalRevenue);
 }
 
 /**
@@ -145,7 +185,9 @@ export function computeCashflowProjection(input: CashflowComputeInput): Cashflow
   const scenarioFactor = D(SCENARIO_FACTOR[input.scenario]).mul(a.scenarioMultiplier);
   const growth = a.monthlyGrowthPct.div(100);
   const fixedIncrease = a.fixedCostIncreasePct.div(100);
-  const marginWeighted = a.weightedMarginPct.div(100);
+  // Excel Varsayımlar!$B$5 (=C37) — DB'nin 4 haneye yuvarlanmış `weighted_margin_pct` alanı DEĞİL,
+  // kanal tablosundan tam hassasiyetle türetilir (bkz. `deriveWeightedMarginPct` yorumu, P0 kök neden).
+  const marginWeighted = deriveWeightedMarginPct(input.channels).div(100);
   const netVatPct = a.netVatPct.div(100);
   const taxRate = a.corporateTaxRate.div(100);
 
@@ -204,6 +246,7 @@ export function computeCashflowProjection(input: CashflowComputeInput): Cashflow
       taxRate,
       netVatPct,
     });
+    const loanOnlyRevenue = loanOnlyRevenueFormula(loanInterest.neg(), loanPrincipal.neg(), marginWeighted);
 
     lines.push({
       period,
@@ -225,6 +268,7 @@ export function computeCashflowProjection(input: CashflowComputeInput): Cashflow
       openingCash: round4(openingCash),
       closingCash: round4(closingCash),
       breakEvenRevenue: round4(breakEvenRevenue),
+      loanOnlyRevenue: round4(loanOnlyRevenue),
     });
 
     openingCash = closingCash;
@@ -437,6 +481,8 @@ export type BreakEvenResult = {
   cashBuffer: Decimal;
   channelShare: Array<{ code: string; name: string; revenue: Decimal; share: Decimal }>;
   monthToDate: MonthToDateResult;
+  /** Excel satır 50 "Sadece kredi taksitlerinin gerektirdiği ciro" */
+  loanOnlyRevenue: Decimal;
 };
 
 /** "Bu ay gereken minimum ciro" + gerçekleşenle karşılaştırma (`/finans/break-even`) */
@@ -457,13 +503,16 @@ export async function getBreakEven(tx: DbOrTx, period: string, scenario: Scenari
     period,
     scenario,
     targetRevenue: line.breakEvenRevenue,
-    weightedMarginPct: input.assumptions.weightedMarginPct,
+    // DB'nin yuvarlanmış `weighted_margin_pct` alanı DEĞİL, `computeCashflowProjection`'ın kullandığı
+    // aynı tam hassasiyetli türetilmiş değer (P0 kök neden düzeltmesi — bkz. `deriveWeightedMarginPct`).
+    weightedMarginPct: round4(deriveWeightedMarginPct(input.channels)),
     fixedExpensesMag: line.fixedExpenses.neg(),
     loanInstallmentMag: line.loanInterest.neg().plus(line.loanPrincipal.neg()),
     corporateTaxRatePct: input.assumptions.corporateTaxRate,
     cashBuffer: input.assumptions.cashBuffer,
     channelShare: channelShare.map((c) => ({ ...c, share: round4(c.share) })),
     monthToDate,
+    loanOnlyRevenue: line.loanOnlyRevenue,
   };
 }
 
@@ -497,11 +546,13 @@ export async function getSensitivity(tx: DbOrTx, period: string, scenario: Scena
   const fixedMag = line.fixedExpenses.neg();
   const loanIntMag = line.loanInterest.neg();
   const loanPrincMag = line.loanPrincipal.neg();
+  // Türetilmiş, tam hassasiyetli ağırlıklı marj (P0 kök neden düzeltmesi — bkz. `deriveWeightedMarginPct`).
+  const baselineWeightedMarginPct = deriveWeightedMarginPct(input.channels);
 
   const marginRevenueGrid: SensitivityResult['marginRevenueGrid'] = [];
   for (const deltaPts of MARGIN_DELTAS_PTS) {
     for (const mult of REVENUE_MULTIPLIERS) {
-      const margin = a.weightedMarginPct.plus(deltaPts).div(100);
+      const margin = baselineWeightedMarginPct.plus(deltaPts).div(100);
       const revenue = line.revenueTotal.mul(mult);
       // Tahsilat ≈ ciro varsayılır (bu tabloda tahsilat vadesi etkisi ihmal edilir — tek aylık
       // "eğer bu ay bu marj/ciroda olsaydık" anlık duyarlılığı, 36 aylık zincirleme tahsilat değil).

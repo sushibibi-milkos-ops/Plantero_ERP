@@ -51,15 +51,24 @@ export default async function CashflowPage({ searchParams }: { searchParams: Pro
         }
       />
 
+      {/*
+        `fractionDigits={2}`: CLAUDE.md kuralı 8 — para ekranda ₺1.234,56 (2 ondalık) gösterilir.
+        Alttaki 36 kolonluk tablo yoğunluk için kasıtlı olarak 0 ondalık kullanır (`Td`, cashflow-table.tsx)
+        ama bu şeritteki KPI'lar bu sayfanın TEK kuruş-hassasiyetli gösterimidir — `KpiCard`'ın kendi
+        yorumu ("bir KPI şeridindeki tüm kartlara aynı değer geçilmeli") gereği 4 kart da aynı hassasiyeti
+        paylaşır (P0 e2e bulgusu: "Bu ay net nakit" 0 ondalıkla basılıyordu, DB'deki net_cashflow
+        33.278,0298 TL doğruydu — hesap değil GÖSTERİM eksikti).
+      */}
       <KpiStripRow>
-        <KpiCard variant="strip" title="Dönem başı nakit" value={openingCash} format="money" hint={lines[0]?.period ? formatDate(`${lines[0].period}-01`) : undefined} />
-        <KpiCard variant="strip" title="Bu ay net nakit" value={currentNetCash} format="money" />
-        <KpiCard variant="strip" title="12 ay ortalama net nakit" value={avg12.toFixed(2)} format="money" />
+        <KpiCard variant="strip" title="Dönem başı nakit" value={openingCash} format="money" fractionDigits={2} hint={lines[0]?.period ? formatDate(`${lines[0].period}-01`) : undefined} />
+        <KpiCard variant="strip" title="Bu ay net nakit" value={currentNetCash} format="money" fractionDigits={2} />
+        <KpiCard variant="strip" title="12 ay ortalama net nakit" value={avg12.toFixed(2)} format="money" fractionDigits={2} />
         <KpiCard
           variant="strip"
           title="Minimum nakit ayı"
           value={minLine?.closingCash ?? '0'}
           format="money"
+          fractionDigits={2}
           hint={minLine ? `${formatDate(`${minLine.period}-01`)}${Number(minLine.closingCash) < 0 ? ' — negatif!' : ''}` : undefined}
         />
       </KpiStripRow>

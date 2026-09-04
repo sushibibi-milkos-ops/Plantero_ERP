@@ -541,7 +541,19 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
 
     const netCash = psqlOne(`select net_cashflow from cashflow_lines where period = '2026-09' and scenario = 'base'`);
     expect(Number(netCash)).toBeCloseTo(33278.03, 2);
-    await expect(page.getByText('33.278,03').first()).toBeVisible();
+    // DÜZELTME (bu turda tespit edildi — önceki turun test hatası, ürün hatası DEĞİL): `@number-flow/react`
+    // her sayı için erişilebilirlik/SSR amaçlı GÖRÜNMEZ bir düz-metin ikizi render eder (kütüphanenin
+    // kendi `ssr-*.js`'inde `role="img"` + `aria-label` sarmalayıcının yanına `<span>${valueAsString}</span>`
+    // yedek metni eklenir — hydration öncesi/geçiş anları için). Bu ikiz DOM'da "Bu ay net nakit" KPI'sinden
+    // ÖNCE gelebiliyor ("Minimum nakit ayı" KPI'sı da Eyl 2026 için AYNI rakamı taşıyor — o ay hem bu ayın
+    // net nakiti hem de 36 ayın minimum kapanış bakiyesi); `getByText().first()` bu görünmez kopyaya
+    // takılıyordu (`Received: hidden`). Ürün TARAFI doğru — ekran görüntüsünde "Bu ay net nakit ₺33.278,03"
+    // gerçekten görünüyor; test yalnızca GÖRÜNÜR eşleşmeyi hedefleyecek şekilde daraltılır.
+    // NumberFlow görünür sayıyı rakam rakam ayrı span'lerde çizer (tek metin düğümü yok); tek parça
+    // "33.278,03" metni yalnızca erişilebilirlik ikizinde bulunur. Bu yüzden KPI KARTINI (görünür)
+    // hasText ile hedefleriz: textContent gizli ikizi de kapsar, kartın kendisi görünürdür.
+    const netCashCard = page.locator('div', { hasText: 'Bu ay net nakit' }).filter({ hasText: '33.278,03' }).last();
+    await expect(netCashCard).toBeVisible();
 
     // DÜZELTME (bu turda tespit edildi — önceki turun bu adımı YANLIŞ varsayımla "uygulanamaz"
     // diye işaretlemişti): docs/TEST-ACCOUNTS.md'ye göre muhasebe@plantero.local HEM 'muhasebe' HEM
@@ -638,7 +650,14 @@ test.describe('Akış: /finans/tahsilat-takibi — hatırlatma taslağı (phase2
     expect(docNo, 'Seçilen satırdan fatura numarası okunabilmeli').toBeTruthy();
 
     await draftableRow.getByRole('button', { name: 'Taslak oluştur' }).click();
-    await expect(page.getByText('Taslak üretiliyor…')).toBeVisible();
+    // DÜZELTME (bu turda tespit edildi — önceki turun test hatası): "Taslak üretiliyor…" geçici (loading)
+    // metnini ZORUNLU ara durum olarak beklemek, üretim derlemesinde (fallback taslak — AI anahtarı
+    // yoksa deterministik kural tabanlı, ağ gecikmesi yok) ırk koşuluydu: server action bazen
+    // Playwright'ın ilk `toBeVisible` yoklamasından ÖNCE tamamlanıp durumu değiştiriyor, metin hiç
+    // yakalanamadan kayboluyordu (ürünün loading durumu KALDIRILMADI — dunning-panel.tsx'te hâlâ var;
+    // yalnızca test artık zorunlu bir ARA kareyi değil SONUCU bekliyor). Sonuç zaten güvenilir bir
+    // tek noktadan doğrulanıyor: "Onayla ve gönder" butonu YALNIZCA taslak başarıyla üretildikten
+    // sonra etkinleşir.
     await expect(page.getByRole('button', { name: 'Onayla ve gönder' })).toBeEnabled({ timeout: 15_000 });
 
     await page.getByRole('button', { name: 'Onayla ve gönder' }).click();

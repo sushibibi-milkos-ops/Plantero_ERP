@@ -92,7 +92,12 @@ export type AssumptionRow = { key: string; value: string; label: string; descrip
 
 export async function getAssumptions(): Promise<AssumptionRow[]> {
   const rows = await db.select().from(cashflowAssumptions).orderBy(asc(cashflowAssumptions.key));
-  return rows.map((r) => ({ key: r.key, value: r.value, label: r.label, description: r.description }));
+  // `weighted_margin_pct` artık motorda KULLANILMAZ — Excel'in kendi formülü (Varsayımlar!C37) gibi
+  // her zaman kanal tablosundan (`channel_assumptions`, tam hassasiyetle) türetilir (P0 kök neden
+  // düzeltmesi, bkz. `@plantero/core` `deriveWeightedMarginPct`). Bu satırı "Varsayımlar" drawer'ından
+  // gizliyoruz: kalsaydı kullanıcı düzenler, sonuç değişmez görünürdü (yanıltıcı UX) — kaynak tek yer
+  // artık salt-okunur kanal tablosu (aynı drawer'daki "Kanal tablosu" bölümü).
+  return rows.filter((r) => r.key !== 'weighted_margin_pct').map((r) => ({ key: r.key, value: r.value, label: r.label, description: r.description }));
 }
 
 export type ChannelAssumptionRow = { channelId: string; code: string; name: string; monthlyRevenue: string; contributionMarginPct: string; collectionLagMonths: number };
