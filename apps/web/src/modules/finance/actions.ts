@@ -4,8 +4,10 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { db } from '@plantero/db';
 import {
-  D, recordPayment, unapplyPayment, runReconciliation, approveMatch, rejectMatch, manualMatch, ignoreTransaction,
+  D, recordPayment, unapplyPayment,
+  approveReconciliationMatch, rejectReconciliationMatch, manualReconciliationMatch, ignoreBankTransaction,
 } from '@plantero/core';
+import { runAiReconciliation } from '@plantero/ai';
 import { requirePermission } from '@/lib/auth';
 import { withAudit } from '@/lib/actions';
 import { listOpenInvoices } from './queries';
@@ -78,11 +80,16 @@ const runReconciliationSchema = z.object({ bankAccountId: z.string().uuid().opti
 export const runReconciliationAction = withAudit('finance.runReconciliation', async (raw: z.infer<typeof runReconciliationSchema>) => {
   const user = await requirePermission('accounting.reconcile');
   const input = runReconciliationSchema.parse(raw);
-  const result = await db.transaction((tx) => runReconciliation(tx, { bankAccountId: input.bankAccountId || undefined }, user.actor));
+  // /muhasebe/mutabakat ve worker (reconciliation-nightly) ile PAYLAŞILAN tek motor — bkz. packages/ai/src/reconciliationRunner.ts.
+  // Eski fatura-only kural motoru (`finance/bankReconciliation.ts::runReconciliation`) canlı yoldan çıkarıldı.
+  const result = await runAiReconciliation(db, { bankAccountId: input.bankAccountId || undefined }, user.actor);
   revalidatePath('/finans/banka');
+  revalidatePath('/muhasebe/banka');
+  revalidatePath('/muhasebe/mutabakat');
+  const failNote = result.failed ? `, ${result.failed} hareket hata verdi (${result.errors.map((e) => e.message).slice(0, 3).join('; ')})` : '';
   return {
-    data: result,
-    audit: { action: 'other', tableName: 'bank_transactions', summary: `Mutabakat çalıştırıldı: ${result.evaluated} değerlendirildi, ${result.suggested} öneri, ${result.autoApplied} otomatik uygulandı` },
+    data: { evaluated: result.evaluated, suggested: result.suggested, autoApplied: result.autoApplied, failed: result.failed },
+    audit: { action: 'other', tableName: 'bank_transactions', summary: `Mutabakat çalıştırıldı: ${result.evaluated} değerlendirildi, ${result.suggested} öneri, ${result.autoApplied} otomatik uygulandı${failNote}` },
   };
 });
 
@@ -91,10 +98,13 @@ const approveMatchSchema = z.object({ matchId: z.string().uuid() });
 export const approveMatchAction = withAudit('finance.approveMatch', async (raw: z.infer<typeof approveMatchSchema>) => {
   const user = await requirePermission('accounting.reconcile');
   const input = approveMatchSchema.parse(raw);
-  const { paymentId } = await db.transaction((tx) => approveMatch(tx, input.matchId, user.actor));
+  // Tür bazlı jenerik onay (fatura / cari avans / kredi taksiti / gider / masraf) — /muhasebe/mutabakat ile aynı servis.
+  const result = await db.transaction((tx) => approveReconciliationMatch(tx, input.matchId, user.actor));
   revalidatePath('/finans/banka');
   revalidatePath('/finans/tahsilat');
-  return { data: { paymentId }, audit: { action: 'approve', tableName: 'reconciliation_matches', recordId: input.matchId, summary: 'Mutabakat önerisi onaylandı; tahsilat/ödeme + fiş üretildi' } };
+  revalidatePath('/muhasebe/banka');
+  revalidatePath('/muhasebe/mutabakat');
+  return { data: { paymentId: result.paymentId ?? null, journalEntryId: result.journalEntryId ?? null }, audit: { action: 'approve', tableName: 'reconciliation_matches', recordId: input.matchId, summary: 'Mutabakat önerisi onaylandı; tahsilat/ödeme veya fiş üretildi' } };
 });
 
 const rejectMatchSchema = z.object({ matchId: z.string().uuid(), reason: z.string().trim().optional().nullable() });
@@ -102,8 +112,9 @@ const rejectMatchSchema = z.object({ matchId: z.string().uuid(), reason: z.strin
 export const rejectMatchAction = withAudit('finance.rejectMatch', async (raw: z.infer<typeof rejectMatchSchema>) => {
   const user = await requirePermission('accounting.reconcile');
   const input = rejectMatchSchema.parse(raw);
-  await db.transaction((tx) => rejectMatch(tx, input.matchId, input.reason || null, user.actor));
+  await db.transaction((tx) => rejectReconciliationMatch(tx, input.matchId, input.reason || null, user.actor));
   revalidatePath('/finans/banka');
+  revalidatePath('/muhasebe/mutabakat');
   return { data: undefined, audit: { action: 'reject', tableName: 'reconciliation_matches', recordId: input.matchId, summary: `Mutabakat önerisi reddedildi${input.reason ? `: ${input.reason}` : ''}` } };
 });
 
@@ -112,18 +123,23 @@ const manualMatchSchema = z.object({ bankTransactionId: z.string().uuid(), partn
 export const manualMatchAction = withAudit('finance.manualMatch', async (raw: z.infer<typeof manualMatchSchema>) => {
   const user = await requirePermission('accounting.reconcile');
   const input = manualMatchSchema.parse(raw);
-  const { paymentId } = await db.transaction((tx) => manualMatch(tx, input.bankTransactionId, { partnerId: input.partnerId, invoiceId: input.invoiceId, amount: D(input.amount) }, user.actor));
+  // Ödeme tutarı = |banka hareketi| (I11-d), fatura tahsisi = girilen tutar; kalan cari avans olarak kalır.
+  const { paymentId } = await db.transaction((tx) =>
+    manualReconciliationMatch(tx, input.bankTransactionId, { kind: 'invoice', partnerId: input.partnerId, invoiceId: input.invoiceId, amount: D(input.amount) }, user.actor),
+  );
   revalidatePath('/finans/banka');
   revalidatePath('/finans/tahsilat');
-  return { data: { paymentId }, audit: { action: 'create', tableName: 'reconciliation_matches', summary: 'Banka hareketi elle eşleştirildi; tahsilat/ödeme + fiş üretildi' } };
+  revalidatePath('/muhasebe/banka');
+  return { data: { paymentId: paymentId ?? null }, audit: { action: 'create', tableName: 'reconciliation_matches', summary: 'Banka hareketi elle eşleştirildi; tahsilat/ödeme + fiş üretildi' } };
 });
 
 const ignoreSchema = z.object({ bankTransactionId: z.string().uuid() });
 
 export const ignoreTransactionAction = withAudit('finance.ignoreTransaction', async (raw: z.infer<typeof ignoreSchema>) => {
-  await requirePermission('accounting.reconcile');
+  const user = await requirePermission('accounting.reconcile');
   const input = ignoreSchema.parse(raw);
-  await db.transaction((tx) => ignoreTransaction(tx, input.bankTransactionId));
+  await db.transaction((tx) => ignoreBankTransaction(tx, input.bankTransactionId, user.actor));
   revalidatePath('/finans/banka');
+  revalidatePath('/muhasebe/banka');
   return { data: undefined, audit: { action: 'update', tableName: 'bank_transactions', recordId: input.bankTransactionId, summary: 'Banka hareketi mutabakat dışı bırakıldı (yok sayıldı)', after: { status: 'ignored' } } };
 });

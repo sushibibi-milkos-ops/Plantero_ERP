@@ -10,6 +10,7 @@ import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { postJournalEntry, reverseJournalEntry, type JournalLineInput } from '../accounting/journal.js';
 import { getExchangeRate } from '../sales/pricing.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
+import { writeAudit } from '../audit/index.js';
 import type { ActorCtx, DocumentOrigin } from '../types.js';
 
 /**
@@ -241,6 +242,16 @@ export async function recordPayment(tx: DbOrTx, input: RecordPaymentInput, ctx: 
   }
 
   const [finalPayment] = await tx.select().from(payments).where(eq(payments.id, p.id)).limit(1);
+  // (I17) `postStockMove`/`postJournalEntry` örüntüsü: tahsilat/ödeme kaydı kendi kayıt-bazlı audit izini
+  // BURADA (core katmanında) bırakır — mutabakat motorunun otomatik uyguladığı (persistAndApply → recordPayment)
+  // tahsilatlar hiçbir çağıran katmandan geçmediği için aksi halde audit_log'da izsiz kalıyordu.
+  await writeAudit(tx, {
+    action: 'create',
+    tableName: 'payments',
+    recordId: p.id,
+    summary: `${kind} ${docNo} kaydedildi: ${partner.name} — ${toDb(amount)} ${currency}${input.bankTransactionId ? ' (banka hareketinden)' : ''}`,
+    after: finalPayment!,
+  }, ctx);
   return { payment: finalPayment!, allocations: insertedAllocs };
 }
 

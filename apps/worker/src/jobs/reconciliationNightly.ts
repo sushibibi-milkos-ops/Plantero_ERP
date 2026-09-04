@@ -1,27 +1,32 @@
 import { db } from '@plantero/db';
-import { runReconciliation, SYSTEM_ACTOR } from '@plantero/core';
+import { SYSTEM_ACTOR } from '@plantero/core';
+import { runAiReconciliation } from '@plantero/ai';
 
 /**
  * Gece mutabakat ajanı (cron 02:00, `apps/worker/src/queues.ts`): eşleşmemiş banka hareketlerini
- * `packages/core/src/finance/bankReconciliation.ts::runReconciliation` — `reconciliation_matches` /
- * `bank_transactions` yazan TEK gerçek akış — üzerinden değerlendirir.
+ * `@plantero/ai::runAiReconciliation` — web ekranlarıyla (`/muhasebe/mutabakat`, `/muhasebe/banka`,
+ * `/finans/banka`) PAYLAŞILAN tek orkestrasyon — üzerinden değerlendirir:
+ *   aday topla (`buildCandidates`) → skorla (`matchBankTransaction`: AI varsa AI+kural, yoksa kural)
+ *   → kalıcılaştır/uygula (`persistAndApply`: güven ≥0.92 VE tek aday ⇒ auto_applied, aksi halde suggested).
  *
- * (I29, tur 10 P0 düzeltmesi) Daha önce burada ayrı, uyumsuz bir yol vardı: `packages/ai`
- * `matchBankTransaction` ile güven ≥0.92 sonuçlar için doğrudan `reconciliation_matches` satırı
- * `status:'auto_applied'` ile ekleniyor ama `recordPayment` hiç çağrılmıyordu (payment_id her zaman
- * NULL) ve `bank_transactions.status` her zaman 'suggested' bırakılıyordu (autoOk olsa bile) —
- * tüketicisi olmayan bir `approvals(kind='reconciliation')` satırı ekleniyordu. `runReconciliation`
- * zaten aynı eşiği (güven ≥0.92 VE tek aday) kural tabanlı skorlamayla uyguluyor; otomatik uygulanan
- * her eşleşme `applyInvoiceAllocation` → `recordPayment` ile gerçek bir tahsilat/ödeme + muhasebe fişi
- * üretir ve `bank_transactions.status`'u 'matched' yapar (I11/I29 bunu doğrular). `packages/ai`
- * entegrasyonu bu modülün kapsamı dışında bırakıldı — bkz. `bankReconciliation.ts` dosya başı yorumu.
+ * Otomatik uygulanan her eşleşme aynı transaction'da gerçek bir tahsilat/ödeme (`recordPayment`) ya da
+ * gider/kredi taksiti fişi (`postJournalEntry`/`postLoanInstallmentPayment`) üretir ve
+ * `bank_transactions.status`'u 'matched' yapar (I11/I29). Onay bekleyenler sabah `/muhasebe/mutabakat`
+ * ekranında listelenir. Bir hareketin uygulanması hata verirse diğerleri etkilenmez (hata sayılır).
+ *
+ * (I29 geçmişi) Daha önce burada `payment_id`'siz `auto_applied` satırı ekleyen ayrı bir yol vardı; sonra
+ * geçici olarak `finance/bankReconciliation.ts::runReconciliation` (yalnızca fatura, kural tabanlı)
+ * bağlandı. Muhasebe modülüyle birlikte canlı akış tek motora indirgendi — bkz. `reconciliationRunner.ts`.
  */
 export async function runReconciliationNightly(): Promise<Record<string, unknown>> {
-  const result = await db.transaction((tx) => runReconciliation(tx, {}, SYSTEM_ACTOR));
+  const result = await runAiReconciliation(db, {}, SYSTEM_ACTOR);
   return {
     evaluated: result.evaluated,
     suggested: result.suggested,
     autoApplied: result.autoApplied,
-    note: 'Otomatik uygulanan (auto_applied) her eşleşme runReconciliation → recordPayment ile gerçek bir tahsilat/ödeme fişi üretti; onay bekleyenler /muhasebe/mutabakat ekranında listelenir.',
+    unresolved: result.unresolved,
+    failed: result.failed,
+    errors: result.errors,
+    note: 'Otomatik uygulanan (auto_applied) her eşleşme gerçek bir tahsilat/ödeme ya da fiş üretti; onay bekleyenler /muhasebe/mutabakat ekranında listelenir.',
   };
 }

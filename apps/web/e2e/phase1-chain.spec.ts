@@ -578,6 +578,8 @@ test.describe('Negatifler', () => {
   });
 
   test('stokta olmayan miktarla sevk engeli: FEFO rezervasyonu INSUFFICIENT_STOCK ile reddedilir', async ({ page }) => {
+    // Sipariş → sevk → fatura → tahsilat zincirinin tamamı tek testte; dev sunucuda soğuk derlemeyle 60 sn'yi aşabiliyor.
+    test.slow();
     const onHand = Number(psqlOne(`select coalesce(sum(qty),0) from stock_quants sq join products p on p.id=sq.product_id where p.sku='110010003'`));
     const hugeQty = String(Math.ceil(onHand) + 999_000);
 
@@ -715,6 +717,8 @@ test.describe('Negatifler', () => {
   });
 
   test('çift tahsilat engeli: fazla tahsis reddedilir, tam ödenen fatura ikinci kez tahsis edilemez', async ({ page }) => {
+    // Sipariş → sevk → fatura → tahsilat zincirinin tamamı tek testte; dev sunucuda soğuk derlemeyle 60 sn'yi aşabiliyor.
+    test.slow();
     await loginAs(page, 'admin');
 
     // İzole bir fatura: kendi ufak siparişimiz (2x Fındık, 2 adet) → onayla → sevk et → faturalandır.
@@ -723,6 +727,10 @@ test.describe('Negatifler', () => {
     await comboboxSelect(page, 'Ürün ara ve ekle…', '110020002', /2x Fındık/);
     await page.getByLabel(/^Miktar/).fill('2');
     await page.keyboard.press('Tab');
+    // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve fatura
+    // "Fiş tutarı sıfır olamaz" ile reddedilir (yavaş dev sunucuda görülen yarış) — Adım 3 ile aynı bekleme.
+    await expect(page.getByText('Liste fiyatı', { exact: true })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByLabel('Birim fiyat (KDV hariç)')).not.toHaveValue(/^0,00$|^$/);
     await page.getByRole('button', { name: 'Siparişi kaydet' }).click();
     await page.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
     const orderId = page.url().split('/').pop()!;

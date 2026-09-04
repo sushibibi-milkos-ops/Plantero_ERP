@@ -9,11 +9,11 @@ import {
   createExpensePurchaseInvoice, createCreditNote, cancelInvoice,
   closePeriod, openPeriod, closeVatPeriod,
   applyEInvoiceResult, getEInvoiceSendContext, resolveEInvoiceKind,
-  buildCandidates, persistAndApply, approveReconciliationMatch, rejectReconciliationMatch,
-  manualReconciliationMatch, ignoreBankTransaction, listUnmatchedTransactions, importStatement,
+  approveReconciliationMatch, rejectReconciliationMatch,
+  manualReconciliationMatch, ignoreBankTransaction, importStatement,
   type JournalLineInput,
 } from '@plantero/core';
-import { matchBankTransaction } from '@plantero/ai';
+import { runAiReconciliation } from '@plantero/ai';
 // Not: '@plantero/integrations' barrel'ı (index.ts) pdf/render.ts üzerinden playwright-core'u da
 // re-export eder; bu server action dosyası client referans grafiğine dahil olduğundan barrel yerine
 // yalnızca ihtiyaç duyulan alt modülden içe aktarılır (aksi halde webpack build hatası verir —
@@ -207,27 +207,16 @@ const runReconciliationSchema = z.object({ bankAccountId: z.string().uuid().opti
 export const runReconciliationAction = withAudit('accounting.runReconciliation', async (raw: z.infer<typeof runReconciliationSchema>) => {
   const user = await requirePermission('accounting.reconcile');
   const input = runReconciliationSchema.parse(raw);
-  const unmatched = await listUnmatchedTransactions(db, { bankAccountId: input.bankAccountId || undefined });
-
-  let evaluated = 0;
-  let autoApplied = 0;
-  let suggested = 0;
-  for (const bt of unmatched) {
-    const outcome = await db.transaction(async (tx) => {
-      const candidates = await buildCandidates(tx, bt.id);
-      const matches = await matchBankTransaction(candidates.tx, candidates);
-      return persistAndApply(tx, bt.id, matches, user.actor);
-    });
-    evaluated++;
-    if (outcome.applied) autoApplied++;
-    else if (outcome.suggestedCount > 0) suggested++;
-  }
+  // Worker (reconciliation-nightly) ve /finans/banka ile PAYLAŞILAN tek orkestrasyon — bkz. packages/ai/src/reconciliationRunner.ts
+  const { evaluated, suggested, autoApplied, failed, errors } = await runAiReconciliation(db, { bankAccountId: input.bankAccountId || undefined }, user.actor);
 
   revalidatePath('/muhasebe/banka');
   revalidatePath('/muhasebe/mutabakat');
+  revalidatePath('/finans/banka');
+  const failNote = failed ? `, ${failed} hareket hata verdi (${errors.map((e) => e.message).slice(0, 3).join('; ')})` : '';
   return {
-    data: { evaluated, suggested, autoApplied },
-    audit: { action: 'other', tableName: 'bank_transactions', summary: `AI Mutabakat Ajanı çalıştırıldı: ${evaluated} hareket değerlendirildi, ${autoApplied} otomatik uygulandı, ${suggested} öneri üretildi` },
+    data: { evaluated, suggested, autoApplied, failed },
+    audit: { action: 'other', tableName: 'bank_transactions', summary: `AI Mutabakat Ajanı çalıştırıldı: ${evaluated} hareket değerlendirildi, ${autoApplied} otomatik uygulandı, ${suggested} öneri üretildi${failNote}` },
   };
 });
 

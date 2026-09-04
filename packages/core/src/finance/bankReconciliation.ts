@@ -12,11 +12,18 @@ import { recordPayment } from './payments.js';
 import type { ActorCtx } from '../types.js';
 
 /**
- * Banka mutabakatı — `docs/modules/muhasebe.md` §`/muhasebe/banka`,`/muhasebe/mutabakat` (tur 8 P0 —
- * `bank_transactions`/`reconciliation_matches` yazan tek servis grubu). AI Mutabakat Ajanı burada kural
- * tabanlı skorlanır (tutar + cari adı benzerliği + tarih yakınlığı); `packages/ai` entegrasyonu bu
- * modülün kapsamı dışında bırakıldı (schemaRequests/issues'te not edilmiştir) — skorlama fonksiyonu
- * ileride `@plantero/ai matchBankTransaction` ile değiştirilebilecek şekilde izole (`scoreInvoiceCandidate`).
+ * Banka ekstresi içe aktarma + (eski) kural tabanlı fatura mutabakatı.
+ *
+ * KANONİK MOTOR (muhasebe + finans birleştirmesi): canlı mutabakat akışı artık TEK yoldan geçer —
+ *   `@plantero/ai::runAiReconciliation` (orkestrasyon) → `accounting/reconciliation.ts::buildCandidates`
+ *   → `@plantero/ai::matchBankTransaction` (AI varsa AI+kural, yoksa kural) → `accounting/reconciliation.ts::
+ *   persistAndApply` / `approveReconciliationMatch` / `rejectReconciliationMatch` / `manualReconciliationMatch`.
+ * Worker `reconciliation-nightly`, `/muhasebe/mutabakat`, `/muhasebe/banka` ve `/finans/banka` hepsi bunu
+ * çağırır. Bu dosyadaki `runReconciliation`/`approveMatch`/`rejectMatch`/`manualMatch` yalnızca fatura
+ * (kind='invoice') eşleştiren, tutar+cari adı+tarih skorlu ESKİ motordur; canlı ekranlar/worker onu artık
+ * çağırmaz — yalnızca `packages/db/src/seed/finance-payments.ts` geriye dönük dolgusu (deterministik demo
+ * verisi) ve kendi birim testleri kullanır. `importStatement` ise PAYLAŞILAN tek ekstre içe aktarma
+ * noktasıdır (her iki modül de bunu kullanır).
  *
  * (I17, tur 15 P1 kök neden düzeltmesi) `postStockMove`/`postJournalEntry` örüntüsü: her mutasyon
  * kendi kayıt-bazlı `writeAudit` satırını BURADA (CORE katmanında) yazar, çağıran katmanın (actions.ts,
