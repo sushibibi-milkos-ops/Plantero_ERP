@@ -59,11 +59,16 @@ export function DataTableMobileCards<T>({
         // tutarlı biçimde en "parasal"/önemli alandır — bkz. yukarıdaki not).
         const metric = rest.length ? rest[rest.length - 1]! : null;
         const actions = rowActions?.(row.original) ?? [];
-        // Satır 2 sol taraf: alt başlık + boş olmayan meta ipuçları, tek satırda "·" ile ayrılmış.
-        const leftBits = [
-          ...(subtitle ? [{ key: subtitle.id, node: flexRender(subtitle.column.columnDef.cell, subtitle.getContext()) }] : []),
-          ...metaCells.map((c) => ({ key: c.id, node: flexRender(c.column.columnDef.cell, c.getContext()) })),
-        ];
+        // Satır 2 sol taraf: alt başlık + boş olmayan meta ipuçları. Tur 16 P1 düzeltmesi
+        // (shell-mobile-card-meta-clip-01, Tur 15'te açıldı) ÖNCESİ bu tek bir düz metin akışıydı — alt başlık
+        // (cari adı/açıklama) satırın tamamını doldurduğunda arkasından gelen meta bit'leri
+        // (tarih, yön) kırpmanın İÇİNDE kalıyor, ya harf ortasından kesiliyor ya da tamamen
+        // kayboluyordu (bkz. /muhasebe/yevmiye — 50/50 kartta tarih hiç görünmüyordu). Artık
+        // öncelik açık: alt başlık `hasLeftContent` içinde AYRI, küçülebilir (`min-w-0 flex-1
+        // truncate`) bir kutu; meta bit'leri (tarih/yön gibi sabit genişlikli) `shrink-0` ikinci
+        // bir kutuda — asla küçülmez, asla kırpılmaz. Alt başlık gerekirse sıfıra kadar küçülür,
+        // meta her zaman tam görünür.
+        const hasLeftContent = Boolean(subtitle) || metaCells.length > 0;
         return (
           <li
             key={row.id}
@@ -112,20 +117,39 @@ export function DataTableMobileCards<T>({
                 (flex olmayan) metin akışı: tüm bit'ler ("·" ayraçlarıyla) aynı satırda yan yana basılır,
                 kesme tek noktada (grubun sonunda) "…" ile olur — `gap-2` artık metric'e gerçek ≥8px
                 boşluk bırakır çünkü sol grup kendi genişliğine (flex-1, min-w-0) düzgün küçülür. */}
-            {leftBits.length || metric ? (
+            {hasLeftContent || metric ? (
               <div className="mt-0.5 flex items-baseline justify-between gap-2">
                 {/* `mobile-card-subtitle-row` işaretçisi (Tur 14 P2 shell-mobile-card-height-02):
                     bu satır zaten kartın kendi `<li>`sinin (tam kart tıklanabilir/dokunulabilir alan)
                     içinde — LotBadge gibi bağlantılı hücrelerin KENDİ 44px dokunma-hedefi dolgusu
                     (h-11) burada gereksiz, satır 2'yi 44px'e şişirip kart toplamını 72px hedefinin
-                    üzerine taşıyor (LotBadge bkz. lot-badge.tsx, aynı sınıf altında h-auto'ya döner). */}
-                <div className="mobile-card-subtitle-row min-w-0 flex-1 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-muted-foreground">
-                  {leftBits.map((b, i) => (
-                    <span key={b.key}>
-                      {i > 0 ? <span aria-hidden className="text-muted-foreground/40"> · </span> : null}
-                      {b.node}
+                    üzerine taşıyor (LotBadge bkz. lot-badge.tsx, aynı sınıf altında h-auto'ya döner).
+                    İki alt kutuya ayrılmış (Tur 16): alt başlık KÜÇÜLÜR, meta bit'leri KÜÇÜLMEZ. */}
+                <div className="mobile-card-subtitle-row flex min-w-0 flex-1 items-baseline text-xs text-muted-foreground">
+                  {subtitle ? (
+                    <span className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                      {flexRender(subtitle.column.columnDef.cell, subtitle.getContext())}
                     </span>
-                  ))}
+                  ) : null}
+                  {metaCells.length ? (
+                    // `max-w-[55%]` (Tur 16 ek düzeltme, ölçümle bulundu): alt başlık YOKSA
+                    // (ör. /muhasebe/banka mutabakat listesi — tarih + karşı taraf adı ikisi de
+                    // 'meta', 'subtitle' yok) meta zinciri TEK başına satırın tamamını serbestçe
+                    // kaplayıp metrik (tutar) sütununu eziyordu (Playwright bbox: metaRight >
+                    // metricLeft, 11 karttan 2'sinde). Üst sınır meta zincirinin normal tek-tarih
+                    // durumunda (< 55%) hiçbir şeyi değiştirmez — yalnızca uzun ikinci/üçüncü meta
+                    // bit'i (serbest metin, ör. karşı taraf adı) taşarsa devreye girer ve o KENDİSİ
+                    // kırpılır; bit'ler tarih-önce sırayla yazıldığından (bkz. sütun tanımları)
+                    // kırpma her zaman SONDAKİ (daha az kritik) bit'i keser, tarihi değil.
+                    <span className="max-w-[55%] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap">
+                      {metaCells.map((c, i) => (
+                        <span key={c.id}>
+                          {subtitle || i > 0 ? <span aria-hidden className="text-muted-foreground/40"> · </span> : null}
+                          {flexRender(c.column.columnDef.cell, c.getContext())}
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
                 </div>
                 {metric ? (
                   <div className="shrink-0 text-[13px] tabular-nums">{flexRender(metric.column.columnDef.cell, metric.getContext())}</div>

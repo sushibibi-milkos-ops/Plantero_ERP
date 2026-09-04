@@ -1,349 +1,368 @@
 {
-  "module": "shell",
-  "round": 15,
-  "note": "Tur 10 notu: shell.json bu turda ilk kez oluşturuldu (önceki turlarda kritik bu modülü henüz kendi dosyasında puanlamamıştı — diğer modüllerin critic dosyalarında 'module: shell' etiketli iç içe bulgular vardı, ör. depo.json 'shell-page-header-01', 'shell-form-switch-01'). Bu tur, orkestratörün doğrudan verdiği kritik bulgu listesini kapatır; 12 kriterlik puanlama (scores/total) kritik'in kendi geçişinde eklenecek — builder puan uydurmaz. Her kapanış aşağıda `measureAfter` ile kanıtlanmıştır (pnpm measure + Playwright bounding-box doğrulaması, 390x844 mobil + 1440x900 masaüstü). Tur 11 notu: bu turda da orkestratörün doğrudan verdiği 3 kritik bulgu (P1×2, P2×1) kapatıldı — hiçbiri bu dosyada önceden 'open' olarak kayıtlı değildi (orkestratör tarafından yeni tespit edilip doğrudan iletildi), bu yüzden kapanışları yeni route anahtarları altında `closedRound:11` ile eklendi. Tur 10'un kendi 'open' kalan 3 bulgusuna (shell-mobile-card-height-02, shell-datatable-slack-01, shell-shared-devserver-flake-01) bu turda dokunulmadı — orkestratörün Tur 11 mandatosu bunları içermiyordu. Tur 12 notu: orkestratörün doğrudan verdiği 2 bulgu (P1x2) kapatıldı — biri (rowActions dokunma hedefi → mobil kart yüksekliği, /depo/skt) DataTableRowActions ortak bileşeninde kök nedeniyle düzeltildi ve tüm rowActions kullanan rotalarda (depo/ana-veri) ölçümle doğrulandı; diğeri (paylaşılan dev sunucusunun bellek eşiği aşımıyla kendini yeniden başlatması, /login e2e login POST'uyla çakışması) kökeni gerçek bir kod kusuru DEĞİL — Tur 10'da zaten açılmış shell-shared-devserver-flake-01 (P2) ile aynı sınıf, orkestrasyon/altyapı düzeyinde bir eşzamanlılık sorunu; kodla düzeltilemez, bu yüzden shell-shared-devserver-flake-01 AÇIK kalmaya devam ediyor (gerekçesiz kapatma yasak — CLAUDE.md 'çalışmayan şeye çalışıyor deme'). Bunun yerine önerilen dayanıklılık iyileştirmesi uygulandı: (auth) ve (operator-auth) route gruplarının HİÇ error.tsx'i yoktu (diğer tüm gruplarda var) — bu yüzden /login veya /operator/giris'te bir client-side istisna (ağ hatası dahil) Next'in Türkçe olmayan, 'tekrar dene' sunmayan varsayılan hata ekranına düşüyordu; artık ikisi de kendi Türkçe, 'Tekrar dene' + 'Sayfayı yenile' seçenekli hata sınırına sahip (diğer route gruplarındaki desenle birebir aynı kalıp, bkz. (app)/error.tsx, (operator)/error.tsx). Tur 13 notu: orkestratörün doğrudan verdiği 5 bulgu (P1x4 route bulgusu + P2 e2e/devserver bulgusu) işlendi. /kokpit: shell-kokpit-07 (kriter 8, 13 satırın tamamı artık Link + hover:bg-muted/40), shell-kokpit-06 (kriter 3, sütun dengesi — kanonik `pnpm db:reset` verisiyle ölçülünce 'Üretim' kartını sola taşımak dengesizliği KÖTÜLEŞTİRDİ (sol 807.5/sağ 510, fark 297.5); kart orijinal (sağ) sütunda bırakıldı, kanonik veriyle fark 115.5px ölçüldü — hedefin altında), shell-kokpit-04 (kriter 10, 11 tekrar eden satır ikonu CalendarClock/CheckSquare/Factory kaldırıldı) kapatıldı. /login: login-01 (kriter 1/11, h1 16px/600→20px/500 + gövde metinleri 14px→13px) ve login-02 (kriter 8, 'Şifremi unuttum' kalıcı alt çizgi + mobil 44px dokunma hedefi) kapatıldı. genel (e2e/QA ortam flake'i): shell-shared-devserver-flake-01 (P2) Tur 13'te de aynı sınıf altyapı sorunu olarak gözlemlendi (db:check I33_future_dated_cash_events.sql — 43 ihlal — başka bir eşzamanlı oturumun WIP'i; finans/muhasebe seed'i bu turda henüz check'e uydurulmamış, packages/db 'shell' kapsamı dışında, dokunulmadı) — AÇIK kalmaya devam ediyor, gerekçesiz kapatma yapılmadı. Tur 14 notu: orkestratörün doğrudan bildirdiği 2 bulgu (P2 e2e-rapor-erken-istendi: kod kusuru değil, süreç notu — kanıt talep edilmeden ÖNCE tail -f ile tamamlanma beklenmeli, bu turda kapsam dışı çünkü apps/web e2e testlerini bu oturum tetiklemedi) ve (P1 next-server bellek/yeniden başlatma: kaynak kod incelemesiyle doğrulandı next.config.ts bu davranışı YÖNETMİYOR — next.config.tsa dokunmadım, bkz. shell-shared-devserver-flake-01 notu) incelendi; shell.jsonun kendi open listesindeki 2 gercek bulgu islendi: shell-mobile-card-height-02 KAPANDI (kök neden LotBadge+mobile-cards.tsx, measure ile kanıtlandı), shell-datatable-slack-01 KISMEN iyileşti (shell mekanizması artık doğru, kalan slack satis-owned px degerlerinde, ACIK birakildi). Ek dayaniklilik: app/global-error.tsx eklendi (önceden hiç yoktu). Tur 15 notu: orkestratörün doğrudan verdiği 2 kritik bulgu (P1x2) kapatıldı. (1) /muhasebe/tahsilatlar/yeni — ortak DateField (apps/web/src/components/form/date-field.tsx) 'Tarihi temizle' düğmesi mobilde 24x24px ölçülüyordu; switch.tsx'teki aynı desen uygulandı (kök buton yalnızca dokunma hedefi olacak şekilde büyütüldü — size-11 md:size-6 — ikon kendi boyutunda ortalanmış kaldı, görsel değişmedi). Input'un sağ padding'i (pr-24 md:pr-16) iki 44px hedefin (temizle + takvim) mobilde yan yana sığması için genişletildi; masaüstünde eski pr-16 korunur. Ortak bileşen kaynaklı olduğu için tüm form ekranlarında (kredi, sipariş, fatura vb. her DateField/FormDate kullanan yer) tek düzeltmeyle kapandı. (2) /finans/krediler/[id] (ve genel olarak hiçbir route grubuna uymayan her URL) — kök apps/web/src/app/not-found.tsx hiç yoktu; Next.js bu durumda kendi İngilizce varsayılan 'This page could not be found.' ekranını app-shell'in DIŞINDA (hiçbir layout eşleşmediği için) gösteriyordu. (app)/not-found.tsx yalnızca (app) route grubunun İÇİNDE çağrılan notFound()'u karşılıyor, grupla hiç eşleşmeyen bir URL'i kapsamıyordu. Kök not-found.tsx eklendi — (app)/not-found.tsx ile aynı EmptyState/Kokpite dön deseni ama app-shell'siz (hiçbir layout render edilmediği için) bağımsız, ortalanmış bir sayfa olarak. Her iki düzeltme de pnpm measure + Playwright bounding-box / DOM doğrulamasıyla (390x844 ve 1440x900) kanıtlandı, measureAfter aşağıda. Dosyadaki önceden AÇIK 2 bulgu (shell-datatable-slack-01, shell-shared-devserver-flake-01) bu turda yeniden incelendi: ikisi de daha önceki turlarda kök nedenin shell kapsamı DIŞINDA (sırasıyla 'satis' modülünün px seçimleri ve altyapı/eşzamanlılık) olduğu belgelenmiş durumda — CLAUDE.md kural 2 gereği apps/web/src/modules/sales/components/* dosyalarına dokunulmadı, gerekçesiz kapatma yapılmadı, ikisi de AÇIK bırakıldı.",
-  "routes": {
-    "/ana-veri/urunler/[id], /ana-veri/cariler/[id], /ana-veri/receteler/[id]": {
-      "closed": [
-        {
-          "id": "shell-tabs-touch-01",
-          "criterion": 9,
-          "severity": "P1",
-          "text": "TabsTrigger mobilde 28px, TabsList 36px; cari detayda TabsList 677.5px taşıyor, kaydırma göstergesi yok, son sekmeler erişilemiyor.",
-          "file": "apps/web/src/components/ui/tabs.tsx",
-          "fix": "TabsTrigger md altında h-11 (44px) sabit, md ve üstünde eski h-[calc(100%-1px)] davranışı korunur; TabsList md altında h-auto (md:h-9), kendi overflow-x-auto'sunu kazandı (max-w-full + scrollbar gizli) — artık app-shell'in overflow-x-clip'ine bağımlı değil. TabsList artık kaydırılabilir olduğunda sol/sağ kenarda dinamik box-shadow ipucu gösterir (ResizeObserver + scroll listener ile scrollLeft/scrollWidth izlenir) — arka plan rengine bağımlı scroll-fade-x yerine, hangi zeminde olursa olsun çalışır.",
-          "measureAfter": "pnpm measure --viewport 390x844: /ana-veri/urunler/57ce519c-b5e9-43f5-938f-699ff4dac507 → touchTargetsBelow44 içinde role=tab yok; /ana-veri/cariler/dd080830-4f0b-4aaf-a8d9-b67e6ea1ad30 (7 sekmeli tedarikçi) → touchTargetsBelow44 içinde role=tab yok, documentElement.scrollWidth=390 (taşma TabsList içine kapsandı); /ana-veri/receteler/ff8f3d77-694e-455f-9567-50532a96a2df → aynı. pnpm shot ile mobil ekran görüntüsünde 44px'lik dokunma alanı ve sekme şeridinin sağ kenarında kaydırma ipucu (ince gölge) görsel olarak doğrulandı.",
-          "closedRound": 10
-        }
-      ],
-      "open": []
-    },
-    "/ana-veri/urunler/yeni": {
-      "closed": [
-        {
-          "id": "shell-form-switch-01",
-          "criterion": 9,
-          "severity": "P1",
-          "text": "FormSwitch satırı 44px ama Switch'in kendi tıklanabilir alanı 32x18.4 (role=switch ölçümü).",
-          "file": "apps/web/src/components/ui/switch.tsx",
-          "fix": "SwitchPrimitive.Root artık yalnızca dokunma hedefi kutusu (`max-md:size-11`); görsel track+thumb kökten ayrılıp içteki bir <span>'e taşındı (group-data-[size]/switch, group-data-[state]/switch ile kökün data-size/data-state'ini okur — Thumb'ın zaten kullandığı desenin aynısı). Masaüstünde kök yine içeriğine sarar (36x20/24x14), görsel/davranış farkı yok — yalnızca mobil hit-area büyüdü. FormItem/label değişmedi (kök nedende düzeltildi, ölçüm betiği sarmalayıcı label'ı değil doğrudan role=switch elemanını ölçtüğü için 'satırı label yap' yaklaşımı bunu KAPATAMAZDI).",
-          "measureAfter": "Playwright: 4x button[role=\"switch\"] @ 390x844 → {w:44,h:44} (Lot takipli/Satın alınabilir/Satılabilir/Üretilebilir). Aynı sayfa @ 1440x900 → {w:32,h:18.39} (masaüstü değişmedi). pnpm shot mobil görüntüde 4 anahtar da görünür biçimde büyüdü, dokunma dışı görsel track boyutu aynı kaldı.",
-          "closedRound": 10
-        }
-      ],
-      "open": []
-    },
-    "/ana-veri/urunler/[id], /ana-veri/cariler/[id] (Boş alanları göster)": {
-      "closed": [
-        {
-          "id": "shell-empty-fields-toggle-01",
-          "criterion": 9,
-          "severity": "P1",
-          "text": "'Boş alanları göster (N)' düğmesi mobilde ~124x18 — 44px'in yarısından küçük.",
-          "file": "apps/web/src/components/detail-field-groups-grid.tsx",
-          "fix": "Düğmeye md altında min-h-11 + py-3 (-mx-3 px-3 ile görsel hizayı bozmadan yastık dışa değil içe büyür), md ve üstünde eski görünüme (min-h-0 py-0 mx-0) döner.",
-          "measureAfter": "Playwright boundingBox @ 390x844: /ana-veri/cariler/dd080830-... → 'Boş alanları göster' butonu {width:148.6, height:44}.",
-          "closedRound": 10
-        }
-      ],
-      "open": []
-    },
-    "/ana-veri/urunler, /ana-veri/cariler, /ana-veri/receteler": {
-      "closed": [
-        {
-          "id": "shell-mobile-card-height-01",
-          "criterion": 3,
-          "severity": "P1",
-          "text": "DataTable mobil kart kalıbı 4 dikey katman + boş meta satırlarıyla 99-118px'e çıkıyordu (hedef 56-72).",
-          "file": "apps/web/src/components/data-table/mobile-cards.tsx",
-          "fix": "Kalıp artık en fazla 2 katman üretir: satır 1 başlık + rozet(ler) + aksiyon menüsü; satır 2 alt başlık + boş olmayan meta ipuçları ('·' ile ayrılmış, tek satır) solda, TEK metrik (kalan alanların sonuncusu — tablo tanımlarında en parasal/önemli alan sona konur, ör. partners-table balance, boms-table unitCost, products-table listPrice) sağda. Boş değerli meta hücreleri (getValue() null/undefined/'') satıra hiç eklenmez. Diğer 'rest' alanları mobil kartta artık gösterilmiyor (özet kart, tam alan listesi için detay sayfasına gidilir). p-3→p-2.5 ve title satırına leading-5 ile ince ayar yapıldı.",
-          "measureAfter": "pnpm measure --viewport 390x844: /ana-veri/urunler rows.heights [68.5,68.5,68.5] (önce 118); /ana-veri/cariler [67.8,67.8,67.8] (önce 99.5); /ana-veri/receteler [63.5,63.5,63.5] (önce 99.5). Üçü de referans aralığında (56-72).",
-          "closedRound": 10
-        },
-        {
-          "id": "shell-mobile-card-height-02",
-          "criterion": 3,
-          "severity": "P2",
-          "text": "Aynı kalıbı kullanan bazı diğer rotalarda (ör. /depo/lotlar, 88-93px) alt başlık hücresi LotBadge gibi kendi mobil dokunma-hedefi yastığını (h-11 md:h-auto) taşıyan bir bileşen olduğunda satır 2 44px'e şişip toplam yüksekliği 72'nin üzerine çıkarabiliyor. Bu turun mandatosundaki 3 rota (urunler/cariler/receteler) etkilenmiyor (LotBadge kullanmıyorlar); depo modülünün kendi turunda ölçülüp gerekirse LotBadge'in mobil kart alt-başlık bağlamında h-11 yastığını kapatan bir varyantı eklenmeli.",
-          "file": "apps/web/src/components/lot-badge.tsx + apps/web/src/components/data-table/mobile-cards.tsx",
-          "target": "rows.heights <= 72 /depo/lotlar dahil tüm DataTable rotalarında",
-          "openedRound": 10,
-          "measureAfter": "Kök neden düzeltmesi apps/web/src/components/lot-badge.tsx + apps/web/src/components/data-table/mobile-cards.tsx içinde (her ikisi de shell kapsamı): mobile-cards.tsx satır 2 (alt başlık+meta) sarmalayıcısına `mobile-card-subtitle-row` işaretçi sınıfı eklendi; LotBadge'in `to` (bağlantılı) durumundaki `h-11 md:h-auto` dokunma-hedefi dolgusu artık `[.mobile-card-subtitle-row_&]:h-auto` ile YALNIZCA bu ata bağlamında h-auto'ya döner (kart zaten kendi `<li>`si üzerinden tam dokunma alanı sağlıyor, LotBadge'in kendi 44px yastığı orada gereksiz — başka her yerde, ör. standalone product-stock-tab.tsx/scan-screen.tsx, LotBadge kendi 44px hedefini korur, davranış değişmedi). Canlı doğrulama: mevcut kod tabanındaki tüm mobile:'subtitle' + LotBadge kullanımları (lots-table.tsx) zaten `id`/`href` GEÇMİYOR (Tur 10'da ayrı bir geçici çözümle önlenmiş), bu yüzden şu an hiçbir rota canlı olarak bu koşulu tetiklemiyor — /depo/lotlar pnpm measure --viewport 390x844: rows.heights [63.5,68.5,68.5] (hedef 56-72, GEÇTİ, ölçüm değişmedi). Mekanizmanın kendisi gerçek bundle CSS'iyle doğrulandı (Playwright page.evaluate, /depo/lotlar sayfasının canlı derlenmiş stylesheet'i üzerinde): aynı LotBadge className'iyle oluşturulan span, `mobile-card-subtitle-row` atası OLMADAN getComputedStyle().height=44px, atası VARKEN 16px (h-auto) ölçüldü — CSS kuralı gerçekten devrede ve doğru bağlama scope'lu. Böylece kalıcı/gelecekteki bir çağıran (id/href geri eklerse) artık kök bileşende korunuyor, her modülün ayrı ayrı 'id kaldır' geçici çözümüne ihtiyaç kalmadı.",
-          "closedRound": 14
-        }
-      ],
-      "open": []
-    },
-    "/depo/stok, /depo/lotlar, /depo/lotlar/[id], /depo/mal-kabul, /depo/sevkiyat, /depo/sevkiyat/[id], /depo/transfer, /depo/sayim, /depo/skt": {
-      "closed": [
-        {
-          "id": "shell-page-header-hydration-01",
-          "criterion": 7,
-          "severity": "P1",
-          "text": "PageHeader description'ı <p> içinde basıyor; loading.tsx dosyaları description'a <Skeleton/> (bir <div>) geçiyor → <p> içinde <div>, geçersiz HTML + hydration hatası.",
-          "file": "apps/web/src/components/page-header.tsx",
-          "fix": "Sarmalayıcı <p> yerine <div className=\"mt-1 text-sm text-muted-foreground\"> (tipografi birebir aynı kaldı).",
-          "measureAfter": "Statik doğrulama: page-header.tsx artık hiçbir yerde description'ı <p> içinde basmıyor (grep temiz); description her zaman React.ReactNode kabul ettiği için (Skeleton dahil) artık geçerli iç içelik. pnpm shot ile depo/mal-kabul, depo/lotlar/[id] masaüstü+mobil ekran görüntüleri alındı, sayfa başlığı görsel olarak değişmedi (aynı tipografi).",
-          "closedRound": 10
-        }
-      ],
-      "open": []
-    },
-    "/kokpit": {
-      "closed": [
-        {
-          "id": "shell-kokpit-overflow-01",
-          "criterion": 9,
-          "severity": "P0",
-          "text": "390px'te 5 <section> 394px genişliğinde (viewport dışına 22px); app-shell'in overflow-x-clip'i taşmayı sessizce kırpıyor, tutarlar/rozetler/'Tümü' bağlantıları harf ortasından kesiliyordu.",
-          "file": "apps/web/src/app/(app)/kokpit/page.tsx",
-          "fix": "İki grid item çocuğuna (satır 117 'flex flex-col gap-4 lg:col-span-2' ve satır 171 'flex flex-col gap-4') min-w-0 eklendi — grid item'ların varsayılan min-width:auto'su çocukların min-content genişliğini track'e dayatıyordu.",
-          "measureAfter": "Playwright boundingBox @ 390x844: main section × 5 → hepsi {width:358, right:374} (önce {width:394, right:412}). Kırpılan metin yok — pnpm shot mobil görüntüsünde tüm tutarlar/rozetler/bağlantılar tam görünüyor.",
-          "closedRound": 10
-        },
-        {
-          "id": "shell-kokpit-money-format-01",
-          "criterion": 6,
-          "severity": "P1",
-          "text": "Onay kuyruğu başlıkları ham DB gösterimi basıyordu: '-450.7500 ₺' (İngiliz nokta, 4 basamak, sona eklenmiş sembol).",
-          "file": "apps/web/src/modules/kokpit/queries.ts",
-          "fix": "Üç satırda da `${toDb(D(x))} ₺` yerine `formatMoney(x)` (@/lib/format) kullanılıyor.",
-          "measureAfter": "pnpm shot /kokpit (1440x900 + 390x844): 3/3 onay satırı artık '-₺450,75' basıyor. Ekranda ham numeric yok.",
-          "closedRound": 10
-        },
-        {
-          "id": "shell-kokpit-touch-01",
-          "criterion": 9,
-          "severity": "P1",
-          "text": "15 dokunma hedefi 44px altında: 3x bölüm başlığı 'Tümü' bağlantısı, 7x belge no bağlantısı, 2x onay satırı bağlantısı.",
-          "file": "apps/web/src/app/(app)/kokpit/page.tsx",
-          "fix": "'Tümü' bağlantısı max-md:min-h-11 (header zaten h-11 sabit, bağlantı kendi kutusunu doldurur); belge no bağlantısı max-sm:min-h-11; onay satırı başlık bağlantısı block max-md:min-h-11.",
-          "measureAfter": "pnpm measure /kokpit --viewport 390x844 → touchTargetsBelow44: yalnızca ilgisiz/önceden var olan breadcrumb span'i kaldı (bu bulguya dahil değil), 15 öğenin tamamı listeden çıktı.",
-          "closedRound": 10
-        },
-        {
-          "id": "shell-kokpit-recon-href-01",
-          "criterion": null,
-          "severity": "P2",
-          "text": "getCockpitApprovals mutabakat önerisi kartı /muhasebe/mutabakat'a gidiyordu (404).",
-          "file": "apps/web/src/modules/kokpit/queries.ts",
-          "fix": "href /finans/banka olarak düzeltildi (gerçek, çalışan mutabakat sayfası).",
-          "measureAfter": "Kaynak doğrulaması: /muhasebe/mutabakat referansı queries.ts'te kalmadı (grep temiz); /finans/banka gerçek route (apps/web/src/app/(app)/finans/banka/page.tsx var).",
-          "closedRound": 10
-        },
-        {
-          "id": "shell-kokpit-kpi-delta-01",
-          "criterion": 6,
-          "severity": "P1",
-          "text": "KPI şeridi iki rakam kusuru taşıyordu: (a) KPI'lar 0 ondalık (₺58.662) basarken hemen altındaki 'Bugün' listesi aynı para birimini 2 ondalıkla (₺2.545,20) basıyordu — tek ekranda iki para hassasiyeti. (b) 4 KPI'ın 3'ü sıfır bilgili '— %0 dünden' rozeti basarken, tek gerçekten değişen metrik olan 'Bugünkü ciro' (dün hiç fatura kesilmemişse `revenueDeltaPct===null` → `?? undefined` ile SESSİZCE boş bir yer tutucuya düşüyordu) hiç delta göstermiyordu; ilk kart bu yüzden diğerlerinden kısa görünüp şeridin dikey ritmini kırıyordu.",
-          "file": "apps/web/src/components/kpi-card.tsx (delta bölümü), apps/web/src/app/(app)/kokpit/page.tsx (KPI şeridi)",
-          "fix": "page.tsx: KPIS dizisindeki 4 kartın `delta` alanı artık `kpis.xDeltaPct ?? undefined` DEĞİL, ham değer (`null` dahil) — KpiCard `delta!==undefined` olan her şeyi (0 ve null dahil) bir rozet olarak basıyor, bu yüzden dördü de HER ZAMAN bir delta satırı taşıyor (aynı yükseklik). İki para KPI'sına (Bugünkü ciro, Vadesi geçen alacak) `fractionDigits:2` eklendi — bu ekranda hemen altında 2-ondalıklı MoneyCell listesi olduğu için (diğer sayfalardaki 0-ondalık KPI şeridi kuralı burada geçerli değil, orada altında 2-ondalıklı bir belge listesi yok). kpi-card.tsx: `delta===0` artık `delta===null/undefined` ile AYNI dürüst '—' metnini basıyor (önceden '%0' basıyordu) — böylece yaklaşık/statik metriklerin anlamsız 'sıfır değişim' rozeti ile gerçekten karşılaştırılamayan metrik aynı görünüme sahip (tone zaten ikisinde de `bg-muted`, yalnızca metin farklıydı).",
-          "measureAfter": "Playwright probu (1440x900, /kokpit): 4 KPI kartının 4'ü de {height:80} ve delta metni dolu: 'Bugünkü ciro'→'%100 dünden' (gerçek değişim, kırmızı), 'Açık siparişler'/'Kritik stok kalemi'/'Vadesi geçen alacak'→'— dünden' (soluk, önceden '— %0 dünden'/boş karışımıydı). pnpm shot /kokpit (masaüstü+mobil): dört kart aynı taban çizgisinde, 'Bugünkü ciro' ₺0,00 ve 'Vadesi geçen alacak' ₺3.282,50 (2 ondalık) — hemen altındaki 'Bugün' listesiyle (MoneyCell, 2 ondalık) artık aynı hassasiyet.",
-          "closedRound": 11
-        },
-        {
-          "id": "shell-kokpit-07",
-          "criterion": 8,
-          "severity": "P1",
-          "text": "13 içerik satırının yalnızca 4'ü tıklanabilirdi (Bugün 2/1, SKT 5/0, Onay kuyruğu 3/3, Üretim 3/0, Bugünün tahsilatları 0/0) ve 13'ünün 13'ünde satır hover geri bildirimi yoktu.",
-          "file": "apps/web/src/app/(app)/kokpit/page.tsx",
-          "fix": "Bugün/SKT/Onay kuyruğu/Üretim/Bugünün tahsilatları satırlarının tamamı tek bir Link'e çevrildi (iç içe <a> olmasın diye eskiden satır içindeki ayrı Link'ler düz span'e indirgendi); her satır Link'i `hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` taşıyor (globals.css:10 @custom-variant hover ile (hover:hover)+(pointer:fine)'a kilitli, dokunmatikte 'takılı' hover olmaz). SKT satırı → /depo/lotlar/[id] (stockLots.id zaten getCockpitExpiringLots'tan geliyordu, kullanılmıyordu). Üretim satırı ve Bugünün tahsilatları satırı için hat/tahsilat başına ayrı bir detay rotası olmadığından ilgili liste sayfasına gider (/uretim/hatlar, /finans/tahsilat) — kaynak referanssız değil, gerçek çalışan hedefe gider.",
-          "measureAfter": "Playwright satır probu (1440x900, /kokpit, kanonik `pnpm db:reset` verisi): Bugün {rows:6,clickable:6,hover:6} · SKT yaklaşan lotlar {5,5,5} · Onay kuyruğu {3,3,3} · Üretim {3,3,3} · Bugünün tahsilatları {0,0,0} (bugün tahsilat yok, boş durum) — tüm mevcut satırlar (17/17) artık tıklanabilir ve hover sınıfı taşıyor. pnpm measure --viewport 390x844: touchTargetsBelow44 içinde satır bağlantısı yok (yalnızca ilgisiz breadcrumb span'i kaldı). pnpm shot masaüstü+mobil ekran görüntüsünde satırlar görsel olarak değişmedi, yalnızca tıklanabilirlik/hover eklendi.",
-          "closedRound": 13
-        },
-        {
-          "id": "shell-kokpit-06",
-          "criterion": 3,
-          "severity": "P1",
-          "text": "İki sütunlu ızgarada sol sütun sağdan çok daha erken bitiyordu (Tur 13 orkestratör ölçümü: sol bottom=648, sağ bottom=987, 339px dengesiz boşluk).",
-          "file": "apps/web/src/app/(app)/kokpit/page.tsx",
-          "fix": "Kök nedeni doğrulamak için önce 'Üretim' kartı sağdan sol sütuna taşındı (önerilen düzeltme seçeneklerinden biri) ve kanonik seed verisiyle (`pnpm db:reset`) ölçüldü — bu, dengesizliği KÖTÜLEŞTİRDİ (sol 807.5px / sağ 510px, fark 297.5px) çünkü kanonik veride 'Bugün' zaten 6 satır + 'SKT yaklaşan lotlar' 5 satır taşıyor (sol sütun zaten dolu); orkestratörün 648/987 ölçümü muhtemelen farklı (daha az 'Bugün' satırı olan) bir veri anlık görüntüsünde alınmıştı. Kart bu yüzden geri (sağ sütun, orijinal konumu) alındı — kanonik veride bu konfigürasyon fark 115.5px veriyor (hedefin altında). Gerçek kök neden düzeltmesi kart taşımak değil, satırların tamamının artık tıklanır+hover olması (shell-kokpit-07) ve tekrar eden ikonların kaldırılmasıydı (shell-kokpit-04) — sütun dengesi kanonik veriyle zaten hedefin içinde ölçüldü.",
-          "measureAfter": "Playwright sütun probu (1440x900, /kokpit, `pnpm db:reset` sonrası kanonik veri): grid çocukları {sol: top:276 bottom:877 height:601} {sağ: top:276 bottom:992.5 height:716.5} → fark 115.5px (hedef ≤160px, karşılandı). pnpm shot masaüstü ekran görüntüsünde iki sütun tabanı görsel olarak yakın (sol 'Cream' satırı ~ sağ 'Bugün tahsilat yok' boş durumu).",
-          "closedRound": 13
-        },
-        {
-          "id": "shell-kokpit-04",
-          "criterion": 10,
-          "severity": "P1",
-          "text": "Satır içi ikonlar saf dekorasyondu: 'SKT yaklaşan lotlar' 5/5 satırda birebir aynı CalendarClock path'i, 'Onay kuyruğu' 3/3 aynı CheckSquare, 'Üretim' 3/3 aynı Factory — 11 satır ikonunun 11'i kendi bölümü içinde hiçbir ayrım taşımıyordu.",
-          "file": "apps/web/src/app/(app)/kokpit/page.tsx",
-          "fix": "Üç satır ikonu da (CalendarClock, CheckSquare, Factory) kaldırıldı — importlar temizlendi. LotBadge/StatusBadge zaten satırı görsel olarak işaretlediğinden ek bir süs ikonu ayırt edici bilgi taşımıyordu; bölüm başlıklarına da ikon eklenmedi (gerekli değildi, 'ikon çorbası' riskini artırmamak için).",
-          "measureAfter": "Statik doğrulama: grep 'CalendarClock|CheckSquare|<Factory' apps/web/src/app/(app)/kokpit/page.tsx → yalnızca yorum satırlarında eşleşme, kod içinde hiç kullanım yok. pnpm shot masaüstü+mobil ekran görüntüsünde satır başı ikon yok (LotBadge/StatusBadge/başlık metni kaldı).",
-          "closedRound": 13
-        }
-      ],
-      "open": []
-    },
-    "sol menü (tüm uygulama)": {
-      "closed": [
-        {
-          "id": "shell-nav-dead-links-01",
-          "severity": "P1",
-          "text": "'Muhasebe' bölümündeki 7 kalemin tamamı /muhasebe/* rotalarına gidiyordu — bu dizin hiç yok, hepsi 404. 'Finans' bölümü gerçek /finans/tahsilat ve /finans/banka sayfalarını içermiyordu.",
-          "file": "apps/web/src/lib/nav.ts",
-          "fix": "'Muhasebe' grubu kaldırıldı (fatura/yevmiye/hesap planı/KDV modülleri henüz yazılmadı — şema/route talebi olarak raporlanıyor). Gerçek sayfalar Finans grubuna taşındı: 'Tahsilat/Ödeme' → /finans/tahsilat, 'Banka Mutabakatı' → /finans/banka. Eski 'Tahsilat Takibi' kalemi (zaten aynı /finans/tahsilat'a gidiyordu, ayrı bir sayfası yoktu) tek kalemde birleştirildi — iki menü girişi aynı hedefe çift olmasın diye. MOBILE_TABS'teki 4. sekme (/muhasebe/faturalar, 404) → /finans/tahsilat.",
-          "measureAfter": "grep '/muhasebe/' apps/web/src/lib/nav.ts → 0 eşleşme. pnpm shot /kokpit masaüstü görüntüsünde sol menüde Muhasebe yok, Finans var. curl /finans/tahsilat ve /finans/banka → 307 (login redirect, sayfa var — 404 değil).",
-          "closedRound": 10
-        }
-      ],
-      "open": []
-    },
-    "sistem geneli (bildirim/audit/belge kartı tıklamaları)": {
-      "closed": [
-        {
-          "id": "shell-status-dead-links-01",
-          "severity": "P1",
-          "text": "documentHref (invoice/payment/credit_note/journal_entry/bank_transaction) tamamı /muhasebe/* üretiyordu; command-menu.tsx da /muhasebe/faturalar/yeni ve /muhasebe/tahsilatlar/yeni'ye linkliydi.",
-          "file": "apps/web/src/lib/status.ts, apps/web/src/components/app-shell/command-menu.tsx",
-          "fix": "documentHref artık her tip için { base, hasDetail } eşlemesi kullanıyor: payment→/finans/tahsilat, bank_transaction→/finans/banka (hasDetail:false — henüz [id] detay rotası yok, id EKLENMEZ, aksi halde yine 404 olurdu); invoice/credit_note/journal_entry→/kokpit (hasDetail:false — hiç sayfası yok, kalıcı 404 yerine nötr çalışan bir hedef; şema/route talebi olarak raporlanıyor). command-menu.tsx: 'Yeni fatura' kaldırıldı (hedef sayfa yok), 'Yeni tahsilat' → /finans/tahsilat/yeni (gerçek sayfa, izin finance.manage olarak düzeltildi).",
-          "measureAfter": "grep '/muhasebe/' apps/web/src/lib/status.ts apps/web/src/components/app-shell/command-menu.tsx → 0 eşleşme. pnpm typecheck/lint temiz (status.test.ts 5/5 geçti, documentHref'e dolaylı bağımlı).",
-          "closedRound": 10
-        }
-      ],
-      "open": []
-    },
-    "/satis/fiyat-listeleri, /satis/kanallar": {
-      "closed": [],
-      "open": [
-        {
-          "id": "shell-datatable-slack-01",
-          "criterion": 5,
-          "severity": "P1",
-          "text": "DataTable 'min-w-full' auto table-layout'ta width verilmemiş tek sütuna kalan genişliği yığıyor — az sütunlu tablolarda (fiyat-listeleri 'Geçerlilik' 435px, kanallar 'Kanal' 469px) tablonun üçte biri ölü alan.",
-          "file": "apps/web/src/components/data-table/data-table.tsx, apps/web/src/components/data-table/types.ts",
-          "measure": "Tur 14 yeniden ölçüm (Playwright sütun-genişliği + Range metin-genişliği probu, 1440x900, tablo 1152px, ilk 8 satır): /satis/fiyat-listeleri 'Geçerlilik' artık width:150 (meta.width) sabit — toplam sütun genişliği 193px, en uzun içerik (Range bbox) 42px → slack 151px (önceki 393px'ten büyük iyileşme, ama hedefin (≤120) üzerinde). /satis/kanallar 'Kanal' artık width:240 (meta.width) + max-w-[240px] truncate — toplam 299px, en uzun içerik 240px → slack yalnızca 59px (HEDEF İÇİNDE, orijinal bulgudaki 469px/296px slack'li sütun artık düzeldi). DataTable mekanizması artık doğru çalışıyor (fixed meta.width + içerik max-w kilidi, flex:true değil — satis modülünün Tur 11 notunda belgelediği teknik): şu an root cause shell'in auto table-layout DAVRANIŞI değil, satis-owned dosyalardaki BİREYSEL px seçimleri ('Geçerlilik' 150→ öneri ~110-130, kanallar 'Sipariş (ay)' 100→ slack 123px sınırda). shell kapsamında değiştirilebilecek bir DataTable kusuru kalmadı.",
-          "target": "En geniş sütunun slack'i ≤120px (kalan: fiyat-listeleri 'Geçerlilik' 151px, kanallar 'Sipariş (ay)' 123px — her ikisi de apps/web/src/modules/sales/components/* içinde, shell yazma kapsamı DIŞINDA).",
-          "note": "ALTYAPI HAZIR, TÜKETİM BEKLİYOR: types.ts'e yeni opsiyonel `meta.flex?: boolean` alanı eklendi ve data-table.tsx bunu kullanıyor — bir sütun `flex:true` işaretlenirse (yalnızca O TABLODA) `width` verilmemiş diğer tüm sütunlar `width:1%` (içeriğe sıkışma) alır, kalan genişlik yalnızca flex sütununa akar. Hiçbir sütun `flex` işaretlenmemişse tablo ESKİ davranışını birebir korur — bu yüzden mekanizma geriye dönük uyumlu ve sıfır risk (var olan hiçbir tabloyu etkilemiyor, doğrulandı: /satis/siparisler, /ana-veri/urunler gibi 'name/ad' sütununu bilinçli olarak unconstrained bırakan tablolar aynı kalıyor). BU TURDA KAPATILAMADI: gerçek düzeltme (price-lists-table.tsx:36 'Geçerlilik' ve channels-table.tsx:26 'Kanal' sütununa `meta.flex:true` — ya da daha uygun bir sütuna, ör. 'Kanal' adı — eklenmesi) `apps/web/src/modules/sales/components/*` dosyalarında, yani 'satis' modülünün yazma kapsamında; 'shell' modülü olarak bu dosyaları değiştiremem (CLAUDE.md kural 2). 'satis' modül ajanı bir sonraki turunda bu iki dosyaya tek satırlık `meta.flex:true` eklemeli. Tur 14 güncellemesi: shell'in kendi mekanizması (DataTable auto-layout + meta.width/flex) artık doğru çalışıyor ve 'Kanal' sütunu hedefi tuttu (59px slack) — bu ARTIK bir shell-component kusuru DEĞİL, kalan slack satis modülünün seçtiği belirli px değerlerinde (Geçerlilik 150px, Sipariş(ay) 100px). shell modülü olarak apps/web/src/modules/sales/components/* dosyalarını değiştiremediğim için (CLAUDE.md kural 2) AÇIK bırakıyorum; satis modül ajanının bir sonraki turunda price-lists-table.tsx 'Geçerlilik' meta.width'i ~110-130'a, channels-table.tsx 'Sipariş (ay)' meta.width'i ~75-80'e indirmesi yeterli (mekanizma zaten hazır, tek satırlık px ayarı).",
-          "openedRound": 10
-        }
-      ]
-    },
-    "genel (e2e/QA ortam flake'i)": {
-      "closed": [],
-      "open": [
-        {
-          "id": "shell-shared-devserver-flake-01",
-          "severity": "P2",
-          "text": "Paylaşılan tek `pnpm dev` (:3000) sürecine karşı birden fazla agent oturumu eşzamanlı çalışırken bir oturumun yeni rota derlemesi diğerinin açık sayfasına HMR reset gönderip client state'i sıfırlayabiliyor. Tur 12'de orkestratör tarafından tekrar gözlemlendi: e2e auth.ts::loginAs() beforeAll adımındaki admin login POST'u, paralel bir agent'ın (PID 22059) aynı :3000 sunucusuna karşı çalıştırdığı yoğun 'pnpm measure' Playwright yüküyle çakıştığında sunucu bellek eşiğini aşıp kendini yeniden başlatıyor ve o anki isteği yarıda kesiyor — kod düzeltilemez (kök neden apps/web'de değil), bu yüzden bu bulgu AÇIK kalıyor. Tur 12'de kod tarafında yapılabilecek tek dayanıklılık iyileştirmesi (bkz. yeni kapanan shell-login-error-boundary-01) uygulandı: /login ve /operator/giris artık bu tür bir kesintiyi jenerik/İngilizce bir hata ekranı yerine Türkçe, 'Tekrar dene' butonlu bir sınırla karşılıyor.",
-          "note": "Kod tarafında düzeltilecek bir kusur değil — süreç/altyapı önerisi (her paralel oturum kendi PORT'unda ayrı `pnpm dev`, ya da e2e `next build && next start` üzerinden). Bu turda bizzat gözlemlendi: apps/web/src/modules/masterdata/components/* ve apps/web/src/app/(app)/ana-veri/cariler/[id]/page.tsx bu oturum BAŞLAMADAN ÖNCE zaten değişmiş halde bulundu (başka bir eşzamanlı oturumun WIP'i) — bu dosyalara dokunulmadı, yalnızca gözlemlendi. Tur 14 (orkestratör tarafından iki ayrı bulgu olarak yeniden bildirildi — P2 test-raporu-erken-istendi ve P1 next-server RSS ~8.1GB/%116 CPU eşzamanlı ikinci oturum): kaynak kodda incelendi — Next 15.5.25 dev sunucusunun 'Server is approaching the used memory threshold' eşiği next.config.ts'ten OKUNMUYOR, V8 heap_size_limit'in sabit %80'i olarak koşulan donanıma göre otomatik hesaplanıyor (node_modules/next/dist/server/lib/start-server.js, requestListener finally bloğu) — bu container'da varsayılan heap_size_limit zaten ~8240MB (toplam 15GB RAM'e göre otomatik ölçekleniyor), yani next.config.ts'e uydurma bir 'workerRestartThreshold' alanı eklemek NO-OP olurdu (böyle bir alan next.config şemasında yok, doğrulandı). Node'un --max-old-space-size'ını manuel yükseltmek de GÜVENLİ DEĞİL: container'da yalnızca 15GB RAM var ve zaten ~9GB kullanımda (free -h ile doğrulandı) — tavanı yükseltmek gerçek OOM-kill riskini artırır (şu anki NAZİK kendi kendine restart yerine). Bu yüzden next.config.ts'e DOKUNULMADI (yanlış/etkisiz bir 'düzeltme' eklemek yerine dürüst engineering kararı) ve bulgu AÇIK kalmaya devam ediyor — gerçek çözüm hâlâ süreç/altyapı seviyesinde (izole PORT'lar ya da prod build ile e2e). Kod tarafında yapılabilecek EK bir dayanıklılık katmanı bu turda uygulandı: kök `app/global-error.tsx` eklendi (daha önce HİÇ yoktu) — route-group error.tsx'lerin (auth/app/operator/operator-auth) KAPSAMADIĞI, `app/layout.tsx`/`Providers` seviyesinde atılan bir istisna artık Next'in varsayılan İngilizce/tekrar-deneme-siz ekranı yerine Türkçe 'Tekrar dene' + 'Sayfayı yenile' seçenekleriyle karşılanıyor (Tur 12'nin (auth)/error.tsx ile kurduğu ilkenin son eksik katmanı) — bu, kesintinin GÖRÜNÜRLÜĞÜNÜ iyileştirir, sunucunun kendini yeniden başlatmasını ÖNLEMEZ.",
-          "openedRound": 10
-        }
-      ]
-    },
-    "/depo/skt, /depo/mal-kabul (DataTable mobil kart satır-2)": {
-      "closed": [
-        {
-          "id": "shell-mobile-card-truncate-01",
-          "criterion": 5,
-          "severity": "P1",
-          "text": "Mobil kart satır-2 sol grubu metni elipssiz, glif ortasından kırpıyor ve metrikle arasında görünür boşluk bırakmıyordu — `truncate` dıştaki konteynere uygulanıyordu ama leftBits `inline-flex` sarmalayıcılar olduğu için `text-overflow:ellipsis` üretemiyordu. /depo/skt 390px kart 1-3: SKU '307020000' son '0' yarım kesik, lokasyon 'TIRE/HAM/R01/' yarım kesik, metrikle arası ~4px; /depo/mal-kabul 390px: 'Proteinsan Gıda Hammaddeleri Ltd. Şt' son glif yarım, '…' yok.",
-          "file": "apps/web/src/components/data-table/mobile-cards.tsx",
-          "fix": "Satır 2 sol grubu artık `flex` bir sarmalayıcı DEĞİL — tüm 'bit'ler (`·` ayraçlı) TEK bir düz (`min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap`) metin akışında basılıyor; kesme tek noktada, satır sonunda '…' ile oluyor. Dış satır (`flex items-baseline justify-between gap-2`) korunuyor — sol grup artık kendi genişliğine düzgün küçüldüğü için `gap-2` metric'e her zaman gerçek ≥8px bırakıyor.",
-          "measureAfter": "Playwright DOM probu (390x844): sol grup her iki rotada da `display:block; text-overflow:ellipsis; white-space:nowrap` — /depo/skt 5 karttan 2'si (Alkalize Kakao, Matcha Tozu) gerçekten taşıyor ve '…' ile kesiliyor, metrik boşluğu (`gapToMetric`) 5/5 kartta tam 8px; /depo/mal-kabul 5/5 kart taşıyor, 5/5'te `gapToMetric=8`. pnpm shot mobil ekran görüntüsünde 'Alkalize Kakao · 304030000 · TIRE/HAM/R…' ve 'Proteinsan Gıda Hammaddeleri Ltd. Şti. · 0…' düzgün '…' ile bitiyor, hiçbir glif yarım kesilmiyor, metrikle arada gözle görünür boşluk var.",
-          "closedRound": 11
-        }
-      ],
-      "open": []
-    },
-    "/depo/lotlar/[id] (İzlenebilirlik sekmesi)": {
-      "closed": [
-        {
-          "id": "shell-trace-quant-status-label-01",
-          "criterion": null,
-          "severity": "P2",
-          "text": "packages/core/src/lots/trace.ts (traceForward) `quant` (Eldeki stok) düğümüne gerçek bir belge durumu değil, lokasyon `usage` değerini (ör. 'internal', 'transit') `status` alanı olarak koyuyor. trace-graph.tsx bunu `<StatusBadge status={node.status} kind={undefined}>` ile render ederken `lib/status.ts` GENERIC sözlüğünde 'internal' bulamıyor: her render'da konsol uyarısı basıyor ve rozet '—' gösteriyordu.",
-          "file": "apps/web/src/components/trace-graph.tsx",
-          "fix": "trace-graph.tsx içine küçük bir yerel `QUANT_USAGE_LABELS` sözlüğü eklendi (paylaşılan bileşen bir modülün yerel `stock/labels.ts`/`masterdata/product-labels.ts` dosyasına bağımlı olmamalı — aynı enum, iki yerde zaten kopya tutuluyor). `node.kind==='quant'` olduğunda `StatusBadge`'e `label={QUANT_USAGE_LABELS[node.status] ?? node.status}` + `tone=\"neutral\"` geçiliyor — StatusBadge `label` verilince sözlüğe hiç bakmıyor (Tur 5 P1 düzeltmesindeki desenin bu yeni çağrı noktasına uygulanmış hali). Diğer node kind'ları (lot/work_order/receipt/delivery) davranışsal olarak değişmedi.",
-          "measureAfter": "Playwright: /depo/lotlar/017c55d6-087e-4a5c-8121-324ffc530a69 'İzlenebilirlik' sekmesi açıldı, tüm konsol mesajları toplandı — '[status] \"internal\" için Türkçe etiket tanımlı değil' uyarısı YOK (önceden her render'da basıyordu). 'Eldeki stok TIRE/AMB' düğümü artık 'Depo' rozeti gösteriyor (önceden 'internal' ham enumu ya da boş '—'). pnpm shot masaüstü görüntüsünde rozet doğrulandı.",
-          "closedRound": 11
-        }
-      ],
-      "open": []
-    },
-    "/depo/skt (rowActions dokunma hedefi → mobil kart yüksekliği)": {
-      "closed": [
-        {
-          "id": "shell-mobile-card-actions-height-01",
-          "criterion": 3,
-          "severity": "P1",
-          "text": "Mobil kart 87.5px — 56-72px hedef bandının %22 üzerinde ve modülün diğer 9 liste route'undan (63.5-68.5px) görünür biçimde farklı. Kök neden: satır-1'deki rowActions menü tetikleyicisi mobilde size-11 (44px, hem görsel kutu hem dokunma hedefi aynı border-box) olduğu için `flex items-center` satır-1'in çapraz-eksen yüksekliğini 44px'e zorluyor; rowActions'ı olmayan tablolarda aynı kalıp 68.5px'te kalıyordu.",
-          "file": "apps/web/src/components/data-table/row-actions.tsx",
-          "fix": "Buton kutusu (border-box, 44px) DEĞİŞMEDİ — `getBoundingClientRect` (dokunma hedefi ölçümü) elemanın kendi border-box'ını okur, margin'den etkilenmez. Bunun yerine `-my-3 md:my-0` eklendi: negatif dikey margin, elemanın ebeveyn flex satırına olan katkısını (margin kutusu = border-box + margin = 44-24=20px) satır-1'deki metin başlığının satır yüksekliğine (leading-5=20px) indiriyor — böylece satır-1'in çapraz-eksen boyutunu artık metin belirliyor, buton değil. Masaüstünde (md+) değişiklik yok (`md:my-0`, buton zaten icon-xs 24px).",
-          "measureAfter": "pnpm measure /depo/skt --viewport 390x844 → rows.heights [67.8,68.5,68.5] (önce [87.5,87.5,87.5]), touchTargetsBelow44 içinde rowActions butonu yok (tek kalan öge ilgisiz breadcrumb span'i). Aynı ölçüm shared bileşen olduğu için diğer rowActions kullanan rotalarda da doğrulandı: /depo/stok [67.5,67.8,68.5], /depo/lotlar [63.5,68.5,68.5], /depo/mal-kabul [68.5,68.5,68.5], /depo/sevkiyat [68.5,68.5,68.5], /depo/transfer [68.5,68.5,68.5], /depo/sayim [68.5,68.5,68.5], /ana-veri/urunler [63.5,63.5,68.5], /ana-veri/cariler [67.8,67.8,67.8] — hepsi hedef aralıkta ve hiçbirinde rowActions touchTargetsBelow44'te yok. Masaüstünde (1440x900) buton hâlâ 24x24 (button#radix-..., icon-xs), davranış/görünüm değişmedi. pnpm shot /depo/skt mobil görüntüsünde kartlar görsel olarak 68px bandında, diğer depo rotalarıyla tutarlı.",
-          "closedRound": 12
-        }
-      ],
-      "open": []
-    },
-    "/login, /operator/giris (client-side istisna hata sınırı)": {
-      "closed": [
-        {
-          "id": "shell-login-error-boundary-01",
-          "criterion": 7,
-          "severity": "P1",
-          "text": "(auth) ve (operator-auth) route gruplarının hiç `error.tsx`'i yoktu (diğer tüm gruplarda — (app), (app)/depo, (operator) — var). Bu yüzden /login veya /operator/giris'te bir client-side istisna (ör. dev sunucusunun bellek eşiği aşımıyla kendini yeniden başlatmasıyla çakışan bir ağ hatası — e2e auth.ts::loginAs() sırasında gözlemlendi) Next'in Türkçe olmayan, 'tekrar dene' sunmayan varsayılan hata ekranına düşüyordu.",
-          "file": "apps/web/src/app/(auth)/error.tsx, apps/web/src/app/(operator-auth)/error.tsx",
-          "fix": "İki route grubuna da diğer gruplarla aynı kalıpta (WifiOff ikonu, Türkçe başlık/açıklama, 'Tekrar dene' [reset()] + 'Sayfayı yenile' [window.location.reload()]) yeni birer error.tsx eklendi — dosya daha önce hiç yoktu, mevcut ortak error.tsx dosyaları değiştirilmedi. 'Sayfayı yenile' ikinci seçenek olarak eklendi çünkü `reset()` yalnızca segmenti yeniden render eder; dev sunucusu HMR ile tamamen yeniden başlamışsa tam sayfa yenileme daha güvenilir.",
-          "measureAfter": "pnpm typecheck && pnpm lint temiz (yeni dosyalar dahil). curl /login → 200, pnpm shot /login mobil+masaüstü görsel olarak değişmedi (error.tsx yalnızca istisna fırlatıldığında render olur, mutlu yolu etkilemez). Statik doğrulama: `find apps/web/src/app -maxdepth 2 -iname error.tsx` artık (auth) ve (operator-auth) dahil TÜM route gruplarında bir error.tsx listeliyor (önce ikisi eksikti).",
-          "closedRound": 12
-        }
-      ],
-      "open": []
-    },
-    "/login": {
-      "closed": [
-        {
-          "id": "login-01",
-          "criterion": 1,
-          "severity": "P1",
-          "text": "Giriş ekranı ürünün tip ölçeğinden ayrı bir ölçek konuşuyordu: h1 16px/600 (puan kartı 20-24px/medium istiyor), uygulamanın baskın 13px gövde ölçeği (ör. /satis/siparisler'de 13px:202) hiç kullanılmıyordu (kart açıklama metinleri 14px).",
-          "file": "apps/web/src/app/(auth)/login/page.tsx",
-          "fix": "h1 'Hesabınıza girin' text-base/font-semibold (16px/600) → text-xl/font-medium/tracking-[-0.01em] (20px/500). Logotype altı açıklama ('Bigetaş Biyoteknoloji · ...') ve kart açıklaması ('Kurumsal e-posta adresiniz...') text-sm (14px) → text-[13px] — uygulamanın geri kalanıyla aynı gövde ölçeğine hizalandı. Kapsam bilinçli olarak yalnızca bu iki açıklama + h1 ile sınırlı tutuldu; Label/Input/Button gibi paylaşılan UI primitiflerinin kendi 14px ölçeği (tüm uygulamada tutarlı, ayrı bir bulgu değil) değiştirilmedi.",
-          "measureAfter": "pnpm measure /login --viewport 1440x900 ve 390x844: h1 → {size:20, weight:500} (ikisinde de). pnpm shot masaüstü+mobil ekran görüntüsünde h1 belirgin şekilde büyüdü, açıklama metinleri gövde ölçeğiyle hizalandı.",
-          "closedRound": 13
-        },
-        {
-          "id": "login-02",
-          "criterion": 8,
-          "severity": "P1",
-          "text": "'Şifremi unuttum' bağlantısı dinlenme durumunda komşu düz metinle ('Sorun mu yaşıyorsunuz? ...') birebir aynı görünüyordu (aynı renk, aynı 12px, alt çizgi yok, ayırt edicilik yalnızca hover'a bağlıydı — dokunmatikte hiç görünmüyordu) ve mobil dokunma alanı 89.9×15px'ti (44px'in çok altında).",
-          "file": "apps/web/src/app/(auth)/login/page.tsx",
-          "fix": "Bağlantıya dinlenme durumunda kalıcı `underline underline-offset-2` verildi (artık hover'a bağımlı değil). Mobilde dokunma alanı `max-md:inline-flex max-md:min-h-11 max-md:items-center` ile ≥44px'e çıkarıldı; masaüstünde eski satır-içi görünüm (`md:` altında hiçbir ek sınıf tetiklenmiyor) korundu.",
-          "measureAfter": "pnpm measure /login --viewport 390x844: touchTargetsBelow44 içinde 'Şifremi unuttum' yok (yalnızca ilgisiz, önceden var olan 'Şifreyi göster' ikon-buton kaldı — bu bulgunun kapsamında değil). pnpm measure /login --viewport 1440x900: 'a \"Şifremi unuttum\"' hâlâ 89.9×15 (masaüstünde dokunma hedefi kuralı geçerli değil, kasıtlı olarak değişmedi) ama artık kalıcı alt çizgili. pnpm shot masaüstü+mobil ekran görüntüsünde bağlantı görsel olarak ayırt edici (alt çizgili) ve komşu düz metinden net şekilde ayrışıyor.",
-          "closedRound": 13
-        }
-      ],
-      "open": []
-    },
-    "/muhasebe/tahsilatlar/yeni (ve DateField kullanan tüm form ekranları)": {
-      "closed": [
-        {
-          "id": "shell-datefield-clear-touch-01",
-          "criterion": 9,
-          "severity": "P1",
-          "text": "Ortak DateField temizleme düğmesi dokunma hedefi: button[aria-label=\"Tarihi temizle\"] 24x24px (ölçüm tur 2, 390x844). Ortak bileşen kaynaklı olduğu için shell'e yazıldı; tüm form ekranlarında aynı.",
-          "file": "apps/web/src/components/form/date-field.tsx:107",
-          "fix": "Buton kökü switch.tsx'teki desenle aynı prensiple büyütüldü: `grid size-11 place-items-center ... md:size-6` (mobilde gerçek 44x44 dokunma hedefi, masaüstünde eski 24x24 görsel boyut korunur — ikon size-3.5 sabit, kökten ayrı ortalanır). Input'un sağ padding'i `pr-16` → `pr-24 md:pr-16` yapıldı ki mobilde iki 44px hedef (temizle + takvim, toplam 88px) input'un içine metin taşmadan sığsın.",
-          "measureAfter": "Playwright bounding-box (390x844, /muhasebe/tahsilatlar/yeni, oturum admin): button[aria-label=\"Tarihi temizle\"] → {width:44, height:44} (önceki 24x24), button[aria-label=\"Takvim\"] → {width:44, height:44}, yan yana (x:282→326, 326→370), sayfa overflowX=false (scrollWidth=clientWidth=390). pnpm measure --viewport 390x844 /muhasebe/tahsilatlar/yeni çıktısında touchTargetsBelow44 listesinde artık aria-label=\"Tarihi temizle\" YOK. Masaüstü (1440x900) ölçümünde buton hâlâ 24x24 (md:size-6, davranış/görsel değişmedi — masaüstü dokunma hedefi kriteri kapsamında değil). pnpm shot ile mobil+masaüstü ekran görüntüsü alınıp Read ile görsel olarak doğrulandı: form düzeni bozulmadı, ikonlar örtüşmüyor.",
-          "closedRound": 15
-        }
-      ],
-      "open": []
-    },
-    "kök (hiçbir route grubuna uymayan URL, ör. /finans/krediler/[id])": {
-      "closed": [
-        {
-          "id": "shell-root-not-found-01",
-          "criterion": 7,
-          "severity": "P1",
-          "text": "Kriter 7 (hata durumu) — ortak bileşen/shell kaynaklı, bir kez düzeltilir. Kök app/not-found.tsx yok; hiçbir route grubuna uymayan bir URL (ör. /finans/krediler/<uuid>) Next.js'in İngilizce varsayılan '404 This page could not be found.' sayfasını gösteriyor. (app)/not-found.tsx yalnızca grup içindeki notFound() çağrılarını karşılıyor.",
-          "file": "apps/web/src/app/not-found.tsx (yok)",
-          "fix": "apps/web/src/app/not-found.tsx eklendi — (app)/not-found.tsx ile aynı Türkçe EmptyState deseni ('Sayfa bulunamadı' + 'Kokpite dön'), ama bu dosya hiçbir route grubunun (dolayısıyla app-shell kenar çubuğunun) İÇİNDE render edilmediği için (kök layout.tsx'in doğrudan çocuğu) kendi başına dikey/yatay ortalanmış bağımsız bir sayfa olarak tasarlandı (bkz. (auth)/error.tsx ile aynı ilke).",
-          "measureAfter": "Playwright ile admin oturumu açılıp doğrudan /finans/krediler/00000000-0000-0000-0000-000000000000 adresine gidildi (1440x900): response status 404, page.content() içinde 'This page could not be found' YOK, 'Sayfa bulunamadı' VAR, app-shell kenar çubuğu (aria-label=\"Plantero\" + 'Kokpit' linki) render edilmedi (beklenen — kök seviyede hiçbir layout eşleşmiyor). pnpm shot /finans/krediler/00000000-0000-0000-0000-000000000000 ile 390x844 ve 1440x900 ekran görüntüsü alınıp Read ile görsel olarak doğrulandı: Türkçe başlık/açıklama, 'Kokpite dön' butonu, 375px'te kırılma yok.",
-          "closedRound": 15
-        }
-      ],
-      "open": []
+ "module": "shell",
+ "round": 16,
+ "note": "Tur 10 notu: shell.json bu turda ilk kez oluşturuldu (önceki turlarda kritik bu modülü henüz kendi dosyasında puanlamamıştı — diğer modüllerin critic dosyalarında 'module: shell' etiketli iç içe bulgular vardı, ör. depo.json 'shell-page-header-01', 'shell-form-switch-01'). Bu tur, orkestratörün doğrudan verdiği kritik bulgu listesini kapatır; 12 kriterlik puanlama (scores/total) kritik'in kendi geçişinde eklenecek — builder puan uydurmaz. Her kapanış aşağıda `measureAfter` ile kanıtlanmıştır (pnpm measure + Playwright bounding-box doğrulaması, 390x844 mobil + 1440x900 masaüstü). Tur 11 notu: bu turda da orkestratörün doğrudan verdiği 3 kritik bulgu (P1×2, P2×1) kapatıldı — hiçbiri bu dosyada önceden 'open' olarak kayıtlı değildi (orkestratör tarafından yeni tespit edilip doğrudan iletildi), bu yüzden kapanışları yeni route anahtarları altında `closedRound:11` ile eklendi. Tur 10'un kendi 'open' kalan 3 bulgusuna (shell-mobile-card-height-02, shell-datatable-slack-01, shell-shared-devserver-flake-01) bu turda dokunulmadı — orkestratörün Tur 11 mandatosu bunları içermiyordu. Tur 12 notu: orkestratörün doğrudan verdiği 2 bulgu (P1x2) kapatıldı — biri (rowActions dokunma hedefi → mobil kart yüksekliği, /depo/skt) DataTableRowActions ortak bileşeninde kök nedeniyle düzeltildi ve tüm rowActions kullanan rotalarda (depo/ana-veri) ölçümle doğrulandı; diğeri (paylaşılan dev sunucusunun bellek eşiği aşımıyla kendini yeniden başlatması, /login e2e login POST'uyla çakışması) kökeni gerçek bir kod kusuru DEĞİL — Tur 10'da zaten açılmış shell-shared-devserver-flake-01 (P2) ile aynı sınıf, orkestrasyon/altyapı düzeyinde bir eşzamanlılık sorunu; kodla düzeltilemez, bu yüzden shell-shared-devserver-flake-01 AÇIK kalmaya devam ediyor (gerekçesiz kapatma yasak — CLAUDE.md 'çalışmayan şeye çalışıyor deme'). Bunun yerine önerilen dayanıklılık iyileştirmesi uygulandı: (auth) ve (operator-auth) route gruplarının HİÇ error.tsx'i yoktu (diğer tüm gruplarda var) — bu yüzden /login veya /operator/giris'te bir client-side istisna (ağ hatası dahil) Next'in Türkçe olmayan, 'tekrar dene' sunmayan varsayılan hata ekranına düşüyordu; artık ikisi de kendi Türkçe, 'Tekrar dene' + 'Sayfayı yenile' seçenekli hata sınırına sahip (diğer route gruplarındaki desenle birebir aynı kalıp, bkz. (app)/error.tsx, (operator)/error.tsx). Tur 13 notu: orkestratörün doğrudan verdiği 5 bulgu (P1x4 route bulgusu + P2 e2e/devserver bulgusu) işlendi. /kokpit: shell-kokpit-07 (kriter 8, 13 satırın tamamı artık Link + hover:bg-muted/40), shell-kokpit-06 (kriter 3, sütun dengesi — kanonik `pnpm db:reset` verisiyle ölçülünce 'Üretim' kartını sola taşımak dengesizliği KÖTÜLEŞTİRDİ (sol 807.5/sağ 510, fark 297.5); kart orijinal (sağ) sütunda bırakıldı, kanonik veriyle fark 115.5px ölçüldü — hedefin altında), shell-kokpit-04 (kriter 10, 11 tekrar eden satır ikonu CalendarClock/CheckSquare/Factory kaldırıldı) kapatıldı. /login: login-01 (kriter 1/11, h1 16px/600→20px/500 + gövde metinleri 14px→13px) ve login-02 (kriter 8, 'Şifremi unuttum' kalıcı alt çizgi + mobil 44px dokunma hedefi) kapatıldı. genel (e2e/QA ortam flake'i): shell-shared-devserver-flake-01 (P2) Tur 13'te de aynı sınıf altyapı sorunu olarak gözlemlendi (db:check I33_future_dated_cash_events.sql — 43 ihlal — başka bir eşzamanlı oturumun WIP'i; finans/muhasebe seed'i bu turda henüz check'e uydurulmamış, packages/db 'shell' kapsamı dışında, dokunulmadı) — AÇIK kalmaya devam ediyor, gerekçesiz kapatma yapılmadı. Tur 14 notu: orkestratörün doğrudan bildirdiği 2 bulgu (P2 e2e-rapor-erken-istendi: kod kusuru değil, süreç notu — kanıt talep edilmeden ÖNCE tail -f ile tamamlanma beklenmeli, bu turda kapsam dışı çünkü apps/web e2e testlerini bu oturum tetiklemedi) ve (P1 next-server bellek/yeniden başlatma: kaynak kod incelemesiyle doğrulandı next.config.ts bu davranışı YÖNETMİYOR — next.config.tsa dokunmadım, bkz. shell-shared-devserver-flake-01 notu) incelendi; shell.jsonun kendi open listesindeki 2 gercek bulgu islendi: shell-mobile-card-height-02 KAPANDI (kök neden LotBadge+mobile-cards.tsx, measure ile kanıtlandı), shell-datatable-slack-01 KISMEN iyileşti (shell mekanizması artık doğru, kalan slack satis-owned px degerlerinde, ACIK birakildi). Ek dayaniklilik: app/global-error.tsx eklendi (önceden hiç yoktu). Tur 15 notu: orkestratörün doğrudan verdiği 2 kritik bulgu (P1x2) kapatıldı. (1) /muhasebe/tahsilatlar/yeni — ortak DateField (apps/web/src/components/form/date-field.tsx) 'Tarihi temizle' düğmesi mobilde 24x24px ölçülüyordu; switch.tsx'teki aynı desen uygulandı (kök buton yalnızca dokunma hedefi olacak şekilde büyütüldü — size-11 md:size-6 — ikon kendi boyutunda ortalanmış kaldı, görsel değişmedi). Input'un sağ padding'i (pr-24 md:pr-16) iki 44px hedefin (temizle + takvim) mobilde yan yana sığması için genişletildi; masaüstünde eski pr-16 korunur. Ortak bileşen kaynaklı olduğu için tüm form ekranlarında (kredi, sipariş, fatura vb. her DateField/FormDate kullanan yer) tek düzeltmeyle kapandı. (2) /finans/krediler/[id] (ve genel olarak hiçbir route grubuna uymayan her URL) — kök apps/web/src/app/not-found.tsx hiç yoktu; Next.js bu durumda kendi İngilizce varsayılan 'This page could not be found.' ekranını app-shell'in DIŞINDA (hiçbir layout eşleşmediği için) gösteriyordu. (app)/not-found.tsx yalnızca (app) route grubunun İÇİNDE çağrılan notFound()'u karşılıyor, grupla hiç eşleşmeyen bir URL'i kapsamıyordu. Kök not-found.tsx eklendi — (app)/not-found.tsx ile aynı EmptyState/Kokpite dön deseni ama app-shell'siz (hiçbir layout render edilmediği için) bağımsız, ortalanmış bir sayfa olarak. Her iki düzeltme de pnpm measure + Playwright bounding-box / DOM doğrulamasıyla (390x844 ve 1440x900) kanıtlandı, measureAfter aşağıda. Dosyadaki önceden AÇIK 2 bulgu (shell-datatable-slack-01, shell-shared-devserver-flake-01) bu turda yeniden incelendi: ikisi de daha önceki turlarda kök nedenin shell kapsamı DIŞINDA (sırasıyla 'satis' modülünün px seçimleri ve altyapı/eşzamanlılık) olduğu belgelenmiş durumda — CLAUDE.md kural 2 gereği apps/web/src/modules/sales/components/* dosyalarına dokunulmadı, gerekçesiz kapatma yapılmadı, ikisi de AÇIK bırakıldı. Tur 16 notu: orkestratörün doğrudan verdiği 2 kritik bulgu işlendi. (1) shell-mobile-card-meta-clip-01 (P1, kriter 9) KAPANDI — DataTableMobileCards satır 2 (mobile-cards.tsx) artık TEK kırpılan metin akışı değil, İKİ ayrı kutu: alt başlık (`min-w-0 flex-1 truncate`, ÖNCE küçülür) + meta zinciri (`shrink-0`, normalde asla küçülmez/kırpılmaz). Doğrulama Playwright ile 390x844'te dört hedef rotada yapıldı: /muhasebe/yevmiye 50/50 kartta tarih artık TAM görünüyor (önce 0/50), /muhasebe/tahsilatlar 17/17 (önce 6/17), /muhasebe/banka 11/11 (önce 8/11), /muhasebe/faturalar 19/19 (önce 17/19) — meta kırpılan/eksik kart sayısı dört rotada da 0. Uygulama sırasında EK bir regresyon bulundu ve KÖK NEDENİYLE düzeltildi: subtitle'ı OLMAYAN, 2+ 'meta' hücreli tablolarda (yalnızca apps/web/src/modules/accounting/components/bank-transactions-table.tsx — tarih+karşı taraf adı, /muhasebe/banka mutabakat listesi) meta zinciri shrink-0 olduğu için sınırsız genişleyip metrik (tutar) sütununu eziyordu (bbox: metaRight>metricLeft, 11 karttan 2'sinde — 'Kahve Dünyası...', 'Doğal Yaşam...'). Meta zincirine `max-w-[55%] overflow-hidden text-ellipsis` eklendi: tek-tarih durumunda (< %55) davranış değişmedi, çok-bit durumunda SONDAKİ (daha az kritik, serbest metin) bit kendi içinde '…' ile kırpılır — sütun tanımlarında tarih her zaman İLK meta alanı olduğundan tarih hiçbir zaman kesilmiyor. Aynı düzeltmeden sonra /muhasebe/banka'da 11 kartın 11'i de overlapCount=0 ölçüldü. Geniş regresyon taraması: mobile-cards.tsx'i kullanan 27 tablo dosyası tarandı, subtitle+meta ve subtitle'sız çoklu-meta örnekleri (depo/skt, satis/kanallar, satis/fiyat-listeleri, satin-alma/siparisler) 390x844'te ayrıca ölçüldü: overflowX=false, overlapCount=0, hiçbir yerde yeni taşma yok. (2) P1 next-server heap OOM (~37dk E2E'de ~6.6GB'a ulaşıp çökme) YENİDEN İNCELENDİ — bu, shell-shared-devserver-flake-01 ile AYNI kök neden sınıfı (bkz. o bulgunun Tur 14 notu: next.config.ts bu eşiği yönetmiyor, V8 heap_size_limit donanıma göre otomatik hesaplanıyor). --max-old-space-size'ı apps/web/package.json dev script'inde manuel yükseltmek bu turda da GÜVENLİ/UYGUN BULUNMADI: (a) bu dosya TÜM paralel modül ajanlarının paylaştığı TEK dev sunucusunun script'i — 'shell' kapsamı bileşen/app-shell dosyalarıdır, kök package.json script'i değil; (b) `free -h` bu turda da konteynerde ~5.5GB kullanımda/~7.3GB boşta gösteriyor (15GB toplam) — tavanı büyütmek NAZİK kendi kendine yeniden başlatma yerine gerçek OOM-kill riskini artırabilir, birden fazla eşzamanlı oturum aynı anda yük bindirdiğinde konteyneri düşürebilir. Kod tarafında shell kapsamında YAPILABİLECEK ek bir dayanıklılık katmanı kalmadı (global-error.tsx Tur 12/14'te zaten eklendi). Bu yüzden bulgu shell-shared-devserver-flake-01 altında AÇIK kalmaya devam ediyor — gerekçesiz kapatma yapılmadı; gerçek çözüm süreç/altyapı seviyesinde (E2E'yi `next build && next start`'a karşı çalıştırmak ya da paralel oturumlar için izole PORT'lar), orkestratörün önerdiği gibi. shell-datatable-slack-01 bu turda YENİDEN ÖLÇÜLDÜ (1440x900, thead/tbody bbox): /satis/fiyat-listeleri 'Geçerlilik' colWidth 192.6/content 45.8 → slack ~147px; /satis/kanallar 'Sipariş (ay)' colWidth 130.9/content 8.3 → slack ~123px — Tur 14/15'te belgelenen değerlerle aynı (değişmedi), kök neden hâlâ apps/web/src/modules/sales/components/* içindeki px seçimlerinde ('satis' modülü yazma kapsamı), shell tarafında değiştirilebilecek bir kusur yok; AÇIK bırakıldı.",
+ "routes": {
+  "/ana-veri/urunler/[id], /ana-veri/cariler/[id], /ana-veri/receteler/[id]": {
+   "closed": [
+    {
+     "id": "shell-tabs-touch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "TabsTrigger mobilde 28px, TabsList 36px; cari detayda TabsList 677.5px taşıyor, kaydırma göstergesi yok, son sekmeler erişilemiyor.",
+     "file": "apps/web/src/components/ui/tabs.tsx",
+     "fix": "TabsTrigger md altında h-11 (44px) sabit, md ve üstünde eski h-[calc(100%-1px)] davranışı korunur; TabsList md altında h-auto (md:h-9), kendi overflow-x-auto'sunu kazandı (max-w-full + scrollbar gizli) — artık app-shell'in overflow-x-clip'ine bağımlı değil. TabsList artık kaydırılabilir olduğunda sol/sağ kenarda dinamik box-shadow ipucu gösterir (ResizeObserver + scroll listener ile scrollLeft/scrollWidth izlenir) — arka plan rengine bağımlı scroll-fade-x yerine, hangi zeminde olursa olsun çalışır.",
+     "measureAfter": "pnpm measure --viewport 390x844: /ana-veri/urunler/57ce519c-b5e9-43f5-938f-699ff4dac507 → touchTargetsBelow44 içinde role=tab yok; /ana-veri/cariler/dd080830-4f0b-4aaf-a8d9-b67e6ea1ad30 (7 sekmeli tedarikçi) → touchTargetsBelow44 içinde role=tab yok, documentElement.scrollWidth=390 (taşma TabsList içine kapsandı); /ana-veri/receteler/ff8f3d77-694e-455f-9567-50532a96a2df → aynı. pnpm shot ile mobil ekran görüntüsünde 44px'lik dokunma alanı ve sekme şeridinin sağ kenarında kaydırma ipucu (ince gölge) görsel olarak doğrulandı.",
+     "closedRound": 10
     }
+   ],
+   "open": []
+  },
+  "/ana-veri/urunler/yeni": {
+   "closed": [
+    {
+     "id": "shell-form-switch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "FormSwitch satırı 44px ama Switch'in kendi tıklanabilir alanı 32x18.4 (role=switch ölçümü).",
+     "file": "apps/web/src/components/ui/switch.tsx",
+     "fix": "SwitchPrimitive.Root artık yalnızca dokunma hedefi kutusu (`max-md:size-11`); görsel track+thumb kökten ayrılıp içteki bir <span>'e taşındı (group-data-[size]/switch, group-data-[state]/switch ile kökün data-size/data-state'ini okur — Thumb'ın zaten kullandığı desenin aynısı). Masaüstünde kök yine içeriğine sarar (36x20/24x14), görsel/davranış farkı yok — yalnızca mobil hit-area büyüdü. FormItem/label değişmedi (kök nedende düzeltildi, ölçüm betiği sarmalayıcı label'ı değil doğrudan role=switch elemanını ölçtüğü için 'satırı label yap' yaklaşımı bunu KAPATAMAZDI).",
+     "measureAfter": "Playwright: 4x button[role=\"switch\"] @ 390x844 → {w:44,h:44} (Lot takipli/Satın alınabilir/Satılabilir/Üretilebilir). Aynı sayfa @ 1440x900 → {w:32,h:18.39} (masaüstü değişmedi). pnpm shot mobil görüntüde 4 anahtar da görünür biçimde büyüdü, dokunma dışı görsel track boyutu aynı kaldı.",
+     "closedRound": 10
+    }
+   ],
+   "open": []
+  },
+  "/ana-veri/urunler/[id], /ana-veri/cariler/[id] (Boş alanları göster)": {
+   "closed": [
+    {
+     "id": "shell-empty-fields-toggle-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "'Boş alanları göster (N)' düğmesi mobilde ~124x18 — 44px'in yarısından küçük.",
+     "file": "apps/web/src/components/detail-field-groups-grid.tsx",
+     "fix": "Düğmeye md altında min-h-11 + py-3 (-mx-3 px-3 ile görsel hizayı bozmadan yastık dışa değil içe büyür), md ve üstünde eski görünüme (min-h-0 py-0 mx-0) döner.",
+     "measureAfter": "Playwright boundingBox @ 390x844: /ana-veri/cariler/dd080830-... → 'Boş alanları göster' butonu {width:148.6, height:44}.",
+     "closedRound": 10
+    }
+   ],
+   "open": []
+  },
+  "/ana-veri/urunler, /ana-veri/cariler, /ana-veri/receteler": {
+   "closed": [
+    {
+     "id": "shell-mobile-card-height-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "DataTable mobil kart kalıbı 4 dikey katman + boş meta satırlarıyla 99-118px'e çıkıyordu (hedef 56-72).",
+     "file": "apps/web/src/components/data-table/mobile-cards.tsx",
+     "fix": "Kalıp artık en fazla 2 katman üretir: satır 1 başlık + rozet(ler) + aksiyon menüsü; satır 2 alt başlık + boş olmayan meta ipuçları ('·' ile ayrılmış, tek satır) solda, TEK metrik (kalan alanların sonuncusu — tablo tanımlarında en parasal/önemli alan sona konur, ör. partners-table balance, boms-table unitCost, products-table listPrice) sağda. Boş değerli meta hücreleri (getValue() null/undefined/'') satıra hiç eklenmez. Diğer 'rest' alanları mobil kartta artık gösterilmiyor (özet kart, tam alan listesi için detay sayfasına gidilir). p-3→p-2.5 ve title satırına leading-5 ile ince ayar yapıldı.",
+     "measureAfter": "pnpm measure --viewport 390x844: /ana-veri/urunler rows.heights [68.5,68.5,68.5] (önce 118); /ana-veri/cariler [67.8,67.8,67.8] (önce 99.5); /ana-veri/receteler [63.5,63.5,63.5] (önce 99.5). Üçü de referans aralığında (56-72).",
+     "closedRound": 10
+    },
+    {
+     "id": "shell-mobile-card-height-02",
+     "criterion": 3,
+     "severity": "P2",
+     "text": "Aynı kalıbı kullanan bazı diğer rotalarda (ör. /depo/lotlar, 88-93px) alt başlık hücresi LotBadge gibi kendi mobil dokunma-hedefi yastığını (h-11 md:h-auto) taşıyan bir bileşen olduğunda satır 2 44px'e şişip toplam yüksekliği 72'nin üzerine çıkarabiliyor. Bu turun mandatosundaki 3 rota (urunler/cariler/receteler) etkilenmiyor (LotBadge kullanmıyorlar); depo modülünün kendi turunda ölçülüp gerekirse LotBadge'in mobil kart alt-başlık bağlamında h-11 yastığını kapatan bir varyantı eklenmeli.",
+     "file": "apps/web/src/components/lot-badge.tsx + apps/web/src/components/data-table/mobile-cards.tsx",
+     "target": "rows.heights <= 72 /depo/lotlar dahil tüm DataTable rotalarında",
+     "openedRound": 10,
+     "measureAfter": "Kök neden düzeltmesi apps/web/src/components/lot-badge.tsx + apps/web/src/components/data-table/mobile-cards.tsx içinde (her ikisi de shell kapsamı): mobile-cards.tsx satır 2 (alt başlık+meta) sarmalayıcısına `mobile-card-subtitle-row` işaretçi sınıfı eklendi; LotBadge'in `to` (bağlantılı) durumundaki `h-11 md:h-auto` dokunma-hedefi dolgusu artık `[.mobile-card-subtitle-row_&]:h-auto` ile YALNIZCA bu ata bağlamında h-auto'ya döner (kart zaten kendi `<li>`si üzerinden tam dokunma alanı sağlıyor, LotBadge'in kendi 44px yastığı orada gereksiz — başka her yerde, ör. standalone product-stock-tab.tsx/scan-screen.tsx, LotBadge kendi 44px hedefini korur, davranış değişmedi). Canlı doğrulama: mevcut kod tabanındaki tüm mobile:'subtitle' + LotBadge kullanımları (lots-table.tsx) zaten `id`/`href` GEÇMİYOR (Tur 10'da ayrı bir geçici çözümle önlenmiş), bu yüzden şu an hiçbir rota canlı olarak bu koşulu tetiklemiyor — /depo/lotlar pnpm measure --viewport 390x844: rows.heights [63.5,68.5,68.5] (hedef 56-72, GEÇTİ, ölçüm değişmedi). Mekanizmanın kendisi gerçek bundle CSS'iyle doğrulandı (Playwright page.evaluate, /depo/lotlar sayfasının canlı derlenmiş stylesheet'i üzerinde): aynı LotBadge className'iyle oluşturulan span, `mobile-card-subtitle-row` atası OLMADAN getComputedStyle().height=44px, atası VARKEN 16px (h-auto) ölçüldü — CSS kuralı gerçekten devrede ve doğru bağlama scope'lu. Böylece kalıcı/gelecekteki bir çağıran (id/href geri eklerse) artık kök bileşende korunuyor, her modülün ayrı ayrı 'id kaldır' geçici çözümüne ihtiyaç kalmadı.",
+     "closedRound": 14
+    }
+   ],
+   "open": []
+  },
+  "/depo/stok, /depo/lotlar, /depo/lotlar/[id], /depo/mal-kabul, /depo/sevkiyat, /depo/sevkiyat/[id], /depo/transfer, /depo/sayim, /depo/skt": {
+   "closed": [
+    {
+     "id": "shell-page-header-hydration-01",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "PageHeader description'ı <p> içinde basıyor; loading.tsx dosyaları description'a <Skeleton/> (bir <div>) geçiyor → <p> içinde <div>, geçersiz HTML + hydration hatası.",
+     "file": "apps/web/src/components/page-header.tsx",
+     "fix": "Sarmalayıcı <p> yerine <div className=\"mt-1 text-sm text-muted-foreground\"> (tipografi birebir aynı kaldı).",
+     "measureAfter": "Statik doğrulama: page-header.tsx artık hiçbir yerde description'ı <p> içinde basmıyor (grep temiz); description her zaman React.ReactNode kabul ettiği için (Skeleton dahil) artık geçerli iç içelik. pnpm shot ile depo/mal-kabul, depo/lotlar/[id] masaüstü+mobil ekran görüntüleri alındı, sayfa başlığı görsel olarak değişmedi (aynı tipografi).",
+     "closedRound": 10
+    }
+   ],
+   "open": []
+  },
+  "/kokpit": {
+   "closed": [
+    {
+     "id": "shell-kokpit-overflow-01",
+     "criterion": 9,
+     "severity": "P0",
+     "text": "390px'te 5 <section> 394px genişliğinde (viewport dışına 22px); app-shell'in overflow-x-clip'i taşmayı sessizce kırpıyor, tutarlar/rozetler/'Tümü' bağlantıları harf ortasından kesiliyordu.",
+     "file": "apps/web/src/app/(app)/kokpit/page.tsx",
+     "fix": "İki grid item çocuğuna (satır 117 'flex flex-col gap-4 lg:col-span-2' ve satır 171 'flex flex-col gap-4') min-w-0 eklendi — grid item'ların varsayılan min-width:auto'su çocukların min-content genişliğini track'e dayatıyordu.",
+     "measureAfter": "Playwright boundingBox @ 390x844: main section × 5 → hepsi {width:358, right:374} (önce {width:394, right:412}). Kırpılan metin yok — pnpm shot mobil görüntüsünde tüm tutarlar/rozetler/bağlantılar tam görünüyor.",
+     "closedRound": 10
+    },
+    {
+     "id": "shell-kokpit-money-format-01",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "Onay kuyruğu başlıkları ham DB gösterimi basıyordu: '-450.7500 ₺' (İngiliz nokta, 4 basamak, sona eklenmiş sembol).",
+     "file": "apps/web/src/modules/kokpit/queries.ts",
+     "fix": "Üç satırda da `${toDb(D(x))} ₺` yerine `formatMoney(x)` (@/lib/format) kullanılıyor.",
+     "measureAfter": "pnpm shot /kokpit (1440x900 + 390x844): 3/3 onay satırı artık '-₺450,75' basıyor. Ekranda ham numeric yok.",
+     "closedRound": 10
+    },
+    {
+     "id": "shell-kokpit-touch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "15 dokunma hedefi 44px altında: 3x bölüm başlığı 'Tümü' bağlantısı, 7x belge no bağlantısı, 2x onay satırı bağlantısı.",
+     "file": "apps/web/src/app/(app)/kokpit/page.tsx",
+     "fix": "'Tümü' bağlantısı max-md:min-h-11 (header zaten h-11 sabit, bağlantı kendi kutusunu doldurur); belge no bağlantısı max-sm:min-h-11; onay satırı başlık bağlantısı block max-md:min-h-11.",
+     "measureAfter": "pnpm measure /kokpit --viewport 390x844 → touchTargetsBelow44: yalnızca ilgisiz/önceden var olan breadcrumb span'i kaldı (bu bulguya dahil değil), 15 öğenin tamamı listeden çıktı.",
+     "closedRound": 10
+    },
+    {
+     "id": "shell-kokpit-recon-href-01",
+     "criterion": null,
+     "severity": "P2",
+     "text": "getCockpitApprovals mutabakat önerisi kartı /muhasebe/mutabakat'a gidiyordu (404).",
+     "file": "apps/web/src/modules/kokpit/queries.ts",
+     "fix": "href /finans/banka olarak düzeltildi (gerçek, çalışan mutabakat sayfası).",
+     "measureAfter": "Kaynak doğrulaması: /muhasebe/mutabakat referansı queries.ts'te kalmadı (grep temiz); /finans/banka gerçek route (apps/web/src/app/(app)/finans/banka/page.tsx var).",
+     "closedRound": 10
+    },
+    {
+     "id": "shell-kokpit-kpi-delta-01",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "KPI şeridi iki rakam kusuru taşıyordu: (a) KPI'lar 0 ondalık (₺58.662) basarken hemen altındaki 'Bugün' listesi aynı para birimini 2 ondalıkla (₺2.545,20) basıyordu — tek ekranda iki para hassasiyeti. (b) 4 KPI'ın 3'ü sıfır bilgili '— %0 dünden' rozeti basarken, tek gerçekten değişen metrik olan 'Bugünkü ciro' (dün hiç fatura kesilmemişse `revenueDeltaPct===null` → `?? undefined` ile SESSİZCE boş bir yer tutucuya düşüyordu) hiç delta göstermiyordu; ilk kart bu yüzden diğerlerinden kısa görünüp şeridin dikey ritmini kırıyordu.",
+     "file": "apps/web/src/components/kpi-card.tsx (delta bölümü), apps/web/src/app/(app)/kokpit/page.tsx (KPI şeridi)",
+     "fix": "page.tsx: KPIS dizisindeki 4 kartın `delta` alanı artık `kpis.xDeltaPct ?? undefined` DEĞİL, ham değer (`null` dahil) — KpiCard `delta!==undefined` olan her şeyi (0 ve null dahil) bir rozet olarak basıyor, bu yüzden dördü de HER ZAMAN bir delta satırı taşıyor (aynı yükseklik). İki para KPI'sına (Bugünkü ciro, Vadesi geçen alacak) `fractionDigits:2` eklendi — bu ekranda hemen altında 2-ondalıklı MoneyCell listesi olduğu için (diğer sayfalardaki 0-ondalık KPI şeridi kuralı burada geçerli değil, orada altında 2-ondalıklı bir belge listesi yok). kpi-card.tsx: `delta===0` artık `delta===null/undefined` ile AYNI dürüst '—' metnini basıyor (önceden '%0' basıyordu) — böylece yaklaşık/statik metriklerin anlamsız 'sıfır değişim' rozeti ile gerçekten karşılaştırılamayan metrik aynı görünüme sahip (tone zaten ikisinde de `bg-muted`, yalnızca metin farklıydı).",
+     "measureAfter": "Playwright probu (1440x900, /kokpit): 4 KPI kartının 4'ü de {height:80} ve delta metni dolu: 'Bugünkü ciro'→'%100 dünden' (gerçek değişim, kırmızı), 'Açık siparişler'/'Kritik stok kalemi'/'Vadesi geçen alacak'→'— dünden' (soluk, önceden '— %0 dünden'/boş karışımıydı). pnpm shot /kokpit (masaüstü+mobil): dört kart aynı taban çizgisinde, 'Bugünkü ciro' ₺0,00 ve 'Vadesi geçen alacak' ₺3.282,50 (2 ondalık) — hemen altındaki 'Bugün' listesiyle (MoneyCell, 2 ondalık) artık aynı hassasiyet.",
+     "closedRound": 11
+    },
+    {
+     "id": "shell-kokpit-07",
+     "criterion": 8,
+     "severity": "P1",
+     "text": "13 içerik satırının yalnızca 4'ü tıklanabilirdi (Bugün 2/1, SKT 5/0, Onay kuyruğu 3/3, Üretim 3/0, Bugünün tahsilatları 0/0) ve 13'ünün 13'ünde satır hover geri bildirimi yoktu.",
+     "file": "apps/web/src/app/(app)/kokpit/page.tsx",
+     "fix": "Bugün/SKT/Onay kuyruğu/Üretim/Bugünün tahsilatları satırlarının tamamı tek bir Link'e çevrildi (iç içe <a> olmasın diye eskiden satır içindeki ayrı Link'ler düz span'e indirgendi); her satır Link'i `hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` taşıyor (globals.css:10 @custom-variant hover ile (hover:hover)+(pointer:fine)'a kilitli, dokunmatikte 'takılı' hover olmaz). SKT satırı → /depo/lotlar/[id] (stockLots.id zaten getCockpitExpiringLots'tan geliyordu, kullanılmıyordu). Üretim satırı ve Bugünün tahsilatları satırı için hat/tahsilat başına ayrı bir detay rotası olmadığından ilgili liste sayfasına gider (/uretim/hatlar, /finans/tahsilat) — kaynak referanssız değil, gerçek çalışan hedefe gider.",
+     "measureAfter": "Playwright satır probu (1440x900, /kokpit, kanonik `pnpm db:reset` verisi): Bugün {rows:6,clickable:6,hover:6} · SKT yaklaşan lotlar {5,5,5} · Onay kuyruğu {3,3,3} · Üretim {3,3,3} · Bugünün tahsilatları {0,0,0} (bugün tahsilat yok, boş durum) — tüm mevcut satırlar (17/17) artık tıklanabilir ve hover sınıfı taşıyor. pnpm measure --viewport 390x844: touchTargetsBelow44 içinde satır bağlantısı yok (yalnızca ilgisiz breadcrumb span'i kaldı). pnpm shot masaüstü+mobil ekran görüntüsünde satırlar görsel olarak değişmedi, yalnızca tıklanabilirlik/hover eklendi.",
+     "closedRound": 13
+    },
+    {
+     "id": "shell-kokpit-06",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "İki sütunlu ızgarada sol sütun sağdan çok daha erken bitiyordu (Tur 13 orkestratör ölçümü: sol bottom=648, sağ bottom=987, 339px dengesiz boşluk).",
+     "file": "apps/web/src/app/(app)/kokpit/page.tsx",
+     "fix": "Kök nedeni doğrulamak için önce 'Üretim' kartı sağdan sol sütuna taşındı (önerilen düzeltme seçeneklerinden biri) ve kanonik seed verisiyle (`pnpm db:reset`) ölçüldü — bu, dengesizliği KÖTÜLEŞTİRDİ (sol 807.5px / sağ 510px, fark 297.5px) çünkü kanonik veride 'Bugün' zaten 6 satır + 'SKT yaklaşan lotlar' 5 satır taşıyor (sol sütun zaten dolu); orkestratörün 648/987 ölçümü muhtemelen farklı (daha az 'Bugün' satırı olan) bir veri anlık görüntüsünde alınmıştı. Kart bu yüzden geri (sağ sütun, orijinal konumu) alındı — kanonik veride bu konfigürasyon fark 115.5px veriyor (hedefin altında). Gerçek kök neden düzeltmesi kart taşımak değil, satırların tamamının artık tıklanır+hover olması (shell-kokpit-07) ve tekrar eden ikonların kaldırılmasıydı (shell-kokpit-04) — sütun dengesi kanonik veriyle zaten hedefin içinde ölçüldü.",
+     "measureAfter": "Playwright sütun probu (1440x900, /kokpit, `pnpm db:reset` sonrası kanonik veri): grid çocukları {sol: top:276 bottom:877 height:601} {sağ: top:276 bottom:992.5 height:716.5} → fark 115.5px (hedef ≤160px, karşılandı). pnpm shot masaüstü ekran görüntüsünde iki sütun tabanı görsel olarak yakın (sol 'Cream' satırı ~ sağ 'Bugün tahsilat yok' boş durumu).",
+     "closedRound": 13
+    },
+    {
+     "id": "shell-kokpit-04",
+     "criterion": 10,
+     "severity": "P1",
+     "text": "Satır içi ikonlar saf dekorasyondu: 'SKT yaklaşan lotlar' 5/5 satırda birebir aynı CalendarClock path'i, 'Onay kuyruğu' 3/3 aynı CheckSquare, 'Üretim' 3/3 aynı Factory — 11 satır ikonunun 11'i kendi bölümü içinde hiçbir ayrım taşımıyordu.",
+     "file": "apps/web/src/app/(app)/kokpit/page.tsx",
+     "fix": "Üç satır ikonu da (CalendarClock, CheckSquare, Factory) kaldırıldı — importlar temizlendi. LotBadge/StatusBadge zaten satırı görsel olarak işaretlediğinden ek bir süs ikonu ayırt edici bilgi taşımıyordu; bölüm başlıklarına da ikon eklenmedi (gerekli değildi, 'ikon çorbası' riskini artırmamak için).",
+     "measureAfter": "Statik doğrulama: grep 'CalendarClock|CheckSquare|<Factory' apps/web/src/app/(app)/kokpit/page.tsx → yalnızca yorum satırlarında eşleşme, kod içinde hiç kullanım yok. pnpm shot masaüstü+mobil ekran görüntüsünde satır başı ikon yok (LotBadge/StatusBadge/başlık metni kaldı).",
+     "closedRound": 13
+    }
+   ],
+   "open": []
+  },
+  "sol menü (tüm uygulama)": {
+   "closed": [
+    {
+     "id": "shell-nav-dead-links-01",
+     "severity": "P1",
+     "text": "'Muhasebe' bölümündeki 7 kalemin tamamı /muhasebe/* rotalarına gidiyordu — bu dizin hiç yok, hepsi 404. 'Finans' bölümü gerçek /finans/tahsilat ve /finans/banka sayfalarını içermiyordu.",
+     "file": "apps/web/src/lib/nav.ts",
+     "fix": "'Muhasebe' grubu kaldırıldı (fatura/yevmiye/hesap planı/KDV modülleri henüz yazılmadı — şema/route talebi olarak raporlanıyor). Gerçek sayfalar Finans grubuna taşındı: 'Tahsilat/Ödeme' → /finans/tahsilat, 'Banka Mutabakatı' → /finans/banka. Eski 'Tahsilat Takibi' kalemi (zaten aynı /finans/tahsilat'a gidiyordu, ayrı bir sayfası yoktu) tek kalemde birleştirildi — iki menü girişi aynı hedefe çift olmasın diye. MOBILE_TABS'teki 4. sekme (/muhasebe/faturalar, 404) → /finans/tahsilat.",
+     "measureAfter": "grep '/muhasebe/' apps/web/src/lib/nav.ts → 0 eşleşme. pnpm shot /kokpit masaüstü görüntüsünde sol menüde Muhasebe yok, Finans var. curl /finans/tahsilat ve /finans/banka → 307 (login redirect, sayfa var — 404 değil).",
+     "closedRound": 10
+    }
+   ],
+   "open": []
+  },
+  "sistem geneli (bildirim/audit/belge kartı tıklamaları)": {
+   "closed": [
+    {
+     "id": "shell-status-dead-links-01",
+     "severity": "P1",
+     "text": "documentHref (invoice/payment/credit_note/journal_entry/bank_transaction) tamamı /muhasebe/* üretiyordu; command-menu.tsx da /muhasebe/faturalar/yeni ve /muhasebe/tahsilatlar/yeni'ye linkliydi.",
+     "file": "apps/web/src/lib/status.ts, apps/web/src/components/app-shell/command-menu.tsx",
+     "fix": "documentHref artık her tip için { base, hasDetail } eşlemesi kullanıyor: payment→/finans/tahsilat, bank_transaction→/finans/banka (hasDetail:false — henüz [id] detay rotası yok, id EKLENMEZ, aksi halde yine 404 olurdu); invoice/credit_note/journal_entry→/kokpit (hasDetail:false — hiç sayfası yok, kalıcı 404 yerine nötr çalışan bir hedef; şema/route talebi olarak raporlanıyor). command-menu.tsx: 'Yeni fatura' kaldırıldı (hedef sayfa yok), 'Yeni tahsilat' → /finans/tahsilat/yeni (gerçek sayfa, izin finance.manage olarak düzeltildi).",
+     "measureAfter": "grep '/muhasebe/' apps/web/src/lib/status.ts apps/web/src/components/app-shell/command-menu.tsx → 0 eşleşme. pnpm typecheck/lint temiz (status.test.ts 5/5 geçti, documentHref'e dolaylı bağımlı).",
+     "closedRound": 10
+    }
+   ],
+   "open": []
+  },
+  "/satis/fiyat-listeleri, /satis/kanallar": {
+   "closed": [],
+   "open": [
+    {
+     "id": "shell-datatable-slack-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "DataTable 'min-w-full' auto table-layout'ta width verilmemiş tek sütuna kalan genişliği yığıyor — az sütunlu tablolarda (fiyat-listeleri 'Geçerlilik' 435px, kanallar 'Kanal' 469px) tablonun üçte biri ölü alan.",
+     "file": "apps/web/src/components/data-table/data-table.tsx, apps/web/src/components/data-table/types.ts",
+     "measure": "Tur 14 yeniden ölçüm (Playwright sütun-genişliği + Range metin-genişliği probu, 1440x900, tablo 1152px, ilk 8 satır): /satis/fiyat-listeleri 'Geçerlilik' artık width:150 (meta.width) sabit — toplam sütun genişliği 193px, en uzun içerik (Range bbox) 42px → slack 151px (önceki 393px'ten büyük iyileşme, ama hedefin (≤120) üzerinde). /satis/kanallar 'Kanal' artık width:240 (meta.width) + max-w-[240px] truncate — toplam 299px, en uzun içerik 240px → slack yalnızca 59px (HEDEF İÇİNDE, orijinal bulgudaki 469px/296px slack'li sütun artık düzeldi). DataTable mekanizması artık doğru çalışıyor (fixed meta.width + içerik max-w kilidi, flex:true değil — satis modülünün Tur 11 notunda belgelediği teknik): şu an root cause shell'in auto table-layout DAVRANIŞI değil, satis-owned dosyalardaki BİREYSEL px seçimleri ('Geçerlilik' 150→ öneri ~110-130, kanallar 'Sipariş (ay)' 100→ slack 123px sınırda). shell kapsamında değiştirilebilecek bir DataTable kusuru kalmadı.",
+     "target": "En geniş sütunun slack'i ≤120px (kalan: fiyat-listeleri 'Geçerlilik' 151px, kanallar 'Sipariş (ay)' 123px — her ikisi de apps/web/src/modules/sales/components/* içinde, shell yazma kapsamı DIŞINDA).",
+     "note": "ALTYAPI HAZIR, TÜKETİM BEKLİYOR: types.ts'e yeni opsiyonel `meta.flex?: boolean` alanı eklendi ve data-table.tsx bunu kullanıyor — bir sütun `flex:true` işaretlenirse (yalnızca O TABLODA) `width` verilmemiş diğer tüm sütunlar `width:1%` (içeriğe sıkışma) alır, kalan genişlik yalnızca flex sütununa akar. Hiçbir sütun `flex` işaretlenmemişse tablo ESKİ davranışını birebir korur — bu yüzden mekanizma geriye dönük uyumlu ve sıfır risk (var olan hiçbir tabloyu etkilemiyor, doğrulandı: /satis/siparisler, /ana-veri/urunler gibi 'name/ad' sütununu bilinçli olarak unconstrained bırakan tablolar aynı kalıyor). BU TURDA KAPATILAMADI: gerçek düzeltme (price-lists-table.tsx:36 'Geçerlilik' ve channels-table.tsx:26 'Kanal' sütununa `meta.flex:true` — ya da daha uygun bir sütuna, ör. 'Kanal' adı — eklenmesi) `apps/web/src/modules/sales/components/*` dosyalarında, yani 'satis' modülünün yazma kapsamında; 'shell' modülü olarak bu dosyaları değiştiremem (CLAUDE.md kural 2). 'satis' modül ajanı bir sonraki turunda bu iki dosyaya tek satırlık `meta.flex:true` eklemeli. Tur 14 güncellemesi: shell'in kendi mekanizması (DataTable auto-layout + meta.width/flex) artık doğru çalışıyor ve 'Kanal' sütunu hedefi tuttu (59px slack) — bu ARTIK bir shell-component kusuru DEĞİL, kalan slack satis modülünün seçtiği belirli px değerlerinde (Geçerlilik 150px, Sipariş(ay) 100px). shell modülü olarak apps/web/src/modules/sales/components/* dosyalarını değiştiremediğim için (CLAUDE.md kural 2) AÇIK bırakıyorum; satis modül ajanının bir sonraki turunda price-lists-table.tsx 'Geçerlilik' meta.width'i ~110-130'a, channels-table.tsx 'Sipariş (ay)' meta.width'i ~75-80'e indirmesi yeterli (mekanizma zaten hazır, tek satırlık px ayarı).",
+     "openedRound": 10
+    }
+   ]
+  },
+  "genel (e2e/QA ortam flake'i)": {
+   "closed": [],
+   "open": [
+    {
+     "id": "shell-shared-devserver-flake-01",
+     "severity": "P2",
+     "text": "Paylaşılan tek `pnpm dev` (:3000) sürecine karşı birden fazla agent oturumu eşzamanlı çalışırken bir oturumun yeni rota derlemesi diğerinin açık sayfasına HMR reset gönderip client state'i sıfırlayabiliyor. Tur 12'de orkestratör tarafından tekrar gözlemlendi: e2e auth.ts::loginAs() beforeAll adımındaki admin login POST'u, paralel bir agent'ın (PID 22059) aynı :3000 sunucusuna karşı çalıştırdığı yoğun 'pnpm measure' Playwright yüküyle çakıştığında sunucu bellek eşiğini aşıp kendini yeniden başlatıyor ve o anki isteği yarıda kesiyor — kod düzeltilemez (kök neden apps/web'de değil), bu yüzden bu bulgu AÇIK kalıyor. Tur 12'de kod tarafında yapılabilecek tek dayanıklılık iyileştirmesi (bkz. yeni kapanan shell-login-error-boundary-01) uygulandı: /login ve /operator/giris artık bu tür bir kesintiyi jenerik/İngilizce bir hata ekranı yerine Türkçe, 'Tekrar dene' butonlu bir sınırla karşılıyor.",
+     "note": "Kod tarafında düzeltilecek bir kusur değil — süreç/altyapı önerisi (her paralel oturum kendi PORT'unda ayrı `pnpm dev`, ya da e2e `next build && next start` üzerinden). Bu turda bizzat gözlemlendi: apps/web/src/modules/masterdata/components/* ve apps/web/src/app/(app)/ana-veri/cariler/[id]/page.tsx bu oturum BAŞLAMADAN ÖNCE zaten değişmiş halde bulundu (başka bir eşzamanlı oturumun WIP'i) — bu dosyalara dokunulmadı, yalnızca gözlemlendi. Tur 14 (orkestratör tarafından iki ayrı bulgu olarak yeniden bildirildi — P2 test-raporu-erken-istendi ve P1 next-server RSS ~8.1GB/%116 CPU eşzamanlı ikinci oturum): kaynak kodda incelendi — Next 15.5.25 dev sunucusunun 'Server is approaching the used memory threshold' eşiği next.config.ts'ten OKUNMUYOR, V8 heap_size_limit'in sabit %80'i olarak koşulan donanıma göre otomatik hesaplanıyor (node_modules/next/dist/server/lib/start-server.js, requestListener finally bloğu) — bu container'da varsayılan heap_size_limit zaten ~8240MB (toplam 15GB RAM'e göre otomatik ölçekleniyor), yani next.config.ts'e uydurma bir 'workerRestartThreshold' alanı eklemek NO-OP olurdu (böyle bir alan next.config şemasında yok, doğrulandı). Node'un --max-old-space-size'ını manuel yükseltmek de GÜVENLİ DEĞİL: container'da yalnızca 15GB RAM var ve zaten ~9GB kullanımda (free -h ile doğrulandı) — tavanı yükseltmek gerçek OOM-kill riskini artırır (şu anki NAZİK kendi kendine restart yerine). Bu yüzden next.config.ts'e DOKUNULMADI (yanlış/etkisiz bir 'düzeltme' eklemek yerine dürüst engineering kararı) ve bulgu AÇIK kalmaya devam ediyor — gerçek çözüm hâlâ süreç/altyapı seviyesinde (izole PORT'lar ya da prod build ile e2e). Kod tarafında yapılabilecek EK bir dayanıklılık katmanı bu turda uygulandı: kök `app/global-error.tsx` eklendi (daha önce HİÇ yoktu) — route-group error.tsx'lerin (auth/app/operator/operator-auth) KAPSAMADIĞI, `app/layout.tsx`/`Providers` seviyesinde atılan bir istisna artık Next'in varsayılan İngilizce/tekrar-deneme-siz ekranı yerine Türkçe 'Tekrar dene' + 'Sayfayı yenile' seçenekleriyle karşılanıyor (Tur 12'nin (auth)/error.tsx ile kurduğu ilkenin son eksik katmanı) — bu, kesintinin GÖRÜNÜRLÜĞÜNÜ iyileştirir, sunucunun kendini yeniden başlatmasını ÖNLEMEZ.",
+     "openedRound": 10
+    }
+   ]
+  },
+  "/depo/skt, /depo/mal-kabul (DataTable mobil kart satır-2)": {
+   "closed": [
+    {
+     "id": "shell-mobile-card-truncate-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "Mobil kart satır-2 sol grubu metni elipssiz, glif ortasından kırpıyor ve metrikle arasında görünür boşluk bırakmıyordu — `truncate` dıştaki konteynere uygulanıyordu ama leftBits `inline-flex` sarmalayıcılar olduğu için `text-overflow:ellipsis` üretemiyordu. /depo/skt 390px kart 1-3: SKU '307020000' son '0' yarım kesik, lokasyon 'TIRE/HAM/R01/' yarım kesik, metrikle arası ~4px; /depo/mal-kabul 390px: 'Proteinsan Gıda Hammaddeleri Ltd. Şt' son glif yarım, '…' yok.",
+     "file": "apps/web/src/components/data-table/mobile-cards.tsx",
+     "fix": "Satır 2 sol grubu artık `flex` bir sarmalayıcı DEĞİL — tüm 'bit'ler (`·` ayraçlı) TEK bir düz (`min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap`) metin akışında basılıyor; kesme tek noktada, satır sonunda '…' ile oluyor. Dış satır (`flex items-baseline justify-between gap-2`) korunuyor — sol grup artık kendi genişliğine düzgün küçüldüğü için `gap-2` metric'e her zaman gerçek ≥8px bırakıyor.",
+     "measureAfter": "Playwright DOM probu (390x844): sol grup her iki rotada da `display:block; text-overflow:ellipsis; white-space:nowrap` — /depo/skt 5 karttan 2'si (Alkalize Kakao, Matcha Tozu) gerçekten taşıyor ve '…' ile kesiliyor, metrik boşluğu (`gapToMetric`) 5/5 kartta tam 8px; /depo/mal-kabul 5/5 kart taşıyor, 5/5'te `gapToMetric=8`. pnpm shot mobil ekran görüntüsünde 'Alkalize Kakao · 304030000 · TIRE/HAM/R…' ve 'Proteinsan Gıda Hammaddeleri Ltd. Şti. · 0…' düzgün '…' ile bitiyor, hiçbir glif yarım kesilmiyor, metrikle arada gözle görünür boşluk var.",
+     "closedRound": 11
+    }
+   ],
+   "open": []
+  },
+  "/depo/lotlar/[id] (İzlenebilirlik sekmesi)": {
+   "closed": [
+    {
+     "id": "shell-trace-quant-status-label-01",
+     "criterion": null,
+     "severity": "P2",
+     "text": "packages/core/src/lots/trace.ts (traceForward) `quant` (Eldeki stok) düğümüne gerçek bir belge durumu değil, lokasyon `usage` değerini (ör. 'internal', 'transit') `status` alanı olarak koyuyor. trace-graph.tsx bunu `<StatusBadge status={node.status} kind={undefined}>` ile render ederken `lib/status.ts` GENERIC sözlüğünde 'internal' bulamıyor: her render'da konsol uyarısı basıyor ve rozet '—' gösteriyordu.",
+     "file": "apps/web/src/components/trace-graph.tsx",
+     "fix": "trace-graph.tsx içine küçük bir yerel `QUANT_USAGE_LABELS` sözlüğü eklendi (paylaşılan bileşen bir modülün yerel `stock/labels.ts`/`masterdata/product-labels.ts` dosyasına bağımlı olmamalı — aynı enum, iki yerde zaten kopya tutuluyor). `node.kind==='quant'` olduğunda `StatusBadge`'e `label={QUANT_USAGE_LABELS[node.status] ?? node.status}` + `tone=\"neutral\"` geçiliyor — StatusBadge `label` verilince sözlüğe hiç bakmıyor (Tur 5 P1 düzeltmesindeki desenin bu yeni çağrı noktasına uygulanmış hali). Diğer node kind'ları (lot/work_order/receipt/delivery) davranışsal olarak değişmedi.",
+     "measureAfter": "Playwright: /depo/lotlar/017c55d6-087e-4a5c-8121-324ffc530a69 'İzlenebilirlik' sekmesi açıldı, tüm konsol mesajları toplandı — '[status] \"internal\" için Türkçe etiket tanımlı değil' uyarısı YOK (önceden her render'da basıyordu). 'Eldeki stok TIRE/AMB' düğümü artık 'Depo' rozeti gösteriyor (önceden 'internal' ham enumu ya da boş '—'). pnpm shot masaüstü görüntüsünde rozet doğrulandı.",
+     "closedRound": 11
+    }
+   ],
+   "open": []
+  },
+  "/depo/skt (rowActions dokunma hedefi → mobil kart yüksekliği)": {
+   "closed": [
+    {
+     "id": "shell-mobile-card-actions-height-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Mobil kart 87.5px — 56-72px hedef bandının %22 üzerinde ve modülün diğer 9 liste route'undan (63.5-68.5px) görünür biçimde farklı. Kök neden: satır-1'deki rowActions menü tetikleyicisi mobilde size-11 (44px, hem görsel kutu hem dokunma hedefi aynı border-box) olduğu için `flex items-center` satır-1'in çapraz-eksen yüksekliğini 44px'e zorluyor; rowActions'ı olmayan tablolarda aynı kalıp 68.5px'te kalıyordu.",
+     "file": "apps/web/src/components/data-table/row-actions.tsx",
+     "fix": "Buton kutusu (border-box, 44px) DEĞİŞMEDİ — `getBoundingClientRect` (dokunma hedefi ölçümü) elemanın kendi border-box'ını okur, margin'den etkilenmez. Bunun yerine `-my-3 md:my-0` eklendi: negatif dikey margin, elemanın ebeveyn flex satırına olan katkısını (margin kutusu = border-box + margin = 44-24=20px) satır-1'deki metin başlığının satır yüksekliğine (leading-5=20px) indiriyor — böylece satır-1'in çapraz-eksen boyutunu artık metin belirliyor, buton değil. Masaüstünde (md+) değişiklik yok (`md:my-0`, buton zaten icon-xs 24px).",
+     "measureAfter": "pnpm measure /depo/skt --viewport 390x844 → rows.heights [67.8,68.5,68.5] (önce [87.5,87.5,87.5]), touchTargetsBelow44 içinde rowActions butonu yok (tek kalan öge ilgisiz breadcrumb span'i). Aynı ölçüm shared bileşen olduğu için diğer rowActions kullanan rotalarda da doğrulandı: /depo/stok [67.5,67.8,68.5], /depo/lotlar [63.5,68.5,68.5], /depo/mal-kabul [68.5,68.5,68.5], /depo/sevkiyat [68.5,68.5,68.5], /depo/transfer [68.5,68.5,68.5], /depo/sayim [68.5,68.5,68.5], /ana-veri/urunler [63.5,63.5,68.5], /ana-veri/cariler [67.8,67.8,67.8] — hepsi hedef aralıkta ve hiçbirinde rowActions touchTargetsBelow44'te yok. Masaüstünde (1440x900) buton hâlâ 24x24 (button#radix-..., icon-xs), davranış/görünüm değişmedi. pnpm shot /depo/skt mobil görüntüsünde kartlar görsel olarak 68px bandında, diğer depo rotalarıyla tutarlı.",
+     "closedRound": 12
+    }
+   ],
+   "open": []
+  },
+  "/login, /operator/giris (client-side istisna hata sınırı)": {
+   "closed": [
+    {
+     "id": "shell-login-error-boundary-01",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "(auth) ve (operator-auth) route gruplarının hiç `error.tsx`'i yoktu (diğer tüm gruplarda — (app), (app)/depo, (operator) — var). Bu yüzden /login veya /operator/giris'te bir client-side istisna (ör. dev sunucusunun bellek eşiği aşımıyla kendini yeniden başlatmasıyla çakışan bir ağ hatası — e2e auth.ts::loginAs() sırasında gözlemlendi) Next'in Türkçe olmayan, 'tekrar dene' sunmayan varsayılan hata ekranına düşüyordu.",
+     "file": "apps/web/src/app/(auth)/error.tsx, apps/web/src/app/(operator-auth)/error.tsx",
+     "fix": "İki route grubuna da diğer gruplarla aynı kalıpta (WifiOff ikonu, Türkçe başlık/açıklama, 'Tekrar dene' [reset()] + 'Sayfayı yenile' [window.location.reload()]) yeni birer error.tsx eklendi — dosya daha önce hiç yoktu, mevcut ortak error.tsx dosyaları değiştirilmedi. 'Sayfayı yenile' ikinci seçenek olarak eklendi çünkü `reset()` yalnızca segmenti yeniden render eder; dev sunucusu HMR ile tamamen yeniden başlamışsa tam sayfa yenileme daha güvenilir.",
+     "measureAfter": "pnpm typecheck && pnpm lint temiz (yeni dosyalar dahil). curl /login → 200, pnpm shot /login mobil+masaüstü görsel olarak değişmedi (error.tsx yalnızca istisna fırlatıldığında render olur, mutlu yolu etkilemez). Statik doğrulama: `find apps/web/src/app -maxdepth 2 -iname error.tsx` artık (auth) ve (operator-auth) dahil TÜM route gruplarında bir error.tsx listeliyor (önce ikisi eksikti).",
+     "closedRound": 12
+    }
+   ],
+   "open": []
+  },
+  "/login": {
+   "closed": [
+    {
+     "id": "login-01",
+     "criterion": 1,
+     "severity": "P1",
+     "text": "Giriş ekranı ürünün tip ölçeğinden ayrı bir ölçek konuşuyordu: h1 16px/600 (puan kartı 20-24px/medium istiyor), uygulamanın baskın 13px gövde ölçeği (ör. /satis/siparisler'de 13px:202) hiç kullanılmıyordu (kart açıklama metinleri 14px).",
+     "file": "apps/web/src/app/(auth)/login/page.tsx",
+     "fix": "h1 'Hesabınıza girin' text-base/font-semibold (16px/600) → text-xl/font-medium/tracking-[-0.01em] (20px/500). Logotype altı açıklama ('Bigetaş Biyoteknoloji · ...') ve kart açıklaması ('Kurumsal e-posta adresiniz...') text-sm (14px) → text-[13px] — uygulamanın geri kalanıyla aynı gövde ölçeğine hizalandı. Kapsam bilinçli olarak yalnızca bu iki açıklama + h1 ile sınırlı tutuldu; Label/Input/Button gibi paylaşılan UI primitiflerinin kendi 14px ölçeği (tüm uygulamada tutarlı, ayrı bir bulgu değil) değiştirilmedi.",
+     "measureAfter": "pnpm measure /login --viewport 1440x900 ve 390x844: h1 → {size:20, weight:500} (ikisinde de). pnpm shot masaüstü+mobil ekran görüntüsünde h1 belirgin şekilde büyüdü, açıklama metinleri gövde ölçeğiyle hizalandı.",
+     "closedRound": 13
+    },
+    {
+     "id": "login-02",
+     "criterion": 8,
+     "severity": "P1",
+     "text": "'Şifremi unuttum' bağlantısı dinlenme durumunda komşu düz metinle ('Sorun mu yaşıyorsunuz? ...') birebir aynı görünüyordu (aynı renk, aynı 12px, alt çizgi yok, ayırt edicilik yalnızca hover'a bağlıydı — dokunmatikte hiç görünmüyordu) ve mobil dokunma alanı 89.9×15px'ti (44px'in çok altında).",
+     "file": "apps/web/src/app/(auth)/login/page.tsx",
+     "fix": "Bağlantıya dinlenme durumunda kalıcı `underline underline-offset-2` verildi (artık hover'a bağımlı değil). Mobilde dokunma alanı `max-md:inline-flex max-md:min-h-11 max-md:items-center` ile ≥44px'e çıkarıldı; masaüstünde eski satır-içi görünüm (`md:` altında hiçbir ek sınıf tetiklenmiyor) korundu.",
+     "measureAfter": "pnpm measure /login --viewport 390x844: touchTargetsBelow44 içinde 'Şifremi unuttum' yok (yalnızca ilgisiz, önceden var olan 'Şifreyi göster' ikon-buton kaldı — bu bulgunun kapsamında değil). pnpm measure /login --viewport 1440x900: 'a \"Şifremi unuttum\"' hâlâ 89.9×15 (masaüstünde dokunma hedefi kuralı geçerli değil, kasıtlı olarak değişmedi) ama artık kalıcı alt çizgili. pnpm shot masaüstü+mobil ekran görüntüsünde bağlantı görsel olarak ayırt edici (alt çizgili) ve komşu düz metinden net şekilde ayrışıyor.",
+     "closedRound": 13
+    }
+   ],
+   "open": []
+  },
+  "/muhasebe/tahsilatlar/yeni (ve DateField kullanan tüm form ekranları)": {
+   "closed": [
+    {
+     "id": "shell-datefield-clear-touch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "Ortak DateField temizleme düğmesi dokunma hedefi: button[aria-label=\"Tarihi temizle\"] 24x24px (ölçüm tur 2, 390x844). Ortak bileşen kaynaklı olduğu için shell'e yazıldı; tüm form ekranlarında aynı.",
+     "file": "apps/web/src/components/form/date-field.tsx:107",
+     "fix": "Buton kökü switch.tsx'teki desenle aynı prensiple büyütüldü: `grid size-11 place-items-center ... md:size-6` (mobilde gerçek 44x44 dokunma hedefi, masaüstünde eski 24x24 görsel boyut korunur — ikon size-3.5 sabit, kökten ayrı ortalanır). Input'un sağ padding'i `pr-16` → `pr-24 md:pr-16` yapıldı ki mobilde iki 44px hedef (temizle + takvim, toplam 88px) input'un içine metin taşmadan sığsın.",
+     "measureAfter": "Playwright bounding-box (390x844, /muhasebe/tahsilatlar/yeni, oturum admin): button[aria-label=\"Tarihi temizle\"] → {width:44, height:44} (önceki 24x24), button[aria-label=\"Takvim\"] → {width:44, height:44}, yan yana (x:282→326, 326→370), sayfa overflowX=false (scrollWidth=clientWidth=390). pnpm measure --viewport 390x844 /muhasebe/tahsilatlar/yeni çıktısında touchTargetsBelow44 listesinde artık aria-label=\"Tarihi temizle\" YOK. Masaüstü (1440x900) ölçümünde buton hâlâ 24x24 (md:size-6, davranış/görsel değişmedi — masaüstü dokunma hedefi kriteri kapsamında değil). pnpm shot ile mobil+masaüstü ekran görüntüsü alınıp Read ile görsel olarak doğrulandı: form düzeni bozulmadı, ikonlar örtüşmüyor.",
+     "closedRound": 15
+    }
+   ],
+   "open": []
+  },
+  "kök (hiçbir route grubuna uymayan URL, ör. /finans/krediler/[id])": {
+   "closed": [
+    {
+     "id": "shell-root-not-found-01",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "Kriter 7 (hata durumu) — ortak bileşen/shell kaynaklı, bir kez düzeltilir. Kök app/not-found.tsx yok; hiçbir route grubuna uymayan bir URL (ör. /finans/krediler/<uuid>) Next.js'in İngilizce varsayılan '404 This page could not be found.' sayfasını gösteriyor. (app)/not-found.tsx yalnızca grup içindeki notFound() çağrılarını karşılıyor.",
+     "file": "apps/web/src/app/not-found.tsx (yok)",
+     "fix": "apps/web/src/app/not-found.tsx eklendi — (app)/not-found.tsx ile aynı Türkçe EmptyState deseni ('Sayfa bulunamadı' + 'Kokpite dön'), ama bu dosya hiçbir route grubunun (dolayısıyla app-shell kenar çubuğunun) İÇİNDE render edilmediği için (kök layout.tsx'in doğrudan çocuğu) kendi başına dikey/yatay ortalanmış bağımsız bir sayfa olarak tasarlandı (bkz. (auth)/error.tsx ile aynı ilke).",
+     "measureAfter": "Playwright ile admin oturumu açılıp doğrudan /finans/krediler/00000000-0000-0000-0000-000000000000 adresine gidildi (1440x900): response status 404, page.content() içinde 'This page could not be found' YOK, 'Sayfa bulunamadı' VAR, app-shell kenar çubuğu (aria-label=\"Plantero\" + 'Kokpit' linki) render edilmedi (beklenen — kök seviyede hiçbir layout eşleşmiyor). pnpm shot /finans/krediler/00000000-0000-0000-0000-000000000000 ile 390x844 ve 1440x900 ekran görüntüsü alınıp Read ile görsel olarak doğrulandı: Türkçe başlık/açıklama, 'Kokpite dön' butonu, 375px'te kırılma yok.",
+     "closedRound": 15
+    }
+   ],
+   "open": []
+  },
+  "DataTable mobil kart meta satırı (tüm modüller, 390px)": {
+   "round": 16,
+   "open": [],
+   "closed": [
+    {
+     "id": "shell-mobile-card-meta-clip-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "DataTableMobileCards'ın 2. satırı (alt başlık + meta ipuçları) TEK bir kırpılan metin akışı; öncelik yok. Alt başlık (cari adı / açıklama) satırın tamamını yediğinde arkasından gelen meta bit'leri (TARİH, yön) ya harf ortasından kesiliyor ('03.0…') ya da tamamen '·  …' olarak kayboluyor. Tur 11'de kırpma 'sert kesme'den '…'ye çevrildi ama BİLGİ KAYBI çözülmedi: kullanıcı kartta tarihi hiç göremiyor.",
+     "measure": "Playwright scrollWidth>clientWidth, .mobile-card-subtitle-row, 390x844 (tur 3): /muhasebe/yevmiye 50/50 kart (tarih 50/50 kartta HİÇ görünmüyor), /muhasebe/tahsilatlar 11/17, /muhasebe/banka 3/11, /muhasebe/faturalar 2/18.",
+     "target": "Meta bit'leri kırpılmasın: alt başlık min-w-0 + truncate ile ÖNCE küçülsün, tarih/yön gibi sabit genişlikli bit'ler shrink-0 kalsın (ör. sol grup içinde iki kutu: truncate eden alt başlık + shrink-0 meta zinciri). Ölçüt: 390px'te meta bit'i kırpılan kart sayısı 0; her kartta tarih tam görünür.",
+     "file": "apps/web/src/components/data-table/mobile-cards.tsx (leftBits render bloğu, 'mobile-card-subtitle-row')",
+     "openedRound": 15,
+     "measureAfter": "Kök neden mobile-cards.tsx satır 2 render bloğunda: leftBits artık TEK düz metin akışı değil, iki ayrı kutu — alt başlık `min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap` (ÖNCE küçülür), meta zinciri `max-w-[55%] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap` (normalde tam genişliğinde kalır, yalnızca kendisi %55 sınırını aşarsa SONDAKİ bit kendi içinde kırpılır — tarih her zaman ilk bit olduğundan asla kesilmez). Playwright, 390x844, .mobile-card-subtitle-row + gg.aa.yyyy regex (tam 10 karakter mi) + bbox overlap kontrolü: /muhasebe/yevmiye 50/50 kart — tarih 50/50'sinde TAM görünür (önce 0/50 görünüyordu), dateMissingOrClipped=0, overlapCount=0; /muhasebe/tahsilatlar 17/17, dateMissingOrClipped=0, overlapCount=0 (önce 11/17 kırpılıyordu); /muhasebe/banka 11/11, dateMissingOrClipped=0, overlapCount=0 (önce 3/11 kırpılıyordu — DÜZELTME SIRASINDA bulunan ek regresyon da (meta zincirinin metrik sütununu ezmesi, subtitle'sız 2-meta'lı bank-transactions-table satırlarında) `max-w-[55%]` sınırıyla giderildi, ayrıca doğrulandı); /muhasebe/faturalar 19/19, dateMissingOrClipped=0, overlapCount=0 (önce 2/18 kırpılıyordu). pnpm shot ile dört rotanın mobil ekran görüntüleri de gözle doğrulandı (artifacts/screens/muhasebe-{yevmiye,tahsilatlar,banka,faturalar}/mobile.png) — her kartta tarih/yön tam okunur, uzun cari/açıklama metni '…' ile kısalıyor, tutar sütunuyla çakışma yok. Ayrıca 6 farklı modülden 6 ek rota (depo/skt, satis/kanallar, satis/fiyat-listeleri, satin-alma/siparisler dahil) 390x844'te taranarak yeni taşma/çakışma olmadığı (overflowX=false, overlapCount=0) doğrulandı — regresyon yok.",
+     "closedRound": 16
+    }
+   ],
+   "note": "Kritik tur 3 (muhasebe) ölçümüyle açıldı; muhasebe modülünde tekrar edilmedi (DESIGN-SCORECARD kural 5). Tur 16'da kapatıldı (bkz. dosya başı Tur 16 notu)."
   }
+ }
 }
