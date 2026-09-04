@@ -40,12 +40,21 @@ export function LotBadge({
   // (border/bg/rounded) tamamen kaldırıldı: artık yalnızca mono metin + istisna durumunda nokta.
   // Dokunma hedefi görsel kabuğa değil GÖRÜNMEZ dikey boşluğa bağlandı — bağlantılıyken (to) mobilde
   // 44px yüksek bir hit-area, masaüstünde satır yüksekliğine göre doğal boyut.
+  //
+  // Kök neden düzeltmesi (Tur 14 P2 shell-mobile-card-height-02): DataTableMobileCards'ın satır 2'si
+  // (alt başlık + meta ipuçları) zaten kartın kendi `<li>`si içinde — o `<li>` tıklanabilir kartın
+  // TAMAMI için 44px'in çok üzerinde bir dokunma alanı sağlıyor, bu yüzden LotBadge'in KENDİ h-11
+  // yastığı orada gereksiz ve satır 2'yi 44px'e şişirip kart toplamını 72px hedefinin üstüne taşıyor
+  // (bkz. mobile-cards.tsx `mobile-card-subtitle-row` işaretçisi). `[.mobile-card-subtitle-row_&]`
+  // ata seçicisi YALNIZCA o bağlamda h-11'i h-auto'ya döndürür; LotBadge'in başka her yerdeki (tek
+  // başına render edildiği, kendi dokunma hedefini sağlaması gereken ekranlar — ör.
+  // product-stock-tab.tsx, scan-screen.tsx) davranışı DEĞİŞMEZ.
   const inner = (
     <span
       title={info ? `${lotNo} · ${info.label}` : lotNo}
       className={cn(
         'inline-flex items-center gap-1.5 font-mono text-xs tracking-tight whitespace-nowrap',
-        to && 'h-11 md:h-auto',
+        to && 'h-11 md:h-auto [.mobile-card-subtitle-row_&]:h-auto',
         className,
       )}
     >

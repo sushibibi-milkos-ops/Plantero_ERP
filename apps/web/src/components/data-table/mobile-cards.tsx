@@ -114,7 +114,12 @@ export function DataTableMobileCards<T>({
                 boşluk bırakır çünkü sol grup kendi genişliğine (flex-1, min-w-0) düzgün küçülür. */}
             {leftBits.length || metric ? (
               <div className="mt-0.5 flex items-baseline justify-between gap-2">
-                <div className="min-w-0 flex-1 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-muted-foreground">
+                {/* `mobile-card-subtitle-row` işaretçisi (Tur 14 P2 shell-mobile-card-height-02):
+                    bu satır zaten kartın kendi `<li>`sinin (tam kart tıklanabilir/dokunulabilir alan)
+                    içinde — LotBadge gibi bağlantılı hücrelerin KENDİ 44px dokunma-hedefi dolgusu
+                    (h-11) burada gereksiz, satır 2'yi 44px'e şişirip kart toplamını 72px hedefinin
+                    üzerine taşıyor (LotBadge bkz. lot-badge.tsx, aynı sınıf altında h-auto'ya döner). */}
+                <div className="mobile-card-subtitle-row min-w-0 flex-1 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-muted-foreground">
                   {leftBits.map((b, i) => (
                     <span key={b.key}>
                       {i > 0 ? <span aria-hidden className="text-muted-foreground/40"> · </span> : null}
