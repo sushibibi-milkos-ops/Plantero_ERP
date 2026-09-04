@@ -44,6 +44,7 @@ export function RefreshActualsButton({ year }: { year: number }) {
     <Button
       variant="outline"
       size="sm"
+      className="h-11 md:h-8"
       disabled={pending}
       onClick={() =>
         startTransition(async () => {
@@ -64,6 +65,25 @@ export function RefreshActualsButton({ year }: { year: number }) {
 }
 
 type Kind = 'revenue' | 'fixed_expense';
+
+/** Plan/gerçekleşen/sapma hücrelerinin biçimlendirmesi — masaüstü tablosu ve mobil kart görünümü
+ * AYNI hesaplamayı paylaşır (tek kaynak, iki render). */
+function budgetRowFormat(r: BudgetLineRow, kindFilter: Kind) {
+  const planned = Number(r.planned);
+  const actual = Number(r.actual);
+  const variance = Number(r.variance);
+  const good = kindFilter === 'revenue' ? variance >= 0 : variance <= 0;
+  // Kriter 6 kök neden düzeltmesi: |sapma| plan'ın %10'unu aşmadıkça nötr — 48/48 satırın
+  // kırmızı/yeşil basıldığı (sinyalin anlamsızlaştığı) durum giderilir.
+  const varianceSignificant = planned !== 0 ? (Math.abs(variance) / Math.abs(planned)) * 100 >= VARIANCE_THRESHOLD_PCT : variance !== 0;
+  return {
+    plannedLabel: formatMoney(r.planned, 'TRY', { digits: 0 }),
+    actualLabel: formatMoney(r.actual, 'TRY', { digits: 0 }),
+    actualMuted: actual === 0,
+    varianceLabel: `${variance >= 0 ? '+' : ''}${formatMoney(r.variance, 'TRY', { digits: 0 })}`,
+    varianceClass: !varianceSignificant ? 'text-muted-foreground' : good ? 'text-success' : 'text-destructive',
+  };
+}
 
 export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summary: Array<{ period: string; kind: string; planned: string; actual: string }> }) {
   const [kindFilter, setKindFilter] = useState<Kind>('revenue');
@@ -93,7 +113,7 @@ export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summar
               <button
                 key={k}
                 onClick={() => setKindFilter(k)}
-                className={cn('rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors', kindFilter === k ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
+                className={cn('min-h-11 rounded-md px-3 py-2.5 text-[13px] font-medium transition-colors md:min-h-0 md:py-1.5', kindFilter === k ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
               >
                 {k === 'revenue' ? 'Ciro' : 'Sabit gider'}
               </button>
@@ -113,54 +133,84 @@ export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summar
         </ResponsiveContainer>
       </div>
 
-      {/* Kriter 9 kök neden düzeltmesi (Tur 2): tabloda `min-w` yoktu, hücreler 390px'te sarılıyordu
-          (KALEM 3 satıra, GERÇEKLEŞEN rakamının ortası kesiliyordu, satır 32.5→71.5px). Modüldeki
-          diğer tüm tablolarla (nakit-akisi, krediler) aynı kalıp: `min-w-max` + `whitespace-nowrap` —
-          taşma sarmalayıcının yatay kaydırmasıyla çözülür, hiçbir sütun gizlenmez/kesilmez. */}
-      <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
-        <table className="w-full min-w-max text-[13px]">
-          <thead>
-            <tr className="border-b border-border/60 text-left text-[11px] text-muted-foreground uppercase">
-              <th className="px-3 py-2 font-medium whitespace-nowrap">Ay</th>
-              <th className="px-3 py-2 font-medium whitespace-nowrap">Kalem</th>
-              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Plan</th>
-              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Gerçekleşen</th>
-              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Sapma</th>
-            </tr>
-          </thead>
-          <tbody>
-            {grouped.map(([period, rows]) =>
-              rows.map((r, i) => {
-                const planned = Number(r.planned);
-                const actual = Number(r.actual);
-                const variance = Number(r.variance);
-                const good = kindFilter === 'revenue' ? variance >= 0 : variance <= 0;
-                // Kriter 6 kök neden düzeltmesi: |sapma| plan'ın %10'unu aşmadıkça nötr — 48/48
-                // satırın kırmızı/yeşil basıldığı (sinyalin anlamsızlaştığı) durum giderilir.
-                const varianceSignificant = planned !== 0 ? Math.abs(variance) / Math.abs(planned) * 100 >= VARIANCE_THRESHOLD_PCT : variance !== 0;
+      {grouped.length === 0 ? (
+        <div className="rounded-xl border border-border/70 bg-card">
+          <EmptyState compact icon={FolderKanban} title="Bu yıl için bütçe satırı yok" description="Bütçe seed'i çalışmamış olabilir ya da farklı bir yıl seçin." />
+        </div>
+      ) : (
+        <>
+          {/* Kriter 9 kök neden düzeltmesi (Tur 3, P1 finans-butce-07): masaüstü tablosu (5 sütun,
+              min-w-max + whitespace-nowrap) 390px'te kart görünümüne düşmüyordu — sarmalayıcı yatay
+              kaydırmaya izin verdiği için PLAN/GERÇEKLEŞEN/SAPMA görünür alanın dışında kalıyordu.
+              Modüldeki ortak kart kalıbıyla (bkz. components/data-table/mobile-cards.tsx, loan-panel
+              LoanCards) aynı fikir: <md'de tablo yerine tek sütun kart listesi, PLAN/GERÇEKLEŞEN/SAPMA
+              üçü de aynı satırda (grid-cols-3) — hiçbir sayı sütunu ilk görünümün dışında kalmaz. */}
+          <ul className="space-y-2 md:hidden">
+            {grouped.flatMap(([period, rows]) =>
+              rows.map((r) => {
+                const { plannedLabel, actualLabel, actualMuted, varianceLabel, varianceClass } = budgetRowFormat(r, kindFilter);
                 return (
-                  <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
-                    <td className="px-3 py-1.5 whitespace-nowrap text-muted-foreground">{i === 0 ? formatDate(`${period}-01`) : ''}</td>
-                    <td className="px-3 py-1.5 whitespace-nowrap">{r.channelName ?? r.label}</td>
-                    <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(r.planned, 'TRY', { digits: 0 })}</td>
-                    <td className={cn('px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums', actual === 0 && 'text-muted-foreground')}>{formatMoney(r.actual, 'TRY', { digits: 0 })}</td>
-                    <td className={cn('px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums', !varianceSignificant ? 'text-muted-foreground' : good ? 'text-success' : 'text-destructive')}>
-                      {variance >= 0 ? '+' : ''}{formatMoney(r.variance, 'TRY', { digits: 0 })}
-                    </td>
-                  </tr>
+                  <li key={r.id} className="rounded-lg border border-border/70 bg-card p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0 truncate text-[14px] leading-5 font-medium">{r.channelName ?? r.label}</div>
+                      <div className="shrink-0 text-xs text-muted-foreground">{formatDate(`${period}-01`)}</div>
+                    </div>
+                    <div className="mt-2 grid grid-cols-3 gap-2 text-[13px]">
+                      <div>
+                        <div className="text-[11px] text-muted-foreground uppercase">Plan</div>
+                        <div className="font-mono tabular-nums">{plannedLabel}</div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] text-muted-foreground uppercase">Gerçekleşen</div>
+                        <div className={cn('font-mono tabular-nums', actualMuted && 'text-muted-foreground')}>{actualLabel}</div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] text-muted-foreground uppercase">Sapma</div>
+                        <div className={cn('font-mono tabular-nums', varianceClass)}>{varianceLabel}</div>
+                      </div>
+                    </div>
+                  </li>
                 );
               }),
             )}
-            {grouped.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="p-0">
-                  <EmptyState compact icon={FolderKanban} title="Bu yıl için bütçe satırı yok" description="Bütçe seed'i çalışmamış olabilir ya da farklı bir yıl seçin." />
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </div>
+          </ul>
+
+          {/* Kriter 9 kök neden düzeltmesi (Tur 2): tabloda `min-w` yoktu, hücreler 390px'te sarılıyordu
+              (KALEM 3 satıra, GERÇEKLEŞEN rakamının ortası kesiliyordu, satır 32.5→71.5px). Modüldeki
+              diğer tüm tablolarla (nakit-akisi, krediler) aynı kalıp: `min-w-max` + `whitespace-nowrap` —
+              taşma sarmalayıcının yatay kaydırmasıyla çözülür, hiçbir sütun gizlenmez/kesilmez. Artık
+              yalnızca md+'de görünür (<md kart görünümü kullanır, yukarı bakın). */}
+          <div className="hidden overflow-x-auto rounded-xl border border-border/70 bg-card md:block">
+            <table className="w-full min-w-max text-[13px]">
+              <thead>
+                <tr className="border-b border-border/60 text-left text-[11px] text-muted-foreground uppercase">
+                  <th className="px-3 py-2 font-medium whitespace-nowrap">Ay</th>
+                  <th className="px-3 py-2 font-medium whitespace-nowrap">Kalem</th>
+                  <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Plan</th>
+                  <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Gerçekleşen</th>
+                  <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Sapma</th>
+                </tr>
+              </thead>
+              <tbody>
+                {grouped.map(([period, rows]) =>
+                  rows.map((r, i) => {
+                    const { plannedLabel, actualLabel, actualMuted, varianceLabel, varianceClass } = budgetRowFormat(r, kindFilter);
+                    return (
+                      <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
+                        <td className="px-3 py-1.5 whitespace-nowrap text-muted-foreground">{i === 0 ? formatDate(`${period}-01`) : ''}</td>
+                        <td className="px-3 py-1.5 whitespace-nowrap">{r.channelName ?? r.label}</td>
+                        <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{plannedLabel}</td>
+                        <td className={cn('px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums', actualMuted && 'text-muted-foreground')}>{actualLabel}</td>
+                        <td className={cn('px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums', varianceClass)}>{varianceLabel}</td>
+                      </tr>
+                    );
+                  }),
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -141,50 +141,99 @@ export function DunningTable({ due, actions }: { due: DueInvoiceDto[]; actions: 
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
-      <table className="w-full min-w-max text-[13px]">
-        <thead>
-          <tr className="border-b border-border/60 text-left text-[11px] text-muted-foreground uppercase">
-            <th className="px-3 py-2 font-medium whitespace-nowrap">Müşteri</th>
-            <th className="px-3 py-2 font-medium whitespace-nowrap">Fatura</th>
-            <th className="px-3 py-2 font-medium whitespace-nowrap">Vade</th>
-            <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Gecikme</th>
-            <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Bakiye</th>
-            <th className="px-3 py-2 font-medium whitespace-nowrap">Seviye</th>
-            <th className="px-3 py-2 font-medium whitespace-nowrap">Son hatırlatma</th>
-            <th className="px-3 py-2 text-right font-medium whitespace-nowrap">İşlem</th>
-          </tr>
-        </thead>
-        <tbody>
-          {due.map((r) => {
-            const existing = r.hasDraft ? findExisting(r.id, r.level) : undefined;
-            return (
-              <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
-                <td className="px-3 py-2 whitespace-nowrap">{r.partnerName}</td>
-                <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{r.docNo}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{formatDate(r.dueDate)}</td>
-                <td className={cn('px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums', r.daysOverdue > 30 && 'text-destructive')}>{r.daysOverdue} gün</td>
-                <td className="px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(r.residual, r.currency, { digits: 2 })}</td>
-                <td className="px-3 py-2 whitespace-nowrap"><StatusBadge status={String(r.level)} label={LEVEL_LABEL[r.level]} tone={LEVEL_TONE[r.level]} /></td>
-                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</td>
-                <td className="px-3 py-2 text-right whitespace-nowrap">
-                  {existing && SENDABLE_STATUS.has(existing.status) ? (
-                    <Button size="sm" variant="outline" onClick={() => setReviewing({ id: existing.id, docNo: r.docNo, partnerName: r.partnerName, channel: existing.channel, subject: existing.subject, body: existing.body })}>
-                      <Eye className="size-3.5" /> İncele ve gönder
-                    </Button>
-                  ) : existing ? (
-                    <span className="text-xs text-muted-foreground">Gönderildi</span>
-                  ) : (
-                    <Button size="sm" variant="outline" onClick={() => setCreatingFor(r)}>
-                      <Sparkles className="size-3.5" /> Taslak oluştur
-                    </Button>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div>
+      {/* Kriter 9 kök neden düzeltmesi (Tur 3, P1 finans-dunning-06): 8 sütunlu tablo 390px'te kart
+          görünümüne düşmüyordu — ekranın birincil eylemi ("Taslak oluştur") tamamen görünür alanın
+          dışında kalıyordu (x=819-955, viewport 390). Modüldeki ortak kart kalıbıyla (bkz.
+          components/data-table/mobile-cards.tsx, loan-panel LoanCards, budget-panel mobil kartı)
+          aynı fikir: <md'de tablo yerine tek sütun kart listesi, eylem butonu kartın İÇİNDE ve
+          tam genişlik h-11 — yatay kaydırma gerektirmeden erişilebilir. */}
+      <ul className="space-y-2 md:hidden">
+        {due.map((r) => {
+          const existing = r.hasDraft ? findExisting(r.id, r.level) : undefined;
+          return (
+            <li key={r.id} className="rounded-lg border border-border/70 bg-card p-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0 truncate text-[14px] leading-5 font-medium">{r.partnerName}</div>
+                <StatusBadge status={String(r.level)} label={LEVEL_LABEL[r.level]} tone={LEVEL_TONE[r.level]} />
+              </div>
+              <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                {r.docNo} <span aria-hidden className="text-muted-foreground/40"> · </span> vade {formatDate(r.dueDate)}
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-2 text-[13px]">
+                <div>
+                  <div className="text-[11px] text-muted-foreground uppercase">Gecikme</div>
+                  <div className={cn('font-mono tabular-nums', r.daysOverdue > 30 && 'text-destructive')}>{r.daysOverdue} gün</div>
+                </div>
+                <div>
+                  <div className="text-[11px] text-muted-foreground uppercase">Bakiye</div>
+                  <div className="font-mono tabular-nums">{formatMoney(r.residual, r.currency, { digits: 2 })}</div>
+                </div>
+              </div>
+              <div className="mt-2 text-xs text-muted-foreground">Son hatırlatma: {r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</div>
+              <div className="mt-2.5">
+                {existing && SENDABLE_STATUS.has(existing.status) ? (
+                  <Button size="sm" variant="outline" className="h-11 w-full" onClick={() => setReviewing({ id: existing.id, docNo: r.docNo, partnerName: r.partnerName, channel: existing.channel, subject: existing.subject, body: existing.body })}>
+                    <Eye className="size-3.5" /> İncele ve gönder
+                  </Button>
+                ) : existing ? (
+                  <span className="text-xs text-muted-foreground">Gönderildi</span>
+                ) : (
+                  <Button size="sm" variant="outline" className="h-11 w-full" onClick={() => setCreatingFor(r)}>
+                    <Sparkles className="size-3.5" /> Taslak oluştur
+                  </Button>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="hidden overflow-x-auto rounded-xl border border-border/70 bg-card md:block">
+        <table className="w-full min-w-max text-[13px]">
+          <thead>
+            <tr className="border-b border-border/60 text-left text-[11px] text-muted-foreground uppercase">
+              <th className="px-3 py-2 font-medium whitespace-nowrap">Müşteri</th>
+              <th className="px-3 py-2 font-medium whitespace-nowrap">Fatura</th>
+              <th className="px-3 py-2 font-medium whitespace-nowrap">Vade</th>
+              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Gecikme</th>
+              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Bakiye</th>
+              <th className="px-3 py-2 font-medium whitespace-nowrap">Seviye</th>
+              <th className="px-3 py-2 font-medium whitespace-nowrap">Son hatırlatma</th>
+              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+            {due.map((r) => {
+              const existing = r.hasDraft ? findExisting(r.id, r.level) : undefined;
+              return (
+                <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
+                  <td className="px-3 py-2 whitespace-nowrap">{r.partnerName}</td>
+                  <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{r.docNo}</td>
+                  <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{formatDate(r.dueDate)}</td>
+                  <td className={cn('px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums', r.daysOverdue > 30 && 'text-destructive')}>{r.daysOverdue} gün</td>
+                  <td className="px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(r.residual, r.currency, { digits: 2 })}</td>
+                  <td className="px-3 py-2 whitespace-nowrap"><StatusBadge status={String(r.level)} label={LEVEL_LABEL[r.level]} tone={LEVEL_TONE[r.level]} /></td>
+                  <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</td>
+                  <td className="px-3 py-2 text-right whitespace-nowrap">
+                    {existing && SENDABLE_STATUS.has(existing.status) ? (
+                      <Button size="sm" variant="outline" onClick={() => setReviewing({ id: existing.id, docNo: r.docNo, partnerName: r.partnerName, channel: existing.channel, subject: existing.subject, body: existing.body })}>
+                        <Eye className="size-3.5" /> İncele ve gönder
+                      </Button>
+                    ) : existing ? (
+                      <span className="text-xs text-muted-foreground">Gönderildi</span>
+                    ) : (
+                      <Button size="sm" variant="outline" onClick={() => setCreatingFor(r)}>
+                        <Sparkles className="size-3.5" /> Taslak oluştur
+                      </Button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       {creatingFor ? (
         <SendDialog
           seed={null}
@@ -208,10 +257,13 @@ export type DunningHistoryRow = { id: string; invoiceDocNo: string; partnerName:
 export function DunningHistoryList({ actions }: { actions: DunningHistoryRow[] }) {
   const [reviewing, setReviewing] = useState<DraftSeed | null>(null);
 
+  // Kriter 3 kök neden düzeltmesi (Tur 3, P1 finans-dunning-07): non-compact EmptyState (px-6 py-16)
+  // tek başına ~358px dikey alan kaplayıp 1440x900 ilk ekranın bilgi yoğunluğunu düşürüyordu —
+  // modüldeki diğer tablo-içi boş durumlar (bkz. budget-panel, forecast-panel) `compact` kullanıyor.
   if (actions.length === 0) {
     return (
       <div className="rounded-xl border border-border/70 bg-card">
-        <EmptyState icon={Send} title="Henüz hatırlatma geçmişi yok" description="Vadesi geçen bir faturadan “Taslak oluştur” ile ilk hatırlatmayı gönderin." />
+        <EmptyState compact icon={Send} title="Henüz hatırlatma geçmişi yok" description="Vadesi geçen bir faturadan “Taslak oluştur” ile ilk hatırlatmayı gönderin." />
       </div>
     );
   }

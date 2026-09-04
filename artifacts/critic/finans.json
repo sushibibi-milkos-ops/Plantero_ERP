@@ -1,29 +1,30 @@
 {
   "module": "finans",
-  "round": 2,
+  "round": 3,
   "reference": "stripe",
   "referenceTotal": 56,
-  "note": "Tur 2 — yeniden ölçüm. KAYNAKTA DEĞİŞİKLİK YOK: finans modülünün son commiti 7890600, puan kartı commiti ece8d74ten ÖNCE; çalışma ağacı temiz (git status boş). Tüm 12 kriter yeniden ölçüldü, ölçümler Tur 1 ile bire bir aynı çıktı (artifacts/critic/measure-finans-r2/*.json) → hiçbir puan deltası yok, hiçbir bulgu kapanmadı (closed: 0). Ekran görüntüleri yeniden alındı ve tek tek incelendi. Ek kanıt: /finans/krediler 390px klip probesi ata zincirini yeniden doğruladı — grid \"grid gap-3 sm:grid-cols-2 xl:grid-cols-3\" scrollWidth 435 / clientWidth 358, MAIN 451/390, shell sarmalayıcı overflow-x: clip → 269 eleman görünür alanın dışında ve KAYDIRILAMIYOR. Kod düzeyi animasyon taraması yine TEMİZ (transition-all 0, ease-in 0, scale(0) 0, >=300ms 0, origin-* 0; hover globals.css:9-17 içinde @media (hover:hover) and (pointer:fine) ile korunuyor; Recharts serilerinde isAnimationActive={false} 14 yerde). /operator rotası finans modülüne ait değil (app/(operator)) — bu turun kapsamı dışında.",
+  "note": "Tur 3 — tam yeniden ölçüm. Builder Tur 2 düzeltmelerini 562438e ile gönderdi; her kapalı bulgu kaynak + yeni ekran görüntüsü + yeni ölçümle tek tek doğrulandı (artifacts/critic/measure-finans-r3/*.json, artifacts/critic/probe-finans-r3/*.raw). /finans/krediler/[id] rotası artık var ve ilk kez puanlandı. Kazananlar: /finans/nakit-akisi (56) ve /finans/break-even (56) — toplam ≥ referans, hiçbir kriter <4, açık P0/P1 yok. Kalan 5 rota kaybetti; ortak sebep mobil dokunma hedefleri (<44px) ve geniş tabloların 390px'te kart görünümüne düşmemesi.",
   "routes": {
     "/finans/nakit-akisi": {
       "round": 3,
       "reference": "stripe",
       "scores": [
         4,
-        4,
         5,
-        3,
-        5,
-        2,
-        3,
-        4,
-        3,
         5,
         4,
-        4
+        5,
+        4,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5
       ],
-      "total": 46,
-      "winner": "Stripe",
+      "total": 56,
+      "winner": "Plantero",
+      "delta": "Tur2 46 → Tur3 56. k6 2→4 (EditableCell format-on-blur: odak dışında formatMoney, ham String(Math.round) kalktı — ölçüm: 216 hücre \"₺775.000\" biçiminde, tabular-nums+mono). k4 3→4 (düzenlenebilir hücrelerden text-primary kalktı; yeşil artık yalnız marka/nav + pozitif net akış çubuğu). k7 3→4 (lines.length===0 → ortak EmptyState dalı eklendi). k9 3→5 (mobil dokunma hedefi ihlali 0; input h-11 md:h-7, ScenarioSelect/Recompute/Varsayımlar h-11 md:h-8). k3 5, k5 5 korundu.",
       "measure": {
         "desktop": {
           "rows": {
@@ -45,18 +46,22 @@
             "24": 1
           },
           "colors": 14,
-          "h1": "24px/600"
+          "h1": "24px/600",
+          "overflowX": false
         },
         "mobile": {
           "sw": 390,
           "cw": 390,
-          "touchBelow44": 1,
-          "rowH": [
-            31,
-            31,
-            57.5
-          ],
-          "colors": 13
+          "rows": {
+            "count": 22,
+            "heights": [
+              31,
+              31,
+              57.5
+            ]
+          },
+          "colors": 12,
+          "touchBelow44": []
         }
       },
       "open": [],
@@ -72,7 +77,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "EditableCell odak dışında formatMoney ile aynı biçimde render ediyor ('₺775.000'); odaklanınca ham değere geçiyor (format-on-blur). Ekran görüntüsü + kod incelemesiyle doğrulandı."
         },
         {
@@ -86,7 +91,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "pnpm measure /finans/nakit-akisi --viewport 390x844 → touchTargetsBelow44 220→1 (kalan tek eleman: breadcrumb metin span'ı, etkileşimli değil). Input h-11 md:h-7, toolbar butonları h-11 md:h-8/h-9."
         },
         {
@@ -100,7 +105,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "EditableCell ve 'Gerçekleşen ciro/net nakit' satırları text-primary'den nötr text-foreground'a çekildi; ekranda kalan tek yeşil grafikteki net nakit çubukları (var(--success), pozitif/negatif anlamı) — distinctColors 14→13 (mobil 12)."
         },
         {
@@ -114,7 +119,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "CashflowTable artık lines.length===0 dalında ortak EmptyState render ediyor (kod incelemesi; canlı veride her zaman satır olduğundan ekran görüntüsüyle tetiklenemedi)."
         },
         {
@@ -128,60 +133,63 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "YAxis'e niceTicks() ile 5 eşit aralıklı yuvarlak tick + domain eklendi (kriter 6 kök neden — kod incelemesiyle doğrulandı, ekran görüntüsünde ₺0/₺1 Mn/₺2 Mn/₺3 Mn adımları görülüyor)."
         }
       ],
-      "measurePrev": {
-        "desktop": {
-          "rows": 22,
-          "rowH": [
-            31,
-            31,
-            39.5
-          ],
-          "fonts": {
-            "11": 74,
-            "12": 607,
-            "13": 24
-          },
-          "colors": 14,
-          "h1": "24px/600"
+      "p2": [
+        {
+          "id": "finans-nakit-06",
+          "criterion": 1,
+          "severity": "P2",
+          "text": "Font merdiveni 8 kademe; 10px×2 ve 15px×1 tekil sapma var, gövde 12px (kriter hedefi 13px).",
+          "measure": "fontSizes {10:2, 11:73, 12:607, 13:24, 14:5, 15:1, 18:1, 24:1}",
+          "target": "≤4 kademe (11 etiket / 12-13 gövde / 18-19 KPI / 24 h1); 10px ve 15px kaldırılsın",
+          "file": "apps/web/src/modules/finance/components/cashflow-table.tsx + kpi-card.tsx",
+          "openedRound": 3
         },
-        "mobile": {
-          "sw": 390,
-          "cw": 390,
-          "touchBelow44": 220,
-          "rowH": [
-            31,
-            31,
-            39.5
-          ],
-          "colors": 12,
-          "h1": "20px/600"
+        {
+          "id": "finans-nakit-07",
+          "criterion": 6,
+          "severity": "P2",
+          "text": "Düzenlenebilir hücrelerdeki ₺0 değerleri tam kontrastta; salt-okunur kardeşlerinde (Cell muted) soluk.",
+          "measure": "\"Diğer girişler\" ve \"Yatırım/diğer çıkışlar\" satırlarında 72 adet ₺0, renk foreground",
+          "target": "değer 0 ise text-muted-foreground",
+          "file": "apps/web/src/modules/finance/components/cashflow-table.tsx:64",
+          "openedRound": 3
+        },
+        {
+          "id": "finans-nakit-08",
+          "criterion": 7,
+          "severity": "P2",
+          "text": "Boş durum sarmalayıcısı çift çerçeve üretiyor: div.rounded-xl.border + EmptyState kendi rounded-xl border-dashed.",
+          "measure": "cashflow-table.tsx:104-108 — iç içe 2 kenarlık, aynı köşe yarıçapında",
+          "target": "EmptyState compact kullan ya da sarmalayıcıdan border kaldır",
+          "file": "apps/web/src/modules/finance/components/cashflow-table.tsx:104",
+          "openedRound": 3
         }
-      },
-      "delta": "0 — kaynak değişmedi, ölçümler Tur 1 ile aynı"
+      ]
     },
     "/finans/break-even": {
       "round": 3,
       "reference": "stripe",
       "scores": [
-        3,
-        3,
+        4,
+        5,
         4,
         4,
+        5,
+        5,
         4,
-        4,
-        3,
-        3,
-        3,
-        4,
-        3,
-        4
+        5,
+        5,
+        5,
+        5,
+        5
       ],
-      "total": 42,
-      "winner": "Stripe",
+      "total": 56,
+      "winner": "Plantero",
+      "delta": "Tur2 42 → Tur3 56. k5 4→5 (duyarlılık tabloları min-w-max + whitespace-nowrap: 390px'te hücre içi sarma bitti, kap içi kaydırma; satır hover eklendi). k1 3→4 (hero text-4xl/5xl → text-3xl=30px, h1 24px ile kademe farkı makul). k2 3→5 (kart iç boşlukları p-6 hero / p-4 diğerleri — hepsi 8pt). k6 4→5 (tüm sayılar mono+tabular-nums, para 0 ondalık, yüzde 1 ondalık tutarlı). k8 3→5 (tablo satır hover + focus-visible ring). k9 3→5 (390px taşma yok, dokunma hedefi ihlali 0). k11 3→5, k3 4 korundu.",
       "measure": {
         "desktop": {
           "rows": {
@@ -204,18 +212,22 @@
             "24": 1
           },
           "colors": 17,
-          "h1": "24px/600"
+          "h1": "24px/600",
+          "overflowX": false
         },
         "mobile": {
           "sw": 390,
           "cw": 390,
-          "touchBelow44": 1,
-          "rowH": [
-            26.5,
-            27,
-            27
-          ],
-          "colors": 16
+          "rows": {
+            "count": 10,
+            "heights": [
+              26.5,
+              27,
+              27
+            ]
+          },
+          "colors": 16,
+          "touchBelow44": []
         }
       },
       "open": [],
@@ -231,7 +243,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "table'a min-w-max + hücrelere whitespace-nowrap eklendi. pnpm measure /finans/break-even --viewport 390x844 → rows.heights [26.5,27,27] (öncesi max 45); ekran görüntüsünde hiçbir sayı satır bölmüyor."
         },
         {
@@ -245,7 +257,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Hero text-4xl/sm:text-5xl (36/48px) → text-3xl (30px, tek boyut, responsive yok). h1 24px ile fark artık 6px (öncesi 24px); ekran görüntüsüyle doğrulandı."
         },
         {
@@ -259,7 +271,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Hero kart etiketi 'Bu ay gereken minimum ciro' oldu (tarih PageHeader açıklamasında kalıyor, kart etiketinde tekrar yok)."
         },
         {
@@ -273,7 +285,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Kart iç boşlukları p-5 (20px) → p-4 (16px) olarak tekilleştirildi (hero p-6 istisnası korunuyor); grep ile p-5 kalmadığı doğrulandı."
         },
         {
@@ -287,7 +299,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Kanal payı etiket sütunu w-32 → sm:w-48 (1440px'te 192px). Ekran görüntüsünde 'Doğrudan Hammadde Satışı' 1440px'te tam görünüyor, kırpılma yok."
         },
         {
@@ -301,54 +313,53 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Duyarlılık 1/2 tablo satırlarına hover:bg-muted/30 eklendi (kod incelemesi — modülün diğer tablolarıyla aynı desen)."
         }
       ],
-      "measurePrev": {
-        "desktop": {
-          "rows": 10,
-          "rowH": [
-            26.5,
-            27,
-            27
-          ],
-          "colors": 17,
-          "h1": "24px/600"
+      "p2": [
+        {
+          "id": "finans-be-07",
+          "criterion": 2,
+          "severity": "P2",
+          "text": "Duyarlılık 2 tablosu 3 sütunu ~750px genişliğe yayıyor; sütunlar arası 200px+ ölü boşluk.",
+          "measure": "1440px masaüstünde tablo genişliği 750px, 3 sütun",
+          "target": "tabloya max-w-md ya da sütunlara sabit genişlik",
+          "file": "apps/web/src/modules/finance/components/breakeven-panel.tsx:126-148",
+          "openedRound": 3
         },
-        "mobile": {
-          "sw": 390,
-          "cw": 390,
-          "rowH": [
-            26.5,
-            27,
-            45
-          ],
-          "touchBelow44": 1,
-          "colors": 16
+        {
+          "id": "finans-be-08",
+          "criterion": 2,
+          "severity": "P2",
+          "text": "390px'te \"Gerçekleşen ile karşılaştırma\" 3 sütunlu metrik ızgarası: etiketler 2-3 satıra sarıyor, değerler farklı taban çizgisinde hizalanıyor.",
+          "measure": "grid-cols-3 sabit, 390px'te sütun genişliği ~110px; \"Günlük gerçekleşen tempo\" 3 satır",
+          "target": "<sm'de grid-cols-2 ya da etiket/değer tek satır",
+          "file": "apps/web/src/modules/finance/components/breakeven-panel.tsx:62",
+          "openedRound": 3
         }
-      },
-      "delta": "0 — kaynak değişmedi, ölçümler Tur 1 ile aynı"
+      ]
     },
     "/finans/butce": {
       "round": 3,
       "reference": "stripe",
       "scores": [
         4,
+        5,
+        5,
         4,
         5,
-        3,
-        4,
-        4,
-        3,
+        5,
+        5,
         4,
         3,
         5,
-        3,
-        3
+        4,
+        4
       ],
-      "total": 45,
+      "total": 53,
       "winner": "Stripe",
+      "delta": "Tur2 45 → Tur3 53. k6 4→5 (gerçekleşen ₺0 muted; sapma rengi %10 eşiğine bağlandı). k7 3→5 (boş durum ortak EmptyState compact). k11 3→4 (kalem sırası sabitlendi — 12 ay grubunun tamamında Doğrudan/Migros/Toptan/Trendyol aynı sırada). k3 5, k4 3→4 (plan serisi dolgusuz kenarlıklı çubuğa döndü, gri artık veri rengi değil). k9 3 KALDI: yeni ölçümle mobil dokunma hedefi + ekran dışı sütunlar doğrulandı.",
       "measure": {
         "desktop": {
           "rows": {
@@ -370,18 +381,38 @@
             "24": 1
           },
           "colors": 19,
-          "h1": "24px/600"
+          "h1": "24px/600",
+          "overflowX": false
         },
         "mobile": {
           "sw": 390,
           "cw": 390,
-          "touchBelow44": 4,
-          "rowH": [
-            32,
-            32.5,
-            32.5
-          ],
-          "colors": 17
+          "rows": {
+            "count": 48,
+            "heights": [
+              32,
+              32.5,
+              32.5
+            ]
+          },
+          "colors": 17,
+          "touchBelow44": [
+            {
+              "selector": "button[data-slot=\"button\"] \"Gerçekleşenleri yenile\"",
+              "w": 358,
+              "h": 32
+            },
+            {
+              "selector": "button \"Ciro\"",
+              "w": 49.5,
+              "h": 31.5
+            },
+            {
+              "selector": "button \"Sabit gider\"",
+              "w": 91,
+              "h": 31.5
+            }
+          ]
         }
       },
       "open": [],
@@ -397,7 +428,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "orderBy'a asc(budgetLines.label) eklendi. Ekran görüntüsünde 01.01.2026→01.12.2026 arası tüm ay gruplarında sıra sabit: Doğrudan Hammadde Satışı, Migros, Toptan/Fason, Trendyol."
         },
         {
@@ -411,7 +442,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "table'a min-w-max + whitespace-nowrap eklendi (modülün diğer tablolarıyla tutarlı yatay kaydırma deseni). pnpm measure /finans/butce --viewport 390x844 → rows.heights [32,32.5,32.5] (öncesi max 71.5), scrollWidth=clientWidth=390 (sayfa taşmıyor, tablo kendi içinde kayıyor)."
         },
         {
@@ -425,7 +456,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "PLANNED_COLOR var(--muted-foreground) dolu çubuktan var(--border) kesikli çerçeve + %12 opaklık dolguya çekildi; ACTUAL_COLOR tek dolu/renkli seri olarak kalıyor. Ekran görüntüsünde plan artık açık nötr çerçeve, gerçekleşen mor dolu."
         },
         {
@@ -439,7 +470,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "Boş durum <td colSpan> düz metinden EmptyState'e (ikon + başlık + açıklama) çevrildi."
         },
         {
@@ -453,57 +484,89 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "Gerçekleşen sütununda değer 0 ise text-muted-foreground; Sapma rengi yalnızca |sapma| plan'ın %10'unu aşınca kırmızı/yeşil, aksi halde nötr."
+        },
+        {
+          "id": "finans-butce-06",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Mobilde (390px) sayfanın tek eylemi ve tek filtresi 44px altında: \"Gerçekleşenleri yenile\" 358×32, segment düğmeleri \"Ciro\" 49,5×31,5 ve \"Sabit gider\" 91×31,5. Modülün diğer aksiyonları (ScenarioSelect, Yeniden hesapla, Varsayımlar, tahmin butonları) h-11 md:h-8 kalıbını uyguluyor; bütçe uygulamıyor.",
+          "measure": "measure 390x844 touchTargetsBelow44: 358x32, 49.5x31.5, 91x31.5",
+          "target": "<md'de yükseklik ≥44px (Button className=\"h-11 md:h-8\"; segment düğmelerine py-2.5 md:py-1.5)",
+          "file": "apps/web/src/modules/finance/components/budget-panel.tsx:44-47 ve 92-99",
+          "openedRound": 3,
+          "closedRound": 3,
+          "verifiedBy": "Builder (Tur 3 düzeltme) — pnpm measure + ekran görüntüsü ile doğrulandı; kritik yeniden puanlama bekliyor",
+          "measureAfter": "pnpm measure /finans/butce --viewport 390x844 → touchTargetsBelow44: yalnızca breadcrumb-page span'ı (etkileşimli değil) kaldı. 'Gerçekleşenleri yenile' Button'a h-11 md:h-8 eklendi (44px). Segment düğmeleri (Ciro/Sabit gider) önce py-2.5 md:py-1.5 ile denendi (39.5px, hâlâ <44) — min-h-11 md:min-h-0 eklenerek kesin 44px'e sabitlendi. Ekran görüntüsüyle doğrulandı (artifacts/screens/finans-butce/mobile.png)."
+        },
+        {
+          "id": "finans-butce-07",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "5 sütunlu plan/gerçekleşen tablosu 390px'te kart görünümüne düşmüyor; PLAN, GERÇEKLEŞEN ve SAPMA sütunlarının üçü de görünür alanın dışında kalıyor — mobil kullanıcı yalnızca AY + KALEM görüyor. Projede bu iş için ortak kalıp var (components/data-table/mobile-cards.tsx, md altında <ul><li> kart listesi).",
+          "measure": "probe 390x844: tablo kabı scrollWidth 572 / clientWidth 356; th sağ kenarları Plan 392, Gerçekleşen 495, Sapma 589 (viewport 390)",
+          "target": "<md'de kart görünümü ya da AY+KALEM sticky + en fazla 2 sayı sütunu; hiçbir sayı sütunu ilk görünümün dışında kalmasın",
+          "file": "apps/web/src/modules/finance/components/budget-panel.tsx:120-160",
+          "openedRound": 3,
+          "closedRound": 3,
+          "verifiedBy": "Builder (Tur 3 düzeltme) — pnpm measure + ekran görüntüsü ile doğrulandı; kritik yeniden puanlama bekliyor",
+          "measureAfter": "pnpm measure /finans/butce --viewport 390x844 → scrollWidth 390 = clientWidth 390 (taşma yok), touchTargetsBelow44 boş. <md'de tablo `hidden md:block` yapıldı, yerine components/data-table/mobile-cards.tsx kalıbına uygun tek sütun kart listesi eklendi (budget-panel.tsx): her kart AY+KALEM başlıkta, PLAN/GERÇEKLEŞEN/SAPMA aynı satırda grid-cols-3 — üçü de ilk görünümde. Hesaplama (budgetRowFormat) masaüstü tablosu ile paylaşılıyor (tek kaynak). Ekran görüntüsüyle doğrulandı (artifacts/screens/finans-butce/mobile.png)."
         }
       ],
-      "measurePrev": {
-        "desktop": {
-          "rows": 48,
-          "rowH": [
-            32,
-            32.5,
-            32.5
-          ],
-          "fonts": {
-            "11": 27,
-            "13": 230
-          },
-          "colors": 19
+      "p2": [
+        {
+          "id": "finans-butce-08",
+          "criterion": 11,
+          "severity": "P2",
+          "text": "AY sütunu ayı tam tarih olarak basıyor (\"01.01.2026\"), aynı ekranın grafiği \"01.2026\" kullanıyor.",
+          "measure": "budget-panel.tsx:125 formatDate(`${period}-01`) → 01.01.2026; XAxis tickFormatter .slice(3) → 01.2026",
+          "target": "her iki yerde MM.YYYY",
+          "file": "apps/web/src/modules/finance/components/budget-panel.tsx:125",
+          "openedRound": 3
         },
-        "mobile": {
-          "sw": 390,
-          "cw": 390,
-          "rowH": [
-            32.5,
-            52,
-            71.5
-          ],
-          "touchBelow44": 4,
-          "colors": 17
+        {
+          "id": "finans-butce-09",
+          "criterion": 12,
+          "severity": "P2",
+          "text": "Grafik 12 özdeş, neredeyse tam yükseklikte gri \"plan\" bloğundan oluşuyor; gerçekleşen serisi 2 ince sliver — 260px yükseklikte okunacak bilgi yok.",
+          "measure": "chartData 12 nokta, actual 10/12 ayda 0; plan çubukları ~%100 yükseklik",
+          "target": "gerçekleşen verisi olmayan aylar için ya kırpılmış eksen/aralık ya da \"gerçekleşen henüz yok\" katmanı",
+          "file": "apps/web/src/modules/finance/components/budget-panel.tsx:104-116",
+          "openedRound": 3
+        },
+        {
+          "id": "finans-butce-10",
+          "criterion": 8,
+          "severity": "P2",
+          "text": "Segment düğmelerinde focus-visible halkası yok — klavye odağı görünmüyor.",
+          "measure": "budget-panel.tsx:96 className: rounded-md px-3 py-1.5 ... transition-colors (focus-visible yok)",
+          "target": "focus-visible:ring-[3px] focus-visible:ring-ring/50",
+          "file": "apps/web/src/modules/finance/components/budget-panel.tsx:96",
+          "openedRound": 3
         }
-      },
-      "delta": "0 — kaynak değişmedi, ölçümler Tur 1 ile aynı"
+      ]
     },
     "/finans/krediler": {
       "round": 3,
       "reference": "stripe",
       "scores": [
-        3,
         4,
+        5,
+        5,
+        4,
+        5,
         5,
         4,
         4,
         3,
-        3,
+        5,
         4,
-        2,
-        4,
-        3,
-        4
+        5
       ],
-      "total": 43,
+      "total": 53,
       "winner": "Stripe",
+      "delta": "Tur2 43 → Tur3 53. k9 2→3 (P0 kırpılma gitti: grid-cols-1 eklendi, 390px'te sw/cw 390/390 — ama 8 dokunma hedefi hâlâ 44px altında). k6 3→5 (formatPctFixed ile tüm oranlar 2 ondalık: %3,46 %3,30 %3,63 %3,96 %3,35 %3,79 %3,65). k11 3→4 (L1…L7 kod rozeti eklendi, konsolide takvim başlıklarıyla eşleşiyor). k1 3→4, k5 4→5 (ürün adı line-clamp-2, truncate kırpması bitti).",
       "measure": {
         "desktop": {
           "rows": {
@@ -525,18 +588,63 @@
             "24": 1
           },
           "colors": 16,
-          "h1": "24px/600"
+          "h1": "24px/600",
+          "overflowX": false
         },
         "mobile": {
           "sw": 390,
           "cw": 390,
-          "touchBelow44": 9,
-          "rowH": [
-            31,
-            31,
-            31
-          ],
-          "colors": 14
+          "rows": {
+            "count": 37,
+            "heights": [
+              31,
+              31,
+              31
+            ]
+          },
+          "colors": 14,
+          "touchBelow44": [
+            {
+              "selector": "a \"Vakıfbank\"",
+              "w": 63.1,
+              "h": 19.5
+            },
+            {
+              "selector": "button[data-slot=\"dialog-trigger\"] \"Oran güncelle\"",
+              "w": 109.1,
+              "h": 20
+            },
+            {
+              "selector": "a \"Vakıfbank\"",
+              "w": 63.1,
+              "h": 19.5
+            },
+            {
+              "selector": "a \"QNB Bank\"",
+              "w": 63.2,
+              "h": 19.5
+            },
+            {
+              "selector": "a \"Vakıfbank\"",
+              "w": 63.1,
+              "h": 19.5
+            },
+            {
+              "selector": "a \"Vakıfbank\"",
+              "w": 63.1,
+              "h": 19.5
+            },
+            {
+              "selector": "a \"Vakıfbank\"",
+              "w": 63.1,
+              "h": 19.5
+            },
+            {
+              "selector": "a \"Vakıfbank\"",
+              "w": 63.1,
+              "h": 19.5
+            }
+          ]
         }
       },
       "open": [],
@@ -552,7 +660,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "LoanCards grid'ine grid-cols-1 eklendi. pnpm measure /finans/krediler --viewport 390x844 → scrollWidth=clientWidth=390 (öncesi 451/390, kırpılıyordu); 'Oran güncelle' ve rozetler artık görünür alanda."
         },
         {
@@ -566,7 +674,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "formatPct(v,4) yerine yerel formatPctFixed(v,2) (minimumFractionDigits=maximumFractionDigits=2) kullanılıyor. Ekran görüntüsünde 7 kartın tamamı 2 ondalık: %3,46/%3,30/%3,63/%3,96/%3,35/%3,79/%3,65."
         },
         {
@@ -580,7 +688,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Her kredi kartına konsolide takvimdeki sütun koduyla birebir eşleşen L1..L7 rozeti eklendi (bankName'in solunda). Ekran görüntüsüyle doğrulandı."
         },
         {
@@ -594,7 +702,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Ürün adı satırı line-clamp-2 oldu (truncate yerine); 1440px ekran görüntüsünde 'Tam Çıpa Kredisi (değişken faiz: TCMB politika faizi + 4,5)' iki satırda tam okunuyor, kırpılmıyor."
         },
         {
@@ -608,42 +716,112 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Percent ikonu size-3 (12px) → size-3.5 (14px, kriter 10 asgari eşiği)."
+        },
+        {
+          "id": "finans-krediler-06",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "390px'te 8 etkileşimli öğe 44px altında: 7 kredi kartının detay bağlantısı (banka adı) 63,1×19,5 ve \"Oran güncelle\" 109,1×20. Kartın birincil eylemi (detaya git) 19,5px yüksekliğinde bir metin bağlantısı.",
+          "measure": "measure 390x844 touchTargetsBelow44: 7×(63.1x19.5) + 1×(109.1x20)",
+          "target": "kartın başlık satırı ≥44px dokunma alanı (Link'e -my-2.5 py-2.5 blok ya da kartın tamamı tıklanabilir) ve \"Oran güncelle\" h-11 md:h-8",
+          "file": "apps/web/src/modules/finance/components/loan-panel.tsx:38 ve 80-83",
+          "openedRound": 3,
+          "closedRound": 3,
+          "verifiedBy": "Builder (Tur 3 düzeltme) — pnpm measure + ekran görüntüsü ile doğrulandı; kritik yeniden puanlama bekliyor",
+          "measureAfter": "pnpm measure /finans/krediler --viewport 390x844 → touchTargetsBelow44: yalnızca breadcrumb-page span'ı (etkileşimli değil) kaldı. Kart başlığındaki banka adı Link'ine `-my-3.5 py-3.5` (görsel boyutu değiştirmeden dokunma alanını 47.5px'e çıkarır — py-2.5/39.5px yetersiz kaldı) eklendi; RateUpdateDialog tetikleyicisi çıplak metinden `Button variant=\"outline\" size=\"sm\" className=\"h-11 md:h-8\"`e çevrildi (44px, modülün PageHeader aksiyon kalıbıyla tutarlı). Ekran görüntüsüyle doğrulandı (artifacts/screens/finans-krediler/mobile.png)."
         }
       ],
-      "measurePrev": {
-        "desktop": {
-          "rows": 37,
-          "rowH": [
-            31,
-            31,
-            31
-          ],
-          "colors": 16
+      "p2": [
+        {
+          "id": "finans-krediler-07",
+          "criterion": 8,
+          "severity": "P2",
+          "text": "RateUpdateDialog tetikleyicisi çıplak <button>; focus-visible halkası yok, klavye odağı hiç görünmüyor.",
+          "measure": "loan-panel.tsx:80 className=\"inline-flex ... hover:bg-primary/10\" — focus-visible yok",
+          "target": "Button variant=\"ghost\" size=\"sm\" (focus-visible:ring-[3px] ortak kalıbı)",
+          "file": "apps/web/src/modules/finance/components/loan-panel.tsx:80",
+          "openedRound": 3
         },
-        "mobile": {
-          "sw": 390,
-          "cw": 390,
-          "shellScrollWidth": 451,
-          "shellClientWidth": 390,
-          "gridScrollWidth": 435,
-          "gridClientWidth": 358,
-          "cardWidth": 435,
-          "clippedElements": 269,
-          "touchBelow44": 2,
-          "colors": 14
+        {
+          "id": "finans-krediler-08",
+          "criterion": 11,
+          "severity": "P2",
+          "text": "Faiz türü rozeti ortak StatusBadge yerine elle yazılmış; StatusBadge warning tonuyla aynı sert kodlanmış oklch değerini tekrarlıyor.",
+          "measure": "loan-panel.tsx:42 bg-warning/15 text-[oklch(0.5_0.14_70)]; status-badge.tsx:9 aynı değer",
+          "target": "<StatusBadge tone=\"warning\" size=\"sm\" label=\"Değişken faiz\" />",
+          "file": "apps/web/src/modules/finance/components/loan-panel.tsx:42",
+          "openedRound": 3
         }
-      },
-      "delta": "0 — kaynak değişmedi, ölçümler Tur 1 ile aynı"
+      ]
     },
     "/finans/krediler/[id]": {
       "round": 3,
       "reference": "stripe",
-      "scores": null,
-      "total": null,
+      "scores": [
+        4,
+        5,
+        4,
+        5,
+        5,
+        5,
+        4,
+        4,
+        3,
+        5,
+        4,
+        5
+      ],
+      "total": 53,
       "winner": "Stripe",
-      "note": "Rota hâlâ yok. Tur 2 doğrulaması: app/(app)/finans/krediler/ altında yalnızca page.tsx; GET /finans/krediler/b837e060-a41d-47f7-ac6b-50ab742db9ea → Next.js İNGİLİZCE varsayılan 404 ekranı (artifacts/screens/finans-krediler-b837e060-a41d-47f7-ac6b-50ab742db9ea/desktop.png). Puanlanamadı.",
+      "delta": "Tur2 puanlanamadı (rota yoktu, 404) → Tur3 ilk kez puanlandı: 53. Rota açıldı; eyebrow L1 + banka adı h1 + KPI şeridi + 21 satırlık amortisman takvimi (satır 32px, tümü mono tabular-nums).",
+      "measure": {
+        "desktop": {
+          "rows": {
+            "count": 21,
+            "heights": [
+              31.5,
+              32,
+              32
+            ]
+          },
+          "fontSizes": {
+            "10": 2,
+            "11": 12,
+            "12": 176,
+            "13": 26,
+            "14": 2,
+            "15": 1,
+            "16": 1,
+            "18": 1,
+            "24": 1
+          },
+          "colors": 15,
+          "h1": "24px/600",
+          "overflowX": false
+        },
+        "mobile": {
+          "sw": 390,
+          "cw": 390,
+          "rows": {
+            "count": 21,
+            "heights": [
+              31.5,
+              32,
+              32
+            ]
+          },
+          "colors": 12,
+          "touchBelow44": [
+            {
+              "selector": "button[data-slot=\"dialog-trigger\"] \"Oran güncelle\"",
+              "w": 358,
+              "h": 28
+            }
+          ]
+        }
+      },
       "open": [],
       "closed": [
         {
@@ -657,31 +835,56 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "screenshot+curl",
+          "verifiedBy": "Tur 3: rota açıldı, gerçek id ile 200 döndü ve ekran görüntüsü alındı",
           "measureAfter": "Route eklendi: apps/web/src/app/(app)/finans/krediler/[id]/page.tsx (amortisman takvimi + KPI şeridi + değişken faizli kredide 'Oran güncelle'; kart listesinden banka adı artık detaya link). Ekran görüntüsüyle 200 + gerçek veri doğrulandı (b8...krediler/[id])."
+        },
+        {
+          "id": "finans-krediler-detay-02",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Mobilde sayfanın tek eylemi \"Oran güncelle\" 358×28 (44px altı) ve PageHeader aksiyonu olarak çıplak yeşil metin — modüldeki her PageHeader aksiyonu outline Button (Yeniden hesapla, Varsayımlar, Gerçekleşenleri yenile). Geri bağlantısı \"Krediler\" 64×16.",
+          "measure": "measure 390x844 touchTargetsBelow44: dialog-trigger 358x28, a \"Krediler\" 64x16",
+          "target": "Button variant=\"outline\" size=\"sm\" className=\"h-11 md:h-8\"; geri bağlantısı ≥44px dokunma alanı",
+          "file": "apps/web/src/modules/finance/components/loan-panel.tsx:80 (RateUpdateDialog) + app/(app)/finans/krediler/[id]/page.tsx:31-35",
+          "openedRound": 3,
+          "closedRound": 3,
+          "verifiedBy": "Builder (Tur 3 düzeltme) — pnpm measure + ekran görüntüsü ile doğrulandı; kritik yeniden puanlama bekliyor",
+          "measureAfter": "pnpm measure /finans/krediler/<id> --viewport 390x844 → touchTargetsBelow44: yalnızca breadcrumb-page span'ı (etkileşimli değil) kaldı. PageHeader aksiyonu (RateUpdateDialog tetikleyicisi) loan-panel.tsx'te ortak bileşen olarak outline Button + h-11 md:h-8'e çevrildi (kart listesiyle aynı bileşen, iki giriş noktası). Geri bağlantısı (`Krediler`) `-my-4 py-4` ile 48px dokunma alanına çıkarıldı (py-3/40px yetersiz kaldı). Ekran görüntüsüyle doğrulandı (artifacts/screens/finans-krediler-<id>/mobile.png)."
         }
       ],
-      "delta": "0 — kaynak değişmedi, ölçümler Tur 1 ile aynı"
+      "p2": [
+        {
+          "id": "finans-krediler-detay-03",
+          "criterion": 7,
+          "severity": "P2",
+          "text": "Amortisman tablosunun boş durumu ortak EmptyState yerine düz <td colSpan={8}> metni.",
+          "measure": "loan-panel.tsx:245 \"Taksit takvimi yok.\" — ikon/açıklama/eylem yok",
+          "target": "EmptyState compact icon+title+description",
+          "file": "apps/web/src/modules/finance/components/loan-panel.tsx:243-247",
+          "openedRound": 3
+        }
+      ]
     },
     "/finans/tahsilat-takibi": {
       "round": 3,
       "reference": "stripe",
       "scores": [
         4,
-        4,
-        3,
         5,
         3,
         4,
-        2,
-        3,
-        3,
         4,
+        4,
+        5,
+        5,
         3,
-        3
+        5,
+        4,
+        5
       ],
-      "total": 41,
+      "total": 51,
       "winner": "Stripe",
+      "delta": "Tur2 41 → Tur3 51. k7 2→5 (iki boş durum da ortak EmptyState: ikon+başlık+açıklama, tablo/başlık hiç çizilmiyor). k12 4→5 (ham İngilizce enumlar Türkçeleşti: E-posta/WhatsApp, Nazik/Sert/Hukuki). k5 3→4, k9 3 KALDI (yeni ölçüm: birincil eylem ekran dışında + 32px). k3 3 KALDI.",
       "measure": {
         "desktop": {
           "rows": {
@@ -704,33 +907,36 @@
             "24": 1
           },
           "colors": 23,
-          "h1": "24px/600"
+          "h1": "24px/600",
+          "overflowX": false
         },
         "mobile": {
           "sw": 390,
           "cw": 390,
-          "touchBelow44": 3,
-          "rowH": [
-            33.5,
-            34,
-            65
-          ],
-          "colors": 22
+          "rows": {
+            "count": 6,
+            "heights": [
+              33.5,
+              34,
+              49
+            ]
+          },
+          "colors": 22,
+          "touchBelow44": [
+            {
+              "selector": "button[data-slot=\"button\"] \"Taslak oluştur\"",
+              "w": 135.2,
+              "h": 32
+            },
+            {
+              "selector": "button[data-slot=\"button\"] \"Taslak oluştur\"",
+              "w": 135.2,
+              "h": 32
+            }
+          ]
         }
       },
-      "open": [
-        {
-          "id": "finans-dunning-05",
-          "criterion": 6,
-          "severity": "P2",
-          "text": "4 yaşlandırma KPI'sının tamamı '₺0' ve tam kontrastta; sıfır değerler soluk olmalı.",
-          "measure": "4/4 KPI değeri ₺0, renk foreground",
-          "target": "değer 0 ise text-muted-foreground",
-          "file": "apps/web/src/app/(app)/finans/tahsilat-takibi/page.tsx (KpiCard kullanımı)",
-          "openedRound": 1,
-          "reverifiedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "finans-dunning-01",
@@ -743,7 +949,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "DunningTable ve DunningHistoryList boşken artık tabloyu/başlık satırını hiç render etmiyor, yalnızca ortak EmptyState (ikon+başlık+açıklama) gösteriliyor. Ekran görüntüsünde 'Henüz hatırlatma geçmişi yok' kartı görülüyor."
         },
         {
@@ -757,7 +963,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "Kural tablosunda channels/tone artık CHANNEL_LABEL/TONE_LABEL sözlüğüyle Türkçeye çevriliyor, Ton için StatusBadge kullanılıyor. Ekran görüntüsünde 'E-posta', 'E-posta, WhatsApp', 'Nazik'/'Sert'/'Hukuki' rozetleri; ham enum yok."
         },
         {
@@ -771,7 +977,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "EmptyState artık tablo/kaydırma kabının dışında, kartın kendi genişliğine göre render ediliyor (colSpan hücresi kaldırıldı). 390px ekran görüntüsünde ortalı."
         },
         {
@@ -785,53 +991,93 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON",
           "measureAfter": "Kural tablosuna min-w-max + whitespace-nowrap eklendi (modülün diğer tablolarıyla tutarlı). pnpm measure /finans/tahsilat-takibi --viewport 390x844 → rows.heights max 49 (öncesi 71.5), scrollWidth=clientWidth=390."
+        },
+        {
+          "id": "finans-dunning-05",
+          "criterion": 6,
+          "severity": "P2",
+          "text": "4 yaşlandırma KPI'sının tamamı '₺0' ve tam kontrastta; sıfır değerler soluk olmalı.",
+          "measure": "4/4 KPI değeri ₺0, renk foreground",
+          "target": "değer 0 ise text-muted-foreground",
+          "file": "apps/web/src/app/(app)/finans/tahsilat-takibi/page.tsx (KpiCard kullanımı)",
+          "openedRound": 1,
+          "reverifiedRound": 2,
+          "closedRound": 3,
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure/probe JSON"
+        },
+        {
+          "id": "finans-dunning-06",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "390px'te ekranın birincil eylemi (\"Taslak oluştur\") tamamen görünür alanın dışında: buton x=819–955, viewport 390. Ayrıca 135,2×32 ile 44px altında. Tablo mobil kart görünümüne düşmüyor; GECİKME/BAKİYE/SEVİYE/İŞLEM sütunlarının hiçbiri ilk görünümde yok.",
+          "measure": "probe 390x844: tablo kabı scrollWidth 950 / clientWidth 356; offscreen: 2×\"Taslak oluştur\" left 819 right 955; measure touchTargetsBelow44 135.2x32",
+          "target": "<md'de kart görünümü (components/data-table/mobile-cards.tsx kalıbı) — eylem butonu kartın içinde, ≥44px, yatay kaydırma gerektirmeden",
+          "file": "apps/web/src/modules/finance/components/dunning-panel.tsx:145-200",
+          "openedRound": 3,
+          "closedRound": 3,
+          "verifiedBy": "Builder (Tur 3 düzeltme) — pnpm measure + ekran görüntüsü ile doğrulandı; kritik yeniden puanlama bekliyor",
+          "measureAfter": "pnpm measure /finans/tahsilat-takibi --viewport 390x844 → scrollWidth 390 = clientWidth 390 (taşma yok), touchTargetsBelow44: yalnızca breadcrumb-page span'ı (etkileşimli değil) kaldı — 'Taslak oluştur' artık görünür alanın tamamen içinde. dunning-panel.tsx DunningTable'a <md'de kart görünümü eklendi (masaüstü tablosu `hidden md:block`): her kart Müşteri/Fatura/Vade üstte, GECİKME+BAKİYE grid-cols-2, SEVİYE rozet, eylem butonu (Taslak oluştur / İncele ve gönder) kartın içinde tam genişlik h-11. Ekran görüntüsüyle doğrulandı (artifacts/screens/finans-tahsilat-takibi/mobile.png)."
+        },
+        {
+          "id": "finans-dunning-07",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Bilgi yoğunluğu düşük: 1440×900 ilk ekranda 4 KPI + 2 tablo satırı; \"Gönderim geçmişi\" boş durumu tek başına ~350px dikey alan kaplıyor (compact değil, py-16).",
+          "measure": "measure desktop rows.count 6 (2 fatura + 4 kural); EmptyState non-compact px-6 py-16 → 358px yükseklik",
+          "target": "boş durum compact (py-10, ~140px); ilk ekranda ≥15 satır ya da yaşlandırma dağılımının görselleştirilmesi",
+          "file": "apps/web/src/modules/finance/components/dunning-panel.tsx:229-235",
+          "openedRound": 3,
+          "closedRound": 3,
+          "verifiedBy": "Builder (Tur 3 düzeltme) — pnpm measure + ekran görüntüsü ile doğrulandı; kritik yeniden puanlama bekliyor",
+          "measureAfter": "DunningHistoryList boş durumu (dunning-panel.tsx) `compact` prop'u ile py-16'dan py-10'a indirildi (~358px'ten ~140px'e). Ekran görüntüsüyle doğrulandı (artifacts/screens/finans-tahsilat-takibi/desktop.png) — 'Gönderim geçmişi' artık sayfanın önemli bir bölümünü tek başına kaplamıyor."
         }
       ],
-      "measurePrev": {
-        "desktop": {
-          "rows": 6,
-          "rowH": [
-            32,
-            32.5,
-            100
-          ],
-          "colors": 14
+      "p2": [
+        {
+          "id": "finans-dunning-05",
+          "criterion": 6,
+          "severity": "P2",
+          "text": "61-90 gün ve 90+ gün KPI değerleri \"₺0\" ve tam kontrastta; sıfır değerler soluk olmalı. (Tur 2'den açık kaldı — KpiCard sıfırı ayırt etmiyor, kök neden shell.)",
+          "measure": "2/4 KPI değeri ₺0, renk foreground (kpi-card.tsx:88 NumberFlow)",
+          "target": "değer 0 ise text-muted-foreground",
+          "file": "apps/web/src/components/kpi-card.tsx:88 (shell) — kullanım: app/(app)/finans/tahsilat-takibi/page.tsx:29-32",
+          "openedRound": 2,
+          "reverifiedRound": 3
         },
-        "mobile": {
-          "sw": 390,
-          "cw": 390,
-          "rowH": [
-            32,
-            71.5,
-            100
-          ],
-          "touchBelow44": 1,
-          "colors": 13
+        {
+          "id": "finans-dunning-08",
+          "criterion": 11,
+          "severity": "P2",
+          "text": "Sayfadaki 3 bölüm iki farklı kalıpta: ilk ikisi \"kart dışı h2 + çerçevesiz tablo kartı\", üçüncüsü \"kart içi h2\". Ayrıca bakiye 2 ondalık (₺1.100,00) basılırken modülün diğer tüm ekranları 0 ondalık kullanıyor.",
+          "measure": "page.tsx:35/42 h2 kart dışında, :49 h2 kart içinde; dunning-panel.tsx:169 formatMoney(..., {digits:2})",
+          "target": "tek bölüm kalıbı; para ondalığı modül genelinde tek kural",
+          "file": "apps/web/src/app/(app)/finans/tahsilat-takibi/page.tsx:35-49",
+          "openedRound": 3
         }
-      },
-      "delta": "0 — kaynak değişmedi, ölçümler Tur 1 ile aynı"
+      ]
     },
     "/finans/tahmin": {
       "round": 3,
       "reference": "stripe",
       "scores": [
         4,
-        4,
+        5,
         2,
+        5,
         4,
-        3,
         4,
-        2,
-        3,
-        3,
+        5,
+        5,
+        5,
+        5,
         4,
-        3,
-        3
+        5
       ],
-      "total": 39,
+      "total": 53,
       "winner": "Stripe",
+      "delta": "Tur2 39 → Tur3 53. k7 2→5 (üç boş durum da ikon+başlık+açıklama+eylem içeren EmptyState). k9 3→5 (mobil dokunma hedefi ihlali 0; butonlar h-11 sm:h-8, başlık/buton <sm'de dikey yığın). k11 3→4 (gerçekleşen serisi gri değil --chart-5). k3 2 KALDI: sayfada okunacak veri yok.",
       "measure": {
         "desktop": {
           "rows": {
@@ -854,18 +1100,22 @@
             "24": 1
           },
           "colors": 15,
-          "h1": "24px/600"
+          "h1": "24px/600",
+          "overflowX": false
         },
         "mobile": {
           "sw": 390,
           "cw": 390,
-          "touchBelow44": 1,
-          "rowH": [
-            0,
-            0,
-            0
-          ],
-          "colors": 14
+          "rows": {
+            "count": 0,
+            "heights": [
+              0,
+              0,
+              0
+            ]
+          },
+          "colors": 14,
+          "touchBelow44": []
         }
       },
       "open": [],
@@ -881,7 +1131,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "İki grafik de points.length<2 iken EmptyState (ikon+başlık+açıklama+'yeniden üret' eylemi) gösteriyor; kanal tablosu da aynı desene çevrildi. Uçtan uca Playwright ile 'Yeniden üret' tıklanıp gerçek veri üretildiği ve EmptyState'in dolu grafiğe döndüğü doğrulandı (hata yok)."
         },
         {
@@ -895,7 +1145,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Sayfaya KpiStripRow eklendi (tahmini 6 ay toplam ciro, ortalama bant genişliği, tahmin noktası, kanal tahmini kalemi). pnpm measure /finans/tahmin → rows dışında KPI şeridiyle ilk ekranda ≥2 sayısal değer her zaman (tahmin noktası/kanal kalemi 0 dahi olsa sayı), tahmin üretildikten sonra 4/4 sayısal."
         },
         {
@@ -909,7 +1159,7 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "HISTORY_COLOR var(--muted-foreground) (gri) → var(--chart-5) (modülün tek vurgu tonu, nakit akışı/krediler ile aynı); FORECAST_COLOR aynı renk kesikli çizgi. Ekran görüntüsünde (tahmin üretildikten sonra) grafik tek renkli mor, gri seri yok."
         },
         {
@@ -923,33 +1173,35 @@
           "openedRound": 1,
           "reverifiedRound": 2,
           "closedRound": 3,
-          "verifiedBy": "measure",
+          "verifiedBy": "Tur 3 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON",
           "measureAfter": "Başlık+buton flex-col (sm altında) + buton className h-11 sm:h-8. pnpm measure /finans/tahmin --viewport 390x844 → 'Satış/Nakit tahminini yeniden üret' butonları touchTargetsBelow44 listesinden çıktı (h=44)."
+        },
+        {
+          "id": "finans-tahmin-05",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Ekran fiilen boş: tablo satırı 0, 4 KPI'nın 2'si \"—\", 2'si 0; 3 kartın 2'si boş durum. Kök neden veri: forecasts tablosu boş (0 satır) ve loadSalesHistory cari ayı hariç tuttuğu için satış geçmişi tek noktaya (2026-08) iniyor — grafik <2 nokta kuralıyla boş duruma düşüyor.",
+          "measure": "measure desktop rows.count 0; psql: select count(*) from forecasts → 0; invoices(sales) yalnızca 2026-08 (17) ve 2026-09 (1); loadSalesHistory lt(currentMonthStart) → 1 nokta",
+          "target": "seed 12 aylık satış geçmişi + tahmin noktası üretsin (packages/db/src/seed/finance.ts) ya da sayfa ilk açılışta fallback tahmini sunucuda üretsin → ilk ekranda ≥8 anlamlı sayı / ≥15 satır",
+          "file": "packages/db/src/seed/finance.ts + apps/web/src/app/(app)/finans/tahmin/page.tsx",
+          "openedRound": 3,
+          "closedRound": 3,
+          "verifiedBy": "Builder (Tur 3 düzeltme) — pnpm measure + ekran görüntüsü ile doğrulandı; kritik yeniden puanlama bekliyor",
+          "measureAfter": "pnpm db:reset sonrası pnpm measure /finans/tahmin --viewport 1440x900 → rows.count 0→36 (kanal tahmini tablosu). Ekran görüntüsü: 4 KPI'nın tamamı anlamlı değer gösteriyor (Tahmini 6 ay toplam ciro ₺269.810, Ortalama bant genişliği %30, Tahmin noktası (satış) 6, Kanal tahmini kalemi 36); her iki grafik (satış, nakit) veri çiziyor, kanal tablosu 36 satır. Kök neden: forecasts tablosu hiç kimse 'Yeniden üret'e basmadan boş kalıyordu; packages/db @plantero/ai'yi import edemediği için (döngüsel bağımlılık) seed'de üretilemiyordu — web katmanında yeni forecast-bootstrap.ts (apps/web/src/modules/finance/forecast-bootstrap.ts) eklendi: /finans/tahmin ilk açılışta forecasts boşsa generateSalesForecastAction/generateCashForecastAction ile AYNI hesaplamayı bir kez çalıştırıp kalıcılaştırır (idempotent — sonraki yüklemelerde tetiklenmez). loadSalesHistory'nin cari ayı dışlaması (doğru davranış) DEĞİŞTİRİLMEDİ."
         }
       ],
-      "measurePrev": {
-        "desktop": {
-          "rows": 1,
-          "rowH": [
-            84,
-            84,
-            84
-          ],
-          "colors": 13
-        },
-        "mobile": {
-          "sw": 390,
-          "cw": 390,
-          "rowH": [
-            103.5,
-            103.5,
-            103.5
-          ],
-          "touchBelow44": 4,
-          "colors": 11
+      "p2": [
+        {
+          "id": "finans-tahmin-05b",
+          "criterion": 11,
+          "severity": "P2",
+          "text": "Aynı eylem butonu tek kartta iki kez: kart başlığında ve boş durumun eylem alanında (\"Satış tahminini yeniden üret\" sayfada 3 kez).",
+          "measure": "measure desktop: 3× \"Satış tahminini yeniden üret\" (226.9x32) + 1× nakit",
+          "target": "boş durumda kart başlığındaki buton gizlensin (tek birincil eylem)",
+          "file": "apps/web/src/modules/finance/components/forecast-panel.tsx:155-165, 216-221",
+          "openedRound": 3
         }
-      },
-      "delta": "0 — kaynak değişmedi, ölçümler Tur 1 ile aynı"
+      ]
     }
   },
   "shellFindings": [
@@ -963,7 +1215,10 @@
       "target": "apps/web/src/app/not-found.tsx (Türkçe, marka içinde, 'Kokpit'e dön' eylemi) → hiçbir 404'te İngilizce varsayılan ekran görünmesin",
       "file": "apps/web/src/app/not-found.tsx (yok)",
       "openedRound": 1,
-      "reverifiedRound": 2
+      "reverifiedRound": 2,
+      "status": "closed",
+      "closedRound": 3,
+      "verifiedBy": "apps/web/src/app/not-found.tsx eklendi (321346d); Türkçe, marka içi, Kokpit'e dön eylemi"
     },
     {
       "id": "shell-measure-clip-01",
@@ -975,7 +1230,7 @@
       "target": "measure.ts çıktısına clip kontrolü eklensin: en yakın overflow-x != visible ataların scrollWidth vs clientWidth farkı + görünür alan dışında kalan metin elemanlarının sayısı",
       "file": "scripts/measure.ts:70-80",
       "openedRound": 1,
-      "reverifiedRound": 2
+      "reverifiedRound": 3
     }
   ],
   "codeScan": {
@@ -983,33 +1238,23 @@
     "easeIn": 0,
     "durationsOver300ms": 0,
     "scaleZero": 0,
-    "hoverGated": true,
-    "hoverGateSource": "apps/web/src/app/globals.css:11 — @media (hover: hover) and (pointer: fine)",
     "transformOriginIssues": 0,
     "keyboardActionAnimations": 0,
-    "note": "Tur 2: finans modülünde (apps/web/src/modules/finance + app/(app)/finans) animasyon kod kokusu yine bulunamadı.",
-    "round": 2
+    "hoverGated": true,
+    "hoverGateSource": "apps/web/src/app/globals.css:11-17 — @custom-variant hover { @media (hover:hover) and (pointer:fine) }",
+    "rechartsAnimationsDisabled": true,
+    "note": "Tur 3: apps/web/src/modules/finance + app/(app)/finans üzerinde grep temiz. Ortak bileşenlerde de transition-all yok (button/tabs/switch yalnızca yorumda geçiyor). Yeni kod düzeyi bulgular animasyon değil odak/erişilebilirlik kaynaklı: budget-panel segment düğmeleri ve loan-panel RateUpdateDialog tetikleyicisinde focus-visible halkası yok.",
+    "round": 3
   },
-  "measureDir": "artifacts/critic/measure-finans-r2",
+  "measureDir": "artifacts/critic/measure-finans-r3",
+  "probeDir": "artifacts/critic/probe-finans-r3",
   "summary": {
-    "round": 2,
-    "referenceTotal": 56,
-    "totals": {
-      "/finans/nakit-akisi": 46,
-      "/finans/break-even": 42,
-      "/finans/butce": 45,
-      "/finans/krediler": 43,
-      "/finans/krediler/[id]": null,
-      "/finans/tahsilat-takibi": 41,
-      "/finans/tahmin": 39
-    },
-    "won": 0,
-    "lost": 7,
-    "openP0": 2,
-    "openP1": 14,
-    "closedThisRound": 0,
+    "routes": 7,
+    "won": 2,
+    "lost": 5,
+    "openP0": 0,
+    "openP1": 7,
+    "openP2": 14,
     "green": false
-  },
-  "builderNote": "Tur 2 düzeltmeleri (builder, round 3 artefaktları): artifacts/critic/finans.json'daki 31 açık bulgudan 30'u kök nedenden kapatıldı (pnpm measure ile kanıtlandı, measureAfter alanlarına yazıldı). Açık kalan tek bulgu finans-dunning-05 (P2) — çözümü ORTAK KpiCard bileşeninde (apps/web/src/components/kpi-card.tsx) 'değer 0 ise muted' desteği gerektiriyor; bu dosya finans modülünün yazma kapsamı dışında (yalnızca yeni dosya eklenebilir, mevcut ortak bileşen değiştirilemez) — sharedComponentRequests olarak raporlandı. Ayrıca görev promptunda JSON dışında verilen 3 ek bulgu: (1) RBAC — muhasebe rolünde finance.manage yok: packages/core/src/auth/rbac.ts finans modülünün yazma kapsamı dışında olduğu için rol eklenmedi, bunun yerine /finans/nakit-akisi'nde açık 'düzenlemek için ... yetkisi gerekir' bildirimi eklendi (UI çözümü, suggestedFix'in ikinci seçeneği). (2) Tahsilat takibi vadesi geçmiş fatura eksikliği: packages/db/src/seed/finance-projections.ts'e idempotent bir adım eklendi (docNo'ya göre deterministik 2 satış faturasının vade tarihi sabit bir geçmiş tarihe çekiliyor) — artık canlı veride 2 vadesi geçmiş fatura var, taslak→onay→gönder akışı uçtan uca test edilebilir. (3) Break-even canlı hesabın Excel'den ~0,95 TL sapması: kök neden packages/db/src/import/nakitakisi.ts'te weighted_margin_pct'nin 4 haneye yuvarlanarak saklanması (cashflow.test.ts bunu belgeliyor, ±1 TL tolerans kabul edilmiş) — bu dosya packages/db/src/import/** finans modülünün yazma kapsamı dışında, düzeltilmedi; schemaRequests olarak raporlandı. pnpm typecheck/lint/test ve db:reset + db:check YEŞİL (bu turda).",
-  "builderRound": 3
+  }
 }

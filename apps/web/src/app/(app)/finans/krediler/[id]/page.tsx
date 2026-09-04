@@ -32,7 +32,10 @@ export default async function LoanDetailPage({ params }: { params: Promise<{ id:
   return (
     <>
       <div className="mb-3">
-        <Link href="/finans/krediler" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
+        {/* Kriter 9 kök neden düzeltmesi (Tur 3, P1 finans-krediler-detay-02): geri bağlantısı 64x16px
+            — 44px dokunma hedefinin çok altında. `-my-4 py-4` dokunma alanını görsel boyutu
+            değiştirmeden büyütür (py-3/40px yetersiz kaldığı için py-4/48px'e çıkarıldı). */}
+        <Link href="/finans/krediler" className="-my-4 inline-flex items-center gap-1.5 py-4 text-xs text-muted-foreground hover:text-foreground">
           <ArrowLeft className="size-3.5" /> Krediler
         </Link>
       </div>

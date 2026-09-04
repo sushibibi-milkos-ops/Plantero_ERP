@@ -5,6 +5,7 @@ import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
 import { relativeTime } from '@/lib/format';
 import { getForecastPage } from '@/modules/finance/forecast-queries';
+import { ensureInitialForecasts } from '@/modules/finance/forecast-bootstrap';
 import { ForecastPanels } from '@/modules/finance/components/forecast-panel';
 
 export const metadata: Metadata = { title: 'Tahmin' };
@@ -12,7 +13,16 @@ export const dynamic = 'force-dynamic';
 
 export default async function ForecastPage() {
   await requirePermission('finance.view');
-  const data = await getForecastPage();
+  let data = await getForecastPage();
+
+  // Kriter 3 kök neden düzeltmesi (Tur 3, P1 finans-tahmin-05): `forecasts` tablosu hiç kimse
+  // "Yeniden üret"e basmadan boş kalıyordu — ilk açılışta boşsa bir kez tohum tahmin üretilip
+  // kalıcılaştırılır (bkz. forecast-bootstrap.ts başlık yorumu); ikinci yüklemede artık boş
+  // olmadığından bu dal hiç çalışmaz (idempotent).
+  if (data.salesForecast.length === 0) {
+    await ensureInitialForecasts();
+    data = await getForecastPage();
+  }
 
   // Kriter 3 kök neden düzeltmesi (Tur 2, P1): sayfada hiçbir KPI şeridi yoktu, ilk ekranda okunabilir
   // tek bir sayı bulunmuyordu (1440x900'de yalnızca eksen tick'leri) — diğer tüm finans rotaları ≥4

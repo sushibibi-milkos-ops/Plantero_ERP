@@ -35,7 +35,12 @@ export function LoanCards({ loans, canEdit }: { loans: LoanCardRow[]; canEdit: b
                 {/* Kriter 11 kök neden düzeltmesi: konsolide takvimin sütun başlıkları (L1…L7) kart
                     tarafında hiç görünmüyordu — kod rozeti eşleşmeyi %100 görünür kılar. */}
                 <span className="shrink-0 rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] font-medium text-muted-foreground tabular-nums">{l.code}</span>
-                <Link href={`/finans/krediler/${l.id}`} className="truncate text-[13px] font-semibold hover:text-primary hover:underline">{l.bankName}</Link>
+                {/* Kriter 9 kök neden düzeltmesi (Tur 3, P1 finans-krediler-06): kartın birincil eylemi
+                    (detaya git) 19,5px yükseklikli çıplak bir metin bağlantısıydı — 44px dokunma hedefi
+                    hedefinin çok altında. `-my-3.5 py-3.5` dokunma alanını görsel boyutu değiştirmeden
+                    büyütür (kutu daha yüksek ama negatif kenar boşluğu satır yüksekliğini geri alır);
+                    py-2.5 (39.5px toplam) yetersiz kaldığı için py-3.5'e (47.5px) çıkarıldı. */}
+                <Link href={`/finans/krediler/${l.id}`} className="-my-3.5 truncate py-3.5 text-[13px] font-semibold hover:text-primary hover:underline">{l.bankName}</Link>
               </div>
               <div className="line-clamp-2 text-xs text-muted-foreground">{l.productName}</div>
             </div>
@@ -80,10 +85,16 @@ export function RateUpdateDialog({ loanId, loanCode, currentRate }: { loanId: st
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {/* Kriter 9 kök neden düzeltmesi (Tur 3, P1 finans-krediler-06 + finans-krediler-detay-02):
+          önceden çıplak (border'sız) yeşil bir metin bağlantısıydı — hem 20px yükseklikte (44px altı)
+          hem de modülün PageHeader aksiyon kalıbının (Yeniden hesapla, Varsayımlar, Gerçekleşenleri
+          yenile — hepsi outline Button) dışındaydı. Tek bileşen hem kart footer'ında hem kredi detayı
+          PageHeader'ında kullanıldığından (bkz. dosya başı yorumu) artık ikisinde de aynı outline
+          Button + h-11 md:h-8 kalıbı. */}
       <DialogTrigger asChild>
-        <button className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-primary hover:bg-primary/10">
+        <Button variant="outline" size="sm" className="h-11 md:h-8">
           <Percent className="size-3.5" /> Oran güncelle
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
