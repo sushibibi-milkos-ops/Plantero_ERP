@@ -96,14 +96,18 @@ export function DateInput({
         aria-label={ariaLabel}
         aria-invalid={ariaInvalid}
         // h-11 md:h-9: fields.tsx/combobox.tsx ile aynı 44px mobil dokunma hedefi (Tur 2 bulgusu).
-        className="num h-11 pr-16 text-[13px] md:h-9 md:text-[13px]"
+        // pr-24 md:pr-16: mobilde iki 44px dokunma hedefi (temizle + takvim) yan yana sığsın diye
+        // masaüstünden daha geniş sağ boşluk (Tur 2 düzeltmesi, aşağıdaki temizle düğmesiyle birlikte).
+        className="num h-11 pr-24 text-[13px] md:h-9 md:pr-16 md:text-[13px]"
       />
       <div className="absolute right-1 flex items-center">
         {clearable && value ? (
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="grid size-6 place-items-center rounded text-muted-foreground hover:text-foreground"
+            // size-11 md:size-6: görsel ikon küçük kalır ama mobil dokunma hedefi gerçek 44×44 —
+            // switch.tsx'teki aynı desen (kök yalnızca hit-area, ikon kendi boyutunda ortalanır).
+            className="grid size-11 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground md:size-6"
             aria-label="Tarihi temizle"
             disabled={disabled}
           >
