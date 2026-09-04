@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
-import { dunningRules, budgets, budgetLines, channelAssumptions, fixedExpenses, salesChannels } from '../schema/index.js';
+import { dunningRules, budgets, budgetLines, channelAssumptions, fixedExpenses, salesChannels, loans } from '../schema/index.js';
 import { parseNakitAkisi, importNakitAkisi } from '../import/nakitakisi.js';
+import { SYSTEM_ACTOR, postLoanOpeningEntry } from '@plantero/core';
 import { log, readImportFile, type SeedSummary } from './_helpers.js';
 
 const DUNNING_RULES: Array<{ level: number; name: string; daysOffset: number; channels: string[]; tone: string; requiresApproval: boolean; templateHint: string }> = [
@@ -29,6 +30,18 @@ export async function seedFinance(db: DbOrTx, summary: SeedSummary): Promise<voi
   summary.add('fixed_expenses', imported.fixedExpenses);
   summary.add('cashflow_assumptions', imported.assumptions);
   summary.add('channel_assumptions', imported.channelAssumptions);
+
+  // I35 (tur 14 P0) kök neden düzeltmesi: her aktif kredinin mevcut bakiyesini (loans.remainingPrincipal)
+  // 300.xx hesabına tek seferlik bir açılış fişiyle işler (packages/core/src/finance/loans.ts) — bu
+  // olmadan 7 kredinin 5,65M TL'lik toplam bakiyesi ne VUK ne UFRS defterinde görünüyordu.
+  log('finance', 'kredi açılış bakiyeleri (300.xx)...');
+  const activeLoans = await db.select().from(loans).where(eq(loans.isActive, true));
+  let loanOpeningCount = 0;
+  for (const l of activeLoans) {
+    const result = await postLoanOpeningEntry(db, l.id, SYSTEM_ACTOR);
+    if (!result.skipped) loanOpeningCount++;
+  }
+  summary.add('loan_opening_entries', loanOpeningCount);
 
   log('finance', 'tahsilat hatırlatma kuralları...');
   for (const r of DUNNING_RULES) {

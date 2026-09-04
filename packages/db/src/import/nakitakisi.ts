@@ -216,23 +216,48 @@ export async function parseNakitAkisi(buffer: Buffer | ArrayBuffer): Promise<Par
       if (!loan) continue;
       const taksit = asNumber(cellVal(row.getCell(startCol)));
       const faizBsmv = asNumber(cellVal(row.getCell(startCol + 1)));
-      const anapara = asNumber(cellVal(row.getCell(startCol + 2)));
+      // I34 (tur 14 P0) kök neden düzeltmesi: anapara üçüncü hücreden BAĞIMSIZ okunmuyor artık — taksit
+      // ve faiz+BSMV önce 4 haneye yuvarlanır (bu iki hücre kaynak veri), anapara bu iki YUVARLANMIŞ
+      // Decimal'in FARKI olarak TÜRETİLİR. Böylece installment = interest + principal özdeşliği satır
+      // bazında her zaman TAM sağlanır (kaynak Excel'in kendi üç hücresi arasındaki kuruş düzeyi yuvarlama
+      // sapmaları veritabanına hiç taşınmaz). remainingAfter zinciri de aynı ROUNDED principal ile, önceki
+      // adımın ROUNDED (ham/unrounded değil) bakiyesinden hesaplanır — her adım zaten ≤4 haneli iki Decimal'in
+      // farkı olduğundan ek yuvarlama gerekmez ve zincir kümülatif sapma biriktirmez (I34 b/c/d birlikte sağlanır).
+      let installmentD = new Decimal(money4(taksit));
+      const interestD = new Decimal(money4(faizBsmv));
+      let principalD = installmentD.minus(interestD);
       const prevBalance = runningBalance.get(code) ?? new Decimal(0);
-      const remainingAfter = prevBalance.minus(anapara);
-      runningBalance.set(code, remainingAfter);
-      if (taksit <= 0) continue; // bu ay bu kredide ödeme yok (henüz başlamadı / bitti)
+      let remainingAfterD = prevBalance.minus(principalD);
+      if (taksit <= 0) {
+        runningBalance.set(code, remainingAfterD);
+        continue; // bu ay bu kredide ödeme yok (henüz başlamadı / bitti)
+      }
 
       const seq = installments.filter((x) => x.loanCode === code).length + 1;
+      // Son taksit (I34 c/d): loans.remainingPrincipal ayrı bir Excel hücresinden ("Krediler" sayfası)
+      // geldiğinden, bu bağımsız hücre ile 21 satırlık taksit programının (installment−interest) toplamı
+      // arasında ~0,0001-0,0002 TL'lik bir kaynak-veri yuvarlama sapması kalabilir. Standart amortisman
+      // pratiğinde olduğu gibi bu kuruş-altı fark SON taksitte kapatılır: son satırın anaparası tam
+      // `prevBalance`'a eşitlenir (remaining_after kesin sıfıra kapanır, I34-d) ve taksit tutarı da
+      // installment=interest+principal özdeşliğini korumak için buna göre yeniden hesaplanır (I34-a);
+      // bu da Σprincipal'i otomatik olarak remainingPrincipal'e eşitler (I34-c, telescoping toplam).
+      if (seq === loan.remainingInstallments) {
+        principalD = prevBalance;
+        installmentD = interestD.plus(principalD);
+        remainingAfterD = new Decimal(0);
+      }
+      runningBalance.set(code, remainingAfterD);
+
       const dueDate = makeDueDate(yil, month, loan.paymentDay);
       installments.push({
         loanCode: code,
         seq,
         dueDate,
         period,
-        installment: money4(taksit),
-        interest: money4(faizBsmv),
-        principal: money4(anapara),
-        remainingAfter: money4(remainingAfter),
+        installment: money4(installmentD),
+        interest: money4(interestD),
+        principal: money4(principalD),
+        remainingAfter: money4(remainingAfterD),
       });
     }
   }
