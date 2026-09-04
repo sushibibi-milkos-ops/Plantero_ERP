@@ -1,0 +1,2889 @@
+{
+ "/muhasebe/mutabakat@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "EFT — Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+    "sw": 378,
+    "cw": 203
+   },
+   {
+    "text": "Trendyol Hakediş — tanımsız dönem",
+    "sw": 226,
+    "cw": 211
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "MutabakatBu sabah 11 öneri, 2 "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "MutabakatBu sabah 11 öneri, 2 "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "MutabakatBu sabah 11 öneri, 2 "
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 1152,
+    "text": "Onay bekleyenler (7)Geçmiş J/K"
+   },
+   {
+    "tag": "div.relative.min-w-0",
+    "w": 1152,
+    "text": "Onay bekleyenler (7)Geçmiş"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 1152,
+    "text": "J/K gez · A onayla · R reddetH"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Onay bekleyenler (7)Geçmiş",
+    "w": 234.8,
+    "h": 36
+   },
+   {
+    "s": "Onay bekleyenler (7)",
+    "w": 156.5,
+    "h": 29
+   },
+   {
+    "s": "Geçmiş",
+    "w": 68.3,
+    "h": 29
+   },
+   {
+    "s": "Bunu onayla",
+    "w": 106.4,
+    "h": 36
+   },
+   {
+    "s": "Bunu onayla",
+    "w": 106.4,
+    "h": 36
+   },
+   {
+    "s": "Onayla A",
+    "w": 120.5,
+    "h": 36
+   },
+   {
+    "s": "Reddet R",
+    "w": 123.4,
+    "h": 36
+   },
+   {
+    "s": "Elle eşle",
+    "w": 105,
+    "h": 36
+   }
+  ],
+  "fontSizes": {
+   "10": 4,
+   "11": 3,
+   "12": 19,
+   "13": 53,
+   "14": 10,
+   "15": 2,
+   "16": 2,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 20,
+  "moneyTotal": 8,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Mutabakat"
+  }
+ },
+ "/muhasebe/yevmiye@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 50,
+   "min": 36,
+   "med": 36,
+   "max": 36
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "Stok hareketi SM-2026-000258 (sevkiyat): Badem İçeceği 1 Lit",
+    "sw": 587,
+    "cw": 380
+   },
+   {
+    "text": "BioGrün Handels GmbH",
+    "sw": 146,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000240 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 588,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000257 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 586,
+    "cw": 380
+   },
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 140,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000256 (sevkiyat): Plantero COSTA RICA",
+    "sw": 583,
+    "cw": 380
+   },
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 140,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000255 (sevkiyat): Plain Protein Mixi ",
+    "sw": 505,
+    "cw": 380
+   },
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 140,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000254 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 483,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000253 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 524,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000252 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 478,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000251 (sevkiyat): Spriluna [OP-306040",
+    "sw": 456,
+    "cw": 380
+   },
+   {
+    "text": "Vegan Gıda Üretim San. Tic. Ltd. Şti.",
+    "sw": 222,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000250 (sevkiyat): Plantero COSTA RICA",
+    "sw": 591,
+    "cw": 380
+   },
+   {
+    "text": "BioGrün Handels GmbH",
+    "sw": 146,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000249 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 532,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000248 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 587,
+    "cw": 380
+   },
+   {
+    "text": "Doğal Yaşam Market Zinciri Ltd. Şti.",
+    "sw": 218,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000247 (sevkiyat): BADEM BAZI [PL-2608",
+    "sw": 484,
+    "cw": 380
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 197,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000246 (sevkiyat): Plantero COSTA RICA",
+    "sw": 584,
+    "cw": 380
+   },
+   {
+    "text": "Fit Life Beslenme Ürünleri Ltd. Şti.",
+    "sw": 207,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000245 (sevkiyat): Plain Protein Mixi ",
+    "sw": 506,
+    "cw": 380
+   },
+   {
+    "text": "Site Perakende Müşterisi",
+    "sw": 152,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000244 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 587,
+    "cw": 380
+   },
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 140,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000243 (sevkiyat): BADEM BAZI [PL-2608",
+    "sw": 480,
+    "cw": 380
+   },
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 140,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000242 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 482,
+    "cw": 380
+   },
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 140,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000241 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 480,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000239 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 483,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000238 (sevkiyat): Plantero COSTA RICA",
+    "sw": 583,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000237 (sevkiyat): KAJU BAZI [PL-26082",
+    "sw": 476,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000236 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 524,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000235 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 478,
+    "cw": 380
+   },
+   {
+    "text": "Site Perakende Müşterisi",
+    "sw": 152,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000234 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 529,
+    "cw": 380
+   },
+   {
+    "text": "Site Perakende Müşterisi",
+    "sw": 152,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000233 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 483,
+    "cw": 380
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 197,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000232 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 483,
+    "cw": 380
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 197,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000198 (mal kabul): Doypack 1kg [SEED-",
+    "sw": 530,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000180 (mal kabul): Fındık [SEED-URT-3",
+    "sw": 484,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000181 (mal kabul): Yulaf [SEED-URT-30",
+    "sw": 476,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000182 (mal kabul): Hurma Şurubu [SEED",
+    "sw": 538,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000183 (mal kabul): Deniz Tuzu [SEED-U",
+    "sw": 509,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000184 (mal kabul): Isolated Pea Prote",
+    "sw": 567,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000179 (mal kabul): Badem [SEED-URT-30",
+    "sw": 489,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000185 (mal kabul): Nohut Tozu [SEED-U",
+    "sw": 517,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000186 (mal kabul): Suklaroz [SEED-URT",
+    "sw": 492,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000187 (mal kabul): Guar Gum [SEED-URT",
+    "sw": 500,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000188 (mal kabul): Xhantam Gum [SEED-",
+    "sw": 529,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000189 (mal kabul): Inulin [SEED-URT-3",
+    "sw": 472,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000190 (mal kabul): b2+b12+e [SEED-URT",
+    "sw": 500,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000191 (mal kabul): Cream [SEED-URT-30",
+    "sw": 481,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000192 (mal kabul): masker [SEED-URT-3",
+    "sw": 487,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000193 (mal kabul): Çilek Aroma Verici",
+    "sw": 554,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000194 (mal kabul): Kahve Çekirdeği (Y",
+    "sw": 589,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000195 (mal kabul): Kavanoz 500ml [SEE",
+    "sw": 548,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000196 (mal kabul): Kapak [SEED-URT-40",
+    "sw": 494,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000197 (mal kabul): Etiket [SEED-URT-4",
+    "sw": 489,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000200 (mal kabul): Kraft Kahve Torbas",
+    "sw": 609,
+    "cw": 380
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 116
+   },
+   {
+    "text": "Stok hareketi SM-2026-000230 (üretim çıktısı): Plantero Guat",
+    "sw": 702,
+    "cw": 380
+   },
+   {
+    "text": "Stok hareketi SM-2026-000229 (sarf): Kahve Çekirdeği (Yeşil)",
+    "sw": 554,
+    "cw": 380
+   }
+  ],
+  "ths": 6,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Yevmiye312 VUK fişi · 312 UFRS"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Yevmiye312 VUK fişi · 312 UFRS"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Yevmiye312 VUK fişi · 312 UFRS"
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 1152,
+    "text": "VUKUFRSDurumYevmiye312 kayıtFi"
+   },
+   {
+    "tag": "div.relative.min-w-0",
+    "w": 1152,
+    "text": "VUKUFRS"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 1152,
+    "text": "DurumYevmiye312 kayıtFiş noAçı"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Manuel fiş",
+    "w": 117.5,
+    "h": 36
+   },
+   {
+    "s": "VUKUFRS",
+    "w": 112.7,
+    "h": 36
+   },
+   {
+    "s": "VUK",
+    "w": 47.9,
+    "h": 29
+   },
+   {
+    "s": "UFRS",
+    "w": 54.7,
+    "h": 29
+   },
+   {
+    "s": "Tabloda ara",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Durum",
+    "w": 83.6,
+    "h": 32
+   },
+   {
+    "s": "Yevmiye",
+    "w": 94.5,
+    "h": 32
+   },
+   {
+    "s": "Sütunlar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Fiş no",
+    "w": 62.2,
+    "h": 28
+   },
+   {
+    "s": "Açıklama",
+    "w": 80.4,
+    "h": 28
+   },
+   {
+    "s": "Cari",
+    "w": 51.4,
+    "h": 28
+   },
+   {
+    "s": "Durum",
+    "w": 66.4,
+    "h": 28
+   },
+   {
+    "s": "Tarih",
+    "w": 56.8,
+    "h": 28
+   },
+   {
+    "s": "Tutar",
+    "w": 57.8,
+    "h": 28
+   },
+   {
+    "s": "JE-2026-000623Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000515Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000575Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000571Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000567Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000563Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000559Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000555Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000553Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000549Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000545Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000541Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000537Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000535Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000531Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000527Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000523Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000521Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000517Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000511Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000507Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000503Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000501Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000499Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000497Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000493Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000491Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000413Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000377Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000379Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000381Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000383Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000385Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000375Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000387Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000389Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000391Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000393Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000395Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000397Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000399Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000401Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000403Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000405Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000407Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000409Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000411Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000417Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000487Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "JE-2026-000485Stok hareketi ",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "Sayfa boyutu",
+    "w": 70,
+    "h": 32
+   },
+   {
+    "s": "İlk sayfa",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "s": "Önceki sayfa",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Sonraki sayfa",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Son sayfa",
+    "w": 24,
+    "h": 24
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 52,
+   "12": 11,
+   "13": 278,
+   "14": 5,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 19,
+  "moneyTotal": 100,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Yevmiye"
+  }
+ },
+ "/muhasebe/hesap-plani@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 61,
+   "min": 36,
+   "med": 36.5,
+   "max": 36.5
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 6,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Hesap Planı61 hesap — Tek Düze"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Hesap Planı61 hesap — Tek Düze"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Hesap Planı61 hesap — Tek Düze"
+   },
+   {
+    "tag": "div.",
+    "w": 1152,
+    "text": "KodAdTipUFRS koduBakiye (VUK)B"
+   },
+   {
+    "tag": "div.relative.mb-3.w-full",
+    "w": 256,
+    "text": ""
+   },
+   {
+    "tag": "div.overflow-hidden.rounded-lg.border",
+    "w": 1152,
+    "text": "KodAdTipUFRS koduBakiye (VUK)B"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "INPUT",
+    "w": 256,
+    "h": 32
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 57,
+   "12": 6,
+   "13": 392,
+   "14": 2,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 14,
+  "moneyTotal": 183,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Hesap Planı"
+  }
+ },
+ "/muhasebe/mizan@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 41,
+   "min": 36.5,
+   "med": 36.5,
+   "max": 36.5
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 5,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Mizan41 hesap — VUK ve UFRS de"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Mizan41 hesap — VUK ve UFRS de"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Mizan41 hesap — VUK ve UFRS de"
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 1152,
+    "text": "VUKUFRSKodHesapBorçAlacakBakiy"
+   },
+   {
+    "tag": "div.relative.min-w-0",
+    "w": 1152,
+    "text": "VUKUFRS"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 1152,
+    "text": "KodHesapBorçAlacakBakiye102.01"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "CSV indir",
+    "w": 106.5,
+    "h": 32
+   },
+   {
+    "s": "VUKUFRS",
+    "w": 112.7,
+    "h": 36
+   },
+   {
+    "s": "VUK",
+    "w": 47.9,
+    "h": 29
+   },
+   {
+    "s": "UFRS",
+    "w": 54.7,
+    "h": 29
+   },
+   {
+    "s": "INPUT",
+    "w": 256,
+    "h": 32
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 37,
+   "12": 5,
+   "13": 234,
+   "14": 5,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 13,
+  "moneyTotal": 250,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Mizan"
+  }
+ },
+ "/muhasebe/kdv@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 1,
+   "min": 37.5,
+   "med": 37.5,
+   "max": 37.5
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 7,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "KDVSatış %1 (gıda) · alış %20 "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "KDVSatış %1 (gıda) · alış %20 "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "KDVSatış %1 (gıda) · alış %20 "
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 1152,
+    "text": "Hesaplanan (391)number-flow-re"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 287.3,
+    "text": "Hesaplanan (391)number-flow-re"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "İndirilecek (191)number-flow-r"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Devredennumber-flow-react > sp"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Ödenecek (360)number-flow-reac"
+   },
+   {
+    "tag": "div.overflow-hidden.rounded-lg.border",
+    "w": 1152,
+    "text": "DönemHesaplananİndirilecekDevr"
+   },
+   {
+    "tag": "div.hidden.overflow-x-auto.md:block",
+    "w": 1150,
+    "text": "DönemHesaplananİndirilecekDevr"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "2026-09",
+    "w": 128,
+    "h": 36
+   },
+   {
+    "s": "Dönemi hesapla",
+    "w": 155.2,
+    "h": 36
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 3,
+   "12": 11,
+   "13": 32,
+   "14": 4,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 15,
+  "moneyTotal": 14,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "KDV"
+  }
+ },
+ "/muhasebe/donemler@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 11,
+   "min": 40.5,
+   "med": 41,
+   "max": 41
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 5,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "DönemlerKapalı döneme fiş atıl"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "DönemlerKapalı döneme fiş atıl"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "DönemlerKapalı döneme fiş atıl"
+   },
+   {
+    "tag": "div.max-w-[720px]",
+    "w": 720,
+    "text": "DönemBaşlangıçBitişDurumEylem2"
+   },
+   {
+    "tag": "div.overflow-hidden.rounded-lg.border",
+    "w": 720,
+    "text": "DönemBaşlangıçBitişDurumEylem2"
+   },
+   {
+    "tag": "button.inline-flex.shrink-0.items-center",
+    "w": 285.9,
+    "text": "37 uzak gelecek dönemi daha gö"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Yeniden aç",
+    "w": 113.8,
+    "h": 32
+   },
+   {
+    "s": "37 uzak gelecek dönemi daha ",
+    "w": 285.9,
+    "h": 32
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 13,
+   "12": 5,
+   "13": 59,
+   "14": 4,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 17,
+  "moneyTotal": 0,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Dönemler"
+  }
+ },
+ "/muhasebe/mutabakat@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "EFT — Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+    "sw": 378,
+    "cw": 241
+   },
+   {
+    "text": "FaturaHepsiburada Pazaryeri — INV-2026-000016",
+    "sw": 318,
+    "cw": 290
+   },
+   {
+    "text": "FaturaTrendyol Pazaryeri — INV-2026-000013",
+    "sw": 294,
+    "cw": 290
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "MutabakatBu sabah 11 öneri, 2 "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "MutabakatBu sabah 11 öneri, 2 "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "MutabakatBu sabah 11 öneri, 2 "
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 358,
+    "text": "Onay bekleyenler (7)Geçmiş J/K"
+   },
+   {
+    "tag": "div.relative.min-w-0",
+    "w": 358,
+    "text": "Onay bekleyenler (7)Geçmiş"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 358,
+    "text": "J/K gez · A onayla · R reddetH"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 7,
+   "11": 2,
+   "12": 18,
+   "13": 28,
+   "14": 10,
+   "15": 1,
+   "16": 2,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 18,
+  "moneyTotal": 8,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Mutabakat"
+  }
+ },
+ "/muhasebe/yevmiye@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 50,
+   "min": 68.5,
+   "med": 68.5,
+   "max": 68.5
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "Stok hareketi SM-2026-000258 (sevkiyat): Badem İçeceği 1 Lit",
+    "sw": 542,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000240 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 542,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000257 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 541,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000256 (sevkiyat): Plantero COSTA RICA",
+    "sw": 539,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000255 (sevkiyat): Plain Protein Mixi ",
+    "sw": 466,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000254 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 446,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000253 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 483,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000252 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 441,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000251 (sevkiyat): Spriluna [OP-306040",
+    "sw": 421,
+    "cw": 183
+   },
+   {
+    "text": "Stok hareketi SM-2026-000250 (sevkiyat): Plantero COSTA RICA",
+    "sw": 546,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000249 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 491,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000248 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 542,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000247 (sevkiyat): BADEM BAZI [PL-2608",
+    "sw": 447,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000246 (sevkiyat): Plantero COSTA RICA",
+    "sw": 539,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000245 (sevkiyat): Plain Protein Mixi ",
+    "sw": 467,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000244 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 542,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000243 (sevkiyat): BADEM BAZI [PL-2608",
+    "sw": 443,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000242 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 445,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000241 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 443,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000239 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 446,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000238 (sevkiyat): Plantero COSTA RICA",
+    "sw": 538,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000237 (sevkiyat): KAJU BAZI [PL-26082",
+    "sw": 439,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000236 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 483,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000235 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 441,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000234 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 489,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000233 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 445,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000232 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 446,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000198 (mal kabul): Doypack 1kg [SEED-",
+    "sw": 490,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000180 (mal kabul): Fındık [SEED-URT-3",
+    "sw": 446,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000181 (mal kabul): Yulaf [SEED-URT-30",
+    "sw": 439,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000182 (mal kabul): Hurma Şurubu [SEED",
+    "sw": 497,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000183 (mal kabul): Deniz Tuzu [SEED-U",
+    "sw": 469,
+    "cw": 211
+   },
+   {
+    "text": "Stok hareketi SM-2026-000184 (mal kabul): Isolated Pea Prote",
+    "sw": 523,
+    "cw": 183
+   },
+   {
+    "text": "Stok hareketi SM-2026-000179 (mal kabul): Badem [SEED-URT-30",
+    "sw": 451,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000185 (mal kabul): Nohut Tozu [SEED-U",
+    "sw": 477,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000186 (mal kabul): Suklaroz [SEED-URT",
+    "sw": 454,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000187 (mal kabul): Guar Gum [SEED-URT",
+    "sw": 462,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000188 (mal kabul): Xhantam Gum [SEED-",
+    "sw": 488,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000189 (mal kabul): Inulin [SEED-URT-3",
+    "sw": 435,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000190 (mal kabul): b2+b12+e [SEED-URT",
+    "sw": 462,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000191 (mal kabul): Cream [SEED-URT-30",
+    "sw": 444,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000192 (mal kabul): masker [SEED-URT-3",
+    "sw": 449,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000193 (mal kabul): Çilek Aroma Verici",
+    "sw": 512,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000194 (mal kabul): Kahve Çekirdeği (Y",
+    "sw": 544,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000195 (mal kabul): Kavanoz 500ml [SEE",
+    "sw": 506,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000196 (mal kabul): Kapak [SEED-URT-40",
+    "sw": 456,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000197 (mal kabul): Etiket [SEED-URT-4",
+    "sw": 451,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000200 (mal kabul): Kraft Kahve Torbas",
+    "sw": 562,
+    "cw": 203
+   },
+   {
+    "text": "Stok hareketi SM-2026-000230 (üretim çıktısı): Plantero Guat",
+    "sw": 648,
+    "cw": 191
+   },
+   {
+    "text": "Stok hareketi SM-2026-000229 (sarf): Kahve Çekirdeği (Yeşil)",
+    "sw": 512,
+    "cw": 191
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Yevmiye312 VUK fişi · 312 UFRS"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Yevmiye312 VUK fişi · 312 UFRS"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Yevmiye312 VUK fişi · 312 UFRS"
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 358,
+    "text": "VUKUFRSDurumYevmiye312 kayıtFi"
+   },
+   {
+    "tag": "div.relative.min-w-0",
+    "w": 358,
+    "text": "VUKUFRS"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 358,
+    "text": "DurumYevmiye312 kayıtFiş noAçı"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 51,
+   "12": 153,
+   "13": 53,
+   "14": 55,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 16,
+  "moneyTotal": 100,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Yevmiye"
+  }
+ },
+ "/muhasebe/hesap-plani@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "300.02 Banka Kredisi — Vakıfbank Kadın İstihdamı 1,5M",
+    "sw": 348,
+    "cw": 332
+   },
+   {
+    "text": "770.03 Personel — mevcut maaşlar (kurucu maaşı dahil)",
+    "sw": 353,
+    "cw": 332
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Hesap Planı61 hesap — Tek Düze"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Hesap Planı61 hesap — Tek Düze"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Hesap Planı61 hesap — Tek Düze"
+   },
+   {
+    "tag": "div.",
+    "w": 358,
+    "text": "KodAdTipUFRS koduBakiye (VUK)B"
+   },
+   {
+    "tag": "div.relative.mb-3.w-full",
+    "w": 358,
+    "text": ""
+   },
+   {
+    "tag": "div.overflow-hidden.rounded-lg.border",
+    "w": 358,
+    "text": "KodAdTipUFRS koduBakiye (VUK)B"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 28,
+   "13": 245,
+   "14": 2,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 13,
+  "moneyTotal": 183,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Hesap Planı"
+  }
+ },
+ "/muhasebe/mizan@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Mizan41 hesap — VUK ve UFRS de"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Mizan41 hesap — VUK ve UFRS de"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Mizan41 hesap — VUK ve UFRS de"
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 358,
+    "text": "VUKUFRSKodHesapBorçAlacakBakiy"
+   },
+   {
+    "tag": "div.relative.min-w-0",
+    "w": 358,
+    "text": "VUKUFRS"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 358,
+    "text": "KodHesapBorçAlacakBakiye102.01"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 36,
+   "12": 164,
+   "13": 129,
+   "14": 5,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 12,
+  "moneyTotal": 250,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Mizan"
+  }
+ },
+ "/muhasebe/kdv@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [
+   {
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl",
+    "sw": 632,
+    "cw": 358
+   }
+  ],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "KDVSatış %1 (gıda) · alış %20 "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "KDVSatış %1 (gıda) · alış %20 "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "KDVSatış %1 (gıda) · alış %20 "
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 358,
+    "text": "Hesaplanan (391)number-flow-re"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Hesaplanan (391)number-flow-re"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "İndirilecek (191)number-flow-r"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Devredennumber-flow-react > sp"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Ödenecek (360)number-flow-reac"
+   },
+   {
+    "tag": "div.overflow-hidden.rounded-lg.border",
+    "w": 358,
+    "text": "DönemHesaplananİndirilecekDevr"
+   },
+   {
+    "tag": "div.divide-y.divide-border/40.md:hidden",
+    "w": 356,
+    "text": "2026-08HesaplandıHesaplanan₺44"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 2,
+   "12": 14,
+   "13": 2,
+   "14": 4,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 16,
+  "moneyTotal": 14,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "KDV"
+  }
+ },
+ "/muhasebe/donemler@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "DönemlerKapalı döneme fiş atıl"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "DönemlerKapalı döneme fiş atıl"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "DönemlerKapalı döneme fiş atıl"
+   },
+   {
+    "tag": "div.max-w-[720px]",
+    "w": 358,
+    "text": "DönemBaşlangıçBitişDurumEylem2"
+   },
+   {
+    "tag": "div.overflow-hidden.rounded-lg.border",
+    "w": 358,
+    "text": "DönemBaşlangıçBitişDurumEylem2"
+   },
+   {
+    "tag": "button.inline-flex.shrink-0.items-center",
+    "w": 285.9,
+    "text": "37 uzak gelecek dönemi daha gö"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 12,
+   "12": 11,
+   "13": 12,
+   "14": 14,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 16,
+  "moneyTotal": 0,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Dönemler"
+  }
+ }
+}

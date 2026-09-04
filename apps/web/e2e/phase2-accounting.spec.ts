@@ -136,23 +136,32 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
     await setupPage.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
     ctx.orderId = setupPage.url().split('/').pop()!;
     await setupPage.getByRole('button', { name: 'Onayla' }).click();
-    await expect(setupPage.locator('[data-status="confirmed"]').first()).toBeVisible({ timeout: 10_000 });
+    // BULGU (K-DEVCOMPILE-TIMEOUT, bu turda canlı doğrulandı — bkz. rapor): bu ortamda `next dev`
+    // sunucusu (production build değil) her İLK ziyaret edilen rotayı istek anında derliyor; bu turun
+    // web.log'unda aynı anda GET /finans/nakit-akisi 40330ms, GET /finans/break-even 19836ms gibi tek
+    // istekler görüldü (4 CPU'luk ortam, next-server tek başına %170 CPU). 10s'lik sabit assertion
+    // penceresi bu yüzden gerçek bir uygulama hatası OLMADAN kırılabiliyor: bu adımın ilk koşusunda
+    // `[data-status="confirmed"]` 10s içinde görünmedi ama `sales_orders.status` DB'de birkaç saniye
+    // SONRA gerçekten 'confirmed' oldu (psql ile doğrulandı — server action başarıyla tamamlandı,
+    // yalnızca sayfanın yeniden render'ı/ilk derlemesi geç geldi). Aşağıdaki 4 bekleme bu nedenle
+    // 30s'e çıkarıldı — ASSERTION'IN KENDİSİ (durumun GERÇEKTEN o değere geçmesi) gevşetilmedi.
+    await expect(setupPage.locator('[data-status="confirmed"]').first()).toBeVisible({ timeout: 30_000 });
 
     ctx.deliveryId = psqlOne(`select id from deliveries where sales_order_id = '${ctx.orderId}'`)!;
     await setupPage.goto(`/depo/sevkiyat/${ctx.deliveryId}`);
     await setupPage.getByRole('button', { name: 'FEFO ile rezerve et' }).click();
-    await expect(setupPage.locator('[data-status="reserved"]').first()).toBeVisible({ timeout: 10_000 });
+    await expect(setupPage.locator('[data-status="reserved"]').first()).toBeVisible({ timeout: 30_000 });
     const lotNo = psqlOne(`select l.lot_no from delivery_lines dl join stock_lots l on l.id=dl.lot_id where dl.delivery_id='${ctx.deliveryId}'`)!;
     await setupPage.getByRole('link', { name: 'Toplama ekranı' }).click();
     await setupPage.waitForURL(/\/topla$/);
     const pickInput = setupPage.getByPlaceholder('Lot okut…');
     await pickInput.fill(lotNo);
     await pickInput.press('Enter');
-    await expect(setupPage.getByText('Toplama tamamlandı')).toBeVisible({ timeout: 10_000 });
+    await expect(setupPage.getByText('Toplama tamamlandı')).toBeVisible({ timeout: 30_000 });
     await setupPage.getByRole('button', { name: 'İrsaliyeye dön ve sevk et' }).click();
     await setupPage.waitForURL(new RegExp(`/depo/sevkiyat/${ctx.deliveryId}$`));
     await setupPage.getByRole('button', { name: 'Sevk et' }).click();
-    await expect(setupPage.locator('[data-status="shipped"]').first()).toBeVisible({ timeout: 10_000 });
+    await expect(setupPage.locator('[data-status="shipped"]').first()).toBeVisible({ timeout: 30_000 });
     await setupPage.close();
 
     const orderRow = psqlRows(`select o.doc_no, o.partner_id, p.name from sales_orders o join partners p on p.id=o.partner_id where o.id='${ctx.orderId}'`)[0]!;
@@ -457,8 +466,31 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
 
     await page.goto(`/muhasebe/cariler/${ctx.partnerId}/ekstre`);
     await expect(page.getByRole('heading', { level: 1 })).toContainText(ctx.partnerName!);
+
+    // DÜZELTME (bu turda canlı tespit edildi — önceki turun test hatası): "Güncel bakiye" hücresinin
+    // LİTERAL "0,00" olmasını beklemek yalnızca carinin geçmişte HİÇ başka ödenmemiş borcu olmadığında
+    // doğrudur. Bu test SABİT bir seed carisi kullanıyor (Doğal Yaşam Market Zinciri — seed'in garanti
+    // ettiği ana veri) ve bu cari, bu spec dosyasının ya da başka bir QA turunun ÖNCEKİ koşularından
+    // kalan ödenmemiş fatura(lar) taşıyabilir/taşıyor — canlı doğrulandı: bu turda bu testin KENDİ
+    // faturasından önce zaten 6 hareket ve -₺2.782 bakiye vardı (INV-2026-000010 hâlâ ödenmemiş, ayrı
+    // bir önceki koşudan kalma). Doğru invaryant "BU faturanın etkisi net sıfırlandı" — yani bakiye
+    // faturanın AÇILMASINDAN ÖNCEKİ (ctx.partnerBalanceBeforeInvoice, beforeAll'da ölçüldü) seviyeye
+    // GERİ DÖNMELİ — "her koşulda mutlak sıfır" DEĞİL.
+    const balanceAfterPayment = psqlOne(`select balance from partners where id='${ctx.partnerId}'`)!;
     const balanceKpi = page.getByText('Güncel bakiye', { exact: true }).locator('xpath=ancestor::*[self::div][1]');
-    await expect(balanceKpi).toContainText('0,00');
+    await expect
+      .poll(
+        async () => {
+          const text = (await balanceKpi.textContent()) ?? '';
+          return Number(text.replace(/[^\d,-]/g, '').replace(',', '.'));
+        },
+        { message: 'Ekrandaki "Güncel bakiye" DB\'deki partners.balance ile eşleşmeli', timeout: 10_000 },
+      )
+      .toBeCloseTo(Number(balanceAfterPayment), 2);
+    expect(
+      Number(balanceAfterPayment),
+      'Fatura tam tahsil edildikten sonra cari bakiye, faturanın AÇILMASINDAN ÖNCEKİ seviyeye dönmeli (bu faturanın net etkisi sıfır — geçmiş borç varsa da bozulmamalı)',
+    ).toBeCloseTo(Number(ctx.partnerBalanceBeforeInvoice), 2);
 
     // I9: Σfatura − Σtahsilat = partners.balance. Tahsilat toplamı `payments.amount_try` (allocation'lı
     // ya da allocation'sız/avans fark etmeksizin TÜM gelen tahsilatlar) üzerinden alınır —
@@ -492,15 +524,55 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
     expect(Number(netCash)).toBeCloseTo(33278.03, 2);
     await expect(page.getByText('33.278,03').first()).toBeVisible();
 
-    // BULGU: "mavi hücre" (override) yalnızca `finance.manage` izniyle düzenlenebilir (bkz.
-    // cashflow-table.tsx `canEdit` → EditableCell / nakit-akisi/page.tsx `userCan(user,'finance.manage')`).
-    // `ROLE_PRESETS.muhasebe` (packages/core/src/auth/rbac.ts) yalnızca `finance.view` taşır — bu
-    // görevin akışını yürüten muhasebe@plantero.local için sayfada TEK bir düzenlenebilir hücre YOK;
-    // "Yeniden hesapla" ve "Varsayımlar" aksiyonları da aynı izinle gizli. Görev tarifi ("bir mavi
-    // hücreyi düzenle → kapanış nakit anında değişir") bu rolle fiilen uygulanamaz (bkz. rapor).
-    await expect(page.getByRole('button', { name: 'Yeniden hesapla' })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Varsayımlar' })).toHaveCount(0);
-    await expect(page.locator('table').getByRole('button')).toHaveCount(0);
+    // DÜZELTME (bu turda tespit edildi — önceki turun bu adımı YANLIŞ varsayımla "uygulanamaz"
+    // diye işaretlemişti): docs/TEST-ACCOUNTS.md'ye göre muhasebe@plantero.local HEM 'muhasebe' HEM
+    // 'finans' rolüne sahip (seed: packages/db/src/seed/core.ts, satır ~122); psql ile doğrulandı —
+    // bu hesabın efektif izinleri arasında 'finance.manage' GERÇEKTEN var (select distinct p.code
+    // from users u join user_roles ur ... where u.email='muhasebe@plantero.local' and p.code like
+    // 'finance%' → finance.dunning, finance.manage, finance.view). `ROLE_PRESETS.muhasebe`'nin TEK
+    // BAŞINA yalnızca finance.view taşıması yanıltıcıydı — `permissionsForRoles` rollerin izinlerini
+    // BİRLEŞTİRİR (rbac.ts), 'finans' rolü byModule('finance') ile finance.manage'i de katıyor. Bu
+    // yüzden bu hesap için mavi hücreler GERÇEKTEN düzenlenebilir olmalı — aşağıda canlı doğrulanır.
+    await expect(page.getByRole('button', { name: 'Yeniden hesapla' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Varsayımlar' })).toBeVisible();
+
+    // Düzenlenecek hücre olarak EYLÜL 2026 (Adım 6/bu adımın üstteki 33.278,03 sabit değer kontrolü)
+    // BİLEREK KULLANILMAZ — override kalıcıdır (packages/core/src/finance/cashflow.ts::applyOverride,
+    // "null/boş = formüle dön" yalnızca sunucu tarafında bir kavramdır; EditableCell.onBlur'da metin
+    // boşaltılırsa onCommit HİÇ tetiklenmiyor — bkz. cashflow-table.tsx satır ~43-47 `trimmed===''`
+    // erken dönüşü — yani UI'da override'ı GERİ ALMANIN bir yolu yok). Bu testin kendisi tekrar tekrar
+    // çalıştırılabilir kalsın diye projeksiyonun EN SON (dolayısıyla başka hiçbir adımın sabit değerle
+    // sınamadığı) ayının "Diğer girişler" hücresi hedeflenir; bu ayın kapanış nakdi hiçbir invariant'ı
+    // beslemiyor ve önceki dönemlerin kapanış nakdini GERİYE doğru etkilemiyor (nakit akışı yalnızca
+    // ileri doğru kümülatif — cashflow.ts).
+    const lastLineBefore = psqlRows(`select period, other_inflows, closing_cash from cashflow_lines where scenario='base' order by period desc limit 1`)[0]!;
+    const [targetPeriod, otherInflowsBefore, closingCashBefore] = lastLineBefore;
+    const newOtherInflows = (Number(otherInflowsBefore) + 1000).toFixed(2);
+
+    const otherRow = page.locator('tr').filter({ has: page.getByText('Diğer girişler', { exact: true }) });
+    const targetInput = otherRow.locator('input[inputmode="decimal"]').last();
+    await targetInput.click();
+    await targetInput.fill(toTr2(newOtherInflows));
+    await targetInput.press('Tab');
+    await expect(page.getByText('Güncellendi — projeksiyon yeniden hesaplandı')).toBeVisible({ timeout: 15_000 });
+
+    const lastLineAfter = psqlRows(`select other_inflows, closing_cash from cashflow_lines where scenario='base' and period='${targetPeriod}'`)[0]!;
+    const [otherInflowsAfter, closingCashAfter] = lastLineAfter;
+    expect(Number(otherInflowsAfter)).toBeCloseTo(Number(newOtherInflows), 2);
+    // "Diğer girişler" kapanış nakde 1:1 yansır (cashflow.ts satır toplamı) — kapanış nakit de tam
+    // olarak aynı delta kadar değişmeli (I: override → DB → kapanış nakit zinciri kopmamış).
+    expect(Number(closingCashAfter) - Number(closingCashBefore)).toBeCloseTo(Number(newOtherInflows) - Number(otherInflowsBefore), 2);
+
+    // "Anında" — tam sayfa navigasyonu OLMADAN (router.refresh() ile) ekrandaki kapanış nakit
+    // hücresi de yeni DB değerine dönmeli.
+    const closingCashRow = page.locator('tr').filter({ has: page.getByText('DÖNEM SONU NAKİT', { exact: true }) });
+    const closingCashCell = closingCashRow.locator('td').last();
+    await expect
+      .poll(async () => {
+        const text = (await closingCashCell.textContent()) ?? '';
+        return Number(text.replace(/[^\d,-]/g, '').replace(',', '.'));
+      }, { message: 'Ekrandaki DÖNEM SONU NAKİT hücresi yeni override sonrası DB değerine dönmeli', timeout: 10_000 })
+      .toBeCloseTo(Math.round(Number(closingCashAfter)), 0);
   });
 });
 
@@ -512,16 +584,15 @@ test.describe('Akış: /finans/tahsilat-takibi — hatırlatma taslağı (phase2
   test('vadesi geçmiş faturada "Taslak oluştur" → AI/fallback metin → Onayla ve gönder → sandbox sent, dunningLevel 1', async ({ page }) => {
     await loginAs(page, 'muhasebe');
 
-    const overdue = psqlRows(`
-      select i.id, i.doc_no from invoices i
+    const anyOverdueCount = psqlOne(`
+      select count(*) from invoices i
       where i.kind='sales' and i.status in ('posted','partially_paid') and i.residual::numeric > 0 and i.due_date < current_date
-      order by i.due_date asc limit 1
-    `)[0];
+    `);
 
     await page.goto('/finans/tahsilat-takibi');
     await expect(page.getByRole('heading', { level: 1, name: 'Tahsilat Takibi' })).toBeVisible();
 
-    if (!overdue) {
+    if (Number(anyOverdueCount) === 0) {
       // Ön koşul yok: DB'de vadesi geçmiş hiçbir satış faturası bulunamadı — ekran boş durumu göstermeli.
       await expect(page.getByText('Vadesi geçmiş fatura yok.')).toBeVisible();
       throw new Error(
@@ -531,18 +602,40 @@ test.describe('Akış: /finans/tahsilat-takibi — hatırlatma taslağı (phase2
       );
     }
 
-    const [invoiceId, docNo] = overdue;
-    const row = page.locator('tr').filter({ hasText: docNo! });
-    await row.getByRole('button', { name: 'Taslak oluştur' }).click();
+    // DÜZELTME (bu turda canlı tespit edildi — önceki turun test hatası): "en eski vadeli faturayı
+    // SQL'den SEÇ, sonra UI'da onu bul" deseni tekrar-çalıştırılabilir DEĞİL — bu sabit/en-gecikmiş
+    // fatura, seviye tavanına (4) çoktan ulaşmış ve ÖNCEKİ bir QA turunda zaten 4. seviye taslağı
+    // üretilmiş olabilir; DB'de doğrulandı — bu turda tam olarak bu oldu: createDunningDraftAction
+    // "Bu fatura için 4. seviye hatırlatma zaten oluşturulmuş" ile reddetti (dunning-actions.ts
+    // hasDunningActionForLevel guard'ı — kod incelemesiyle doğrulandı, bkz. rapor). Uygulamanın
+    // KENDİSİ bu durumda zaten "Taslak oluştur" yerine "İncele ve gönder"/"Gönderildi" göstermeli
+    // (dunning-panel.tsx: `existing = r.hasDraft ? findExisting(...) : ...`) — bu yüzden test de
+    // artık hangi faturanın bu koşuda uygun olduğunu SQL'de ÖNCEDEN varsaymıyor; EKRANDAN "Taslak
+    // oluştur" yazan İLK satırı seçiyor (gerçek kullanıcının yapacağı gibi).
+    const table = page.locator('table').filter({ has: page.locator('thead').getByText('İşlem', { exact: true }) });
+    const draftableRow = table.locator('tbody tr').filter({ has: page.getByRole('button', { name: 'Taslak oluştur' }) }).first();
+    await expect(draftableRow, 'En az bir satırda "Taslak oluştur" eylemi sunulmalı (hiçbiri o seviyede zaten taslak/gönderilmiş olmamalı)').toBeVisible({ timeout: 10_000 });
+    const docNo = (await draftableRow.locator('td').nth(1).textContent())?.trim();
+    expect(docNo, 'Seçilen satırdan fatura numarası okunabilmeli').toBeTruthy();
+
+    await draftableRow.getByRole('button', { name: 'Taslak oluştur' }).click();
     await expect(page.getByText('Taslak üretiliyor…')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Onayla ve gönder' })).toBeEnabled({ timeout: 15_000 });
 
     await page.getByRole('button', { name: 'Onayla ve gönder' }).click();
-    await expect(page.getByText(/^Gönderildi/)).toBeVisible({ timeout: 15_000 });
+    // BULGU (test hatası, bu turda düzeltildi): `getByText(/^Gönderildi/)` sayfada TEKİL değil —
+    // aynı adla "Gönderildi" durum rozeti/sütun başlığı geçmiş tablosunda da görünür (canlı ölçüldü:
+    // 5 eşleşme, strict-mode ihlali). Asıl kanıt sonner toast'ı (`region "Notifications alt+T"`) —
+    // yalnızca ORAYA daraltılır.
+    await expect(page.getByRole('region', { name: 'Notifications alt+T' }).getByText(/^Gönderildi/)).toBeVisible({ timeout: 15_000 });
 
-    const action = psqlRows(`select status, level, sent_to from dunning_actions where invoice_id = '${invoiceId}' order by created_at desc limit 1`)[0]!;
+    const action = psqlRows(`
+      select da.status, da.level, da.sent_to from dunning_actions da
+      join invoices i on i.id = da.invoice_id
+      where i.doc_no = '${docNo}' order by da.created_at desc limit 1
+    `)[0]!;
     expect(action[0]).toBe('sent');
-    const dunningLevel = psqlOne(`select dunning_level from invoices where id = '${invoiceId}'`);
+    const dunningLevel = psqlOne(`select dunning_level from invoices where doc_no = '${docNo}'`);
     expect(Number(dunningLevel)).toBeGreaterThanOrEqual(1);
   });
 });

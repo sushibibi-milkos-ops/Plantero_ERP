@@ -1,0 +1,3093 @@
+{
+ "/muhasebe@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 15,
+   "min": 40,
+   "med": 41,
+   "max": 41
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "MuhasebeFaturalar, tahsilat, b"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "MuhasebeFaturalar, tahsilat, b"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "MuhasebeFaturalar, tahsilat, b"
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 1152,
+    "text": "Banka farkı (TL hesaplar)Açık "
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 191.2,
+    "text": "Banka farkı (TL hesaplar)"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 192.2,
+    "text": "Açık alacak"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 192.2,
+    "text": "Açık borç"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 192.2,
+    "text": "Vadesi geçen alacak"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 192.2,
+    "text": "Devreden KDV2026-08"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 192.2,
+    "text": "Eşleşmeyen banka hareketi"
+   },
+   {
+    "tag": "div.mb-6.space-y-2",
+    "w": 1152,
+    "text": "TL banka hesaplarında ekstre/d"
+   },
+   {
+    "tag": "a.flex.min-h-11.items-center",
+    "w": 1152,
+    "text": "TL banka hesaplarında ekstre/d"
+   },
+   {
+    "tag": "a.flex.min-h-11.items-center",
+    "w": 1152,
+    "text": "1 geçmiş dönem henüz kapatılma"
+   },
+   {
+    "tag": "div.grid.grid-cols-1.gap-6",
+    "w": 1152,
+    "text": "Vadesi geçen alacaklarTümü ↗IN"
+   },
+   {
+    "tag": "div.",
+    "w": 564,
+    "text": "Vadesi geçen alacaklarTümü ↗IN"
+   },
+   {
+    "tag": "div.",
+    "w": 564,
+    "text": "Son yevmiye fişleriTümü ↗JE-20"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Tümü ↗",
+    "w": 45.3,
+    "h": 18
+   },
+   {
+    "s": "INV-2026-000007Hepsiburada P",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "INV-2026-000011Migros Ticare",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "Tümü ↗",
+    "w": 45.3,
+    "h": 18
+   },
+   {
+    "s": "JE-2026-000623Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000523Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000493Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000517Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000507Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000491Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000503Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000499Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000501Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000511Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000521Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000497Stok hareketi ",
+    "w": 562,
+    "h": 40
+   },
+   {
+    "s": "JE-2026-000515Stok hareketi ",
+    "w": 562,
+    "h": 40
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 18,
+   "12": 8,
+   "13": 75,
+   "14": 2,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 17,
+  "moneyTotal": 30,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Muhasebe"
+  }
+ },
+ "/muhasebe/faturalar@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 18,
+   "min": 36,
+   "med": 36,
+   "max": 36
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 7,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Faturalar18 satış · 10 alış · "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Faturalar18 satış · 10 alış · "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Faturalar18 satış · 10 alış · "
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 1152,
+    "text": "Açık alacaknumber-flow-react >"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 287.3,
+    "text": "Açık alacaknumber-flow-react >"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Açık borçnumber-flow-react > s"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Vadesi geçennumber-flow-react "
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Gönderilmemiş e-Faturanumber-f"
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 1152,
+    "text": "SatışAlışİadeler e-Fatura gönd"
+   },
+   {
+    "tag": "div.flex.flex-wrap.items-center",
+    "w": 1152,
+    "text": "SatışAlışİadeler e-Fatura gönd"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 1152,
+    "text": "Durume-Belge18 kayıtBelge noCa"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Gider faturası",
+    "w": 138.6,
+    "h": 36
+   },
+   {
+    "s": "SatışAlışİadeler",
+    "w": 171.2,
+    "h": 36
+   },
+   {
+    "s": "Satış",
+    "w": 50.8,
+    "h": 29
+   },
+   {
+    "s": "Alış",
+    "w": 42.5,
+    "h": 29
+   },
+   {
+    "s": "İadeler",
+    "w": 63.8,
+    "h": 29
+   },
+   {
+    "s": "e-Fatura gönder (18)",
+    "w": 187.4,
+    "h": 36
+   },
+   {
+    "s": "Tabloda ara",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Durum",
+    "w": 83.6,
+    "h": 32
+   },
+   {
+    "s": "e-Belge",
+    "w": 90.8,
+    "h": 32
+   },
+   {
+    "s": "Sütunlar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Belge no",
+    "w": 78.1,
+    "h": 28
+   },
+   {
+    "s": "Cari",
+    "w": 51.4,
+    "h": 28
+   },
+   {
+    "s": "Vade",
+    "w": 57.2,
+    "h": 28
+   },
+   {
+    "s": "Durum",
+    "w": 66.4,
+    "h": 28
+   },
+   {
+    "s": "Tarih",
+    "w": 56.8,
+    "h": 28
+   },
+   {
+    "s": "Kalan",
+    "w": 60.1,
+    "h": 28
+   },
+   {
+    "s": "Tutar",
+    "w": 57.8,
+    "h": 28
+   },
+   {
+    "s": "INV-2026-000005Trendyol Paza",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000004Trendyol Paza",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000007Hepsiburada P",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000003Trendyol Paza",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000010Doğal Yaşam M",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000018Hepsiburada P",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000015Trendyol Paza",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000017Hepsiburada P",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000014Trendyol Paza",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000013Trendyol Paza",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000012BioGrün Hande",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000001Yeşil Sofra G",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000016Hepsiburada P",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000009Yeşil Sofra G",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000008Site Perakend",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000006Hepsiburada P",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000011Migros Ticare",
+    "w": 1152,
+    "h": 36
+   },
+   {
+    "s": "INV-2026-000002Trendyol Paza",
+    "w": 1152,
+    "h": 36
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 22,
+   "12": 12,
+   "13": 136,
+   "14": 7,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 23,
+  "moneyTotal": 54,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Faturalar"
+  }
+ },
+ "/muhasebe/faturalar/f440f113-ccba-4a89-9a48-042e8d4c29e6@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 2,
+   "min": 52.5,
+   "med": 52.5,
+   "max": 53
+  },
+  "innerScrollers": [
+   {
+    "cls": "scrollbar-thin scroll-fade-x -mx-1 snap-x snap-mandatory ove",
+    "sw": 1404,
+    "cw": 1160
+   }
+  ],
+  "clipped": [
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 167,
+    "cw": 154
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 167,
+    "cw": 154
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 167,
+    "cw": 154
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 167,
+    "cw": 154
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 167,
+    "cw": 154
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 167,
+    "cw": 154
+   }
+  ],
+  "ths": 5,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Satış faturasıINV-2026-000001Y"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Satış faturasıINV-2026-000001Y"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Satış faturasıINV-2026-000001Y"
+   },
+   {
+    "tag": "div.mt-4",
+    "w": 1152,
+    "text": "Tahsil edildiGönderilmediYevmi"
+   },
+   {
+    "tag": "div.mb-6",
+    "w": 1152,
+    "text": "Belge zinciriFırsatKazanıldıOP"
+   },
+   {
+    "tag": "div.mb-2.text-[13px].font-medium",
+    "w": 1152,
+    "text": "Belge zinciri"
+   },
+   {
+    "tag": "div.scrollbar-thin.scroll-fade-x.-mx-1",
+    "w": 1160,
+    "text": "FırsatKazanıldıOPP-2026-000010"
+   },
+   {
+    "tag": "div.grid.grid-cols-1.gap-6",
+    "w": 1152,
+    "text": "AçıklamaMiktarBirim fiyatKDV %"
+   },
+   {
+    "tag": "div.space-y-4.lg:col-span-2",
+    "w": 760,
+    "text": "AçıklamaMiktarBirim fiyatKDV %"
+   },
+   {
+    "tag": "div.space-y-4",
+    "w": 368,
+    "text": "Tahsilat / ödemeKalan₺0,00PAY-"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Faturalar",
+    "w": 54.1,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Yeşil Sofra Gıda Dağıtım Ltd",
+    "w": 212.2,
+    "h": 20
+   },
+   {
+    "s": "e-Fatura gönder",
+    "w": 150.7,
+    "h": 32
+   },
+   {
+    "s": "İade faturası",
+    "w": 125,
+    "h": 32
+   },
+   {
+    "s": "Yevmiye fişi ↗",
+    "w": 87.8,
+    "h": 19.5
+   }
+  ],
+  "fontSizes": {
+   "10": 8,
+   "11": 30,
+   "12": 6,
+   "13": 56,
+   "14": 6,
+   "15": 1,
+   "16": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 20,
+  "moneyTotal": 18,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "INV-2026-000001"
+  }
+ },
+ "/muhasebe/faturalar/yeni?tur=alis@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 1,
+   "min": 52.5,
+   "med": 52.5,
+   "max": 52.5
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 5,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Gider / Alış FaturasıKaynak PO"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Gider / Alış FaturasıKaynak PO"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Gider / Alış FaturasıKaynak PO"
+   },
+   {
+    "tag": "form.space-y-6.pb-[calc(72px+env(safe-area-inset-bottom))].md:pb-0",
+    "w": 1152,
+    "text": "Tedarikçi*Tedarikçi seçin…Teda"
+   },
+   {
+    "tag": "div.max-w-[1080px].space-y-6",
+    "w": 1080,
+    "text": "Tedarikçi*Tedarikçi seçin…Teda"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Faturalar",
+    "w": 54.1,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Tedarikçi seçin…",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "INPUT",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "INPUT",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "Tarihi temizle",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "s": "Takvim",
+    "w": 36,
+    "h": 36
+   },
+   {
+    "s": "Satır ekle",
+    "w": 104.2,
+    "h": 32
+   },
+   {
+    "s": "INPUT",
+    "w": 428.5,
+    "h": 36
+   },
+   {
+    "s": "Hesap seçin…",
+    "w": 280.3,
+    "h": 36
+   },
+   {
+    "s": "INPUT",
+    "w": 104,
+    "h": 36
+   },
+   {
+    "s": "KDV %20",
+    "w": 109.2,
+    "h": 36
+   },
+   {
+    "s": "KDV %0KDV %1KDV %10KDV %20",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "s": "Satırı sil",
+    "w": 36,
+    "h": 36
+   },
+   {
+    "s": "Vazgeç",
+    "w": 81.7,
+    "h": 36
+   },
+   {
+    "s": "Gider faturasını kaydet",
+    "w": 183.3,
+    "h": 36
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 2,
+   "12": 4,
+   "13": 43,
+   "14": 5,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 12,
+  "moneyTotal": 3,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Gider / Alış Faturası"
+  }
+ },
+ "/muhasebe/tahsilatlar@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 17,
+   "min": 36,
+   "med": 36,
+   "max": 36
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 240,
+    "cw": 236
+   },
+   {
+    "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+    "sw": 277,
+    "cw": 236
+   },
+   {
+    "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+    "sw": 257,
+    "cw": 236
+   },
+   {
+    "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+    "sw": 242,
+    "cw": 236
+   }
+  ],
+  "ths": 7,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Tahsilatlar17 kayıt Yeni tahsi"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Tahsilatlar17 kayıt Yeni tahsi"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Tahsilatlar17 kayıt Yeni tahsi"
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 1152,
+    "text": "Toplam tahsilatnumber-flow-rea"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 287.3,
+    "text": "Toplam tahsilatnumber-flow-rea"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Toplam ödemenumber-flow-react "
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Tahsissiz (avans)number-flow-r"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 288.3,
+    "text": "Son 30 günnumber-flow-react > "
+   },
+   {
+    "tag": "div.",
+    "w": 1152,
+    "text": "DurumYön17 kayıtBelge noCariYö"
+   },
+   {
+    "tag": "div.mb-3.flex.flex-wrap",
+    "w": 1152,
+    "text": "DurumYön17 kayıt"
+   },
+   {
+    "tag": "div.contain-paint.hidden.md:block",
+    "w": 1152,
+    "text": "Belge noCariYönDurumTarihTutar"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Yeni tahsilat/ödeme",
+    "w": 180.1,
+    "h": 36
+   },
+   {
+    "s": "Tabloda ara",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Durum",
+    "w": 83.6,
+    "h": 32
+   },
+   {
+    "s": "Yön",
+    "w": 65.6,
+    "h": 32
+   },
+   {
+    "s": "Sütunlar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Belge no",
+    "w": 78.1,
+    "h": 28
+   },
+   {
+    "s": "Cari",
+    "w": 51.4,
+    "h": 28
+   },
+   {
+    "s": "Yön",
+    "w": 49.8,
+    "h": 28
+   },
+   {
+    "s": "Durum",
+    "w": 66.4,
+    "h": 28
+   },
+   {
+    "s": "Tarih",
+    "w": 56.8,
+    "h": 28
+   },
+   {
+    "s": "Tutar (₺)",
+    "w": 77.2,
+    "h": 28
+   },
+   {
+    "s": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 19,
+   "12": 12,
+   "13": 113,
+   "14": 3,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 18,
+  "moneyTotal": 34,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Tahsilatlar"
+  }
+ },
+ "/muhasebe/tahsilatlar/yeni@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Yeni Tahsilat / ÖdemeCariye ai"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Yeni Tahsilat / ÖdemeCariye ai"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Yeni Tahsilat / ÖdemeCariye ai"
+   },
+   {
+    "tag": "form.space-y-6.pb-[calc(72px+env(safe-area-inset-bottom))].md:pb-0",
+    "w": 1152,
+    "text": "Yön*Tahsilat (müşteriden alına"
+   },
+   {
+    "tag": "div.max-w-[1080px].space-y-6",
+    "w": 1080,
+    "text": "Yön*Tahsilat (müşteriden alına"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 62.5,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Tahsilat (müşteriden alınan)",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "Tahsilat (müşteriden alınan)",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "s": "Cari seçin…",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "Havale/EFT",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "Havale/EFTKasa (nakit)Kredi ",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "s": "Banka hesabı seçin…",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "INPUT",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "Tarihi temizle",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "s": "Takvim",
+    "w": 36,
+    "h": 36
+   },
+   {
+    "s": "TRY — Türk Lirası",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "TRY — Türk LirasıEUR — EuroU",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "s": "INPUT",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "INPUT",
+    "w": 532,
+    "h": 36
+   },
+   {
+    "s": "Otomatik dağıt (en eski önce",
+    "w": 237.8,
+    "h": 36
+   },
+   {
+    "s": "Vazgeç",
+    "w": 81.7,
+    "h": 36
+   },
+   {
+    "s": "Tahsilatı kaydet",
+    "w": 136,
+    "h": 36
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 2,
+   "13": 50,
+   "14": 6,
+   "15": 1,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 13,
+  "moneyTotal": 0,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Yeni Tahsilat / Ödeme"
+  }
+ },
+ "/muhasebe/banka@1440": {
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "overflowX": false,
+  "rows": {
+   "kind": "tr",
+   "count": 11,
+   "min": 36,
+   "med": 36,
+   "max": 36
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "EFT — Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+    "sw": 375,
+    "cw": 356
+   },
+   {
+    "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+    "sw": 331,
+    "cw": 146
+   },
+   {
+    "text": "Doğal Yaşam Market Zinciri Ltd. Şti.",
+    "sw": 218,
+    "cw": 146
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 197,
+    "cw": 146
+   }
+  ],
+  "ths": 7,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 1152,
+    "text": "Banka3 hesap Ekstre içe aktar "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 1152,
+    "text": "Banka3 hesap Ekstre içe aktar "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 1152,
+    "text": "Banka3 hesap Ekstre içe aktar "
+   },
+   {
+    "tag": "a.mb-4.flex.items-center",
+    "w": 1152,
+    "text": "7 banka hareketi onay bekliyor"
+   },
+   {
+    "tag": "span.font-normal",
+    "w": 412.1,
+    "text": "7 banka hareketi onay bekliyor"
+   },
+   {
+    "tag": "span.flex.shrink-0.items-center",
+    "w": 55.4,
+    "text": "İncele"
+   },
+   {
+    "tag": "div.mb-6",
+    "w": 1152,
+    "text": "QNB — Ödemiş ŞubesiQNB-ODEMIS-"
+   },
+   {
+    "tag": "div.grid.grid-cols-1.gap-3",
+    "w": 1152,
+    "text": "QNB — Ödemiş ŞubesiQNB-ODEMIS-"
+   },
+   {
+    "tag": "div.",
+    "w": 1152,
+    "text": "Durum11 kayıtTarihAçıklamaKarş"
+   },
+   {
+    "tag": "div.mb-3.flex.flex-wrap",
+    "w": 1152,
+    "text": "Durum11 kayıt"
+   },
+   {
+    "tag": "div.contain-paint.hidden.md:block",
+    "w": 1152,
+    "text": "TarihAçıklamaKarşı tarafHesapT"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Plantero",
+    "w": 89.2,
+    "h": 25.4
+   },
+   {
+    "s": "Kokpit",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ana Veri",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Depo",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Üretim",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satış & CRM",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Satın Alma",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kalite",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Özet",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Faturalar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Tahsilatlar",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Banka",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mutabakat",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Yevmiye",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Hesap Planı",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Mizan",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "KDV",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Dönemler",
+    "w": 197,
+    "h": 28
+   },
+   {
+    "s": "Finans",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "İhracat",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Bakım",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ar-Ge",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Ayarlar",
+    "w": 223,
+    "h": 32
+   },
+   {
+    "s": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Muhasebe",
+    "w": 64.4,
+    "h": 19.5
+   },
+   {
+    "s": "Ara (⌘K)",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Tema",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Kullanıcı menüsü",
+    "w": 28,
+    "h": 28
+   },
+   {
+    "s": "Ekstre içe aktar",
+    "w": 153.2,
+    "h": 36
+   },
+   {
+    "s": "Mutabakatı çalıştır",
+    "w": 171,
+    "h": 36
+   },
+   {
+    "s": "Tabloda ara",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "s": "Durum",
+    "w": 83.6,
+    "h": 32
+   },
+   {
+    "s": "Sütunlar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "s": "Tarih",
+    "w": 56.8,
+    "h": 28
+   },
+   {
+    "s": "Açıklama",
+    "w": 80.4,
+    "h": 28
+   },
+   {
+    "s": "Karşı taraf",
+    "w": 87.3,
+    "h": 28
+   },
+   {
+    "s": "Hesap",
+    "w": 64.7,
+    "h": 28
+   },
+   {
+    "s": "Tutar",
+    "w": 57.8,
+    "h": 28
+   },
+   {
+    "s": "Durum",
+    "w": 66.4,
+    "h": 28
+   }
+  ],
+  "fontSizes": {
+   "10": 2,
+   "11": 17,
+   "12": 11,
+   "13": 113,
+   "14": 4,
+   "15": 1,
+   "16": 3,
+   "18": 1,
+   "24": 1
+  },
+  "distinctColors": 21,
+  "moneyTotal": 28,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 24,
+   "weight": 600,
+   "text": "Banka"
+  }
+ },
+ "/muhasebe@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 15,
+   "min": 59.5,
+   "med": 60.5,
+   "max": 60.5
+  },
+  "innerScrollers": [
+   {
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl",
+    "sw": 952,
+    "cw": 358
+   }
+  ],
+  "clipped": [
+   {
+    "text": "Banka farkı (TL hesaplar)",
+    "sw": 144,
+    "cw": 126
+   },
+   {
+    "text": "Eşleşmeyen banka hareketi",
+    "sw": 156,
+    "cw": 126
+   },
+   {
+    "text": "Stok hareketi SM-2026-000258 (sevkiyat): Badem İçeceği 1 Lit",
+    "sw": 542,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000243 (sevkiyat): BADEM BAZI [PL-2608",
+    "sw": 443,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000233 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 445,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000241 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 443,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000238 (sevkiyat): Plantero COSTA RICA",
+    "sw": 538,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000232 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 446,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000237 (sevkiyat): KAJU BAZI [PL-26082",
+    "sw": 439,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000235 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 441,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000236 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 483,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000239 (sevkiyat): YULAF BAZI [PL-2608",
+    "sw": 446,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000242 (sevkiyat): Türk Kahvesi [PL-26",
+    "sw": 445,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000234 (sevkiyat): Oat Coffee Creamer ",
+    "sw": 489,
+    "cw": 264
+   },
+   {
+    "text": "Stok hareketi SM-2026-000240 (sevkiyat): BARISTA BASE - BADE",
+    "sw": 542,
+    "cw": 264
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "MuhasebeFaturalar, tahsilat, b"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "MuhasebeFaturalar, tahsilat, b"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "MuhasebeFaturalar, tahsilat, b"
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 358,
+    "text": "Banka farkı (TL hesaplar)Açık "
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 152,
+    "text": "Banka farkı (TL hesaplar)"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 152,
+    "text": "Açık alacak"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 152,
+    "text": "Açık borç"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 152,
+    "text": "Vadesi geçen alacak"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 152,
+    "text": "Devreden KDV2026-08"
+   },
+   {
+    "tag": "a.group.relative.block",
+    "w": 152,
+    "text": "Eşleşmeyen banka hareketi"
+   },
+   {
+    "tag": "div.mb-6.space-y-2",
+    "w": 358,
+    "text": "TL banka hesaplarında ekstre/d"
+   },
+   {
+    "tag": "a.flex.min-h-11.items-center",
+    "w": 358,
+    "text": "TL banka hesaplarında ekstre/d"
+   },
+   {
+    "tag": "a.flex.min-h-11.items-center",
+    "w": 358,
+    "text": "1 geçmiş dönem henüz kapatılma"
+   },
+   {
+    "tag": "div.grid.grid-cols-1.gap-6",
+    "w": 358,
+    "text": "Vadesi geçen alacaklarTümü ↗IN"
+   },
+   {
+    "tag": "div.",
+    "w": 358,
+    "text": "Vadesi geçen alacaklarTümü ↗IN"
+   },
+   {
+    "tag": "div.",
+    "w": 358,
+    "text": "Son yevmiye fişleriTümü ↗JE-20"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 17,
+   "12": 23,
+   "13": 35,
+   "14": 2,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 16,
+  "moneyTotal": 30,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Muhasebe"
+  }
+ },
+ "/muhasebe/faturalar@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 18,
+   "min": 68.5,
+   "med": 68.5,
+   "max": 68.5
+  },
+  "innerScrollers": [
+   {
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl",
+    "sw": 632,
+    "cw": 358
+   }
+  ],
+  "clipped": [
+   {
+    "text": "Gönderilmemiş e-Fatura",
+    "sw": 139,
+    "cw": 126
+   },
+   {
+    "text": "Doğal Yaşam Market Zinciri Ltd. Şti.",
+    "sw": 201,
+    "cw": 192
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Faturalar18 satış · 10 alış · "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Faturalar18 satış · 10 alış · "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Faturalar18 satış · 10 alış · "
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 358,
+    "text": "Açık alacaknumber-flow-react >"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Açık alacaknumber-flow-react >"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Açık borçnumber-flow-react > s"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Vadesi geçennumber-flow-react "
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Gönderilmemiş e-Faturanumber-f"
+   },
+   {
+    "tag": "div.group/tabs.flex.gap-2",
+    "w": 358,
+    "text": "SatışAlışİadeler e-Fatura gönd"
+   },
+   {
+    "tag": "div.flex.flex-wrap.items-center",
+    "w": 358,
+    "text": "SatışAlışİadeler e-Fatura gönd"
+   },
+   {
+    "tag": "div.flex-1.outline-none.mt-3",
+    "w": 358,
+    "text": "Durume-Belge18 kayıtBelge noCa"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Alış",
+    "w": 42.5,
+    "h": 44
+   }
+  ],
+  "fontSizes": {
+   "10": 5,
+   "11": 19,
+   "12": 56,
+   "13": 21,
+   "14": 25,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 21,
+  "moneyTotal": 54,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Faturalar"
+  }
+ },
+ "/muhasebe/faturalar/f440f113-ccba-4a89-9a48-042e8d4c29e6@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 1,
+   "min": 39,
+   "med": 39,
+   "max": 39
+  },
+  "innerScrollers": [
+   {
+    "cls": "scrollbar-thin scroll-fade-x -mx-1 snap-x snap-mandatory ove",
+    "sw": 2301,
+    "cw": 366
+   }
+  ],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Satış faturasıINV-2026-000001Y"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Satış faturasıINV-2026-000001Y"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Satış faturasıINV-2026-000001Y"
+   },
+   {
+    "tag": "div.mt-4",
+    "w": 358,
+    "text": "Tahsil edildiGönderilmediYevmi"
+   },
+   {
+    "tag": "div.mb-6",
+    "w": 358,
+    "text": "Belge zinciriFırsatKazanıldıOP"
+   },
+   {
+    "tag": "div.mb-2.text-[13px].font-medium",
+    "w": 358,
+    "text": "Belge zinciri"
+   },
+   {
+    "tag": "div.scrollbar-thin.scroll-fade-x.-mx-1",
+    "w": 366,
+    "text": "FırsatKazanıldıOPP-2026-000010"
+   },
+   {
+    "tag": "div.grid.grid-cols-1.gap-6",
+    "w": 358,
+    "text": "AçıklamaMiktarBirim fiyatKDV %"
+   },
+   {
+    "tag": "div.space-y-4.lg:col-span-2",
+    "w": 358,
+    "text": "AçıklamaMiktarBirim fiyatKDV %"
+   },
+   {
+    "tag": "div.space-y-4",
+    "w": 358,
+    "text": "Tahsilat / ödemeKalan₺0,00PAY-"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Yeşil Sofra Gıda Dağıtım Ltd",
+    "w": 212.2,
+    "h": 20
+   },
+   {
+    "s": "Yevmiye fişi ↗",
+    "w": 87.8,
+    "h": 19.5
+   }
+  ],
+  "fontSizes": {
+   "10": 11,
+   "11": 27,
+   "12": 7,
+   "13": 24,
+   "14": 6,
+   "16": 1,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 19,
+  "moneyTotal": 18,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "INV-2026-000001"
+  }
+ },
+ "/muhasebe/faturalar/yeni?tur=alis@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Gider / Alış FaturasıKaynak PO"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Gider / Alış FaturasıKaynak PO"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Gider / Alış FaturasıKaynak PO"
+   },
+   {
+    "tag": "form.space-y-6.pb-[calc(72px+env(safe-area-inset-bottom))].md:pb-0",
+    "w": 358,
+    "text": "Tedarikçi*Tedarikçi seçin…Teda"
+   },
+   {
+    "tag": "div.max-w-[1080px].space-y-6",
+    "w": 358,
+    "text": "Tedarikçi*Tedarikçi seçin…Teda"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "KDV %0KDV %1KDV %10KDV %20",
+    "w": 1,
+    "h": 1
+   }
+  ],
+  "fontSizes": {
+   "10": 5,
+   "11": 1,
+   "12": 1,
+   "13": 21,
+   "14": 5,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 12,
+  "moneyTotal": 3,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Gider / Alış Faturası"
+  }
+ },
+ "/muhasebe/tahsilatlar@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 17,
+   "min": 68.5,
+   "med": 69.5,
+   "max": 69.5
+  },
+  "innerScrollers": [
+   {
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl",
+    "sw": 632,
+    "cw": 358
+   }
+  ],
+  "clipped": [
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 129,
+    "cw": 120
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    "sw": 221,
+    "cw": 183
+   },
+   {
+    "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+    "sw": 256,
+    "cw": 175
+   },
+   {
+    "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+    "sw": 237,
+    "cw": 175
+   },
+   {
+    "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+    "sw": 224,
+    "cw": 183
+   },
+   {
+    "text": "Hepsiburada Pazaryeri",
+    "sw": 129,
+    "cw": 120
+   },
+   {
+    "text": "Doğal Yaşam Market Zinciri Ltd. Şti.",
+    "sw": 201,
+    "cw": 120
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 182,
+    "cw": 122
+   },
+   {
+    "text": "Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 182,
+    "cw": 122
+   },
+   {
+    "text": "Site Perakende Müşterisi",
+    "sw": 141,
+    "cw": 120
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Tahsilatlar17 kayıt Yeni tahsi"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Tahsilatlar17 kayıt Yeni tahsi"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Tahsilatlar17 kayıt Yeni tahsi"
+   },
+   {
+    "tag": "div.relative.mb-6.scrollbar-thin",
+    "w": 358,
+    "text": "Toplam tahsilatnumber-flow-rea"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Toplam tahsilatnumber-flow-rea"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Toplam ödemenumber-flow-react "
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Tahsissiz (avans)number-flow-r"
+   },
+   {
+    "tag": "div.group.relative.block",
+    "w": 152,
+    "text": "Son 30 günnumber-flow-react > "
+   },
+   {
+    "tag": "div.",
+    "w": 358,
+    "text": "DurumYön17 kayıtBelge noCariYö"
+   },
+   {
+    "tag": "div.mb-3.flex.flex-wrap",
+    "w": 358,
+    "text": "DurumYön17 kayıt"
+   },
+   {
+    "tag": "div.md:hidden",
+    "w": 358,
+    "text": "PAY-2026-000017KaydedildiTrend"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 18,
+   "12": 79,
+   "13": 20,
+   "14": 20,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 16,
+  "moneyTotal": 34,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Tahsilatlar"
+  }
+ },
+ "/muhasebe/tahsilatlar/yeni@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 0,
+   "min": 0,
+   "med": 0,
+   "max": 0
+  },
+  "innerScrollers": [],
+  "clipped": [],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Yeni Tahsilat / ÖdemeCariye ai"
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Yeni Tahsilat / ÖdemeCariye ai"
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Yeni Tahsilat / ÖdemeCariye ai"
+   },
+   {
+    "tag": "form.space-y-6.pb-[calc(72px+env(safe-area-inset-bottom))].md:pb-0",
+    "w": 358,
+    "text": "Yön*Tahsilat (müşteriden alına"
+   },
+   {
+    "tag": "div.max-w-[1080px].space-y-6",
+    "w": 358,
+    "text": "Yön*Tahsilat (müşteriden alına"
+   }
+  ],
+  "touchBelow44": [
+   {
+    "s": "Tahsilat (müşteriden alınan)",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "s": "Havale/EFTKasa (nakit)Kredi ",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "s": "TRY — Türk LirasıEUR — EuroU",
+    "w": 1,
+    "h": 1
+   }
+  ],
+  "fontSizes": {
+   "10": 5,
+   "11": 1,
+   "13": 24,
+   "14": 6,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 12,
+  "moneyTotal": 0,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Yeni Tahsilat / Ödeme"
+  }
+ },
+ "/muhasebe/banka@390": {
+  "scrollWidth": 390,
+  "clientWidth": 390,
+  "overflowX": false,
+  "rows": {
+   "kind": "li",
+   "count": 11,
+   "min": 68.5,
+   "med": 68.5,
+   "max": 68.5
+  },
+  "innerScrollers": [],
+  "clipped": [
+   {
+    "text": "Trendyol Hakediş — tanımsız dönem",
+    "sw": 244,
+    "cw": 198
+   },
+   {
+    "text": "EFT — Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+    "sw": 407,
+    "cw": 198
+   },
+   {
+    "text": "Trendyol hakedişi 2026-08-15–2026-08-22",
+    "sw": 291,
+    "cw": 264
+   },
+   {
+    "text": "EFT — Doğal Yaşam Market Zinciri Ltd. Şti.",
+    "sw": 284,
+    "cw": 264
+   },
+   {
+    "text": "Havale — Yeşil Sofra Gıda Dağıtım Ltd. Şti.",
+    "sw": 282,
+    "cw": 264
+   }
+  ],
+  "ths": 0,
+  "upperTh": 0,
+  "blockWidths": [
+   {
+    "tag": "div.mx-auto.w-full.max-w-[1400px]",
+    "w": 358,
+    "text": "Banka3 hesap Ekstre içe aktar "
+   },
+   {
+    "tag": "div.mb-5.md:mb-6",
+    "w": 358,
+    "text": "Banka3 hesap Ekstre içe aktar "
+   },
+   {
+    "tag": "div.flex.flex-col.gap-3",
+    "w": 358,
+    "text": "Banka3 hesap Ekstre içe aktar "
+   },
+   {
+    "tag": "a.mb-4.flex.items-center",
+    "w": 358,
+    "text": "7 banka hareketi onay bekliyor"
+   },
+   {
+    "tag": "span.font-normal",
+    "w": 260.6,
+    "text": "7 banka hareketi onay bekliyor"
+   },
+   {
+    "tag": "span.flex.shrink-0.items-center",
+    "w": 55.4,
+    "text": "İncele"
+   },
+   {
+    "tag": "div.mb-6",
+    "w": 358,
+    "text": "QNB — Ödemiş ŞubesiQNB-ODEMIS-"
+   },
+   {
+    "tag": "div.grid.grid-cols-1.gap-3",
+    "w": 358,
+    "text": "QNB — Ödemiş ŞubesiQNB-ODEMIS-"
+   },
+   {
+    "tag": "div.",
+    "w": 358,
+    "text": "Durum11 kayıtTarihAçıklamaKarş"
+   },
+   {
+    "tag": "div.mb-3.flex.flex-wrap",
+    "w": 358,
+    "text": "Durum11 kayıt"
+   },
+   {
+    "tag": "div.md:hidden",
+    "w": 358,
+    "text": "Trendyol Hakediş — tanımsız dö"
+   }
+  ],
+  "touchBelow44": [],
+  "fontSizes": {
+   "10": 5,
+   "11": 16,
+   "12": 16,
+   "13": 44,
+   "14": 15,
+   "16": 3,
+   "18": 1,
+   "20": 1
+  },
+  "distinctColors": 19,
+  "moneyTotal": 28,
+  "moneyNoTabular": 0,
+  "h1": {
+   "size": 20,
+   "weight": 600,
+   "text": "Banka"
+  }
+ }
+}
