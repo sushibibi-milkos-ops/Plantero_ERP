@@ -212,8 +212,16 @@ export function DataTableMobileCards<T>({
               onRowClick && 'cursor-pointer active:bg-accent/50',
             )}
           >
-            {/* Satır 1: başlık solda, rozet(ler) + aksiyon menüsü sağda. */}
-            <div className="flex items-center gap-2">
+            {/* Satır 1: başlık solda, rozet(ler) + aksiyon menüsü sağda.
+                gap-1.5 (6px, gap-2/8px değil — Tur 6 P1 aynı bulgunun ikinci yarısı): rozet yuvasına
+                taban font boyutu (yukarıda) eklendikten SONRA bile 2+ rozetli satırlarda (ör.
+                payments-table.tsx Yön+Durum) başlık kolonu flex-1 olarak yalnızca 125px'e düşüyor,
+                bazı belge no'ları (14px, sw 126-128px) 1-3px farkla hâlâ kırpılıyordu — üç gap
+                (başlık→rozet1, rozet1→rozet2, rozet2→aksiyon) toplamda 24px alıyordu. 6px'e
+                indirilince kazanılan 6px başlığa geçer (cw 125→131), üç harfli/geniş belge no'ları
+                da sığar; rozetler arası ayrım (StatusBadge kendi dolgusu + nokta zaten görsel sınır
+                veriyor) 6px'te de okunur kalır, dokunma hedefleri (aksiyon 44px) etkilenmez. */}
+            <div className="flex items-center gap-1.5">
               {/* min-w-0 + overflow-hidden: bu kolon rozet/aksiyon sütunlarıyla flex'te paylaşılıyor,
                   min-w-0 olmadan içerik hiç küçülmeden kart genişliğini zorluyordu. `truncate` yalnızca
                   DÜZ METİN çocuklar için çalışır (text-overflow yalnızca bloğun kendi metnini keser);
@@ -231,7 +239,16 @@ export function DataTableMobileCards<T>({
                 // max-w-[45%]: uzun bir rozet metni (ör. "10 gün önce doldu · 24.08.2026") başlık
                 // sütununu (lot no/ürün adı) neredeyse sıfıra indirebiliyordu (Tur 4 P0 bulgusu) —
                 // rozet kartın en fazla yarısını alır, kalan başlık sütununa geçer.
-                <div key={b.id} className="max-w-[45%] shrink-0 overflow-hidden">
+                // text-[11px] leading-4 (Tur 6 P1 shell-mobile-card-badge-slot-fontsize-01 kök neden):
+                // bu yuva hiçbir zaman kendi font boyutunu tanımlamıyordu — StatusBadge kendi
+                // text-[11px]'ini taşıdığı için bugüne kadar sorun görünmüyordu, ama düz metin bir hücre
+                // (ör. payments-table.tsx "Yön" sütunu, mobile:'badge') buraya girince gövdenin 16px
+                // varsayılanını miras alıyordu: kartın EN BÜYÜK metni oluyor, başlıktan (14px) ve
+                // StatusBadge'den (11px) büyük basılıp hiyerarşiyi tersine çeviriyordu (bkz.
+                // /muhasebe/tahsilatlar — 17/17 kartta başlık scrollWidth > clientWidth, belge no
+                // kırpılıyordu). Taban artık StatusBadge'in kendi ölçeğiyle (11px) birebir aynı —
+                // rozet yuvasına giren HER içerik (rozet bileşeni veya düz metin) aynı büyüklükte kalır.
+                <div key={b.id} className="max-w-[45%] shrink-0 overflow-hidden text-[11px] leading-4">
                   {flexRender(b.column.columnDef.cell, b.getContext())}
                 </div>
               ))}
