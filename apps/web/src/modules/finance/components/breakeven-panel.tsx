@@ -2,7 +2,7 @@
 
 import NumberFlow from '@number-flow/react';
 import { Progress } from '@/components/ui/progress';
-import { formatMoney, formatPct, formatDate } from '@/lib/format';
+import { formatMoney, formatPct } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { BreakEvenDto, SensitivityDto } from '../cashflow-queries';
 
@@ -17,8 +17,8 @@ export function BreakEvenPanel({ data, sensitivity }: { data: BreakEvenDto; sens
     <div className="space-y-4">
       {/* Hero */}
       <div className="rounded-xl border border-border/70 bg-card p-6">
-        <div className="text-[13px] font-medium text-muted-foreground">{formatDate(`${data.period}-01`)} — bu ay gereken minimum ciro</div>
-        <div className="mt-1.5 font-mono text-4xl font-semibold tracking-tight tabular-nums sm:text-5xl">
+        <div className="text-[13px] font-medium text-muted-foreground">Bu ay gereken minimum ciro</div>
+        <div className="mt-1.5 font-mono text-3xl font-semibold tracking-tight tabular-nums">
           <NumberFlow value={Number(data.targetRevenue)} locales="tr-TR" format={MONEY_FMT} />
         </div>
         <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border/60 pt-4 text-[13px] sm:grid-cols-4">
@@ -45,7 +45,7 @@ export function BreakEvenPanel({ data, sensitivity }: { data: BreakEvenDto; sens
       </div>
 
       {/* Gerçekleşen ile karşılaştırma */}
-      <div className="rounded-xl border border-border/70 bg-card p-5">
+      <div className="rounded-xl border border-border/70 bg-card p-4">
         <h2 className="mb-3 text-[13px] font-semibold">Gerçekleşen ile karşılaştırma</h2>
         <div className="mb-3 flex items-baseline justify-between text-[13px]">
           <span className="text-muted-foreground">Bu ayın bugüne kadarki net cirosu</span>
@@ -75,14 +75,14 @@ export function BreakEvenPanel({ data, sensitivity }: { data: BreakEvenDto; sens
       </div>
 
       {/* Kanal payı */}
-      <div className="rounded-xl border border-border/70 bg-card p-5">
+      <div className="rounded-xl border border-border/70 bg-card p-4">
         <h2 className="mb-3 text-[13px] font-semibold">Kanal payı dağılımı (mevcut kanal karışımıyla)</h2>
         <div className="space-y-2.5">
           {data.channelShare.map((c) => {
             const pct = Number(data.targetRevenue) > 0 ? (Number(c.share) / Number(data.targetRevenue)) * 100 : 0;
             return (
               <div key={c.code} className="flex items-center gap-3 text-[13px]">
-                <span className="w-32 shrink-0 truncate text-muted-foreground">{c.name}</span>
+                <span className="w-32 shrink-0 truncate text-muted-foreground sm:w-48">{c.name}</span>
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                   <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(100, pct)}%` }} />
                 </div>
@@ -95,24 +95,24 @@ export function BreakEvenPanel({ data, sensitivity }: { data: BreakEvenDto; sens
 
       {/* Duyarlılık tabloları */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="overflow-x-auto rounded-xl border border-border/70 bg-card p-5">
+        <div className="overflow-x-auto rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-1 text-[13px] font-semibold">Duyarlılık 1 — marj × ciro → net nakit akışı</h2>
           <p className="mb-3 text-xs text-muted-foreground">Satırlar ağırlıklı marj puanı değişimi, kolonlar mevcut ciroya göre çarpan.</p>
-          <table className="w-full text-[12px]">
+          <table className="w-full min-w-max text-[12px]">
             <thead>
               <tr className="text-muted-foreground">
-                <th className="px-2 py-1 text-left font-medium">Marj Δ</th>
+                <th className="px-2 py-1 text-left font-medium whitespace-nowrap">Marj Δ</th>
                 {[0.8, 0.9, 1, 1.1, 1.2].map((m) => (
-                  <th key={m} className="px-2 py-1 text-right font-medium">×{m}</th>
+                  <th key={m} className="px-2 py-1 text-right font-medium whitespace-nowrap">×{m}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {[-10, -5, 0, 5, 10].map((delta) => (
-                <tr key={delta} className="border-t border-border/40">
-                  <td className={cn('px-2 py-1 font-mono tabular-nums', delta === 0 && 'font-semibold text-primary')}>{delta > 0 ? '+' : ''}{delta} pp</td>
+                <tr key={delta} className="border-t border-border/40 hover:bg-muted/30">
+                  <td className={cn('px-2 py-1 font-mono whitespace-nowrap tabular-nums', delta === 0 && 'font-semibold text-primary')}>{delta > 0 ? '+' : ''}{delta} pp</td>
                   {sensitivity.marginRevenueGrid.filter((g) => g.marginDeltaPts === delta).map((g) => (
-                    <td key={g.multiplier} className={cn('px-2 py-1 text-right font-mono tabular-nums', Number(g.netCashflow) < 0 && 'text-destructive', delta === 0 && g.multiplier === 1 && 'font-semibold text-primary')}>
+                    <td key={g.multiplier} className={cn('px-2 py-1 text-right font-mono whitespace-nowrap tabular-nums', Number(g.netCashflow) < 0 && 'text-destructive', delta === 0 && g.multiplier === 1 && 'font-semibold text-primary')}>
                       {formatMoney(g.netCashflow, 'TRY', { digits: 0 })}
                     </td>
                   ))}
@@ -122,23 +122,23 @@ export function BreakEvenPanel({ data, sensitivity }: { data: BreakEvenDto; sens
           </table>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-border/70 bg-card p-5">
+        <div className="overflow-x-auto rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-1 text-[13px] font-semibold">Duyarlılık 2 — toptan/fason ciro senaryoları</h2>
           <p className="mb-3 text-xs text-muted-foreground">Toptan kanalı ciro senaryoları, diğer kanallar sabit — ağırlıklı marj ve hedef ciroya etkisi.</p>
-          <table className="w-full text-[12px]">
+          <table className="w-full min-w-max text-[12px]">
             <thead>
               <tr className="text-muted-foreground">
-                <th className="px-2 py-1 text-left font-medium">Toptan cirosu</th>
-                <th className="px-2 py-1 text-right font-medium">Ağırlıklı marj</th>
-                <th className="px-2 py-1 text-right font-medium">Hedef ciro</th>
+                <th className="px-2 py-1 text-left font-medium whitespace-nowrap">Toptan cirosu</th>
+                <th className="px-2 py-1 text-right font-medium whitespace-nowrap">Ağırlıklı marj</th>
+                <th className="px-2 py-1 text-right font-medium whitespace-nowrap">Hedef ciro</th>
               </tr>
             </thead>
             <tbody>
               {sensitivity.wholesaleScenarios.map((s) => (
-                <tr key={s.wholesaleRevenue} className="border-t border-border/40">
-                  <td className="px-2 py-1 font-mono tabular-nums">{formatMoney(s.wholesaleRevenue, 'TRY', { digits: 0 })}</td>
-                  <td className="px-2 py-1 text-right font-mono tabular-nums">{formatPct(s.weightedMarginPct, 1)}</td>
-                  <td className="px-2 py-1 text-right font-mono tabular-nums">{formatMoney(s.targetRevenue, 'TRY', { digits: 0 })}</td>
+                <tr key={s.wholesaleRevenue} className="border-t border-border/40 hover:bg-muted/30">
+                  <td className="px-2 py-1 font-mono whitespace-nowrap tabular-nums">{formatMoney(s.wholesaleRevenue, 'TRY', { digits: 0 })}</td>
+                  <td className="px-2 py-1 text-right font-mono whitespace-nowrap tabular-nums">{formatPct(s.weightedMarginPct, 1)}</td>
+                  <td className="px-2 py-1 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(s.targetRevenue, 'TRY', { digits: 0 })}</td>
                 </tr>
               ))}
             </tbody>

@@ -22,6 +22,28 @@ const xTick = { fontSize: 11, fill: 'var(--muted-foreground)' };
 const tickFmt = (v: string) => formatDate(`${v}-01`).slice(3);
 const moneyTick = (v: number) => formatMoney(v, 'TRY', { digits: 0, compact: true });
 
+/** 1/2/5×10ⁿ'e yuvarlanmış "nice" adım — eşit aralıklı eksen tick'leri için (kriter 6). */
+function niceStep(rawStep: number): number {
+  if (!Number.isFinite(rawStep) || rawStep <= 0) return 1;
+  const exp = Math.floor(Math.log10(rawStep));
+  const base = rawStep / 10 ** exp;
+  const niceBase = base <= 1 ? 1 : base <= 2 ? 2 : base <= 5 ? 5 : 10;
+  return niceBase * 10 ** exp;
+}
+
+/** 5 eşit aralıklı, yuvarlak tick — 0'ı her zaman kapsar (ör. ₺0/₺700B/₺1,4Mn/₺2,1Mn/₺2,8Mn). */
+function niceTicks(values: number[], targetCount = 5): number[] {
+  const min = Math.min(0, ...values);
+  const max = Math.max(0, ...values);
+  if (max === min) return [0];
+  const step = niceStep((max - min) / (targetCount - 1));
+  const niceMin = Math.floor(min / step) * step;
+  const niceMax = Math.ceil(max / step) * step;
+  const ticks: number[] = [];
+  for (let v = niceMin; v <= niceMax + step * 0.001; v += step) ticks.push(Math.round(v));
+  return ticks;
+}
+
 function ClosingTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
@@ -50,6 +72,8 @@ function NetFlowTooltip({ active, payload, label }: { active?: boolean; payload?
 }
 
 export function CashflowChart({ points }: { points: Point[] }) {
+  const closingTicks = niceTicks(points.map((p) => p.closingCash));
+
   return (
     <div className="space-y-1">
       <div className="mb-1 text-xs font-medium text-muted-foreground">Dönem sonu nakit</div>
@@ -63,7 +87,15 @@ export function CashflowChart({ points }: { points: Point[] }) {
           </defs>
           <CartesianGrid stroke="var(--border)" vertical={false} />
           <XAxis dataKey="period" tickFormatter={tickFmt} tick={xTick} axisLine={false} tickLine={false} minTickGap={28} />
-          <YAxis tickFormatter={moneyTick} tick={xTick} axisLine={false} tickLine={false} width={64} />
+          <YAxis
+            tickFormatter={moneyTick}
+            tick={xTick}
+            axisLine={false}
+            tickLine={false}
+            width={64}
+            ticks={closingTicks}
+            domain={[closingTicks[0]!, closingTicks[closingTicks.length - 1]!]}
+          />
           <Tooltip content={<ClosingTooltip />} isAnimationActive={false} allowEscapeViewBox={{ x: false, y: false }} wrapperStyle={{ outline: 'none' }} />
           <Area type="linear" dataKey="closingCash" name="Dönem sonu nakit" stroke={CLOSING_COLOR} strokeWidth={2} fill="url(#fill-closing-cash)" isAnimationActive={false} />
         </AreaChart>

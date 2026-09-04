@@ -4,14 +4,19 @@ import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Loader2, Sparkles, ArrowRight } from 'lucide-react';
+import { Loader2, Sparkles, ArrowRight, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { EmptyState } from '@/components/empty-state';
 import { formatDate, formatMoney } from '@/lib/format';
 import { generateSalesForecastAction, generateCashForecastAction, applyForecastAction } from '../forecast-actions';
 import type { ForecastPageData } from '../forecast-queries';
 
-const HISTORY_COLOR = 'var(--muted-foreground)';
+// Kriter 11 kök neden düzeltmesi (Tur 2, P2): gerçekleşen seri önceden `--muted-foreground` (gri)
+// çiziliyordu — modülün diğer grafiklerinde (nakit akışı, krediler) ana seri her zaman `--chart-5`;
+// tahmin verisi yokken grafik tamamen gri kalıyordu. Artık gerçekleşen DÜZ `--chart-5`, tahmin AYNI
+// renk kesikli çizgi + bant — ayrım renkle değil çizgi stiliyle yapılır (ekranda gri veri serisi 0).
+const HISTORY_COLOR = 'var(--chart-5)';
 const FORECAST_COLOR = 'var(--chart-5)';
 const BAND_COLOR = 'var(--chart-5)';
 
@@ -88,6 +93,7 @@ export function GenerateSalesForecastButton() {
     <Button
       variant="outline"
       size="sm"
+      className="h-11 sm:h-8"
       disabled={pending}
       onClick={() =>
         startTransition(async () => {
@@ -114,6 +120,7 @@ export function GenerateCashForecastButton() {
     <Button
       variant="outline"
       size="sm"
+      className="h-11 sm:h-8"
       disabled={pending}
       onClick={() =>
         startTransition(async () => {
@@ -140,19 +147,44 @@ export function ForecastPanels({ data }: { data: ForecastPageData }) {
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-border/70 bg-card p-4">
-        <div className="mb-3 flex items-center justify-between">
+        {/* Kriter 9 kök neden düzeltmesi (Tur 2, P2): başlık + buton 390px'te aynı satırda kalıyor,
+            başlık 3 satıra sarıp butonla sıkışıyordu; buton 32px'ti (44px altı). `sm:` altında
+            dikey yığın + buton tam genişlik h-11'e döner. */}
+        <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-[13px] font-semibold">Toplam satış — son 12 ay + 6 aylık tahmin</h2>
           <GenerateSalesForecastButton />
         </div>
-        {salesPoints.length ? <ForecastChart points={salesPoints} label="Tahmin" /> : <p className="py-10 text-center text-sm text-muted-foreground">Henüz yeterli satış geçmişi yok.</p>}
+        {/* Kriter 7 kök neden düzeltmesi (Tur 2, P1): <2 nokta (tek aylık geçmiş, tahmin üretilmemiş)
+            neredeyse boş bir ızgara çiziyordu — artık özenli bir boş durum gösterilir. */}
+        {salesPoints.length >= 2 ? (
+          <ForecastChart points={salesPoints} label="Tahmin" />
+        ) : (
+          <EmptyState
+            compact
+            icon={TrendingUp}
+            title="Tahmin üretilmedi"
+            description="Anlamlı bir grafik için en az iki aylık satış geçmişi ya da bir tahmin gerekir."
+            action={<GenerateSalesForecastButton />}
+          />
+        )}
       </div>
 
       <div className="rounded-xl border border-border/70 bg-card p-4">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-[13px] font-semibold">Nakit bakiyesi tahmini</h2>
           <GenerateCashForecastButton />
         </div>
-        {cashPoints.length ? <ForecastChart points={cashPoints} label="Tahmin" /> : <p className="py-10 text-center text-sm text-muted-foreground">Nakit tahmini için önce Bütçe ekranından &quot;Gerçekleşenleri yenile&quot;yi çalıştırın.</p>}
+        {cashPoints.length >= 2 ? (
+          <ForecastChart points={cashPoints} label="Tahmin" />
+        ) : (
+          <EmptyState
+            compact
+            icon={TrendingUp}
+            title="Nakit tahmini üretilmedi"
+            description="Önce Bütçe ekranından “Gerçekleşenleri yenile”yi çalıştırın, sonra nakit tahminini üretin."
+            action={<GenerateCashForecastButton />}
+          />
+        )}
       </div>
 
       <ChannelForecastTable channelForecast={data.channelForecast} channels={data.channels} />
@@ -167,6 +199,15 @@ function ChannelForecastTable({ channelForecast, channels }: { channelForecast: 
   const [, startTransition] = useTransition();
 
   const nameById = new Map(channels.map((c) => [c.id, c.name]));
+
+  if (channelForecast.length === 0) {
+    return (
+      <div className="rounded-xl border border-border/70 bg-card p-4">
+        <h2 className="mb-3 text-[13px] font-semibold">Kanal bazlı satış tahmini</h2>
+        <EmptyState compact icon={TrendingUp} title="Kanal tahmini üretilmedi" description="Yukarıdan satış tahminini üretin — kanal kırılımı otomatik hesaplanır." action={<GenerateSalesForecastButton />} />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card p-4">
@@ -228,11 +269,6 @@ function ChannelForecastTable({ channelForecast, channels }: { channelForecast: 
               </td>
             </tr>
           ))}
-          {channelForecast.length === 0 ? (
-            <tr>
-              <td colSpan={6} className="px-2 py-8 text-center text-muted-foreground">Kanal tahmini üretilmedi — yukarıdan &quot;Satış tahminini yeniden üret&quot;i çalıştırın.</td>
-            </tr>
-          ) : null}
         </tbody>
       </table>
     </div>

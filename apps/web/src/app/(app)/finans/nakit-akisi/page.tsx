@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Lock } from 'lucide-react';
 import { requirePermission, userCan } from '@/lib/auth';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
@@ -34,6 +35,7 @@ export default async function CashflowPage({ searchParams }: { searchParams: Pro
   const minLine = lines.reduce((min, l) => (Number(l.closingCash) < Number(min.closingCash) ? l : min), lines[0]!);
 
   const chartPoints = lines.map((l) => ({ period: l.period, closingCash: Number(l.closingCash), netCashflow: Number(l.netCashflow) }));
+  const canEdit = userCan(user, 'finance.manage');
 
   return (
     <>
@@ -43,8 +45,8 @@ export default async function CashflowPage({ searchParams }: { searchParams: Pro
         actions={
           <>
             <ScenarioSelect scenario={scenario} />
-            {userCan(user, 'finance.manage') ? <RecomputeCashflowButton scenario={scenario} /> : null}
-            {userCan(user, 'finance.manage') ? <AssumptionsDrawer assumptions={assumptions} channels={channelAssumptions} /> : null}
+            {canEdit ? <RecomputeCashflowButton scenario={scenario} /> : null}
+            {canEdit ? <AssumptionsDrawer assumptions={assumptions} channels={channelAssumptions} /> : null}
           </>
         }
       />
@@ -66,7 +68,13 @@ export default async function CashflowPage({ searchParams }: { searchParams: Pro
         <CashflowChart points={chartPoints} />
       </div>
 
-      <CashflowTable lines={lines} channels={channels} scenario={scenario} canEdit={userCan(user, 'finance.manage')} />
+      {!canEdit ? (
+        <div className="mb-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Lock className="size-3.5" />
+          Tabloyu düzenlemek için &quot;Kredi, bütçe, nakit akışı yönet&quot; yetkisi gerekir — hücreler salt okunur gösteriliyor.
+        </div>
+      ) : null}
+      <CashflowTable lines={lines} channels={channels} scenario={scenario} canEdit={canEdit} />
     </>
   );
 }

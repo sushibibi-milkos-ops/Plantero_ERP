@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -9,22 +10,34 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
-import { formatDate, formatMoney, formatPct } from '@/lib/format';
+import { formatDate, formatMoney } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { recomputeVariableLoanAction } from '../loans-actions';
+import { formatPctFixed } from '../format';
 import type { LoanCardRow } from '../loans-queries';
 
 const BURDEN_COLOR = 'var(--chart-5)';
 
+/**
+ * Kriter 9 kök neden düzeltmesi (Tur 2, P0): mobil için açık `grid-cols-1` yoktu — örtük tek sütun
+ * `auto` track içeriğe göre (min/max-content) büyüyor, 390px'te 435px genişliğinde kart üretip
+ * shell'in `overflow-x-clip` sarmalayıcısı tarafından kırpılıyordu (kaydırma bile mümkün değildi).
+ * `grid-cols-1` kart genişliğini konteynerle sınırlar — kırpılma kaynağı tamamen ortadan kalkar.
+ */
 export function LoanCards({ loans, canEdit }: { loans: LoanCardRow[]; canEdit: boolean }) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
       {loans.map((l) => (
         <div key={l.id} className="rounded-xl border border-border/70 bg-card p-4">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <div className="truncate text-[13px] font-semibold">{l.bankName}</div>
-              <div className="truncate text-xs text-muted-foreground">{l.productName}</div>
+              <div className="flex items-center gap-1.5">
+                {/* Kriter 11 kök neden düzeltmesi: konsolide takvimin sütun başlıkları (L1…L7) kart
+                    tarafında hiç görünmüyordu — kod rozeti eşleşmeyi %100 görünür kılar. */}
+                <span className="shrink-0 rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] font-medium text-muted-foreground tabular-nums">{l.code}</span>
+                <Link href={`/finans/krediler/${l.id}`} className="truncate text-[13px] font-semibold hover:text-primary hover:underline">{l.bankName}</Link>
+              </div>
+              <div className="line-clamp-2 text-xs text-muted-foreground">{l.productName}</div>
             </div>
             <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium', l.rateKind === 'variable' ? 'bg-warning/15 text-[oklch(0.5_0.14_70)] dark:text-warning' : 'bg-muted text-muted-foreground')}>
               {l.rateKind === 'variable' ? 'Değişken faiz' : 'Sabit faiz'}
@@ -49,7 +62,7 @@ export function LoanCards({ loans, canEdit }: { loans: LoanCardRow[]; canEdit: b
             </div>
           </div>
           <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-3 text-xs text-muted-foreground">
-            <span>Aylık faiz: <span className="font-mono tabular-nums text-foreground">{formatPct(l.monthlyRatePct, 4)}</span></span>
+            <span>Aylık faiz: <span className="font-mono tabular-nums text-foreground">{formatPctFixed(l.monthlyRatePct)}</span></span>
             {canEdit && l.rateKind === 'variable' ? <RateUpdateDialog loanId={l.id} loanCode={l.code} currentRate={l.monthlyRatePct} /> : null}
           </div>
         </div>
@@ -58,7 +71,8 @@ export function LoanCards({ loans, canEdit }: { loans: LoanCardRow[]; canEdit: b
   );
 }
 
-function RateUpdateDialog({ loanId, loanCode, currentRate }: { loanId: string; loanCode: string; currentRate: string }) {
+/** Değişken faizli kredi için oran güncelleme diyaloğu — kart listesinde ve kredi detay sayfasında ortak. */
+export function RateUpdateDialog({ loanId, loanCode, currentRate }: { loanId: string; loanCode: string; currentRate: string }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [rate, setRate] = useState(currentRate);
@@ -68,7 +82,7 @@ function RateUpdateDialog({ loanId, loanCode, currentRate }: { loanId: string; l
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-primary hover:bg-primary/10">
-          <Percent className="size-3" /> Oran güncelle
+          <Percent className="size-3.5" /> Oran güncelle
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
@@ -186,6 +200,52 @@ export function ConsolidatedScheduleTable({
               </tr>
             );
           })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** Kredi detayı (`/finans/krediler/[id]`) — tüm amortisman takvimi: taksit/faiz/anapara/kalan bakiye + durum. */
+export function LoanInstallmentsTable({ installments }: { installments: Array<{ id: string; seq: number; dueDate: string; installment: string; interest: string; principal: string; remainingAfter: string; status: string; paidAt: string | null }> }) {
+  return (
+    <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
+      <table className="w-full min-w-max text-[12px]">
+        <thead>
+          <tr className="border-b border-border/60 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+            <th className="px-3 py-2 whitespace-nowrap">#</th>
+            <th className="px-3 py-2 whitespace-nowrap">Vade</th>
+            <th className="px-3 py-2 text-right whitespace-nowrap">Taksit</th>
+            <th className="px-3 py-2 text-right whitespace-nowrap">Faiz + BSMV</th>
+            <th className="px-3 py-2 text-right whitespace-nowrap">Anapara</th>
+            <th className="px-3 py-2 text-right whitespace-nowrap">Kalan bakiye</th>
+            <th className="px-3 py-2 whitespace-nowrap">Durum</th>
+            <th className="px-3 py-2 whitespace-nowrap">Ödendi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {installments.map((i) => (
+            <tr key={i.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
+              <td className="px-3 py-1.5 font-mono whitespace-nowrap tabular-nums text-muted-foreground">{i.seq}</td>
+              <td className="px-3 py-1.5 whitespace-nowrap">{formatDate(i.dueDate)}</td>
+              <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(i.installment, 'TRY', { digits: 0 })}</td>
+              <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground">{formatMoney(i.interest, 'TRY', { digits: 0 })}</td>
+              <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground">{formatMoney(i.principal, 'TRY', { digits: 0 })}</td>
+              <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(i.remainingAfter, 'TRY', { digits: 0 })}</td>
+              <td className="px-3 py-1.5 whitespace-nowrap">
+                <span className={cn('inline-flex items-center gap-1.5 text-[12px]', i.status === 'paid' ? 'text-success' : i.status === 'overdue' ? 'text-destructive' : 'text-muted-foreground')}>
+                  <span className={cn('size-1.5 rounded-full', i.status === 'paid' ? 'bg-success' : i.status === 'overdue' ? 'bg-destructive' : 'bg-muted-foreground/50')} />
+                  {i.status === 'paid' ? 'Ödendi' : i.status === 'overdue' ? 'Gecikti' : 'Planlandı'}
+                </span>
+              </td>
+              <td className="px-3 py-1.5 whitespace-nowrap text-muted-foreground">{i.paidAt ? formatDate(i.paidAt) : '—'}</td>
+            </tr>
+          ))}
+          {installments.length === 0 ? (
+            <tr>
+              <td colSpan={8} className="px-3 py-10 text-center text-muted-foreground">Taksit takvimi yok.</td>
+            </tr>
+          ) : null}
         </tbody>
       </table>
     </div>

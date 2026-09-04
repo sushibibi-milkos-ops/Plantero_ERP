@@ -4,14 +4,24 @@ import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { Loader2, RefreshCw, FolderKanban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/empty-state';
 import { formatDate, formatMoney } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { refreshBudgetActualsAction } from '../budget-actions';
 import type { BudgetLineRow } from '../budget-queries';
 
-const PLANNED_COLOR = 'var(--muted-foreground)';
+/** Sapma rengi yalnızca |sapma| plan'ın %10'unu aşınca anlamlı sayılır (kriter 6 — aksi halde her
+ * satır kırmızı/yeşil basılıp sinyal değerini yitiriyordu, 48/48 satır ölçüldü). */
+const VARIANCE_THRESHOLD_PCT = 10;
+
+// Kriter 4 + 12 kök neden düzeltmesi (Tur 2): `--muted-foreground` dolu bir seri rengi olarak
+// kullanıldığında 12 ayın tamamı ~%100 yükseklikte ağır gri bloklara dönüşüyor, yanındaki
+// "Gerçekleşen" serisi (ince/kısa çubuklar) görünmez kalıyordu — gri hiçbir zaman VERİ rengi olmamalı
+// (yalnızca zemin/ayraç). Plan artık dolgusuz, yalnızca ince kenarlıklı bir "hedef" çubuğu; gerçekleşen
+// tek dolu/renkli seri olarak öne çıkar.
+const PLANNED_COLOR = 'var(--border)';
 const ACTUAL_COLOR = 'var(--chart-5)';
 
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ dataKey?: string; value: number }>; label?: string }) {
@@ -97,35 +107,44 @@ export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summar
             <YAxis tickFormatter={(v: number) => formatMoney(v, 'TRY', { digits: 0, compact: true })} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} width={64} />
             <Tooltip content={<CustomTooltip />} isAnimationActive={false} wrapperStyle={{ outline: 'none' }} />
             <Legend wrapperStyle={{ fontSize: 11 }} formatter={(v) => (v === 'planned' ? 'Plan' : 'Gerçekleşen')} />
-            <Bar dataKey="planned" name="planned" fill={PLANNED_COLOR} radius={[2, 2, 0, 0]} isAnimationActive={false} />
+            <Bar dataKey="planned" name="planned" fill="var(--muted-foreground)" fillOpacity={0.12} stroke={PLANNED_COLOR} strokeWidth={1} radius={[2, 2, 0, 0]} isAnimationActive={false} />
             <Bar dataKey="actual" name="actual" fill={ACTUAL_COLOR} radius={[2, 2, 0, 0]} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
+      {/* Kriter 9 kök neden düzeltmesi (Tur 2): tabloda `min-w` yoktu, hücreler 390px'te sarılıyordu
+          (KALEM 3 satıra, GERÇEKLEŞEN rakamının ortası kesiliyordu, satır 32.5→71.5px). Modüldeki
+          diğer tüm tablolarla (nakit-akisi, krediler) aynı kalıp: `min-w-max` + `whitespace-nowrap` —
+          taşma sarmalayıcının yatay kaydırmasıyla çözülür, hiçbir sütun gizlenmez/kesilmez. */}
       <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
-        <table className="w-full text-[13px]">
+        <table className="w-full min-w-max text-[13px]">
           <thead>
             <tr className="border-b border-border/60 text-left text-[11px] text-muted-foreground uppercase">
-              <th className="px-3 py-2 font-medium">Ay</th>
-              <th className="px-3 py-2 font-medium">Kalem</th>
-              <th className="px-3 py-2 text-right font-medium">Plan</th>
-              <th className="px-3 py-2 text-right font-medium">Gerçekleşen</th>
-              <th className="px-3 py-2 text-right font-medium">Sapma</th>
+              <th className="px-3 py-2 font-medium whitespace-nowrap">Ay</th>
+              <th className="px-3 py-2 font-medium whitespace-nowrap">Kalem</th>
+              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Plan</th>
+              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Gerçekleşen</th>
+              <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Sapma</th>
             </tr>
           </thead>
           <tbody>
             {grouped.map(([period, rows]) =>
               rows.map((r, i) => {
+                const planned = Number(r.planned);
+                const actual = Number(r.actual);
                 const variance = Number(r.variance);
                 const good = kindFilter === 'revenue' ? variance >= 0 : variance <= 0;
+                // Kriter 6 kök neden düzeltmesi: |sapma| plan'ın %10'unu aşmadıkça nötr — 48/48
+                // satırın kırmızı/yeşil basıldığı (sinyalin anlamsızlaştığı) durum giderilir.
+                const varianceSignificant = planned !== 0 ? Math.abs(variance) / Math.abs(planned) * 100 >= VARIANCE_THRESHOLD_PCT : variance !== 0;
                 return (
                   <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
-                    <td className="px-3 py-1.5 text-muted-foreground">{i === 0 ? formatDate(`${period}-01`) : ''}</td>
-                    <td className="px-3 py-1.5">{r.channelName ?? r.label}</td>
-                    <td className="px-3 py-1.5 text-right font-mono tabular-nums">{formatMoney(r.planned, 'TRY', { digits: 0 })}</td>
-                    <td className="px-3 py-1.5 text-right font-mono tabular-nums">{formatMoney(r.actual, 'TRY', { digits: 0 })}</td>
-                    <td className={cn('px-3 py-1.5 text-right font-mono tabular-nums', good ? 'text-success' : 'text-destructive')}>
+                    <td className="px-3 py-1.5 whitespace-nowrap text-muted-foreground">{i === 0 ? formatDate(`${period}-01`) : ''}</td>
+                    <td className="px-3 py-1.5 whitespace-nowrap">{r.channelName ?? r.label}</td>
+                    <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(r.planned, 'TRY', { digits: 0 })}</td>
+                    <td className={cn('px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums', actual === 0 && 'text-muted-foreground')}>{formatMoney(r.actual, 'TRY', { digits: 0 })}</td>
+                    <td className={cn('px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums', !varianceSignificant ? 'text-muted-foreground' : good ? 'text-success' : 'text-destructive')}>
                       {variance >= 0 ? '+' : ''}{formatMoney(r.variance, 'TRY', { digits: 0 })}
                     </td>
                   </tr>
@@ -134,7 +153,9 @@ export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summar
             )}
             {grouped.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-3 py-10 text-center text-muted-foreground">Bu yıl için bütçe satırı yok.</td>
+                <td colSpan={5} className="p-0">
+                  <EmptyState compact icon={FolderKanban} title="Bu yıl için bütçe satırı yok" description="Bütçe seed'i çalışmamış olabilir ya da farklı bir yıl seçin." />
+                </td>
               </tr>
             ) : null}
           </tbody>

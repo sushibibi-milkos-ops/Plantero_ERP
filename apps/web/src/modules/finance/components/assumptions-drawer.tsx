@@ -67,7 +67,7 @@ export function AssumptionsDrawer({ assumptions, channels }: { assumptions: Assu
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="h-11 md:h-8">
           <Settings2 className="size-3.5" />
           Varsayımlar
         </Button>

@@ -26,7 +26,12 @@ export async function getBudgetOverview(year: number): Promise<BudgetOverview> {
     .from(budgetLines)
     .leftJoin(salesChannels, eq(salesChannels.id, budgetLines.channelId))
     .where(eq(budgetLines.budgetId, budget.id))
-    .orderBy(asc(budgetLines.period), asc(budgetLines.kind));
+    // Kriter 11 kök neden düzeltmesi (Tur 2): `kind` içinde aynı ay grubundaki 4 kalem (kanal
+    // cirosu/sabit gider satırları) arasında üçüncü bir sıralama anahtarı yoktu — Postgres eşit
+    // sıralama anahtarlarında satır sırasını GARANTİ ETMEZ, her sorguda farklı fiziksel sırayla
+    // dönebiliyordu (12 ay grubunda ≥3 farklı permütasyon ölçüldü). `label` eklenince aynı ay/kind
+    // içindeki kalemler her zaman aynı (alfabetik) sırada gelir.
+    .orderBy(asc(budgetLines.period), asc(budgetLines.kind), asc(budgetLines.label));
 
   return {
     budgetId: budget.id,

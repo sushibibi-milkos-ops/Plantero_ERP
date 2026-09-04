@@ -1,25 +1,45 @@
 'use client';
 
-import { useState, useTransition, type ChangeEvent } from 'react';
+import { useState, useTransition, type ChangeEvent, type FocusEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { formatMoney, formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { EmptyState } from '@/components/empty-state';
 import { applyCashflowOverrideAction } from '../cashflow-actions';
 import type { CashflowLineDto, ChannelRef } from '../cashflow-queries';
 
 type Scenario = 'base' | 'optimistic' | 'pessimistic';
 
+/**
+ * Düzenlenebilir para hücresi — odak dışında salt-okunur kardeşiyle (`Cell`) AYNI biçimde
+ * (`formatMoney`, ayraçlı + ₺ simgeli) gösterilir; yalnızca odaklanınca ham/ayraçsız düzenleme
+ * değerine geçer (format-on-blur). Kriter 6 kök neden düzeltmesi — Tur 2: önceden odak dışında bile
+ * ham `String(Math.round(...))` basılıyordu (ör. '775000'), aynı sütundaki salt-okunur hücre
+ * '₺775.000' basıyordu.
+ *
+ * Renk: primary/yeşil KALDIRILDI (kriter 4 — ekranda yeşil tek anlama iniyor: grafikteki net nakit
+ * çubukları). Düzenlenebilirlik artık yalnızca kesikli alt çizgi + odakta halka ile anlatılıyor.
+ * Dokunma hedefi: mobilde (varsayılan) 44px, md+ masaüstünde yoğun 28px'e döner (kriter 9).
+ */
 function EditableCell({ value, onCommit, disabled }: { value: string; onCommit: (next: string | null) => void; disabled?: boolean }) {
   const rounded = String(Math.round(Number(value)));
   const [draft, setDraft] = useState(rounded);
+  const [focused, setFocused] = useState(false);
   const [pending, startTransition] = useTransition();
 
   return (
     <input
+      inputMode="decimal"
       disabled={disabled || pending}
+      onFocus={(e: FocusEvent<HTMLInputElement>) => {
+        setFocused(true);
+        setDraft(rounded);
+        e.currentTarget.select();
+      }}
       onChange={(e: ChangeEvent<HTMLInputElement>) => setDraft(e.target.value)}
       onBlur={() => {
+        setFocused(false);
         const trimmed = draft.trim();
         if (trimmed === '' || trimmed === rounded) {
           setDraft(rounded);
@@ -41,11 +61,12 @@ function EditableCell({ value, onCommit, disabled }: { value: string; onCommit: 
         }
       }}
       className={cn(
-        'w-24 min-w-24 rounded border-b border-dashed border-primary/40 bg-transparent px-1 py-0.5 text-right font-mono text-[12px] text-primary tabular-nums outline-none',
+        'h-11 w-24 min-w-24 rounded border-b border-dashed border-foreground/25 bg-transparent px-1 text-right font-mono text-[12px] tabular-nums outline-none',
         'focus:border-primary focus:ring-1 focus:ring-primary/30',
+        'md:h-7 md:py-0.5',
         pending && 'opacity-50',
       )}
-      value={draft}
+      value={focused ? draft : formatMoney(value, 'TRY', { digits: 0 })}
     />
   );
 }
@@ -79,6 +100,14 @@ export function CashflowTable({ lines, channels, scenario, canEdit }: { lines: C
 
   const rowClass = 'border-b border-border/50 hover:bg-muted/30';
   const sectionRowClass = 'border-b border-border/60 bg-muted/20';
+
+  if (lines.length === 0) {
+    return (
+      <div className="rounded-xl border border-border/70 bg-card">
+        <EmptyState title="Projeksiyon üretilmedi" description="Bu senaryo için henüz nakit akışı satırı yok." />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
@@ -187,17 +216,17 @@ export function CashflowTable({ lines, channels, scenario, canEdit }: { lines: C
           {lines.some((l) => l.actualRevenue !== null) ? (
             <>
               <tr className={rowClass}>
-                <RowLabel className="text-primary">Gerçekleşen ciro</RowLabel>
+                <RowLabel className="font-medium text-foreground">Gerçekleşen ciro</RowLabel>
                 {lines.map((l) => (
-                  <td key={l.period} className="px-3 py-1.5 text-right font-mono text-[12px] text-primary tabular-nums">
+                  <td key={l.period} className="px-3 py-1.5 text-right font-mono text-[12px] font-medium text-foreground tabular-nums">
                     {l.actualRevenue !== null ? formatMoney(l.actualRevenue, 'TRY', { digits: 0 }) : <span className="text-muted-foreground">—</span>}
                   </td>
                 ))}
               </tr>
               <tr className={rowClass}>
-                <RowLabel className="text-primary">Gerçekleşen net nakit</RowLabel>
+                <RowLabel className="font-medium text-foreground">Gerçekleşen net nakit</RowLabel>
                 {lines.map((l) => (
-                  <td key={l.period} className="px-3 py-1.5 text-right font-mono text-[12px] text-primary tabular-nums">
+                  <td key={l.period} className="px-3 py-1.5 text-right font-mono text-[12px] font-medium text-foreground tabular-nums">
                     {l.actualNetCashflow !== null ? formatMoney(l.actualNetCashflow, 'TRY', { digits: 0 }) : <span className="text-muted-foreground">—</span>}
                   </td>
                 ))}

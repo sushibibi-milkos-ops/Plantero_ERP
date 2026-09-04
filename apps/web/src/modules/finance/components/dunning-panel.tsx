@@ -3,13 +3,14 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Loader2, Sparkles, Send, Eye, Mail, MessageCircle } from 'lucide-react';
+import { Loader2, Sparkles, Send, Eye, Mail, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { StatusBadge } from '@/components/status-badge';
+import { EmptyState } from '@/components/empty-state';
 import { formatMoney, formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { createDunningDraftAction, approveAndSendDunningAction } from '../dunning-actions';
@@ -127,19 +128,31 @@ export function DunningTable({ due, actions }: { due: DueInvoiceDto[]; actions: 
 
   const findExisting = (invoiceId: string, level: number) => actions.find((a) => a.invoiceId === invoiceId && a.level === level);
 
+  // Kriter 7 + 5 kök neden düzeltmesi (Tur 2, P1/P2): boş tablo önceden çıplak `<td colSpan>` metni
+  // basıyordu (ikon/açıklama/eylem yok) ve bu metin kaydırılabilir tablo genişliğine göre
+  // ortalandığından 390px'te görünür alanın dışına kayıyordu (x≈370-660). Artık boş durumda tablo/
+  // başlık satırı HİÇ render edilmiyor — ortak `EmptyState` kart genişliğine göre ortalanır.
+  if (due.length === 0) {
+    return (
+      <div className="rounded-xl border border-border/70 bg-card">
+        <EmptyState icon={CheckCircle2} title="Vadesi geçmiş fatura yok" description="Tüm satış faturaları vadesinde ya da tamamı tahsil edilmiş." />
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
-      <table className="w-full text-[13px]">
+      <table className="w-full min-w-max text-[13px]">
         <thead>
           <tr className="border-b border-border/60 text-left text-[11px] text-muted-foreground uppercase">
-            <th className="px-3 py-2 font-medium">Müşteri</th>
-            <th className="px-3 py-2 font-medium">Fatura</th>
-            <th className="px-3 py-2 font-medium">Vade</th>
-            <th className="px-3 py-2 text-right font-medium">Gecikme</th>
-            <th className="px-3 py-2 text-right font-medium">Bakiye</th>
-            <th className="px-3 py-2 font-medium">Seviye</th>
-            <th className="px-3 py-2 font-medium">Son hatırlatma</th>
-            <th className="px-3 py-2 text-right font-medium">İşlem</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Müşteri</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Fatura</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Vade</th>
+            <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Gecikme</th>
+            <th className="px-3 py-2 text-right font-medium whitespace-nowrap">Bakiye</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Seviye</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Son hatırlatma</th>
+            <th className="px-3 py-2 text-right font-medium whitespace-nowrap">İşlem</th>
           </tr>
         </thead>
         <tbody>
@@ -147,14 +160,14 @@ export function DunningTable({ due, actions }: { due: DueInvoiceDto[]; actions: 
             const existing = r.hasDraft ? findExisting(r.id, r.level) : undefined;
             return (
               <tr key={r.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
-                <td className="px-3 py-2">{r.partnerName}</td>
-                <td className="px-3 py-2 font-mono text-xs">{r.docNo}</td>
-                <td className="px-3 py-2 text-muted-foreground">{formatDate(r.dueDate)}</td>
-                <td className={cn('px-3 py-2 text-right font-mono tabular-nums', r.daysOverdue > 30 && 'text-destructive')}>{r.daysOverdue} gün</td>
-                <td className="px-3 py-2 text-right font-mono tabular-nums">{formatMoney(r.residual, r.currency, { digits: 2 })}</td>
-                <td className="px-3 py-2"><StatusBadge status={String(r.level)} label={LEVEL_LABEL[r.level]} tone={LEVEL_TONE[r.level]} /></td>
-                <td className="px-3 py-2 text-muted-foreground">{r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 whitespace-nowrap">{r.partnerName}</td>
+                <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{r.docNo}</td>
+                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{formatDate(r.dueDate)}</td>
+                <td className={cn('px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums', r.daysOverdue > 30 && 'text-destructive')}>{r.daysOverdue} gün</td>
+                <td className="px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(r.residual, r.currency, { digits: 2 })}</td>
+                <td className="px-3 py-2 whitespace-nowrap"><StatusBadge status={String(r.level)} label={LEVEL_LABEL[r.level]} tone={LEVEL_TONE[r.level]} /></td>
+                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{r.lastDunningAt ? formatDate(r.lastDunningAt) : '—'}</td>
+                <td className="px-3 py-2 text-right whitespace-nowrap">
                   {existing && SENDABLE_STATUS.has(existing.status) ? (
                     <Button size="sm" variant="outline" onClick={() => setReviewing({ id: existing.id, docNo: r.docNo, partnerName: r.partnerName, channel: existing.channel, subject: existing.subject, body: existing.body })}>
                       <Eye className="size-3.5" /> İncele ve gönder
@@ -170,11 +183,6 @@ export function DunningTable({ due, actions }: { due: DueInvoiceDto[]; actions: 
               </tr>
             );
           })}
-          {due.length === 0 ? (
-            <tr>
-              <td colSpan={8} className="px-3 py-10 text-center text-muted-foreground">Vadesi geçmiş fatura yok.</td>
-            </tr>
-          ) : null}
         </tbody>
       </table>
       {creatingFor ? (
@@ -200,18 +208,26 @@ export type DunningHistoryRow = { id: string; invoiceDocNo: string; partnerName:
 export function DunningHistoryList({ actions }: { actions: DunningHistoryRow[] }) {
   const [reviewing, setReviewing] = useState<DraftSeed | null>(null);
 
+  if (actions.length === 0) {
+    return (
+      <div className="rounded-xl border border-border/70 bg-card">
+        <EmptyState icon={Send} title="Henüz hatırlatma geçmişi yok" description="Vadesi geçen bir faturadan “Taslak oluştur” ile ilk hatırlatmayı gönderin." />
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
-      <table className="w-full text-[13px]">
+      <table className="w-full min-w-max text-[13px]">
         <thead>
           <tr className="border-b border-border/60 text-left text-[11px] text-muted-foreground uppercase">
-            <th className="px-3 py-2 font-medium">Fatura</th>
-            <th className="px-3 py-2 font-medium">Müşteri</th>
-            <th className="px-3 py-2 font-medium">Seviye</th>
-            <th className="px-3 py-2 font-medium">Kanal</th>
-            <th className="px-3 py-2 font-medium">Durum</th>
-            <th className="px-3 py-2 font-medium">Gönderildi</th>
-            <th className="px-3 py-2 text-right font-medium">İşlem</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Fatura</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Müşteri</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Seviye</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Kanal</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Durum</th>
+            <th className="px-3 py-2 font-medium whitespace-nowrap">Gönderildi</th>
+            <th className="px-3 py-2 text-right font-medium whitespace-nowrap">İşlem</th>
           </tr>
         </thead>
         <tbody>
@@ -219,19 +235,19 @@ export function DunningHistoryList({ actions }: { actions: DunningHistoryRow[] }
             const Icon = CHANNEL_ICON[a.channel] ?? Mail;
             return (
               <tr key={a.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
-                <td className="px-3 py-2 font-mono text-xs">{a.invoiceDocNo}</td>
-                <td className="px-3 py-2">{a.partnerName}</td>
-                <td className="px-3 py-2">{LEVEL_LABEL[a.level] ?? a.level}</td>
-                <td className="px-3 py-2"><span className="inline-flex items-center gap-1.5 text-muted-foreground"><Icon className="size-3.5" />{a.channel === 'email' ? 'E-posta' : 'WhatsApp'}</span></td>
-                <td className="px-3 py-2">
+                <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{a.invoiceDocNo}</td>
+                <td className="px-3 py-2 whitespace-nowrap">{a.partnerName}</td>
+                <td className="px-3 py-2 whitespace-nowrap">{LEVEL_LABEL[a.level] ?? a.level}</td>
+                <td className="px-3 py-2 whitespace-nowrap"><span className="inline-flex items-center gap-1.5 text-muted-foreground"><Icon className="size-3.5" />{a.channel === 'email' ? 'E-posta' : 'WhatsApp'}</span></td>
+                <td className="px-3 py-2 whitespace-nowrap">
                   <StatusBadge
                     status={a.status}
                     label={a.status === 'sent' ? 'Gönderildi' : a.status === 'failed' ? 'Başarısız' : a.status === 'pending_approval' ? 'Onay bekliyor' : a.status === 'approved' ? 'Onaylandı' : 'Taslak'}
                     tone={a.status === 'sent' ? 'success' : a.status === 'failed' ? 'danger' : a.status === 'pending_approval' ? 'warning' : 'neutral'}
                   />
                 </td>
-                <td className="px-3 py-2 text-muted-foreground">{a.sentAt ? formatDate(a.sentAt) : '—'}{a.sentTo ? ` · ${a.sentTo}` : ''}</td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{a.sentAt ? formatDate(a.sentAt) : '—'}{a.sentTo ? ` · ${a.sentTo}` : ''}</td>
+                <td className="px-3 py-2 text-right whitespace-nowrap">
                   {SENDABLE_STATUS.has(a.status) ? (
                     <Button size="sm" variant="outline" onClick={() => setReviewing({ id: a.id, docNo: a.invoiceDocNo, partnerName: a.partnerName, channel: a.channel, subject: a.subject, body: a.body })}>
                       <Eye className="size-3.5" /> İncele ve gönder
@@ -241,11 +257,6 @@ export function DunningHistoryList({ actions }: { actions: DunningHistoryRow[] }
               </tr>
             );
           })}
-          {actions.length === 0 ? (
-            <tr>
-              <td colSpan={7} className="px-3 py-10 text-center text-muted-foreground">Henüz hatırlatma geçmişi yok.</td>
-            </tr>
-          ) : null}
         </tbody>
       </table>
       {reviewing ? <SendDialog seed={reviewing} onClose={() => setReviewing(null)} /> : null}

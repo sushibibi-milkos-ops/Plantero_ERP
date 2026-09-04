@@ -24,7 +24,7 @@ export function ScenarioSelect({ scenario, paramName = 'senaryo' }: { scenario: 
         router.push(`${pathname}?${params.toString()}`);
       }}
     >
-      <SelectTrigger className="w-44" size="sm">
+      <SelectTrigger className="w-44 data-[size=sm]:h-11 md:data-[size=sm]:h-8" size="sm">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -44,6 +44,7 @@ export function RecomputeCashflowButton({ scenario }: { scenario: string }) {
     <Button
       variant="outline"
       size="sm"
+      className="h-11 md:h-8"
       disabled={pending}
       onClick={() =>
         startTransition(async () => {
