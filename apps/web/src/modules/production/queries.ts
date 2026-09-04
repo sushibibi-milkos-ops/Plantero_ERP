@@ -304,12 +304,18 @@ export async function listLineCards(): Promise<LineCardRow[]> {
 export type PlanningWorkOrderRow = { id: string; docNo: string; status: string; productName: string; lineId: string; plannedQty: string; uomCode: string; plannedStart: string | null };
 
 export async function listPlanningWorkOrders(fromIso: string, toIso: string): Promise<PlanningWorkOrderRow[]> {
+  // Sütun başlıkları (planlama/page.tsx) Europe/Istanbul iş gününe göre üretilir — aralık sınırları
+  // da aynı takvime göre çevrilmeli, yoksa UTC gece yarısı sınırı hafta kenarında (00:00-03:00 TR)
+  // iş emirlerini komşu haftaya kaydırır (Tur 14 bulgusu, P1). `businessDateBoundsUtc` fromIso'nun
+  // Istanbul 00:00'ını, toIso'nun Istanbul 23:59:59.999'unu UTC Date'e çevirir.
+  const fromUtc = istanbulDayStartUtc(fromIso);
+  const toUtc = istanbulDayEndUtc(toIso);
   const rows = await db
     .select({ wo: workOrders, productName: products.name, uomCode: uoms.code })
     .from(workOrders)
     .innerJoin(products, eq(products.id, workOrders.productId))
     .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
-    .where(and(inArray(workOrders.status, ['planned', 'released', 'in_progress', 'paused']), gte(workOrders.plannedStart, new Date(`${fromIso}T00:00:00Z`)), lte(workOrders.plannedStart, new Date(`${toIso}T23:59:59Z`))))
+    .where(and(inArray(workOrders.status, ['planned', 'released', 'in_progress', 'paused']), gte(workOrders.plannedStart, fromUtc), lte(workOrders.plannedStart, toUtc)))
     .orderBy(asc(workOrders.plannedStart));
   const unscheduled = await db
     .select({ wo: workOrders, productName: products.name, uomCode: uoms.code })
@@ -319,8 +325,19 @@ export async function listPlanningWorkOrders(fromIso: string, toIso: string): Pr
     .where(and(inArray(workOrders.status, ['planned', 'released']), isNull(workOrders.plannedStart)));
   return [...rows, ...unscheduled].map((r) => ({
     id: r.wo.id, docNo: r.wo.docNo, status: r.wo.status, productName: r.productName, lineId: r.wo.lineId,
-    plannedQty: r.wo.plannedQty, uomCode: r.uomCode, plannedStart: r.wo.plannedStart ? r.wo.plannedStart.toISOString().slice(0, 10) : null,
+    plannedQty: r.wo.plannedQty, uomCode: r.uomCode, plannedStart: r.wo.plannedStart ? businessDate(r.wo.plannedStart) : null,
   }));
+}
+
+/** `YYYY-MM-DD` Istanbul takvim gününün başlangıcı (00:00 TR) → UTC `Date` */
+function istanbulDayStartUtc(dateIso: string): Date {
+  // Istanbul yıl boyu UTC+3 (DST yok) — bkz. packages/core/src/dates.ts TZ tanımı
+  return new Date(`${dateIso}T00:00:00+03:00`);
+}
+
+/** `YYYY-MM-DD` Istanbul takvim gününün sonu (23:59:59.999 TR) → UTC `Date` */
+function istanbulDayEndUtc(dateIso: string): Date {
+  return new Date(`${dateIso}T23:59:59.999+03:00`);
 }
 
 /* ==================================================================== */
@@ -370,7 +387,9 @@ export async function listOpenWorkOrdersForLine(lineId: string): Promise<LineQue
     .map((r) => ({
       id: r.wo.id, docNo: r.wo.docNo, status: r.wo.status, productName: r.productName, uomCode: r.uomCode,
       plannedQty: r.wo.plannedQty, producedQty: r.wo.producedQty,
-      plannedStart: r.wo.plannedStart ? r.wo.plannedStart.toISOString().slice(0, 10) : null,
+      // Istanbul iş günü (businessDate) — UTC takvim günü kullanılırsa /uretim/planlama,
+      // /uretim/is-emirleri ile aynı iş emri için farklı gün gösterir (Tur 14 bulgusu, P1).
+      plannedStart: r.wo.plannedStart ? businessDate(r.wo.plannedStart) : null,
     }))
     .sort((a, b) => (LINE_STATUS_PRIORITY[a.status] ?? 9) - (LINE_STATUS_PRIORITY[b.status] ?? 9)); // stable — SQL sırasını önceliğe göre yalnızca yeniden gruplar
   return sorted;
