@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { journals, loans, loanInstallments, type Tx } from '@plantero/db';
 import { withRollback, seedBase, ctx, d, today, balanceProbe, suffix, type Base } from '../__tests__/helpers.js';
-import { postLoanOpeningEntry, postLoanInstallmentPayment, recomputeVariableLoan, listConsolidatedInstallments } from './loans.js';
+import { postLoanOpeningEntry, postLoanInstallmentPayment, recomputeVariableLoan, listConsolidatedInstallments, listOutstandingPrincipal, getOutstandingPrincipal } from './loans.js';
 import { round4 } from '../money.js';
 
 /** BNK yevmiyesi seedBase'de yok — testte elle eklenir (bkz. finance/payments.test.ts örüntüsü). */
@@ -209,6 +209,51 @@ describe('finance/loans', () => {
       const rows = await listConsolidatedInstallments(tx);
       const codes = rows.filter((r) => r.loanId === loanA.id || r.loanId === loanB.id).map((r) => r.loanCode);
       expect(codes).toEqual(expect.arrayContaining([loanA.code, loanB.code]));
+    });
+  });
+
+  // Tur 7 P2 (artifacts/critic/finans.json bulgu): loans.remainingPrincipal I34(c) gereği taksit
+  // ödendikçe DEĞİŞMEYEN sabit bir referanstır — ekranların "canlı kalan bakiye" göstermesi için
+  // listOutstandingPrincipal/getOutstandingPrincipal kullanılır (Σ ödenmemiş taksit anaparası).
+  it('getOutstandingPrincipal: taksit ödenmeden önce takvim toplamına eşit, ödendikten sonra düşer (remainingPrincipal sabit kalır)', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      await ensureBankJournal(tx);
+      const loan = await makeLoan(tx, { remainingPrincipal: '3000.0000' });
+      await tx.insert(loanInstallments).values([
+        { loanId: loan.id, seq: 1, dueDate: today(), period: today().slice(0, 7), installment: '1050.0000', interest: '50.0000', principal: '1000.0000', remainingAfter: '2000.0000', status: 'scheduled' },
+        { loanId: loan.id, seq: 2, dueDate: today(), period: today().slice(0, 7), installment: '1040.0000', interest: '40.0000', principal: '1000.0000', remainingAfter: '1000.0000', status: 'scheduled' },
+        { loanId: loan.id, seq: 3, dueDate: today(), period: today().slice(0, 7), installment: '1030.0000', interest: '30.0000', principal: '1000.0000', remainingAfter: '0.0000', status: 'scheduled' },
+      ]);
+
+      expect(await getOutstandingPrincipal(tx, loan.id)).toBe('3000.0000');
+
+      await postLoanInstallmentPayment(tx, { loanId: loan.id, seq: 1 }, ctx);
+
+      // Canlı bakiye 1. taksidin anaparası kadar düştü…
+      expect(await getOutstandingPrincipal(tx, loan.id)).toBe('2000.0000');
+      // …ama I34(c) statik referansı (loans.remainingPrincipal) kasıtlı olarak DEĞİŞMEDİ.
+      const [loanAfter] = await tx.select().from(loans).where(eq(loans.id, loan.id));
+      expect(loanAfter!.remainingPrincipal).toBe('3000.0000');
+    });
+  });
+
+  it('listOutstandingPrincipal: birden fazla kredinin canlı bakiyesini TEK sorguda (Map) döner', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      await ensureBankJournal(tx);
+      const loanA = await makeLoan(tx, { remainingPrincipal: '1000.0000' });
+      const loanB = await makeLoan(tx, { remainingPrincipal: '2000.0000' });
+      await tx.insert(loanInstallments).values([
+        { loanId: loanA.id, seq: 1, dueDate: today(), period: today().slice(0, 7), installment: '1050.0000', interest: '50.0000', principal: '1000.0000', remainingAfter: '0.0000', status: 'scheduled' },
+        { loanId: loanB.id, seq: 1, dueDate: today(), period: today().slice(0, 7), installment: '1050.0000', interest: '50.0000', principal: '1000.0000', remainingAfter: '1000.0000', status: 'scheduled' },
+        { loanId: loanB.id, seq: 2, dueDate: today(), period: today().slice(0, 7), installment: '1040.0000', interest: '40.0000', principal: '1000.0000', remainingAfter: '0.0000', status: 'scheduled' },
+      ]);
+      await postLoanInstallmentPayment(tx, { loanId: loanB.id, seq: 1 }, ctx);
+
+      const map = await listOutstandingPrincipal(tx);
+      expect(map.get(loanA.id)).toBe('1000.0000');
+      expect(map.get(loanB.id)).toBe('1000.0000'); // 2000 - 1000 (ödenen taksit)
     });
   });
 });

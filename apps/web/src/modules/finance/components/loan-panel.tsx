@@ -59,7 +59,12 @@ export function LoanCards({ loans, canEdit }: { loans: LoanCardRow[]; canEdit: b
           <div className="mt-3 grid grid-cols-2 gap-2.5 text-[13px]">
             <div>
               <div className="text-[11px] text-muted-foreground">Kalan anapara</div>
-              <div className="font-mono font-medium tabular-nums">{formatMoney(l.remainingPrincipal, 'TRY', { digits: 0 })}</div>
+              {/* Tur 7 P2 kök neden düzeltmesi: burada eskiden loans.remainingPrincipal (I34(c)
+                  gereği SABİT Excel-içe-aktarım referansı) basılıyordu — taksit ödendikçe
+                  değişmediği için "kalan anapara" etiketiyle çelişen, giderek yanıltıcı bir
+                  rakam üretiyordu. outstandingPrincipal ödenmemiş taksitlerin canlı toplamıdır
+                  (tek GROUP BY sorgusuyla türetilir, bkz. loans-queries.ts). */}
+              <div className="font-mono font-medium tabular-nums">{formatMoney(l.outstandingPrincipal, 'TRY', { digits: 0 })}</div>
             </div>
             <div>
               <div className="text-[11px] text-muted-foreground">Aylık taksit</div>

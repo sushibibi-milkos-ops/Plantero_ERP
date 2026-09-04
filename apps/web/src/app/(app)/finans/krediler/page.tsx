@@ -13,7 +13,9 @@ export default async function LoansPage() {
   const user = await requirePermission('finance.view');
   const [loans, schedule, burden] = await Promise.all([listLoans(), getConsolidatedSchedule(), getMonthlyLoanBurden()]);
 
-  const totalRemaining = loans.reduce((acc, l) => acc + Number(l.remainingPrincipal), 0);
+  // Tur 7 P2 kök neden düzeltmesi: toplam da canlı bakiyeden (outstandingPrincipal) toplanır —
+  // statik remainingPrincipal (I34(c) referansı) taksit ödendikçe değişmez, toplamı şişirirdi.
+  const totalRemaining = loans.reduce((acc, l) => acc + Number(l.outstandingPrincipal), 0);
   const totalMonthlyInstallment = loans.filter((l) => l.remainingInstallments > 0).reduce((acc, l) => acc + Number(l.monthlyInstallment), 0);
   const variableCount = loans.filter((l) => l.rateKind === 'variable').length;
 

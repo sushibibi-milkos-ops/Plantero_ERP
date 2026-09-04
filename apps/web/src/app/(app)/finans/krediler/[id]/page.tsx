@@ -47,7 +47,9 @@ export default async function LoanDetailPage({ params }: { params: Promise<{ id:
       />
 
       <KpiStripRow>
-        <KpiCard variant="strip" title="Kalan anapara" value={loan.remainingPrincipal} format="money" />
+        {/* Tur 7 P2 kök neden düzeltmesi: statik I34(c) referansı (remainingPrincipal) yerine
+            canlı bakiye (outstandingPrincipal, tek SUM sorgusu — bkz. loans-queries.ts) gösterilir. */}
+        <KpiCard variant="strip" title="Kalan anapara" value={loan.outstandingPrincipal} format="money" />
         <KpiCard variant="strip" title="Aylık taksit" value={loan.monthlyInstallment} format="money" />
         {/* Kriter 11 kök neden düzeltmesi (Tur 4, P1 — finans-krediler-detay-05): iki kart birebir
             aynı yardımcı metni ("N taksit toplam") basıyordu — Ödenen taksit kartı artık tamamlanma

@@ -1,29 +1,41 @@
 import 'server-only';
 import { asc, eq } from 'drizzle-orm';
 import { db, loans, loanInstallments, bankAccounts } from '@plantero/db';
-import { listConsolidatedInstallments } from '@plantero/core';
+import { listConsolidatedInstallments, listOutstandingPrincipal, getOutstandingPrincipal } from '@plantero/core';
 
 export type LoanCardRow = {
   id: string; code: string; bankName: string; productName: string; rateKind: string; monthlyRatePct: string; monthlyInstallment: string;
-  remainingPrincipal: string; remainingInstallments: number; lastDue: string | null; paymentDay: number; isActive: boolean; bankAccountLabel: string | null;
+  /** Statik I34(c) referansı — Excel içe aktarım anındaki toplam anapara, taksit ödendikçe DEĞİŞMEZ. Ekranlarda gösterilmez. */
+  remainingPrincipal: string;
+  /** Canlı bakiye — ödenmemiş taksitlerin anapara toplamı (`listOutstandingPrincipal`, tek GROUP BY sorgusu). Ekranlarda "Kalan anapara" olarak bu gösterilir. */
+  outstandingPrincipal: string;
+  remainingInstallments: number; lastDue: string | null; paymentDay: number; isActive: boolean; bankAccountLabel: string | null;
 };
 
 export async function listLoans(): Promise<LoanCardRow[]> {
-  const rows = await db
-    .select({ l: loans, bankCode: bankAccounts.code })
-    .from(loans)
-    .leftJoin(bankAccounts, eq(bankAccounts.id, loans.bankAccountId))
-    .orderBy(asc(loans.code));
+  // Tur 7 P2 düzeltmesi: canlı bakiye TEK bir GROUP BY sorgusuyla (listOutstandingPrincipal) tüm
+  // krediler için birlikte alınır — kredi sayısı kadar N+1 sorgu üretmez (bkz. loans.ts yorumu).
+  const [rows, outstandingByLoan] = await Promise.all([
+    db
+      .select({ l: loans, bankCode: bankAccounts.code })
+      .from(loans)
+      .leftJoin(bankAccounts, eq(bankAccounts.id, loans.bankAccountId))
+      .orderBy(asc(loans.code)),
+    listOutstandingPrincipal(db),
+  ]);
   return rows.map((r) => ({
     id: r.l.id, code: r.l.code, bankName: r.l.bankName, productName: r.l.productName, rateKind: r.l.rateKind, monthlyRatePct: r.l.monthlyRatePct,
-    monthlyInstallment: r.l.monthlyInstallment, remainingPrincipal: r.l.remainingPrincipal, remainingInstallments: r.l.remainingInstallments,
-    lastDue: r.l.lastDue, paymentDay: r.l.paymentDay, isActive: r.l.isActive, bankAccountLabel: r.bankCode,
+    monthlyInstallment: r.l.monthlyInstallment, remainingPrincipal: r.l.remainingPrincipal, outstandingPrincipal: outstandingByLoan.get(r.l.id) ?? r.l.remainingPrincipal,
+    remainingInstallments: r.l.remainingInstallments, lastDue: r.l.lastDue, paymentDay: r.l.paymentDay, isActive: r.l.isActive, bankAccountLabel: r.bankCode,
   }));
 }
 
 export async function getLoan(loanId: string) {
   const [loan] = await db.select().from(loans).where(eq(loans.id, loanId)).limit(1);
-  return loan ?? null;
+  if (!loan) return null;
+  // Tur 7 P2 düzeltmesi: detay ekranındaki "Kalan anapara" KPI'ı da canlı bakiyeyi göstermeli (bkz. loans.ts yorumu).
+  const outstandingPrincipal = await getOutstandingPrincipal(db, loanId);
+  return { ...loan, outstandingPrincipal };
 }
 
 export type InstallmentRow = { id: string; seq: number; dueDate: string; period: string; installment: string; interest: string; principal: string; remainingAfter: string; status: string; paidAt: string | null };

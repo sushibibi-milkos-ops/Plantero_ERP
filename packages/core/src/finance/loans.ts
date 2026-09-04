@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { loans, loanInstallments, journalEntries, type DbOrTx } from '@plantero/db';
 import { D, ZERO, round4, toDb, toDbRate, isZero4 } from '../money.js';
 import { businessDate } from '../dates.js';
@@ -220,6 +220,40 @@ export async function recomputeVariableLoan(tx: DbOrTx, loanId: string, newMonth
   );
 
   return { updated: pending.length, newMonthlyInstallment: firstInstallment ? toDb(firstInstallment) : null };
+}
+
+/**
+ * **Tur 7 P2 düzeltmesi (I34/I35 tasarım notunun devamı)**: `loans.remainingPrincipal` I34(c) gereği
+ * SABİT bir referanstır (bkz. dosya başı yorumu) — ekranlarda "kalan bakiye" olarak GÖSTERİLEMEZ,
+ * çünkü taksit ödendikçe güncellenmez ve kullanıcıyı gerçek borçtan daha yüksek bir tutara yanıltır.
+ * Canlı bakiye `Σ(status<>'paid' taksitlerin principal'ı)` ile türetilir (I35'in de kullandığı formül) —
+ * ama bunu ekran başına (kart listesindeki HER kredi için ayrı bir sorgu) çağırmak N+1 üretir. Bu iki
+ * fonksiyon tüm krediler için TEK bir GROUP BY sorgusuyla (liste ekranı) ya da tek kredi için TEK bir
+ * SUM sorgusuyla (detay ekranı) canlı bakiyeyi döner — O(1) sorgu, ödenmemiş taksit sayısından bağımsız.
+ * `schemaRequests`: kalıcı çözüm `loans`ya denormalize bir `outstanding_principal` kolonu eklemek olurdu
+ * (her taksit ödemesinde `postLoanInstallmentPayment` tarafından güncellenir) — şema donduğundan burada
+ * uygulanamadı, bkz. proje raporu.
+ */
+export async function listOutstandingPrincipal(tx: DbOrTx): Promise<Map<string, string>> {
+  const rows = await tx
+    .select({
+      loanId: loanInstallments.loanId,
+      outstanding: sql<string>`coalesce(sum(case when ${loanInstallments.status} <> 'paid' then ${loanInstallments.principal} else 0 end), 0)`,
+    })
+    .from(loanInstallments)
+    .groupBy(loanInstallments.loanId);
+  return new Map(rows.map((r) => [r.loanId, toDb(round4(D(r.outstanding)))]));
+}
+
+/** Tek bir kredinin canlı kalan bakiyesi (bkz. `listOutstandingPrincipal` yorumu). */
+export async function getOutstandingPrincipal(tx: DbOrTx, loanId: string): Promise<string> {
+  const [row] = await tx
+    .select({
+      outstanding: sql<string>`coalesce(sum(case when ${loanInstallments.status} <> 'paid' then ${loanInstallments.principal} else 0 end), 0)`,
+    })
+    .from(loanInstallments)
+    .where(eq(loanInstallments.loanId, loanId));
+  return toDb(round4(D(row?.outstanding ?? '0')));
 }
 
 export type ConsolidatedInstallmentRow = {
