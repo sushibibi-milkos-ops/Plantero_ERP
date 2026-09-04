@@ -1,6 +1,6 @@
 {
   "module": "core",
-  "round": 16,
+  "round": 17,
   "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I36, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz.",
   "findings": [
     {
@@ -48,11 +48,28 @@
       "measureAfter": "pnpm db:reset && pnpm db:check → 36/36 kural GEÇTİ, 0 ihlal (tek kesintisiz zincirde alındı). pnpm --filter @plantero/core exec vitest run → 41 dosya / 207 test GEÇTİ.",
       "verifiedBy": "pnpm db:check (tek kesintisiz db:reset && db:check zinciri), docs/INVARIANTS.md güncellemesi"
     }
+    ,
+    {
+      "id": "core-checks-test-rule-count-01",
+      "module": "core",
+      "severity": "P2",
+      "rule": "N/A (birim testi — phase2 akışını etkilemiyor)",
+      "file": "packages/db/src/checks/checks.test.ts",
+      "route": null,
+      "status": "closed",
+      "closedRound": 17,
+      "description": "checks.test.ts sabit RULE_COUNT=36 bekliyordu, ama packages/db/src/checks/ altında 37_journal_reversal_guard.sql (I37, ters kayıt koruması) eklendiğinden dosya sayısı 37'ye çıkmış, test sabiti güncellenmemişti — 'pnpm test' bu yüzden exit 1 dönüyordu (@plantero/db: 1 failed | 44 passed).",
+      "measureBefore": "pnpm --filter @plantero/db exec vitest run src/checks/checks.test.ts → FAIL: 'checks/ altında tam olarak 36 kural dosyası var' testi 37 dosya bulduğu için kırık (expected length 36, received 37); pnpm test → @plantero/db 1 failed | 44 passed.",
+      "fix": "checks.test.ts içindeki RULE_COUNT sabiti 36'dan 37'ye güncellendi (yalnızca test dosyası — uygulama/SQL kodu değişmedi, hiçbir kural gevşetilmedi); dosya başındaki I22..I36 açıklama yorumuna I37 (yevmiye ters kayıt koruması) eklendi.",
+      "measureAfter": "pnpm --filter @plantero/db exec vitest run src/checks/checks.test.ts → PASS, 39/39 test (37 kural × şema doğrulaması + 2 genel test). pnpm db:reset && pnpm db:check (tek kesintisiz zincir) → 37/37 kural GEÇTİ, 0 ihlal. pnpm --filter @plantero/db exec vitest run (tüm paket) → 2 dosya / 45 test GEÇTİ. pnpm --filter @plantero/core test → 41 dosya / 210 test GEÇTİ (izole çalıştırma; workspace-genelinde ilk 'pnpm test' denemesinde eşzamanlı başka bir oturumun db:reset'i yüzünden 'relation accounts does not exist' ile 3 dosya geçici olarak kırıldı — docs/INVARIANTS.md 'Tur 11 ortak bulgu' örüntüsünün tekrarı, kod hatası değil; izole yeniden çalıştırmada 210/210 yeşil). pnpm typecheck, pnpm lint (tüm paketler) temiz.",
+      "verifiedBy": "pnpm --filter @plantero/db exec vitest run (birim testi), pnpm db:check (SQL ölçüm — I37 dahil 37/37)"
+    }
   ],
   "open": [],
   "closed": [
     { "id": "core-bankrecon-audit-01", "closedRound": 15, "verifiedBy": "pnpm db:check — I17 0 ihlal" },
     { "id": "core-export-shipment-gap-01", "closedRound": 16, "verifiedBy": "pnpm db:check — I36 0 ihlal" },
-    { "id": "core-db-concurrency-note-01", "closedRound": 16, "verifiedBy": "pnpm db:check — tek kesintisiz zincirde 36/36 GEÇTİ" }
+    { "id": "core-db-concurrency-note-01", "closedRound": 16, "verifiedBy": "pnpm db:check — tek kesintisiz zincirde 36/36 GEÇTİ" },
+    { "id": "core-checks-test-rule-count-01", "closedRound": 17, "verifiedBy": "pnpm --filter @plantero/db exec vitest run — 45/45 test GEÇTİ; pnpm db:check — 37/37 kural GEÇTİ" }
   ]
 }
