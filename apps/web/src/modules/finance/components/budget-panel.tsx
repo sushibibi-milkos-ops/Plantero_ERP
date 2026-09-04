@@ -98,7 +98,7 @@ export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summar
   // sonuna kadar (henüz gelmemiş) 0 gerçekleşenle dolu bir grafik üretiyordu — plan çubuğu her ay
   // birbirinin aynı, gerçekleşen serisi ya görünmüyor ya da plan'a kıyasla piksel altı kalıyordu.
   // Gerçekleşen verisi olan SON aya kadar kırp (YTD) — henüz veri girilmemiş aylar hiç çizilmez.
-  const { chartData, chartInformative, lastActualLabel } = useMemo(() => {
+  const { chartData, chartInformative, lastActualLabel, actualToPlannedPct } = useMemo(() => {
     const rows = summary
       .filter((s) => s.kind === kindFilter)
       .map((s) => ({ period: s.period, planned: Number(s.planned), actual: Number(s.actual) }))
@@ -109,8 +109,9 @@ export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summar
     const maxPlanned = Math.max(0, ...ytd.map((r) => r.planned));
     const maxActual = Math.max(0, ...ytd.map((r) => r.actual));
     // 260px yükseklikte ≥8px bir gerçekleşen çubuk için gereken minimum oran (kriter 12 hedefi).
-    const informative = ytd.length > 0 && maxPlanned > 0 && maxActual / maxPlanned >= 8 / 260;
-    return { chartData: ytd, chartInformative: informative, lastActualLabel: lastActual ? formatMonth(lastActual) : null };
+    const ratio = maxPlanned > 0 ? maxActual / maxPlanned : 0;
+    const informative = ytd.length > 0 && maxPlanned > 0 && ratio >= 8 / 260;
+    return { chartData: ytd, chartInformative: informative, lastActualLabel: lastActual ? formatMonth(lastActual) : null, actualToPlannedPct: ratio * 100 };
   }, [summary, kindFilter]);
 
   const filteredLines = useMemo(() => lines.filter((l) => l.kind === kindFilter), [lines, kindFilter]);
@@ -156,12 +157,24 @@ export function BudgetPanel({ lines, summary }: { lines: BudgetLineRow[]; summar
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <div className="flex h-[260px] flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-border/60 text-center">
-            <BarChart3 className="size-5 text-muted-foreground" />
-            <p className="text-[13px] font-medium text-muted-foreground">Gerçekleşen henüz yok</p>
-            <p className="max-w-64 text-[11px] text-muted-foreground">
-              {lastActualLabel ? `${lastActualLabel} itibarıyla gerçekleşen tutar plana kıyasla henüz karşılaştırılabilir değil.` : 'Bu yıl için gerçekleşen kaydedilmedi. Tablodaki tutarlar hâlâ güncel.'}
-            </p>
+          // Kriter 11+12 kök neden düzeltmesi (Tur 5, P1 — finans-butce-13): önceki metin
+          // "Gerçekleşen henüz yok" diyordu ama gerçekleşen SIFIR değil — yalnızca en yüksek ayın
+          // plan çubuğunun yanında 260px'te görünür bir çubuk oluşturamayacak kadar küçük (maxActual/
+          // maxPlanned oranı). KPI şeridindeki "↘ %99,8 plana göre" rozetiyle AYNI olguyu (gerçekleşen
+          // plana kıyasla çok küçük) aynı sayı biçimiyle anlatır — çelişki kalmaz. Ortak EmptyState
+          // (compact) kullanılır; kart zaten kendi border'ını taşıdığı için ikinci bir kesikli
+          // çerçeve (kutu içinde kutu) eklenmez.
+          <div className="flex h-[260px] items-center justify-center">
+            <EmptyState
+              compact
+              icon={BarChart3}
+              title={`Gerçekleşen plana kıyasla çizilemeyecek kadar küçük (%${actualToPlannedPct.toLocaleString('tr-TR', { maximumFractionDigits: 1 })})`}
+              description={
+                lastActualLabel
+                  ? `${lastActualLabel} itibarıyla en yüksek aylık gerçekleşen, plan çubuğunun yanında görünür kalınlıkta çizilemiyor. Tablodaki tutarlar güncel.`
+                  : 'Bu yıl için gerçekleşen kaydedilmedi. Tablodaki tutarlar hâlâ güncel.'
+              }
+            />
           </div>
         )}
       </div>

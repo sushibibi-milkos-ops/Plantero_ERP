@@ -45,7 +45,7 @@ const HISTORY_COLOR = 'var(--chart-5)';
 const FORECAST_COLOR = 'var(--chart-5)';
 const BAND_COLOR = 'var(--chart-5)';
 
-type Point = { period: string; history?: number; predicted?: number; low?: number; high?: number; bandWidth?: number };
+type Point = { period: string; history?: number; predicted?: number; low?: number; high?: number };
 
 function buildSeries(history: { period: string; amount: string }[], forecast: ForecastPageData['salesForecast']): Point[] {
   const byPeriod = new Map<string, Point>();
@@ -55,10 +55,6 @@ function buildSeries(history: { period: string; amount: string }[], forecast: Fo
     cur.predicted = Number(f.predicted);
     cur.low = f.low ? Number(f.low) : undefined;
     cur.high = f.high ? Number(f.high) : undefined;
-    // Band alanı stackId ile inşa edilir: önce görünmez `low` yükseklik kadar taban, üstüne yalnızca
-    // (high−low) kadar dolgulu ikinci alan biner — recharts'ta gerçek bir "min-max bant" bu şekilde
-    // (iki ayrı sıfır-tabanlı alan değil) doğru çizilir.
-    if (cur.low !== undefined && cur.high !== undefined) cur.bandWidth = cur.high - cur.low;
     byPeriod.set(f.period, cur);
   }
   // Tarihçe ile tahmin arasında görsel süreklilik: tahminin ilk noktası tarihçenin son noktasına bağlanır.
@@ -71,20 +67,28 @@ function buildSeries(history: { period: string; amount: string }[], forecast: Fo
 }
 
 function ForecastChart({ points, label }: { points: Point[]; label: string }) {
-  // Kriter 12 kök neden düzeltmesi (Tur 4, P1 — finans-tahmin-10): Y ekseni recharts'ın varsayılan
-  // "0'dan dataMax'a" davranışına bırakılınca veri düz/bantı dar olduğunda (tüm noktalar birbirine
-  // yakın) grafik alanının çoğu boş kalıyordu. `niceTicks` (cashflow-chart.tsx — aynı modül, tek
-  // kaynak) bandı saran 5 eşit tick üretir; domain bu tick aralığına daralır, seri her zaman
-  // yüksekliğin anlamlı bir bölümünde hareket eder.
+  // Kriter 12 kök neden düzeltmesi (Tur 5, P1 — finans-tahmin-12, finans-tahmin-10'un tekrarı):
+  // `niceTicks`/`fitTicks` veriyi saran 5 eşit tick üretiyordu AMA bant iki `Area` bileşeninin
+  // `stackId="band"` ile üst üste yığılmasıyla çiziliyordu — recharts yığılı (stacked) serilerde
+  // eksen alanını her zaman 0'ı içerecek şekilde genişletir, verilen `domain` prop'unu ezer. Sonuç:
+  // 240px'lik çizim alanının %62'si (0 ile en alt tick arası) boş kalıyordu. Kök neden çözümü: bant
+  // artık STACK KULLANMADAN tek bir `Area` ile, `dataKey`'i `[low, high]` demeti döndüren bir
+  // erişimciyle ("range area") çizilir — recharts bunu iki ayrı yığılı seri değil TEK bir aralık
+  // olarak ele alır, YAxis domain'i asla 0'a zorlamaz. `allowDataOverflow` ek güvence olarak eklendi.
   const allValues = points.flatMap((p) => [p.history, p.predicted, p.low, p.high]).filter((v): v is number => v !== undefined);
   const ticks = fitTicks(allValues.length ? allValues : [0]);
   const domain: [number, number] = [ticks[0]!, ticks[ticks.length - 1]!];
-  // Kriter 11 kök neden düzeltmesi (Tur 4, P1 — finans-tahmin-08): tek aylık geçmişte `dot={false}`
-  // çizgiyi 0 piksele indiriyordu (bir noktadan çizgi geçmez) — "gerçekleşen" seri tamamen görünmez
-  // kalıyordu. ≤1 noktalı geçmişte görünür bir işaretçi zorunlu; ≥2 noktada Stripe kalıbı (temiz
-  // çizgi, hover'da nokta) korunur.
+  // Kriter 11 kök neden düzeltmesi (Tur 4, P1 — finans-tahmin-08; Tur 5'te ayrıştırıldı —
+  // finans-tahmin-12): tek aylık geçmişte `dot={false}` çizgiyi 0 piksele indiriyordu ("gerçekleşen"
+  // seri tamamen görünmez). Önceki düzeltme (r=2.5, aynı `--chart-5` dolgu) tahmin çizgisinin
+  // tam üzerine denk geldiğinde dash parçacıklarından ayırt edilemiyordu. Tek noktalı gerçekleşen
+  // artık NÖTR (`--foreground`) dolgulu, kart zeminiyle 2px halkalı, büyütülmüş (r=4) bir işaretçi —
+  // tahmin rengiyle (mor `--chart-5`) çakışmaz, ekranın diğer yerlerinde "Gerçekleşen ciro" satırının
+  // zaten nötr/foreground olması (finans-nakit-03 kök neden çözümü — aynı modül, tek kaynak) ile
+  // tutarlı bir "gerçekleşen = nötr vurgu" dili kurar. ≥2 noktada Stripe kalıbı (temiz çizgi,
+  // hover'da nokta) korunur.
   const historyPointCount = points.filter((p) => p.history !== undefined).length;
-  const historyDot = historyPointCount <= 1 ? { r: 2.5, fill: HISTORY_COLOR, strokeWidth: 0 } : false;
+  const historyDot = historyPointCount <= 1 ? { r: 4, fill: 'var(--foreground)', stroke: 'var(--card)', strokeWidth: 2 } : false;
   return (
     <ResponsiveContainer width="100%" height={240}>
       <ComposedChart data={points} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
@@ -96,7 +100,7 @@ function ForecastChart({ points, label }: { points: Point[]; label: string }) {
         </defs>
         <CartesianGrid stroke="var(--border)" vertical={false} />
         <XAxis dataKey="period" tickFormatter={formatMonth} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} minTickGap={24} />
-        <YAxis domain={domain} ticks={ticks} tickFormatter={(v: number) => formatMoney(v, 'TRY', { digits: 0, compact: true })} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} width={64} />
+        <YAxis domain={domain} ticks={ticks} allowDataOverflow tickFormatter={(v: number) => formatMoney(v, 'TRY', { digits: 0, compact: true })} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} width={64} />
         <Tooltip
           isAnimationActive={false}
           wrapperStyle={{ outline: 'none' }}
@@ -116,8 +120,16 @@ function ForecastChart({ points, label }: { points: Point[]; label: string }) {
             ) : null
           }
         />
-        <Area type="linear" dataKey="low" stackId="band" stroke="none" fill="transparent" isAnimationActive={false} legendType="none" connectNulls />
-        <Area type="linear" dataKey="bandWidth" name="Bant" stackId="band" stroke="none" fill="url(#fill-forecast-band)" isAnimationActive={false} legendType="none" connectNulls />
+        <Area
+          type="linear"
+          dataKey={(p: Point) => (p.low !== undefined && p.high !== undefined ? [p.low, p.high] : undefined)}
+          name="Bant"
+          stroke="none"
+          fill="url(#fill-forecast-band)"
+          isAnimationActive={false}
+          legendType="none"
+          connectNulls
+        />
         <Line type="linear" dataKey="history" name="Gerçekleşen" stroke={HISTORY_COLOR} strokeWidth={2} dot={historyDot} isAnimationActive={false} />
         <Line type="linear" dataKey="predicted" name={label} stroke={FORECAST_COLOR} strokeWidth={2} strokeDasharray="4 3" dot={{ r: 2.5 }} isAnimationActive={false} connectNulls />
       </ComposedChart>
@@ -306,27 +318,35 @@ function ChannelForecastTable({ channelForecast, channels }: { channelForecast: 
           bant 3 satıra), İŞLEM sütunu tamamen görünür alan dışında kalıyordu. Modülün diğer tüm
           tablolarıyla (budget-panel, loan-panel, dunning-panel) aynı kalıp: <md'de kart listesi,
           md+'de min-w-max + whitespace-nowrap tablo — hiçbir hücre sarmaz/kırpılmaz. */}
+      {/* Kriter 9 kök neden düzeltmesi (Tur 5, P1 — finans-tahmin-13): önceki kart 166px'ti (36 kart
+          = 5.976px kaydırma) çünkü TAHMİN/BANT ayrı bir grid satırında, YÖNTEM kendi satırında ve
+          altında tam genişlik h-11 "Uygula" butonu vardı — 36 özdeş tam genişlik birincil eylem
+          masaüstünde Tur 4'te bilinçle kaldırılan "eylem duvarı"nın (finans-tahmin-07) mobile
+          taşınmış haliydi. Artık tek kart: başlık satırında kanal + ay, ikinci satırda tahmin+bant
+          yan yana, üçüncü satırda yöntem — sağda 44×44 ikon buton (masaüstündeki ghost ikon
+          butonun mobil eşdeğeri). Kart yüksekliği ≤96px. */}
       <ul className="space-y-2 md:hidden">
         {channelForecast.map((f) => (
-          <li key={f.id} className="rounded-lg border border-border/70 bg-card p-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="min-w-0 truncate text-[13px] font-medium">{nameById.get(f.channelId ?? '') ?? f.channelName ?? '—'}</div>
-              <div className="shrink-0 text-[11px] text-muted-foreground">{formatMonth(f.period)}</div>
-            </div>
-            <div className="mt-2 grid grid-cols-2 gap-2 text-[13px]">
-              <div>
-                <div className="text-[11px] text-muted-foreground uppercase">Tahmin</div>
-                <div className="font-mono tabular-nums">{formatMoney(f.predicted, 'TRY', { digits: 0 })}</div>
+          <li key={f.id} className="flex items-start justify-between gap-2 rounded-lg border border-border/70 bg-card p-3">
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-1.5">
+                <span className="min-w-0 truncate text-[13px] font-medium">{nameById.get(f.channelId ?? '') ?? f.channelName ?? '—'}</span>
+                <span className="shrink-0 text-[11px] text-muted-foreground">{formatMonth(f.period)} · {f.method === 'ai' ? 'AI' : 'Mevsimsel ort.'}</span>
               </div>
-              <div>
-                <div className="text-[11px] text-muted-foreground uppercase">Bant</div>
-                <div className="font-mono text-[11px] text-muted-foreground tabular-nums">{f.low && f.high ? `${formatMoney(f.low, 'TRY', { digits: 0 })} – ${formatMoney(f.high, 'TRY', { digits: 0 })}` : '—'}</div>
+              <div className="mt-1.5 flex items-baseline gap-2">
+                <span className="font-mono text-[13px] tabular-nums">{formatMoney(f.predicted, 'TRY', { digits: 0 })}</span>
+                <span className="font-mono text-[11px] text-muted-foreground tabular-nums">{f.low && f.high ? `${formatMoney(f.low, 'TRY', { digits: 0 })} – ${formatMoney(f.high, 'TRY', { digits: 0 })}` : '—'}</span>
               </div>
             </div>
-            <div className="mt-1.5 text-[11px] text-muted-foreground">{f.method === 'ai' ? 'AI' : 'Mevsimsel ort.'}</div>
-            <Button size="sm" variant="outline" className="mt-2.5 h-11 w-full" disabled={applyingId === f.id} onClick={() => applyRow(f)}>
-              {applyingId === f.id ? <Loader2 className="size-3.5 animate-spin" /> : <ArrowRight className="size-3.5" />}
-              Uygula
+            <Button
+              size="icon-sm"
+              variant="outline"
+              className="size-11 shrink-0"
+              disabled={applyingId === f.id}
+              aria-label={`${nameById.get(f.channelId ?? '') ?? f.channelName ?? ''} — ${formatMonth(f.period)} tahminini uygula`}
+              onClick={() => applyRow(f)}
+            >
+              {applyingId === f.id ? <Loader2 className="size-4 animate-spin" /> : <ArrowRight className="size-4" />}
             </Button>
           </li>
         ))}

@@ -37,7 +37,13 @@ export default async function ForecastPage() {
 
   return (
     <>
-      <PageHeader title="AI Satış / Nakit Tahmini" description="Son 12 ay + gelecek 6 ay tahmin (AI, yoksa mevsimsel hareketli ortalama fallback)" />
+      {/* Kriter 11 kök neden düzeltmesi (Tur 5, P1 — finans-tahmin-14): önceki metin sabit "Son 12 ay
+          + gelecek 6 ay" penceresi vaat ediyordu; ForecastChart başlığı (finans-tahmin-08 Tur 4'te
+          kök nedeni düzeltilmişti) gerçek pencereyi (`salesHistoryMonths` — yalnızca TAMAMLANMIŞ
+          aylar) gösterip erken evrede 1 aya düşebiliyor, ikisi 200px arayla birbirini yalanlıyordu.
+          Açıklama artık pencereden BAĞIMSIZ yazılır — grafik başlığı (ForecastPanels) gerçek
+          pencereyi zaten bildiriyor, burada tekrar sayı vermek gerekmiyor. */}
+      <PageHeader title="AI Satış / Nakit Tahmini" description="Satış ve nakit tahmini — AI, yoksa mevsimsel hareketli ortalama fallback (gerçek geçmiş/tahmin penceresi her grafiğin başlığında)" />
 
       <KpiStripRow>
         <KpiCard variant="strip" title="Tahmini 6 ay toplam ciro" value={data.salesForecast.length ? salesTotal6mo.toFixed(2) : null} format="money" hint={lastGenerated ? `son üretim ${relativeTime(lastGenerated)}` : 'henüz üretilmedi'} />

@@ -1,12 +1,12 @@
 {
  "module": "finans",
- "round": 4,
+ "round": 6,
  "reference": "stripe",
  "referenceTotal": 56,
- "note": "Tur 4 — tam yeniden ölçüm (artifacts/critic/measure-finans-r4/*.json, ekran görüntüleri artifacts/screens/finans-*/). Builder Tur 3 kapanışlarını 8699c97 ile gönderdi: mobil dokunma hedefleri 5 rotada tamamen düzeldi (390px'te etkileşimli öğe ihlali 0 — tek kalan 'ihlal' breadcrumb metin span'ı, etkileşimli değil), bütçe tablosu mobil kart görünümüne düştü, RateUpdateDialog ortak Button'a geçti. KAZANANLAR: /finans/nakit-akisi (56) ve /finans/break-even (56) — Tur 3'ten korundu. Kalan 5 rota kaybetti; /finans/tahmin REGRESYON yaşadı (53→51): yeni kanal tahmini tablosu mobil kart görünümü ve nowrap olmadan eklendi, 36 satır butonu 32px. Kod düzeyi tarama temiz: modülde transition-all, çıplak ease-in, ≥300ms süre, scale(0), gate'lenmemiş hover yok (globals.css:11 @media (hover:hover) and (pointer:fine)). | Tur 5 (builder): tahmin P0 regresyonu + tüm açık P1'ler (butce/krediler/krediler-detay/tahsilat-takibi/tahmin) kapatıldı; ek olarak apps/web/src/modules/finance/dunning-actions.ts'deki gün-sınırı tutarsızlığı (Date.now() → businessDate()) düzeltildi. Kanıtlar: pnpm measure + ekran görüntüleri (artifacts/screens/finans-*).",
+ "note": "Tur 5 — tam yeniden ölçüm (artifacts/critic/measure-finans-r5/*.json, ekran görüntüleri artifacts/screens/finans-*/). Builder Tur 5 kapanışlarının çoğu ölçümle DOĞRULANDI: sıfır KPI değerleri artık soluk (piksel ölçümü rgb(113,113,123) vs rgb(24,24,27)), /finans/krediler mobil takvimi DÖNEM+TOPLAM sticky ile 3 sütuna iniyor, bütçe SAPMA kırmızısı 44→4 satır, dunning rozet tonu 5→2, tüm modülde font merdiveni main içinde 13/11-e indi, hiçbir rotada belge taşması yok, 390px-te etkileşimli dokunma hedefi ihlali 0. KAZANANLAR (4/7): /finans/nakit-akisi 56, /finans/break-even 56, /finans/krediler 59, /finans/tahsilat-takibi 59. KAYBEDENLER (3/7): /finans/butce 57 (toplam yeterli ama grafik boş durumu ekranın geri kalanıyla çelişiyor), /finans/krediler/[id] 58 (KALAN BAKİYE 390px ilk görünüm dışında; aynı dosyadaki sticky right-0 kalıbı uygulanmamış), /finans/tahmin 53 (finans-tahmin-10 KAPANMADI — stackId-li bant YAxis domain-ini eziyor, çizim alanının %62-si boş; mobil kart 166px + 36 özdeş Uygula; PageHeader hâlâ -Son 12 ay- diyor). Kod düzeyi tarama TEMİZ: apps/web/src/modules/finance ve app/(app)/finans altında transition-all, çıplak ease-in, ≥300ms süre, scale(0)/scale-95, elle transform-origin yok; group-hover dahil tüm hover varyantları globals.css:10 @custom-variant hover ile @media (hover:hover) and (pointer:fine) altında (CSSOM ile doğrulandı); recharts grafiklerinde isAnimationActive={false}.",
  "routes": {
   "/finans/nakit-akisi": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "scores": [
     4,
@@ -24,7 +24,7 @@
    ],
    "total": 56,
    "winner": "Plantero",
-   "delta": "Tur3 56 → Tur4 56 (değişiklik yok). Tüm ölçümler birebir aynı: satır 31px/22 satır, mobil dokunma ihlali 0, distinctColors 14/12, h1 24px/600, overflowX yok. Kapalı bulguların hiçbiri geri gelmedi (ekran görüntüsü: 216 düzenlenebilir hücre '₺775.000' biçiminde, y ekseni ₺0/₺1 Mn/₺2 Mn/₺3 Mn eşit adım).",
+   "delta": "Tur4 56 → Tur5 56 (değişiklik yok). Ölçümler birebir aynı: satır 22/[31,31,42], masaüstü renk 14 / mobil 12, h1 24px/600, overflowX yok, 390px etkileşimli dokunma ihlali 0 (tek kayıt breadcrumb metin span-i, etkileşimli değil). Kapalı bulguların hiçbiri geri gelmedi; yeni ölçülebilir bulgu yok.",
    "measure": {
     "desktop": {
      "rows": {
@@ -47,7 +47,8 @@
      },
      "colors": 14,
      "h1": "24px/600",
-     "overflowX": false
+     "overflowX": false,
+     "touchBelow44": 247
     },
     "mobile": {
      "sw": 390,
@@ -61,7 +62,14 @@
       ]
      },
      "colors": 12,
-     "touchBelow44": []
+     "overflowX": false,
+     "touchBelow44": [
+      {
+       "selector": "span[data-slot=\"breadcrumb-page\"] \"Nakit Akışı\"",
+       "w": 65.7,
+       "h": 19.5
+      }
+     ]
     }
    },
    "open": [],
@@ -171,7 +179,7 @@
    ]
   },
   "/finans/break-even": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "scores": [
     4,
@@ -189,7 +197,7 @@
    ],
    "total": 56,
    "winner": "Plantero",
-   "delta": "Tur3 56 → Tur4 56 (değişiklik yok). Ölçümler birebir aynı: duyarlılık tabloları 390px'te satır 26.5–27px (sarma yok), mobil dokunma ihlali 0, overflowX yok.",
+   "delta": "Tur4 56 → Tur5 56 (değişiklik yok). Satır 10/[26.5,27,27], renk 17/16, h1 24px/600, overflowX yok, mobil dokunma ihlali 0. Duyarlılık matrisi 390px-te kendi kabı içinde kaydırılıyor (belge taşması yok) — Tur 3-4-te kabul edildiği gibi.",
    "measure": {
     "desktop": {
      "rows": {
@@ -213,7 +221,8 @@
      },
      "colors": 17,
      "h1": "24px/600",
-     "overflowX": false
+     "overflowX": false,
+     "touchBelow44": 28
     },
     "mobile": {
      "sw": 390,
@@ -227,7 +236,14 @@
       ]
      },
      "colors": 16,
-     "touchBelow44": []
+     "overflowX": false,
+     "touchBelow44": [
+      {
+       "selector": "span[data-slot=\"breadcrumb-page\"] \"Break-even\"",
+       "w": 71.2,
+       "h": 19.5
+      }
+     ]
     }
    },
    "open": [],
@@ -341,25 +357,25 @@
    ]
   },
   "/finans/butce": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "scores": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
     4,
     5,
-    5,
-    4,
-    5,
-    5,
-    5,
-    4,
     5,
     5,
     4,
     4
    ],
-   "total": 55,
+   "total": 57,
    "winner": "Stripe",
-   "delta": "Tur3 53 → Tur4 55. k9 3→5 (ölçüm: 390px'te dokunma hedefi ihlali 3→0 — 'Gerçekleşenleri yenile' 358x32→358x44, segment düğmeleri 31.5→44px; tablo <md'de kart listesine düşüyor, satır 90px, taşma yok). Diğer 11 kriter değişmedi; k1/k4/k8/k11/k12 hâlâ 4 (aşağıdaki 5 açık P1).",
+   "delta": "Tur4 55 → Tur5 57 (toplam yükseldi ama YENİ P1 açıldı). k1 4→5 (finans-butce-12 kapandı: main içi merdiven 13px×231 + 11px×8; kalan kademeler shell kabuğundan). k4 4→5 (finans-butce-11 kapandı: SAPMA kırmızısı 44 satırdan 4 satıra indi, kalan 44 satır muted). k8 4→5 (finans-butce-10 kapandı: segment düğmelerinde focus-visible:ring-[3px]). k11 4 kaldı ve k7 5→4: finans-butce-09-un çözümü grafiği boş duruma çevirdi; ekran artık aynı anda hem karşılaştırıyor (KPI ₺32.749 ↘%99,8) hem -Gerçekleşen henüz yok- diyor. k12 4 kaldı (kart içinde 260px kesikli boş kutu).",
    "measure": {
     "desktop": {
      "rows": {
@@ -372,31 +388,39 @@
      },
      "fontSizes": {
       "10": 2,
-      "11": 27,
+      "11": 8,
       "12": 8,
-      "13": 230,
+      "13": 231,
       "14": 3,
       "15": 1,
       "18": 1,
       "24": 1
      },
-     "colors": 19,
+     "colors": 18,
      "h1": "24px/600",
-     "overflowX": false
+     "overflowX": false,
+     "touchBelow44": 31
     },
     "mobile": {
      "sw": 390,
      "cw": 390,
      "rows": {
-      "count": 50,
+      "count": 48,
       "heights": [
-       16.5,
+       90,
        90,
        90
       ]
      },
-     "colors": 17,
-     "touchBelow44": []
+     "colors": 16,
+     "overflowX": false,
+     "touchBelow44": [
+      {
+       "selector": "span[data-slot=\"breadcrumb-page\"] \"Bütçe\"",
+       "w": 35.8,
+       "h": 19.5
+      }
+     ]
     }
    },
    "open": [],
@@ -564,6 +588,19 @@
      "closedRound": 5,
      "verifiedBy": "Tur 5 düzeltme: kaynak + ekran görüntüsü + pnpm measure JSON",
      "measureAfter": "pnpm measure /finans/butce --viewport 1440x900 → fontSizes {10:2,11:8,12:8,13:231,14:3,15:1,18:1,24:1} — modülün kendi dosyası (budget-panel.tsx) artık yalnızca 11/13px kullanıyor; kalan 10/12/14/15/18/24 PageHeader/breadcrumb/KpiCard/Button (shell, apps/web/src/components) kaynaklı — bkz. rapordaki sharedComponentRequests."
+    },
+    {
+     "id": "finans-butce-13",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "Aynı ekran gerçekleşen veri hakkında iki zıt şey söylüyor: KPI şeridi -Gerçekleşen ciro ₺32.749- ve -↘ %99,8 plana göre- rozetiyle plana kıyaslama yapıyor, tablo 4 satırda sıfırdan büyük gerçekleşen basıyor (₺3.762 / ₺9.061 / ₺16.045 / ₺3.881); ama sayfanın en büyük öğesi olan grafik -Gerçekleşen henüz yok- başlığıyla boş duruma düşüyor. chartInformative eşiği (maxActual/maxPlanned ≥ 8/260 = %3,08) 16.045/775.000 = %2,07 ile karşılanmıyor — teknik karar doğru, başlık yalan.",
+     "measure": "pnpm measure + DOM probu: gerçekleşen toplamı ₺32.749, nonZeroActual=4/48 satır; grafik yerine 260px yüksekliğinde kesikli çerçeveli boş durum, başlık -Gerçekleşen henüz yok-",
+     "target": "başlık gerçeği söylesin (ör. -Gerçekleşen plana kıyasla çizilemeyecek kadar küçük (%2,1)-) ya da gerçekleşen serisi ikinci bir eksende/etiketli işaretçiyle çizilsin; KPI-deki ↘%99,8 rozetiyle aynı olguyu aynı kelimeyle anlatsın",
+     "file": "apps/web/src/modules/finance/components/budget-panel.tsx:101-113 (chartInformative) ve 159-166 (boş durum)",
+     "openedRound": 5,
+     "closedRound": 6,
+     "verifiedBy": "Tur 6 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON + DOM probu",
+     "measureAfter": "budget-panel.tsx artık gerçek oranı (maxActual/maxPlanned*100) hesaplayıp EmptyState başlığında basıyor: '/finans/butce' Ciro sekmesinde ekran görüntüsünde başlık 'Gerçekleşen plana kıyasla çizilemeyecek kadar küçük (%1,7)' — KPI şeridindeki '↘ %99,8 plana göre' rozetiyle ARTIK ÇELİŞMİYOR (ikisi de 'gerçekleşen çok küçük' olgusunu, gerçek sayılarla, aynı yönde anlatıyor; önceki 'Gerçekleşen henüz yok' — sıfırmış gibi okunan — yanlış ifade kaldırıldı). Kutu içinde kutu (kriter 12) da giderildi: elle yazılmış border-dashed div yerine ortak <EmptyState compact> kullanılıyor, kart zaten kendi border'ını taşıdığından ikinci çerçeve yok (kod incelemesi: budget-panel.tsx içinde border-dashed 0 adet). pnpm measure /finans/butce --viewport 1440x900 → overflowX false, distinctColors 18; ekran görüntüsü artifacts/screens/finans-butce/desktop.png ile doğrulandı."
     }
    ],
    "p2": [
@@ -580,48 +617,49 @@
    ]
   },
   "/finans/krediler": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "scores": [
-    4,
     5,
     5,
-    4,
     5,
     5,
-    4,
     5,
-    4,
+    5,
+    5,
+    5,
+    5,
     5,
     4,
     5
    ],
-   "total": 55,
-   "winner": "Stripe",
-   "delta": "Tur3 53 → Tur4 55. k9 3→4 (dokunma hedefi ihlali 8→0: banka bağlantıları -my-3.5 py-3.5 ile 47.5px, 'Oran güncelle' outline Button h-11 md:h-8; ama konsolide takvimde TOPLAM sütunu 390px'te hâlâ görünür alan dışında → 5 değil). k8 4→5 (finans-krediler-07 kapandı: RateUpdateDialog tetikleyicisi çıplak <button>'dan ortak outline Button'a geçti, focus-visible:ring-[3px] geldi). k1/k4/k7/k11 4 kaldı.",
+   "total": 59,
+   "winner": "Plantero",
+   "delta": "Tur4 55 → Tur5 59. k1 4→5 (finans-krediler-12 kapandı: 13px×394 gövde + 11px×130 etiket, kalan kademeler shell). k4 4→5 (finans-krediler-11 kapandı: konsolide takvimde -ödendi- yeşili kalktı, yeşil yalnızca marka/nav). k7 4→5 (finans-krediler-10 kapandı: LoanCards ve ConsolidatedScheduleTable boş durum dalları eklendi). k9 4→5 (finans-krediler-09 kapandı: 390px-te tablo DÖNEM sticky left-0 + TOPLAM sticky right-0 ile 3 sütuna iniyor, TOPLAM ilk görünümde; dokunma ihlali 0). k11 4 kaldı (P2: 01.08.2026 satırındaki kırmızı ₺41.164 ve TOPLAM yanındaki -(0/7)- gösterimi için ekranda hiçbir açıklama/legend yok).",
    "measure": {
     "desktop": {
      "rows": {
       "count": 37,
       "heights": [
-       31,
-       31,
-       31
+       32.5,
+       32.5,
+       32.5
       ]
      },
      "fontSizes": {
       "10": 2,
-      "11": 81,
-      "12": 386,
-      "13": 61,
+      "11": 130,
+      "12": 4,
+      "13": 394,
       "14": 3,
       "15": 1,
       "18": 1,
       "24": 1
      },
-     "colors": 16,
+     "colors": 17,
      "h1": "24px/600",
-     "overflowX": false
+     "overflowX": false,
+     "touchBelow44": 29
     },
     "mobile": {
      "sw": 390,
@@ -629,13 +667,20 @@
      "rows": {
       "count": 37,
       "heights": [
-       31,
-       31,
-       31
+       32.5,
+       32.5,
+       32.5
       ]
      },
-     "colors": 14,
-     "touchBelow44": []
+     "colors": 15,
+     "overflowX": false,
+     "touchBelow44": [
+      {
+       "selector": "span[data-slot=\"breadcrumb-page\"] \"Krediler\"",
+       "w": 48.6,
+       "h": 19.5
+      }
+     ]
     }
    },
    "open": [],
@@ -816,62 +861,70 @@
    ]
   },
   "/finans/krediler/[id]": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "scores": [
-    4,
-    5,
-    4,
     5,
     5,
-    4,
-    4,
+    5,
+    5,
+    5,
+    5,
+    5,
     5,
     4,
     5,
     4,
     5
    ],
-   "total": 54,
+   "total": 58,
    "winner": "Stripe",
-   "delta": "Tur3 53 → Tur4 54. k9 3→4 ('Oran güncelle' 358x28 ihlali kalktı — outline Button h-11 md:h-8; 390px'te hücre sarma yok, satır 32px; ama tabloda sticky sütun yok, 8 sütundan 4'ü görünüyor → 5 değil). k8 4→5 (dialog tetikleyicisi ortak Button, focus-visible ring geldi). k6 5→4 (gerekçe: 'Ödenen taksit 0' KPI değeri tam kontrastta; sıfır soluk olmalı — kök neden ortak KpiCard, shell'de izleniyor). k3 4 kaldı.",
+   "delta": "Tur4 54 → Tur5 58 (toplam yükseldi, k9 açığı sürüyor). k1 4→5 (finans-krediler-detay-07 kapandı: 13px×152 + 11px×13). k3 4→5 (finans-krediler-detay-04 kapandı: DURUM/ÖDENDİ ölü sütunları kalktı, 6 sütunun 6-sı da satırdan satıra değişiyor). k6 4→5 (ölçüldü: -Ödenen taksit- 0 değeri rgb(113,113,123) muted, dolu KPI-lar rgb(24,24,27) — sıfır artık soluk). k7 4→5 (EmptyState geldi). k9 4 KALDI: finans-krediler-detay-06 -kapatıldı- sayılmış ama sadece VADE sticky left-0 eklenmiş; KALAN BAKİYE hâlâ 390px ilk görünümün dışında (x 405-515 > 390) ve aynı dosyadaki konsolide takvimin sticky right-0 kalıbı uygulanmamış. k11 4 (modüldeki tek tablo bu — ne kart görünümüne düşüyor ne de kilit sütununu sabitliyor).",
    "measure": {
     "desktop": {
      "rows": {
-      "count": 36,
+      "count": 21,
       "heights": [
-       31.5,
        32,
-       32
+       32.5,
+       32.5
       ]
      },
      "fontSizes": {
       "10": 2,
-      "11": 12,
-      "12": 296,
-      "13": 26,
-      "14": 2,
+      "11": 13,
+      "12": 5,
+      "13": 152,
+      "14": 3,
       "15": 1,
       "18": 1,
       "24": 1
      },
-     "colors": 15,
+     "colors": 14,
      "h1": "24px/600",
-     "overflowX": false
+     "overflowX": false,
+     "touchBelow44": 30
     },
     "mobile": {
      "sw": 390,
      "cw": 390,
      "rows": {
-      "count": 36,
+      "count": 21,
       "heights": [
-       31.5,
        32,
-       32
+       32.5,
+       32.5
       ]
      },
-     "colors": 12,
-     "touchBelow44": []
+     "colors": 11,
+     "overflowX": false,
+     "touchBelow44": [
+      {
+       "selector": "span[data-slot=\"breadcrumb-page\"] \"Detay\"",
+       "w": 36.2,
+       "h": 19.5
+      }
+     ]
     }
    },
    "open": [],
@@ -968,6 +1021,19 @@
      "closedRound": 5,
      "verifiedBy": "Tur 5 düzeltme: kaynak + ekran görüntüsü + pnpm measure JSON",
      "measureAfter": "pnpm measure /finans/krediler/88b0c2f6... → tablo text-[12px]→text-[13px] (sayfa gövdesiyle eşitlendi); modül dosyalarında artık yalnızca 11/13px."
+    },
+    {
+     "id": "finans-krediler-detay-08",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "Amortisman tablosu 390px-te en önemli çıktı sütununu (KALAN BAKİYE) ilk görünümün tamamen dışında bırakıyor. Aynı dosyadaki ConsolidatedScheduleTable bu sorunu TOPLAM sütununa sticky right-0 vererek çözmüş (loan-panel.tsx:204,226); amortisman tablosunda yalnızca VADE sticky left-0 var, sağ sabitleme yok. Ayrıca # sütunu sticky VADE-den ÖNCE geldiği için kaydırınca VADE-nin altında kalıyor.",
+     "measure": "390x844 DOM probu: wrap.clientWidth 358, table.scrollWidth 515; scrollLeft=0-da başlık kutuları # 17-57, VADE 57-150, TAKSİT 150-229, FAİZ+BSMV 229-326, ANAPARA 326-405, KALAN BAKİYE 405-515 → KALAN BAKİYE tamamen görünür alan dışında",
+     "target": "KALAN BAKİYE-ye konsolide takvimin kalıbı: sticky right-0 z-10 bg-card shadow-[-1px_0_0_0_var(--border)]; # sütunu ya VADE ile birleştirilsin ya da sticky left-0 grubuna alınsın — 390px ilk görünümde VADE + TAKSİT + KALAN BAKİYE aynı anda okunabilsin",
+     "file": "apps/web/src/modules/finance/components/loan-panel.tsx:251-260 (başlıklar) ve ~272-285 (gövde hücreleri)",
+     "openedRound": 5,
+     "closedRound": 6,
+     "verifiedBy": "Tur 6 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON + DOM probu",
+     "measureAfter": "loan-panel.tsx LoanInstallmentsTable: ayrı '#' sütunu kaldırıldı, sıra numarası VADE hücresinin içine soluk bir önek olarak taşındı (tek sticky left-0 grup); KALAN BAKİYE artık ConsolidatedScheduleTable'daki TOPLAM ile BİREBİR aynı kalıpla sticky right-0 z-10 bg-card shadow-[-1px_0_0_0_var(--border)]. DOM probu (390x844, /finans/krediler/ce8acd8a-3755-4e80-8d00-bfb3a0b96e39): scrollLeft=0'da başlık kutuları VADE 17-129, TAKSİT 129-207, FAİZ+BSMV 207-304, ANAPARA 304-385, KALAN BAKİYE (sticky right) 263-373 — VADE + TAKSİT + KALAN BAKİYE ilk görünümde AYNI ANDA görünür (önceki ölçümde KALAN BAKİYE 405-515 tümüyle görünür alan dışındaydı). Ekran görüntüsü artifacts/screens/finans-krediler-ce8acd8a.../mobile.png ile doğrulandı; pnpm measure aynı route --viewport 390x844 → overflowX false, rows.count 21/[32,32.5,32.5]."
     }
    ],
    "p2": [
@@ -984,62 +1050,70 @@
    ]
   },
   "/finans/tahsilat-takibi": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "scores": [
-    4,
-    5,
-    4,
-    4,
-    4,
-    4,
     5,
     5,
     4,
     5,
-    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
     5
    ],
-   "total": 53,
-   "winner": "Stripe",
-   "delta": "Tur3 51 → Tur4 53. k3 3→4 (gerekçe: satır 34px/13px, mobilde kart; ilk ekranda 4 KPI + 2 fatura + kural tablosu — boşluk artık düzenden değil veriden geliyor, seed'de yalnızca 2 vadesi geçen fatura var). k9 3→4 ('Taslak oluştur' 135x32 ihlali kalktı, mobilde tam genişlik kart butonu; ama kural tablosunda TON/ONAY 390px'te görünür alan dışında → 5 değil). k1/k4/k5/k6/k11 4.",
+   "total": 59,
+   "winner": "Plantero",
+   "delta": "Tur4 53 → Tur5 59. k1 4→5 (finans-dunning-13 kapandı: main içi 13px×38 + 11px×18; 12px×6 KpiCard, 14px×2 PageHeader/EmptyState — üçü de shell). k4 4→5 (finans-dunning-10 kapandı: rozet tonu 5-ten 2-ye indi — kırmızı -İhtar-, gri -Vade geçti- + kırmızı -34 gün- metni). k5 4→5 (finans-dunning-11 kapandı: satır eylemi ghost + hover/focus-within ile beliriyor, satır 42px sabit; hairline ayraç, sağ hizalı tabular sayılar, satır hover-ı var). k6 4→5 (ölçüldü: 61-90 ve 90+ ₺0 değerleri rgb(113,113,123), dolu KPI-lar rgb(24,24,27)). k9 4→5 (finans-dunning-09 kapandı: kural tablosu kendi overflow-x kabında, fatura listesi 390px-te karta düşüyor, dokunma ihlali 0). k11 4→5 (finans-dunning-08 kapandı: üç bölümün h2-si de kartın dışında, bakiye her yerde 0 ondalık). k3 4 kaldı: 1440x900 ilk ekranda yalnızca 2 fatura + 4 kural satırı — seed kaynaklı, düzen değil.",
    "measure": {
     "desktop": {
      "rows": {
       "count": 6,
       "heights": [
-       33.5,
-       34,
-       49
+       32,
+       32.5,
+       41.5
       ]
      },
      "fontSizes": {
       "10": 2,
-      "11": 22,
-      "12": 6,
-      "13": 58,
-      "14": 5,
+      "11": 20,
+      "12": 4,
+      "13": 62,
+      "14": 3,
       "15": 1,
       "18": 1,
       "24": 1
      },
-     "colors": 24,
+     "colors": 19,
      "h1": "24px/600",
-     "overflowX": false
+     "overflowX": false,
+     "touchBelow44": 28
     },
     "mobile": {
      "sw": 390,
      "cw": 390,
      "rows": {
-      "count": 4,
+      "count": 6,
       "heights": [
-       33.5,
-       34,
-       34
+       133.5,
+       133.5,
+       187
       ]
      },
-     "colors": 23,
-     "touchBelow44": []
+     "colors": 17,
+     "overflowX": false,
+     "touchBelow44": [
+      {
+       "selector": "span[data-slot=\"breadcrumb-page\"] \"Tahsilat Takibi\"",
+       "w": 88.3,
+       "h": 19.5
+      }
+     ]
     }
    },
    "open": [],
@@ -1223,48 +1297,49 @@
    "p2": []
   },
   "/finans/tahmin": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "scores": [
+    5,
+    5,
+    3,
+    5,
+    4,
+    5,
+    5,
+    5,
     4,
     5,
     4,
-    5,
-    3,
-    5,
-    5,
-    5,
-    3,
-    5,
-    3,
-    4
+    3
    ],
-   "total": 51,
+   "total": 53,
    "winner": "Stripe",
-   "delta": "Tur3 53 → Tur4 51 (NET DÜŞÜŞ). k3 2→4 (yeni 'Kanal bazlı satış tahmini' tablosu 36 satır getirdi — sayfada artık okunacak veri var; satır 45px>40px hedefi olduğu için 5 değil). k6 4→5 (tüm para/oran mono tabular-nums, bant tek biçim, sıfır değer yok). ANCAK aynı tablo iki kriteri kırdı: k9 5→3 (REGRESYON, ölçüm: 390px'te dokunma hedefi ihlali 0→38, satır 71.5px, hücre sarma) ve k5 4→3 (masaüstünde satır 45px + 36 özdeş 'Uygula'; mobilde İŞLEM sütunu görünmüyor). k11 4→3 (grafik başlığı 'son 12 ay' ama eksende 7 dönem; nakit tahmini /finans/nakit-akisi ile zıt işaretli; yeni tablo modülün mobil kart kalıbını izlemiyor).",
+   "delta": "Tur4 51 → Tur5 53 (hâlâ referansın altında). k1 4→5 (finans-tahmin-11 kapandı: main içi 11/13). k3 4→3 REGRESYON: masaüstü satır 37,5px iyi ama mobil kart 166px (36 kart = 5.976px kaydırma; kriter hedefi 56-72px) ve YÖNTEM sütunu 36/36 satırda aynı değer. k5 4 (üst grafiğin çizim alanının %62-si boş). k9 5→4 (mobilde 36 özdeş tam genişlik -Uygula- butonu duvarı; masaüstünde kaldırılan kalıp mobile taşınmış). k11 3→4 (grafik başlıkları düzeldi ama PageHeader hâlâ -Son 12 ay- diyor). k12 4→3: finans-tahmin-10 KAPANMADI — fitTicks tick etiketlerini daralttı ama stackId-li bant Area-ları YAxis domain-ini geçersiz kılıyor, seri 240px-lik alanın üst %20-sinde duruyor.",
    "measure": {
     "desktop": {
      "rows": {
       "count": 36,
       "heights": [
-       44.5,
-       45,
-       45
+       37,
+       37.5,
+       37.5
       ]
      },
      "fontSizes": {
       "10": 2,
-      "11": 42,
-      "12": 77,
+      "11": 114,
+      "12": 4,
       "13": 135,
-      "14": 41,
+      "14": 5,
       "15": 1,
       "18": 1,
       "24": 1
      },
      "colors": 13,
      "h1": "24px/600",
-     "overflowX": false
+     "overflowX": false,
+     "touchBelow44": 31
     },
     "mobile": {
      "sw": 390,
@@ -1272,197 +1347,18 @@
      "rows": {
       "count": 36,
       "heights": [
-       44.5,
-       61,
-       71.5
+       166,
+       166,
+       166
       ]
      },
      "colors": 11,
+     "overflowX": false,
      "touchBelow44": [
       {
-       "selector": "button[data-slot=\"select-trigger\"] \"Baz\"",
-       "w": 144,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
-      },
-      {
-       "selector": "button[data-slot=\"button\"] \"Uygula\"",
-       "w": 86.7,
-       "h": 32
+       "selector": "span[data-slot=\"breadcrumb-page\"] \"Tahmin\"",
+       "w": 45.4,
+       "h": 19.5
       }
      ]
     }
@@ -1615,6 +1511,45 @@
      "closedRound": 5,
      "verifiedBy": "Tur 5 düzeltme: kaynak + ekran görüntüsü + pnpm measure JSON",
      "measureAfter": "pnpm measure /finans/tahmin --viewport 1440x900 → fontSizes {10:2,11:114,12:4,13:135,14:5,15:1,18:1,24:1} — forecast-panel.tsx artık yalnızca 11/13px; kalan sapmalar shell kaynaklı."
+    },
+    {
+     "id": "finans-tahmin-12",
+     "criterion": 12,
+     "severity": "P1",
+     "text": "-Toplam satış- grafiğinin Y ekseni domain-i veriye oturmuyor: fitTicks 35B/45B/55B tick-lerini üretiyor ama bant (low tabanı + bandWidth) stackId ile çizildiği için recharts stack domain-ini 0-a kadar genişletiyor ve verdiğimiz domain prop-u geçersiz kalıyor. Sonuç: tüm seri 240px-lik çizim alanının üst %20-sinde sıkışık duruyor, altındaki 131px bomboş beyaz. Tek noktalı -Gerçekleşen- serisinin noktası da kesikli tahmin çizgisinin dash-lerinden ayırt edilemiyor. Bu, Tur 5-te kapatılmış sayılan finans-tahmin-10-un aynısıdır.",
+     "measure": "DOM probu (1440x900): ResponsiveContainer height 240; yatay grid çizgileri y=4 (₺55B), 41 (₺45B), 79 (₺35B) ve 210 (eksen tabanı) → en alt tick ile eksen tabanı arasında 131px = çizim alanının %62-si veri taşımıyor. Seri çizgisi y=42, yükseklik 0. Karşılaştırma: aynı sayfadaki ikinci grafik gridY=[4,56,107,159,210] ile yüksekliğin tamamını kullanıyor.",
+     "target": "gridY tick-leri çizim alanının tamamına yayılsın (en alt tick ile eksen tabanı arası ≤8px). Bant için stackId yerine recharts range-area (dataKey=[low,high]) ya da YAxis-e allowDataOverflow ekle; ≤1 noktalı gerçekleşen seride nokta yarıçapı r≥3 ve tahmin renginden ayrışan dolgu.",
+     "file": "apps/web/src/modules/finance/components/forecast-panel.tsx:73-89 (domain/ticks) ve bant Area-larının stackId kullanımı",
+     "openedRound": 5,
+     "closedRound": 6,
+     "verifiedBy": "Tur 6 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON + DOM probu",
+     "measureAfter": "forecast-panel.tsx: bant için iki stackId'li Area yerine TEK bir range-area Area (dataKey={(p)=>[p.low,p.high]}, stack YOK) kullanılıyor — recharts artık YAxis domain'ini 0'a zorlamıyor; YAxis'e allowDataOverflow eklendi. DOM probu (1440x900, .recharts-cartesian-grid-horizontal line y1 değerleri): HER İKİ grafikte de gridY=[4,55.5,107,158.5,210] — çizim alanının TAMAMINA yayılıyor (önceki ölçümde ilk grafik y=[4,41,79,...,210] ile alanın yalnızca üst %38'ini kullanıyordu, altta 131px boştu). Tek noktalı 'Gerçekleşen' işaretçisi de ayrıştırıldı: r 2.5→4, dolgu tahmin serisinin moru yerine nötr `--foreground`, 2px kart-renginde halka — kesikli tahmin çizgisinin dash parçacıklarından net biçimde ayrışıyor (ekran görüntüsü zoom crop ile doğrulandı: dolu koyu halka vs mor dikdörtgen dash'ler). Ekran görüntüsü artifacts/screens/finans-tahmin/desktop.png."
+    },
+    {
+     "id": "finans-tahmin-13",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "Kanal tahmini mobil kartı 166px ve her kartın altında tam genişlik 44px -Uygula- butonu var; 36 kart = 5.976px dikey kaydırma ve 36 özdeş birincil eylem. Masaüstünde Tur 4-te kaldırılan -eylem duvarı- (finans-tahmin-07) mobile taşınmış durumda.",
+     "measure": "pnpm measure /finans/tahmin --viewport 390x844 → rows.count 36, heights [166,166,166]; toplam kart yüksekliği 5.976px (sayfa scrollHeight 15.152px). Karşılaştırma: /finans/butce mobil kartı 90px, /finans/krediler 32,5px satır.",
+     "target": "kart ≤96px: BANT satırı ikincil/ikinci satıra alınsın, -Mevsimsel ort.- kart başlığındaki aya bitişik küçük etiket olsun, -Uygula- kart başlığında ikon buton (44x44) ya da çoklu seçim + tek toplu -Uygula- olsun; 36 özdeş tam genişlik buton kalmasın",
+     "file": "apps/web/src/modules/finance/components/forecast-panel.tsx:309-331 (mobil <ul> kartı)",
+     "openedRound": 5,
+     "closedRound": 6,
+     "verifiedBy": "Tur 6 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON + DOM probu",
+     "measureAfter": "ChannelForecastTable mobil kartı yeniden tasarlandı: tam genişlik h-11 'Uygula' butonu + ayrı YÖNTEM satırı kaldırıldı, kart artık tek satırda kanal+ay+yöntem, ikinci satırda tahmin+bant, sağda 44×44 ikon buton (aria-label'lı). pnpm measure /finans/tahmin --viewport 390x844 → rows.count 36, heights [71,71,71] (hedef ≤96px karşılandı, önceki 166px); touchTargetsBelow44 yalnızca etkileşimsiz breadcrumb span'ı. Ekran görüntüsü artifacts/screens/finans-tahmin/mobile.png ile doğrulandı."
+    },
+    {
+     "id": "finans-tahmin-14",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "PageHeader açıklaması -Son 12 ay + gelecek 6 ay tahmin- diyor; aynı sayfadaki grafik başlığı -Toplam satış — son 1 ay + 6 aylık tahmin- ve X ekseni 08.2026→02.2027 (1 geçmiş + 6 tahmin noktası). Tur 5-te grafik başlığı gerçeğe uydurulmuş ama sayfa başlığındaki aynı yanlış bırakılmış.",
+     "measure": "DOM: PageHeader description -Son 12 ay + gelecek 6 ay tahmin (AI, yoksa mevsimsel hareketli ortalama fallback)-; ForecastChart label -Toplam satış — son 1 ay + 6 aylık tahmin-; salesHistory nokta sayısı 1",
+     "target": "PageHeader açıklaması gerçek pencereyi söylesin ya da pencereden bağımsız olsun (ör. -Satış ve nakit tahmini — AI, yoksa mevsimsel hareketli ortalama-)",
+     "file": "apps/web/src/app/(app)/finans/tahmin/page.tsx:40",
+     "openedRound": 5,
+     "closedRound": 6,
+     "verifiedBy": "Tur 6 yeniden ölçüm: kaynak + ekran görüntüsü + measure JSON + DOM probu",
+     "measureAfter": "PageHeader açıklaması pencereden bağımsız hale getirildi: 'Satış ve nakit tahmini — AI, yoksa mevsimsel hareketli ortalama fallback (gerçek geçmiş/tahmin penceresi her grafiğin başlığında)'. Artık grafik başlıklarındaki gerçek pencereyle (ör. 'son 1 ay + 6 aylık tahmin') çelişmiyor — sabit '12 ay' vaadi kaldırıldı. Ekran görüntüsü artifacts/screens/finans-tahmin/desktop.png ile doğrulandı (page.tsx:40-45)."
     }
    ],
    "p2": [

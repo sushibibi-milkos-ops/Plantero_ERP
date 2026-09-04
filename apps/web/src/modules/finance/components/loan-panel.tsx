@@ -242,21 +242,25 @@ export function LoanInstallmentsTable({ installments }: { installments: Array<{ 
   // olan bir amortisman takviminde DURUM ve ÖDENDİ sütunları 36/36 satırda sıfır bilgi taşıyordu.
   // Yalnızca en az bir taksit gerçekten ödenmiş/gecikmişse (ayrım anlamlıysa) bu iki sütun gösterilir.
   const hasStatusVariety = installments.some((i) => i.status !== 'scheduled');
-  const colCount = hasStatusVariety ? 8 : 6;
+  const colCount = hasStatusVariety ? 7 : 5;
   return (
     <div className="overflow-x-auto rounded-xl border border-border/70 bg-card">
       <table className="w-full min-w-max text-[13px]">
         <thead>
           <tr className="border-b border-border/60 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-            <th className="px-3 py-2 whitespace-nowrap">#</th>
-            {/* Kriter 9 kök neden düzeltmesi (Tur 4, P1 — finans-krediler-detay-06): hiçbir sütun sabit
-                değildi, 390px'te VADE dahil yatay kaydırma gerektiriyordu — ConsolidatedScheduleTable
-                ile aynı kalıp (DÖNEM sticky left-0), burada VADE sabitlenir. */}
+            {/* Kriter 9 kök neden düzeltmesi (Tur 5, P1 — finans-krediler-detay-08): önceki sürümde
+                ayrı bir "#" sütunu VADE'den ÖNCE geliyordu ama sticky DEĞİLDİ — 390px'te sağa
+                kaydırınca sabit VADE'nin altında kalıp TAKSİT'i örtüyordu. # artık ayrı bir sütun
+                değil, VADE hücresinin içinde küçük soluk bir önek (aynı sticky left-0 grup) —
+                sabitlenen sütun sayısı azalır, çakışma imkânsızlaşır. KALAN BAKİYE de
+                ConsolidatedScheduleTable'daki TOPLAM ile BİREBİR aynı kalıpla (sticky right-0)
+                sabitlenir: 390px ilk görünümde VADE + TAKSİT + KALAN BAKİYE her zaman aynı anda
+                okunabilir. */}
             <th className="sticky left-0 z-10 bg-card px-3 py-2 whitespace-nowrap shadow-[1px_0_0_0_var(--border)]">Vade</th>
             <th className="px-3 py-2 text-right whitespace-nowrap">Taksit</th>
             <th className="px-3 py-2 text-right whitespace-nowrap">Faiz + BSMV</th>
             <th className="px-3 py-2 text-right whitespace-nowrap">Anapara</th>
-            <th className="px-3 py-2 text-right whitespace-nowrap">Kalan bakiye</th>
+            <th className="sticky right-0 z-10 bg-card px-3 py-2 text-right whitespace-nowrap shadow-[-1px_0_0_0_var(--border)]">Kalan bakiye</th>
             {hasStatusVariety ? (
               <>
                 <th className="px-3 py-2 whitespace-nowrap">Durum</th>
@@ -268,12 +272,14 @@ export function LoanInstallmentsTable({ installments }: { installments: Array<{ 
         <tbody>
           {installments.map((i) => (
             <tr key={i.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
-              <td className="px-3 py-1.5 font-mono whitespace-nowrap tabular-nums text-muted-foreground">{i.seq}</td>
-              <td className="sticky left-0 z-10 whitespace-nowrap bg-card px-3 py-1.5 shadow-[1px_0_0_0_var(--border)]">{formatDate(i.dueDate)}</td>
+              <td className="sticky left-0 z-10 whitespace-nowrap bg-card px-3 py-1.5 shadow-[1px_0_0_0_var(--border)]">
+                <span className="mr-1.5 font-mono text-[11px] tabular-nums text-muted-foreground/60">{i.seq}</span>
+                {formatDate(i.dueDate)}
+              </td>
               <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(i.installment, 'TRY', { digits: 0 })}</td>
               <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground">{formatMoney(i.interest, 'TRY', { digits: 0 })}</td>
               <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground">{formatMoney(i.principal, 'TRY', { digits: 0 })}</td>
-              <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(i.remainingAfter, 'TRY', { digits: 0 })}</td>
+              <td className="sticky right-0 z-10 whitespace-nowrap bg-card px-3 py-1.5 text-right font-mono tabular-nums shadow-[-1px_0_0_0_var(--border)]">{formatMoney(i.remainingAfter, 'TRY', { digits: 0 })}</td>
               {hasStatusVariety ? (
                 <>
                   <td className="px-3 py-1.5 whitespace-nowrap">
