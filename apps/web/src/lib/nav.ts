@@ -58,6 +58,9 @@ import {
   UserCog,
   KeyRound,
   ScrollText,
+  Bell,
+  Inbox,
+  ClipboardCheck,
 } from 'lucide-react';
 
 /**
@@ -88,6 +91,18 @@ export const NAV: NavGroup[] = [
     label: 'Kokpit',
     icon: LayoutDashboard,
     items: [{ label: 'Kokpit', href: '/kokpit', icon: LayoutDashboard, permission: 'cockpit.view', keywords: ['dashboard', 'özet', 'kpi'] }],
+  },
+  // Bildirimler & Onay Merkezi (docs/modules/bildirimler.md): modüller arası tek onay kuyruğu +
+  // kullanıcı bildirimleri. Sayfalar `requireUser` ile açılır (izin kapısı kart/tür bazında — onay
+  // kuyruğu yalnızca kullanıcının karar yetkisi olan türleri listeler), bu yüzden `permission` yok.
+  {
+    id: 'bildirimler',
+    label: 'Bildirimler',
+    icon: Bell,
+    items: [
+      { label: 'Onay Merkezi', href: '/onaylar', icon: Inbox, keywords: ['onay', 'approval', 'kuyruk', 'bekleyen'] },
+      { label: 'Bildirimler', href: '/bildirimler', icon: Bell, keywords: ['uyarı', 'skt', 'kritik stok', 'okunmamış'] },
+    ],
   },
   {
     id: 'ana-veri',
@@ -165,6 +180,7 @@ export const NAV: NavGroup[] = [
     permissions: ['quality.view'],
     items: [
       { label: 'Kontroller', href: '/kalite/kontroller', icon: ShieldCheck, permission: 'quality.view', keywords: ['qc', 'karantina'] },
+      { label: 'Şablonlar', href: '/kalite/sablonlar', icon: ClipboardCheck, permission: 'quality.inspect', keywords: ['qc şablonu', 'kontrol kalemi', 'spesifikasyon'] },
       { label: 'Tedarikçi Skoru', href: '/kalite/tedarikci-skoru', icon: Star, permission: 'quality.view' },
       { label: 'İzlenebilirlik', href: '/kalite/izlenebilirlik', icon: GitBranch, permission: 'quality.view', keywords: ['lot izleme', 'trace'] },
       { label: 'Geri Çağırma', href: '/kalite/geri-cagirma', icon: Megaphone, permission: 'quality.recall', keywords: ['recall'] },

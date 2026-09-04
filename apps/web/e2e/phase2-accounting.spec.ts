@@ -30,7 +30,8 @@ const FIXTURES_DIR = path.join(__dirname, 'fixtures');
 
 function psql(query: string): string {
   const escaped = query.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$');
-  return execSync(`psql "${DATABASE_URL}" -t -A -F'|' -c "${escaped}"`, { encoding: 'utf-8' }).trim();
+  // PGTZ: psql oturumu uygulamanın iş takvimiyle (Europe/Istanbul) aynı `current_date`'i görsün.
+  return execSync(`psql "${DATABASE_URL}" -t -A -F'|' -c "${escaped}"`, { encoding: 'utf-8', env: { ...process.env, PGTZ: 'Europe/Istanbul' } }).trim();
 }
 function psqlRows(query: string): string[][] {
   const out = psql(query);
@@ -39,6 +40,21 @@ function psqlRows(query: string): string[][] {
 }
 function psqlOne(query: string): string | null {
   return psqlRows(query)[0]?.[0] ?? null;
+}
+
+/** Uygulamanın iş takvimi (Europe/Istanbul) "bugün"ü — `packages/core/src/dates.ts::businessDate` ile aynı; test süreci UTC'de koşsa da kaymaz. */
+function businessTodayIso(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+}
+function addDaysIso(iso: string, days: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+/** `YYYY-MM-DD` → `gg.aa.yyyy` (CSV ekstre biçimi) */
+function isoToTr(iso: string): string {
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
 }
 
 /** `packages/db` `numeric` sütunu ("12345.6700") → TR ondalık (virgül) — hiçbir hane kaybı yok, tam eşleşme için gerekli. */
@@ -182,14 +198,20 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
     // verir (0,91) — "öneri, otomatik değil, Onayla gerektirir" senaryosu için ideal; art arda
     // koşularda en yakın taksitler tükendikçe pencere 5 güne kadar genişletilerek bir sonraki uygun
     // takside düşülür.
+    // Entegrasyon turu düzeltmesi: pencere yalnızca "bugünden sonraki 5 gün" iken takvimde taksitsiz
+    // günler (ör. taksit bugün + bir sonraki 6 gün sonra) testi ön koşuldan düşürüyordu. Artık bugüne
+    // en yakın taksit ±5 gün içinden seçilir; ekstre satırının tarihi Adım 3'te taksit vadesine göre
+    // konur (vade ileriyse bugün → dayDiff 1..5; vade bugün/geçmişse vade−1 → dayDiff 1) — her iki
+    // durumda güven 0,92 eşiğinin altında kalır (dayDiff 0 → 0,95 otomatik uygulanırdı) ve ekstre
+    // tarihi hiçbir zaman bugünden ileri düşmez (I33).
     const loanRow = psqlRows(`
       select li.id, l.code, li.due_date, li.installment, l.account_code
       from loan_installments li join loans l on l.id = li.loan_id
       where li.status = 'scheduled' and l.is_active = true
-        and li.due_date > current_date and li.due_date <= current_date + interval '5 days'
-      order by li.due_date limit 1
+        and li.due_date >= current_date - 5 and li.due_date <= current_date + 5
+      order by abs(li.due_date - current_date), li.due_date limit 1
     `)[0];
-    if (!loanRow) throw new Error('DB ön koşulu: 5 gün içinde vadesi gelen (scheduled) kredi taksidi bulunamadı — havuz tükenmiş olabilir (bkz. rapor).');
+    if (!loanRow) throw new Error('DB ön koşulu: ±5 gün içinde vadesi olan (scheduled) kredi taksidi bulunamadı — havuz tükenmiş olabilir (bkz. rapor).');
     [ctx.loanInstId, ctx.loanCode, ctx.loanDueDate, ctx.loanInstallment, ctx.loanAccountCode] = loanRow;
 
     ctx.partnerBalanceBeforeInvoice = psqlOne(`select balance from partners where id = '${ctx.partnerId}'`)!;
@@ -266,12 +288,17 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
   test('Adım 3 — /muhasebe/banka: CSV ekstre içe aktar (fatura + kredi taksiti + tanınmayan) → 3 yeni/0 mükerrer, ikinci kez → 0 yeni/3 mükerrer', async () => {
     ctx.unknownAmount = '4321,00';
     ctx.unknownDesc = `TANIMSIZ EFT ISLEM REF ${RUN}`;
-    const todayTr = new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
+    const todayIso = businessTodayIso();
+    const todayTr = isoToTr(todayIso);
+    // Kredi taksidi satırının tarihi: vade ileriyse bugün (dayDiff = vade − bugün ∈ 1..5), vade bugün ya da
+    // geçmişse vade−1 (dayDiff 1) — bkz. beforeAll'daki taksit seçimi açıklaması.
+    const loanLineIso = ctx.loanDueDate! > todayIso ? todayIso : addDaysIso(ctx.loanDueDate!, -1);
+    const loanLineTr = isoToTr(loanLineIso);
 
     const csvLines = [
       'Tarih;Açıklama;Tutar;Bakiye',
       `${todayTr};HAVALE ${ctx.partnerName} ${ctx.invoiceDocNo} FATURA ODEMESI;${dbNumToTrExact(ctx.invoiceGrandTotal!)};500000,00`,
-      `${todayTr};KREDI TAKSIT ODEMESI ${ctx.loanCode};-${dbNumToTrExact(ctx.loanInstallment!)};${(500000 - Number(ctx.invoiceGrandTotal)).toFixed(2).replace('.', ',')}`,
+      `${loanLineTr};KREDI TAKSIT ODEMESI ${ctx.loanCode};-${dbNumToTrExact(ctx.loanInstallment!)};${(500000 - Number(ctx.invoiceGrandTotal)).toFixed(2).replace('.', ',')}`,
       `${todayTr};${ctx.unknownDesc};${ctx.unknownAmount};600000,00`,
     ];
     fs.mkdirSync(FIXTURES_DIR, { recursive: true });
@@ -315,7 +342,7 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
   });
 
   test('Adım 3b — MT940 format paritesi: apps/web/e2e/fixtures/ekstre.mt940 üretilir ve içe aktarılır (QNB hesabı), duplicate testi', async () => {
-    const yymmdd = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+    const yymmdd = businessTodayIso().slice(2, 10).replace(/-/g, '');
     const mt940 = [
       `:20:STMT${RUN}`,
       ':25:TR440006200119000006672315',

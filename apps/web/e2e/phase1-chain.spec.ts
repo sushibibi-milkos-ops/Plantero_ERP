@@ -21,7 +21,8 @@ const RUN = Date.now().toString(36);
 
 function psql(query: string): string {
   const escaped = query.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$');
-  return execSync(`psql "${DATABASE_URL}" -t -A -F'|' -c "${escaped}"`, { encoding: 'utf-8' }).trim();
+  // PGTZ: psql oturumu uygulamanın iş takvimiyle (Europe/Istanbul) aynı `current_date`'i görsün.
+  return execSync(`psql "${DATABASE_URL}" -t -A -F'|' -c "${escaped}"`, { encoding: 'utf-8', env: { ...process.env, PGTZ: 'Europe/Istanbul' } }).trim();
 }
 function psqlRows(query: string): string[][] {
   const out = psql(query);

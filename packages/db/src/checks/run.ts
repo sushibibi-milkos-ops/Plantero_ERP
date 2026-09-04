@@ -130,7 +130,9 @@ function printTable(results: RuleResult[]): void {
 async function main(): Promise<void> {
   const { rule, json } = parseArgs(process.argv.slice(2));
   const url = process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/plantero';
-  const sql = postgres(url, { max: 1, onnotice: () => {} });
+  // Oturum saat dilimi uygulamanın iş takvimiyle (Europe/Istanbul — bkz. client.ts BUSINESS_TZ) aynı:
+  // CURRENT_DATE kullanan kurallar (I31, I33) uygulamanın `businessDate` "bugün"üyle aynı günü görsün.
+  const sql = postgres(url, { max: 1, onnotice: () => {}, connection: { TimeZone: 'Europe/Istanbul' } });
 
   const files = await listCheckFiles(rule);
   if (files.length === 0) {

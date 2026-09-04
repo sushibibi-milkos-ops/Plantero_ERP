@@ -1,4 +1,5 @@
 export * from './money.js';
+export * from './dates.js';
 export * from './types.js';
 export * from './sequences.js';
 export * from './auth/index.js';

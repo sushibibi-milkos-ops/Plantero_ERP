@@ -7,6 +7,7 @@ import {
 import { ensureCoreAccounts } from '../accounting/mapping.js';
 import { getAccountBalance } from '../accounting/journal.js';
 import type { ActorCtx, Ledger } from '../types.js';
+import { businessDate, addDays } from '../dates.js';
 
 export const ctx: ActorCtx = { userId: null, userEmail: 'test@plantero.local', requestId: 'test' };
 
@@ -41,9 +42,14 @@ export async function expectReject(tx: Tx, fn: (sp: Tx) => Promise<unknown>): Pr
 }
 
 export const suffix = () => randomBytes(3).toString('hex').toUpperCase();
-export const today = () => new Date().toISOString().slice(0, 10);
-export const isoDate = (d: Date) => d.toISOString().slice(0, 10);
-export const daysFromNow = (n: number) => isoDate(new Date(Date.now() + n * 86_400_000));
+/**
+ * "Bugün" servislerle AYNI takvimde (Europe/Istanbul iş günü — `businessDate`) hesaplanır. UTC ISO tarihi
+ * kullanmak, UTC 21:00–24:00 arasında servislerin bir gün ilerisinde kalıp SKT/tahsilat tarihi
+ * karşılaştırmalarını bir gün kaydırıyordu.
+ */
+export const today = () => businessDate(new Date());
+export const isoDate = (d: Date) => businessDate(d);
+export const daysFromNow = (n: number) => addDays(today(), n);
 
 export type Base = Awaited<ReturnType<typeof seedBase>>;
 
@@ -60,10 +66,10 @@ export async function seedBase(tx: Tx) {
     await tx.insert(journals).values(j).onConflictDoNothing({ target: journals.code });
   }
 
-  // Bu ayın mali dönemi
-  const now = new Date();
-  const y = now.getUTCFullYear();
-  const m = now.getUTCMonth() + 1;
+  // Bu ayın mali dönemi (iş takvimine göre)
+  const [yStr, mStr] = today().split('-');
+  const y = Number(yStr);
+  const m = Number(mStr);
   const start = `${y}-${String(m).padStart(2, '0')}-01`;
   const endDate = new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10);
   await tx.insert(fiscalPeriods).values({ code: `${y}-${String(m).padStart(2, '0')}`, year: y, month: m, startDate: start, endDate }).onConflictDoNothing({ target: fiscalPeriods.code });

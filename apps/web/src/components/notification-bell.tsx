@@ -9,11 +9,8 @@ import { getUnreadCountAction } from '@/modules/notifications/actions';
 
 /**
  * Üst bar bildirim zili — 30 sn polling (docs/modules/bildirimler.md §2, gerçek zamanlı gerekmez).
- * ORTAK BİLEŞEN (`apps/web/src/components/**`): mevcut hiçbir dosya değiştirilmedi, bu YENİ bir
- * dosya. `topbar.tsx` (app-shell, benim yazma kapsamımın dışında) bu bileşeni henüz İÇE AKTARMIYOR —
- * raporun "ortak bileşen talepleri" bölümünde `sharedComponentRequests` olarak belirtildi. Şimdilik
- * `/bildirimler` sayfasının kendisi ve bu bileşen bağımsız çalışır durumdadır; kabuk sahibi
- * `<NotificationBell />`'i `topbar.tsx`de `<ThemeToggle />`'ın yanına eklediğinde otomatik aktif olur.
+ * `app-shell/topbar.tsx` içinde `<ThemeToggle />`'ın yanına bağlıdır; sayaç `getUnreadCountAction`
+ * (oturumdaki kullanıcının okunmamış in_app bildirimleri) üzerinden gelir, tıklanınca `/bildirimler`.
  */
 export function NotificationBell({ className }: { className?: string }) {
   const [count, setCount] = useState<number | null>(null);

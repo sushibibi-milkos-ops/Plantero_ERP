@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { journals, invoices, payments, exchangeRates, bankAccounts, type Tx } from '@plantero/db';
 import { postJournalEntry, getPartnerBalance } from '../accounting/journal.js';
 import { recordPayment, unapplyPayment, getOpenInvoicesForPartner } from './payments.js';
-import { withRollback, seedBase, ctx, d, today, expectReject, balanceProbe, type Base } from '../__tests__/helpers.js';
+import { withRollback, seedBase, ctx, d, today, expectReject, balanceProbe, type Base, daysFromNow } from '../__tests__/helpers.js';
 import { round4 } from '../money.js';
 
 /** SAT/ALS/BNK/KAS/KUR yevmiyeleri seedBase'de yok — testte elle eklenir (bkz. sales/orders.test.ts örüntüsü). */
@@ -256,7 +256,7 @@ describe('finance/payments', () => {
       const b: Base = await seedBase(tx);
       await ensureJournals(tx);
       const invoice = await makeInvoice(tx, { partnerId: b.customer.id, kind: 'sales', grandTotal: '100' });
-      const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+      const tomorrow = daysFromNow(1); // iş takvimine (Europe/Istanbul) göre yarın — servisin kıyasladığı takvim
 
       const err = await expectReject(tx, (sp) =>
         recordPayment(sp, { direction: 'inbound', partnerId: b.customer.id, paymentDate: tomorrow, amount: d(100), allocations: [{ invoiceId: invoice.id, amount: d(100) }] }, ctx),

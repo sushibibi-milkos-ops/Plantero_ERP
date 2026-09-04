@@ -1,7 +1,7 @@
 import { and, eq, sql } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
 import { invoices, partners, bankAccounts, exchangeRates, reconciliationMatches, bankTransactions } from '../schema/index.js';
-import { D, SYSTEM_ACTOR, writeAudit, recordPayment, importStatement, runReconciliation, approveMatch, getAccountBalance } from '@plantero/core';
+import { D, SYSTEM_ACTOR, writeAudit, recordPayment, importStatement, runReconciliation, approveMatch, getAccountBalance, businessDate } from '@plantero/core';
 import { log, type SeedSummary } from './_helpers.js';
 
 /**
@@ -56,7 +56,7 @@ const addDays = (iso: string, days: number): string => {
  * doğal tarih aynen kullanılır — yalnızca `due_date < bugün` olan faturalar "vadesinden önce tahsil
  * edilmiş" kurgusuna tam olarak girer, geleceğe düşenler bugünün gerisine sıkıştırılır.
  */
-const TODAY = new Date().toISOString().slice(0, 10);
+const TODAY = businessDate(new Date());
 const capFuture = (iso: string): string => (iso > TODAY ? addDays(TODAY, -1) : iso);
 
 /** Bir faturayı doğrudan (banka hareketi olmadan — "geçmişte manuel girilmiş") tam ya da kısmi tahsil/öder */

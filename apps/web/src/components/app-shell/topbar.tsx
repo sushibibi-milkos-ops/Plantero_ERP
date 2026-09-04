@@ -16,6 +16,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { NotificationBell } from '@/components/notification-bell';
 import { useShell } from './app-shell';
 import { UserMenu } from './user-menu';
 
@@ -100,6 +101,8 @@ export function Topbar() {
         <Search className="size-4" />
       </Button>
 
+      {/* Bildirim zili — docs/modules/bildirimler.md §2 (30 sn polling, sayaç) */}
+      <NotificationBell />
       <ThemeToggle />
       <UserMenu />
     </header>
