@@ -10,6 +10,9 @@ import { seedProduction } from './production.js';
 import { seedSales } from './sales.js';
 import { seedPurchasing, seedPurchasingBackfill } from './purchasing.js';
 import { seedFinancePayments } from './finance-payments.js';
+import { seedAccountingDocs } from './accounting-docs.js';
+import { seedBank } from './bank.js';
+import { seedFinanceProjections } from './finance-projections.js';
 
 /**
  * Seed sırası — docs/ARCHITECTURE.md §11 genel akışı `... stock → production → sales → purchasing ...`
@@ -38,7 +41,16 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   // PO'suz mal kabulleri yamar, tahsilat/mutabakat verisiyle bağımlılığı yoktur (sıra bu yüzden serbest,
   // ama modül sözleşmesi gereği belge akışının doğal sonunda — bkz. finance-payments.ts başlık yorumu).
   { name: 'finance-payments', run: seedFinancePayments },
+  // `accounting-docs`/`bank`: muhasebe modülünün YENİ servisleriyle (gider faturası, iade faturası,
+  // KDV dönem kapanışı, gider/kredi taksiti mutabakatı) üretilen belgeler — `finance-payments`'ten
+  // SONRA (tüm faturalar + ilk banka ekstresi zaten mevcut olmalı), `purchasing-backfill`'den ÖNCE.
+  { name: 'accounting-docs', run: seedAccountingDocs },
+  { name: 'bank', run: seedBank },
   { name: 'purchasing-backfill', run: seedPurchasingBackfill },
+  // `finance-projections`: EN SONDA — 36 aylık nakit akışı projeksiyonunu (3 senaryo) kalıcı hale
+  // getirir ve bütçe/nakit akışı "gerçekleşen" alanlarını muhasebeden (TÜM yukarıdaki adımların
+  // ürettiği yevmiye satırlarından) hesaplar (bkz. finance-projections.ts başlık yorumu).
+  { name: 'finance-projections', run: seedFinanceProjections },
 ];
 
 async function main() {

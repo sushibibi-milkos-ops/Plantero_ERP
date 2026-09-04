@@ -170,11 +170,30 @@ export const NAV: NavGroup[] = [
       { label: 'Geri Çağırma', href: '/kalite/geri-cagirma', icon: Megaphone, permission: 'quality.recall', keywords: ['recall'] },
     ],
   },
-  // 'muhasebe' grubu kaldırıldı (Tur 10 P1 shell-nav-dead-links-01): 7 kalemin tamamı /muhasebe/*
-  // rotalarına gidiyordu ve `apps/web/src/app/(app)/muhasebe` HİÇ YOK — hepsi 404. Fatura/yevmiye/
-  // hesap planı/KDV modülleri henüz yazılmadı (bkz. rapor "şema/route talepleri": bu ekranlar ayrı
-  // bir muhasebe modülü görevi gerektirir). Gerçekten var olan iki karşılığı ("Tahsilat/Ödeme",
-  // "Banka Mutabakatı") aşağıdaki Finans grubuna taşındı — tek çalışan menü artık tek gerçeği yansıtır.
+  // 'muhasebe' grubu geri eklendi: /muhasebe/* rotaları artık gerçekten var (muhasebe modülü —
+  // faturalar, tahsilatlar, banka, mutabakat, yevmiye, hesap planı, mizan, KDV, dönemler). Tur 10'da
+  // buradan kaldırılmıştı (7 kalem 404 veriyordu); geri ekleme o turun bıraktığı yorumdaki açık
+  // beklentiyi karşılıyor. "Tahsilatlar"/"Banka" burada VE Finans grubunda ikisinde de görünür —
+  // aynı alttaki servisleri (recordPayment/importStatement) kullanan iki farklı ekrandır (muhasebe
+  // modülü kendi RBAC'iyle: accounting.post/accounting.reconcile; Finans grubu finance.manage/view).
+  {
+    id: 'muhasebe',
+    label: 'Muhasebe',
+    icon: ScrollText,
+    permissions: ['accounting.view'],
+    items: [
+      { label: 'Özet', href: '/muhasebe', icon: LayoutDashboard, permission: 'accounting.view' },
+      { label: 'Faturalar', href: '/muhasebe/faturalar', icon: FileText, permission: 'accounting.view', keywords: ['inv', 'e-fatura', 'iade'] },
+      { label: 'Tahsilatlar', href: '/muhasebe/tahsilatlar', icon: Wallet, permission: 'accounting.view', keywords: ['tahsilat', 'ödeme'] },
+      { label: 'Banka', href: '/muhasebe/banka', icon: CreditCard, permission: 'accounting.view', keywords: ['ekstre', 'mt940'] },
+      { label: 'Mutabakat', href: '/muhasebe/mutabakat', icon: Activity, permission: 'accounting.reconcile', keywords: ['ai', 'onay ekranı'] },
+      { label: 'Yevmiye', href: '/muhasebe/yevmiye', icon: ScrollText, permission: 'accounting.view', keywords: ['fiş', 'vuk', 'ufrs'] },
+      { label: 'Hesap Planı', href: '/muhasebe/hesap-plani', icon: ListChecks, permission: 'accounting.view' },
+      { label: 'Mizan', href: '/muhasebe/mizan', icon: PieChart, permission: 'accounting.view' },
+      { label: 'KDV', href: '/muhasebe/kdv', icon: Coins, permission: 'accounting.view' },
+      { label: 'Dönemler', href: '/muhasebe/donemler', icon: CalendarRange, permission: 'accounting.view', keywords: ['kapat', 'aç'] },
+    ],
+  },
   {
     id: 'finans',
     label: 'Finans',
@@ -187,13 +206,17 @@ export const NAV: NavGroup[] = [
       // izin OR'lanır (görünürlük ikisinden biri yeterli olacak şekilde `permission` yerine grup düzeyi
       // kontrolü zaten `permissions` dizisinde var; öğe düzeyinde `finance.view` yeterli — dunning
       // rolü de pratikte finance.view taşır, bkz. RBAC ön ayarları).
-      { label: 'Tahsilat/Ödeme', href: '/finans/tahsilat', icon: Wallet, permission: 'finance.view', keywords: ['fatura', 'ödeme', 'cari', 'pay', 'tahsilat takibi', 'hatırlatma', 'vade', 'gecikmiş'] },
+      { label: 'Tahsilat/Ödeme', href: '/finans/tahsilat', icon: Wallet, permission: 'finance.view', keywords: ['fatura', 'ödeme', 'cari', 'pay'] },
       { label: 'Banka Mutabakatı', href: '/finans/banka', icon: CreditCard, permission: 'finance.view', keywords: ['hesap hareketi', 'mt940', 'mutabakat'] },
-      { label: 'Nakit Akışı', href: '/finans/nakit-akisi', icon: Activity, permission: 'finance.view' },
-      { label: 'Break-even', href: '/finans/break-even', icon: PieChart, permission: 'finance.view', keywords: ['başabaş'] },
-      { label: 'Bütçe', href: '/finans/butce', icon: Coins, permission: 'finance.view' },
-      { label: 'Krediler', href: '/finans/krediler', icon: Landmark, permission: 'finance.view', keywords: ['taksit'] },
-      { label: 'Tahmin', href: '/finans/tahmin', icon: LineChart, permission: 'finance.view', keywords: ['forecast'] },
+      { label: 'Nakit Akışı', href: '/finans/nakit-akisi', icon: Activity, permission: 'finance.view', keywords: ['projeksiyon', '36 ay', 'senaryo'] },
+      { label: 'Break-even', href: '/finans/break-even', icon: PieChart, permission: 'finance.view', keywords: ['başabaş', 'hedef ciro'] },
+      { label: 'Bütçe', href: '/finans/butce', icon: Coins, permission: 'finance.view', keywords: ['plan', 'gerçekleşen', 'sapma'] },
+      { label: 'Krediler', href: '/finans/krediler', icon: Landmark, permission: 'finance.view', keywords: ['taksit', 'amortisman'] },
+      // Tahsilat Takibi (kademeli hatırlatma / dunning) artık GERÇEK, ayrı bir sayfa (/finans/tahsilat-takibi —
+      // finans modülü, docs/modules/finans.md §5). Önceki turda "/finans/tahsilat ile birleşti" diye menüden
+      // düşürülmüştü; sayfa yazıldığı için geri eklendi.
+      { label: 'Tahsilat Takibi', href: '/finans/tahsilat-takibi', icon: AlertTriangle, permission: 'finance.view', keywords: ['hatırlatma', 'vade', 'gecikmiş', 'dunning', 'yaşlandırma'] },
+      { label: 'Tahmin', href: '/finans/tahmin', icon: LineChart, permission: 'finance.view', keywords: ['forecast', 'ai', 'satış tahmini'] },
     ],
   },
   {
@@ -247,9 +270,8 @@ export const MOBILE_TABS: NavItem[] = [
   { label: 'Kokpit', href: '/kokpit', icon: LayoutDashboard, permission: 'cockpit.view' },
   { label: 'Depo', href: '/depo/stok', icon: Boxes, permission: 'stock.view' },
   { label: 'Satış', href: '/satis/siparisler', icon: ShoppingCart, permission: 'sales.view' },
-  // '/muhasebe/faturalar' 404 veriyordu (muhasebe modülü hiç yok) — dördüncü sekme artık gerçekten
-  // var olan Finans/Tahsilat sayfasına gidiyor (Tur 10 P1).
-  { label: 'Finans', href: '/finans/tahsilat', icon: Landmark, permission: 'finance.view' },
+  // Muhasebe modülü artık var — dördüncü sekme gerçek hedefine (faturalar listesi) döndü.
+  { label: 'Muhasebe', href: '/muhasebe/faturalar', icon: FileText, permission: 'accounting.view' },
 ];
 
 export type PermissionChecker = (code: string) => boolean;
@@ -288,6 +310,9 @@ export const SUBPATH_LABELS: Record<string, string> = {
   board: 'Pano',
   detay: 'Detay',
   topla: 'Toplama',
+  cariler: 'Cariler',
+  ekstre: 'Ekstre',
+  'gider-yeni': 'Gider faturası',
 };
 
 /** İstemci tarafı izin denetleyicisi: admin rolü her şeyi görür, `*` joker izindir */

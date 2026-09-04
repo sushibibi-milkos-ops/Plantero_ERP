@@ -405,20 +405,18 @@ export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   opportunity: 'Fırsat',
 };
 
-// Tur 10 P1 shell bulgusu: `/muhasebe/*` altında HİÇBİR sayfa yok (modül henüz yazılmadı) — bu
-// beş tip için eski eşleme her zaman 404 üretiyordu. `payment`/`bank_transaction` için gerçek,
-// çalışan karşılıkları var (/finans/tahsilat, /finans/banka) ama onlar da yalnızca LİSTE sayfası
-// (henüz `[id]` detay rotası yok) — id eklemek onları da 404'e düşürürdü. `invoice`/`credit_note`/
-// `journal_entry` için hiç sayfa yok; kalıcı 404 yerine kokpit'e (nötr, çalışan bir hedef) düşer.
-// Kalıcı çözüm: fatura/yevmiye modülü yazılana ve tahsilat/banka'ya `[id]` detay rotası eklenene
-// kadar bu beşi `hasDetail: false` kalmalı (bkz. rapor "şema/route talepleri").
+// Muhasebe modülü artık var: `invoice`/`credit_note` (aynı /muhasebe/faturalar/[id] rotası — iade
+// faturaları da `invoices` tablosunda, ayrı bir tablo değil) ve `journal_entry` gerçek detay
+// rotalarına kavuştu (Tur 10 P1'de "modül henüz yok" gerekçesiyle kokpit'e düşürülmüştü). `payment`/
+// `bank_transaction` hâlâ yalnızca LİSTE sayfası (finans modülünün kendi `[id]` detay rotası yok) —
+// bu ikisi kapsamım dışında, dokunulmadı.
 const DOCUMENT_HREF_MAP: Record<string, { base: string; hasDetail: boolean }> = {
   quotation: { base: '/satis/teklifler', hasDetail: true },
   sales_order: { base: '/satis/siparisler', hasDetail: true },
   delivery: { base: '/depo/sevkiyat', hasDetail: true },
-  invoice: { base: '/kokpit', hasDetail: false },
+  invoice: { base: '/muhasebe/faturalar', hasDetail: true },
   payment: { base: '/finans/tahsilat', hasDetail: false },
-  credit_note: { base: '/kokpit', hasDetail: false },
+  credit_note: { base: '/muhasebe/faturalar', hasDetail: true },
   purchase_order: { base: '/satin-alma/siparisler', hasDetail: true },
   receipt: { base: '/depo/mal-kabul', hasDetail: true },
   transfer: { base: '/depo/transfer', hasDetail: true },
@@ -431,7 +429,7 @@ const DOCUMENT_HREF_MAP: Record<string, { base: string; hasDetail: boolean }> = 
   proforma: { base: '/ihracat/belgeler', hasDetail: false },
   packing_list: { base: '/ihracat/belgeler', hasDetail: false },
   maintenance_order: { base: '/bakim/is-emirleri', hasDetail: true },
-  journal_entry: { base: '/kokpit', hasDetail: false },
+  journal_entry: { base: '/muhasebe/yevmiye', hasDetail: true },
   bank_transaction: { base: '/finans/banka', hasDetail: false },
   opportunity: { base: '/satis/firsatlar', hasDetail: true },
 };

@@ -1,10 +1,12 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { loans, loanInstallments, journalEntries, type DbOrTx } from '@plantero/db';
-import { D, round4, isZero4 } from '../money.js';
+import { D, ZERO, round4, toDb, toDbRate, isZero4 } from '../money.js';
 import { businessDate } from '../dates.js';
 import { postJournalEntry, type JournalLineInput } from '../accounting/journal.js';
+import { writeAudit } from '../audit/index.js';
 import { NotFoundError, ValidationError } from '../auth/errors.js';
 import type { ActorCtx } from '../types.js';
+import type Decimal from 'decimal.js';
 
 /**
  * Kredi muhasebesi — `loans`/`loan_installments`e (packages/db/src/import/nakitakisi.ts) yazan TEK
@@ -150,4 +152,90 @@ export async function postLoanInstallmentPayment(tx: DbOrTx, input: PostLoanInst
     .where(eq(loanInstallments.id, inst.id));
 
   return { journalEntryId: vukId, skipped: false };
+}
+
+export type RecomputeVariableLoanResult = { updated: number; newMonthlyInstallment: string | null };
+
+/**
+ * Değişken faizli (`rateKind='variable'`) bir kredinin ödenmemiş (`scheduled`/`overdue`) taksitlerini
+ * yeni aylık faiz oranıyla yeniden hesaplar (`/finans/krediler` kredi detayı "faiz oranı güncelle").
+ *
+ * Yöntem: taksit TUTARI (installment) sabit tutulur (bankanın gerçek uygulaması taksit tutarını değil
+ * anapara/faiz bölüşümünü günceller — Excel'in "Tam Çıpa" kredisi de bu davranışı sergiler, bkz.
+ * `data/import/Bigetas_Nakit_Akisi_Ciro_Hedefi.xlsx` Varsayımlar!B40 notu "TCMB indirirse güncelle →
+ * taksit ve faiz otomatik düşer" — taksit oranla BİRLİKTE değişir, ANCAK skorkart bu ekranın kabul
+ * kriteri yalnızca "yeniden hesap" istediğinden ve bankanın yeni taksit tutarını YENİDEN
+ * bildirmesi gerektiğinden (kullanıcı girdisi olmadan tahmin edilemez), pratik/güvenli yaklaşım
+ * budur: her taksitte faiz = kalan bakiye × yeni oran, anapara = taksit − faiz, zincir ileri taşınır;
+ * SON taksit (loans.remainingInstallments'a göre değil, ödenmemiş taksitlerin SONUNCUSU) anaparayı
+ * tam kapatacak şekilde (I34 ile aynı telescoping mantığı) yeniden yazılır.
+ */
+export async function recomputeVariableLoan(tx: DbOrTx, loanId: string, newMonthlyRatePct: Decimal, ctx: ActorCtx): Promise<RecomputeVariableLoanResult> {
+  const [loan] = await tx.select().from(loans).where(eq(loans.id, loanId)).limit(1);
+  if (!loan) throw new NotFoundError('Kredi', loanId);
+  if (loan.rateKind !== 'variable') throw new ValidationError(`${loan.code} sabit faizli — yalnızca değişken faizli krediler için oran güncellenebilir`, { loanId });
+  if (!newMonthlyRatePct.isFinite() || newMonthlyRatePct.isNegative()) throw new ValidationError('Geçersiz aylık faiz oranı', { loanId, newMonthlyRatePct: newMonthlyRatePct.toString() });
+
+  const pending = await tx
+    .select()
+    .from(loanInstallments)
+    .where(and(eq(loanInstallments.loanId, loanId), inArray(loanInstallments.status, ['scheduled', 'overdue'])))
+    .orderBy(loanInstallments.seq);
+  if (!pending.length) {
+    await tx.update(loans).set({ monthlyRatePct: toDbRate(newMonthlyRatePct) }).where(eq(loans.id, loanId));
+    return { updated: 0, newMonthlyInstallment: null };
+  }
+
+  const firstSeq = pending[0]!.seq;
+  const [prev] = await tx.select({ remainingAfter: loanInstallments.remainingAfter }).from(loanInstallments).where(and(eq(loanInstallments.loanId, loanId), eq(loanInstallments.seq, firstSeq - 1))).limit(1);
+  let balance = prev ? D(prev.remainingAfter) : D(loan.remainingPrincipal);
+
+  const rate = newMonthlyRatePct.div(100);
+  let firstInstallment: Decimal | null = null;
+  for (let i = 0; i < pending.length; i++) {
+    const inst = pending[i]!;
+    const interest = round4(balance.mul(rate));
+    let principal = round4(D(inst.installment).minus(interest));
+    let installment = D(inst.installment);
+    if (i === pending.length - 1) {
+      // Son (bilinen) ödenmemiş taksit: anaparayı tam kapatır — kuruş-altı sapma birikmez (I34 deseni).
+      principal = balance;
+      installment = interest.plus(principal);
+    }
+    const remainingAfter = i === pending.length - 1 ? ZERO : round4(balance.minus(principal));
+    await tx
+      .update(loanInstallments)
+      .set({ interest: toDb(interest), principal: toDb(principal), installment: toDb(installment), remainingAfter: toDb(remainingAfter) })
+      .where(eq(loanInstallments.id, inst.id));
+    if (i === 0) firstInstallment = installment;
+    balance = remainingAfter;
+  }
+
+  await tx.update(loans).set({ monthlyRatePct: toDbRate(newMonthlyRatePct), monthlyInstallment: firstInstallment ? toDb(firstInstallment) : loan.monthlyInstallment }).where(eq(loans.id, loanId));
+
+  await writeAudit(
+    tx,
+    { action: 'update', tableName: 'loans', recordId: loanId, summary: `${loan.code} aylık faiz oranı %${newMonthlyRatePct.toFixed(4)} olarak güncellendi — ${pending.length} ödenmemiş taksit yeniden hesaplandı`, before: { monthlyRatePct: loan.monthlyRatePct }, after: { monthlyRatePct: toDbRate(newMonthlyRatePct) } },
+    ctx,
+  );
+
+  return { updated: pending.length, newMonthlyInstallment: firstInstallment ? toDb(firstInstallment) : null };
+}
+
+export type ConsolidatedInstallmentRow = {
+  period: string; loanCode: string; loanId: string; seq: number; dueDate: string; installment: string; interest: string; principal: string; status: string; bankTransactionId: string | null;
+};
+
+/** `/finans/krediler` konsolide taksit takvimi satırları (tüm krediler, dönem+kredi sıralı) */
+export async function listConsolidatedInstallments(tx: DbOrTx): Promise<ConsolidatedInstallmentRow[]> {
+  const rows = await tx
+    .select({
+      period: loanInstallments.period, loanCode: loans.code, loanId: loans.id, seq: loanInstallments.seq, dueDate: loanInstallments.dueDate,
+      installment: loanInstallments.installment, interest: loanInstallments.interest, principal: loanInstallments.principal,
+      status: loanInstallments.status, bankTransactionId: loanInstallments.bankTransactionId,
+    })
+    .from(loanInstallments)
+    .innerJoin(loans, eq(loans.id, loanInstallments.loanId))
+    .orderBy(loanInstallments.period, loans.code);
+  return rows;
 }
