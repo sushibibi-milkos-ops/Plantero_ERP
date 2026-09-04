@@ -1,14 +1,14 @@
 {
  "module": "depo",
- "round": 14,
+ "round": 15,
  "reference": {
   "linear": 57,
   "stripe": 56
  },
- "note": "Tur 15 duzeltme turu — Tur 14'te acilan tek yeni bulgu (depo-lotlar-id-04, P1, /depo/lotlar/[id]) kapatildi. Kok neden: lot detayindaki 'Giris belgesi' <Link> ve Izlenebilirlik sekmesindeki 'Kalite modulunde detayli izlenebilirlik' <Link> ciplak metin baglantisiydi, dokunma yastigi tasimiyordu (mobilde 107.4x17 / 44px esiginin altinda). detail-field-groups-grid.tsx:47'deki mevcut kalip (dokunma-yastigi: negatif margin + min-h-11, md: kirilma noktasinda notrlestirme) her iki baglantiya da uygulandi — masaustu (>=768px) piksel olarak degismedi. pnpm measure /depo/lotlar/305706b2-ae05-4d4b-a1ce-e5b55f1b8134 --viewport 390x844: touchTargetsBelow44 artik yalnizca etkilesimsiz breadcrumb-page span'ini iceriyor. Izlenebilirlik sekmesi Playwright ile aktive edilip ayrica olculdu: boundingBox height=44. /depo/lotlar/[id] kriter 9: 4->5, toplam 58->59, KAZANAN: Linear -> KAZANAN: Plantero. Modulde artik acik P1 yok, 8 acik P2 duruyor (shell/ortak bilesen kokenli, bu turda kapsam disi).",
+ "note": "Tur 15 (HIZLI TUR + shell regresyon dogrulamasi). Son commit'ler (git log -8) depo'yu iki noktadan etkiledi: 0d23af5 /depo/lotlar/[id] belge baglantilarina dokunma yastigi (depo-lotlar-id-04 P1 KAPALI, Tur 15'te dogrulandi) ve e46100a shell/mobile-cards.tsx + lot-badge.tsx (`mobile-card-subtitle-row` ata seciciyle LotBadge'in h-11 yastigi mobil kart alt-baslik satirinda h-auto'ya donuyor). Ikincisi TUM depo liste ekranlarinin mobil kart anatomisini degistirdigi icin 12 route'un hepsinde 390x844 measure yeniden calistirildi: hicbir route'ta yeni <44px etkilesimli hedef olusmadi (touchTargetsBelow44 yalnizca etkilesimsiz breadcrumb-page span'ini iceriyor; /depo/sevkiyat/[id]/topla'da liste tamamen bos), yatay tasma yok, /depo/lotlar kart yuksekligi 63.5-68.5px bandinda kaldi. lots-table.tsx LotBadge'i `to` olmadan kullaniyor (baglanti degil), bu yuzden degisiklik depo'da gorsel olarak notr. Kod duzeyi tarama temiz: modul + ortak bilesenlerde `transition-all`/`transition: all` yok (yalnizca neden kullanilmadigini anlatan yorumlar), `ease-in` yok, `scale(0)`/`scale-0` yok, en uzun sure 220ms (sheet/mobile-nav), hover globals.css:11'de `@media (hover: hover) and (pointer: fine)` ile korunuyor. 12/12 route KAZANAN: Plantero; acik P0/P1 yok, 9 acik P2 (cogu shell kokenli) duruyor.",
  "routes": {
   "/depo/stok": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -25,7 +25,7 @@
     5
    ],
    "total": 58,
-   "delta": "degisiklik yok — measure 1440x900: rows 50/sayfa, satir 36px, ilk ekranda 18 satir, scrollWidth 1440 = clientWidth, h1 24/600, distinctColors 18; 390x844: rows.heights [67.5,67.8,68.5], overflowX false, touchTargetsBelow44 yalnizca breadcrumb-page span'i, distinctColors 16. Gorsel: KPI seridi masaustunde dikey hairline ayracli 6 blok, tablo sayilari sag hizali tabular + muted birim. Kriter 4 (depo-stok-04 dolgulu SKT pili: ilk ekranda 18 hucrenin 15'i) ve kriter 6 (depo-stok-05 mobil kartta birimsiz metrik) acik P2'ler yuzunden 4'te kaliyor.",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: rows 50 kart, heights [67.5,67.8,68.5], overflowX false, scrollWidth 390 = clientWidth, distinctColors 16, h1 20/600, touchTargetsBelow44 = yalnizca breadcrumb-page span (etkilesimsiz). 1440x900: 50 satir, hepsi 36px, scrollWidth 1440 = clientWidth, h1 24/600, fontSizes 13px:326 / 11px:250 baskin, distinctColors 18. Gorsel: ilk ekranda 18 satir, sag hizali tabular sayi + 11px muted birim (60 ADET / 82 KG), KPI seridi 6 blok dikey hairline ayracli. Kriter 4 ve 6 acik P2'ler (dolgulu SKT pili, mobil kartta birimsiz metrik) yuzunden 4'te.",
    "open": [
     {
      "id": "depo-stok-05",
@@ -81,7 +81,7 @@
    "verdict": "KAZANAN: Plantero — 58 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/lotlar": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -98,7 +98,7 @@
     5
    ],
    "total": 58,
-   "delta": "degisiklik yok — measure 390x844: 50 kart, rows.heights [63.5,68.5,68.5], overflowX false, distinctColors 19, touchTargetsBelow44 yalnizca breadcrumb-page; 1440x900 satir 36px, scrollWidth 1440 = clientWidth.",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: 50 kart, heights [63.5,68.5,68.5] (shell LotBadge degisikligi sonrasi bant korundu), overflowX false, distinctColors 19, touchTargetsBelow44 yalnizca breadcrumb-page. 1440x900 satir 36px, scrollWidth = clientWidth. Gorsel: durum cipleri (Karantina 3 / Reddedildi 2 / Serbest 195) sayfa basligi altinda tek satir; mobil kart metrikleri hala birimsiz (18/19/17) — depo-lotlar-02 P2 acik.",
    "open": [
     {
      "id": "depo-lotlar-02",
@@ -127,7 +127,7 @@
    "verdict": "KAZANAN: Plantero — 58 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/lotlar/[id]": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -144,7 +144,7 @@
     5
    ],
    "total": 59,
-   "delta": "Tur 15 duzeltme: kriter 9 4->5 — depo-lotlar-id-04 (P1) kapatildi. 'Giris belgesi' alanindaki <Link> (-my-3 inline-flex min-h-11 items-center md:my-0 md:min-h-0, detail-field-groups-grid.tsx:47'deki kalip) ve Izlenebilirlik sekmesindeki 'Kalite modulunde detayli izlenebilirlik' baglantisi ayni yastikla duzeltildi. measure 390x844: touchTargetsBelow44 yalnizca etkilesimsiz breadcrumb-page span'ini iceriyor. Masaustu gorunum degismedi (md: kirilma noktasinda yastik notrlestiriliyor). Diger kriterler onceki turdan degismedi: rows.heights [68.5,68.5,68.5], overflowX false, alan izgarasi 11px uppercase etiket + 13px deger, Hareketler kartinda metrik '25 KG'/'12 KG' birimli ve dogru sutunda. Toplam 58->59.",
+   "delta": "Tur 15: depo-lotlar-id-04 (P1) KAPALI olarak dogrulandi — yeni bagimsiz kayitla (0c5c83d3-…, OP-304030000-A) 390x844 measure touchTargetsBelow44 = yalnizca breadcrumb-page span; sayfada 44px alti etkilesimli oge yok. overflowX false, rows.heights [68.5,68.5,68.5], distinctColors 23, h1 20/600. 1440x900: alan izgarasi 11px uppercase etiket + 13px deger, Hareketler tablosu 36px satir, miktarlar '5 KG'/'28 KG' sag hizali tabular. Puan degismedi (59).",
    "open": [
     {
      "id": "depo-lotlar-id-03",
@@ -184,7 +184,7 @@
    "verdict": "KAZANAN: Plantero — 59 >= 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/mal-kabul": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -201,7 +201,7 @@
     5
    ],
    "total": 59,
-   "delta": "degisiklik yok — measure 390x844: 7 kart, rows.heights [68.5,68.5,68.5], overflowX false, scrollWidth 390 = clientWidth. Gorsel: tedarikci adlari gercek '…' ile kirpiliyor (shell-mobile-card-clip-01 ucuncu kez dogrulandi). Kriter 4 4'te kaliyor: 7 satirin 6'si yesil 'Tamamlandi' (kok neden shell/status-badge, depo-sevkiyat-02); ayrica mobil KPI seridinde 'Bu ay kabul edilen t…' ve 'Orta…' kirpik (shell-kpi-strip-label-01 ikinci route'ta dogrulandi).",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: 7 kart, heights [68.5,68.5,68.5], overflowX false, distinctColors 20, touchTargetsBelow44 yalnizca breadcrumb-page. Gorsel 1440x900: 7 satirin 6'si yesil 'Tamamlandi' (kok neden shell/status-badge, depo-sevkiyat-02 P2), 3. KPI '—' + gerekce ipucu duruyor.",
    "open": [],
    "closed": [
     {
@@ -228,7 +228,7 @@
    "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/mal-kabul/yeni": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -245,7 +245,7 @@
     5
    ],
    "total": 58,
-   "delta": "degisiklik yok — measure 390x844: overflowX false, touchTargetsBelow44 yalnizca breadcrumb-page, fontSizes 13px:17 baskin, distinctColors 14.",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: overflowX false, touchTargetsBelow44 yalnizca breadcrumb-page, fontSizes 13px:17 baskin, distinctColors 14, h1 20/600. Gorsel: 'Siparis sec (opsiyonel)' paneli hala yesil tonlu zemin + yesil cerceve (depo-mal-kabul-yeni-01 P2 acik); bos durum (ikon + 'Henuz satir yok' + 'Barkod alanina git') ozenli.",
    "open": [
     {
      "id": "depo-mal-kabul-yeni-01",
@@ -263,7 +263,7 @@
    "verdict": "KAZANAN: Plantero — 58 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/sevkiyat": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -280,7 +280,7 @@
     5
    ],
    "total": 59,
-   "delta": "degisiklik yok — measure 390x844: 27 kart, rows.heights [68.5,68.5,68.5], overflowX false, distinctColors 13 (modulun en disiplinli ekrani); 1440x900: 27 satir, 36px, scrollWidth 1440 = clientWidth.",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: 27 kart, heights [68.5,68.5,68.5], overflowX false, distinctColors 13 (modulun en disiplinli ekrani), touchTargetsBelow44 yalnizca breadcrumb-page. 1440x900 gorsel: ilk ekranda 17/17 satir yesil 'Sevk edildi' — depo-sevkiyat-02 (shell) P2 acik.",
    "open": [
     {
      "id": "depo-sevkiyat-02",
@@ -304,7 +304,7 @@
    "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/sevkiyat/[id]": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -321,7 +321,7 @@
     5
    ],
    "total": 59,
-   "delta": "degisiklik yok — UCUNCU BAGIMSIZ kayitla (3a4b4682-…, DN-2026-000002) dogrulandi: measure 390x844 rows.heights [67.8,67.8,67.8], overflowX false, touchTargetsBelow44 yalnizca breadcrumb-page; kart satir-2 '150040001 · TIRE/MAMUL/R01' TEK satirda, sag metrik '10/10 ADET' dogru sutunda. Masaustu: belge zinciri 5 kart tek satirda (FIRSAT→TEKLIF→SIPARIS→IRSALIYE→'Devam belgesi yok'), tablo 36px. Kriter 4 4'te kaliyor (baslik rozeti + zincir kartlari + birincil buton ayni yesil; SKT sutunu dolgulu gri pil).",
+   "delta": "Tur 15 dogrulama, puan degismedi. DORDUNCU bagimsiz kayitla (6a4c5061-…, DN-2026-000001) 390x844: rows.heights [67.8,67.8,67.8], overflowX false, distinctColors 20, touchTargetsBelow44 yalnizca breadcrumb-page. 1440x900: belge zinciri 5 kart (FIRSAT→TEKLIF→SIPARIS→IRSALIYE→FATURA), aktif kart yesil cerceveyle isaretli; satir tablosu 'Talep 12 ADET / Toplanan 12/12 ADET' sag hizali tabular. Mobilde PageHeader eylemleri hala solda topluyor (depo-lotlar-id-03 P2, shell sozlesmesi).",
    "open": [],
    "closed": [
     {
@@ -343,7 +343,7 @@
    "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/sevkiyat/[id]/topla": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -360,7 +360,7 @@
     5
    ],
    "total": 57,
-   "delta": "degisiklik yok — YENI toplama kaydiyla (be31b53f-…, DN-2026-000003) dogrulandi: measure 390x844 touchTargetsBelow44 BOS (modulun tek tam temiz route'u), overflowX false, distinctColors 13. 1440x900 olcumunde tek dokunma bulgusu tarama girdisi (768x36) — shell-input-height-override-01 acik P2'si aynen duruyor. Ilerleme cubugu 0/2'de gorunur nub basiyor (depo-topla-02), 'Satiri atla' tek kirmizi oge (depo-topla-01).",
+   "delta": "Tur 15 dogrulama, puan degismedi. YENI toplama kaydiyla (0d2c6b30-…, DN-2026-000003) 390x844: touchTargetsBelow44 BOS (modulun tek tam temiz route'u), overflowX false, distinctColors 13, tek satir 38px. Gorsel: '0/2 toplandi' ilerleme cubugu hala %0'da gorunur yesil nub basiyor (depo-topla-02 P2), 'Satiri atla — eksik/bulunamadi' hala ekrandaki tek kirmizi oge (depo-topla-01 P2).",
    "open": [
     {
      "id": "depo-topla-01",
@@ -400,7 +400,7 @@
    "verdict": "KAZANAN: Plantero — 57 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/transfer": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -417,7 +417,7 @@
     5
    ],
    "total": 59,
-   "delta": "degisiklik yok — measure 390x844: 3 kart, rows.heights [68.5,68.5,68.5], overflowX false; 1440x900 satir 36px. Durum renkleri gercekten ayirt ediyor (Tamamlandi yesil / Yolda mavi) — kriter 4 = 5.",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: 3 kart, heights [68.5,68.5,68.5], overflowX false, distinctColors 19, touchTargetsBelow44 yalnizca breadcrumb-page. 1440x900: 3 satir 36px; durum renkleri gercekten ayirt ediyor (2 yesil 'Tamamlandi' + 1 mavi 'Yolda') — kriter 4 = 5 korunuyor. Az kayitli listede alt satirdaki ipucu + '+ Yeni transfer' ikincil eylemi bosluk yonetimini cozuyor.",
    "open": [],
    "closed": [
     {
@@ -434,7 +434,7 @@
    "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/sayim": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -451,7 +451,7 @@
     5
    ],
    "total": 59,
-   "delta": "degisiklik yok — measure 390x844: kart 68.5px, overflowX false, distinctColors 17; 1440x900 satir 36px.",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: 1 kart 68.5px, overflowX false, distinctColors 17, touchTargetsBelow44 yalnizca breadcrumb-page. 1440x900: satir 36px, 'Fark degeri +₺360,00' sag hizali tabular, KPI ikilisi dikey hairline ayracli.",
    "open": [],
    "closed": [
     {
@@ -468,7 +468,7 @@
    "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."
   },
   "/depo/skt": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -485,7 +485,7 @@
     5
    ],
    "total": 59,
-   "delta": "degisiklik yok — depo-skt-04 duzeltmesi (Tur 13, commit 7e3301b) ikinci kez dogrulandi: 390x844 rows.heights [67.8,68.5,68.5] (kardes bant 63.5-68.5), overflowX false, touchTargetsBelow44 yalnizca breadcrumb-page. Masaustu 18 satir/36px, distinctColors 21. Kriter 4 acik P2 (depo-skt-03: ilk ekranda 1 kirmizi + 6 amber tonlu satir, hepsi ayrica renkli rozetli) yuzunden 4'te kaliyor.",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: 50 kart, heights [67.8,68.5,68.5], overflowX false, distinctColors 19, touchTargetsBelow44 yalnizca breadcrumb-page. 1440x900: 50 satir 36px, scrollWidth 1440 = clientWidth, distinctColors 21 (modulun en yuksegi — kok neden depo-skt-03: satir zemini tonlamasi + renkli rozet ayni bilgiyi iki kez tasiyor, P2 acik). 4 KPI'lik SKT kademesi seridi sayi + altinda tutar ile Stripe kalibinda.",
    "open": [
     {
      "id": "depo-skt-03",
@@ -532,7 +532,7 @@
    "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok. (Tur 12'de KAZANAN: Linear idi.)"
   },
   "/depo/tara": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "scores": [
     5,
@@ -549,7 +549,7 @@
     5
    ],
    "total": 59,
-   "delta": "degisiklik yok — measure 390x844: overflowX false, distinctColors 14, touchTargetsBelow44 yalnizca breadcrumb-page. Ozenli bos durum (ikon + 'Okutmayi bekliyor' + el terminali aciklamasi + 'Stok ekranina don').",
+   "delta": "Tur 15 dogrulama, puan degismedi. 390x844: overflowX false, distinctColors 14, touchTargetsBelow44 yalnizca breadcrumb-page, h1 20/600. Ozenli bos durum (ikon + 'Okutmayi bekliyor' + el terminali aciklamasi + 'Stok ekranina don' ikincil eylemi); odakli barkod alani tek birincil oge.",
    "open": [],
    "closed": [],
    "verdict": "KAZANAN: Plantero — 59 ≥ 57, hicbir kriter < 4, acik P0/P1 yok."

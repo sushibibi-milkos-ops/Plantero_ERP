@@ -1,14 +1,14 @@
 {
   "module": "ana-veri",
-  "round": 13,
+  "round": 15,
   "referenceScores": {
     "linear": 57,
     "stripe": 56
   },
-  "note": "Tur 13 kritik geçişi. 10 rotanın hepsi yeniden ekran görüntüsü + `pnpm measure` (1440x900 ve 390x844) + eleman probe'u ile ölçüldü. Tek açık P1 (ana-veri-recete-detay-01, PageHeader eyebrow ürün bağlantısının 390px dokunma hedefi) YENİDEN ÖLÇÜLDÜ ve KAPALI doğrulandı: /ana-veri/receteler/da48fdc8-... @390x844 touchTargetsBelow44 = yalnızca etkileşimsiz breadcrumb span'i (36.2x19.5); eyebrow <a> listede yok. Bu nedenle kriter 9: 4->5, toplam 57->58 ve rota artık kazanıyor. Diğer 9 rotanın puanları ölçümle doğrulandı, değişmedi. Ayrıca kod-yapisi arama input'u h-11/md:h-9 ile 390px'te 44px'i sağlıyor (tur 12 p2'si kapandı). DB yeniden tohumlandığı için dinamik [id] örnekleri değişti (ürün e56742e3-..., cari 82d0867b-..., reçete da48fdc8-...). Kod düzeyi tarama temiz: transition-all/ease-in/scale(0)/300ms+ süre/transform-origin YOK; tek '400ms' eşleşmesi loading-skeletons.tsx'te yorum metni. hover globals.css:10'da @custom-variant ile (hover:hover) and (pointer:fine) altında. SONUÇ: 10/10 rota kazandı, ana-veri modülünde açık P0/P1 yok.",
+  "note": "Tur 15 HIZLI TUR. Tur 13'te 10/10 rota kazanmıştı, tur 14'te ölçümle doğrulandı; bu turda da açık P0/P1 yok, protokol gereği yeniden puanlama yapılmadı. Son 8 commit'ten (a2edb97..d2a99ef) ana-veri rotalarını etkileyebilecek tek değişiklik e46100a (components/data-table/mobile-cards.tsx + lot-badge.tsx + global-error.tsx, shell); regresyon YOK: mobil kart yükseklikleri /ana-veri/urunler 63.5-68.5, /ana-veri/cariler 67.8, /ana-veri/receteler 63.5 — hepsi 56-72 hedefinde. 10 rotanın 20 ekran görüntüsü (1440x900 + 390x844) yeniden alındı ve gözle karşılaştırıldı. Hiçbir rotada yatay taşma yok (scrollWidth = clientWidth her iki viewport'ta), tablo satırları 36px, h1 masaüstü 24/600 mobil 20/600, distinctColors 11-19. 390x844 touchTargetsBelow44 listesi tüm rotalarda yalnızca etkileşimsiz breadcrumb span'i (+/urunler/yeni'de Radix'in aria-hidden 1x1 native <select>'leri). DB yeniden tohumlandı, dinamik [id] örnekleri güncellendi (ürün 69d5a13d-..., cari db9c015d-..., reçete 736922be-...). Kod düzeyi tarama temiz: masterdata modülünde ve (app)/ana-veri altında transition-all / ease-in / scale(0) / 300ms+ süre / transform-origin YOK; tek '400ms' eşleşmesi loading-skeletons.tsx:8'deki yorum. hover globals.css:10'da @custom-variant ile (hover:hover) and (pointer:fine) altında. SONUÇ: 10/10 rota kazandı, açık P0/P1 yok.",
   "routes": {
     "/ana-veri/urunler": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -25,9 +25,9 @@
         5
       ],
       "total": 60,
-      "delta": "60 -> 60 (değişiklik yok). Ölçüm yeniden alındı: 1440x900 scrollWidth 1440 = clientWidth, 50 satır [36,36,36], h1 24/600, fonts {11:102,12:163,13:224}, colors 16. 390x844 kart 63.5-68.5px, overflowX false, touch<44 yalnızca breadcrumb span'i. Probe: 'Aktif' rozeti listede şeffaf + muted-foreground, MoneyCell sıfırları text-muted-foreground/70.",
+      "delta": "60 -> 60 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (60 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: scrollWidth 1440 = clientWidth 1440, rows 50 [36,36,36], h1 24/600, fonts {11:102,12:163,13:224}, distinctColors 16. 390x844: rows 50 [63.5,63.5,68.5], overflowX false, h1 20/600, fonts {12:153,13:54,14:54}, touch<44 = [breadcrumb-page 'Ürünler' 46.2x19.5].",
+      "measure": "1440x900: scrollWidth 1440 = clientWidth 1440, overflowX false, rows 50 [36,36,36], h1 24/600, fonts {11:102,12:163,13:224}, colors 16. 390x844: rows 50 [63.5,63.5,68.5], overflowX false, h1 20/600, touch<44 = [breadcrumb-page 'Ürünler' 46.2x19.5], colors 14.",
       "open": [],
       "closed": [],
       "p2": [
@@ -38,9 +38,9 @@
       ]
     },
     "/ana-veri/urunler/[id]": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
-      "sample": "e56742e3-5e9e-4922-8fe0-9038620e1caa (110010001 BADEM BAZI, liste sırasının ilki)",
+      "sample": "69d5a13d-b3c0-463a-bfd7-dd4265f05224 (110010001 BADEM BAZI, liste sırasının ilki)",
       "scores": [
         5,
         5,
@@ -56,9 +56,9 @@
         5
       ],
       "total": 57,
-      "delta": "57 -> 57 (değişiklik yok). Kriter 4 = 4 ve 11 = 4 KALIYOR: probe bu tur da 'Aktif' rozetini burada color oklch(0.6 0.16 152) + bg oklab(0.6 -0.141272 0.0751154 / 0.12) (dolgulu yeşil) gösteriyor; aynı statü listede oklch(0.552 0.016 285.9) + şeffaf, /ana-veri/cariler/[id]'de muted + bg-muted/0.6, /ana-veri/receteler/[id]'de foreground/0.8 + bg oklch(0.967) — tek statü, dört farklı (color,bg) üçlüsü. Kriter 6 = 4 KALIYOR (Ortalama/standart maliyet ₺0,00 color oklch(0.21 0.006 285.9) tam foreground; listede MoneyCell aynı değeri text-muted-foreground/70 ile basıyor).",
-      "verdict": "KAZANAN: Plantero (57 = 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, h1 24/600, rows 0 (tablo yok), fonts {12:28,13:55,14:11}, colors 16. 390x844: overflowX false, h1 20/600, fonts {12:28,13:34,14:11}, touch<44 = [breadcrumb-page 'Detay' 36.2x19.5]. Probe: aktif rozeti color oklch(0.6 0.16 152) / bg oklab(0.6 -0.141272 0.0751154 / 0.12); ₺0,00 x2 color oklch(0.21 0.006 285.9).",
+      "delta": "57 -> 57 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
+      "verdict": "KAZANAN: Plantero (57 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
+      "measure": "1440x900: overflowX false, rows 0, h1 24/600, fonts {12:28,13:55,14:11}, colors 16. 390x844: overflowX false, h1 20/600, fonts {12:28,13:34,14:11}, touch<44 = [breadcrumb-page 'Detay' 36.2x19.5], colors 15.",
       "open": [],
       "closed": [],
       "p2": [
@@ -77,7 +77,7 @@
       ]
     },
     "/ana-veri/urunler/yeni": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -94,9 +94,9 @@
         5
       ],
       "total": 58,
-      "delta": "58 -> 58 (değişiklik yok). Kriter 9 = 5 doğrulandı (390x844 overflowX false, touch<44'te yalnızca Radix'in aria-hidden 1x1 native <select>'leri + breadcrumb span'i). Kriter 2 = 4 KALIYOR (FormSwitch etiket-kontrol boşluğu — shell-form-switch-02, shell kartında açık). Kriter 7 = 4 KALIYOR: bu tur ölçüldü — eksik kimlik segmentiyle 'Ürünü oluştur' disabled + 'Kimlik segmentlerini tamamlayın (T·AA·BB·CC·PP)' ipucu var (iyi), ancak alan düzeyi doğrulama mesajı (form-message / aria-invalid) hiç basılmıyor: probe'da [data-slot=form-message], [role=alert], [aria-invalid=true] sayısı 0. Kanıtsız yükseltme yapılmadı.",
+      "delta": "58 -> 58 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (58 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, h1 24/600, fonts {11:7,12:33,13:56,20:5}, colors 16. 390x844: overflowX false, h1 20/600, fonts {11:6,12:32,13:35,20:6}, touch<44 = [breadcrumb span + 4x aria-hidden 1x1 native <select>]. Form probe: submit disabled=true, ipucu 1 adet, form-message/alert/aria-invalid = 0.",
+      "measure": "1440x900: overflowX false, h1 24/600, fonts {11:7,12:33,13:56,20:5}, colors 16. 390x844: overflowX false, h1 20/600, touch<44 = [breadcrumb span 'Yeni' + 4x aria-hidden 1x1 native <select>], colors 14.",
       "open": [],
       "closed": [],
       "p2": [
@@ -107,7 +107,7 @@
       ]
     },
     "/ana-veri/cariler": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -124,9 +124,9 @@
         5
       ],
       "total": 60,
-      "delta": "60 -> 60 (değişiklik yok). Ölçüm yeniden alındı ve doğrulandı.",
+      "delta": "60 -> 60 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (60 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, rows 17 [36,36,36], h1 24/600, fonts {11:19,12:24,13:90}, colors 19. 390x844: rows 17 [67.8,67.8,67.8], overflowX false, h1 20/600, touch<44 = [breadcrumb-page 'Cariler' 41.3x19.5].",
+      "measure": "1440x900: overflowX false, rows 17 [36,36,36], h1 24/600, fonts {11:19,12:24,13:90}, colors 19. 390x844: rows 17 [67.8,67.8,67.8], overflowX false, h1 20/600, touch<44 = [breadcrumb-page 'Cariler' 41.3x19.5], colors 16.",
       "open": [],
       "closed": [],
       "p2": [
@@ -137,9 +137,9 @@
       ]
     },
     "/ana-veri/cariler/[id]": {
-      "round": 13,
+      "round": 15,
       "reference": "stripe",
-      "sample": "82d0867b-c6ee-48d1-a590-af32c250c5e0 (S-000005 Anadolu Kuruyemiş, ad sırasının ilki)",
+      "sample": "db9c015d-e002-41b8-93f2-b4cb70648c27 (S-000005 Anadolu Kuruyemiş, ad sırasının ilki)",
       "scores": [
         5,
         5,
@@ -155,9 +155,9 @@
         5
       ],
       "total": 58,
-      "delta": "58 -> 58 (değişiklik yok). Kriter 4 = 5 doğrulandı (probe: yeşil taşıyan tek bileşen 'Tahsil edildi' rozeti; 'Aktif' bg-muted/0.6 + muted-foreground, 'Kaydedildi' nötr). Kriter 11 = 4 KALIYOR (boş alan politikası: burada 9 em-dash basılıyor, 'Boş alanları göster' rayı yok; /ana-veri/urunler/[id] aynı ızgarayı 'Boş alanları göster (3)' ile kullanıyor). Kriter 3 = 4 KALIYOR (Kimlik & Vergi + İletişim'in 6 alanının 5'i '—').",
+      "delta": "58 -> 58 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (58 >= 56, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, rows 2 [36,36,36], h1 24/600, colors 19. 390x844: overflowX false (documentElement 390 = 390), rows 2 [64,64,64], h1 20/600, touch<44 = [breadcrumb-page 'Detay' 36.2x19.5]. Probe: greenEls = ['Tahsil edildi']; 'Aktif' color oklch(0.552 0.016 285.9) / bg oklab(0.967 .. /0.6).",
+      "measure": "1440x900: overflowX false, rows 2 [36,36,36], h1 24/600, fonts {11:10,12:24,13:49,19:3(KPI)}, colors 19. 390x844: overflowX false, rows 2 [64,64,64], h1 20/600, touch<44 = [breadcrumb-page 'Detay' 36.2x19.5], colors 19.",
       "open": [],
       "closed": [],
       "p2": [
@@ -172,7 +172,7 @@
       ]
     },
     "/ana-veri/receteler": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -189,9 +189,9 @@
         5
       ],
       "total": 59,
-      "delta": "59 -> 59 (değişiklik yok). Kriter 5 = 4 KALIYOR ('Ürün' sütunu ~700px genişlikte, en uzun içerik ~250px — 'Reçete Kodu' ~1045px'te başlıyor; kök neden shell-datatable-slack-01, shell kartında açık, burada tekrar açılmadı).",
+      "delta": "59 -> 59 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (59 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, rows 38 [36,36,36], h1 24/600, fonts {12:82,13:136}, colors 17. 390x844: rows 38 [63.5,63.5,63.5], overflowX false, h1 20/600, touch<44 = [breadcrumb-page 'Reçeteler' 58.9x19.5].",
+      "measure": "1440x900: overflowX false, rows 38 [36,36,36], h1 24/600, fonts {12:82,13:136}, colors 17. 390x844: rows 38 [63.5,63.5,63.5], overflowX false, h1 20/600, touch<44 = [breadcrumb-page 'Reçeteler' 58.9x19.5], colors 14.",
       "open": [],
       "closed": [],
       "p2": [
@@ -202,9 +202,9 @@
       ]
     },
     "/ana-veri/receteler/[id]": {
-      "round": 13,
+      "round": 15,
       "reference": "stripe",
-      "sample": "da48fdc8-fef3-4032-9b8a-1aee80401fb5 (BOM-110010001-v1, liste sırasının ilki)",
+      "sample": "736922be-0f0f-417a-9355-89134c9cf1d7 (BOM-110010001-v1, liste sırasının ilki)",
       "scores": [
         5,
         5,
@@ -220,9 +220,9 @@
         5
       ],
       "total": 58,
-      "delta": "57 -> 58. Kriter 9: 4->5 (ana-veri-recete-detay-01 KAPANDI ve bu tur BAĞIMSIZ ölçümle doğrulandı: pnpm measure /ana-veri/receteler/da48fdc8-... --viewport 390x844 -> touchTargetsBelow44 = [{span[data-slot=\"breadcrumb-page\"] \"Detay\", 36.2x19.5}] — tek kalan öğe etkileşimsiz breadcrumb span'i; eyebrow <a> \"110010001 — BADEM BAZI\" artık listede yok (masaüstünde hâlâ 157.5x16, orada 44px kuralı geçerli değil). Düzeltme commit dbc4376. Masaüstü görünüm ekran görüntüsüyle karşılaştırıldı, değişmedi. Kriter 3 = 4 ve kriter 5 = 4 KALIYOR ('Bileşen' sütunu kalan boşluğu emiyor — kök neden shell-datatable-slack-01; 6 satırlık tablo ilk ekranın %25'ini dolduruyor).",
+      "delta": "58 -> 58 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (58 >= 56, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, rows 6 [36,36,36], h1 24/600, fonts {11:15,12:14,13:55,20:5(KPI)}, colors 17. 390x844: overflowX false, rows 6 [36,36,36], h1 20/600, fonts {11:14,13:21,20:6}, touchTargetsBelow44 = [breadcrumb-page 'Detay' 36.2x19.5].",
+      "measure": "1440x900: overflowX false, rows 6 [36,36,36], h1 24/600, fonts {11:15,12:14,13:55,20:5(KPI)}, colors 17. 390x844: overflowX false, rows 6 [36,36,36], h1 20/600, touch<44 = [breadcrumb-page 'Detay' 36.2x19.5], colors 17.",
       "open": [],
       "closed": [
         {
@@ -253,7 +253,7 @@
       ]
     },
     "/ana-veri/depolar": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -270,9 +270,9 @@
         5
       ],
       "total": 58,
-      "delta": "58 -> 58 (değişiklik yok). Kriter 1 = 5 doğrulandı (390x844 fonts {11:14,12:26,13:97,14:4}; kalan 5 adet 10px kabuğun ⌘K/⌘B kbd ipuçları). Kriter 9 = 5 doğrulandı (touch<44 = yalnızca breadcrumb span'i; masaüstündeki 12x12 tooltip ve 20x20 ağaç düğmeleri 390px'te dokunma yastığı alıyor). Kriter 2 = 4 KALIYOR (tek sayfada iki özdeş 'Kod ya da ad ara...' kutusu). Kriter 5 = 4 KALIYOR ve ölçümle sabitlendi: probe'da 'Red' rozetinin metni oklch(0.577 0.245 27.3) kırmızı, diğer 8 durumun metni oklab(0.21 .. /0.8) nötr — aynı sütunda iki metin rengi politikası; nokta rengi anlamı zaten taşıyor.",
+      "delta": "58 -> 58 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (58 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, h1 24/600, fonts {11:13,12:58,13:69,16:2}, colors 15, ağaç satırı 36px. 390x844: overflowX false, h1 20/600, fonts {11:14,12:26,13:97,14:4}, touch<44 = [breadcrumb-page 'Depolar' 48.6x19.5]. Probe: 9 durum rozeti tek anatomi (bg oklab(0.967 .. /0.4) + renkli nokta); tek istisna 'Red' metin rengi.",
+      "measure": "1440x900: overflowX false, h1 24/600, fonts {11:13,12:58,13:69,16:2}, colors 15, ağaç satırı 36px. 390x844: overflowX false, h1 20/600, fonts {11:14,12:26,13:97}, touch<44 = [breadcrumb-page 'Depolar' 48.6x19.5], colors 15.",
       "open": [],
       "closed": [],
       "p2": [
@@ -291,7 +291,7 @@
       ]
     },
     "/ana-veri/import": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -308,9 +308,9 @@
         5
       ],
       "total": 59,
-      "delta": "59 -> 59 (değişiklik yok). Kriter 3 = 4 KALIYOR (ilk ekranda tek dropzone + boş durum; 'Beklenen sütunlar' varsayılan kapalı). Kriter 7 = 5 doğrulandı (dropzone + 'Önce bir .xlsx dosyası seçin.' disabled durumu + ikonlu 'Henüz içe aktarım yapılmadı' EmptyState + (app)/error.tsx sınırı).",
+      "delta": "59 -> 59 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (59 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: scrollWidth 1440 = clientWidth, rows 10 [36,36,36], h1 24/600, colors 15. 390x844: rows 10 [36,36,37], overflowX false, tek kolon, h1 20/600, touch<44 = [breadcrumb-page 'İçe Aktarım' 70.5x19.5].",
+      "measure": "1440x900: overflowX false, rows 10 [36,36,36], h1 24/600, colors 15. 390x844: rows 10 [36,36,37], overflowX false, tek kolon, h1 20/600, touch<44 = [breadcrumb-page 'İçe Aktarım' 70.5x19.5], colors 14.",
       "open": [],
       "closed": [],
       "p2": [
@@ -321,7 +321,7 @@
       ]
     },
     "/ana-veri/kod-yapisi": {
-      "round": 13,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -338,9 +338,9 @@
         5
       ],
       "total": 58,
-      "delta": "58 -> 58 (değişiklik yok). Kriter 9 = 5 doğrulandı ve tur 12'nin p2'si KAPANDI: segments-table.tsx:117 arama input'u artık 'h-11 ... md:h-9' — 390x844 touchTargetsBelow44'te yok (tur 12'de 358x36'ydı). Kriter 7 = 4 KALIYOR (segments-table.tsx:143 boş aramada EmptyState değil çıplak <p class='text-[13px] text-muted-foreground'>'Aramayla eşleşen kayıt yok.' basıyor; ikon+eylem yok, beş tablo birden bu satıra düşüyor). Kriter 2 = 4 KALIYOR (T ve PP tablolarının sağında ~570px boş hücre).",
+      "delta": "58 -> 58 (değişiklik yok — hızlı tur: 1440x900 + 390x844 ölçümüyle ve 2 ekran görüntüsüyle doğrulandı, yeniden puanlanmadı; açık bulgu yok, son 8 commit bu rotanın kaynak dosyalarına dokunmadı).",
       "verdict": "KAZANAN: Plantero (58 >= 57, hiçbir kriter < 4, açık P0/P1 yok)",
-      "measure": "1440x900: overflowX false, rows 46 [36,36,40], h1 24/600, fonts {12:57,13:94}, colors 13. 390x844: rows 46 [36,36,79], overflowX false, h1 20/600, fonts {12:57,13:74}, touch<44 = [breadcrumb-page 'Kod Yapısı' 64.8x19.5] (arama input'u artık listede YOK).",
+      "measure": "1440x900: overflowX false, rows 46 [36,36,40], h1 24/600, fonts {12:57,13:94}, colors 13. 390x844: rows 46 [36,36,79], overflowX false, h1 20/600, touch<44 = [breadcrumb-page 'Kod Yapısı' 64.8x19.5], colors 11.",
       "open": [],
       "closed": [],
       "p2": [
@@ -409,7 +409,7 @@
     }
   ],
   "codeScan": {
-    "round": 13,
+    "round": 15,
     "scope": "apps/web/src/modules/masterdata/**, apps/web/src/app/(app)/ana-veri/**",
     "transitionAll": 0,
     "easeIn": 0,
@@ -421,11 +421,11 @@
     "verdict": "temiz"
   },
   "summary": {
-    "round": 13,
+    "round": 15,
     "routesWon": 10,
     "routesLost": 0,
     "openP0": 0,
     "openP1": 0,
-    "verdict": "ana-veri modülünde 10/10 rota kazandı; açık P0/P1 yok. Kalan bulgular P2 (yeşil 'Aktif' rozetinin dört farklı anatomisi, detayda sıfır para tam foreground, DataTable sütun ölü boşluğu — sonuncusu shell kaynaklı)."
+    "verdict": "ana-veri modülünde 10/10 rota kazandı; açık P0/P1 yok. Kalan bulgular P2 (yeşil 'Aktif' rozetinin dört farklı anatomisi, detayda sıfır para tam foreground, DataTable sütun ölü boşluğu — sonuncusu shell kaynaklı, shell-form-switch-02 shell kartında açık)."
   }
 }

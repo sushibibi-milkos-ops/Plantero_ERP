@@ -1,7 +1,7 @@
 {
   "routes": {
     "/operator/[lineId]": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "closed": [
         {
@@ -50,10 +50,11 @@
         5
       ],
       "total": 59,
-      "scoreNotes": "Tur 11'de ilk kez 12 kriter puanlandı (önceki turlarda yalnızca bulgu kaydı vardı). Ölçüm: 1024x768 / 390x844 / 1440x900 → overflowX false, touchTargetsBelow44 boş, distinctColors 10, h1 24/20px. Kriter 3: 4 (operatör terminali bilinçli iri). Tur 12: 1024x768 + 390x844 yeniden çekildi/ölçüldü — overflowX false, touchTargetsBelow44 boş (lot okutma girişi dahil), distinctColors 10. Puan korunuyor (59). Tur 13: 1024x768 + 390x844 yeniden çekildi/ölçüldü — overflowX false, touchTargetsBelow44 boş (lot okutma girişi dahil), distinctColors 10, h1 24/20px. Yeni bulgu yok, puan korunuyor (59). Tur 14 (hızlı tur doğrulaması): @1024x768, @390x844 ve @1440x900 → overflowX false, touchTargetsBelow44 boş, h1 24/600 (tablet/masaüstü) ve 20/600 (mobil), distinctColors 10. Yeni bulgu yok, 59 korunuyor."
+      "scoreNotes": "Tur 11'de ilk kez 12 kriter puanlandı (önceki turlarda yalnızca bulgu kaydı vardı). Ölçüm: 1024x768 / 390x844 / 1440x900 → overflowX false, touchTargetsBelow44 boş, distinctColors 10, h1 24/20px. Kriter 3: 4 (operatör terminali bilinçli iri). Tur 12: 1024x768 + 390x844 yeniden çekildi/ölçüldü — overflowX false, touchTargetsBelow44 boş (lot okutma girişi dahil), distinctColors 10. Puan korunuyor (59). Tur 13: 1024x768 + 390x844 yeniden çekildi/ölçüldü — overflowX false, touchTargetsBelow44 boş (lot okutma girişi dahil), distinctColors 10, h1 24/20px. Yeni bulgu yok, puan korunuyor (59). Tur 14 (hızlı tur doğrulaması): @1024x768, @390x844 ve @1440x900 → overflowX false, touchTargetsBelow44 boş, h1 24/600 (tablet/masaüstü) ve 20/600 (mobil), distinctColors 10. Yeni bulgu yok, 59 korunuyor. Tur 15 (hızlı tur doğrulaması, HAT2 eb52cc98 / WO-2026-000007): @1024x768 overflowX false, h1 24/600, distinctColors 10, touchTargetsBelow44 BOŞ (Duraklat/Fire gir/Bitir 80px yükseklik); @390x844 overflowX false, h1 20/600, touchTargetsBelow44 BOŞ. Lot okut alanı, reçete malzeme listesi ve son tüketimler tam görünüyor. Açık bulgu yok. Toplam 59 → KAZANAN: Plantero.",
+      "winner": "Plantero"
     },
     "/uretim/is-emirleri": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -76,12 +77,12 @@
           "criterion": 5,
           "severity": "P2",
           "text": "Mobil iş emri kartının meta satırındaki truncate uretim-is-emirleri-03 kapatılırken belge numarasından tarihe taşındı; taşma kaldırılmadı, yer değiştirdi. 390px'te 8 kartın 8'inde tarih kırpılıyor ('04.09.20…', '27.0…'), yıl hiçbir kartta görünmüyor. Linear mobil satırında tarih ya kısa biçimde ('4 Eyl') ya tam basılır, yarım basılmaz.",
-          "measure": "Tur 14 yeniden ölçüm — Playwright DOM probu @390x844 (/uretim/is-emirleri, güncel seed): text-overflow:ellipsis olan tarih span'lerinde scrollWidth/clientWidth → 04.09.2026 66/58, 01.09.2026 66/58, 28.08.2026 66/41, 21.08.2026 66/58, 14.08.2026 66/58, 07.08.2026 66/49 → ölçülebilir eşiğin üstünde 6/8 kart kırpık (kesilen genişlik 8–25px); ekran görüntüsünde 8/8 kartta üç nokta görünüyor (kalan 2'si alt piksel farkı). Belge no 8/8 tam. Sayfa taşması yok (scrollWidth 390 = clientWidth 390).",
+          "measure": "Tur 14 yeniden ölçüm — Playwright DOM probu @390x844 (/uretim/is-emirleri, güncel seed): text-overflow:ellipsis olan tarih span'lerinde scrollWidth/clientWidth → 04.09.2026 66/58, 01.09.2026 66/58, 28.08.2026 66/41, 21.08.2026 66/58, 14.08.2026 66/58, 07.08.2026 66/49 → ölçülebilir eşiğin üstünde 6/8 kart kırpık (kesilen genişlik 8–25px); ekran görüntüsünde 8/8 kartta üç nokta görünüyor (kalan 2'si alt piksel farkı). Belge no 8/8 tam. Sayfa taşması yok (scrollWidth 390 = clientWidth 390). | Tur 15: pnpm shot /uretim/is-emirleri @390x844 → 8/8 kartta tarih üç noktayla kırpık ('05.09.20…', '04.09.2…', '28.08…', '14.08.2…', '07.08.…'); pnpm measure @390x844 → overflowX false, kart 70,5px, touchTargetsBelow44 yalnızca breadcrumb-page (etkileşimsiz span, false-positive).",
           "target": "390px'te tarih de tam görünsün (scrollWidth ≤ clientWidth): tarihi mobil kartta kısa biçimde bas (ör. `04.09.26` ya da `4 Eyl`) ya da HAT rozetini/ayraçları daraltarak 66px'lik tarihe yer aç.",
           "file": "apps/web/src/modules/production/components/work-orders-table.tsx (WorkOrderMobileCard meta satırı)",
           "openedRound": 13,
-          "status": "açık — Tur 13'ten beri değişmedi",
-          "lastMeasuredRound": 14
+          "status": "açık — Tur 15'te de doğrulandı",
+          "lastMeasuredRound": 15
         }
       ],
       "closed": [
@@ -128,10 +129,11 @@
           "verifiedBy": "Playwright DOM probu (clientWidth/scrollWidth) + pnpm measure + pnpm shot (Tur 13 düzeltme turu)"
         }
       ],
-      "scoreNotes": "Tur 12: Kriter 5: 5→4 (gerekçe: mobil kart meta satırı 8 karttan 6'sında belge numarasını kırpıyor — uretim-is-emirleri-03; ölçüm: clientWidth 67-84 vs scrollWidth 92). Masaüstü değişmedi: satır 37px/13px, taşma yok, tabular-nums sağ hizalı, 8 satır tam görünür. Mobil kart 70,5px (hedef 56-72) korunuyor, touchTargetsBelow44 yalnızca ilgisiz breadcrumb false-positive. Tur 13: Kriter 5: 4→5 (uretim-is-emirleri-03 kapatıldı — docNo/HAT artık shrink-0, truncate tarihe taşındı; Playwright probu 8/8 kartta docNo tam). Diğer ölçümler değişmedi (satır 37px/70.5px, overflowX false). Tur 13 (kritik turu): Kriter 5: 5→4 (gerekçe: truncate kaldırılmadı, docNo'dan tarihe taşındı — 8/8 kartta tarih kırpık, yıl görünmüyor; uretim-is-emirleri-04, P2). Masaüstü değişmedi: satır 37px/13px, overflowX false, 8 satır tam görünür, distinctColors 20. Mobil kart 70.5px, touchTargetsBelow44 yalnızca breadcrumb false-positive. Toplam 60→59 (≥57, P2 kazanmayı engellemez → KAZANAN: Plantero). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, satır yüksekliği 36,5–37px (8 satır), h1 24/600, distinctColors 20; @390x844 overflowX false, kart yüksekliği 70,5px, touchTargetsBelow44 boş (breadcrumb hariç). uretim-is-emirleri-04 (P2) yeniden ölçüldü, açık kaldı — kriter 5 = 4 korunuyor. Toplam 59."
+      "scoreNotes": "Tur 12: Kriter 5: 5→4 (gerekçe: mobil kart meta satırı 8 karttan 6'sında belge numarasını kırpıyor — uretim-is-emirleri-03; ölçüm: clientWidth 67-84 vs scrollWidth 92). Masaüstü değişmedi: satır 37px/13px, taşma yok, tabular-nums sağ hizalı, 8 satır tam görünür. Mobil kart 70,5px (hedef 56-72) korunuyor, touchTargetsBelow44 yalnızca ilgisiz breadcrumb false-positive. Tur 13: Kriter 5: 4→5 (uretim-is-emirleri-03 kapatıldı — docNo/HAT artık shrink-0, truncate tarihe taşındı; Playwright probu 8/8 kartta docNo tam). Diğer ölçümler değişmedi (satır 37px/70.5px, overflowX false). Tur 13 (kritik turu): Kriter 5: 5→4 (gerekçe: truncate kaldırılmadı, docNo'dan tarihe taşındı — 8/8 kartta tarih kırpık, yıl görünmüyor; uretim-is-emirleri-04, P2). Masaüstü değişmedi: satır 37px/13px, overflowX false, 8 satır tam görünür, distinctColors 20. Mobil kart 70.5px, touchTargetsBelow44 yalnızca breadcrumb false-positive. Toplam 60→59 (≥57, P2 kazanmayı engellemez → KAZANAN: Plantero). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, satır yüksekliği 36,5–37px (8 satır), h1 24/600, distinctColors 20; @390x844 overflowX false, kart yüksekliği 70,5px, touchTargetsBelow44 boş (breadcrumb hariç). uretim-is-emirleri-04 (P2) yeniden ölçüldü, açık kaldı — kriter 5 = 4 korunuyor. Toplam 59. Tur 15 (hızlı tur doğrulaması): @1440x900 overflowX false, satır 36,5-37px (8 satır), h1 24/600, distinctColors 20, fontSizes {11:22,12:36,13:63,24:1}; @390x844 overflowX false, kart 70,5px. uretim-is-emirleri-04 (P2) yeniden ölçüldü, açık kaldı — kriter 5 = 4 korunuyor. Toplam 59 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok → KAZANAN: Plantero.",
+      "winner": "Plantero"
     },
     "/uretim/is-emirleri/[id]": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -193,10 +195,11 @@
           "verifiedBy": "pnpm measure + pnpm shot (Tur 11 düzeltme turu)"
         }
       ],
-      "scoreNotes": "Kriter 3: 3→5 (mobil malzeme kartı 164,5px → 71,3px, ölçüldü). Kriter 9: 3→4 (sekme şeridi 36px→44px, tetikleyiciler 29px→44px; yalnızca 'Fire' sekmesi 43,2px genişlikte kaldı, 5 değil 4). Tur 11 düzeltme turu — Kriter 9: 4→5 (Fire sekmesi tetikleyicisi 43,2px→≥44px min-w-11 ile, uretim-wo-detay-03 kapatıldı). Tur 12: yeniden ölçüldü, değişiklik yok — @390x844 rows.heights [71,3], touchTargetsBelow44 yalnızca breadcrumb false-positive, overflowX false; @1440x900 satır 37px, 12 malzeme satırı tam görünür. Puan korunuyor (60). Tur 13: yeniden ölçüldü — @1440x900 satır 36.5-37px, 12 malzeme satırı tam görünür, overflowX false, distinctColors 15; @390x844 rows.heights [71.3], touchTargetsBelow44 boş. Yeni bulgu yok, puan korunuyor (60). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, 12 satır 36,5–37px, h1 24/600, distinctColors 15; @390x844 overflowX false, kart 71,3px, h1 20/600, touchTargetsBelow44 boş (breadcrumb hariç). Yeni bulgu yok, 60 korunuyor."
+      "scoreNotes": "Kriter 3: 3→5 (mobil malzeme kartı 164,5px → 71,3px, ölçüldü). Kriter 9: 3→4 (sekme şeridi 36px→44px, tetikleyiciler 29px→44px; yalnızca 'Fire' sekmesi 43,2px genişlikte kaldı, 5 değil 4). Tur 11 düzeltme turu — Kriter 9: 4→5 (Fire sekmesi tetikleyicisi 43,2px→≥44px min-w-11 ile, uretim-wo-detay-03 kapatıldı). Tur 12: yeniden ölçüldü, değişiklik yok — @390x844 rows.heights [71,3], touchTargetsBelow44 yalnızca breadcrumb false-positive, overflowX false; @1440x900 satır 37px, 12 malzeme satırı tam görünür. Puan korunuyor (60). Tur 13: yeniden ölçüldü — @1440x900 satır 36.5-37px, 12 malzeme satırı tam görünür, overflowX false, distinctColors 15; @390x844 rows.heights [71.3], touchTargetsBelow44 boş. Yeni bulgu yok, puan korunuyor (60). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, 12 satır 36,5–37px, h1 24/600, distinctColors 15; @390x844 overflowX false, kart 71,3px, h1 20/600, touchTargetsBelow44 boş (breadcrumb hariç). Yeni bulgu yok, 60 korunuyor. Tur 15 (hızlı tur doğrulaması, WO-2026-000007 / c8e2ff35): @1440x900 overflowX false, tablo satırı 36,5-37px (12 satır), h1 24/600, distinctColors 15, fontSizes {11:56,13:72,20:2,24:1}; @390x844 overflowX false, kart 71,3px, touchTargetsBelow44 yalnızca breadcrumb false-positive. Sekmeler altı çizgili, miktarlar tabular sağ hizalı + soluk birim eki. Açık bulgu yok. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
+      "winner": "Plantero"
     },
     "/uretim/is-emirleri/yeni": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -230,10 +233,11 @@
           "verifiedBy": "pnpm measure + pnpm shot (Tur 11)"
         }
       ],
-      "scoreNotes": "Kriter 2: 4→5 (H1 sol kenarı 265px, form kartı sol kenarı 458px iken artık ikisi de 264px — tek eksen, Playwright DOM ölçümü ile doğrulandı). Tur 12: yeniden ölçüldü — H1 ve form kartı tek eksende (264px), overflowX false, mobilde touchTargetsBelow44 yalnızca breadcrumb + görünmez yerel select false-positive'leri. Puan korunuyor (60). Tur 13: yeniden ölçüldü — @1440x900 overflowX false, h1 24/600, distinctColors 15; @390x844 touchTargetsBelow44 yalnızca 1x1 gizli native select false-positive'leri. Yeni bulgu yok, puan korunuyor (60). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, h1 24/600, font ölçeği 13px baskın; @390x844 overflowX false, h1 20/600, touchTargetsBelow44 yalnızca Radix'in gizli native select'i (aria-hidden, 1x1) ve breadcrumb — gerçek dokunma hedefi değil. Yeni bulgu yok, 60 korunuyor."
+      "scoreNotes": "Kriter 2: 4→5 (H1 sol kenarı 265px, form kartı sol kenarı 458px iken artık ikisi de 264px — tek eksen, Playwright DOM ölçümü ile doğrulandı). Tur 12: yeniden ölçüldü — H1 ve form kartı tek eksende (264px), overflowX false, mobilde touchTargetsBelow44 yalnızca breadcrumb + görünmez yerel select false-positive'leri. Puan korunuyor (60). Tur 13: yeniden ölçüldü — @1440x900 overflowX false, h1 24/600, distinctColors 15; @390x844 touchTargetsBelow44 yalnızca 1x1 gizli native select false-positive'leri. Yeni bulgu yok, puan korunuyor (60). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, h1 24/600, font ölçeği 13px baskın; @390x844 overflowX false, h1 20/600, touchTargetsBelow44 yalnızca Radix'in gizli native select'i (aria-hidden, 1x1) ve breadcrumb — gerçek dokunma hedefi değil. Yeni bulgu yok, 60 korunuyor. Tur 15 (hızlı tur doğrulaması): @1440x900 overflowX false, h1 24/600, fontSizes {13:33,14:5,24:1} (3 kademe), distinctColors 15; @390x844 overflowX false, h1 20/600, tek kolon form, touchTargetsBelow44 yalnızca breadcrumb + görsel olarak gizli native <select> (1x1, shell deseni — özel tetikleyici 36px). Boş durum 'Reçete henüz hesaplanmadı' ikon+metin+alt açıklama ile duruyor. Açık bulgu yok. Toplam 60 → KAZANAN: Plantero.",
+      "winner": "Plantero"
     },
     "/uretim/planlama": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -242,15 +246,28 @@
         5,
         5,
         5,
-        5,
+        4,
         5,
         5,
         5,
         5,
         5
       ],
-      "total": 59,
-      "open": [],
+      "total": 58,
+      "open": [
+        {
+          "id": "uretim-planlama-05",
+          "criterion": 7,
+          "severity": "P2",
+          "text": "'Planlanmamış' sütununun boş-durum metni 'Tüm iş emirleri planlandı' sütun düzeyinde bir iddia ama yalnızca ilk hat satırının hücresinde (showEmptyLabel={isFirstRow}) basılıyor. HAT1'in hücresi boş, HAT2/HAT3'ünkü doluysa ekranda aynı sütunda üst üste 'Tüm iş emirleri planlandı' metni ve hemen altında planlanmamış iş emri kartı görünür — metin yalan söyler. (Tur 12'de operatör boş hat kartında kapatılan çelişkili boş-durum sınıfının aynısı, d2a99ef.)",
+          "measure": "Kod düzeyi, koşulsuz: planning-board.tsx:331 etiketin görünürlüğü yalnızca `isFirstRow`a bağlı; diğer hatların `byCell.get(lineId:unscheduled)` uzunluğuna bakılmıyor. Mevcut seed'de üç hattın da planlanmamış hücresi boş olduğu için Tur 15 ekran görüntüsünde çelişki görünmüyor (canlı doğrulama DB yazma izni olmadığı için yapılamadı); tek bir 'kartı Planlanmamış sütununa sürükle' etkileşimi durumu üretir.",
+          "target": "Etiket sütun düzeyinde koşullansın: yalnızca TÜM hatların unscheduled hücresi boşken ilk satırda basılsın (ör. `showEmptyLabel={isFirstRow && allUnscheduledEmpty}`), aksi halde diğer satırlardaki Plus ipucu deseni kullanılsın.",
+          "file": "apps/web/src/modules/production/components/planning-board.tsx:331 (UnscheduledCell showEmptyLabel) + :285 (LineRow isFirstRow aktarımı)",
+          "openedRound": 15,
+          "status": "açık",
+          "lastMeasuredRound": 15
+        }
+      ],
       "closed": [
         {
           "id": "uretim-planlama-01",
@@ -309,10 +326,11 @@
           "verifiedBy": "psql + pnpm shot (desktop+mobile) + pnpm typecheck/lint/test + pnpm db:reset/db:check (Tur 14 düzeltme turu)"
         }
       ],
-      "scoreNotes": "Kriter 5: 4→5 (gün hücrelerinden border-r kaldırıldı; yalnızca yapısal sütun ayraçları + satır hairline'ı kaldı — 'çerçeve çorbası' giderildi). Kriter 9: 3→5 ('7 gün'/'14 gün' 40px→44px, ölçümde touchTargetsBelow44 boş). Kriter 6: 5→4 (mobil kartta birim yok — uretim-planlama-03). Kriter 3: 4 (3 hat × 9 sütunluk pano 1440x900'ün üst ~470px'ini kullanıyor, veri kaynaklı; değişmedi). Tur 11 düzeltme turu — Kriter 6: 4→5 (mobil gün kartında miktarın yanında birim (ADET) görünüyor, uretim-planlama-03 kapatıldı). Tur 12: yeniden ölçüldü — @1440x900 overflowX false, h1 24/600; @390x844 touchTargetsBelow44 boş (breadcrumb hariç). \"Planlanmamış\" sütunundaki tek satırlık boş-durum metni bilinçli (kod yorumu, Tur 5 P2). Puan korunuyor (59). Tur 13: yeniden ölçüldü — @1440x900 overflowX false, h1 24/600, distinctColors 26; @390x844 overflowX false, touchTargetsBelow44 yalnızca breadcrumb false-positive. Yeni bulgu yok, puan korunuyor (59). Tur 14: Kriter 11: 5→4 (uretim-planlama-04 — aynı iş emri planlama panosunda 03.09, iş emri listesi/detayında 04.09; UTC gün dilimlemesi vs Istanbul iş günü). Ölçüm @1440x900 overflowX false, h1 24/600, distinctColors 26; @390x844 overflowX false, touchTargetsBelow44 boş (breadcrumb false-positive hariç). Toplam 59→58. Tur 14 düzeltme turu: Kriter 11: 4→5 (uretim-planlama-04 kapatıldı — listPlanningWorkOrders/listOpenWorkOrdersForLine businessDate() kullanıyor, aralık filtresi Istanbul gün sınırına çevrildi; WO-2026-000007 artık /uretim/planlama, /uretim/is-emirleri, /uretim/is-emirleri/[id] üçünde de 04.09.2026/Cum 04.09). Toplam 58→59."
+      "scoreNotes": "Kriter 5: 4→5 (gün hücrelerinden border-r kaldırıldı; yalnızca yapısal sütun ayraçları + satır hairline'ı kaldı — 'çerçeve çorbası' giderildi). Kriter 9: 3→5 ('7 gün'/'14 gün' 40px→44px, ölçümde touchTargetsBelow44 boş). Kriter 6: 5→4 (mobil kartta birim yok — uretim-planlama-03). Kriter 3: 4 (3 hat × 9 sütunluk pano 1440x900'ün üst ~470px'ini kullanıyor, veri kaynaklı; değişmedi). Tur 11 düzeltme turu — Kriter 6: 4→5 (mobil gün kartında miktarın yanında birim (ADET) görünüyor, uretim-planlama-03 kapatıldı). Tur 12: yeniden ölçüldü — @1440x900 overflowX false, h1 24/600; @390x844 touchTargetsBelow44 boş (breadcrumb hariç). \"Planlanmamış\" sütunundaki tek satırlık boş-durum metni bilinçli (kod yorumu, Tur 5 P2). Puan korunuyor (59). Tur 13: yeniden ölçüldü — @1440x900 overflowX false, h1 24/600, distinctColors 26; @390x844 overflowX false, touchTargetsBelow44 yalnızca breadcrumb false-positive. Yeni bulgu yok, puan korunuyor (59). Tur 14: Kriter 11: 5→4 (uretim-planlama-04 — aynı iş emri planlama panosunda 03.09, iş emri listesi/detayında 04.09; UTC gün dilimlemesi vs Istanbul iş günü). Ölçüm @1440x900 overflowX false, h1 24/600, distinctColors 26; @390x844 overflowX false, touchTargetsBelow44 boş (breadcrumb false-positive hariç). Toplam 59→58. Tur 14 düzeltme turu: Kriter 11: 4→5 (uretim-planlama-04 kapatıldı — listPlanningWorkOrders/listOpenWorkOrdersForLine businessDate() kullanıyor, aralık filtresi Istanbul gün sınırına çevrildi; WO-2026-000007 artık /uretim/planlama, /uretim/is-emirleri, /uretim/is-emirleri/[id] üçünde de 04.09.2026/Cum 04.09). Toplam 58→59. Tur 15: uretim-planlama-04 (İstanbul iş günü hizası, d0e944d) canlı doğrulandı — WO-2026-000007 'Cum 04.09', WO-2026-000008 'Cmt 05.09' sütununda; /uretim/is-emirleri (04.09.2026 / 05.09.2026), /operator 'Sıradaki: WO-2026-000008 · 05.09.2026' ve iş emri detayı ile birebir aynı gün. Kriter 7: 5→4 (gerekçe: yeni bulgu uretim-planlama-05 — 'Planlanmamış' sütununun boş-durum metni satır düzeyinde koşullu, hat başına çelişki üretebiliyor; P2). Ölçümler: @1440x900 overflowX false, h1 24/600, distinctColors 26 (pano hücre zeminleri + bugün/hafta sonu vurguları), fontSizes {10:6,11:23,12:9,13:19,24:1}; @390x844 overflowX false, distinctColors 25, touchTargetsBelow44 yalnızca breadcrumb false-positive. Toplam 59→58 (≥57, açık P0/P1 yok → KAZANAN: Plantero).",
+      "winner": "Plantero"
     },
     "/uretim/hatlar": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -375,10 +393,11 @@
           "verifiedBy": "pnpm shot (/uretim/hatlar + /operator, aynı oturum) + pnpm db:reset/db:check (Tur 13 düzeltme turu)"
         }
       ],
-      "scoreNotes": "Kriter 6: 3→5 (HAT3'te '↘%100 + Veri yok' çelişkisi kalktı; delta yalnızca sparkline verisi varken basılıyor, üç kartta metrikler aynı kalıpta: değer `num` + soluk 11px birim). Kriter 9: 3→5 (hat bağlantısı 40px→44px, ölçümde touchTargetsBelow44 boş). Kriter 5: 4→5 (üç kart aynı bölme dizisini aynı yüksekliklerde taşıyor; 'Son 7 gün' yuvası her kartta 88x24). Kriter 11: 4→5 (aynı gerekçe). Kriter 3: 4 (3 kartlık koleksiyon 1440x900'ün üst ~530px'i; veri kaynaklı, değişmedi). Tur 12: Kriter 11: 5→4 (gerekçe: /uretim/hatlar ile /operator aynı hat/aynı dakika için çelişen bugün rakamı basıyor — uretim-hatlar-05). Diğer kriterler yeniden ölçüldü, değişiklik yok (overflowX false, mobilde touchTargetsBelow44 boş, üç kart aynı bölme dizisi). Tur 13: Kriter 11: 4→5 (uretim-hatlar-05 kapatıldı — listLineCards artık businessDate(new Date()) kullanıyor, /uretim/hatlar ile /operator vardiya özeti aynı hat için aynı dakikada aynı rakamı basıyor). Tur 13 (kritik turu): uretim-hatlar-05 kapanışı bağımsız doğrulandı — aynı oturumda /uretim/hatlar HAT2 'BUGÜN (HAT) 0 ADET · DOLULUK %0' ile /operator vardiya özeti HAT2 '0 / 1.200 · %0' birebir aynı. @390x844 touchTargetsBelow44 yalnızca breadcrumb false-positive. Puan korunuyor (59). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, h1 24/600, distinctColors 21; @390x844 overflowX false, touchTargetsBelow44 boş (breadcrumb hariç). Yeni bulgu yok, 59 korunuyor."
+      "scoreNotes": "Kriter 6: 3→5 (HAT3'te '↘%100 + Veri yok' çelişkisi kalktı; delta yalnızca sparkline verisi varken basılıyor, üç kartta metrikler aynı kalıpta: değer `num` + soluk 11px birim). Kriter 9: 3→5 (hat bağlantısı 40px→44px, ölçümde touchTargetsBelow44 boş). Kriter 5: 4→5 (üç kart aynı bölme dizisini aynı yüksekliklerde taşıyor; 'Son 7 gün' yuvası her kartta 88x24). Kriter 11: 4→5 (aynı gerekçe). Kriter 3: 4 (3 kartlık koleksiyon 1440x900'ün üst ~530px'i; veri kaynaklı, değişmedi). Tur 12: Kriter 11: 5→4 (gerekçe: /uretim/hatlar ile /operator aynı hat/aynı dakika için çelişen bugün rakamı basıyor — uretim-hatlar-05). Diğer kriterler yeniden ölçüldü, değişiklik yok (overflowX false, mobilde touchTargetsBelow44 boş, üç kart aynı bölme dizisi). Tur 13: Kriter 11: 4→5 (uretim-hatlar-05 kapatıldı — listLineCards artık businessDate(new Date()) kullanıyor, /uretim/hatlar ile /operator vardiya özeti aynı hat için aynı dakikada aynı rakamı basıyor). Tur 13 (kritik turu): uretim-hatlar-05 kapanışı bağımsız doğrulandı — aynı oturumda /uretim/hatlar HAT2 'BUGÜN (HAT) 0 ADET · DOLULUK %0' ile /operator vardiya özeti HAT2 '0 / 1.200 · %0' birebir aynı. @390x844 touchTargetsBelow44 yalnızca breadcrumb false-positive. Puan korunuyor (59). Tur 14 (hızlı tur doğrulaması): @1440x900 overflowX false, h1 24/600, distinctColors 21; @390x844 overflowX false, touchTargetsBelow44 boş (breadcrumb hariç). Yeni bulgu yok, 59 korunuyor. Tur 15 (hızlı tur doğrulaması): @1440x900 overflowX false, h1 24/600, distinctColors 21, fontSizes {11:26,12:18,13:19,14:14,16:3,24:1}; @390x844 overflowX false, distinctColors 20, touchTargetsBelow44 yalnızca breadcrumb false-positive. 'Aktif iş emri yok' boş durumu ikon+metin+eylem ile duruyor; BUGÜN (HAT)/DOLULUK/KAPASİTE rakamları tabular ve birimli. Açık bulgu yok. Toplam 59 → KAZANAN: Plantero.",
+      "winner": "Plantero"
     },
     "/operator": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "scores": [
         5,
@@ -413,10 +432,11 @@
           "verifiedBy": "Playwright DOM probu (iki tarih senaryosu) + pnpm shot + pnpm db:reset/db:check (Tur 13 düzeltme turu)"
         }
       ],
-      "scoreNotes": "Değişiklik yok; 1024x768 tablet görüntüsü de çekildi (artifacts/screens/operator/tablet.png). Ölçüm: 1440/390'da touchTargetsBelow44 boş, taşma yok, distinctColors 15. Kriter 3: 4 (terminal bilinçli olarak seyrek/iri — eldivenli dokunuş). Tur 12: 1024x768 tablet + 390x844 + 1440x900 yeniden çekildi/ölçüldü — overflowX false, touchTargetsBelow44 boş, distinctColors 15, h1 30/24px. Vardiya özeti rakamları (businessDate) doğru taraf; çelişki /uretim/hatlar tarafında açıldı (uretim-hatlar-05). Puan korunuyor (59). Tur 13: Kriter 7: 5→3 (gerekçe: boş-durum metni yanlış bilgi veriyor — 'Bugün planlanan iş emri yok' derken aynı kartta bugüne (04.09.2026) planlanmış WO-2026-000008'i 'Sıradaki' olarak listeliyor; uretim-operator-01, P1). Diğer ölçümler temiz: @1024x768 ve @390x844 overflowX false, touchTargetsBelow44 boş, distinctColors 15, h1 30/24px. Toplam 59→57; kriter 7 < 4 ve açık P1 var → KAZANAN: Linear. Tur 13 düzeltme turu — Kriter 7: 3→5 (uretim-operator-01 kapatıldı — boş-durum metni artık kuyruk koşulunu anlatıyor, 'bugün' iddiası yalnızca gerçekten bugüne planlı bir iş emri varken ve tarihi tekrar etmeden basılıyor; listNextPlannedWorkOrders businessDate'e geçirildi). Diğer ölçümler değişmedi (@1024x768/@390x844 overflowX false, touchTargetsBelow44 boş, distinctColors 15, h1 30/24px). Toplam 57→59 → KAZANAN: Plantero. Tur 14: d2a99ef sonrası tam yeniden puanlama — HAT1 kartında 'Kuyrukta serbest bırakılmış iş emri yok' + 'Sıradaki: WO-2026-000008 · 05.09.2026' çelişkisiz (WO-000008 planned_start 05.09.2026 TR ile birebir); HAT3'te sıradaki satırı hiç basılmıyor. Ölçüm @1440x900 / @1024x768 / @390x844: overflowX false, touchTargetsBelow44 boş. h1 30/600 (dokunmatik terminal için bilinçli, app-shell'in 24px h1'inden ayrı bir yüzey). Yeni bulgu yok, 59 korunuyor."
+      "scoreNotes": "Değişiklik yok; 1024x768 tablet görüntüsü de çekildi (artifacts/screens/operator/tablet.png). Ölçüm: 1440/390'da touchTargetsBelow44 boş, taşma yok, distinctColors 15. Kriter 3: 4 (terminal bilinçli olarak seyrek/iri — eldivenli dokunuş). Tur 12: 1024x768 tablet + 390x844 + 1440x900 yeniden çekildi/ölçüldü — overflowX false, touchTargetsBelow44 boş, distinctColors 15, h1 30/24px. Vardiya özeti rakamları (businessDate) doğru taraf; çelişki /uretim/hatlar tarafında açıldı (uretim-hatlar-05). Puan korunuyor (59). Tur 13: Kriter 7: 5→3 (gerekçe: boş-durum metni yanlış bilgi veriyor — 'Bugün planlanan iş emri yok' derken aynı kartta bugüne (04.09.2026) planlanmış WO-2026-000008'i 'Sıradaki' olarak listeliyor; uretim-operator-01, P1). Diğer ölçümler temiz: @1024x768 ve @390x844 overflowX false, touchTargetsBelow44 boş, distinctColors 15, h1 30/24px. Toplam 59→57; kriter 7 < 4 ve açık P1 var → KAZANAN: Linear. Tur 13 düzeltme turu — Kriter 7: 3→5 (uretim-operator-01 kapatıldı — boş-durum metni artık kuyruk koşulunu anlatıyor, 'bugün' iddiası yalnızca gerçekten bugüne planlı bir iş emri varken ve tarihi tekrar etmeden basılıyor; listNextPlannedWorkOrders businessDate'e geçirildi). Diğer ölçümler değişmedi (@1024x768/@390x844 overflowX false, touchTargetsBelow44 boş, distinctColors 15, h1 30/24px). Toplam 57→59 → KAZANAN: Plantero. Tur 14: d2a99ef sonrası tam yeniden puanlama — HAT1 kartında 'Kuyrukta serbest bırakılmış iş emri yok' + 'Sıradaki: WO-2026-000008 · 05.09.2026' çelişkisiz (WO-000008 planned_start 05.09.2026 TR ile birebir); HAT3'te sıradaki satırı hiç basılmıyor. Ölçüm @1440x900 / @1024x768 / @390x844: overflowX false, touchTargetsBelow44 boş. h1 30/600 (dokunmatik terminal için bilinçli, app-shell'in 24px h1'inden ayrı bir yüzey). Yeni bulgu yok, 59 korunuyor. Tur 15 (hızlı tur doğrulaması, uretim_operatoru): @1024x768 overflowX false, h1 30/600 (operatör terminali kasıtlı büyük tipografi), distinctColors 15, touchTargetsBelow44 BOŞ; @390x844 overflowX false, h1 24/600, distinctColors 15, touchTargetsBelow44 BOŞ. HAT1 kartı 'Kuyrukta serbest bırakılmış iş emri yok' + 'Sıradaki: WO-2026-000008 · 05.09.2026' — planlama panosuyla tutarlı (d0e944d sonrası). Açık bulgu yok. Toplam 59 → KAZANAN: Plantero.",
+      "winner": "Plantero"
     }
   },
-  "round": 14,
+  "round": 15,
   "referenceTotals": {
     "linear": 57,
     "stripe": 56
