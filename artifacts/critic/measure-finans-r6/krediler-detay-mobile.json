@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /finans/krediler/ce8acd8a-3755-4e80-8d00-bfb3a0b96e39 --viewport 390x844
+
+{"route":"/finans/krediler/ce8acd8a-3755-4e80-8d00-bfb3a0b96e39","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":21,"heights":[32,32.5,32.5]},"fontSizes":{"10":5,"11":32,"12":5,"13":107,"14":3,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Detay\"","w":36.2,"h":19.5}],"distinctColors":12,"h1":{"size":20,"weight":600},"images":0}

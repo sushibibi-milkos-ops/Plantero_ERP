@@ -258,8 +258,17 @@ export function LoanInstallmentsTable({ installments }: { installments: Array<{ 
                 okunabilir. */}
             <th className="sticky left-0 z-10 bg-card px-3 py-2 whitespace-nowrap shadow-[1px_0_0_0_var(--border)]">Vade</th>
             <th className="px-3 py-2 text-right whitespace-nowrap">Taksit</th>
-            <th className="px-3 py-2 text-right whitespace-nowrap">Faiz + BSMV</th>
-            <th className="px-3 py-2 text-right whitespace-nowrap">Anapara</th>
+            {/* Kriter 5 kök neden düzeltmesi (Tur 6, P0 REGRESYON — finans-krediler-detay-09):
+                sticky left-0 VADE ile sticky right-0 KALAN BAKİYE arasında 390px'te tabloya sığmayan
+                bir "yarım sütun" kalıyordu — opak sticky KALAN BAKİYE, altındaki FAİZ+BSMV hücresinin
+                sağa hizalı metnini %46 oranında (ellipsis/fade YOK) örtüyordu; "₺40.181" ekranda
+                "₺40" okunuyordu. Kök neden: 390px'te sabitlenen iki sütun (Vade+Kalan bakiye) DIŞINDA
+                kalan orta sütunlar toplam genişliği viewport'u aşıyordu. FAİZ+BSMV ve ANAPARA —
+                Kalan bakiye zaten anapara+faiz toplamını taşıdığından mobilde ikincil detay — <md'de
+                gizlenir; Vade+Taksit+Kalan bakiye (ve varsa Durum/Ödendi) 390px'e sığar, hiçbir hücre
+                başka bir sütunun altında kalmaz (bkz. probe-finans-r6.ts doğrulaması). */}
+            <th className="hidden px-3 py-2 text-right whitespace-nowrap md:table-cell">Faiz + BSMV</th>
+            <th className="hidden px-3 py-2 text-right whitespace-nowrap md:table-cell">Anapara</th>
             <th className="sticky right-0 z-10 bg-card px-3 py-2 text-right whitespace-nowrap shadow-[-1px_0_0_0_var(--border)]">Kalan bakiye</th>
             {hasStatusVariety ? (
               <>
@@ -277,8 +286,8 @@ export function LoanInstallmentsTable({ installments }: { installments: Array<{ 
                 {formatDate(i.dueDate)}
               </td>
               <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums">{formatMoney(i.installment, 'TRY', { digits: 0 })}</td>
-              <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground">{formatMoney(i.interest, 'TRY', { digits: 0 })}</td>
-              <td className="px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground">{formatMoney(i.principal, 'TRY', { digits: 0 })}</td>
+              <td className="hidden px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground md:table-cell">{formatMoney(i.interest, 'TRY', { digits: 0 })}</td>
+              <td className="hidden px-3 py-1.5 text-right font-mono whitespace-nowrap tabular-nums text-muted-foreground md:table-cell">{formatMoney(i.principal, 'TRY', { digits: 0 })}</td>
               <td className="sticky right-0 z-10 whitespace-nowrap bg-card px-3 py-1.5 text-right font-mono tabular-nums shadow-[-1px_0_0_0_var(--border)]">{formatMoney(i.remainingAfter, 'TRY', { digits: 0 })}</td>
               {hasStatusVariety ? (
                 <>

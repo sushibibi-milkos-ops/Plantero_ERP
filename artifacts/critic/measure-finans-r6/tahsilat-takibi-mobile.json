@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /finans/tahsilat-takibi --viewport 390x844
+
+{"route":"/finans/tahsilat-takibi","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":6,"heights":[133.5,133.5,187]},"fontSizes":{"10":5,"11":29,"12":4,"13":27,"14":5,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Tahsilat Takibi\"","w":88.3,"h":19.5}],"distinctColors":17,"h1":{"size":20,"weight":600},"images":0}

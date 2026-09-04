@@ -8,6 +8,9 @@ import { Loader2, Sparkles, ArrowRight, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { EmptyState } from '@/components/empty-state';
+// NOT: '@plantero/core' barrel'ı server-only kod da re-export eder (ör. auth/session.ts → node:crypto);
+// bu istemci bileşeni yalnızca alt-yol importuyla money yardımcılarını çeker (bkz. record-payment-form.tsx aynı kalıp).
+import { D, toDb } from '@plantero/core/money';
 import { formatMoney } from '@/lib/format';
 import { formatMonth } from '../format';
 import { generateSalesForecastAction, generateCashForecastAction, applyForecastAction } from '../forecast-actions';
@@ -46,8 +49,10 @@ const FORECAST_COLOR = 'var(--chart-5)';
 const BAND_COLOR = 'var(--chart-5)';
 
 type Point = { period: string; history?: number; predicted?: number; low?: number; high?: number };
+/** `buildSeries`in ikinci parametresi — `ForecastRow`nun yalnızca çizim için gereken alt kümesi (bkz. `toCashDeltaSeries`). */
+type ForecastLike = { period: string; predicted: string; low: string | null; high: string | null };
 
-function buildSeries(history: { period: string; amount: string }[], forecast: ForecastPageData['salesForecast']): Point[] {
+function buildSeries(history: { period: string; amount: string }[], forecast: ForecastLike[]): Point[] {
   const byPeriod = new Map<string, Point>();
   for (const h of history) byPeriod.set(h.period, { period: h.period, history: Number(h.amount) });
   for (const f of forecast) {
@@ -64,6 +69,49 @@ function buildSeries(history: { period: string; amount: string }[], forecast: Fo
     sorted[lastHistoryIdx]!.predicted = sorted[lastHistoryIdx]!.history;
   }
   return sorted;
+}
+
+/**
+ * Kriter 6 kök neden düzeltmesi (Tur 6, P1 — finans-tahmin-15): `forecasts(kind='cash').predicted`
+ * KÜMÜLATİF dönem sonu banka bakiyesi tahminidir (`packages/ai/src/forecast.ts`:
+ * `balance = balance.plus(inflow).minus(outflow)`), oysa aynı grafikteki "Gerçekleşen" serisi
+ * (`cashHistory` → `cashflow_lines.actual_net_cashflow`) AYLIK NET nakit akışıdır — tek eksende iki
+ * farklı birim (₺1 Mn'lik kümülatif eksende aylık ₺100-200 Bin'lik gerçekleşen düz görünüyordu).
+ * Ardışık kümülatif bakiye farkı matematiksel olarak birebir "o ayın net nakit akışı"na eşittir
+ * (`balance[i] - balance[i-1] = inflow[i] - outflow[i]`), yani bu dönüşüm YAKLAŞIK değil — algoritmanın
+ * zaten hesapladığı aylık akışı geri çıkarır. İlk tahmin ayı için önceki bakiye olarak `forecasts`
+ * tablosunda saklanmayan "tahmin üretildiği andaki bakiye" yerine ekranın taze okuduğu güncel banka
+ * bakiyesi (`currentBankBalance`) kullanılır — banka bakiyesi son tahmin üretiminden beri değiştiyse
+ * küçük bir sapma olabilir, ama bu yalnızca ekrandaki İLK noktayı etkiler (şema dondurulmuş olduğundan
+ * `forecasts`e üretim anı bakiyesini saklayacak bir kolon eklenemez).
+ */
+function toCashDeltaSeries(forecast: ForecastPageData['cashForecast'], currentBankBalance: string): ForecastLike[] {
+  const sorted = [...forecast].sort((a, b) => (a.period < b.period ? -1 : 1));
+  let prevBalance = D(currentBankBalance);
+  return sorted.map((f) => {
+    const predicted = D(f.predicted);
+    const low = f.low !== null ? toDb(D(f.low).minus(prevBalance)) : null;
+    const high = f.high !== null ? toDb(D(f.high).minus(prevBalance)) : null;
+    const delta = toDb(predicted.minus(prevBalance));
+    prevBalance = predicted;
+    return { period: f.period, predicted: delta, low, high };
+  });
+}
+
+/**
+ * Kriter 3 kök neden düzeltmesi (Tur 6, P1 — finans-tahmin-16): tahmin serisinin varyansı ~0 iken
+ * (ör. tek aylık geçmişte trend/mevsimsellik hesaplanamadığından her ay birebir aynı değer üretiliyor
+ * — bkz. `packages/ai/src/forecast.ts` `fallbackForecastSales`: n<2 → trend=ZERO) 240px'lik grafik
+ * düz bir çizgiden başka bir şey çizmiyor; bilgi/piksel oranı sıfıra yakın. Göreli standart sapma
+ * (stdev/|ortalama|) bir eşiğin altındaysa seri "düz" sayılır.
+ */
+function isFlatForecast(rows: { predicted: string }[]): boolean {
+  if (rows.length < 2) return false;
+  const vals = rows.map((r) => Number(r.predicted));
+  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+  if (mean === 0) return vals.every((v) => v === 0);
+  const variance = vals.reduce((a, b) => a + (b - mean) ** 2, 0) / vals.length;
+  return Math.sqrt(variance) / Math.abs(mean) < 0.001;
 }
 
 function ForecastChart({ points, label }: { points: Point[]; label: string }) {
@@ -137,6 +185,35 @@ function ForecastChart({ points, label }: { points: Point[]; label: string }) {
   );
 }
 
+/**
+ * Kriter 3 kök neden düzeltmesi (Tur 6, P1 — finans-tahmin-16): `isFlatForecast` true iken (tüm
+ * tahmin noktaları aynı — okunacak eğim/mevsimsellik/kırılma yok) 240px'lik boş bir çizgi yerine
+ * kompakt bir değer bloğu ("₺44.968 · bant ₺38.223–₺51.714 · yöntem Mevsimsel ort." + düzlüğün
+ * nedeni). Yükseklik ≤96px.
+ */
+function FlatForecastNotice({ rows, historyMonths }: { rows: { predicted: string; low: string | null; high: string | null; method: string }[]; historyMonths: number }) {
+  const sample = rows[0];
+  if (!sample) return null;
+  const methodLabel = sample.method === 'ai' ? 'AI' : 'Mevsimsel ortalama';
+  return (
+    <div className="flex flex-col gap-1.5 rounded-lg border border-dashed border-border/70 bg-muted/20 p-3">
+      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[13px]">
+        <span className="font-mono font-semibold tabular-nums">{formatMoney(sample.predicted, 'TRY', { digits: 0 })}</span>
+        <span className="text-[11px] text-muted-foreground">·</span>
+        <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
+          bant {sample.low !== null && sample.high !== null ? `${formatMoney(sample.low, 'TRY', { digits: 0 })} – ${formatMoney(sample.high, 'TRY', { digits: 0 })}` : '—'}
+        </span>
+        <span className="text-[11px] text-muted-foreground">· yöntem {methodLabel}</span>
+      </div>
+      <p className="text-[11px] text-muted-foreground">
+        {historyMonths < 2
+          ? `Yalnızca ${historyMonths} aylık gerçekleşen veri var — trend/mevsimsellik hesaplanamadığı için tüm aylara aynı tahmin veriliyor.`
+          : 'Tahmin serisinde ay bazında değişim yok — trend/mevsimsellik sinyali bulunamadı.'}
+      </p>
+    </div>
+  );
+}
+
 export function GenerateSalesForecastButton() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -193,7 +270,8 @@ export function GenerateCashForecastButton() {
 
 export function ForecastPanels({ data }: { data: ForecastPageData }) {
   const salesPoints = useMemo(() => buildSeries(data.salesHistory, data.salesForecast), [data]);
-  const cashPoints = useMemo(() => buildSeries(data.cashHistory, data.cashForecast), [data]);
+  const cashPoints = useMemo(() => buildSeries(data.cashHistory, toCashDeltaSeries(data.cashForecast, data.currentBankBalance)), [data]);
+  const salesForecastFlat = useMemo(() => isFlatForecast(data.salesForecast), [data.salesForecast]);
   // Kriter 11 kök neden düzeltmesi (Tur 4, P1 — finans-tahmin-08): başlık sabit metinde "son 12 ay"
   // vaat ediyordu ama `loadSalesHistory` yalnızca TAMAMLANMIŞ ayları döndürür (bkz. forecast.ts
   // başı) — erken evre verisinde bu 1 ay olabilir. Başlık artık X ekseniyle (gerçek pencere) BİREBİR
@@ -218,7 +296,13 @@ export function ForecastPanels({ data }: { data: ForecastPageData }) {
         {/* Kriter 7 kök neden düzeltmesi (Tur 2, P1): <2 nokta (tek aylık geçmiş, tahmin üretilmemiş)
             neredeyse boş bir ızgara çiziyordu — artık özenli bir boş durum gösterilir. */}
         {salesPoints.length >= 2 ? (
-          <ForecastChart points={salesPoints} label="Tahmin" />
+          salesForecastFlat ? (
+            // Kriter 3 kök neden düzeltmesi (Tur 6, P1 — finans-tahmin-16): varyans ~0 iken 240px'lik
+            // grafik yerine kompakt değer bloğu — grafik yalnızca varyans > 0 olduğunda çizilir.
+            <FlatForecastNotice rows={data.salesForecast} historyMonths={salesHistoryMonths} />
+          ) : (
+            <ForecastChart points={salesPoints} label="Tahmin" />
+          )
         ) : (
           <EmptyState
             compact
@@ -239,7 +323,12 @@ export function ForecastPanels({ data }: { data: ForecastPageData }) {
                 kapsam etiketi bu farkı açıkça belirtir; aksi halde iki ekran "aynı şeyi" söylüyormuş
                 gibi okunup zıt sinyal veriyormuş izlenimi veriyordu. */}
             <h2 className="text-[13px] font-semibold">{cashTitle}</h2>
-            <p className="mt-0.5 text-[11px] text-muted-foreground">Yalnızca gerçekleşen aylık net tahsilat/ödeme farkı — /finans/nakit-akışı'ndaki kümülatif dönem sonu bakiye projeksiyonundan farklıdır.</p>
+            {/* Kriter 6 kök neden düzeltmesi (Tur 6, P1 — finans-tahmin-15): tahmin serisi artık
+                (`toCashDeltaSeries`) kümülatif bakiye tahmininin ardışık farkı olarak, "Gerçekleşen"
+                seriyle (`cashflow_lines.actual_net_cashflow`) AYNI birimde (aylık net akış) çizilir —
+                metin bunu açıkça söyler; /finans/nakit-akışı ayrı bir yöntemle (senaryo bazlı, elle
+                düzenlenebilir) hesaplandığından rakamlar birebir eşleşmeyebilir, bu kasıtlıdır. */}
+            <p className="mt-0.5 text-[11px] text-muted-foreground">Tahmin serisi, öngörülen dönem sonu banka bakiyesindeki aylık değişimdir (bir önceki aya göre fark) — ham kümülatif bakiye tahmini değil, "Gerçekleşen" ile aynı birimdedir.</p>
           </div>
           <GenerateCashForecastButton />
         </div>
