@@ -283,8 +283,13 @@ export const ignoreBankTransactionAction = withAudit('accounting.ignoreTransacti
 // alanda onChange(null) çağırır; sunucu şeması istemciyle aynı biçimi kabul etmeli (bkz.
 // manual-journal-form.tsx lineSchema'daki eşlenik not, P0 kök neden).
 const journalLineSchema = z.object({ accountCode: z.string().min(1, 'Hesap seçin'), partnerId: z.string().trim().optional().nullable(), description: z.string().trim().optional().nullable(), debit: z.string().optional().nullable(), credit: z.string().optional().nullable() });
+// ledger z.literal('both') (P0 kök neden — kritik bulgu, manuel yevmiye tek taraflı defter):
+// istemci artık yalnızca 'both' gönderiyor (manual-journal-form.tsx), ama sunucu şeması bunu
+// bağımsız olarak da zorunlu kılar — istemci doğrulaması atlanıp (ör. doğrudan API çağrısı)
+// ledger:'VUK'/'UFRS' gönderilse bile zod burada reddeder (I4 journal_entry_twin_missing'i
+// üretecek tek taraflı bir postJournalEntry çağrısı sunucuya asla ulaşamaz).
 const manualJournalSchema = z.object({
-  ledger: z.enum(['VUK', 'UFRS', 'both']), journalCode: z.string().min(1), entryDate: z.string().min(1, 'Tarih girin'),
+  ledger: z.literal('both'), journalCode: z.string().min(1), entryDate: z.string().min(1, 'Tarih girin'),
   description: z.string().trim().min(3, 'Açıklama girin'), lines: z.array(journalLineSchema).min(2, 'En az iki satır olmalı'),
 });
 

@@ -41,7 +41,12 @@ export function PaymentsTable({ rows, canManage }: { rows: AccountingPaymentRow[
       // Kök neden (tur 2 P2 muhasebe-tahsilatlar-02): yeşil metin burada aynı ekranda birincil eylem
       // düğmesi ve "Kaydedildi" durum rozetiyle ÜÇÜNCÜ bir anlam taşıyordu — Yön bir durum değil bir
       // sınıflandırma. Nötr foreground + yön oku (14px) ile ayrışır, yeşil yalnızca StatusBadge'te kalır.
-      { id: 'direction', accessorFn: (r) => r.direction, header: 'Yön', meta: { width: 110, mobile: 'meta' }, cell: ({ row }) => (
+      // mobile:'badge' (kritik bulgu muhasebe-tahsilatlar-04 — kök neden): 'meta' iken bu bit
+      // MetaChain'in (mobile-cards.tsx) taşma-düşürme sırasına giriyordu — tarih-olmayan bit
+      // olduğu için uzun cari adlı satırlarda (5/17) alan yetmeyince SESSİZCE tamamen kaldırılıyordu,
+      // o kartlarda tutar da işaretsiz olduğundan yön hiç okunamıyordu. 'badge' satır 1'de (başlık
+      // sağında) render edilir, MetaChain'e hiç girmez — asla düşürülmez, 17/17 kartta görünür.
+      { id: 'direction', accessorFn: (r) => r.direction, header: 'Yön', meta: { width: 110, mobile: 'badge' }, cell: ({ row }) => (
         <span className="inline-flex items-center gap-1">
           {row.original.direction === 'inbound' ? <ArrowDownLeft className="size-3.5 text-muted-foreground" /> : <ArrowUpRight className="size-3.5 text-muted-foreground" />}
           {row.original.direction === 'inbound' ? 'Tahsilat' : 'Ödeme'}

@@ -76,9 +76,15 @@ export default async function AccountingHomePage() {
                     {/* Mobilde 2 satırlı düzen (kritik bulgu muhasebe-ozet-04 — kök neden): tek
                         satıra sıkışan başlık span'i 152px'e düşüyordu, açıklama/cari fiilen
                         görünmüyordu. 1. satır belge no + tutar, 2. satır cari + gün sayısı —
-                        DataTable mobil kart kalıbıyla aynı fikir (iki satır, ~60px). */}
+                        DataTable mobil kart kalıbıyla aynı fikir (iki satır, ~60px).
+                        md:contents (kritik bulgu muhasebe-ozet-05 — kök neden): bu sarmalayıcı
+                        span md'de satırın flex öğesiydi ama min-w-0/flex-1 almadığı için
+                        max-content genişliğinde kalıp kartı 151px aşıyordu, tutar/tarih
+                        1440px viewport'un dışına düşüyordu. md:contents ile masaüstünde bu
+                        span kaybolur, içindeki min-w-0 flex-1 truncate span doğrudan üst
+                        satırın (Link) flex öğesi olur — mobil 2 satırlı düzen aynen kalır. */}
                     <Link href={`/muhasebe/faturalar/${r.id}`} className="flex flex-col gap-0.5 px-3 py-2.5 text-[13px] hover:bg-accent/50 md:h-10 md:flex-row md:items-center md:justify-between md:gap-3 md:py-0">
-                      <span className="flex items-center justify-between gap-2">
+                      <span className="flex items-center justify-between gap-2 md:contents">
                         <span className="min-w-0 flex-1 truncate">
                           <span className="font-mono">{r.docNo}</span>
                           <span className="ml-1.5 hidden text-muted-foreground md:inline">{r.partnerName}</span>
@@ -112,7 +118,7 @@ export default async function AccountingHomePage() {
                 {recentEntries.map((e) => (
                   <li key={e.id} className="border-b border-border/40 last:border-0">
                     <Link href={`/muhasebe/yevmiye/${e.id}`} className="flex flex-col gap-0.5 px-3 py-2.5 text-[13px] hover:bg-accent/50 md:h-10 md:flex-row md:items-center md:justify-between md:gap-3 md:py-0">
-                      <span className="flex items-center justify-between gap-2">
+                      <span className="flex items-center justify-between gap-2 md:contents">
                         <span className="min-w-0 flex-1 truncate">
                           <span className="font-mono">{e.docNo}</span>
                           <span className="ml-1.5 hidden text-muted-foreground md:inline">{e.description}</span>

@@ -44,9 +44,12 @@ export default async function InvoicesPage() {
         }
       />
 
+      {/* fractionDigits={2} (kritik bulgu muhasebe-faturalar-04 — kök neden): bu şerit 0 ondalıklıydı,
+          /muhasebe özetindeki aynı KpiCard aynı metriği ("Açık alacak") 2 ondalıklı basıyordu —
+          modül genelinde tek para KPI ondalık kuralı: tüm muhasebe KPI şeritleri 2 ondalık. */}
       <KpiStripRow>
-        <KpiCard variant="strip" title="Açık alacak" value={openReceivable.toFixed(4)} format="money" />
-        <KpiCard variant="strip" title="Açık borç" value={openPayable.toFixed(4)} format="money" />
+        <KpiCard variant="strip" title="Açık alacak" value={openReceivable.toFixed(4)} format="money" fractionDigits={2} />
+        <KpiCard variant="strip" title="Açık borç" value={openPayable.toFixed(4)} format="money" fractionDigits={2} />
         <KpiCard variant="strip" title="Vadesi geçen" value={overdueCount} format="int" />
         <KpiCard variant="strip" title="Gönderilmemiş e-Fatura" value={notSentIds.length} format="int" />
       </KpiStripRow>

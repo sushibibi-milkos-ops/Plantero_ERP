@@ -223,6 +223,16 @@ export async function postJournalEntry(tx: DbOrTx, input: JournalEntryInput, ctx
 }
 
 /**
+ * Fiziksel stok hareketinden otomatik üretilen fişlerin refType'ları (bkz. stock/ledger.ts
+ * `postStockMove` → `postJournalEntry({ refType: 'stock_move', … })` — mal kabul/sevkiyat/transfer/
+ * sayım/iş emri tüketimi-üretimi/fire dahil TÜM stok hareketi türleri için tek refType değeri
+ * 'stock_move'dur; diğer değerler (receipt/delivery/…​) `stock_moves.refType` alanında görülür,
+ * `journal_entries.refType` içinde değil — burada ileride doğrudan başka bir refType ile
+ * postlanabilecek stok kaynaklı fişlere karşı da koruma için tam küme tutulur).
+ */
+export const STOCK_LINKED_REF_TYPES = new Set(['stock_move', 'receipt', 'delivery', 'transfer', 'scrap', 'stock_count', 'work_order', 'quality_check']);
+
+/**
  * Ters kayıt: satırları borç/alacak değiştirilmiş yeni fiş; orijinal `reversed`.
  * İkiz fiş varsa o da ters çevrilir ve ters fişler birbirine ikiz bağlanır.
  */
@@ -240,6 +250,21 @@ export async function reverseJournalEntry(
   if (entry.twinEntryId) {
     const [twin] = await tx.select().from(journalEntries).where(eq(journalEntries.id, entry.twinEntryId)).limit(1);
     if (twin && twin.status === 'posted') targets.push(twin);
+  }
+
+  // Guard (P0 kök neden — kritik bulgu): fiziksel stok hareketinden otomatik üretilmiş bir fiş
+  // (ref_type='stock_move' vb.) burada koşulsuz ters çevrilebiliyordu; ilgili stok hareketine/
+  // quant'a hiç dokunulmuyordu — muhasebe ile stok senkronu kopuyordu (I37 + I1). Stok kaynaklı
+  // fişlerin ters kaydı yalnızca STOK tarafından (ör. `postStockMove`'un kendi iptal/düzeltme
+  // akışı, bu modülün kapsamı dışında) üretilmelidir; muhasebe ekranından asla.
+  for (const t of targets) {
+    if (t.refType && STOCK_LINKED_REF_TYPES.has(t.refType)) {
+      throw new DomainError(
+        'JOURNAL_REVERSAL_BLOCKED_STOCK_LINKED',
+        `Fiş ${t.docNo} bir stok hareketinden (${t.refType}) otomatik üretildi; muhasebeden ters kayıtla iptal edilemez — ilgili stok hareketini düzeltin`,
+        { entryId: t.id, docNo: t.docNo, refType: t.refType, refId: t.refId },
+      );
+    }
   }
 
   const reversalDate = opts.reversalDate ?? new Date();
@@ -314,6 +339,17 @@ export async function reverseJournalEntry(
       summary: `${t.ledger} fişi ters kayıtla iptal edildi: ${t.docNo} → ${docNo}`,
       before: { status: 'posted' },
       after: { status: 'reversed', reversedById: revId, journalCode: journal?.code },
+    }, ctx);
+
+    // writeAudit(revId) (P1 kök neden — kritik bulgu): döngü önceden yalnızca İPTAL EDİLEN
+    // orijinal fiş için audit yazıyordu; döngünün ürettiği YENİ ters kayıt fişi (revId) hiç
+    // izlenmiyordu — `postJournalEntry`'nin ledger-başına-audit örüntüsü burada tekrarlanır.
+    await writeAudit(tx, {
+      action: 'post',
+      tableName: 'journal_entries',
+      recordId: revId,
+      summary: `${t.ledger} ters kayıt fişi oluşturuldu: ${docNo} (${t.docNo} fişinin iptali)`,
+      after: { ledger: t.ledger, journalCode: journal?.code, entryDate: toDateStr(reversalDate), totalDebit: t.totalCredit, totalCredit: t.totalDebit, reversesId: t.id },
     }, ctx);
   }
 

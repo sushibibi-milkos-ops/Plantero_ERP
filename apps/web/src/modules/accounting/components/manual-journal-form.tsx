@@ -25,9 +25,16 @@ import { createManualJournalEntryAction } from '../actions';
 // ulaştırmadan SESSİZCE engelliyordu — "Fişi kaydet" tıklanıyor, hiçbir hata/toast görünmüyor,
 // istek asla gitmiyordu. `.nullable()` eklenince boş alan geçerli sayılır; sunuşta `D(l.debit || '0')`
 // zaten null/undefined'ı 0'a çeviriyor.
+// ledger z.literal('both') (P0 kök neden — kritik bulgu, manuel yevmiye tek taraflı defter):
+// packages/db/src/checks/04_journal_balance.sql I4 (journal_entry_twin_missing) postelenmiş HER
+// fişin twin_entry_id'sinin dolu olmasını şart koşar — kod tabanında `postJournalEntry`'i
+// ledger!=='both' ile çağıran TEK gerçek yazma yolu buydu (VUK/UFRS-only diğer tüm 'ledger'
+// kullanımları salt-okunur `getAccountBalance` sorgularıdır). "Yalnızca VUK"/"Yalnızca UFRS"
+// seçeneği twin_entry_id'siz posted fiş üretiyordu → I4 ihlali. Form artık tek değeri (`'both'`)
+// kabul eder; z.literal ile şema düzeyinde de sabitlenir (bkz. actions.ts manualJournalSchema).
 const lineSchema = z.object({ accountCode: z.string().min(1, 'Hesap seçin'), partnerId: z.string().optional().nullable(), description: z.string().trim().optional().nullable(), debit: z.string().optional().nullable(), credit: z.string().optional().nullable() });
 const schema = z.object({
-  ledger: z.enum(['VUK', 'UFRS', 'both']), journalCode: z.string().min(1, 'Yevmiye seçin'), entryDate: z.string().min(1, 'Tarih girin'),
+  ledger: z.literal('both'), journalCode: z.string().min(1, 'Yevmiye seçin'), entryDate: z.string().min(1, 'Tarih girin'),
   description: z.string().trim().min(3, 'Açıklama girin'), lines: z.array(lineSchema).min(2, 'En az iki satır olmalı'),
 });
 type FormValues = z.infer<typeof schema>;
@@ -91,7 +98,9 @@ export function ManualJournalForm({
             alanları sınırlanır, aşağıdaki "Satırlar" tablosu (6 sütun) tam genişlikte kalır. */}
         <div className="max-w-3xl space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <FormSelect control={form.control} name="ledger" label="Defter" required options={[{ value: 'both', label: 'VUK + UFRS (ikisi)' }, { value: 'VUK', label: 'Yalnızca VUK' }, { value: 'UFRS', label: 'Yalnızca UFRS' }]} />
+            {/* Tek seçenek, disabled (P0 kök neden — yukarıdaki şema notuna bkz.): "Yalnızca VUK"/
+                "Yalnızca UFRS" kaldırıldı — manuel fiş her zaman iki deftere birden düşer (I4). */}
+            <FormSelect control={form.control} name="ledger" label="Defter" required disabled options={[{ value: 'both', label: 'VUK + UFRS (ikisi)' }]} description="Manuel fiş her zaman iki deftere birden düşer" />
             <FormSelect control={form.control} name="journalCode" label="Yevmiye" required options={journalOptions} />
             <FormDate control={form.control} name="entryDate" label="Tarih" required />
           </div>

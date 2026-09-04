@@ -17,7 +17,7 @@ export default async function JournalEntryDetailPage({ params }: { params: Promi
   const user = await requirePermission('accounting.view');
   const detail = await getJournalEntryDetail(id);
   if (!detail) notFound();
-  const { entry, journalCode, lines, twin } = detail;
+  const { entry, journalCode, lines, twin, stockLinkedRefType } = detail;
 
   return (
     <>
@@ -25,7 +25,7 @@ export default async function JournalEntryDetailPage({ params }: { params: Promi
         eyebrow={`${entry.ledger} — ${journalCode}`}
         title={entry.docNo}
         description={`${formatDate(entry.entryDate)} · ${entry.description}`}
-        actions={userCan(user, 'accounting.post') && entry.status === 'posted' ? <ReverseJournalButton entryId={entry.id} /> : undefined}
+        actions={userCan(user, 'accounting.post') && entry.status === 'posted' ? <ReverseJournalButton entryId={entry.id} stockLinkedRefType={stockLinkedRefType} /> : undefined}
       >
         <div className="flex flex-wrap items-center gap-2">
           <StatusBadge status={entry.status} kind="journal_entry" />

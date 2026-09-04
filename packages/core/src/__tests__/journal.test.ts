@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { eq } from 'drizzle-orm';
-import { journalEntries, journalLines, accounts, partners, fiscalPeriods } from '@plantero/db';
+import { eq, and } from 'drizzle-orm';
+import { journalEntries, journalLines, accounts, partners, fiscalPeriods, auditLog } from '@plantero/db';
 import { postJournalEntry, reverseJournalEntry, getPartnerBalance } from '../accounting/journal.js';
 import { ensurePartnerAccount } from '../accounting/mapping.js';
 import { DomainError } from '../auth/errors.js';
@@ -166,6 +166,56 @@ describe('journal', () => {
       expect((err as DomainError).code).toBe('JOURNAL_NOT_POSTED');
     });
   });
+  it('stok hareketinden üretilmiş fiş (refType=stock_move) ters kayıtla iptal edilemez', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      const r = await postJournalEntry(tx, {
+        ledger: 'both', journalCode: 'GEN', entryDate: new Date(), description: 'stok hareketi taklidi',
+        lines: [{ accountCode: '100', debit: d('50') }, { accountCode: '500', credit: d('50') }],
+        refType: 'stock_move', refId: '00000000-0000-4000-8000-000000000099', refNo: 'SM-TEST-001',
+      }, ctx);
+      const err = await expectReject(tx, (sp) => reverseJournalEntry(sp, r.vukId!, ctx));
+      expect(err).toBeInstanceOf(DomainError);
+      expect((err as DomainError).code).toBe('JOURNAL_REVERSAL_BLOCKED_STOCK_LINKED');
+      // Hiçbir şey değişmedi: fiş hâlâ posted, ters kayıt oluşmadı
+      const [orig] = await tx.select().from(journalEntries).where(eq(journalEntries.id, r.vukId!));
+      expect(orig!.status).toBe('posted');
+    });
+  });
+
+  it('manuel fiş (refType=null) normal şekilde ters kayıtla iptal edilebilir', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      const r = await postJournalEntry(tx, {
+        ledger: 'both', journalCode: 'GEN', entryDate: new Date(), description: 'manuel fiş', origin: 'manual',
+        lines: [{ accountCode: '100', debit: d('50') }, { accountCode: '500', credit: d('50') }],
+      }, ctx);
+      const rev = await reverseJournalEntry(tx, r.vukId!, ctx);
+      expect(rev.reversalIds).toHaveLength(2);
+    });
+  });
+
+  it('ters kayıt: hem iptal edilen orijinal fiş hem yeni ters kayıt fişi audit_log\'a yazılır', async () => {
+    await withRollback(async (tx) => {
+      await seedBase(tx);
+      const r = await postJournalEntry(tx, {
+        ledger: 'both', journalCode: 'GEN', entryDate: new Date(), description: 'audit testi',
+        lines: [{ accountCode: '100', debit: d('75') }, { accountCode: '500', credit: d('75') }],
+      }, ctx);
+      const rev = await reverseJournalEntry(tx, r.vukId!, ctx);
+      expect(rev.vukId).toBeTruthy();
+      expect(rev.ufrsId).toBeTruthy();
+      // Orijinal fişler için 'cancel' audit satırı (önceden de vardı)
+      const cancelRows = await tx.select().from(auditLog).where(and(eq(auditLog.tableName, 'journal_entries'), eq(auditLog.action, 'cancel'), eq(auditLog.recordId, r.vukId!)));
+      expect(cancelRows.length).toBeGreaterThanOrEqual(1);
+      // YENİ: ters kayıt fişlerinin (revId) kendisi için de 'post' audit satırı olmalı (P1 kök neden)
+      const vukPostRows = await tx.select().from(auditLog).where(and(eq(auditLog.tableName, 'journal_entries'), eq(auditLog.action, 'post'), eq(auditLog.recordId, rev.vukId!)));
+      expect(vukPostRows.length).toBeGreaterThanOrEqual(1);
+      const ufrsPostRows = await tx.select().from(auditLog).where(and(eq(auditLog.tableName, 'journal_entries'), eq(auditLog.action, 'post'), eq(auditLog.recordId, rev.ufrsId!)));
+      expect(ufrsPostRows.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
   it('120/320 ana hesabına cari olmadan kayıt reddedilir', async () => {
     await withRollback(async (tx) => {
       await seedBase(tx);

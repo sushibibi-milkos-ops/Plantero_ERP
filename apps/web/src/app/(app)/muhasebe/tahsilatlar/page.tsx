@@ -36,10 +36,12 @@ export default async function PaymentsPage() {
         }
       />
 
+      {/* fractionDigits={2} (kritik bulgu muhasebe-faturalar-04 — kök neden, modül geneli): tüm
+          muhasebe KPI şeritleri tek ondalık kuralına (2) sahip olmalı — bkz. /muhasebe/page.tsx. */}
       <KpiStripRow>
-        <KpiCard variant="strip" title="Toplam tahsilat" value={inbound.toFixed(4)} format="money" />
-        <KpiCard variant="strip" title="Toplam ödeme" value={outbound.toFixed(4)} format="money" />
-        <KpiCard variant="strip" title="Tahsissiz (avans)" value={unallocated.toFixed(4)} format="money" />
+        <KpiCard variant="strip" title="Toplam tahsilat" value={inbound.toFixed(4)} format="money" fractionDigits={2} />
+        <KpiCard variant="strip" title="Toplam ödeme" value={outbound.toFixed(4)} format="money" fractionDigits={2} />
+        <KpiCard variant="strip" title="Tahsissiz (avans)" value={unallocated.toFixed(4)} format="money" fractionDigits={2} />
         <KpiCard variant="strip" title="Son 30 gün" value={posted.filter((r) => r.paymentDate >= new Date(Date.now() - 30 * 86_400_000).toISOString().slice(0, 10)).length} format="int" />
       </KpiStripRow>
 

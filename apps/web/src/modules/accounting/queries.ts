@@ -2,7 +2,7 @@ import 'server-only';
 import type Decimal from 'decimal.js';
 import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
-import { D, ZERO, round4, listPeriods as coreListPeriods, getAging as coreGetAging } from '@plantero/core';
+import { D, ZERO, round4, listPeriods as coreListPeriods, getAging as coreGetAging, STOCK_LINKED_REF_TYPES } from '@plantero/core';
 
 const {
   invoices, invoiceLines, partners, products, salesChannels, payments, paymentAllocations,
@@ -340,7 +340,7 @@ export async function listJournalEntries(opts: { ledger: 'VUK' | 'UFRS'; journal
 }
 
 export type JournalLineRow = { id: string; accountCode: string; accountName: string | null; partnerName: string | null; description: string | null; debit: string; credit: string };
-export type JournalEntryDetail = { entry: typeof journalEntries.$inferSelect; journalCode: string; lines: JournalLineRow[]; twin: { id: string; ledger: string } | null };
+export type JournalEntryDetail = { entry: typeof journalEntries.$inferSelect; journalCode: string; lines: JournalLineRow[]; twin: { id: string; ledger: string; refType: string | null } | null; stockLinkedRefType: string | null };
 
 export async function getJournalEntryDetail(id: string): Promise<JournalEntryDetail | null> {
   if (!isUuid(id)) return null;
@@ -354,15 +354,26 @@ export async function getJournalEntryDetail(id: string): Promise<JournalEntryDet
     .leftJoin(partners, eq(partners.id, journalLines.partnerId))
     .where(eq(journalLines.entryId, id))
     .orderBy(asc(journalLines.sequence));
-  let twin: { id: string; ledger: string } | null = null;
+  // refType (P0 kök neden — kritik bulgu, ReverseJournalButton UI ikincil savunması): ikiz fişin
+  // refType'i de gerekiyor — VUK fişi kaynaksız görünse bile UFRS ikizi stok kaynaklı olabilir
+  // (ya da tersi), guard ikisini de kontrol eder (bkz. reverse-journal-button.tsx).
+  let twin: { id: string; ledger: string; refType: string | null } | null = null;
   if (entry.twinEntryId) {
-    const [t] = await db.select({ id: journalEntries.id, ledger: journalEntries.ledger }).from(journalEntries).where(eq(journalEntries.id, entry.twinEntryId)).limit(1);
+    const [t] = await db.select({ id: journalEntries.id, ledger: journalEntries.ledger, refType: journalEntries.refType }).from(journalEntries).where(eq(journalEntries.id, entry.twinEntryId)).limit(1);
     twin = t ?? null;
   }
+  // stockLinkedRefType (P0 kök neden — kritik bulgu, ReverseJournalButton UI ikincil savunması):
+  // `entry`/`twin`'den hangisi fiziksel stok hareketinden üretilmişse o refType burada hesaplanır
+  // — 'use client' bileşeni (reverse-journal-button.tsx) `@plantero/core`'un aggregate index'ini
+  // (db/audit bağımlılıkları, node:crypto dahil) ASLA import etmemeli, bu yüzden karar SUNUCUDA
+  // (bu dosya `server-only`) verilir ve hazır bir bayrak olarak geçirilir.
+  const stockLinkedRefType = (entry.refType && STOCK_LINKED_REF_TYPES.has(entry.refType) ? entry.refType : null) ?? (twin?.refType && STOCK_LINKED_REF_TYPES.has(twin.refType) ? twin.refType : null);
+
   return {
     entry, journalCode: journal?.code ?? '—',
     lines: lineRows.map((r) => ({ id: r.l.id, accountCode: r.l.accountCode, accountName: r.accountName, partnerName: r.partnerName, description: r.l.description, debit: r.l.debit, credit: r.l.credit })),
     twin,
+    stockLinkedRefType,
   };
 }
 

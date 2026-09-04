@@ -6,13 +6,36 @@ import { toast } from 'sonner';
 import { Undo2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { reverseJournalEntryAction } from '../actions';
 
-export function ReverseJournalButton({ entryId }: { entryId: string }) {
+// stockLinkedRefType (P0 kök neden — kritik bulgu, UI ikincil savunma): core'daki
+// `reverseJournalEntry` guard'ı (packages/core/src/accounting/journal.ts) sunucu tarafında zaten
+// reddediyor — bu sadece kullanıcının hiç tıklayamaması için ikinci bir savunma katmanı. Karar
+// ('bu fiş stok kaynaklı mı') SUNUCU bileşeninde (yevmiye/[id]/page.tsx, STOCK_LINKED_REF_TYPES ile)
+// verilir ve buraya HAZIR bir bayrak olarak geçer — `@plantero/core`'un aggregate index'i (db/audit
+// bağımlılıkları, `node:crypto` dahil) bu 'use client' dosyasına ASLA import edilmemeli, tarayıcı
+// paketleme hatası verir (webpack "UnhandledSchemeError: node:crypto").
+export function ReverseJournalButton({ entryId, stockLinkedRefType }: { entryId: string; stockLinkedRefType?: string | null }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+
+  if (stockLinkedRefType) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span>
+            <Button variant="outline" size="sm" disabled aria-disabled>
+              <Undo2 className="size-3.5" /> Ters kayıt
+            </Button>
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>Bu fiş bir stok hareketinden ({stockLinkedRefType}) otomatik üretildi; muhasebeden ters kayıtla iptal edilemez.</TooltipContent>
+      </Tooltip>
+    );
+  }
 
   async function submit() {
     setPending(true);
