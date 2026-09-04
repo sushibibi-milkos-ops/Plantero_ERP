@@ -215,6 +215,8 @@ export async function getReorderRuleDetail(id: string) {
 export type SupplierCardRow = {
   id: string; code: string; name: string; leadTimeDays: number | null; qualityScore: string | null;
   isPurchaseWhitelisted: boolean; openPoCount: number; openPoValue: string; productCount: number;
+  /** Zamanında teslimat % — son tamamlanmış mal kabullerinden (`receipts.was_on_time`, kalite modülü/`stock/receipts.ts` besler); veri yoksa null. */
+  onTimeDeliveryPct: number | null; deliveryCount: number;
 };
 
 export async function listSupplierCards(): Promise<SupplierCardRow[]> {
@@ -227,12 +229,29 @@ export async function listSupplierCards(): Promise<SupplierCardRow[]> {
   const byPartner = new Map(poAgg.map((r) => [r.partnerId, r]));
   const productAgg = await db.select({ partnerId: supplierProducts.partnerId, cnt: sql<string>`count(*)` }).from(supplierProducts).groupBy(supplierProducts.partnerId);
   const productByPartner = new Map(productAgg.map((r) => [r.partnerId, Number(r.cnt)]));
+  // Zamanında teslimat %: `receipts.was_on_time` (yalnızca PO'lu, `expectedDate` bilinen kabullerde
+  // `receiveGoods` tarafından doldurulur — bkz. `packages/core/src/stock/receipts.ts`). NULL olanlar
+  // (PO'suz manuel kabul, beklenen tarihsiz PO) sayıma katılmaz.
+  const deliveryAgg = await db
+    .select({
+      partnerId: receipts.partnerId,
+      onTimeCnt: sql<string>`count(*) filter (where ${receipts.wasOnTime} = true)`,
+      totalCnt: sql<string>`count(*) filter (where ${receipts.wasOnTime} is not null)`,
+    })
+    .from(receipts)
+    .where(and(inArray(receipts.status, ['received', 'qc_pending', 'done'])))
+    .groupBy(receipts.partnerId);
+  const deliveryByPartner = new Map(deliveryAgg.map((r) => [r.partnerId, r]));
   return suppliers.map((s) => {
     const agg = byPartner.get(s.id);
+    const delivery = deliveryByPartner.get(s.id);
+    const totalCnt = Number(delivery?.totalCnt ?? 0);
+    const onTimeCnt = Number(delivery?.onTimeCnt ?? 0);
     return {
       id: s.id, code: s.code, name: s.name, leadTimeDays: s.supplierLeadTimeDays, qualityScore: s.supplierQualityScore,
       isPurchaseWhitelisted: s.isPurchaseWhitelisted, openPoCount: Number(agg?.cnt ?? 0), openPoValue: agg?.value ?? '0',
       productCount: productByPartner.get(s.id) ?? 0,
+      onTimeDeliveryPct: totalCnt > 0 ? Math.round((onTimeCnt / totalCnt) * 100) : null, deliveryCount: totalCnt,
     };
   });
 }

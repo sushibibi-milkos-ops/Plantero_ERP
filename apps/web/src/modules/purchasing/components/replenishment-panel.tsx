@@ -9,13 +9,20 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { runReplenishmentAction } from '../actions';
 import { CriticalStockTable } from './critical-stock-table';
+import { ReorderRuleDrawer } from './reorder-rule-drawer';
 import type { CriticalStockRow } from '../queries';
 
 /** "Motoru çalıştır" + "sadece kritik" filtresi + tablo — tek bir client kabuğu (docs/modules/depo.md
- * kalıbı: filtre çubuğu üstte, tablo altta). */
-export function ReplenishmentPanel({ rows, canRun }: { rows: CriticalStockRow[]; canRun: boolean }) {
+ * kalıbı: filtre çubuğu üstte, tablo altta). Kural düzenleme drawer'ı burada (üst seviyede) yönetilir —
+ * satır aksiyonundan (`CriticalStockTable`) `setEditingRule` ile açılır. */
+export function ReplenishmentPanel({
+  rows, canRun, canManageRule, suppliers,
+}: {
+  rows: CriticalStockRow[]; canRun: boolean; canManageRule: boolean; suppliers: Array<{ id: string; name: string; code: string }>;
+}) {
   const [onlyCritical, setOnlyCritical] = useState(true);
   const [pending, startTransition] = useTransition();
+  const [editingRule, setEditingRule] = useState<CriticalStockRow | null>(null);
   const router = useRouter();
 
   function run() {
@@ -49,7 +56,8 @@ export function ReplenishmentPanel({ rows, canRun }: { rows: CriticalStockRow[];
           </Button>
         ) : null}
       </div>
-      <CriticalStockTable rows={rows} onlyCritical={onlyCritical} />
+      <CriticalStockTable rows={rows} onlyCritical={onlyCritical} canManageRule={canManageRule} onEditRule={setEditingRule} />
+      <ReorderRuleDrawer rule={editingRule} onOpenChange={(open) => { if (!open) setEditingRule(null); }} suppliers={suppliers} />
     </div>
   );
 }

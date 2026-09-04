@@ -132,17 +132,24 @@ async function seedReorderRules(tx: DbOrTx, tireId: string, summary: SeedSummary
 /* ==================================================================== */
 
 type PoLineSeed = { sku: string; qty: number; unitCost: number };
-type PoSeed = { supplierCode: string; deliveryNo: string; lines: PoLineSeed[] };
+type PoSeed = { supplierCode: string; deliveryNo: string; lines: PoLineSeed[]; expectedDateOffsetDays: number };
 
 /** `seed/stock.ts` R1–R6 mal kabulleriyle BİREBİR eşleşir (aynı tedarikçi/ürün/miktar/maliyet) — o dosya
- * bu siparişlerin satırlarına `purchaseOrderLineId` ile bağlanır. */
+ * bu siparişlerin satırlarına `purchaseOrderLineId` ile bağlanır.
+ * `expectedDateOffsetDays`: `receipts.was_on_time` (tedarikçi kartları "zamanında teslimat %" —
+ * `packages/core/src/stock/receipts.ts::receiveGoods`) yalnızca PO'nun `expectedDate`'i doluysa
+ * hesaplanır; `stock.ts`'teki `createAndReceive` çağrıları `receivedAt = new Date()` (seed'in
+ * ÇALIŞTIĞI an) kullanır — bu yüzden burada bugüne göre (seed çalıştığı ana göre) pozitif/negatif bir
+ * ofset veriyoruz (negatif = beklenen tarih geçmişte kaldı → geç; pozitif = henüz gelmedi → zamanında)
+ * ki panoda gerçek bir zamanında/geç karışımı görünsün (docs/modules/tedarik.md §4: "tedarikçi kartları
+ * kalite skoru, zamanında teslimat %, beyaz liste"). */
 const RECEIPT_POS: PoSeed[] = [
-  { supplierCode: 'S-000001', deliveryNo: 'İRS-8842', lines: [{ sku: '301010000', qty: 120, unitCost: 210 }] },
-  { supplierCode: 'S-000005', deliveryNo: 'İRS-3301', lines: [{ sku: '301030000', qty: 200, unitCost: 315 }, { sku: '301040000', qty: 150, unitCost: 275 }] },
-  { supplierCode: 'S-000002', deliveryNo: 'İRS-5567', lines: [{ sku: '302010000', qty: 80, unitCost: 690 }, { sku: '302020000', qty: 60, unitCost: 650 }] },
-  { supplierCode: 'S-000003', deliveryNo: 'İRS-9012', lines: [{ sku: '304010000', qty: 40, unitCost: 910 }] },
-  { supplierCode: 'S-000004', deliveryNo: 'İRS-1180', lines: [{ sku: '401010000', qty: 1000, unitCost: 22 }, { sku: '401020000', qty: 1000, unitCost: 10 }, { sku: '401030000', qty: 2000, unitCost: 8 }, { sku: '401040000', qty: 300, unitCost: 25 }] },
-  { supplierCode: 'S-000006', deliveryNo: 'İRS-6603', lines: [{ sku: '308010000', qty: 100, unitCost: 255 }, { sku: '308020000', qty: 25, unitCost: 810 }] },
+  { supplierCode: 'S-000001', deliveryNo: 'İRS-8842', expectedDateOffsetDays: -4, lines: [{ sku: '301010000', qty: 120, unitCost: 210 }] },
+  { supplierCode: 'S-000005', deliveryNo: 'İRS-3301', expectedDateOffsetDays: 2, lines: [{ sku: '301030000', qty: 200, unitCost: 315 }, { sku: '301040000', qty: 150, unitCost: 275 }] },
+  { supplierCode: 'S-000002', deliveryNo: 'İRS-5567', expectedDateOffsetDays: -2, lines: [{ sku: '302010000', qty: 80, unitCost: 690 }, { sku: '302020000', qty: 60, unitCost: 650 }] },
+  { supplierCode: 'S-000003', deliveryNo: 'İRS-9012', expectedDateOffsetDays: 5, lines: [{ sku: '304010000', qty: 40, unitCost: 910 }] },
+  { supplierCode: 'S-000004', deliveryNo: 'İRS-1180', expectedDateOffsetDays: 1, lines: [{ sku: '401010000', qty: 1000, unitCost: 22 }, { sku: '401020000', qty: 1000, unitCost: 10 }, { sku: '401030000', qty: 2000, unitCost: 8 }, { sku: '401040000', qty: 300, unitCost: 25 }] },
+  { supplierCode: 'S-000006', deliveryNo: 'İRS-6603', expectedDateOffsetDays: -6, lines: [{ sku: '308010000', qty: 100, unitCost: 255 }, { sku: '308020000', qty: 25, unitCost: 810 }] },
 ];
 
 async function seedOpenPurchaseOrders(tx: DbOrTx, tireId: string, summary: SeedSummary): Promise<void> {
@@ -155,6 +162,7 @@ async function seedOpenPurchaseOrders(tx: DbOrTx, tireId: string, summary: SeedS
     }));
     const { order } = await createPurchaseOrder(tx, {
       partnerId: supplier.id, warehouseId: tireId, paymentTermDays: 30, origin: 'manual',
+      expectedDate: new Date(Date.now() + p.expectedDateOffsetDays * 86_400_000),
       note: `Tedarikçi irsaliyesi: ${p.deliveryNo} (bkz. seed/stock.ts mal kabulü)`, lines,
     }, SYSTEM_ACTOR);
     await auditCreate(tx, 'purchase_orders', order.id, `Satın alma siparişi ${order.docNo} oluşturuldu (${supplier.name})`);

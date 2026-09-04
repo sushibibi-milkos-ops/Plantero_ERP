@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { requirePermission, userCan } from '@/lib/auth';
-import { listCriticalStock } from '@/modules/purchasing/queries';
+import { listCriticalStock, listSuppliers } from '@/modules/purchasing/queries';
 import { ReplenishmentPanel } from '@/modules/purchasing/components/replenishment-panel';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function CriticalStockPage() {
   const user = await requirePermission('purchasing.view');
-  const rows = await listCriticalStock();
+  const [rows, suppliers] = await Promise.all([listCriticalStock(), listSuppliers()]);
 
   const critical = rows.filter((r) => r.risk === 'critical').length;
   const warning = rows.filter((r) => r.risk === 'warning').length;
@@ -36,7 +36,7 @@ export default async function CriticalStockPage() {
         </p>
       ) : null}
 
-      <ReplenishmentPanel rows={rows} canRun={userCan(user, 'purchasing.draft')} />
+      <ReplenishmentPanel rows={rows} canRun={userCan(user, 'purchasing.draft')} canManageRule={userCan(user, 'purchasing.approve')} suppliers={suppliers} />
     </>
   );
 }

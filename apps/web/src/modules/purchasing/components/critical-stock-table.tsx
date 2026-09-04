@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { SlidersHorizontal } from 'lucide-react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { formatQty, formatDateTime } from '@/lib/format';
 // Alt-yol içe aktarımı ('@plantero/core/money', barrel değil): kök giriş noktası node:crypto kullanan
@@ -17,7 +18,11 @@ const RISK_CLASS: Record<CriticalStockRow['risk'], string> = {
   none: 'bg-muted/60 text-muted-foreground',
 };
 
-export function CriticalStockTable({ rows, onlyCritical }: { rows: CriticalStockRow[]; onlyCritical: boolean }) {
+export function CriticalStockTable({
+  rows, onlyCritical, canManageRule, onEditRule,
+}: {
+  rows: CriticalStockRow[]; onlyCritical: boolean; canManageRule?: boolean; onEditRule?: (row: CriticalStockRow) => void;
+}) {
   const filtered = useMemo(() => (onlyCritical ? rows.filter((r) => r.risk !== 'none') : rows), [rows, onlyCritical]);
 
   const columns = useMemo<ColumnDef<CriticalStockRow, unknown>[]>(
@@ -68,6 +73,7 @@ export function CriticalStockTable({ rows, onlyCritical }: { rows: CriticalStock
       initialSorting={[{ id: 'suggestedQty', desc: true }]}
       emptyTitle="Kritik stok kuralı yok"
       emptyDescription="Kural tanımlı ürün bulunamadı."
+      rowActions={canManageRule && onEditRule ? (row) => [{ label: 'Kuralı düzenle', icon: SlidersHorizontal, onSelect: () => onEditRule(row) }] : undefined}
     />
   );
 }

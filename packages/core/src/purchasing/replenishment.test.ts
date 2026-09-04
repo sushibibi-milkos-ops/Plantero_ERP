@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { reorderRules } from '@plantero/db';
-import { evaluateRules, computeConsumptionRates } from './replenishment.js';
+import { evaluateRules, computeConsumptionRates, updateReorderRule } from './replenishment.js';
 import { postStockMove } from '../stock/ledger.js';
 import { receiveRawHelper } from '../stock/__test-utils__.js';
 import { withRollback, seedBase, ctx, d } from '../__tests__/helpers.js';
@@ -59,6 +59,34 @@ describe('purchasing/replenishment', () => {
       const row = evaluated.find((r) => r.productId === b.raw.id)!;
       expect(row.dailyConsumption.gt(0)).toBe(true);
       expect(row.daysOfCover).not.toBeNull();
+    });
+  });
+
+  it('updateReorderRule: min/max/lead/güvenlik/beyaz liste alanlarını günceller, motor alanlarına dokunmaz', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const [rule] = await tx
+        .insert(reorderRules)
+        .values({ productId: b.raw.id, warehouseId: b.wh.id, minQty: '50', maxQty: '150', leadTimeDays: 10, safetyDays: 3, lastOnHand: '77.0000' })
+        .returning();
+
+      const updated = await updateReorderRule(tx, rule!.id, { minQty: d(60), maxQty: d(200), leadTimeDays: 14, safetyDays: 5, isAutoOrderWhitelisted: true, autoOrderMaxAmount: d(5000) }, ctx);
+      expect(updated.minQty).toBe('60.0000');
+      expect(updated.maxQty).toBe('200.0000');
+      expect(updated.leadTimeDays).toBe(14);
+      expect(updated.safetyDays).toBe(5);
+      expect(updated.isAutoOrderWhitelisted).toBe(true);
+      expect(updated.autoOrderMaxAmount).toBe('5000.0000');
+      // Motor alanı korunur (updateReorderRule dokunmadı)
+      expect(updated.lastOnHand).toBe('77.0000');
+    });
+  });
+
+  it('updateReorderRule: maxQty < minQty reddedilir (motorun "max\'a tamamlama" bileşeni anlamsızlaşır)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const [rule] = await tx.insert(reorderRules).values({ productId: b.raw.id, warehouseId: b.wh.id, minQty: '50', maxQty: '150', leadTimeDays: 10, safetyDays: 3 }).returning();
+      await expect(updateReorderRule(tx, rule!.id, { minQty: d(100), maxQty: d(80) }, ctx)).rejects.toThrow();
     });
   });
 });

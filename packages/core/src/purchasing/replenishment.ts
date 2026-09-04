@@ -4,6 +4,7 @@ import { reorderRules, stockMoves, locations, products, warehouses, type DbOrTx 
 import { D, toDb, round4, ZERO } from '../money.js';
 import { getOnHand } from '../stock/ledger.js';
 import { getOpenPoQtyByProduct } from './orders.js';
+import { NotFoundError, ValidationError } from '../auth/errors.js';
 import type { ActorCtx } from '../types.js';
 
 /**
@@ -128,4 +129,49 @@ export async function evaluateRules(tx: DbOrTx, ctx: ActorCtx, opts: { warehouse
   }
 
   return evaluated.sort((a, b) => (a.daysOfCover?.toNumber() ?? -1) - (b.daysOfCover?.toNumber() ?? -1));
+}
+
+export type UpdateReorderRuleInput = {
+  minQty?: Decimal;
+  maxQty?: Decimal;
+  leadTimeDays?: number;
+  safetyDays?: number;
+  preferredSupplierId?: string | null;
+  isAutoOrderWhitelisted?: boolean;
+  /** `undefined` = değiştirme, `null` = sınırı kaldır (tutar sınırsız otomatik onay — yalnızca beyaz liste kontrol eder). */
+  autoOrderMaxAmount?: Decimal | null;
+  isActive?: boolean;
+};
+
+/**
+ * Kritik stok kuralı düzenleme drawer'ı — `docs/modules/tedarik.md` §1 "Kural düzenleme drawer
+ * (min/max/lead/güvenlik/beyaz liste/tedarikçi)". Motorun kendi ürettiği alanlara (`daily_consumption`,
+ * `last*`) dokunmaz — yalnızca kullanıcı tanımlı politika alanlarını değiştirir. `maxQty < minQty`
+ * (motorun "max'a tamamlama" bileşenini anlamsız kılar — bkz. `evaluateRules` yorumları) reddedilir.
+ */
+export async function updateReorderRule(tx: DbOrTx, id: string, input: UpdateReorderRuleInput, ctx: ActorCtx) {
+  const [rule] = await tx.select().from(reorderRules).where(eq(reorderRules.id, id)).limit(1);
+  if (!rule) throw new NotFoundError('Kritik stok kuralı', id);
+
+  const minQty = input.minQty !== undefined ? round4(input.minQty) : D(rule.minQty);
+  const maxQty = input.maxQty !== undefined ? round4(input.maxQty) : D(rule.maxQty);
+  if (minQty.lt(0) || maxQty.lt(0)) throw new ValidationError('Min/Max stok negatif olamaz');
+  if (maxQty.gt(0) && maxQty.lt(minQty)) throw new ValidationError('Maks. stok, min. stoktan küçük olamaz');
+  if (input.leadTimeDays !== undefined && input.leadTimeDays < 0) throw new ValidationError('Lead time negatif olamaz');
+  if (input.safetyDays !== undefined && input.safetyDays < 0) throw new ValidationError('Güvenlik günü negatif olamaz');
+
+  const [updated] = await tx
+    .update(reorderRules)
+    .set({
+      minQty: toDb(minQty), maxQty: toDb(maxQty),
+      leadTimeDays: input.leadTimeDays ?? rule.leadTimeDays, safetyDays: input.safetyDays ?? rule.safetyDays,
+      preferredSupplierId: input.preferredSupplierId === undefined ? rule.preferredSupplierId : input.preferredSupplierId,
+      isAutoOrderWhitelisted: input.isAutoOrderWhitelisted ?? rule.isAutoOrderWhitelisted,
+      autoOrderMaxAmount: input.autoOrderMaxAmount === undefined ? rule.autoOrderMaxAmount : input.autoOrderMaxAmount === null ? null : toDb(input.autoOrderMaxAmount),
+      isActive: input.isActive ?? rule.isActive,
+      updatedBy: ctx.userId ?? null,
+    })
+    .where(eq(reorderRules.id, id))
+    .returning();
+  return updated!;
 }

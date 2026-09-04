@@ -48,14 +48,25 @@ function SupplierCard({ supplier, canManageWhitelist }: { supplier: SupplierCard
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 border-t border-border/60 pt-3 text-center">
+      <div className="grid grid-cols-4 gap-2 border-t border-border/60 pt-3 text-center">
         <div>
           <div className="font-mono text-sm font-semibold tabular-nums">{supplier.leadTimeDays ?? '—'}</div>
-          <div className="text-[11px] text-muted-foreground uppercase">Lead time (gün)</div>
+          <div className="text-[11px] text-muted-foreground uppercase">Lead time</div>
         </div>
         <div>
           <div className="font-mono text-sm font-semibold tabular-nums">{supplier.qualityScore ? `${Math.round(Number(supplier.qualityScore))}` : '—'}</div>
           <div className="text-[11px] text-muted-foreground uppercase">Kalite skoru</div>
+        </div>
+        <div>
+          <div
+            className={`font-mono text-sm font-semibold tabular-nums ${
+              supplier.onTimeDeliveryPct === null ? '' : supplier.onTimeDeliveryPct >= 90 ? 'text-emerald-600 dark:text-emerald-400' : supplier.onTimeDeliveryPct >= 70 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'
+            }`}
+            title={supplier.deliveryCount > 0 ? `Son ${supplier.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
+          >
+            {supplier.onTimeDeliveryPct === null ? '—' : `%${supplier.onTimeDeliveryPct}`}
+          </div>
+          <div className="text-[11px] text-muted-foreground uppercase">Zamanında</div>
         </div>
         <div>
           <div className="font-mono text-sm font-semibold tabular-nums">{supplier.productCount}</div>

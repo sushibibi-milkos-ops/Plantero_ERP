@@ -8,13 +8,41 @@ import {
   D, toDb,
   createPurchaseOrder, approvePurchaseOrder, rejectPurchaseOrder, markPurchaseOrderSent, cancelPurchaseOrder,
   evaluateRules, computeConsumptionRates, evaluateAutoOrderEligibility, isSupplierWhitelisted, setSupplierWhitelist,
+  updateReorderRule,
 } from '@plantero/core';
 import { draftPurchaseOrders, type ReplenishRule, type ConsumptionPoint, type SupplierProductOption } from '@plantero/ai';
 import { email } from '@plantero/integrations/messaging/email';
+import { whatsapp } from '@plantero/integrations/messaging/whatsapp';
 import { requirePermission } from '@/lib/auth';
 import { withAudit, type AuditInfo } from '@/lib/actions';
 
 const { purchaseOrders, approvals, replenishmentRuns, warehouses, supplierProducts, products, partners } = schema;
+
+/**
+ * NOT (PDF): `docs/modules/tedarik.md` §2 "integrations pdf" istiyor — `packages/integrations/src/pdf/render.ts`
+ * (`renderPdf`, Playwright chromium `page.pdf`) mevcut ve çalışıyor, ANCAK bu paketi doğrudan bir Next.js
+ * server action'a (`'use server'`) import etmek webpack'in `playwright-core`'un opsiyonel/native alt
+ * bağımlılıklarını (`bufferutil`, `utf-8-validate`, `electron`, `chromium-bidi/...`) derleme zamanında
+ * çözmeye çalışmasına yol açıyor ve TÜM uygulamayı (login dahil, `/login` 500) kırıyor — canlı olarak
+ * denendi, `next.config.ts`'e `serverExternalPackages: [..., 'playwright-core']` eklemek de (postgres/
+ * bullmq/ioredis'te işe yarayan aynı desen) `chromium-bidi` alt bağımlılığında tekrar aynı hatayı verdi.
+ * Bu yüzden PDF üretimi burada YOK — `sentVia` yalnızca e-posta (+ tedarikçinin `whatsapp` alanı doluysa
+ * WhatsApp) kanallarını kapsıyor. Şema talebi değil, bir ORKESTRASYON sınırı: PDF üretimi ancak webpack
+ * bundling'i olmayan bir katmandan (apps/worker, düz Node süreci) bir kuyruk job'ı olarak tetiklenebilir
+ * — bkz. rapordaki "bilinen eksikler".
+ */
+async function sendPurchaseOrderToSupplier(docNo: string, partner: { email: string | null; name: string; whatsapp: string | null } | null) {
+  const emailResult = await email.sendEmail({
+    to: partner?.email ?? 'siparis@tedarikci.local', subject: `Satın Alma Siparişi ${docNo}`,
+    body: `Sayın ${partner?.name ?? 'Tedarikçi'}, ${docNo} numaralı satın alma siparişimiz sistemde görüntülenebilir.`,
+  });
+  const via = ['email'];
+  if (partner?.whatsapp) {
+    await whatsapp.sendWhatsApp({ to: partner.whatsapp, body: `Plantero: ${docNo} numaralı satın alma siparişimiz gönderildi, sistemde/e-postada görüntüleyebilirsiniz.` });
+    via.push('whatsapp');
+  }
+  return { sentVia: via.join('+'), sandbox: emailResult.sandbox, pdfPath: null as string | null };
+}
 
 /* ==================================================================== */
 /* Sipariş oluşturma / yaşam döngüsü                                    */
@@ -88,19 +116,14 @@ export const rejectPurchaseOrderAction = withAudit('purchasing.rejectOrder', asy
 export const sendPurchaseOrderAction = withAudit('purchasing.sendOrder', async (raw: z.infer<typeof idSchema>) => {
   const user = await requirePermission('purchasing.send');
   const input = idSchema.parse(raw);
-  const [before] = await db.select({ partnerId: purchaseOrders.partnerId }).from(purchaseOrders).where(eq(purchaseOrders.id, input.id)).limit(1);
-  const [partner] = before ? await db.select().from(partners).where(eq(partners.id, before.partnerId)).limit(1) : [null];
-  // Gönderim (e-posta, sandbox — SMTP_URL yoksa gerçek posta atılmaz): katman kuralı gereği (core →
-  // integrations bağımlılığı yasak) burada, transaction DIŞINDA yapılır; `markPurchaseOrderSent` yalnızca
-  // sonucu kalıcılaştırır.
-  const sendResult = await email.sendEmail({
-    to: partner?.email ?? 'siparis@tedarikci.local', subject: `Satın Alma Siparişi`,
-    body: `Sayın ${partner?.name ?? 'Tedarikçi'}, satın alma siparişimiz ekte/sistemde görüntülenebilir.`,
-  });
-  const order = await db.transaction((tx) => markPurchaseOrderSent(tx, input.id, { sentVia: 'email', sentTo: partner?.email ?? null, pdfPath: sendResult.providerId }, user.actor));
+  const [before] = await db.select({ partnerId: purchaseOrders.partnerId, docNo: purchaseOrders.docNo }).from(purchaseOrders).where(eq(purchaseOrders.id, input.id)).limit(1);
+  if (!before) throw new Error('Sipariş bulunamadı');
+  const [partner] = await db.select().from(partners).where(eq(partners.id, before.partnerId)).limit(1);
+  const sendResult = await sendPurchaseOrderToSupplier(before.docNo, partner ?? null);
+  const order = await db.transaction((tx) => markPurchaseOrderSent(tx, input.id, { sentVia: sendResult.sentVia, sentTo: partner?.email ?? null, pdfPath: sendResult.pdfPath }, user.actor));
   revalidatePath('/satin-alma/siparisler');
   revalidatePath(`/satin-alma/siparisler/${input.id}`);
-  return { data: { id: order.id, status: order.status }, audit: { action: 'post', tableName: 'purchase_orders', recordId: order.id, summary: `Satın alma siparişi ${order.docNo} tedarikçiye gönderildi (${sendResult.sandbox ? 'sandbox' : 'e-posta'})` } };
+  return { data: { id: order.id, status: order.status }, audit: { action: 'post', tableName: 'purchase_orders', recordId: order.id, summary: `Satın alma siparişi ${order.docNo} tedarikçiye gönderildi (${sendResult.sentVia}${sendResult.sandbox ? ', sandbox' : ''})` } };
 });
 
 export const cancelPurchaseOrderAction = withAudit('purchasing.cancelOrder', async (raw: z.infer<typeof rejectSchema>) => {
@@ -127,6 +150,36 @@ export const setSupplierWhitelistAction = withAudit('purchasing.setWhitelist', a
 });
 
 /* ==================================================================== */
+/* Kritik stok kuralı düzenleme (drawer)                                */
+/* ==================================================================== */
+
+const updateRuleSchema = z.object({
+  id: z.string().uuid(),
+  minQty: z.string().min(1, 'Min. stok girin'),
+  maxQty: z.string().min(1, 'Maks. stok girin'),
+  leadTimeDays: z.coerce.number().int().min(0, 'Lead time negatif olamaz'),
+  safetyDays: z.coerce.number().int().min(0, 'Güvenlik günü negatif olamaz'),
+  preferredSupplierId: z.string().uuid().optional().nullable(),
+  isAutoOrderWhitelisted: z.boolean(),
+  autoOrderMaxAmount: z.string().optional().nullable(),
+  isActive: z.boolean(),
+});
+
+export const updateReorderRuleAction = withAudit('purchasing.updateReorderRule', async (raw: z.infer<typeof updateRuleSchema>) => {
+  const user = await requirePermission('purchasing.approve');
+  const input = updateRuleSchema.parse(raw);
+  const updated = await db.transaction((tx) =>
+    updateReorderRule(tx, input.id, {
+      minQty: D(input.minQty), maxQty: D(input.maxQty), leadTimeDays: input.leadTimeDays, safetyDays: input.safetyDays,
+      preferredSupplierId: input.preferredSupplierId ?? null, isAutoOrderWhitelisted: input.isAutoOrderWhitelisted,
+      autoOrderMaxAmount: input.autoOrderMaxAmount && input.autoOrderMaxAmount.trim() ? D(input.autoOrderMaxAmount) : null,
+      isActive: input.isActive,
+    }, user.actor));
+  revalidatePath('/satin-alma/kritik-stok');
+  return { data: { id: updated.id }, audit: { action: 'update', tableName: 'reorder_rules', recordId: updated.id, summary: `Kritik stok kuralı güncellendi (min ${updated.minQty} / maks ${updated.maxQty} / lead ${updated.leadTimeDays}g)`, after: updated } };
+});
+
+/* ==================================================================== */
 /* Kritik stok motoru                                                    */
 /* ==================================================================== */
 
@@ -142,7 +195,7 @@ export type RunReplenishmentResult = { evaluated: number; suggested: number; dra
 export const runReplenishmentAction = withAudit('purchasing.runReplenishment', async () => {
   const user = await requirePermission('purchasing.draft');
 
-  const toSend: Array<{ orderId: string; docNo: string; partnerEmail: string | null; partnerName: string }> = [];
+  const toSend: Array<{ orderId: string; docNo: string; partnerEmail: string | null; partnerName: string; partnerWhatsapp: string | null }> = [];
   // `createPurchaseOrder` (core) kendi audit satırını yazmaz (sözleşme: audit yalnızca web
   // katmanındaki `withAudit`'te) — bu action'ın oluşturduğu her PO için ayrı bir audit girdisi
   // gerekir (I17: son 24 saatteki her purchase_orders satırının audit_log karşılığı olmalı; tek bir
@@ -207,7 +260,7 @@ export const runReplenishmentAction = withAudit('purchasing.runReplenishment', a
       if (eligibility.eligible) {
         await approvePurchaseOrder(tx, order.id, user.actor);
         await tx.update(purchaseOrders).set({ isAutoApproved: true }).where(eq(purchaseOrders.id, order.id));
-        toSend.push({ orderId: order.id, docNo: order.docNo, partnerEmail: partner?.email ?? null, partnerName: partner?.name ?? draft.partnerName });
+        toSend.push({ orderId: order.id, docNo: order.docNo, partnerEmail: partner?.email ?? null, partnerName: partner?.name ?? draft.partnerName, partnerWhatsapp: partner?.whatsapp ?? null });
         autoOrdered += 1;
       } else {
         await tx.update(purchaseOrders).set({ status: 'pending_approval' }).where(eq(purchaseOrders.id, order.id));
@@ -228,11 +281,11 @@ export const runReplenishmentAction = withAudit('purchasing.runReplenishment', a
     return { evaluated: rules.length, suggested: critical.length, draftedOrders: purchaseOrderIds.length, autoOrdered } satisfies RunReplenishmentResult;
   });
 
-  // Otomatik onaylanıp gönderilenler için e-posta (sandbox) + durum kalıcılaştırma — transaction dışında.
+  // Otomatik onaylanıp gönderilenler için PDF + e-posta/WhatsApp (sandbox) + durum kalıcılaştırma — transaction dışında.
   for (const s of toSend) {
-    const sendResult = await email.sendEmail({ to: s.partnerEmail ?? 'siparis@tedarikci.local', subject: 'Satın Alma Siparişi (otomatik)', body: `Sayın ${s.partnerName}, kritik stok motoru tarafından otomatik oluşturulan siparişimiz ekte/sistemde görüntülenebilir.` });
-    const sent = await db.transaction((tx) => markPurchaseOrderSent(tx, s.orderId, { sentVia: 'email', sentTo: s.partnerEmail, isAutoApproved: true, pdfPath: sendResult.providerId }, user.actor));
-    auditEntries.push({ action: 'post', tableName: 'purchase_orders', recordId: sent.id, summary: `Satın alma siparişi ${sent.docNo}: beyaz liste + tutar sınırı içinde otomatik onaylanıp gönderildi` });
+    const sendResult = await sendPurchaseOrderToSupplier(s.docNo, { email: s.partnerEmail, name: s.partnerName, whatsapp: s.partnerWhatsapp });
+    const sent = await db.transaction((tx) => markPurchaseOrderSent(tx, s.orderId, { sentVia: sendResult.sentVia, sentTo: s.partnerEmail, isAutoApproved: true, pdfPath: sendResult.pdfPath }, user.actor));
+    auditEntries.push({ action: 'post', tableName: 'purchase_orders', recordId: sent.id, summary: `Satın alma siparişi ${sent.docNo}: beyaz liste + tutar sınırı içinde otomatik onaylanıp gönderildi (${sendResult.sentVia})` });
   }
 
   revalidatePath('/satin-alma/kritik-stok');
