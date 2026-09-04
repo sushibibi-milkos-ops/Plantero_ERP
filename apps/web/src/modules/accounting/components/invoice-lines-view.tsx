@@ -6,6 +6,13 @@ import type { InvoiceLineRow } from '../queries';
  * Fatura satırları — masaüstünde tablo, mobilde tek kolona düşen kart listesi (5 sütun 375px'te
  * kesiliyordu; toplam satırları görünmez oluyordu — Tur kuralı: "formlar tek kolona düşer").
  * Toplamlar HER iki görünümde de ayrı, her zaman tam genişlikte bir blokta (asla kesilmez).
+ *
+ * "Tutar" sütunu KDV HARİÇ satır tutarını (lineSubtotal = Miktar × Birim fiyat) basar (tur 6 P1
+ * muhasebe-fatura-detay-05): önceden lineTotal (KDV DAHİL) basıyordu ama Miktar × Birim fiyat hiçbir
+ * satırda ekrandaki "Tutar" ile tutmuyordu (o çarpım KDV hariçtir) ve alttaki "Ara toplam" da KDV
+ * hariç tutarların toplamıydı — Σ Tutar ≠ Ara toplam oluyordu. Kardeş ekran expense-invoice-form.tsx
+ * da "Tutar" sözcüğünü KDV hariç anlamda kullanıyor; modül genelinde tek taban artık budur. KDV dahil
+ * satır tutarı zaten "KDV %" sütunundan hesaplanabilir ve Genel toplam bloğunda ayrıca gösteriliyor.
  */
 export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTotal }: { lines: InvoiceLineRow[]; currency: string; subtotal: string; vatTotal: string; grandTotal: string }) {
   return (
@@ -38,7 +45,7 @@ export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTot
                     ("%20.0000", 4 ondalık nokta ayraçlı) — aynı satırdaki MoneyCell TR virgülüyle
                     ("₺30.600,00") çelişiyordu. formatPct gereksiz sıfırları atar, TR virgül kullanır. */}
                 <td className="px-3 py-2 text-right font-mono tabular-nums text-muted-foreground">{formatPct(l.vatRate)}</td>
-                <td className="px-3 py-2 text-right"><MoneyCell value={l.lineTotal} currency={currency} /></td>
+                <td className="px-3 py-2 text-right"><MoneyCell value={l.lineSubtotal} currency={currency} /></td>
               </tr>
             ))}
           </tbody>
@@ -53,7 +60,7 @@ export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTot
                 <div className="truncate">{l.productName ?? l.description}</div>
                 {l.productName && l.description !== l.productName ? <div className="truncate text-[12px] text-muted-foreground">{l.description}</div> : null}
               </div>
-              <MoneyCell value={l.lineTotal} currency={currency} className="shrink-0 font-medium" />
+              <MoneyCell value={l.lineSubtotal} currency={currency} className="shrink-0 font-medium" />
             </div>
             <div className="flex items-center justify-between text-[12px] text-muted-foreground">
               <span>{formatQty(l.qty, l.uomCode)} × <MoneyCell value={l.unitPrice} currency={currency} className="text-[12px]" /> · KDV {formatPct(l.vatRate)}</span>

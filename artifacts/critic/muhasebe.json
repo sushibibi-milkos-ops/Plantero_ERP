@@ -1,19 +1,19 @@
 {
  "module": "muhasebe",
- "round": 5,
- "note": "Tur 1 — kart ilk kez oluşturuldu. Referans puanları docs/DESIGN-SCORECARD.md'de sabittir (Linear 57 / Stripe 56) ve yeniden puanlanmaz. Ölçümler: `pnpm shot`, `pnpm measure` (scripts/measure.ts) ve ek iç-kaydırıcı/para-rengi ölçümü (Playwright, aynı scripts/lib/browser.ts giriş akışı). Ortak bileşen (DataTable, KpiCard/KpiStripRow, PageHeader, MoneyCell, StatusBadge, DocumentChain, app-shell) kaynaklı bulgular buraya YAZILMAZ — shell modülünde izlenir. | Tur 2: kaynak dosyalarda tur-1 bulgularına dair değişiklik yok (git: son muhasebe commit 7d74854/7890600, tur-1 puan kartından sonra düzeltme commit'i yok). Tüm açık bulgular pnpm shot + pnpm measure + scripts/probe-r2.ts ile yeniden ölçüldü ve AÇIK kaldı; hiçbir kriterde delta yok. | Tur 3 (modul-builder): tur 2'de açık bulunan tüm P0/P1/P2 bulgular kök nedenden düzeltildi (kaynak: bu turun commit'i) ve pnpm typecheck/lint/test + db:reset + db:check yeşil, her route pnpm shot + pnpm measure ile yeniden ölçüldü. measureAfter alanları eklendi. Nihai puanlama ve KAZANAN kararı kritik (gorsel-critic) ajanının turudur — builder yalnızca kapatır, puan vermez. | Tur 3 (gorsel-critic): builder'ın tur-3 kapanışları pnpm shot (1440x900 + 390x844) + pnpm measure + scripts/tmp-probe2/3 ile yeniden ölçüldü. 33 kapanışın 31'i doğrulandı; 2'si KISMEN kapanmıştı ve kalan yarısı yeni id ile yeniden açıldı (muhasebe-fatura-detay-01 → -04 'miktar birimsiz', muhasebe-kdv-03 → muhasebe-tablo-baslik-01 'el yapımı tablo başlıkları hâlâ UPPERCASE'). 12 kriter yeniden puanlandı; her delta gerekçelendirildi. Ortak bileşen (DataTable mobil kart meta satırı kırpması) bulgusu shell.json'a yazıldı, burada tekrar edilmedi. | Tur 3 (modul-builder, ek geçiş): Tur 3 kritik turunda açık kalan 12 bulgu (10 P1 + 2 P2, '/muhasebe/faturalar/[id]' k6/k9, '/muhasebe/faturalar/yeni?tur=alis' k6/k11, '/muhasebe/tahsilatlar/yeni' k2/k7, '/muhasebe/kdv' k3/k8, '/muhasebe/donemler' k5/k11) + modül geneli 4 P2 bulgu (muhasebe-tablo-baslik-01, muhasebe-banka-04, muhasebe-mobil-buton-01, muhasebe-tahsilatlar-03) kök nedenden kapatıldı; ayrıca JSON dışı, görev promptunda ayrıca verilen 1 P0 bulgu (manuel yevmiye fişi — tek taraflı satır sessizce engelleniyordu) kapatıldı ve 'muhasebe-yevmiye-p0-tek-tarafli-satir' id'siyle /muhasebe/yevmiye route'una eklendi. Tüm kapanışlar pnpm shot (1440x900 + 390x844) ve/veya doğrudan Playwright DOM ölçümüyle kanıtlandı, measureAfter alanlarına yazıldı. pnpm typecheck + lint + test (core+web) yeşil; pnpm db:reset + db:check YEŞİL (I1-I35), yalnızca I36 (36_export_shipment_gap.sql) İHLAL veriyor — bu kural ve ihlali muhasebe modülü kapsamı DIŞINDA, eşzamanlı başka bir agent'ın commit edilmemiş çalışmasından (satış/ihracat sevkiyat modülü) kaynaklanıyor; packages/db dondurulmuş olduğundan ve bu modülün sorumluluğunda olmadığından dokunulmadı. Nihai puanlama gorsel-critic ajanının turudur. | Tur 4 (gorsel-critic): 13 rota yeniden çekildi (pnpm shot 1440x900 + 390x844) ve ölçüldü (scripts/probe-muhasebe-r4.ts — satır yüksekliği, kök scrollWidth/clientWidth, iç kaydırıcılar, ellipsis ile kırpılan metinler, th uppercase sayısı, blok genişlikleri, <44px dokunma hedefleri, font dağılımı, renk sayısı, tabular-nums olmayan para hücresi; + scripts/probe-r4b.ts çerçeve/tablo ve DocumentChain ölçümü). Tur 3 builder ek geçişinin 16 kapanışı yeniden ölçüldü: 14'ü doğrulandı; muhasebe-tahsilat-yeni-03 kendi hedefine göre (≤2 blok genişliği) kapalı kaldı ama kardeş formun tek-1080px çözümüyle çeliştiği için yeni id (muhasebe-tahsilat-yeni-05) ile P1 açıldı; muhasebe-donemler-04 kapanışı ölü bandı çerçevenin içine taşıdığı için muhasebe-donemler-06 ile yeniden açıldı. Kod düzeyi tarama (transition:all, ease-in, scale(0), >300ms, hover gating): muhasebe/accounting kaynaklarında ihlal YOK — hover globals.css:11'de @media (hover:hover) and (pointer:fine) ile korunuyor. Ortak bileşen bulguları (DataTable mobil meta zinciri tarih kırpması, DocumentChain aktif düğüm kırpması) shell.json'a yazıldı. Sonuç: 11 rota KAZANDI, 2 rota KAYBETTİ (/muhasebe/tahsilatlar/yeni 55<57, /muhasebe/donemler 54<57). | Tur 4 (modul-builder, ek geçiş): kritik turunda açık kalan 10 bulgu (/muhasebe: muhasebe-ozet-03 P2, muhasebe-ozet-04 P2; /muhasebe/faturalar/[id]: muhasebe-fatura-detay-06 P2; /muhasebe/tahsilatlar/yeni: muhasebe-tahsilat-yeni-05 P1; /muhasebe/mutabakat: muhasebe-mutabakat-04 P2; /muhasebe/yevmiye: muhasebe-yevmiye-05 P2; /muhasebe/mizan: muhasebe-mizan-03 P2; /muhasebe/kdv: muhasebe-kdv-07 P2; /muhasebe/donemler: muhasebe-donemler-06 P1, muhasebe-donemler-07 P1) kök nedenden kapatıldı; ayrıca JSON dışı, görev promptunda ayrıca verilen 2 P2 bulgu (import-statement-dialog.tsx: dialog tetikleyicisi hydration tamamlanmadan tıklanabiliyordu — artık mounted state'e kadar disabled; .mt940 uzantısı artık MT940 olarak otomatik algılanıyor) kapatıldı. Tüm kapanışlar pnpm shot (1440x900 + 390x844) ve/veya doğrudan Playwright DOM ölçümüyle kanıtlandı, measureAfter alanlarına yazıldı. pnpm typecheck (apps/web) temiz (repoda tek kalan hata finans modülünün eşzamanlı, commit edilmemiş çalışmasında — loan-panel.tsx StatusBadge 'status' prop eksikliği — muhasebe kapsamı dışında, dokunulmadı), pnpm lint (apps/web) temiz (1 önceden var olan, ilgisiz uyarı dışında), packages/core/src/accounting testleri dahil packages/core tüm testler (41 dosya, 207 test) yeşil. Nihai puanlama gorsel-critic ajanının turudur — builder yalnızca kapatır, puan vermez. | Tur 5 (gorsel-critic): 13 rota yeniden çekildi (pnpm shot 1440x900 + 390x844) ve ölçüldü (scripts/probe-muhasebe-r4.ts → artifacts/critic/measure-muhasebe-r5/probe.json; ek hedefli Playwright DOM probları: liste satırı taşması, DocumentChain aktif düğüm bbox, mobil kart meta zinciri bit sayımı, dönemler mobil kart yüksekliği/düğme genişliği). Tur 4 builder ek geçişinin 10 kapanışı yeniden ölçüldü: 10/10 DOĞRULANDI (donemler mobil kart 65px + 0 tam-genişlik düğme, düğme 81.1x44; donemler tablo w-full; tahsilat formu tek 1080px kapsayıcı; mizan CSV PageHeader'da; yevmiye 'Yevmiye' sütunu gizli; mutabakat klavye ipucu 390px'te yok; kdv EmptyState ikon+başlık+eylem; özet KPI 2 ondalık; fatura detay meta '·' karakteri kalktı). ANCAK muhasebe-ozet-04 kapanışı (özet listelerinin mobil 2 satırlı düzeni) MASAÜSTÜNDE REGRESYON getirdi: satır sarmalayıcı span'ine md düzeninde min-w-0/flex-1 verilmediği için satır içeriği kartı 151px aşıyor, tarih ve tutar 1440px viewport'un dışına düşüyor (muhasebe-ozet-05, P0). Kod düzeyi tarama (transition:all, ease-in, scale(0), >300ms, hover gating): muhasebe kaynaklarında ihlal YOK; hover globals.css:11'de @media (hover:hover) and (pointer:fine) ile korunuyor. Ortak bileşen bulguları (DocumentChain aktif düğüm masaüstünde kırpık; DataTable MetaChain karma meta hücresinde tarihi de gizliyor) shell.json'a yazıldı. Sonuç: 11 rota KAZANDI, 2 rota KAYBETTİ (/muhasebe 51<56 ve açık P0; /muhasebe/tahsilatlar toplam 57≥57 ama k9=3<4 ve açık P1). | Tur 6 (modul-builder): kritik turunda (tur 5) açık kalan 3 bulgu (muhasebe-ozet-05 P0, muhasebe-faturalar-04 P2, muhasebe-tahsilatlar-04 P1) + görev promptunda ayrıca verilen 4 P0/P1 bulgu (manuel yevmiye tek taraflı defter seçeneği; reverseJournalEntry refType guard'ı yoktu; reverseJournalEntry ters kayıt fişleri için audit yazmıyordu; 17_audit_coverage.sql yorum güncelliği — bu SONUNCUSU packages/db/src/checks kapsamı DIŞINDA olduğu için ATLANDI, bkz. rapor) kök nedenden kapatıldı. pnpm typecheck + lint + core/web test (core: 41 dosya/210 test, web: 3 dosya/33 test) yeşil; pnpm db:reset + db:check YEŞİL (I1-I37, I37 dahil — journal_reversal_guard kuralı zaten mevcuttu ve artık geçiyor). Nihai puanlama gorsel-critic ajanının turudur.",
- "measuredAt": "2026-09-04 (tur 5 — kritik)",
+ "round": 6,
+ "note": "Tur 1 — kart ilk kez oluşturuldu. Referans puanları docs/DESIGN-SCORECARD.md'de sabittir (Linear 57 / Stripe 56) ve yeniden puanlanmaz. Ölçümler: `pnpm shot`, `pnpm measure` (scripts/measure.ts) ve ek iç-kaydırıcı/para-rengi ölçümü (Playwright, aynı scripts/lib/browser.ts giriş akışı). Ortak bileşen (DataTable, KpiCard/KpiStripRow, PageHeader, MoneyCell, StatusBadge, DocumentChain, app-shell) kaynaklı bulgular buraya YAZILMAZ — shell modülünde izlenir. | Tur 2: kaynak dosyalarda tur-1 bulgularına dair değişiklik yok (git: son muhasebe commit 7d74854/7890600, tur-1 puan kartından sonra düzeltme commit'i yok). Tüm açık bulgular pnpm shot + pnpm measure + scripts/probe-r2.ts ile yeniden ölçüldü ve AÇIK kaldı; hiçbir kriterde delta yok. | Tur 3 (modul-builder): tur 2'de açık bulunan tüm P0/P1/P2 bulgular kök nedenden düzeltildi (kaynak: bu turun commit'i) ve pnpm typecheck/lint/test + db:reset + db:check yeşil, her route pnpm shot + pnpm measure ile yeniden ölçüldü. measureAfter alanları eklendi. Nihai puanlama ve KAZANAN kararı kritik (gorsel-critic) ajanının turudur — builder yalnızca kapatır, puan vermez. | Tur 3 (gorsel-critic): builder'ın tur-3 kapanışları pnpm shot (1440x900 + 390x844) + pnpm measure + scripts/tmp-probe2/3 ile yeniden ölçüldü. 33 kapanışın 31'i doğrulandı; 2'si KISMEN kapanmıştı ve kalan yarısı yeni id ile yeniden açıldı (muhasebe-fatura-detay-01 → -04 'miktar birimsiz', muhasebe-kdv-03 → muhasebe-tablo-baslik-01 'el yapımı tablo başlıkları hâlâ UPPERCASE'). 12 kriter yeniden puanlandı; her delta gerekçelendirildi. Ortak bileşen (DataTable mobil kart meta satırı kırpması) bulgusu shell.json'a yazıldı, burada tekrar edilmedi. | Tur 3 (modul-builder, ek geçiş): Tur 3 kritik turunda açık kalan 12 bulgu (10 P1 + 2 P2, '/muhasebe/faturalar/[id]' k6/k9, '/muhasebe/faturalar/yeni?tur=alis' k6/k11, '/muhasebe/tahsilatlar/yeni' k2/k7, '/muhasebe/kdv' k3/k8, '/muhasebe/donemler' k5/k11) + modül geneli 4 P2 bulgu (muhasebe-tablo-baslik-01, muhasebe-banka-04, muhasebe-mobil-buton-01, muhasebe-tahsilatlar-03) kök nedenden kapatıldı; ayrıca JSON dışı, görev promptunda ayrıca verilen 1 P0 bulgu (manuel yevmiye fişi — tek taraflı satır sessizce engelleniyordu) kapatıldı ve 'muhasebe-yevmiye-p0-tek-tarafli-satir' id'siyle /muhasebe/yevmiye route'una eklendi. Tüm kapanışlar pnpm shot (1440x900 + 390x844) ve/veya doğrudan Playwright DOM ölçümüyle kanıtlandı, measureAfter alanlarına yazıldı. pnpm typecheck + lint + test (core+web) yeşil; pnpm db:reset + db:check YEŞİL (I1-I35), yalnızca I36 (36_export_shipment_gap.sql) İHLAL veriyor — bu kural ve ihlali muhasebe modülü kapsamı DIŞINDA, eşzamanlı başka bir agent'ın commit edilmemiş çalışmasından (satış/ihracat sevkiyat modülü) kaynaklanıyor; packages/db dondurulmuş olduğundan ve bu modülün sorumluluğunda olmadığından dokunulmadı. Nihai puanlama gorsel-critic ajanının turudur. | Tur 4 (gorsel-critic): 13 rota yeniden çekildi (pnpm shot 1440x900 + 390x844) ve ölçüldü (scripts/probe-muhasebe-r4.ts — satır yüksekliği, kök scrollWidth/clientWidth, iç kaydırıcılar, ellipsis ile kırpılan metinler, th uppercase sayısı, blok genişlikleri, <44px dokunma hedefleri, font dağılımı, renk sayısı, tabular-nums olmayan para hücresi; + scripts/probe-r4b.ts çerçeve/tablo ve DocumentChain ölçümü). Tur 3 builder ek geçişinin 16 kapanışı yeniden ölçüldü: 14'ü doğrulandı; muhasebe-tahsilat-yeni-03 kendi hedefine göre (≤2 blok genişliği) kapalı kaldı ama kardeş formun tek-1080px çözümüyle çeliştiği için yeni id (muhasebe-tahsilat-yeni-05) ile P1 açıldı; muhasebe-donemler-04 kapanışı ölü bandı çerçevenin içine taşıdığı için muhasebe-donemler-06 ile yeniden açıldı. Kod düzeyi tarama (transition:all, ease-in, scale(0), >300ms, hover gating): muhasebe/accounting kaynaklarında ihlal YOK — hover globals.css:11'de @media (hover:hover) and (pointer:fine) ile korunuyor. Ortak bileşen bulguları (DataTable mobil meta zinciri tarih kırpması, DocumentChain aktif düğüm kırpması) shell.json'a yazıldı. Sonuç: 11 rota KAZANDI, 2 rota KAYBETTİ (/muhasebe/tahsilatlar/yeni 55<57, /muhasebe/donemler 54<57). | Tur 4 (modul-builder, ek geçiş): kritik turunda açık kalan 10 bulgu (/muhasebe: muhasebe-ozet-03 P2, muhasebe-ozet-04 P2; /muhasebe/faturalar/[id]: muhasebe-fatura-detay-06 P2; /muhasebe/tahsilatlar/yeni: muhasebe-tahsilat-yeni-05 P1; /muhasebe/mutabakat: muhasebe-mutabakat-04 P2; /muhasebe/yevmiye: muhasebe-yevmiye-05 P2; /muhasebe/mizan: muhasebe-mizan-03 P2; /muhasebe/kdv: muhasebe-kdv-07 P2; /muhasebe/donemler: muhasebe-donemler-06 P1, muhasebe-donemler-07 P1) kök nedenden kapatıldı; ayrıca JSON dışı, görev promptunda ayrıca verilen 2 P2 bulgu (import-statement-dialog.tsx: dialog tetikleyicisi hydration tamamlanmadan tıklanabiliyordu — artık mounted state'e kadar disabled; .mt940 uzantısı artık MT940 olarak otomatik algılanıyor) kapatıldı. Tüm kapanışlar pnpm shot (1440x900 + 390x844) ve/veya doğrudan Playwright DOM ölçümüyle kanıtlandı, measureAfter alanlarına yazıldı. pnpm typecheck (apps/web) temiz (repoda tek kalan hata finans modülünün eşzamanlı, commit edilmemiş çalışmasında — loan-panel.tsx StatusBadge 'status' prop eksikliği — muhasebe kapsamı dışında, dokunulmadı), pnpm lint (apps/web) temiz (1 önceden var olan, ilgisiz uyarı dışında), packages/core/src/accounting testleri dahil packages/core tüm testler (41 dosya, 207 test) yeşil. Nihai puanlama gorsel-critic ajanının turudur — builder yalnızca kapatır, puan vermez. | Tur 5 (gorsel-critic): 13 rota yeniden çekildi (pnpm shot 1440x900 + 390x844) ve ölçüldü (scripts/probe-muhasebe-r4.ts → artifacts/critic/measure-muhasebe-r5/probe.json; ek hedefli Playwright DOM probları: liste satırı taşması, DocumentChain aktif düğüm bbox, mobil kart meta zinciri bit sayımı, dönemler mobil kart yüksekliği/düğme genişliği). Tur 4 builder ek geçişinin 10 kapanışı yeniden ölçüldü: 10/10 DOĞRULANDI (donemler mobil kart 65px + 0 tam-genişlik düğme, düğme 81.1x44; donemler tablo w-full; tahsilat formu tek 1080px kapsayıcı; mizan CSV PageHeader'da; yevmiye 'Yevmiye' sütunu gizli; mutabakat klavye ipucu 390px'te yok; kdv EmptyState ikon+başlık+eylem; özet KPI 2 ondalık; fatura detay meta '·' karakteri kalktı). ANCAK muhasebe-ozet-04 kapanışı (özet listelerinin mobil 2 satırlı düzeni) MASAÜSTÜNDE REGRESYON getirdi: satır sarmalayıcı span'ine md düzeninde min-w-0/flex-1 verilmediği için satır içeriği kartı 151px aşıyor, tarih ve tutar 1440px viewport'un dışına düşüyor (muhasebe-ozet-05, P0). Kod düzeyi tarama (transition:all, ease-in, scale(0), >300ms, hover gating): muhasebe kaynaklarında ihlal YOK; hover globals.css:11'de @media (hover:hover) and (pointer:fine) ile korunuyor. Ortak bileşen bulguları (DocumentChain aktif düğüm masaüstünde kırpık; DataTable MetaChain karma meta hücresinde tarihi de gizliyor) shell.json'a yazıldı. Sonuç: 11 rota KAZANDI, 2 rota KAYBETTİ (/muhasebe 51<56 ve açık P0; /muhasebe/tahsilatlar toplam 57≥57 ama k9=3<4 ve açık P1). | Tur 6 (modul-builder): kritik turunda (tur 5) açık kalan 3 bulgu (muhasebe-ozet-05 P0, muhasebe-faturalar-04 P2, muhasebe-tahsilatlar-04 P1) + görev promptunda ayrıca verilen 4 P0/P1 bulgu (manuel yevmiye tek taraflı defter seçeneği; reverseJournalEntry refType guard'ı yoktu; reverseJournalEntry ters kayıt fişleri için audit yazmıyordu; 17_audit_coverage.sql yorum güncelliği — bu SONUNCUSU packages/db/src/checks kapsamı DIŞINDA olduğu için ATLANDI, bkz. rapor) kök nedenden kapatıldı. pnpm typecheck + lint + core/web test (core: 41 dosya/210 test, web: 3 dosya/33 test) yeşil; pnpm db:reset + db:check YEŞİL (I1-I37, I37 dahil — journal_reversal_guard kuralı zaten mevcuttu ve artık geçiyor). Nihai puanlama gorsel-critic ajanının turudur. | Tur 6 (HIZLI TUR + iki tam yeniden puanlama): ölçümler artifacts/critic/measure-muhasebe-r6/*.json (pnpm measure, 1440x900 + 390x844, 13 rota x 2) ve scripts/probe-muhasebe-r6.ts (mobil kart tipografisi/kırpma). Tur 5'te KAZANAN olup açık bulgusu olmayan 9 rota yalnızca ölçümle doğrulandı, puanları korundu. Tam yeniden puanlama: /muhasebe (093c041 taşma düzeltmesi kart yazıldıktan SONRA geldi) ve /muhasebe/tahsilatlar (aynı commit'in mobil 'Yön' rozeti değişikliği). Tur 5 kartında 'winner' alanı üç rotada (tahsilatlar, tahsilatlar/yeni, donemler) puanla çelişiyordu (bayat etiket) — tur 6'da kazanma kuralı puanlardan yeniden hesaplandı. | Tur 6 (modul-builder, ek geçiş — critic bulgusu muhasebe-fatura-detay-07): kritik turunda (tur 6 hızlı tur) açık kalan 1 P1 bulgu (muhasebe-fatura-detay-07, /muhasebe/faturalar/[id] — 'Tutar' sütunu KDV DAHİL (lineTotal) basıyordu, hemen altındaki 'Ara toplam' KDV HARİÇ idi; kardeş ekran expense-invoice-form.tsx 'Tutar'ı NET anlamda kullanıyordu) kök nedenden kapatıldı: invoice-lines-view.tsx satır tablosu ve mobil kart artık lineTotal yerine lineSubtotal (= Miktar × Birim fiyat, KDV hariç) basıyor — modül genelinde 'Tutar' artık tek taban (KDV hariç) gösteriyor ve Σ Tutar = Ara toplam. Kanıt: pnpm shot + pnpm measure (PINV-2026-000005, 1440x900 + 390x844, rows.count=4, overflowX=false) — 4/4 satırda Miktar × Birim fiyat artık ekrandaki Tutar ile birebir eşleşiyor (₺22.000,00 / ₺10.000,00 / ₺16.000,00 / ₺7.500,00, Σ=₺55.500,00=Ara toplam). pnpm typecheck + lint yeşil (apps/web dahil tüm paketler). Not: dev sunucusu bu tur başında production build (`next start`) olarak çalışıyordu ve değişiklik yansımıyordu — .next temizlenip `pnpm dev:web` ile dev moduna geçildi, sonra ölçüldü. Nihai puanlama gorsel-critic ajanının turudur — builder yalnızca kapatır, puan vermez.",
+ "measuredAt": "2026-09-04T19:16:44.166374Z",
  "routes": {
   "/muhasebe": {
-   "round": 5,
+   "round": 6,
    "reference": "stripe",
    "scores": [
     5,
     5,
     4,
     5,
-    2,
-    3,
+    5,
+    5,
     4,
     5,
     4,
@@ -21,7 +21,7 @@
     5,
     4
    ],
-   "total": 51,
+   "total": 56,
    "winner": "Plantero",
    "open": [],
    "closed": [
@@ -98,11 +98,11 @@
      "verifiedBy": "pnpm shot (1440x900+390x844) + Playwright DOM ölçümü + pnpm typecheck/lint/test + pnpm db:reset && db:check"
     }
    ],
-   "scoreDelta": "tur 3 → 4: değişiklik yok, tüm kriterler yeniden ölçüldü (pnpm shot + scripts/probe-muhasebe-r4.ts). k3=4 sabit (ilk ekranda 15 veri satırı ölçüldü, li yüksekliği 41px; sol kolon yalnız 2 satır olduğu için masaüstünde ~450px boş). k9=4 sabit: 390px'te yatay taşma yok (390/390) ama iki \"Tümü ↗\" bağlantısı 45x18 (<44) ve liste satırında başlık span'i sw 700 > cw 152 — açıklama fiilen okunmuyor (P2). k12=4 sabit (üst üste iki renkli uyarı kutusu + iki çerçeveli liste kutusu).",
-   "scoreNote": "k5 5→2: satır içeriği kartı 151px aşıyor, tutar/tarih viewport dışında (ölçüm yukarıda) — 'taşma yok' ölçütü ihlal. k6 5→3: masaüstünde 13/13 satırda para hücresi hiç görünmüyor (tabular-nums/hizalama doğru ama rakam ekranda yok). Diğer kriterler tur 4 ile aynı; KPI şeridi 2 ondalık kapanışı doğrulandı (k6'nın çökmemesinin tek nedeni bu)."
+   "scoreDelta": "tur 5 → 6: k5 2→5 ve k6 3→5. Gerekçe: muhasebe-ozet-05 (satır sarmalayıcıya md:contents) commit 093c041 ile kapandı — ölçüm (measure-muhasebe-r6/ozet-desktop.json): scrollWidth 1440 = clientWidth 1440, overflowX false; ekran görüntüsünde 2/2 vadesi geçen alacak ve 13/13 yevmiye satırında tutar VE tarih kart sınırları içinde okunuyor (tur 5'te 151px taşma, 13/13 satırda tutar/tarih viewport dışındaydı). Diğer 10 kriter tur 5 ile aynı.",
+   "scoreNote": "k3=4 sabit: sol kolonda yalnız 2 satır var, masaüstünde kolonun ~700px'i boş (rows.count 15 toplam, li 40-41px). k7=4 sabit (EmptyState var, skeleton yok). k9=4 sabit: 390px'te taşma yok (390/390), 44 altı etkileşimli hedef 0, kart 59.5-60.5px. k12=4 sabit: üst üste iki tam genişlik renkli uyarı kutusu + iki çerçeveli liste kutusu."
   },
   "/muhasebe/faturalar": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
     5,
@@ -167,11 +167,11 @@
      "verifiedBy": "pnpm shot (1440x900+390x844) + Playwright DOM ölçümü + pnpm typecheck/lint/test + pnpm db:reset && db:check"
     }
    ],
-   "scoreDelta": "tur 3 → 4: delta yok. Yeniden ölçüm: satır 36px (18 satır), iç kaydırıcı yok (1440/1440), th uppercase 0/7, para hücrelerinin 54/54'ü tabular-nums, mobil kart 68.5px, 390px'te 44 altı tek hedef \"Alış\" sekmesi (42.5x44). k9=5 değil: sekme genişliği 42.5 ve mobil meta zinciri 2/18 kartta kırpılıyor (151>145).",
-   "scoreNote": "k11 5→4: aynı KpiCard aynı metriği modül içinde iki farklı ondalıkla basıyor (muhasebe-faturalar-04). Diğer kriterler tur 4 ile aynı; tablo anatomisi/yoğunluk/rakam sunumu yeniden ölçüldü (satır 36px x18, upperTh 0/7, para 54/54 tabular-nums, kök taşma yok)."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması). Ölçüm: desktop scrollWidth 1440 = clientWidth, 18 satır x 36px; mobil 390/390, kart 68.5px, 44 altı etkileşimli hedef yalnız 'Alış' sekmesi 42.5x44 (k9=4 gerekçesi zaten buydu). probe-r6: 18/18 mobil kartta başlık kırpılmıyor (sw = cw = 236).",
+   "scoreNote": "Tur 5 ile aynı. KPI şeridi fractionDigits={2} (093c041) doğrulandı: '₺13.996,80 / ₺449.136,00' — /muhasebe özetiyle aynı ondalık."
   },
   "/muhasebe/faturalar/[id]": {
-   "round": 5,
+   "round": 6,
    "reference": "stripe",
    "scores": [
     5,
@@ -179,16 +179,16 @@
     4,
     5,
     5,
-    5,
+    4,
     4,
     5,
     4,
     5,
-    5,
+    4,
     5
    ],
-   "total": 57,
-   "winner": "Plantero",
+   "total": 55,
+   "winner": "Stripe",
    "open": [],
    "closed": [
     {
@@ -277,13 +277,27 @@
      "measureAfter": "pnpm shot (INV-2026-000001, 390x844): başlık altı meta akışındaki '·' metin karakterleri kaldırıldı, yerine her değerin başında ince bir dikey çizgi (`border-l`) kullanıldı — bu bir yazı karakteri olmadığından sarma satırdan taşınca hiçbir satır noktalama işaretiyle başlamıyor (2. satır artık düz 'vade 14.08.2026' okunuyor, çizgi görsel olarak değere bağlı). Kaynak: apps/web/src/app/(app)/muhasebe/faturalar/[id]/page.tsx.",
      "closedRound": 4,
      "verifiedBy": "pnpm shot + Playwright DOM ölçümü + pnpm typecheck/lint/test"
+    },
+    {
+     "id": "muhasebe-fatura-detay-07",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "Fatura satır tablosunun 'Tutar' sütunu KDV DAHİL tutarı (lineTotal) gösteriyor, ama hemen altındaki toplam bloğu 'Ara toplam' olarak KDV HARİÇ tutarı basıyor. Sütun başlığı hangi tabanda olduğunu söylemiyor; 'Miktar × Birim fiyat' ile 'Tutar' 4/4 satırda uyuşmuyor. Mobil kartta bu daha da açık: '1.000 ADET × ₺22,00 · KDV %20' metninin tam yanında '₺26.400,00' yazıyor. Kardeş ekran /muhasebe/faturalar/yeni aynı 'Tutar' başlığını NET anlamda kullanıyor (Ara toplam = Σ Tutar).",
+     "measure": "PINV-2026-000005: satırlar 1.000×22,00 → ₺26.400,00 · 1.000×10,00 → ₺12.000,00 · 2.000×8,00 → ₺19.200,00 · 300×25,00 → ₺9.000,00. Σ Tutar = 66.600,00 = Genel toplam; Σ(Miktar×Birim fiyat) = 55.500,00 = Ara toplam. 4/4 satırda ekrandaki çarpım tutmuyor. queries.ts InvoiceLineRow kullanılmayan bir lineSubtotal alanı da döndürüyor.",
+     "target": "Ya sütun lineSubtotal'a alınır (Miktar × Birim fiyat = Tutar, Σ Tutar = Ara toplam) ya da başlık 'Tutar (KDV dahil)' olur ve mobil satır metni 'KDV dahil' der; her iki durumda ekrandaki çarpım 4/4 satırda tutmalı ve aynı sözcük modül içinde tek tabanı göstermeli.",
+     "file": "apps/web/src/modules/accounting/components/invoice-lines-view.tsx (satır 21 başlık, 41 ve 56 hücre; karşılaştırma: expense-invoice-form.tsx satır 141-145)",
+     "openedRound": 6,
+     "status": "kapandı (tur 6) — kök neden: sütun lineTotal (KDV dahil) basıyordu, lineSubtotal (KDV hariç = Miktar × Birim fiyat) olarak değiştirildi",
+     "measureAfter": "PINV-2026-000005, /muhasebe/faturalar/71ae0012-c057-4029-b9ce-d6997b73cdac, pnpm shot + pnpm measure (1440x900, rows.count=4, overflowX=false): satırlar artık 1.000×22,00 → ₺22.000,00 · 1.000×10,00 → ₺10.000,00 · 2.000×8,00 → ₺16.000,00 · 300×25,00 → ₺7.500,00. Σ Tutar = 55.500,00 = Ara toplam (4/4 satırda çarpım tutuyor). Kardeş ekran /muhasebe/faturalar/yeni?tur=alis (expense-invoice-form.tsx) zaten aynı tabanı (KDV hariç) kullanıyordu — artık modül genelinde 'Tutar' tek anlam taşıyor. Mobil kartta da aynı düzeltme (390x844, Read ile doğrulandı): '1.000 ADET × ₺22,00 · KDV %20' satırının yanında ₺22.000,00 yazıyor.",
+     "closedRound": 6,
+     "verifiedBy": "pnpm measure + pnpm shot + pnpm typecheck + pnpm lint"
     }
    ],
-   "scoreDelta": "tur 3 → 4: k6 4→5 (miktar artık birimli \"12 ADET\", KDV \"%1\", para 18/18 tabular-nums — muhasebe-fatura-detay-04 kapanışı ölçümle doğrulandı). k9 3→4 (\"e-Fatura gönder\"/\"İade faturası\" artık h-11; 390px'te 44 altı yalnız iki satır-içi metin bağlantısı 212x20 ve 87.8x19.5; yatay taşma yok). k11 4→5 (tablo başlıkları modül sözleşmesiyle aynı: uppercase th 0/5, birim/yüzde biçimleri modülle tutarlı). k3=4 sabit (2 satır + masaüstünde ~450px boş alan).",
-   "scoreNote": "Tur 4 ile aynı. muhasebe-fatura-detay-06 kapanışı doğrulandı (390px'te hiçbir meta satırı '·' ile başlamıyor). DocumentChain aktif düğümünün 1440px'te sağdan 56px kırpılması ORTAK BİLEŞEN bulgusudur (shell.json / shell-document-chain-current-clip-02), protokol kural 5 gereği burada tekrar açılmadı ve rota puanına yansıtılmadı."
+   "scoreDelta": "tur 5 → 6: k6 5→4 ve k11 5→4. Gerekçe: yeni ölçülebilir bulgu muhasebe-fatura-detay-07 — satır tablosunun 'Tutar' sütunu KDV DAHİL (lineTotal) basılıyor, aynı tablonun altındaki 'Ara toplam' ise KDV hariç; 4/4 satırda ekranda yazan çarpım tutmuyor (1.000 ADET x ₺22,00 → ₺26.400,00). Aynı modüldeki kardeş ekran /muhasebe/faturalar/yeni aynı 'Tutar' başlığını NET anlamında kullanıyor (Ara toplam = Σ Tutar) → k11 tutarlılık da düşer.",
+   "scoreNote": "Diğer 10 kriter tur 5 ile aynı; ölçüm: desktop 1440/1440 taşma yok, mobil 390/390, 44 altı etkileşimli hedef yok (yalnız iki satır-içi metin bağlantısı 230.7x20 ve 324x19.5 — k9=4 gerekçesi). DocumentChain aktif düğüm kırpması shell'de izleniyor, burada tekrar açılmadı."
   },
   "/muhasebe/faturalar/yeni?tur=alis": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
     5,
@@ -362,29 +376,40 @@
      "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
     }
    ],
-   "scoreDelta": "tur 3 → 4: k6 2→5 (önizleme toplamları \"0.0000\" yerine \"₺0,00\"; sayfada 4 ondalıklı nokta ayraçlı sayı 0, para 3/3 tabular-nums). k1 4→5, k2 4→5 (ölçüm: form gövdesi TEK max-w-[1080px] blok — blockWidths 1080 tek değer). k5 4→5 (satır tablosu w-full, th 12px sentence-case 0/5 uppercase, hairline, iç kaydırıcı yok). k11 3→4 (başlıklar ve genişlik tek ölçüye indi; 5 değil çünkü kardeş form record-payment-form.tsx 768/1152 kullanıyor — modülde iki form genişlik sistemi). k12 4→5 (çerçeve çorbası/uppercase kalmadı). k9 4→5 (390px'te tek kolon, satır kartında Tutar/KDV 2 kolonlu ızgara, sil düğmesi size-11, 44 altı gerçek hedef yok — yalnız 1x1 Radix select vekili).",
-   "scoreNote": "Tur 4 ile aynı; yeniden ölçüldü (tek 1080px kapsayıcı, satır tablosu başlık+toplam satırı, 390px'te tek kolon, kök taşma yok, para 3/3 tabular-nums)."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması). Ölçüm: desktop 1440/1440, mobil 390/390 taşma yok; 390px'te 44 altı etkileşimli hedef yok (listelenen 1x1 <select> Radix'in aria-hidden yerel select'i, dokunma hedefi değil).",
+   "scoreNote": "Tur 5 ile aynı. k3=4 (tek satırlık form, masaüstünde ~600px boş), k7=4, k11=4."
   },
   "/muhasebe/tahsilatlar": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
+    4,
     5,
     5,
     5,
+    4,
     5,
     5,
     5,
-    5,
-    5,
-    3,
+    4,
     5,
     4,
     5
    ],
-   "total": 57,
-   "winner": "Plantero",
-   "open": [],
+   "total": 56,
+   "winner": "Linear",
+   "open": [
+    {
+     "id": "muhasebe-tahsilatlar-05",
+     "criterion": 1,
+     "severity": "P1",
+     "text": "ORTAK BİLEŞEN KAYNAKLI (shell / shell-mobile-card-badge-size-01): DataTable mobil kartında rozet yuvası (mobile-cards.tsx) hiç font boyutu vermiyor, gövde varsayılanı 16px miras alınıyor. StatusBadge kendi 11px'ini taşıdığı için sorun görünmüyordu; payments-table.tsx 'Yön' hücresi düz metin olduğu için 16px basılıyor — kartın EN BÜYÜK metni, başlıktan (14px) da büyük. 76px kaplayınca başlık sütunu 107px'e iniyor ve belge no 17/17 kartta kırpılıyor ('PAY-2026-000017' → 'PAY-2026-00…'); kartları birbirinden ayıran tek alan okunmuyor.",
+     "measure": "390x844, scripts/probe-muhasebe-r6.ts: rozet font-size 16px x 17 örnek (sayfadaki tek 16px metin, h1 20px'ten sonraki en büyük), rozet genişliği 76px; başlık font 14px, clientWidth 107px < scrollWidth 121-127px → 17/17 kartta ellipsis. Karşılaştırma /muhasebe/faturalar: başlık cw 236 = sw 236, 0/18 kırpma.",
+     "target": "mobile-cards.tsx rozet yuvası metin boyutu ≤12px (StatusBadge 11px ölçeğiyle uyumlu); mobil kartta h1 dışında 14px üstü metin kalmamalı ve başlık scrollWidth ≤ clientWidth en az 16/17 kartta.",
+     "file": "apps/web/src/components/data-table/mobile-cards.tsx (rozet sarmalayıcı div, 'max-w-[45%] shrink-0 overflow-hidden') — tetikleyen kullanım: apps/web/src/modules/accounting/components/payments-table.tsx satır 49-54",
+     "openedRound": 6
+    }
+   ],
    "closed": [
     {
      "id": "muhasebe-tahsilatlar-01",
@@ -431,11 +456,11 @@
      "verifiedBy": "pnpm shot (1440x900+390x844) + Playwright DOM ölçümü + pnpm typecheck/lint/test + pnpm db:reset && db:check"
     }
    ],
-   "scoreDelta": "tur 3 → 4: k9 3→4 (390px'te 44 altı hedef 0 — muhasebe-mobil-buton-01 kapanışı doğrulandı; yatay taşma yok, kart 69.5px). 5 değil: meta zinciri 3/17 kartta tarihi kırpıyor (sw 144 > cw 141, shell-mobile-cards max-w-[55%]). k3 4→5 (bilgi taşımayan \"Yöntem\" ve \"Tahsissiz\" sütunları defaultHidden oldu; 17 satır 36px, ilk ekranda hepsi görünür).",
-   "scoreNote": "k9 4→3: 5/17 mobil kartta yön bilgisi tamamen kayboluyor ve tutar işaretsiz — mobilde tahsilat/ödeme ayırt edilemiyor (muhasebe-tahsilatlar-04). k11 5→4: aynı modülde /muhasebe/banka tutarı işaretli basarken burada işaretsiz + KPI ondalığı özetten farklı. Masaüstü tablo ölçümleri tur 4 ile aynı (36px x17, para 34/34 tabular-nums, taşma yok)."
+   "scoreDelta": "tur 5 → 6: k9 3→4 (muhasebe-tahsilatlar-04 KAPANDI — 'Yön' sütunu meta.mobile 'badge' oldu, 17/17 mobil kartta 'Tahsilat'/'Ödeme' görünüyor, 390px'te taşma yok, 44 altı etkileşimli hedef 0, kart 68.5px). ANCAK aynı düzeltme iki yeni ölçülebilir kusur doğurdu: k1 5→4 ve k5 5→4 — rozet yuvası boyut vermediği için düz metin 'Yön' hücresi 16px basılıyor (kart başlığı 14px, StatusBadge 11px) ve 76px yer kapıyor; başlık sütunu 107px'e düşüp 17/17 kartta belge no kırpılıyor.",
+   "scoreNote": "k9 5 değil 4: yön bilgisi geri geldi ama başlık kırpması mobil kart okunabilirliğini hâlâ düşürüyor. k11=4 sabit: /muhasebe/banka tutarı işaretli basarken burada işaretsiz. Masaüstü tablo tur 5 ile aynı (17 satır x 36px, taşma yok, para tabular-nums)."
   },
   "/muhasebe/tahsilatlar/yeni": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
     5,
@@ -452,7 +477,7 @@
     4
    ],
    "total": 57,
-   "winner": "Linear",
+   "winner": "Plantero",
    "open": [],
    "closed": [
     {
@@ -528,11 +553,11 @@
      "verifiedBy": "pnpm shot + Playwright DOM ölçümü + pnpm typecheck/lint/test"
     }
    ],
-   "scoreDelta": "tur 3 → 4: k5 4→5 (\"Faturaya tahsis\" boş durumu artık ortak EmptyState — ikon + başlık + açıklama; kart anatomisi modülle aynı). k2=4 ve k11=4 SABİT: ölçüm (blockWidths 1440x900) alan ızgarası 768 → tahsis kartı 1152 → Not 768 → FormActions 1152; göz dört kez yeniden hizalanıyor ve kardeş form (expense-invoice-form) tek 1080px kullanıyor. k7=4 (boş durumda eylem düğmesi yok). k3=4 (tahsis kutusu masaüstünde ~350px boş).",
-   "scoreNote": "k2 4→5: muhasebe-tahsilat-yeni-05 kapandı — form gövdesindeki dört farklı blok genişliği (768/1152/768/1152) tek `max-w-[1080px]` kapsayıcıya indi (ölçüm: form>div TEK eleman, w=1080). k11 4→5: kardeş form expense-invoice-form.tsx ile birebir aynı kapsayıcı kalıbı; iki 'yeni belge' formu artık aynı genişlikte. k3/k7/k12 tur 4 ile aynı (form ekranı, 'Henüz cari seçilmedi' boş durumu ikon+başlık+açıklama taşıyor ama eylemi yok)."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 1440/1440, mobil 390/390 taşma yok; 390px'te 44 altı etkileşimli hedef yok (1x1 <select>'ler Radix aria-hidden yerel select'i). Form gövdesi tek 1080px kapsayıcı (tur 5 kapanışı korunuyor).",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe/banka": {
-   "round": 5,
+   "round": 6,
    "reference": "stripe",
    "scores": [
     5,
@@ -598,11 +623,11 @@
      "verifiedBy": "pnpm measure + pnpm shot"
     }
    ],
-   "scoreDelta": "tur 3 → 4: delta yok. Yeniden ölçüm: 11 satır 36px, iç kaydırıcı yok, para 28/28 tabular-nums, 390px'te 44 altı hedef 0, kart 68.5px. k4=4 sabit (tutarlarda +/− yeşil/kırmızı işaret rengi + hesap kartlarında amber \"Fark\").",
-   "scoreNote": "Tur 4 ile aynı; yeniden ölçüldü (36px x11 satır, 28/28 tabular-nums, kök taşma yok, 390px'te 68.5px kart, <44px dokunma hedefi yok)."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 11 satır x 36px, 1440/1440; mobil 390/390, kart 68.5px, 44 altı hedef 0.",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe/mutabakat": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
     5,
@@ -682,11 +707,11 @@
      "verifiedBy": "pnpm shot + Playwright DOM ölçümü + pnpm typecheck/lint/test"
     }
    ],
-   "scoreDelta": "tur 3 → 4: delta yok. 390px'te 44 altı hedef 0, yatay taşma yok. k9=4: klavye ipucu şeridi (\"J/K gez · A onayla · R reddet\") 390px'te de basılıyor (P2).",
-   "scoreNote": "Tur 4 ile aynı. muhasebe-mutabakat-04 kapanışı doğrulandı: klavye ipucu şeridi 390px'te basılmıyor (hidden sm:flex lg:hidden)."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 1440/1440; mobil 390/390, 44 altı hedef 0. İki panelli onay kuyruğu ve klavye ipuçları (J/K · A · R) yerinde.",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe/yevmiye": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
     5,
@@ -781,11 +806,11 @@
      "verifiedBy": "pnpm shot + Playwright DOM ölçümü + pnpm typecheck/lint/test"
     }
    ],
-   "scoreDelta": "tur 3 → 4: k9 3→4 (390px'te 44 altı hedef 0 — mobil düğme bulgusu kapandı; yatay taşma yok, kart 68.5px, sayfalama mobilde de var). 5 değil: kart başlığı (açıklama) 50/50 kartta sw 542 > cw 203 ile kırpılıyor. k3=4 ve k4=4 sabit (\"Yevmiye\" sütunu 50/50 satırda \"STK\", durum rozeti 50/50 \"Kaydedildi\").",
-   "scoreNote": "k3 4→5: muhasebe-yevmiye-05 kapandı — 'Yevmiye' sütunu defaultHidden, ilk ekranda 50/50 aynı değeri taşıyan sütun 2'den 1'e indi (ölçüt ≤1); 50 satır x 36px, 13px gövde. Diğer kriterler tur 4 ile aynı."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 50 satır x 36px, 1440/1440; mobil 390/390, 50 kart x 68.5px, 44 altı hedef 0.",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe/hesap-plani": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
     5,
@@ -851,11 +876,11 @@
      "verifiedBy": "pnpm measure + pnpm shot"
     }
    ],
-   "scoreDelta": "tur 3 → 4: delta yok. 61 satır 36.5px, distinctColors 14, para 183/183 tabular-nums, 390px'te 44 altı hedef 0, yatay taşma yok. k11=4 sabit (bakiye sonundaki \"A\"/\"B\" kısaltmasının ekranda açıklaması yok). k7=4 sabit.",
-   "scoreNote": "Tur 4 ile aynı; yeniden ölçüldü (61 satır x 36.5px, 183/183 tabular-nums, upperTh 0/6, kök taşma yok)."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 61 satır x 36-36.5px, 1440/1440; mobil 390/390, 44 altı hedef 0.",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe/mizan": {
-   "round": 5,
+   "round": 6,
    "reference": "stripe",
    "scores": [
     5,
@@ -935,11 +960,11 @@
      "verifiedBy": "pnpm shot + Playwright DOM ölçümü + pnpm typecheck/lint/test"
     }
    ],
-   "scoreDelta": "tur 3 → 4: delta yok. 41 satır 36.5px, toplam satırı, para 250/250 tabular-nums, mobilde kart + toplam, 44 altı hedef 0. k11=4 sabit: \"CSV indir\" tek sayfa eylemi PageHeader yerine sekmelerle tablo arasında kendi satırında (modülün diğer 6 rotasında sayfa eylemi PageHeader'da).",
-   "scoreNote": "k11 4→5: muhasebe-mizan-03 kapandı — 'CSV indir' artık PageHeader actions'ta, modülün diğer rotalarıyla aynı yerleşim; sekmeler ile arama arasında ayrı eylem satırı yok (LedgerTabs ?ledger= ile). Diğer kriterler tur 4 ile aynı (41 satır x 36.5px, 250/250 tabular-nums, toplam satırı)."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 41 satır x 36.5px + sabit toplam satırı, 1440/1440; mobil 390/390, 44 altı hedef 0.",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe/kdv": {
-   "round": 5,
+   "round": 6,
    "reference": "stripe",
    "scores": [
     5,
@@ -1062,11 +1087,11 @@
      "verifiedBy": "pnpm shot + Playwright DOM ölçümü + pnpm typecheck/lint/test"
     }
    ],
-   "scoreDelta": "tur 3 → 4: k2 4→5 ve k3 3→4 (dejenere grafik kutusu — masaüstü 330px / mobil 490px — tamamen kaldırıldı; dönem tablosu KPI şeridinin hemen altında, 390px'te dönem kartı ilk ekranda tam görünür). k5 4→5 (tablo w-full, th 12px sentence-case 0/7 uppercase, hairline, sağ hizalı para, hover; mobilde etiketli dl kartı). k8 4→5 (satır hover eklendi — muhasebe-kdv-06 kapanışı doğrulandı). k11 4→5 (durum StatusBadge kind=\"vat_period\"; KPI fractionDigits=2 ile tablo birebir: ₺442,56 = ₺442,56). k12 4→5. k3=5 değil: veri tek dönem, masaüstünde tablo altında ~800px boş. k7=4: tablonun kendi boş durumu hâlâ ikonsuz/eylemsiz düz metin.",
-   "scoreNote": "k7 4→5: muhasebe-kdv-07 kapandı — tablonun boş durumu ortak EmptyState (ikon + başlık + açıklama) + PageHeader'daki 'Dönemi hesapla' ile AYNI bileşen (CloseVatPeriodButton) action olarak bağlı (kdv/page.tsx:95-99). k3 4 kalır: veri seti tek dönem, ilk ekranda 1 satır. Diğerleri tur 4 ile aynı."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 1440/1440; mobil 390/390, 44 altı hedef 0. Tek dönem satırı (seed) — k3=4 gerekçesi bu.",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe/donemler": {
-   "round": 5,
+   "round": 6,
    "reference": "linear",
    "scores": [
     5,
@@ -1083,7 +1108,7 @@
     5
    ],
    "total": 58,
-   "winner": "Linear",
+   "winner": "Plantero",
    "open": [],
    "closed": [
     {
@@ -1188,8 +1213,8 @@
      "verifiedBy": "pnpm shot + Playwright DOM ölçümü + pnpm typecheck/lint/test"
     }
    ],
-   "scoreDelta": "tur 3 → 4: delta yok, toplam 54. k5=4 SABİT ve gerekçesi değişti: tur 3'te tablo 1152px'e yayılıp sağda ölü bant bırakıyordu; şimdi çerçeve max-w-[720px] ama tablo `w-full` olmadığı için 491px — ölçüm (Playwright): frame 720px/right=984, table 491px/right=756, thead right=756 → ölü bant çerçevenin İÇİNDE 229px. k3=4 ve k11=4 sabit: mobil kartta 11/11 satırda tam genişlik 44px düğme, kart yüksekliği ~119px (hedef 56-72px); masaüstünde aynı eylem yalnız hover'da beliriyor — tek eylem iki farklı kalıpta.",
-   "scoreNote": "k5 4→5: muhasebe-donemler-06 kapandı — <table> w-full, |frameRight − tableRight| = 1px (984 vs 983), çerçeve içindeki 229px ölü bant yok. k9 4→5: muhasebe-donemler-07 kapandı — mobil kart yüksekliği 119px→65px (11 kart / 714px kapsayıcı), tam genişlik düğme sayısı 0, eylem düğmesi 81.1x44 satır sonunda. k11 4→5: mobil eylem kalıbı diğer DataTable ekranlarıyla hizalandı. k12 4→5: 11 özdeş tam-genişlik düğmeden oluşan duvar ve çerçeve içi ölü bant kalktı. k3 4 kalır: 11 satır x 41px, 900px masaüstü ekranın ~%40'ı dolu, tablo 720px'lik dar sütunda."
+   "scoreDelta": "tur 5 → 6: delta yok (hızlı tur doğrulaması — tur 5'te açık P0/P1 yoktu, son commit'ler bu rotanın dosyalarına dokunmadı). Ölçüm: desktop 11 satır x 40.5-41px, 1440/1440; mobil 390/390, 44 altı hedef 0. Tablo w-full, çerçeve içi ölü bant yok (tur 5 kapanışı korunuyor).",
+   "scoreNote": "Tur 5 ile aynı. Kazanma kuralı puanlardan yeniden hesaplandı (tur 5'te 'winner' alanı bayattı)."
   },
   "/muhasebe (modül geneli)": {
    "round": 5,
