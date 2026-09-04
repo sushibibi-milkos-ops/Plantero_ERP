@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Upload, Loader2 } from 'lucide-react';
@@ -21,11 +21,21 @@ export function ImportStatementDialog({ bankAccounts }: { bankAccounts: Array<{ 
   const [pending, setPending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // mounted (P2 kök nedeni): dialog tetikleyicisi navigasyondan hemen sonraki ilk tıklamada
+  // (bazen ikisinde de) açılmıyordu — client component hydrate olmadan tıklama geliyordu. Düğme
+  // hydration tamamlanana kadar disabled kalır; useEffect yalnızca client'ta çalışır, ilk tıklama
+  // artık her zaman hydrate olmuş bir onClick'e düşer.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setFileName(file.name);
-    if (file.name.toLowerCase().endsWith('.sta') || file.name.toLowerCase().endsWith('.txt')) setSource('mt940');
+    const lower = file.name.toLowerCase();
+    // .mt940 uzantısı (P2 kök nedeni): yalnızca .sta/.txt tanınıyordu, .mt940 dosyaları
+    // varsayılan CSV ayrıştırıcısına gidip hata veriyordu.
+    if (lower.endsWith('.sta') || lower.endsWith('.txt') || lower.endsWith('.mt940')) setSource('mt940');
     else setSource('csv');
     const reader = new FileReader();
     reader.onload = () => setFileText(String(reader.result ?? ''));
@@ -53,7 +63,7 @@ export function ImportStatementDialog({ bankAccounts }: { bankAccounts: Array<{ 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline"><Upload className="size-4" /> Ekstre içe aktar</Button>
+        <Button variant="outline" disabled={!mounted}><Upload className="size-4" /> Ekstre içe aktar</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -82,7 +92,7 @@ export function ImportStatementDialog({ bankAccounts }: { bankAccounts: Array<{ 
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="statement-file">Dosya</Label>
-            <input id="statement-file" ref={inputRef} type="file" accept=".csv,.sta,.txt" onChange={onPickFile} className="block w-full text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-[13px] file:font-medium" />
+            <input id="statement-file" ref={inputRef} type="file" accept=".csv,.sta,.txt,.mt940" onChange={onPickFile} className="block w-full text-[13px] file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-[13px] file:font-medium" />
             {fileName ? <p className="text-[12px] text-muted-foreground">{fileName}</p> : null}
           </div>
         </div>

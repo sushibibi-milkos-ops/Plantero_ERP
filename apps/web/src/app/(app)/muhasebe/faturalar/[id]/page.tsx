@@ -38,10 +38,17 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         eyebrow={KIND_LABELS[invoice.kind] ?? invoice.kind}
         title={invoice.docNo}
         description={
-          <span className="flex flex-wrap items-center gap-2">
+          // Dikey ayraç (kritik bulgu muhasebe-fatura-detay-06 - kok neden, DUZELTME 2): "." metin
+          // karakteri, hangi flex ogesine baglansa (bir onceki degerin sonuna ya da bir sonrakinin
+          // basina), sarma satirdan tasinca o glifin kendisi satir basinda asili kaliyordu - ayrac
+          // metin oldugu surece bu kacinilmazdi. `border-l` ile cizilen ince bir dikey cizgi ayni
+          // ayirma isini gorur ama bir YAZI KARAKTERI degildir; hicbir satir bir noktalama
+          // isaretiyle baslamaz (olcut tam olarak budur).
+          <span className="flex flex-wrap items-center gap-y-1">
             <Link href={`/muhasebe/cariler/${partner.id}/ekstre`} className="underline decoration-dotted underline-offset-2 hover:text-foreground">{partner.name}</Link>
-            · {formatDate(invoice.invoiceDate)} · vade {formatDate(invoice.dueDate)}
-            {invoice.origin === 'manual' ? <span className="text-muted-foreground/70">(manuel)</span> : null}
+            <span className="ml-3 border-l border-border/60 pl-3">{formatDate(invoice.invoiceDate)}</span>
+            <span className="ml-3 border-l border-border/60 pl-3">vade {formatDate(invoice.dueDate)}</span>
+            {invoice.origin === 'manual' ? <span className="ml-3 border-l border-border/60 pl-3 text-muted-foreground/70">(manuel)</span> : null}
           </span>
         }
         actions={<InvoiceDetailActions invoiceId={invoice.id} canCredit={canCredit} canCancel={canCancel} canSendEInvoice={canSendEInvoice} />}

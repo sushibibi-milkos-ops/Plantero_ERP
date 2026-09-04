@@ -146,7 +146,11 @@ export function ReconciliationReview({
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[320px_1fr]">
-      <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground lg:hidden">
+      {/* hidden sm:flex (kritik bulgu muhasebe-mutabakat-04 — kök neden): 390px'te (dokunmatik
+          telefon) fiziksel klavyenin karşılığı olmayan bir kısayol şeridi basılıyordu; sm: (≥640px,
+          tablet/klavyeli cihaz aralığı) itibarıyla görünür kalır, lg:hidden'da ikinci kopyası
+          devralır. */}
+      <div className="hidden items-center gap-1.5 text-[12px] text-muted-foreground sm:flex lg:hidden">
         <Keyboard className="size-3.5" /> J/K gez · A onayla · R reddet
       </div>
 

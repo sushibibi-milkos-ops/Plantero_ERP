@@ -24,14 +24,18 @@ export function FiscalPeriodsTable({ periods, canClose, horizonMonths = 2 }: { p
   }, [periods, showAll, todayCode, horizonMonths]);
 
   return (
-    // max-w-[720px] (kritik bulgu, kriter 5 — kök neden): tablo önceden ana içerik genişliğine
-    // (1152px) yayılıyordu ama gerçek içerik (4 dar sütun + eylem düğmesi) ~500px'te bitiyordu —
-    // sağda ~200-650px ölü bant kalıyordu. Tablo artık kendi içeriğine göre doğal genişliğinde
-    // (`w-full` YOK — table-layout auto sütunları içeriğe göre boyutlar), üst sınır 720px.
+    // max-w-[720px] (tur 3 P1 kök nedeni): tablo önceden ana içerik genişliğine (1152px)
+    // yayılıyordu ama gerçek içerik (4 dar sütun + eylem düğmesi) ~500px'te bitiyordu — sağda
+    // ~200-650px ölü bant kalıyordu. Sarmalayıcı artık kendi içeriğine göre doğal genişliğinde
+    // (üst sınır 720px), TABLO ise `w-full` ile bu sarmalayıcıyı doldurur (tur 4 P1 kök nedeni:
+    // `w-full` yoksa table-layout:auto tabloyu 491px'te bırakıyor, çerçeve 720/984px'e kadar
+    // sürüyor — başlık zemini/hairline'lar x=756'da bitip çerçevenin İÇİNDE 229px ölü bant
+    // kalıyordu). Sütun genişlikleri hâlâ içeriğe göre dağılır (auto layout), yalnız toplam
+    // genişlik artık çerçeveyle birebir eşleşir.
     <div className="max-w-[720px]">
       <div className="overflow-hidden rounded-lg border border-border/60">
         <div className="hidden overflow-x-auto md:block">
-          <table className="text-[13px]">
+          <table className="w-full text-[13px]">
             <thead>
               <tr className="border-b border-border/60 bg-muted/40 text-left text-[12px] text-muted-foreground">
                 <th className="px-3 py-2 font-medium">Dönem</th>
@@ -64,16 +68,22 @@ export function FiscalPeriodsTable({ periods, canClose, horizonMonths = 2 }: { p
 
         {/* Mobil kart listesi (tur 2 P0 muhasebe-donemler-01 kök nedeni): tablonun TEK eylemi
             (Kapat/Yeniden aç) 390px'te görünmez taşan bir kaydırıcının içindeydi — hiçbir görünür
-            kaydırma ipucu yoktu, dönem açma/kapama mobilde fiilen yapılamıyordu. */}
+            kaydırma ipucu yoktu, dönem açma/kapama mobilde fiilen yapılamıyordu.
+            Eylem düğmesi artık satır SONUNDA, kompakt (auto genişlik, dikeyde ortalı) — tur 4 P1
+            kök nedeni: `w-full` düğün 11/11 kartta ~119px kart adımı yaratıyordu (hedef 56-72px)
+            ve masaüstündeki tek hover'da beliren ghost düğmeyle aynı eylem için ikinci, tutarsız
+            bir kalıp oluşturuyordu (kriter 11). */}
         <div className="divide-y divide-border/40 md:hidden">
           {visible.map((p) => (
-            <div key={p.id} className={`space-y-2 px-3 py-2.5 text-[13px] ${p.code === todayCode ? 'bg-primary/5' : ''}`}>
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-mono font-medium">{p.code}</span>
-                <StatusBadge status={p.isClosed ? 'closed' : 'open'} kind="fiscal_period" />
+            <div key={p.id} className={`flex items-center justify-between gap-3 px-3 py-2.5 text-[13px] ${p.code === todayCode ? 'bg-primary/5' : ''}`}>
+              <div className="min-w-0 space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono font-medium">{p.code}</span>
+                  <StatusBadge status={p.isClosed ? 'closed' : 'open'} kind="fiscal_period" />
+                </div>
+                <div className="text-[12px] text-muted-foreground">{formatDate(p.startDate)} – {formatDate(p.endDate)}</div>
               </div>
-              <div className="text-[12px] text-muted-foreground">{formatDate(p.startDate)} – {formatDate(p.endDate)}</div>
-              {canClose ? <PeriodToggleButton code={p.code} isClosed={p.isClosed} className="h-11 w-full" /> : null}
+              {canClose ? <PeriodToggleButton code={p.code} isClosed={p.isClosed} className="h-11 shrink-0" /> : null}
             </div>
           ))}
         </div>

@@ -3,9 +3,9 @@ import { Download } from 'lucide-react';
 import { requirePermission } from '@/lib/auth';
 import { getTrialBalance } from '@/modules/accounting/queries';
 import { TrialBalanceView } from '@/modules/accounting/components/trial-balance-view';
+import { LedgerTabs } from '@/modules/accounting/components/ledger-tabs';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { D, ZERO } from '@plantero/core/money';
 
 export const metadata: Metadata = { title: 'Mizan' };
@@ -23,41 +23,39 @@ function totals(rows: Awaited<ReturnType<typeof getTrialBalance>>) {
  * aynı seçim /muhasebe/yevmiye'de alt çizgili `TabsList variant="line"` idi — aynı modülde aynı
  * kavram iki farklı bileşenle sunuluyordu. Yevmiye'nin kalıbı birebir uygulanır: iki defter de
  * SUNUCUDA önceden yüklenir (URL parametresi yok), istemci tarafında Tabs ile geçilir.
+ *
+ * Kök neden (kritik bulgu muhasebe-mizan-03): "CSV indir" önceden sekmelerle tablo arasında kendi
+ * satırındaydı — modülün diğer rotalarında (faturalar, banka, yevmiye, kdv, tahsilatlar) sayfa
+ * eylemi PageHeader'ın sağındadır. Aktif defter artık `?ledger=` sorgu parametresinde tutulur
+ * (`LedgerTabs` — finans modülündeki `ScenarioSelect` kalıbı) — PageHeader actions'taki CSV
+ * bağlantısı sunucuda bu parametreyi okuyup her zaman doğru defteri indirir, sekmeler ile arama
+ * kutusu arasında ayrı bir eylem satırı kalmaz.
  */
-export default async function TrialBalancePage() {
+export default async function TrialBalancePage({ searchParams }: { searchParams: Promise<{ ledger?: string }> }) {
   await requirePermission('accounting.view');
+  const { ledger: ledgerParam } = await searchParams;
+  const ledger: 'VUK' | 'UFRS' = ledgerParam === 'UFRS' ? 'UFRS' : 'VUK';
   const [vukRows, ufrsRows] = await Promise.all([getTrialBalance('VUK'), getTrialBalance('UFRS')]);
   const vukTotals = totals(vukRows);
   const ufrsTotals = totals(ufrsRows);
 
   return (
     <>
-      <PageHeader title="Mizan" description={`${vukRows.length} hesap — VUK ve UFRS defterleri`} />
-
-      <Tabs defaultValue="VUK">
-        <TabsList variant="line">
-          <TabsTrigger value="VUK">VUK</TabsTrigger>
-          <TabsTrigger value="UFRS">UFRS</TabsTrigger>
-        </TabsList>
-        <TabsContent value="VUK" className="mt-3 space-y-3">
-          <div className="flex justify-end">
-            {/* h-11 sm:h-8 (kritik bulgu, muhasebe-mobil-buton-01): 390px'te 32px yükseklikteydi. */}
-            <Button variant="outline" size="sm" className="h-11 sm:h-8" asChild>
-              <a href="/muhasebe/mizan/export?ledger=VUK" download="mizan-VUK.csv"><Download className="size-4" /> CSV indir</a>
-            </Button>
-          </div>
-          <TrialBalanceView rows={vukRows} totalDebit={vukTotals.debit} totalCredit={vukTotals.credit} />
-        </TabsContent>
-        <TabsContent value="UFRS" className="mt-3 space-y-3">
-          <div className="flex justify-end">
-            {/* h-11 sm:h-8 (kritik bulgu, muhasebe-mobil-buton-01): 390px'te 32px yükseklikteydi. */}
-            <Button variant="outline" size="sm" className="h-11 sm:h-8" asChild>
-              <a href="/muhasebe/mizan/export?ledger=UFRS" download="mizan-UFRS.csv"><Download className="size-4" /> CSV indir</a>
-            </Button>
-          </div>
-          <TrialBalanceView rows={ufrsRows} totalDebit={ufrsTotals.debit} totalCredit={ufrsTotals.credit} />
-        </TabsContent>
-      </Tabs>
+      <PageHeader
+        title="Mizan"
+        description={`${vukRows.length} hesap — VUK ve UFRS defterleri`}
+        actions={
+          // h-11 sm:h-8 (kritik bulgu, muhasebe-mobil-buton-01): 390px'te 32px yükseklikteydi.
+          <Button variant="outline" size="sm" className="h-11 sm:h-8" asChild>
+            <a href={`/muhasebe/mizan/export?ledger=${ledger}`} download={`mizan-${ledger}.csv`}><Download className="size-4" /> CSV indir</a>
+          </Button>
+        }
+      />
+      <LedgerTabs
+        ledger={ledger}
+        vuk={<TrialBalanceView rows={vukRows} totalDebit={vukTotals.debit} totalCredit={vukTotals.credit} />}
+        ufrs={<TrialBalanceView rows={ufrsRows} totalDebit={ufrsTotals.debit} totalCredit={ufrsTotals.credit} />}
+      />
     </>
   );
 }

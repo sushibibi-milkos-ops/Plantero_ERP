@@ -168,12 +168,13 @@ export function RecordPaymentForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
-        {/* max-w-3xl (tur 2 P1 muhasebe-tahsilat-yeni-01 kök nedeni): sınırsız 2 kolonlu ızgara
-            1152px içerik alanına yayılıyordu, tek bir "Yön" select'i 568px genişliğe çıkıyordu —
-            modülün geri kalanı ve diğer tüm modüller (receipt-form.tsx, order-form.tsx,
-            sales-doc-form.tsx) formu max-w-3xl (768px) ile sınırlar; muhasebe formları bu
-            konvansiyonun dışındaydı. */}
-        <div className="max-w-3xl grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* max-w-[1080px] TEK ölçü (tur 4 P1 kök nedeni): önceden alan ızgarası max-w-3xl (768px),
+            "Faturaya tahsis" kartı tam genişlik (1152px), "Not" tekrar max-w-3xl (768px), FormActions
+            yine tam genişlik (1152px) — aynı formda blok genişliği dört kez değişiyordu. Kardeş form
+            (expense-invoice-form.tsx) bu dört bloğu TEK max-w-[1080px] kapsayıcıya almıştı; bu form
+            artık aynı kalıbı kullanır (kriter 11 — modül içi tutarlılık). */}
+        <div className="max-w-[1080px] space-y-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormSelect
             control={form.control}
             name="direction"
@@ -262,14 +263,10 @@ export function RecordPaymentForm({
           )}
         </div>
 
-        {/* max-w-3xl (kritik bulgu, kriter 2): önceden tam genişlik (1152px) — tek satırlık bir not
-            alanının o kadar geniş olması için gerekçe yoktu, alan ızgarasıyla (768px) aynı ölçüye
-            alınır; yalnızca "Faturaya tahsis" tablosu tam genişlikte kalır. */}
-        <div className="max-w-3xl">
-          <FormTextarea control={form.control} name="note" label="Not (opsiyonel)" />
-        </div>
+        <FormTextarea control={form.control} name="note" label="Not (opsiyonel)" />
 
         <FormActions onCancel={() => router.back()} pending={form.formState.isSubmitting} submitLabel={direction === 'inbound' ? 'Tahsilatı kaydet' : 'Ödemeyi kaydet'} />
+        </div>
       </form>
     </Form>
   );

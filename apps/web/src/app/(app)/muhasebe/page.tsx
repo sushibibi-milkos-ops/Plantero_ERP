@@ -24,12 +24,16 @@ export default async function AccountingHomePage() {
     <>
       <PageHeader title="Muhasebe" description="Faturalar, tahsilat, banka mutabakatı, yevmiye ve KDV — tek bakışta" />
 
+      {/* fractionDigits={2} (kritik bulgu muhasebe-ozet-03 — kök neden): şerit 0 ondalıklıydı,
+          hemen altındaki iki liste (vadesi geçen alacak, son yevmiye fişleri) 2 ondalıklı
+          MoneyCell kullanıyor — aynı ekranda aynı sayı iki biçimde görünüyordu (₺4.900 vs
+          ₺4.900,00). KDV sayfasındaki kalıpla aynı: tüm para KPI'ları 2 ondalık. */}
       <KpiStripRow>
-        <KpiCard variant="strip" title="Banka farkı (TL hesaplar)" value={d.bankDiffTry} format="money" invertDelta href="/muhasebe/banka" />
-        <KpiCard variant="strip" title="Açık alacak" value={d.openReceivable} format="money" href="/muhasebe/faturalar" />
-        <KpiCard variant="strip" title="Açık borç" value={d.openPayable} format="money" href="/muhasebe/faturalar" />
-        <KpiCard variant="strip" title="Vadesi geçen alacak" value={d.overdueReceivable} format="money" invertDelta href="/muhasebe/faturalar" />
-        <KpiCard variant="strip" title="Devreden KDV" value={d.vatCarriedToNext} format="money" hint={d.vatLastPeriod ?? undefined} href="/muhasebe/kdv" />
+        <KpiCard variant="strip" title="Banka farkı (TL hesaplar)" value={d.bankDiffTry} format="money" fractionDigits={2} invertDelta href="/muhasebe/banka" />
+        <KpiCard variant="strip" title="Açık alacak" value={d.openReceivable} format="money" fractionDigits={2} href="/muhasebe/faturalar" />
+        <KpiCard variant="strip" title="Açık borç" value={d.openPayable} format="money" fractionDigits={2} href="/muhasebe/faturalar" />
+        <KpiCard variant="strip" title="Vadesi geçen alacak" value={d.overdueReceivable} format="money" fractionDigits={2} invertDelta href="/muhasebe/faturalar" />
+        <KpiCard variant="strip" title="Devreden KDV" value={d.vatCarriedToNext} format="money" fractionDigits={2} hint={d.vatLastPeriod ?? undefined} href="/muhasebe/kdv" />
         <KpiCard variant="strip" title="Eşleşmeyen banka hareketi" value={d.unmatchedBankCount} format="int" invertDelta href="/muhasebe/mutabakat" />
       </KpiStripRow>
 
@@ -60,19 +64,33 @@ export default async function AccountingHomePage() {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-[13px] font-medium">Vadesi geçen alacaklar</h2>
-            <Link href="/muhasebe/faturalar" className="text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground">Tümü ↗</Link>
+            {/* min-h-11 mobilde (kritik bulgu muhasebe-ozet-04 — kök neden): "Tümü ↗" 45x18 dokunma
+                hedefi eşiğinin altındaydı; md:min-h-0 masaüstünde eski kompakt satırı korur. */}
+            <Link href="/muhasebe/faturalar" className="flex min-h-11 items-center text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground md:min-h-0">Tümü ↗</Link>
           </div>
           <div className="rounded-lg border border-border/60">
             {overdue.length ? (
               <ul>
                 {overdue.map((r) => (
                   <li key={r.id} className="border-b border-border/40 last:border-0">
-                    <Link href={`/muhasebe/faturalar/${r.id}`} className="flex h-11 items-center justify-between gap-3 px-3 text-[13px] hover:bg-accent/50 md:h-10">
-                      <span className="min-w-0 flex-1 truncate">
-                        <span className="font-mono">{r.docNo}</span> <span className="text-muted-foreground">{r.partnerName}</span>
+                    {/* Mobilde 2 satırlı düzen (kritik bulgu muhasebe-ozet-04 — kök neden): tek
+                        satıra sıkışan başlık span'i 152px'e düşüyordu, açıklama/cari fiilen
+                        görünmüyordu. 1. satır belge no + tutar, 2. satır cari + gün sayısı —
+                        DataTable mobil kart kalıbıyla aynı fikir (iki satır, ~60px). */}
+                    <Link href={`/muhasebe/faturalar/${r.id}`} className="flex flex-col gap-0.5 px-3 py-2.5 text-[13px] hover:bg-accent/50 md:h-10 md:flex-row md:items-center md:justify-between md:gap-3 md:py-0">
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="min-w-0 flex-1 truncate">
+                          <span className="font-mono">{r.docNo}</span>
+                          <span className="ml-1.5 hidden text-muted-foreground md:inline">{r.partnerName}</span>
+                        </span>
+                        <MoneyCell value={r.residual} currency={r.currency} className="w-24 shrink-0 md:hidden" />
                       </span>
-                      <span className="shrink-0 text-[11px] font-medium text-destructive">{r.daysOverdue} gün</span>
-                      <MoneyCell value={r.residual} currency={r.currency} className="w-24 shrink-0" />
+                      <span className="flex items-center justify-between gap-2 text-[12px] text-muted-foreground md:hidden">
+                        <span className="min-w-0 flex-1 truncate">{r.partnerName}</span>
+                        <span className="shrink-0 text-[11px] font-medium text-destructive">{r.daysOverdue} gün</span>
+                      </span>
+                      <span className="hidden shrink-0 text-[11px] font-medium text-destructive md:inline">{r.daysOverdue} gün</span>
+                      <MoneyCell value={r.residual} currency={r.currency} className="hidden w-24 shrink-0 md:block" />
                     </Link>
                   </li>
                 ))}
@@ -86,19 +104,27 @@ export default async function AccountingHomePage() {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-[13px] font-medium">Son yevmiye fişleri</h2>
-            <Link href="/muhasebe/yevmiye" className="text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground">Tümü ↗</Link>
+            <Link href="/muhasebe/yevmiye" className="flex min-h-11 items-center text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground md:min-h-0">Tümü ↗</Link>
           </div>
           <div className="rounded-lg border border-border/60">
             {recentEntries.length ? (
               <ul>
                 {recentEntries.map((e) => (
                   <li key={e.id} className="border-b border-border/40 last:border-0">
-                    <Link href={`/muhasebe/yevmiye/${e.id}`} className="flex h-11 items-center justify-between gap-3 px-3 text-[13px] hover:bg-accent/50 md:h-10">
-                      <span className="min-w-0 flex-1 truncate">
-                        <span className="font-mono">{e.docNo}</span> <span className="text-muted-foreground">{e.description}</span>
+                    <Link href={`/muhasebe/yevmiye/${e.id}`} className="flex flex-col gap-0.5 px-3 py-2.5 text-[13px] hover:bg-accent/50 md:h-10 md:flex-row md:items-center md:justify-between md:gap-3 md:py-0">
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="min-w-0 flex-1 truncate">
+                          <span className="font-mono">{e.docNo}</span>
+                          <span className="ml-1.5 hidden text-muted-foreground md:inline">{e.description}</span>
+                        </span>
+                        <MoneyCell value={e.totalDebit} className="w-24 shrink-0 md:hidden" />
                       </span>
-                      <span className="shrink-0 text-[11px] text-muted-foreground">{formatDate(e.entryDate)}</span>
-                      <MoneyCell value={e.totalDebit} className="w-24 shrink-0" />
+                      <span className="flex items-center justify-between gap-2 text-[12px] text-muted-foreground md:hidden">
+                        <span className="min-w-0 flex-1 truncate">{e.description}</span>
+                        <span className="shrink-0 text-[11px]">{formatDate(e.entryDate)}</span>
+                      </span>
+                      <span className="hidden shrink-0 text-[11px] text-muted-foreground md:inline">{formatDate(e.entryDate)}</span>
+                      <MoneyCell value={e.totalDebit} className="hidden w-24 shrink-0 md:block" />
                     </Link>
                   </li>
                 ))}

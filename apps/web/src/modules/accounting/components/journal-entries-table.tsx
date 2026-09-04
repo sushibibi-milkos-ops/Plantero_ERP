@@ -28,7 +28,11 @@ export function JournalEntriesTable({ rows, journalOptions }: { rows: JournalEnt
       // genişliğine göre küçülür (bkz. invoices-table.tsx Vade sütunu aynı "div mobilde kartı 2.
       // satıra taşırıyordu" kök nedeni — burada baştan `inline-block` kullanılarak önlendi).
       { accessorKey: 'description', header: 'Açıklama', meta: { mobile: 'subtitle', flex: true, width: 380 }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[380px]" title={row.original.description}>{row.original.description}</span> },
-      { accessorKey: 'journalCode', header: 'Yevmiye', meta: { width: 90, mobile: 'hidden' } },
+      // defaultHidden (kritik bulgu muhasebe-yevmiye-05 — kök neden, tahsilatlar tablosuyla aynı
+      // kalıp): bu seed'de VUK/UFRS sekmelerinin her ikisinde de 50/50 satır aynı yevmiye kodunu
+      // ("STK") taşıyor — sütun filtre çubuğunda zaten seçilebilir (bkz. `journalOptions`), varsayılan
+      // görünümde tekrar eden değer başlangıçta kapalı, sütun görünürlük menüsünden açılabilir.
+      { accessorKey: 'journalCode', header: 'Yevmiye', meta: { width: 90, mobile: 'hidden', defaultHidden: true } },
       // mobile:'hidden' → yalnızca masaüstünde render edilir, bu yüzden truncate her zaman blok
       // (`<div>`, `inline-block` gerekmez) olabilir. Aynı kök neden (meta.width, uzun cari adında
       // yoksayılıyordu — "Trendyol Pazaryeri" 140px yerine 263.7px ölçüldü).

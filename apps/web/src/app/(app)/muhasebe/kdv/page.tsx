@@ -84,7 +84,23 @@ export default async function VatPage() {
                   <td className="px-3 py-2"><StatusBadge status={p.status} kind="vat_period" /></td>
                 </tr>
               ))}
-              {!periods.length ? <tr><td colSpan={7} className="px-3 py-10 text-center text-muted-foreground">Henüz hesaplanmış KDV dönemi yok.</td></tr> : null}
+              {!periods.length ? (
+                // EmptyState + eylem (kritik bulgu muhasebe-kdv-07 — kök neden): önceden ikonsuz/
+                // eylemsiz düz metin basılıyordu; modülün diğer boş durumları (mobil kart listesi,
+                // "Faturaya tahsis" kartı) ortak EmptyState (ikon + başlık + açıklama) kullanıyor.
+                // Eylem PageHeader'daki "Dönemi hesapla" düğmesiyle AYNI bileşen (CloseVatPeriodButton) —
+                // yeni bir eylem icat edilmedi, boş durumdaki kullanıcıya en yakın yerde tekrarlanır.
+                <tr>
+                  <td colSpan={7} className="p-0">
+                    <EmptyState
+                      compact
+                      title="Henüz hesaplanmış KDV dönemi yok"
+                      description="İlk dönemi hesaplamak için aşağıdaki eylemi kullanın."
+                      action={userCan(user, 'accounting.post') && computable.length ? <CloseVatPeriodButton computablePeriods={computable} /> : undefined}
+                    />
+                  </td>
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>
@@ -108,7 +124,14 @@ export default async function VatPage() {
               </dl>
             </div>
           ))}
-          {!periods.length ? <EmptyState compact title="Henüz hesaplanmış KDV dönemi yok" /> : null}
+          {!periods.length ? (
+            <EmptyState
+              compact
+              title="Henüz hesaplanmış KDV dönemi yok"
+              description="İlk dönemi hesaplamak için aşağıdaki eylemi kullanın."
+              action={userCan(user, 'accounting.post') && computable.length ? <CloseVatPeriodButton computablePeriods={computable} /> : undefined}
+            />
+          ) : null}
         </div>
       </div>
       {latest?.declaredAt ? <p className="mt-2 text-[12px] text-muted-foreground">Son hesaplama: {formatDate(latest.declaredAt)}</p> : null}
