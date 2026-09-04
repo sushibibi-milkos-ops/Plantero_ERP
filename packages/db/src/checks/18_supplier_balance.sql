@@ -1,8 +1,15 @@
 -- I18 — Cari bakiye (tedarikçi tarafı, I9'un simetriği)
 --   Σ alış faturaları (posted/partially_paid/paid, purchase − purchase_return) − Σ tedarikçiye yapılan
---   tahsis edilmiş ödemeler (outbound payment_allocations) = −partners.balance (payable, negatif taraf)
+--   TÜM ödemeler (tahsis edilmiş + edilmemiş) = −partners.balance (payable, negatif taraf)
 --   = 320 hesabının (borç − alacak) × −1 (getPartnerBalance ile aynı yöntem: payable = −(debit−credit)).
 -- I9 yalnızca customer/both tarafını (120) doğrular; bu kural supplier/both tarafını (320) doğrular.
+--
+-- **Tur 7 düzeltmesi (I9 ile aynı kök neden — bkz. 09_partner_balance.sql üst yorumu)**: `allocated`
+-- CTE'si yalnızca `payment_allocations`'ı topluyordu; `packages/core/src/finance/payments.ts::recordPayment`
+-- ise TAM ödeme tutarını (tahsis edilsin/edilmesin) doğrudan 320 hesabına yazıyor. Simetri için burada da
+-- `payments` tablosundan doğrudan (`direction='outbound'`, `status='posted'`) toplanıyor — ve I9'daki
+-- ikinci düzeltmeyle aynı nedenle (dövizli ödemede ayrı bir kur farkı fişi de 320'ye net `fx_difference`
+-- kadar dokunuyor) `amount_try - fx_difference` toplanıyor, yalnızca `amount_try` değil.
 
 WITH invoice_net AS (
   SELECT partner_id,
@@ -12,12 +19,10 @@ WITH invoice_net AS (
   GROUP BY partner_id
 ),
 allocated AS (
-  SELECT i.partner_id, SUM(pa.amount_try) AS amt
-  FROM payment_allocations pa
-  JOIN invoices i ON i.id = pa.invoice_id
-  JOIN payments p ON p.id = pa.payment_id
-  WHERE p.status = 'posted' AND i.kind IN ('purchase', 'purchase_return')
-  GROUP BY i.partner_id
+  SELECT p.partner_id, SUM(p.amount_try - p.fx_difference) AS amt
+  FROM payments p
+  WHERE p.status = 'posted' AND p.direction = 'outbound'
+  GROUP BY p.partner_id
 ),
 computed AS (
   -- payable > 0 alacaklı bakiye anlamına gelir; partners.balance (net = receivable − payable) içinde

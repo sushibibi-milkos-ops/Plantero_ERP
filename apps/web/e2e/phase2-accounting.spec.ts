@@ -478,10 +478,29 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
     // GERİ DÖNMELİ — "her koşulda mutlak sıfır" DEĞİL.
     const balanceAfterPayment = psqlOne(`select balance from partners where id='${ctx.partnerId}'`)!;
     const balanceKpi = page.getByText('Güncel bakiye', { exact: true }).locator('xpath=ancestor::*[self::div][1]');
+    // BULGU (K-NUMBERFLOW-STYLE-POLLUTION, bu turda canlı tespit edildi — test hatası, UI doğru
+    // görünüyor): `KpiCard`'ın para değerlerini bastığı `@number-flow/react`, render edilen
+    // `<number-flow-react>` özel elemanının İÇİNE (light DOM, shadow DOM DEĞİL) bir `<style>` etiketi
+    // enjekte ediyor (`number-flow-react > span{font-kerning:none; ...}`). Ham DOM API'si
+    // `Element.textContent` — Playwright'ın KENDİ metin motorunun (getByText/toContainText/toHaveText)
+    // aksine — `<style>` içeriğini de bir metin düğümü olarak sayar; bu yüzden `balanceKpi.textContent()`
+    // gerçekte "Güncel bakiyenumber-flow-react > span{font-kerning:none; ...0.25em... 1px...}-₺2.782,18"
+    // gibi CSS kural metniyle KİRLENMİŞ bir dize döndürüyordu — rakam ayıklama regex'i CSS içindeki
+    // "0.25", "1" gibi sahte rakamları da asıl tutarla karıştırıp hep NaN/anlamsız bir sayı üretiyordu
+    // (canlı doğrulandı: `page.evaluate` ile ham `outerHTML` dökümü + izole bir Playwright betiğiyle
+    // ekran görüntüsünde "-₺2.782,18" doğru basılıyorken `.textContent()` her seferinde bozuk çıktı
+    // verdiği kanıtlandı — 10 saniyelik `.poll()` penceresi boyunca hep NaN, yani bir zamanlama/animasyon
+    // yarışı DEĞİL, deterministik bir kirlenme). Düzeltme: `evaluate` içinde DOM klonundan `<style>`
+    // etiketleri silinip metin ONDAN okunur (`innerText`/tekil `<span>` hedeflemesi de bu ortamda
+    // güvenilir bulunmadı — özel eleman + giriş animasyonu birlikte kararsız davranıyor).
     await expect
       .poll(
         async () => {
-          const text = (await balanceKpi.textContent()) ?? '';
+          const text = await balanceKpi.evaluate((el) => {
+            const clone = el.cloneNode(true) as HTMLElement;
+            clone.querySelectorAll('style').forEach((s) => s.remove());
+            return clone.textContent ?? '';
+          });
           return Number(text.replace(/[^\d,-]/g, '').replace(',', '.'));
         },
         { message: 'Ekrandaki "Güncel bakiye" DB\'deki partners.balance ile eşleşmeli', timeout: 10_000 },

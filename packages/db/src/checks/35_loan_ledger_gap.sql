@@ -1,27 +1,37 @@
 -- I35 — Kredi hesap planı bakiyesi: aktif her kredinin 300.xx (Banka Kredileri) alt hesap
--- bakiyesi (posted journal_lines, credit-debit), VUK ve UFRS için ayrı ayrı,
--- loans.remaining_principal'e eşit olmalı.
+-- bakiyesi (posted journal_lines, credit-debit), VUK ve UFRS için ayrı ayrı, o kredinin ÖDENMEMİŞ
+-- (status <> 'paid') taksitlerinin anapara (principal) toplamına eşit olmalı.
 --
--- Kök neden notu: `accounts` tablosunda her kredi için özel açılmış bir alt hesap var
--- (300.01..300.07, isimleri loans.product_name ile birebir eşleşiyor) ve loans.remaining_principal
--- toplamı (bugün 5.653.346,57 TL) gerçek bir yükümlülüğü temsil ediyor, ama `packages/core/src`
--- içinde `loans`/`loan_installments` okuyan/yazan TEK satır kod yok (`grep -rln "loans\b" packages/core/src`
--- → 0 sonuç) ve `apps/web/src/app` altında kredi ekranı da yok — yani ne kredinin açılış bakiyesi
--- (300.xx'e alacak) ne de bir taksit ödemesi (300.xx'e borç + 780 faiz gideri + banka/kasa alacağı)
--- için tek bir yevmiye fişi hiç üretilmemiş. Sonuç: muhasebe defterlerinde (VUK da UFRS de) bu
--- 5,65 milyon TL'lik banka kredisi yükümlülüğü YOK — bilanço bu kadar eksik gösteriyor. Bu, I9-I18'i
--- döşeyen "tahsilat/banka" ortak bulgusunun (`payments`/`bank_transactions` kod yok) ve I31'in
--- ("channel_settlements" kod yok) aynı örüntüsünün kredi tarafındaki eşleniği.
---
--- Düzeltme önerisi: `packages/core/src/finance/loans.ts` yaz — (a) her aktif kredi için tek seferlik
--- açılış fişi (300.xx'e alacak, karşı taraf muhtemelen 102/varlık ya da özkaynak açılış hesabı,
--- VUK+UFRS ikiz), (b) `postLoanInstallmentPayment(loanId, seq)` → aynı transaction'da
--- `recordPayment`/`postJournalEntry` ile 300.xx borç (anapara) + 780 borç (faiz+BSMV) + banka/kasa
--- alacak fişi üretsin, `loan_installments.status='paid'`+`bankTransactionId`/`journalEntryId` doldursun.
+-- **Tur 7 düzeltmesi (P0, veri-critic — kendi kontrolündeki tasarım çelişkisi, CANLI OLARAK YAKALANDI)**:
+-- Bu kural önceden `loans.remaining_principal` alanını "expected" olarak kullanıyordu. Ancak
+-- `remaining_principal`, I34(c)'nin ZORUNLU kıldığı gibi, kredi takviminin (`loan_installments`)
+-- TÜM satırlarının (durumdan BAĞIMSIZ) anapara toplamına eşit SABİT bir referans değerdir (Excel içe
+-- aktarım anındaki toplam anapara — `packages/db/src/import/nakitakisi.ts`); canlı bir "kalan bakiye"
+-- alanı DEĞİLDİR (schema donduğundan ayrı bir "canlı bakiye" kolonu yok — bkz.
+-- `packages/core/src/finance/loans.ts` üst yorumu, satır 28-38). `postLoanInstallmentPayment` (aynı
+-- dosya) bilinçli olarak bu alanı DEĞİŞTİRMEZ, tam da bu iki kuralın (eski I35 ile I34-c) BİRBİRİYLE
+-- ÇELİŞMESİNİ önlemek için — ama bunun bedeli, taksit ödemesi POSTALANDIĞI ANDA eski I35'in anlıksız
+-- kırmızıya düşmesiydi (I34-c ile eski I35 aynı anda yalnızca HİÇBİR taksit ödenmemişken tutarlı
+-- olabiliyordu — yapısal olarak birbiriyle uyumsuz iki beklenti).
+-- Canlı doğrulama: `db:reset` sonrası arka planda kredi L2 (`6b66455d-...`) için taksit #1
+-- (`917947c5-...`, anapara 21.579,73 TL) banka mutabakatı (`reconciliation_matches`,
+-- kind='loan_installment', `postLoanInstallmentPayment` üzerinden) ile ÖDENDİ işaretlendi — 300.02
+-- hesabına gerçek bir borç kaydı (VUK+UFRS) düştü, `loans.remaining_principal` (I34-c gereği,
+-- kasıtlı olarak) 1.500.000,00 TL'de sabit kaldı. Eski I35 anında **2 ihlal** verdi (VUK+UFRS,
+-- diff=-21.579,73 — ledger < eski expected). Doğru "beklenen" değer, kredinin HENÜZ ÖDENMEMİŞ
+-- taksitlerinin anapara toplamıdır (bu örnekte 1.478.420,27 TL) — ki bu TAM OLARAK gerçek 300.02
+-- ledger bakiyesine eşittir; sorun kredi/muhasebe modülünde değil, eski I35'in "expected" formülündeydi.
+-- **schemaRequests**: `loans` tablosuna canlı bir `outstanding_principal` (veya benzeri) kolonu
+-- eklenmesi önerilir — böylece hem I34(c) (statik referans) hem I35 (canlı bakiye) kendi ayrı,
+-- birbiriyle çelişmeyen alanlarını doğrulamış olur; bugünkü çözüm (`loan_installments.status`'tan
+-- türetme) doğru ama her okuma tüm takvimi tarıyor, tek bir denormalize alan daha ucuz olurdu.
 
 WITH loan_ledger AS (
   SELECT
-    l.id AS loan_id, l.code AS loan_code, l.remaining_principal, l.account_code, led.ledger
+    l.id AS loan_id, l.code AS loan_code, l.account_code, led.ledger,
+    COALESCE((
+      SELECT SUM(li.principal) FROM loan_installments li WHERE li.loan_id = l.id AND li.status <> 'paid'
+    ), 0) AS expected_outstanding_principal
   FROM loans l
   CROSS JOIN (VALUES ('VUK'), ('UFRS')) AS led(ledger)
   WHERE l.is_active AND l.account_code IS NOT NULL
@@ -36,10 +46,10 @@ balances AS (
 SELECT
   'I35' AS rule, 'loan_account_balance_mismatch' AS entity,
   (ll.loan_id::text || ':' || ll.ledger) AS id,
-  ll.remaining_principal::numeric(18, 4) AS expected,
+  ll.expected_outstanding_principal::numeric(18, 4) AS expected,
   COALESCE(b.balance, 0)::numeric(18, 4) AS actual,
-  (COALESCE(b.balance, 0) - ll.remaining_principal)::numeric(18, 4) AS diff
+  (COALESCE(b.balance, 0) - ll.expected_outstanding_principal)::numeric(18, 4) AS diff
 FROM loan_ledger ll
 LEFT JOIN balances b ON b.account_code = ll.account_code AND b.ledger::text = ll.ledger
-WHERE abs(COALESCE(b.balance, 0) - ll.remaining_principal) > 0
+WHERE abs(COALESCE(b.balance, 0) - ll.expected_outstanding_principal) > 0
 ORDER BY id;

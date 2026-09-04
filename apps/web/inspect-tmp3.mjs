@@ -1,0 +1,15 @@
+import { chromium } from '@playwright/test';
+const PID = process.argv[2];
+const browser = await chromium.launch();
+const page = await browser.newPage();
+await page.goto('http://localhost:3000/login');
+await page.getByLabel('E-posta').fill('muhasebe@plantero.local');
+await page.getByLabel('Şifre', { exact: true }).fill('Plantero!2026');
+await page.getByTestId('login-submit').click();
+await page.waitForURL((u) => !u.pathname.startsWith('/login'), { timeout: 30000 });
+await page.goto(`http://localhost:3000/muhasebe/cariler/${PID}/ekstre`);
+await page.waitForSelector('text=Güncel bakiye');
+await page.waitForTimeout(1500);
+const textNode = page.getByText('Güncel bakiye', { exact: true });
+const anc = textNode.locator('xpath=ancestor::*[self::div][1]');
+console.log(await anc.evaluate(e => e.outerHTML));

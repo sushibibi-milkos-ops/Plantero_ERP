@@ -19,9 +19,11 @@ const FILES = await checkFiles();
 // (iş emri malzeme/reçete formülü), I29 (mutabakat kaydı bütünlüğü), I30 (banka hesabı para birimi),
 // I31/I32 (kanal hakediş mutabakatı/ödeme bütünlüğü), I33 (gelecek tarihli nakit olayı yasağı, tur 13
 // P0), I34/I35 (kredi taksit takvimi iç tutarlılığı + kredi hesap planı bakiyesi, tur 14), I36
-// (ihracat sevkiyat zinciri boşluğu) ve I37 (yevmiye ters kayıt koruması — stok/üretim kaynaklı fiş
-// reversed olamaz) sonraki turlarda eklendi; dosya sayısı/aralığı buna göre güncellendi.
-const RULE_COUNT = 37;
+// (ihracat sevkiyat zinciri boşluğu), I37 (yevmiye ters kayıt koruması — stok/üretim kaynaklı fiş
+// reversed olamaz), I38 (iş emri tüketim/çıktı/fire satırları ↔ bağlı stock_moves birebir tutarlılığı)
+// ve I39 (değerli stok hareketi tutarı = bağlı yevmiye fişi tutarı, VUK+UFRS — tur 7) sonraki turlarda
+// eklendi; dosya sayısı/aralığı buna göre güncellendi.
+const RULE_COUNT = 39;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
