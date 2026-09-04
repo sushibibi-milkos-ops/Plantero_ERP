@@ -14,9 +14,18 @@ import { FormDate } from '@/components/form/date-field';
 import { FormCombobox } from '@/components/form/combobox';
 import { FormActions } from '@/components/form/form-actions';
 import { D, sum, round4 } from '@plantero/core/money';
+import { formatMoney } from '@/lib/format';
 import { createManualJournalEntryAction } from '../actions';
 
-const lineSchema = z.object({ accountCode: z.string().min(1, 'Hesap seçin'), partnerId: z.string().optional().nullable(), description: z.string().trim().optional().nullable(), debit: z.string().optional(), credit: z.string().optional() });
+// debit/credit .nullable() (P0 kök neden — kritik bulgu): `NumberInput.onBlur` boş bir alanda
+// `onChange(null)` çağırır (parseTrNumber('') === null) — bu ORTAK bileşenin sözleşmesidir
+// (apps/web/src/components/form/number-input.tsx, değiştirilemez). Alan yalnızca
+// `z.string().optional()` (undefined kabul, null REDDEDER) olduğunda zodResolver tek taraflı
+// (yalnız Borç ya da yalnız Alacak dolu) HERHANGİ bir satırla `form.handleSubmit`'i sunucuya hiç
+// ulaştırmadan SESSİZCE engelliyordu — "Fişi kaydet" tıklanıyor, hiçbir hata/toast görünmüyor,
+// istek asla gitmiyordu. `.nullable()` eklenince boş alan geçerli sayılır; sunuşta `D(l.debit || '0')`
+// zaten null/undefined'ı 0'a çeviriyor.
+const lineSchema = z.object({ accountCode: z.string().min(1, 'Hesap seçin'), partnerId: z.string().optional().nullable(), description: z.string().trim().optional().nullable(), debit: z.string().optional().nullable(), credit: z.string().optional().nullable() });
 const schema = z.object({
   ledger: z.enum(['VUK', 'UFRS', 'both']), journalCode: z.string().min(1, 'Yevmiye seçin'), entryDate: z.string().min(1, 'Tarih girin'),
   description: z.string().trim().min(3, 'Açıklama girin'), lines: z.array(lineSchema).min(2, 'En az iki satır olmalı'),
@@ -92,7 +101,7 @@ export function ManualJournalForm({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[13px] font-medium">Satırlar</span>
-            <Button type="button" variant="outline" size="sm" onClick={() => append({ accountCode: '', debit: '', credit: '' })}>
+            <Button type="button" variant="outline" size="sm" className="h-11 sm:h-8" onClick={() => append({ accountCode: '', debit: '', credit: '' })}>
               <Plus className="size-3.5" /> Satır ekle
             </Button>
           </div>
@@ -100,7 +109,7 @@ export function ManualJournalForm({
           <div className="hidden overflow-x-auto rounded-lg border border-border/60 md:block">
             <table className="w-full text-[13px]">
               <thead>
-                <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] uppercase tracking-wide text-muted-foreground">
+                <tr className="border-b border-border/60 bg-muted/40 text-left text-[12px] text-muted-foreground">
                   <th className="px-3 py-2 font-medium">Hesap</th>
                   <th className="px-3 py-2 font-medium">Cari</th>
                   <th className="px-3 py-2 font-medium">Açıklama</th>
@@ -153,10 +162,13 @@ export function ManualJournalForm({
               );
             })}
           </div>
+          {/* formatMoney (kritik bulgu, kriter 6 — expense-invoice-form.tsx ile aynı kök neden):
+              önceden toFixed(4) ham veritabanı ondalığıyla ("0.0000") basıyordu; FormMoney alanları
+              "₺ 0,00" gösteriyordu. */}
           <div className="flex justify-end gap-4 text-[13px]">
-            <span className="text-muted-foreground">Borç: <span className="num tabular-nums text-foreground">{totals.debit.toFixed(4)}</span></span>
-            <span className="text-muted-foreground">Alacak: <span className="num tabular-nums text-foreground">{totals.credit.toFixed(4)}</span></span>
-            <span className={balanced ? 'font-medium text-success' : 'font-medium text-destructive'}>{balanced ? 'Dengeli' : `Fark: ${totals.diff.toFixed(4)}`}</span>
+            <span className="text-muted-foreground">Borç: <span className="num tabular-nums text-foreground">{formatMoney(totals.debit)}</span></span>
+            <span className="text-muted-foreground">Alacak: <span className="num tabular-nums text-foreground">{formatMoney(totals.credit)}</span></span>
+            <span className={balanced ? 'font-medium text-success' : 'font-medium text-destructive'}>{balanced ? 'Dengeli' : `Fark: ${formatMoney(totals.diff)}`}</span>
           </div>
         </div>
 

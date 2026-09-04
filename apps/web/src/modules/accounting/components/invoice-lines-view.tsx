@@ -13,7 +13,7 @@ export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTot
       <div className="hidden overflow-x-auto md:block">
         <table className="w-full text-[13px]">
           <thead>
-            <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] uppercase tracking-wide text-muted-foreground">
+            <tr className="border-b border-border/60 bg-muted/40 text-left text-[12px] text-muted-foreground">
               <th className="px-3 py-2 font-medium">Açıklama</th>
               <th className="px-3 py-2 text-right font-medium">Miktar</th>
               <th className="px-3 py-2 text-right font-medium">Birim fiyat</th>
@@ -32,7 +32,7 @@ export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTot
                   {l.productName && l.description !== l.productName ? <div className="text-[12px] text-muted-foreground">{l.description}</div> : null}
                   {l.accountCode ? <div className="font-mono text-[11px] text-muted-foreground">{l.accountCode}</div> : null}
                 </td>
-                <td className="px-3 py-2 text-right font-mono tabular-nums">{formatQty(l.qty)}</td>
+                <td className="px-3 py-2 text-right font-mono tabular-nums">{formatQty(l.qty, l.uomCode)}</td>
                 <td className="px-3 py-2 text-right"><MoneyCell value={l.unitPrice} currency={currency} /></td>
                 {/* formatPct (tur 2 P1 muhasebe-fatura-detay-01): ham numeric(18,4) çıplak basılıyordu
                     ("%20.0000", 4 ondalık nokta ayraçlı) — aynı satırdaki MoneyCell TR virgülüyle
@@ -56,7 +56,7 @@ export function InvoiceLinesView({ lines, currency, subtotal, vatTotal, grandTot
               <MoneyCell value={l.lineTotal} currency={currency} className="shrink-0 font-medium" />
             </div>
             <div className="flex items-center justify-between text-[12px] text-muted-foreground">
-              <span>{formatQty(l.qty)} × <MoneyCell value={l.unitPrice} currency={currency} className="text-[12px]" /> · KDV {formatPct(l.vatRate)}</span>
+              <span>{formatQty(l.qty, l.uomCode)} × <MoneyCell value={l.unitPrice} currency={currency} className="text-[12px]" /> · KDV {formatPct(l.vatRate)}</span>
               {l.accountCode ? <span className="font-mono">{l.accountCode}</span> : null}
             </div>
           </div>

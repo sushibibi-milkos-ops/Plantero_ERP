@@ -29,8 +29,10 @@ export function CloseVatPeriodButton({ computablePeriods }: { computablePeriods:
 
   return (
     <div className="flex items-center gap-2">
+      {/* data-[size=default]:h-11 md:...:h-9 (kritik bulgu, muhasebe-mobil-buton-01): fields.tsx
+          FormSelect ile aynı kalıp — 390px'te varsayılan 36px, 44px hedefinin altındaydı. */}
       <Select value={period} onValueChange={setPeriod}>
-        <SelectTrigger className="w-32"><SelectValue placeholder="Dönem" /></SelectTrigger>
+        <SelectTrigger className="w-32 data-[size=default]:h-11 md:data-[size=default]:h-9"><SelectValue placeholder="Dönem" /></SelectTrigger>
         <SelectContent>
           {computablePeriods.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
         </SelectContent>

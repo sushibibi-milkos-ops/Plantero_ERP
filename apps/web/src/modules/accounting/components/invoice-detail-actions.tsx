@@ -72,18 +72,21 @@ export function InvoiceDetailActions({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {/* h-11 sm:h-8 (kritik bulgu, kriter 9): sayfanın birincil eylemleri size='sm' (h-8/32px)
+          ile 390px'te 44px dokunma hedefinin altındaydı — modülün geri kalanı ("Otomatik dağıt",
+          arama kutuları, dönem kartı düğmesi) zaten bu kalıbı kullanıyor. */}
       {canSendEInvoice ? (
-        <Button variant="outline" size="sm" onClick={sendEInvoice} disabled={sending}>
+        <Button variant="outline" size="sm" className="h-11 sm:h-8" onClick={sendEInvoice} disabled={sending}>
           {sending ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />} e-Fatura gönder
         </Button>
       ) : null}
       {canCredit ? (
-        <Button variant="outline" size="sm" onClick={() => setCreditOpen(true)}>
+        <Button variant="outline" size="sm" className="h-11 sm:h-8" onClick={() => setCreditOpen(true)}>
           <Undo2 className="size-3.5" /> İade faturası
         </Button>
       ) : null}
       {canCancel ? (
-        <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={() => setCancelOpen(true)}>
+        <Button variant="outline" size="sm" className="h-11 text-destructive hover:text-destructive sm:h-8" onClick={() => setCancelOpen(true)}>
           <Ban className="size-3.5" /> İptal et
         </Button>
       ) : null}

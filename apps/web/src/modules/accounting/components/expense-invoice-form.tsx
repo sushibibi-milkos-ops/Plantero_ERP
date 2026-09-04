@@ -15,7 +15,8 @@ import { FormCombobox } from '@/components/form/combobox';
 import { FormActions } from '@/components/form/form-actions';
 // '@plantero/core' barrel sunucu-özel kod (bcrypt/node:crypto vb.) re-export eder — client
 // bileşende yalnızca saf `money.ts` alt yolundan içe aktarılır (finans modülüyle aynı örüntü).
-import { D, sum, round4, toDb } from '@plantero/core/money';
+import { D, sum, round4 } from '@plantero/core/money';
+import { formatMoney } from '@/lib/format';
 import { createExpenseInvoiceAction } from '../actions';
 import type { ExpenseAccountOption } from '../queries';
 
@@ -66,19 +67,21 @@ export function ExpenseInvoiceForm({ suppliers, expenseAccounts }: { suppliers: 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
-        {/* max-w-3xl (tur 2 P1 muhasebe-tahsilat-yeni-01 ile aynı kök neden/desen — receipt-form.tsx
-            konvansiyonu): yalnızca başlık alanları sınırlanır, aşağıdaki "Satırlar" tablosu tam
-            genişlikte kalır. */}
-        <div className="max-w-3xl grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FormCombobox control={form.control} name="partnerId" label="Tedarikçi" required options={supplierOptions} placeholder="Tedarikçi seçin…" searchPlaceholder="Ara…" />
-          <FormText control={form.control} name="supplierInvoiceNo" label="Tedarikçi fatura no (opsiyonel)" />
-          <FormDate control={form.control} name="invoiceDate" label="Fatura tarihi" required />
-        </div>
+        {/* max-w-[1080px] TEK ölçü (kritik bulgu, kriter 11 — önceden alanlar max-w-3xl/768px,
+            Satırlar tablosu ve FormActions tam genişlik/1152px idi: aynı ekranda üç farklı blok
+            genişliği). Artık alan ızgarası, satır tablosu ve eylem çubuğu AYNI kapsayıcının içinde —
+            tek genişlik, göz her blokta yeniden hizalanmıyor. */}
+        <div className="max-w-[1080px] space-y-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <FormCombobox control={form.control} name="partnerId" label="Tedarikçi" required options={supplierOptions} placeholder="Tedarikçi seçin…" searchPlaceholder="Ara…" />
+            <FormText control={form.control} name="supplierInvoiceNo" label="Tedarikçi fatura no (opsiyonel)" />
+            <FormDate control={form.control} name="invoiceDate" label="Fatura tarihi" required />
+          </div>
 
-        <div className="space-y-2">
+          <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[13px] font-medium">Satırlar</span>
-            <Button type="button" variant="outline" size="sm" onClick={() => append({ description: '', accountCode: '', amount: '', vatRate: '20' })}>
+            <Button type="button" variant="outline" size="sm" className="h-11 sm:h-8" onClick={() => append({ description: '', accountCode: '', amount: '', vatRate: '20' })}>
               <Plus className="size-3.5" /> Satır ekle
             </Button>
           </div>
@@ -88,7 +91,7 @@ export function ExpenseInvoiceForm({ suppliers, expenseAccounts }: { suppliers: 
           <div className="hidden overflow-x-auto rounded-lg border border-border/60 md:block">
             <table className="w-full text-[13px]">
               <thead>
-                <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] uppercase tracking-wide text-muted-foreground">
+                <tr className="border-b border-border/60 bg-muted/40 text-left text-[12px] text-muted-foreground">
                   <th className="px-3 py-2 font-medium">Açıklama</th>
                   <th className="px-3 py-2 font-medium">Hesap</th>
                   <th className="px-3 py-2 text-right font-medium">Tutar</th>
@@ -132,14 +135,18 @@ export function ExpenseInvoiceForm({ suppliers, expenseAccounts }: { suppliers: 
               </div>
             ))}
           </div>
+          {/* formatMoney (kritik bulgu, kriter 6): önceden toDb(...) ham veritabanı ondalığıyla
+              ("0.0000", nokta ayraç, 4 ondalık, para birimsiz) basıyordu — aynı ekrandaki
+              FormMoney alanı ("₺ 0,00") ile tek ekranda iki farklı sayı biçimi oluşuyordu. */}
           <div className="flex justify-end gap-4 text-[13px] text-muted-foreground">
-            <span>Ara toplam: <span className="num tabular-nums text-foreground">{toDb(totals.subtotal)}</span></span>
-            <span>KDV: <span className="num tabular-nums text-foreground">{toDb(totals.vat)}</span></span>
-            <span className="font-medium">Genel toplam: <span className="num tabular-nums text-foreground">{toDb(totals.grand)}</span></span>
+            <span>Ara toplam: <span className="num tabular-nums text-foreground">{formatMoney(totals.subtotal)}</span></span>
+            <span>KDV: <span className="num tabular-nums text-foreground">{formatMoney(totals.vat)}</span></span>
+            <span className="font-medium">Genel toplam: <span className="num tabular-nums text-foreground">{formatMoney(totals.grand)}</span></span>
           </div>
         </div>
 
         <FormActions onCancel={() => router.back()} pending={form.formState.isSubmitting} submitLabel="Gider faturasını kaydet" />
+        </div>
       </form>
     </Form>
   );

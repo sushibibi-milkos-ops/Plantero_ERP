@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Wand2 } from 'lucide-react';
+import { Wand2, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { EmptyState } from '@/components/empty-state';
@@ -207,17 +207,21 @@ export function RecordPaymentForm({
               <Wand2 className="size-3.5" /> Otomatik dağıt (en eski önce)
             </Button>
           </div>
+          {/* EmptyState (kritik bulgu, kriter 7 — kök neden): "Önce bir cari seçin." düz metni
+              ikonsuz/eylemsizdi; modülün diğer boş durumu (KDV grafiği) ikon+başlık+açıklama
+              kalıbı kullanıyor — aynı modülde iki farklı boş-durum dili vardı. `compact` her iki
+              dalda da kullanılır (KDV chart empty state ile aynı kalıp), kart yüksekliği de küçülür. */}
           {!partnerId ? (
-            <p className="py-6 text-center text-[13px] text-muted-foreground">Önce bir cari seçin.</p>
+            <EmptyState compact icon={Users} title="Henüz cari seçilmedi" description="Faturaya tahsis edebilmek için önce bir cari (müşteri/tedarikçi) seçin." />
           ) : loadingInvoices ? (
             <p className="py-6 text-center text-[13px] text-muted-foreground">Açık faturalar yükleniyor…</p>
           ) : !openInvoices.length ? (
-            <EmptyState title="Açık fatura yok" description="Bu carinin kalan tutarlı faturası bulunmuyor. Tahsilat tahsissiz (cari üzerinde avans) olarak kaydedilir." />
+            <EmptyState compact title="Açık fatura yok" description="Bu carinin kalan tutarlı faturası bulunmuyor. Tahsilat tahsissiz (cari üzerinde avans) olarak kaydedilir." />
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr className="border-b border-border/60 text-left text-[11px] uppercase tracking-wide text-muted-foreground">
+                  <tr className="border-b border-border/60 text-left text-[12px] text-muted-foreground">
                     <th className="w-8 py-1.5" />
                     <th className="py-1.5 font-medium">Fatura</th>
                     <th className="py-1.5 font-medium">Vade</th>
@@ -258,7 +262,12 @@ export function RecordPaymentForm({
           )}
         </div>
 
-        <FormTextarea control={form.control} name="note" label="Not (opsiyonel)" />
+        {/* max-w-3xl (kritik bulgu, kriter 2): önceden tam genişlik (1152px) — tek satırlık bir not
+            alanının o kadar geniş olması için gerekçe yoktu, alan ızgarasıyla (768px) aynı ölçüye
+            alınır; yalnızca "Faturaya tahsis" tablosu tam genişlikte kalır. */}
+        <div className="max-w-3xl">
+          <FormTextarea control={form.control} name="note" label="Not (opsiyonel)" />
+        </div>
 
         <FormActions onCancel={() => router.back()} pending={form.formState.isSubmitting} submitLabel={direction === 'inbound' ? 'Tahsilatı kaydet' : 'Ödemeyi kaydet'} />
       </form>

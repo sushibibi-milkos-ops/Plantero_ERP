@@ -56,7 +56,7 @@ export function ChartOfAccountsView({ accounts }: { accounts: ChartAccountRow[] 
         <div className="hidden overflow-x-auto md:block">
           <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] uppercase tracking-wide text-muted-foreground">
+              <tr className="border-b border-border/60 bg-muted/40 text-left text-[12px] text-muted-foreground">
                 <th className="px-3 py-2 font-medium">Kod</th>
                 <th className="px-3 py-2 font-medium">Ad</th>
                 <th className="px-3 py-2 font-medium">Tip</th>

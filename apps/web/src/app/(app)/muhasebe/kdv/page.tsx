@@ -10,7 +10,6 @@ import { MoneyCell } from '@/components/money-cell';
 import { StatusBadge } from '@/components/status-badge';
 import { EmptyState } from '@/components/empty-state';
 import { formatDate } from '@/lib/format';
-import { LineChart } from 'lucide-react';
 
 export const metadata: Metadata = { title: 'KDV' };
 export const dynamic = 'force-dynamic';
@@ -45,20 +44,23 @@ export default async function VatPage() {
         </KpiStripRow>
       ) : null}
 
-      <div className="mb-6 rounded-lg border border-border/60 p-4">
-        <div className="mb-2 text-[13px] font-medium text-muted-foreground">Devreden KDV birikimi</div>
-        {hasChartableSeries ? (
+      {/* Kutu yalnızca karşılaştırılabilir bir seri VARKEN çizilir (kritik bulgu, kriter 3): önceden
+          seri <2 dönemken de 330px (mobilde 490px) boş-durum kutusu hep basılıyordu — 390px'te
+          telefonun İLK ekranı tamamen "veri yok" mesajına ayrılıyor, tek dönem satırı katlamanın
+          altında kalıyordu. Grafiğin karşılığı olan eylem zaten PageHeader'da ("Dönemi hesapla") —
+          burada tekrar bir boş-durum kutusu açmaya gerek yok; dönem tablosu doğrudan yukarı çıkar. */}
+      {hasChartableSeries ? (
+        <div className="mb-6 rounded-lg border border-border/60 p-4">
+          <div className="mb-2 text-[13px] font-medium text-muted-foreground">Devreden KDV birikimi</div>
           <VatCarryforwardChart series={series} />
-        ) : (
-          <EmptyState compact icon={LineChart} title="Henüz karşılaştırılabilir dönem yok" description="En az iki dönem hesaplandığında devreden KDV eğilimi burada görünecek." />
-        )}
-      </div>
+        </div>
+      ) : null}
 
       <div className="overflow-hidden rounded-lg border border-border/60">
         <div className="hidden overflow-x-auto md:block">
           <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] uppercase tracking-wide text-muted-foreground">
+              <tr className="border-b border-border/60 bg-muted/40 text-left text-[12px] text-muted-foreground">
                 <th className="px-3 py-2 font-medium">Dönem</th>
                 <th className="px-3 py-2 text-right font-medium">Hesaplanan</th>
                 <th className="px-3 py-2 text-right font-medium">İndirilecek</th>
@@ -69,8 +71,10 @@ export default async function VatPage() {
               </tr>
             </thead>
             <tbody>
+              {/* hover:bg-muted/40 (kritik bulgu, kriter 8): mizan/hesap planı tablolarıyla aynı satır
+                  geri bildirimi kalıbı — önceden bu tablo hiç hover almıyordu. */}
               {periods.map((p) => (
-                <tr key={p.id} className="border-b border-border/40 last:border-0">
+                <tr key={p.id} className="border-b border-border/40 last:border-0 hover:bg-muted/40">
                   <td className="px-3 py-2 font-mono">{p.period}</td>
                   <td className="px-3 py-2 text-right"><MoneyCell value={p.outputVat} /></td>
                   <td className="px-3 py-2 text-right"><MoneyCell value={p.inputVat} /></td>

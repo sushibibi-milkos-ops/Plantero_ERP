@@ -7,7 +7,7 @@ import { D, ZERO, round4, listPeriods as coreListPeriods, getAging as coreGetAgi
 const {
   invoices, invoiceLines, partners, products, salesChannels, payments, paymentAllocations,
   bankAccounts, bankTransactions, reconciliationMatches, journalEntries, journalLines, journals,
-  accounts, vatPeriods,
+  accounts, vatPeriods, uoms,
 } = schema;
 
 /* ==================================================================== */
@@ -124,7 +124,7 @@ export async function listInvoices(kinds: Array<'sales' | 'purchase' | 'sales_re
   }));
 }
 
-export type InvoiceLineRow = { id: string; productName: string | null; description: string; qty: string; unitPrice: string; vatRate: string; lineSubtotal: string; lineVat: string; lineTotal: string; accountCode: string | null; lotId: string | null };
+export type InvoiceLineRow = { id: string; productName: string | null; description: string; qty: string; uomCode: string | null; unitPrice: string; vatRate: string; lineSubtotal: string; lineVat: string; lineTotal: string; accountCode: string | null; lotId: string | null };
 export type InvoiceDetail = {
   invoice: typeof invoices.$inferSelect;
   partner: typeof partners.$inferSelect;
@@ -139,10 +139,14 @@ export async function getInvoiceDetail(id: string): Promise<InvoiceDetail | null
   const [invoice] = await db.select().from(invoices).where(eq(invoices.id, id)).limit(1);
   if (!invoice) return null;
   const [partner] = await db.select().from(partners).where(eq(partners.id, invoice.partnerId)).limit(1);
+  // uoms join (kritik bulgu, kriter 6 — muhasebe-fatura-detay-04): invoiceLines.uomId zaten var,
+  // şema değişikliği gerekmez; birim kodu (KG/ADET/LT…) olmadan "Miktar" hücresi birimsiz ("5")
+  // basılıyordu, aynı satırdaki tutar/birim fiyat hücreleri para birimiyle geliyordu.
   const lineRows = await db
-    .select({ l: invoiceLines, productName: products.name })
+    .select({ l: invoiceLines, productName: products.name, uomCode: uoms.code })
     .from(invoiceLines)
     .leftJoin(products, eq(products.id, invoiceLines.productId))
+    .leftJoin(uoms, eq(uoms.id, invoiceLines.uomId))
     .where(eq(invoiceLines.invoiceId, id))
     .orderBy(asc(invoiceLines.sequence));
 
@@ -159,7 +163,7 @@ export async function getInvoiceDetail(id: string): Promise<InvoiceDetail | null
 
   return {
     invoice, partner: partner!,
-    lines: lineRows.map((r) => ({ id: r.l.id, productName: r.productName, description: r.l.description, qty: r.l.qty, unitPrice: r.l.unitPrice, vatRate: r.l.vatRate, lineSubtotal: r.l.lineSubtotal, lineVat: r.l.lineVat, lineTotal: r.l.lineTotal, accountCode: r.l.accountCode, lotId: r.l.lotId })),
+    lines: lineRows.map((r) => ({ id: r.l.id, productName: r.productName, description: r.l.description, qty: r.l.qty, uomCode: r.uomCode, unitPrice: r.l.unitPrice, vatRate: r.l.vatRate, lineSubtotal: r.l.lineSubtotal, lineVat: r.l.lineVat, lineTotal: r.l.lineTotal, accountCode: r.l.accountCode, lotId: r.l.lotId })),
     payments: allocRows.map((r) => ({ id: r.p.id, docNo: r.p.docNo, direction: r.p.direction, paymentDate: r.p.paymentDate, amount: r.p.amount, allocatedAmount: r.allocAmount })),
     linkedCreditNoteId: asSource?.targetId ?? null, sourceInvoiceId: asTarget?.sourceId ?? null,
   };

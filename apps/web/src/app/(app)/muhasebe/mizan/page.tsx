@@ -41,7 +41,8 @@ export default async function TrialBalancePage() {
         </TabsList>
         <TabsContent value="VUK" className="mt-3 space-y-3">
           <div className="flex justify-end">
-            <Button variant="outline" size="sm" asChild>
+            {/* h-11 sm:h-8 (kritik bulgu, muhasebe-mobil-buton-01): 390px'te 32px yükseklikteydi. */}
+            <Button variant="outline" size="sm" className="h-11 sm:h-8" asChild>
               <a href="/muhasebe/mizan/export?ledger=VUK" download="mizan-VUK.csv"><Download className="size-4" /> CSV indir</a>
             </Button>
           </div>
@@ -49,7 +50,8 @@ export default async function TrialBalancePage() {
         </TabsContent>
         <TabsContent value="UFRS" className="mt-3 space-y-3">
           <div className="flex justify-end">
-            <Button variant="outline" size="sm" asChild>
+            {/* h-11 sm:h-8 (kritik bulgu, muhasebe-mobil-buton-01): 390px'te 32px yükseklikteydi. */}
+            <Button variant="outline" size="sm" className="h-11 sm:h-8" asChild>
               <a href="/muhasebe/mizan/export?ledger=UFRS" download="mizan-UFRS.csv"><Download className="size-4" /> CSV indir</a>
             </Button>
           </div>

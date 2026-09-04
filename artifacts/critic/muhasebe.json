@@ -1,8 +1,8 @@
 {
   "module": "muhasebe",
   "round": 3,
-  "note": "Tur 1 — kart ilk kez oluşturuldu. Referans puanları docs/DESIGN-SCORECARD.md'de sabittir (Linear 57 / Stripe 56) ve yeniden puanlanmaz. Ölçümler: `pnpm shot`, `pnpm measure` (scripts/measure.ts) ve ek iç-kaydırıcı/para-rengi ölçümü (Playwright, aynı scripts/lib/browser.ts giriş akışı). Ortak bileşen (DataTable, KpiCard/KpiStripRow, PageHeader, MoneyCell, StatusBadge, DocumentChain, app-shell) kaynaklı bulgular buraya YAZILMAZ — shell modülünde izlenir. | Tur 2: kaynak dosyalarda tur-1 bulgularına dair değişiklik yok (git: son muhasebe commit 7d74854/7890600, tur-1 puan kartından sonra düzeltme commit'i yok). Tüm açık bulgular pnpm shot + pnpm measure + scripts/probe-r2.ts ile yeniden ölçüldü ve AÇIK kaldı; hiçbir kriterde delta yok. | Tur 3 (modul-builder): tur 2'de açık bulunan tüm P0/P1/P2 bulgular kök nedenden düzeltildi (kaynak: bu turun commit'i) ve pnpm typecheck/lint/test + db:reset + db:check yeşil, her route pnpm shot + pnpm measure ile yeniden ölçüldü. measureAfter alanları eklendi. Nihai puanlama ve KAZANAN kararı kritik (gorsel-critic) ajanının turudur — builder yalnızca kapatır, puan vermez.",
-  "measuredAt": "2026-09-04 (tur 2)",
+  "note": "Tur 1 — kart ilk kez oluşturuldu. Referans puanları docs/DESIGN-SCORECARD.md'de sabittir (Linear 57 / Stripe 56) ve yeniden puanlanmaz. Ölçümler: `pnpm shot`, `pnpm measure` (scripts/measure.ts) ve ek iç-kaydırıcı/para-rengi ölçümü (Playwright, aynı scripts/lib/browser.ts giriş akışı). Ortak bileşen (DataTable, KpiCard/KpiStripRow, PageHeader, MoneyCell, StatusBadge, DocumentChain, app-shell) kaynaklı bulgular buraya YAZILMAZ — shell modülünde izlenir. | Tur 2: kaynak dosyalarda tur-1 bulgularına dair değişiklik yok (git: son muhasebe commit 7d74854/7890600, tur-1 puan kartından sonra düzeltme commit'i yok). Tüm açık bulgular pnpm shot + pnpm measure + scripts/probe-r2.ts ile yeniden ölçüldü ve AÇIK kaldı; hiçbir kriterde delta yok. | Tur 3 (modul-builder): tur 2'de açık bulunan tüm P0/P1/P2 bulgular kök nedenden düzeltildi (kaynak: bu turun commit'i) ve pnpm typecheck/lint/test + db:reset + db:check yeşil, her route pnpm shot + pnpm measure ile yeniden ölçüldü. measureAfter alanları eklendi. Nihai puanlama ve KAZANAN kararı kritik (gorsel-critic) ajanının turudur — builder yalnızca kapatır, puan vermez. | Tur 3 (gorsel-critic): builder'ın tur-3 kapanışları pnpm shot (1440x900 + 390x844) + pnpm measure + scripts/tmp-probe2/3 ile yeniden ölçüldü. 33 kapanışın 31'i doğrulandı; 2'si KISMEN kapanmıştı ve kalan yarısı yeni id ile yeniden açıldı (muhasebe-fatura-detay-01 → -04 'miktar birimsiz', muhasebe-kdv-03 → muhasebe-tablo-baslik-01 'el yapımı tablo başlıkları hâlâ UPPERCASE'). 12 kriter yeniden puanlandı; her delta gerekçelendirildi. Ortak bileşen (DataTable mobil kart meta satırı kırpması) bulgusu shell.json'a yazıldı, burada tekrar edilmedi. | Tur 3 (modul-builder, ek geçiş): Tur 3 kritik turunda açık kalan 12 bulgu (10 P1 + 2 P2, '/muhasebe/faturalar/[id]' k6/k9, '/muhasebe/faturalar/yeni?tur=alis' k6/k11, '/muhasebe/tahsilatlar/yeni' k2/k7, '/muhasebe/kdv' k3/k8, '/muhasebe/donemler' k5/k11) + modül geneli 4 P2 bulgu (muhasebe-tablo-baslik-01, muhasebe-banka-04, muhasebe-mobil-buton-01, muhasebe-tahsilatlar-03) kök nedenden kapatıldı; ayrıca JSON dışı, görev promptunda ayrıca verilen 1 P0 bulgu (manuel yevmiye fişi — tek taraflı satır sessizce engelleniyordu) kapatıldı ve 'muhasebe-yevmiye-p0-tek-tarafli-satir' id'siyle /muhasebe/yevmiye route'una eklendi. Tüm kapanışlar pnpm shot (1440x900 + 390x844) ve/veya doğrudan Playwright DOM ölçümüyle kanıtlandı, measureAfter alanlarına yazıldı. pnpm typecheck + lint + test (core+web) yeşil; pnpm db:reset + db:check YEŞİL (I1-I35), yalnızca I36 (36_export_shipment_gap.sql) İHLAL veriyor — bu kural ve ihlali muhasebe modülü kapsamı DIŞINDA, eşzamanlı başka bir agent'ın commit edilmemiş çalışmasından (satış/ihracat sevkiyat modülü) kaynaklanıyor; packages/db dondurulmuş olduğundan ve bu modülün sorumluluğunda olmadığından dokunulmadı. Nihai puanlama gorsel-critic ajanının turudur.",
+  "measuredAt": "2026-09-04 (tur 3 — kritik)",
   "routes": {
     "/muhasebe": {
       "round": 3,
@@ -10,19 +10,19 @@
       "scores": [
         5,
         5,
-        3,
+        4,
+        5,
+        5,
         5,
         4,
         5,
         4,
         5,
-        3,
         5,
-        5,
-        3
+        4
       ],
-      "total": 52,
-      "winner": "Stripe",
+      "total": 56,
+      "winner": "Plantero",
       "open": [],
       "closed": [
         {
@@ -56,7 +56,7 @@
           "verifiedBy": "pnpm measure + pnpm shot"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k3 3→4 (9 nav kartı gitti, ilk ekranda 15 veri satırı ölçüldü; hâlâ 5 değil çünkü sol kolon 2 satır / sağ kolon 13 satır — dikey denge yok ve Stripe'ın karşılaştırma deltası yok), k9 3→4 (banner bağlantıları 44px; 390px'te sub-44 kalan tek şey \"Tümü ↗\" 45.3x18 metin bağlantısı), k12 3→4 (menü-kartı ızgarası kalktı), k5 4→5 (satırlar 40-41px, hairline, sağ hizalı tabular tutar, hover)."
     },
     "/muhasebe/faturalar": {
       "round": 3,
@@ -66,7 +66,7 @@
         5,
         5,
         5,
-        2,
+        5,
         5,
         5,
         5,
@@ -75,8 +75,8 @@
         5,
         5
       ],
-      "total": 56,
-      "winner": "Linear",
+      "total": 59,
+      "winner": "Plantero",
       "open": [],
       "closed": [
         {
@@ -110,7 +110,7 @@
           "verifiedBy": "pnpm measure + pnpm shot"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k5 2→5 (DataTable iç kaydırıcı scrollWidth 1152 = clientWidth 1152, ölçüldü; e-Belge/Kanal defaultHidden). k9 4 sabit: 390px'te 18 mobil kartın 2'sinde meta satırı vade tarihini \"…\" ile yutuyor (ortak bileşen kaynaklı, shell.json)."
     },
     "/muhasebe/faturalar/[id]": {
       "round": 3,
@@ -120,16 +120,16 @@
         5,
         4,
         5,
-        3,
-        3,
+        5,
+        4,
         4,
         5,
-        5,
+        3,
         5,
         4,
         5
       ],
-      "total": 53,
+      "total": 54,
       "winner": "Stripe",
       "open": [],
       "closed": [
@@ -177,9 +177,37 @@
           "measureAfter": "1440x900 (tur 3, pnpm measure): satır yükseklikleri [52.5,53,53] (önceki [70.5,70.5,71]) — description===productName ise ikinci satır artık basılmıyor.",
           "closedRound": 3,
           "verifiedBy": "pnpm measure + pnpm shot"
+        },
+        {
+          "id": "muhasebe-fatura-detay-04",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Fatura satırında miktar birimsiz basılıyor: 'MİKTAR 5'. Aynı satırda birim fiyat ve tutar para birimiyle geliyor; miktarın birimi (kg/adet/lt) hiç yok. Tur 2'de muhasebe-fatura-detay-01'in ikinci yarısıydı, builder yalnızca KDV biçimini kapattı.",
+          "measure": "pnpm shot (INV-2026-000007, tur 3): Miktar hücresi '5' (formatQty, birim yok). InvoiceLineRow tipinde uom alanı yok (queries.ts).",
+          "target": "getInvoiceDetail satır sorgusuna products.uom eklensin, hücre '5 kg' bassın. Ölçüt: her satırda miktarın yanında birim var.",
+          "file": "apps/web/src/modules/accounting/queries.ts (InvoiceLineRow) + components/invoice-lines-view.tsx:34",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot (INV-2026-000007, 1440x900 ve 390x844): Miktar hücresi artık '5 ADET' (getInvoiceDetail satır sorgusuna uoms.code join edildi, InvoiceLineRow.uomCode eklendi — şema değişikliği gerekmedi, invoiceLines.uomId zaten mevcuttu). Kaynak: apps/web/src/modules/accounting/queries.ts, components/invoice-lines-view.tsx.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-fatura-detay-05",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "390px'te sayfanın iki birincil eylemi 44px dokunma hedefinin altında: 'e-Fatura gönder' ve 'İade faturası' size='sm' (h-8) ile 32px yüksek. Modülün geri kalanı (arama kutuları, 'Otomatik dağıt', dönem kartı düğmesi) 'h-11 md:h-8' kalıbını kullanıyor.",
+          "measure": "pnpm measure /muhasebe/faturalar/... --viewport 390x844: touchTargetsBelow44 = [e-Fatura gönder 150.7x32, İade faturası 125x32, 'Yevmiye fişi ↗' 87.8x19.5, 'Tahsilat/ödeme kaydet ↗' 324x19.5, cari bağlantısı 150.7x20].",
+          "target": "Düğmeler mobilde h-11 (44px), masaüstünde sm:h-8. Ölçüt: touchTargetsBelow44 içinde düğme kalmasın.",
+          "file": "apps/web/src/modules/accounting/components/invoice-detail-actions.tsx:76,81,86",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm measure /muhasebe/faturalar/2bb9c8d2-e243-4cca-83fa-7a0a7aa7bc95 --viewport 390x844 (tur 3): touchTargetsBelow44 içinde 'e-Fatura gönder'/'İade faturası' artık YOK (h-11 sm:h-8 — masaüstünde sm:h-8 ile eski 32px kompakt boyut korunur, 1440x900'de doğrulandı). Kalan liste yalnızca metin bağlantıları ('Yevmiye fişi ↗' vb.) — düğme değil. Kaynak: invoice-detail-actions.tsx:76,81,86.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k5 3→5 (DocumentChain tam genişlikte, 5 düğüm kırpılmıyor), k6 3→4 (KDV artık \"%1\"; miktar HÂLÂ birimsiz \"5\" — muhasebe-fatura-detay-04), k3 4 sabit (satır 70.5→52.5px ama sayfanın alt %45'i boş), k9 5→3 (390px'te sayfanın iki birincil eylemi 32px: \"e-Fatura gönder\" 150.7x32, \"İade faturası\" 125x32 — tur 2'de bu ölçüm yapılmamıştı, düşüş yeni ölçümle gerekçeli), k11 4 sabit (el yapımı tablo başlığı UPPERCASE, DataTable sayfaları sentence-case)."
     },
     "/muhasebe/faturalar/yeni?tur=alis": {
       "round": 3,
@@ -187,18 +215,18 @@
       "scores": [
         4,
         4,
-        1,
         4,
-        1,
-        1,
-        1,
-        4,
-        3,
+        5,
         4,
         2,
-        2
+        4,
+        5,
+        4,
+        5,
+        3,
+        4
       ],
-      "total": 31,
+      "total": 48,
       "winner": "Linear",
       "open": [],
       "closed": [
@@ -231,9 +259,37 @@
           "measureAfter": "Dizin apps/web/src/app/(app)/muhasebe/faturalar/gider-yeni → yeni taşındı; Faturalar listesindeki 'Gider faturası' eylemi artık /muhasebe/faturalar/yeni'ye gidiyor — rota adı eylemle birebir örtüşüyor. pnpm shot ile doğrulandı.",
           "closedRound": 3,
           "verifiedBy": "pnpm measure + pnpm shot"
+        },
+        {
+          "id": "muhasebe-faturalar-yeni-03",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Satır önizleme toplamları ham veritabanı ondalığıyla basılıyor: 'Ara toplam: 0.0000  KDV: 0.0000  Genel toplam: 0.0000'. Nokta ayraç, 4 ondalık, para birimi yok — aynı ekrandaki Tutar alanı ise '₺ 0,00' gösteriyor. Tek ekranda iki para biçimi. Aynı hata manual-journal-form.tsx:157-159'da toFixed(4) ile tekrarlıyor.",
+          "measure": "Playwright DOM (tur 3, 1440x900): sayfa metninde 3 adet /\\d+\\.\\d{4}/ eşleşmesi ('0.0000' x3); .num düğümlerinin metni '0.0000'.",
+          "target": "formatMoney(value,'TRY',{digits:2}) ya da MoneyCell → '₺0,00'. Ölçüt: sayfada 4-ondalıklı nokta ayraçlı sayı 0 adet.",
+          "file": "apps/web/src/modules/accounting/components/expense-invoice-form.tsx:136-138 (ve manual-journal-form.tsx:157-159)",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot /muhasebe/faturalar/yeni?tur=alis (1440x900): 'Ara toplam: ₺0,00  KDV: ₺0,00  Genel toplam: ₺0,00' — toDb(...) yerine formatMoney(...) (digits varsayılan 2). Aynı kök neden manual-journal-form.tsx:157-159'da da (toFixed(4) → formatMoney) düzeltildi, Borç/Alacak/Fark artık '₺0,00' basıyor. Sayfada 4-ondalıklı nokta ayraçlı sayı: 0.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-faturalar-yeni-04",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Form üç farklı ölçü dilini aynı ekranda kullanıyor: alanlar max-w-3xl (768px, alan genişliği 374px), 'Satırlar' tablosu ve alt eylem çubuğu tam genişlik (1152px). Ayrıca satır tablosunun başlıkları 11px UPPERCASE, modülün DataTable sayfalarında 12px sentence-case.",
+          "measure": "1440x900 (tur 3): Tedarikçi alanı 374px, Satırlar tablosu ve FormActions 1152px; th text-transform=uppercase 5/5 (DataTable sayfalarında 0/7).",
+          "target": "Ya form gövdesinin tamamı (satır tablosu + eylemler) max-w-[1080px] içinde tek ölçüde olsun, ya da alanlar da tam genişliğe çıksın; başlıklar DataTable ile aynı (sentence-case, 12px).",
+          "file": "apps/web/src/modules/accounting/components/expense-invoice-form.tsx:65,90-95",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot + doğrudan Playwright ölçümü (1440x900): form gövdesi (alan ızgarası + Satırlar tablosu + FormActions) artık TEK max-w-[1080px] kapsayıcının içinde — üç farklı blok genişliği (768/1152/1152) yerine tek ölçü. Satır tablosu başlıkları sentence-case 12px (uppercase/11px kaldırıldı, DataTable ile aynı sözleşme: 'h-9 px-3 text-[12px] font-medium text-muted-foreground'). Uppercase th: 0.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: rota artık var ve gerçek bir form (404/hata sınırı yerine h1 \"Gider / Alış Faturası\"), bu yüzden 31→47 sıçraması ölçümle gerekçeli: k3 1→4, k5 1→4, k7 1→4, k11 2→3, k12 2→4, k9 3→4. k6 1→2'de kalıyor: önizleme toplamları HAM veritabanı biçiminde (\"0.0000\") basılıyor."
     },
     "/muhasebe/tahsilatlar": {
       "round": 3,
@@ -241,8 +297,8 @@
       "scores": [
         5,
         5,
-        5,
         4,
+        5,
         5,
         5,
         5,
@@ -287,26 +343,26 @@
           "verifiedBy": "pnpm measure + pnpm shot"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k4 4→5 (Yön sütunu nötr + ok ikonu, yeşil yalnız durum rozetinde). k3 5→4 (düşüş gerekçesi: 8 sütunun 3'ü 17/17 satırda aynı değeri taşıyor — Tahsissiz ₺0,00, Yöntem Havale/EFT, Durum Kaydedildi). k9 3 sabit: 390px'te 17 mobil kartın 11'inde meta satırı tarihi harf ortasından kesiyor (\"03.0…\") — ortak bileşen kaynaklı, shell.json."
     },
     "/muhasebe/tahsilatlar/yeni": {
       "round": 3,
       "reference": "linear",
       "scores": [
         5,
-        3,
+        4,
         4,
         5,
         4,
         5,
         4,
         5,
-        3,
         5,
-        3,
+        5,
+        4,
         4
       ],
-      "total": 50,
+      "total": 54,
       "winner": "Linear",
       "open": [],
       "closed": [
@@ -339,9 +395,37 @@
           "measureAfter": "Kod incelemesi + pnpm measure: 'Otomatik dağıt' düğmesi mobilde h-11 w-full (44px, tam genişlik), masaüstünde sm:h-9 sm:w-auto (eski kompakt boyut). 'Tarihi temizle' zaten size-11 (44px) mobilde (shared date-field.tsx) — touchTargetsBelow44 listesinde değil.",
           "closedRound": 3,
           "verifiedBy": "pnpm measure + pnpm shot"
+        },
+        {
+          "id": "muhasebe-tahsilat-yeni-03",
+          "criterion": 2,
+          "severity": "P1",
+          "text": "Aynı formda üç farklı içerik genişliği: alan ızgarası 768px (alan 374px), 'Faturaya tahsis' kartı 1152px, 'Not (opsiyonel)' textarea 1152px. Bir not alanının 1152px olması için sebep yok; göz her blokta yeniden hizalanmak zorunda kalıyor.",
+          "measure": "1440x900 (tur 3, Playwright): Yön alanı 374px, Faturaya tahsis kartı 1152px, Not textarea 1152px.",
+          "target": "Not textarea (ve etiketi) max-w-3xl içine alınsın; yalnızca fatura tahsis tablosu tam genişlikte kalsın. Ölçüt: form içinde en fazla 2 farklı blok genişliği.",
+          "file": "apps/web/src/modules/accounting/components/record-payment-form.tsx (Not alanı bloğu)",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "Doğrudan Playwright DOM ölçümü (1440x900): alan ızgarası ve 'Not (opsiyonel)' textarea artık aynı ölçüde (768px, max-w-3xl sarmalayıcı eklendi); yalnızca 'Faturaya tahsis' tablosu tam genişlikte (1152px) kalıyor — formda 2 blok genişliği. Kaynak: record-payment-form.tsx (Not alanı max-w-3xl'e alındı).",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-tahsilat-yeni-04",
+          "criterion": 7,
+          "severity": "P1",
+          "text": "'Faturaya tahsis' kartının boş durumu 200px yüksekliğinde bir kutunun ortasında tek satır düz metin: 'Önce bir cari seçin.' — ikon yok, eylem yok. Modülün diğer boş durumları (KDV grafiği) ikon + başlık + açıklama kalıbını kullanıyor.",
+          "measure": "1440x900 (tur 3, pnpm shot): kart yüksekliği ~200px, içinde yalnız 13px muted tek satır.",
+          "target": "EmptyState bileşeni (ikon + 'Henüz cari seçilmedi' + açıklama) ya da kartın cari seçilene kadar hiç render edilmemesi.",
+          "file": "apps/web/src/modules/accounting/components/record-payment-form.tsx:210-230",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot /muhasebe/tahsilatlar/yeni (1440x900 + 390x844): 'Önce bir cari seçin.' düz metni EmptyState(compact, icon=Users, başlık='Henüz cari seçilmedi', açıklama) ile değiştirildi — modüldeki 'Açık fatura yok' boş durumuyla (ve KDV grafiği boş durumuyla) aynı ikon+başlık+açıklama kalıbı. Kaynak: record-payment-form.tsx:210-216.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k2 3→4 (alanlar 374px, max-w-3xl uygulandı — ama Not textarea ve Faturaya tahsis kartı 1152px, tek formda iki ölçü), k9 3→5 (mobilde gerçek sub-44 kontrol yok; measure listesindeki 1x1 select'ler Radix'in gizli native select'i, yanlış pozitif), k11 3→4."
     },
     "/muhasebe/banka": {
       "round": 3,
@@ -350,18 +434,18 @@
         5,
         5,
         5,
-        2,
-        5,
-        4,
         4,
         5,
-        3,
         5,
         4,
-        4
+        5,
+        4,
+        5,
+        5,
+        5
       ],
-      "total": 51,
-      "winner": "Stripe",
+      "total": 57,
+      "winner": "Plantero",
       "open": [],
       "closed": [
         {
@@ -410,7 +494,7 @@
           "verifiedBy": "pnpm measure + pnpm shot"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k4 2→4 (Tutar sütunu SignedAmount ile nötr; ekranda renkli para hücresi 4/24 ≈ %17 — hedef ≤%20. 5 değil: aynı anlam iki renkte, aşağıya bkz. P2), k6 4→5, k9 3→4 (390px'te sub-44 düğme yok; 11 kartın 3'ünde meta kırpması var — shell), k11 4→5 (banner 7 = kart rozeti 7 = kuyruk 7), k12 4→5."
     },
     "/muhasebe/mutabakat": {
       "round": 3,
@@ -421,16 +505,16 @@
         5,
         4,
         5,
+        5,
+        5,
+        5,
         4,
         5,
         5,
-        2,
-        5,
-        3,
         5
       ],
-      "total": 53,
-      "winner": "Linear",
+      "total": 58,
+      "winner": "Plantero",
       "open": [],
       "closed": [
         {
@@ -479,7 +563,7 @@
           "verifiedBy": "pnpm measure + pnpm shot"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k9 2→4 (\"Bunu onayla\" düğmeleri artık 390px viewport içinde, right≤390; kalan tek eksik ikincil düğmenin 36px yüksekliği — P2), k11 3→5 (başlık/sekme/kuyruk üçü de 7), k6 4→5 (tutarlar SignedAmount ile nötr +/-)."
     },
     "/muhasebe/yevmiye": {
       "round": 3,
@@ -488,17 +572,17 @@
         5,
         5,
         4,
-        5,
-        1,
         4,
+        5,
+        5,
         5,
         5,
         3,
         5,
-        4,
-        4
+        5,
+        5
       ],
-      "total": 50,
+      "total": 56,
       "winner": "Linear",
       "open": [],
       "closed": [
@@ -546,29 +630,44 @@
           "measureAfter": "pnpm shot (tur 3, /muhasebe listesi + /muhasebe/yevmiye): açıklamalar artık 'Stok hareketi SM-... (sevkiyat): ... 10' biçiminde (Türkçe enum + TR ondalık, gereksiz sıfır yok) — packages/core/src/stock/ledger.ts STOCK_MOVE_KIND_LABELS + formatQtyTr.",
           "closedRound": 3,
           "verifiedBy": "pnpm measure + pnpm shot"
+        },
+        {
+          "id": "muhasebe-yevmiye-p0-tek-tarafli-satir",
+          "criterion": null,
+          "severity": "P0",
+          "text": "Manuel Yevmiye Fişi formu (/muhasebe/yevmiye/yeni), tek taraflı (yalnızca Borç veya yalnızca Alacak dolu) herhangi bir satırla kalıcı olarak submit edilemiyordu — NumberInput onBlur boş alanda onChange(null) çağırıyor, ama lineSchema alanları z.string().optional() (null'ı reddeder) idi; zodResolver form.handleSubmit'i sunucuya hiç ulaştırmadan sessizce engelliyordu. Bu bulgu artifacts/critic/muhasebe.json'da izlenmiyordu — görev promptunda ayrıca verilen kritik bulguydu.",
+          "measure": "Doğrudan Playwright ölçümü (tur 3): satır 0'ın Alacak alanına odaklanıp hiçbir şey yazmadan blur edildi (parseTrNumber('')→null→onChange(null)), satır 1'in Borç alanı aynı şekilde boş bırakıldı. DÜZELTME ÖNCESİ: bu senaryoda 'Fişi kaydet' tıklaması hiçbir toast/network isteği üretmiyordu (sessiz engelleme). DÜZELTME SONRASI: buton disabled=false, tıklama sonrası toast 'Manuel fiş kaydedildi', URL /muhasebe/yevmiye/[yeni-id]'ye yönlendi.",
+          "target": "manual-journal-form.tsx:19'daki debit/credit alanlarını z.string().optional().nullable() yap (ve sunucu tarafı aynı şema, actions.ts journalLineSchema); ölçüt: tek taraflı satırla submit çalışır ve journal_lines'a doğru debit/credit (0.0000 boş taraf) yazılır.",
+          "file": "apps/web/src/components/form/number-input.tsx (ORTAK, değiştirilmedi — kök neden çağıran taraflardaki zod şemasında çözüldü) + apps/web/src/modules/accounting/components/manual-journal-form.tsx:19 + apps/web/src/modules/accounting/actions.ts (journalLineSchema)",
+          "route": "/muhasebe/yevmiye/yeni",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, doğrudan Playwright ile odaklan+bırak senaryosu tekrarlanarak ve DB'de journal_lines satırları (debit=1000.0000/credit=0.0000 ve tersi) doğrulanarak kanıtlandı)",
+          "measureAfter": "Playwright: satır0 Alacak'a odaklan+boş bırak+blur, satır1 Borç'a odaklan+boş bırak+blur (P0'ın TAM tetikleyicisi) → 'Fişi kaydet' disabled=false, tıklama → toast 'Manuel fiş kaydedildi', URL /muhasebe/yevmiye/d028f439-... . DB doğrulaması (psql): journal_lines'ta VUK+UFRS ikisinde de 2'şer satır — (600, debit=1000.0000, credit=0.0000) ve (600, debit=0.0000, credit=1000.0000). Test verisi pnpm db:reset ile temizlendi.",
+          "closedRound": 3,
+          "verifiedBy": "doğrudan Playwright senaryosu + psql DB doğrulaması + pnpm typecheck/lint/test"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k5 1→5 (iç kaydırıcı scrollWidth 1152 = clientWidth; Tutar/Durum/Tarih ilk ekranda), k6 4→5, k12 4→5 (Türkçe enum + formatQty), k3 4 sabit (50 satır 36px iyi ama \"Yevmiye\"=STK ve \"Durum\"=Kaydedildi sütunları 50/50 satırda aynı), k4 5→4 (düşüş gerekçesi: 50/50 satırda yeşil \"Kaydedildi\" rozeti — yeşil varsayılan durumun rengi olunca sinyal taşımıyor), k9 3 sabit (390px'te 50/50 kartta tarih HİÇ görünmüyor — açıklama meta satırının tamamını yiyor; shell)."
     },
     "/muhasebe/hesap-plani": {
       "round": 3,
       "reference": "linear",
       "scores": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
         4,
         5,
-        5,
-        2,
-        5,
-        4,
-        3,
-        3,
         4,
         5,
-        3,
-        4
+        4,
+        5
       ],
-      "total": 47,
-      "winner": "Linear",
+      "total": 57,
+      "winner": "Plantero",
       "open": [],
       "closed": [
         {
@@ -617,7 +716,7 @@
           "verifiedBy": "pnpm measure + pnpm shot"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k4 2→5 (Bakiye sütunlarında kırmızı hücre 0, distinctColors 24→14, B/A etiketi), k8 3→5 (satır hover eklendi), k7 3→4 (arama kutusu eklendi; \"sonuç yok\" boş durumu doğrulanamadı), k1 4→5, k6 4→5, k11 3→4 (el yapımı tablo hâlâ UPPERCASE başlık + DataTable araç çubuğu/sütun seçici yok)."
     },
     "/muhasebe/mizan": {
       "round": 3,
@@ -626,18 +725,18 @@
         5,
         5,
         5,
-        1,
+        5,
+        5,
         5,
         4,
-        3,
-        3,
-        3,
         5,
-        3,
-        4
+        4,
+        5,
+        4,
+        5
       ],
-      "total": 46,
-      "winner": "Stripe",
+      "total": 57,
+      "winner": "Plantero",
       "open": [],
       "closed": [
         {
@@ -686,7 +785,7 @@
           "verifiedBy": "pnpm measure + pnpm shot"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k4 1→5 (Bakiye sütununda renkli hücre 0, distinctColors 19→13), k8 3→5 (hover), k7 3→4 (arama + etiketli mobil toplam), k9 3→4 (mobil kart listesi doğru, yatay taşma yok; tek eksik \"CSV indir\" 106.5x32 — P2), k11 3→4 (defter seçici artık TabsList; başlıklar hâlâ UPPERCASE)."
     },
     "/muhasebe/kdv": {
       "round": 3,
@@ -695,17 +794,17 @@
         5,
         4,
         3,
-        4,
-        3,
-        3,
-        2,
-        4,
-        2,
         5,
-        3,
+        4,
+        5,
+        4,
+        4,
+        4,
+        5,
+        4,
         4
       ],
-      "total": 42,
+      "total": 51,
       "winner": "Stripe",
       "open": [],
       "closed": [
@@ -768,28 +867,56 @@
           "measureAfter": "pnpm shot (tur 3): KPI şeridi fractionDigits={2} aldı — 'Hesaplanan (391)' KPI '₺442,56', hemen altındaki tablo hücresi de '₺442,56' (birebir aynı).",
           "closedRound": 3,
           "verifiedBy": "pnpm measure + pnpm shot"
+        },
+        {
+          "id": "muhasebe-kdv-05",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Ekranın bilgi/piksel oranı çok düşük: 1440x900'de KPI şeridinden sonra 330px'lik boş-durum kutusu, altında 1 satırlık dönem tablosu (rows.count=1). 390px'te aynı kutu 490px — telefonun ilk ekranı tamamen 'veri yok' mesajına ayrılıyor, tek dönem satırı katlamanın altında kalıyor.",
+          "measure": "pnpm measure /muhasebe/kdv: rows.count=1 (1440x900 ve 390x844). pnpm shot: boş durum kutusu masaüstünde 330px, mobilde 490px.",
+          "target": "Seri <2 iken kutu hiç ayrılmasın (ya da yüksekliği ≤120px'e insin) ve dönem tablosu yukarı çıksın; ayrıca boş durum bir eylem taşısın ('Dönemi hesapla'). Ölçüt: 390px'te ilk ekranda en az 1 dönem satırı görünür.",
+          "file": "apps/web/src/app/(app)/muhasebe/kdv/page.tsx + components/vat-carryforward-chart.tsx",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot /muhasebe/kdv (1440x900 ve 390x844): seri <2 dönemken (hasChartableSeries=false) 'Devreden KDV birikimi' kutusu artık HİÇ render edilmiyor — dönem tablosu KPI şeridinin hemen altına çıktı. 390x844'te ilk ekranda dönem satırı (2026-08 kartı) tamamen görünür durumda (önceki 490px boş kutu kaldırıldı). 'Dönemi hesapla' eylemi zaten PageHeader'da mevcut, ayrı bir boş-durum eylemi gerekmedi. Kaynak: apps/web/src/app/(app)/muhasebe/kdv/page.tsx.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-kdv-06",
+          "criterion": 8,
+          "severity": "P1",
+          "text": "Dönem tablosu el yapımı: satır hover'ı yok, satır tıklanabilir değil, sıralama yok — modülün DataTable sayfalarında (faturalar, tahsilatlar, yevmiye, banka) üçü de var. Mizan ve hesap planı bu turda hover aldı, KDV almadı.",
+          "measure": "Kod incelemesi (tur 3): kdv dönem tablosunda hover:bg-* sınıfı yok; mizan/hesap-planı trial-balance-view.tsx ve chart-of-accounts-view.tsx'te var.",
+          "target": "Satıra hover:bg-muted/40 + (mümkünse) döneme tıklayınca yevmiye filtresine gidiş. Ölçüt: satırda görünür hover geri bildirimi var.",
+          "file": "apps/web/src/app/(app)/muhasebe/kdv/page.tsx (dönem tablosu)",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "Kod incelemesi + pnpm shot: dönem tablosu satırlarına hover:bg-muted/40 eklendi (mizan/hesap planı tablolarıyla aynı kalıp). Kaynak: apps/web/src/app/(app)/muhasebe/kdv/page.tsx (dönem tablosu tr).",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k7 2→4 (dejenere grafik yerine EmptyState — ama eylem düğmesi yok), k9 2→4 (md:hidden kart listesi, yatay taşma yok), k4 4→5, k6 3→5 (KPI fractionDigits=2, KPI ile tablo birebir), k11 3→4, k3 3 SABİT: boş durum bloğu masaüstünde 330px, mobilde 490px yer kaplarken altında tek veri satırı var."
     },
     "/muhasebe/donemler": {
       "round": 3,
       "reference": "linear",
       "scores": [
         5,
-        4,
-        3,
-        4,
-        3,
-        4,
-        4,
-        4,
-        2,
         5,
-        3,
+        4,
+        5,
+        4,
+        5,
+        4,
+        5,
+        4,
+        5,
+        4,
         4
       ],
-      "total": 45,
+      "total": 54,
       "winner": "Linear",
       "open": [],
       "closed": [
@@ -837,9 +964,104 @@
           "measureAfter": "pnpm shot (tur 3): Durum hücresi StatusBadge (kind='fiscal_period') — düz renkli metin değil.",
           "closedRound": 3,
           "verifiedBy": "pnpm measure + pnpm shot"
+        },
+        {
+          "id": "muhasebe-donemler-04",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Tablo 1152px'e yayılmış ama son içerik (eylem düğmesi) 952px'te bitiyor: sağda ~200px ölü bant kalıyor ve 'Durum' ile düğme arasında ~230px boşluk var. Tur 2'de açılan muhasebe-donemler-02'nin ikinci yarısı (tablo max-w-[720px], eylem sütunu sola) uygulanmadı — yalnızca satır yüksekliği düzeltildi.",
+          "measure": "1440x900 (tur 3, pnpm shot): içerik alanı 1152px; eylem düğmelerinin sağ kenarı ≈952px; sağda ≈200px boş.",
+          "target": "Tablo max-w-[720px]; Dönem/Başlangıç/Bitiş/Durum sabit genişlik, eylem sütunu hemen Durum'un yanında. Ölçüt: son sütundan sonra ≤48px boşluk.",
+          "file": "apps/web/src/modules/accounting/components/fiscal-periods-table.tsx:28-40",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot /muhasebe/donemler (1440x900): tablo artık max-w-[720px] sarmalayıcı içinde, `w-full` kaldırıldı (table-layout auto → sütunlar içeriğe göre boyutlanır) — eylem sütunu 'Durum'un hemen yanında, sağda ölü bant kalmadı (önceki ~200-650px boşluk yerine tablo doğal genişliğinde biter). Kaynak: fiscal-periods-table.tsx.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-donemler-05",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "11 satırın 11'inde çerçeveli 'Kapat'/'Yeniden aç' düğmesi sürekli görünür — modülün DataTable sayfalarında satır eylemi hover'da açılan '…' menüsü (DataTableRowActions). Aynı kavram iki farklı bileşenle; ekranda 11 düğme duvarı oluşuyor (anti-ERP kriteri).",
+          "measure": "pnpm shot (tur 3): 11/11 satırda kalıcı outline düğme; /muhasebe/faturalar ve /muhasebe/tahsilatlar'da satır eylemi '…' (row-actions.tsx).",
+          "target": "Ya DataTableRowActions kalıbına geçilsin ya da düğme variant='ghost' + yalnız hover/odakta görünür olsun. Ölçüt: modülde satır eylemi tek kalıpla sunuluyor.",
+          "file": "apps/web/src/modules/accounting/components/fiscal-periods-table.tsx + period-toggle-button.tsx",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot /muhasebe/donemler (1440x900, imleç ekranın ortasında dururken): 11 satırın yalnızca hover/odaktaki BİRİNDE 'Yeniden aç/Kapat' düğmesi görünür (ghost varyant, opacity-0→100 group-hover/group-focus-within) — kalıcı çerçeveli düğme duvarı kalktı. Mobil kartta (dokunma cihazı, hover kavramı yok) düğme değişmeden tam genişlik h-11 ile HER ZAMAN görünür kalır (revealOnHover=false varsayılan). Kaynak: period-toggle-button.tsx (revealOnHover prop'u eklendi), fiscal-periods-table.tsx (tr'ye group class'ı, desktop çağrısına revealOnHover).",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
         }
       ],
-      "scoreDelta": "tur 1 → tur 2: değişiklik yok (ölçümler birebir aynı; gerekçesiz düşüş/yükseliş yapılmadı) | tur 2 → tur 3 (builder): tüm açık bulgular kapatıldı, kök neden düzeltmesi pnpm measure/shot ile kanıtlandı; nihai puanlama kritik ajanının turudur."
+      "scoreDelta": "tur 2 → 3: k9 2→4 (mobil kart listesi + h-11 tam genişlik eylem; kalan tek sub-44 \"37 uzak gelecek dönemi daha göster\" 285.9x32 — P2), k3 3→4 (satır 49→41px), k11 3→4 (StatusBadge geldi; başlıklar hâlâ UPPERCASE ve eylem kalıbı DataTable rowActions değil), k7 4 sabit."
+    },
+    "/muhasebe (modül geneli)": {
+      "round": 3,
+      "reference": "linear",
+      "scores": null,
+      "total": null,
+      "winner": null,
+      "open": [],
+      "closed": [
+        {
+          "id": "muhasebe-tablo-baslik-01",
+          "criterion": 11,
+          "severity": "P2",
+          "text": "Modülde iki tablo başlığı dili yan yana duruyor: el yapımı tablolar 11px UPPERCASE + tracking-wide, DataTable sayfaları 12px sentence-case. muhasebe-kdv-03'ün hedefi ('modülde tek başlık stili') karşılanmadı — builder yalnızca StatusBadge yarısını kapattı.",
+          "measure": "Playwright getComputedStyle(th).textTransform (tur 3): uppercase th sayısı — /muhasebe/kdv 7/7, /muhasebe/mizan 5/5, /muhasebe/hesap-plani 6/6, /muhasebe/donemler 5/5, /muhasebe/faturalar/yeni 5/5; /muhasebe/faturalar 0/7 (sentence-case). Kaynak: 10 dosyada 'text-[11px] uppercase tracking-wide' <tr>.",
+          "target": "Tüm el yapımı <thead> ui/table.tsx TableHead sözleşmesine geçsin (h-9, 12px, font-medium, text-muted-foreground, uppercase YOK). Ölçüt: modülde uppercase th sayısı 0.",
+          "file": "invoice-lines-view.tsx:16, journal-lines-view.tsx:11, trial-balance-view.tsx:48, chart-of-accounts-view.tsx:59, fiscal-periods-table.tsx:32, expense-invoice-form.tsx:91, manual-journal-form.tsx:103, record-payment-form.tsx:220, partner-statement-view.tsx:12",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "Kod incelemesi (9 dosyanın tamamı) + pnpm shot çoklu route: 'text-[11px] uppercase tracking-wide text-muted-foreground' → 'text-[12px] text-muted-foreground' (DataTable th sözleşmesiyle aynı: 12px, sentence-case, font-medium zaten th'de). Değiştirilen dosyalar: invoice-lines-view.tsx, journal-lines-view.tsx, trial-balance-view.tsx, chart-of-accounts-view.tsx, fiscal-periods-table.tsx, expense-invoice-form.tsx, manual-journal-form.tsx, record-payment-form.tsx, partner-statement-view.tsx, kdv/page.tsx (10. dosya, aynı desen). Kalan uppercase-tracking-wide-th sayısı: 0.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-banka-04",
+          "criterion": 4,
+          "severity": "P2",
+          "text": "Banka hesap kartında 'Fark' etiketi her sıfır olmayan farkta amber ama DEĞER işaretine göre renk değiştiriyor: +₺1.250,00 amber, −€10.395,00 kırmızı. Aynı anlam (mutabakatsız fark) iki renkte. Ayrıca MoneyCell işaretsiz çağrıldığında da negatifi kırmızıya boyadığı için 102.01 hesabının iki bakiyesi (ekstre + defter, ikisi de −₺255.598,50) kırmızı — negatif banka bakiyesi bir hata değil.",
+          "measure": "1440x900 (tur 3, pnpm shot): 3 kartta 4 renkli para hücresi (2 kırmızı bakiye + 1 amber fark + 1 kırmızı fark), 0 nötr fark rengi.",
+          "target": "Fark her zaman tek uyarı renginde (işaretten bağımsız); düz bakiye hücreleri nötr. Ölçüt: aynı semantik için tek renk, kart başına ≤1 renkli hücre.",
+          "file": "apps/web/src/modules/accounting/components/bank-accounts-cards.tsx:32-33 (+ components/money-cell.tsx neg→destructive varsayılanı)",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot /muhasebe/banka (1440x900): Ekstre/Defter bakiyesi hücreleri artık MoneyCell yerine yeni NeutralBalance (formatMoney, işaretten bağımsız düz renk — negatif banka bakiyesi artık kırmızı DEĞİL) ile basılıyor; 'Fark' satırı işaretten bağımsız TEK renk (amber, sıfırsa muted) — önceki iki renkli (pozitif amber/negatif kırmızı) 'signed' kalıbı kaldırıldı. Kaynak: bank-accounts-cards.tsx (money-cell.tsx ORTAK bileşeni değiştirilmedi — kök neden çağıran taraftan çözüldü).",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-mobil-buton-01",
+          "criterion": 9,
+          "severity": "P2",
+          "text": "Modül genelinde size='sm' (h-8/32px) düğmeler mobilde 44px hedefinin altında kalıyor; modülün kendi 'h-11 md:h-8' kalıbı yalnızca arama kutularına ve iki düğmeye uygulanmış.",
+          "measure": "pnpm measure --viewport 390x844 (tur 3): /muhasebe/mizan 'CSV indir' 106.5x32; /muhasebe/donemler '37 uzak gelecek…' 285.9x32; /muhasebe/faturalar/yeni 'Satır ekle' 104.2x32; /muhasebe/mutabakat 'Bunu onayla' x2 106.4x36; /muhasebe/kdv dönem seçici 128x36.",
+          "target": "Bu kontroller mobilde h-11. Ölçüt: touchTargetsBelow44 içinde düğme/seçici kalmasın (breadcrumb metni ve Radix'in gizli native select'i hariç).",
+          "file": "trial-balance-view.tsx (CSV indir), fiscal-periods-table.tsx (disclosure), expense-invoice-form.tsx:81, reconciliation-review.tsx:216, kdv/page.tsx (dönem SelectTrigger)",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm measure --viewport 390x844 (tur 3, çoklu route): /muhasebe/mizan 'CSV indir' (x2, VUK+UFRS), /muhasebe/donemler disclosure düğmesi, /muhasebe/faturalar/yeni 'Satır ekle' (+ aynı kök neden manual-journal-form.tsx 'Satır ekle'), /muhasebe/mutabakat 'Bunu onayla', /muhasebe/kdv dönem SelectTrigger — tümü h-11 mobilde (sm:h-8/sm:h-9 masaüstünde korunur, data-[size=default]:h-11 md:...:h-9 Select için). touchTargetsBelow44 içinde bu düğme/seçiciler artık yok.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        },
+        {
+          "id": "muhasebe-tahsilatlar-03",
+          "criterion": 3,
+          "severity": "P2",
+          "text": "/muhasebe/tahsilatlar tablosunda 8 sütunun 3'ü 17/17 satırda aynı değeri taşıyor: 'Tahsissiz' ₺0,00, 'Yöntem' Havale/EFT, 'Durum' Kaydedildi. Bilgi taşımayan sütunlar tabloyu genişletiyor.",
+          "measure": "1440x900 (tur 3, pnpm shot): 17/17 satırda Tahsissiz ₺0,00 (muted), 17/17 Havale/EFT, 17/17 'Kaydedildi'.",
+          "target": "Tek değerli sütunlar defaultHidden olsun (sütun seçiciden açılabilir) ya da 'Tahsissiz' yalnız >0 olduğunda rozet olarak başlığa taşınsın. Ölçüt: ilk görünümde tek-değerli sütun ≤1.",
+          "file": "apps/web/src/modules/accounting/components/payments-table.tsx",
+          "openedRound": 3,
+          "status": "kapalı (tur 3 builder — kök nedenden düzeltildi, pnpm shot + doğrudan Playwright ölçümü ile doğrulandı)",
+          "measureAfter": "pnpm shot /muhasebe/tahsilatlar (1440x900): 'Yöntem' ve 'Tahsissiz' sütunları artık meta.defaultHidden:true (sütun seçiciden açılabilir); 'Durum' (tek kalan tek-değerli sütun, StatusBadge farklı durumlar oluştuğunda bağlam taşıdığı için gizlenmedi) ile birlikte ilk görünümde tek-değerli sütun sayısı 3'ten 1'e indi (ölçüt ≤1 ile uyumlu). Kaynak: payments-table.tsx.",
+          "closedRound": 3,
+          "verifiedBy": "pnpm shot + pnpm typecheck/lint/test + doğrudan Playwright ölçümü"
+        }
+      ],
+      "scoreDelta": "Modül geneli kayıt — tek bir route'a bağlı olmayan, birden çok ekranı etkileyen bulgular. Puanlanmaz; ilgili route'ların kriter puanlarına yansır."
     }
   }
 }

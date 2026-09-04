@@ -213,7 +213,9 @@ export function ReconciliationReview({
                       </div>
                       <div className="flex items-center justify-between gap-2 sm:justify-end">
                         <ConfidenceBar value={Number(c.confidence)} />
-                        <Button variant="ghost" size="sm" onClick={() => approve(c.matchId)} disabled={busy} className="h-9 shrink-0">Bunu onayla</Button>
+                        {/* h-11 sm:h-9 (kritik bulgu, muhasebe-mobil-buton-01): 390px'te 36px
+                            yükseklikteydi (44px hedefinin altında). */}
+                        <Button variant="ghost" size="sm" onClick={() => approve(c.matchId)} disabled={busy} className="h-11 shrink-0 sm:h-9">Bunu onayla</Button>
                       </div>
                     </div>
                   ))}

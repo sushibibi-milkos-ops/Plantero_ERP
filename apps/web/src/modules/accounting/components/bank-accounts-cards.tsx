@@ -1,7 +1,18 @@
 import { cn } from '@/lib/utils';
-import { MoneyCell } from '@/components/money-cell';
-import { formatDateTime } from '@/lib/format';
+import { formatDateTime, formatMoney } from '@/lib/format';
 import type { BankAccountSummary } from '../queries';
+
+/**
+ * Nötr bakiye hücresi (kritik bulgu, kriter 4 — kök neden): ORTAK `MoneyCell` işaretsiz
+ * çağrıldığında bile negatifi kırmızıya boyuyor (money-cell.tsx, değiştirilemez — "Negatif kırmızı"
+ * genel para hücresi sözleşmesi). Ekstre/defter bakiyesi burada bir HATA değil, düz bir bakiyedir —
+ * negatif banka bakiyesi (KMH/kredili mevduat) normal bir durumdur. `MoneyCell`'in işaret tabanlı
+ * renklendirmesine güvenmek yerine `formatMoney` ile DÜZ (her zaman nötr) basılır.
+ */
+function NeutralBalance({ value, currency }: { value: string; currency: string }) {
+  const zero = Math.abs(Number(value)) < 0.005;
+  return <span className={cn('num inline-block text-right whitespace-nowrap', zero && 'text-muted-foreground/70')}>{formatMoney(value, currency)}</span>;
+}
 
 export function BankAccountsCards({ accounts }: { accounts: BankAccountSummary[] }) {
   return (
@@ -22,15 +33,21 @@ export function BankAccountsCards({ accounts }: { accounts: BankAccountSummary[]
             <dl className="space-y-1.5 text-[13px]">
               <div className="flex items-center justify-between">
                 <dt className="text-muted-foreground">Ekstre bakiyesi</dt>
-                <dd><MoneyCell value={a.statementBalance} currency={a.currency} /></dd>
+                <dd><NeutralBalance value={a.statementBalance} currency={a.currency} /></dd>
               </div>
               <div className="flex items-center justify-between">
                 <dt className="text-muted-foreground">Defter bakiyesi (VUK)</dt>
-                <dd><MoneyCell value={a.ledgerBalanceVuk} currency={a.currency} /></dd>
+                <dd><NeutralBalance value={a.ledgerBalanceVuk} currency={a.currency} /></dd>
               </div>
+              {/* Fark: işaretten BAĞIMSIZ tek uyarı rengi (kritik bulgu, kriter 4) — önceden `signed`
+                  pozitifte amber/negatifte kırmızı iki renk kullanıyordu; aynı anlam (mutabakatsız
+                  fark) iki farklı renkte görünüyordu. `MoneyCell`'in işaret renklendirmesi burada da
+                  uygunsuz olduğundan `formatMoney` ile düz basılır. */}
               <div className="flex items-center justify-between border-t border-border/50 pt-1.5">
                 <dt className={cn('font-medium', diffZero ? 'text-muted-foreground' : 'text-warning')}>Fark</dt>
-                <dd><MoneyCell value={a.diff} currency={a.currency} signed muted={diffZero} /></dd>
+                <dd className={cn('num inline-block text-right whitespace-nowrap', diffZero ? 'text-muted-foreground/70' : 'text-warning')}>
+                  {formatMoney(a.diff, a.currency)}
+                </dd>
               </div>
             </dl>
             <div className="mt-2 text-[11px] text-muted-foreground">{a.lastSyncedAt ? `Son senkron: ${formatDateTime(a.lastSyncedAt)}` : 'Henüz senkronize edilmedi'}</div>

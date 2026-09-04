@@ -47,8 +47,12 @@ export function PaymentsTable({ rows, canManage }: { rows: AccountingPaymentRow[
           {row.original.direction === 'inbound' ? 'Tahsilat' : 'Ödeme'}
         </span>
       ) },
-      { id: 'method', accessorFn: (r) => METHOD_LABELS[r.method] ?? r.method, header: 'Yöntem', meta: { width: 120, mobile: 'hidden' } },
-      { accessorKey: 'unallocatedAmount', header: 'Tahsissiz', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <MoneyCell value={row.original.unallocatedAmount} currency={row.original.currency} muted={Number(row.original.unallocatedAmount) <= 0} /> },
+      // defaultHidden (kritik bulgu, kriter 3 — muhasebe-tahsilatlar-03): bu seeddeki 17 kaydın
+      // 17'si de "Havale/EFT" ve "Tahsissiz ₺0,00" — bilgi taşımayan iki sütun tabloyu genişletiyordu.
+      // Sütun seçiciden istenirse açılır; "Durum" tek değerli 3. sütun olarak KALIR (ölçüt ≤1 ile
+      // uyumlu — StatusBadge farklı durumlar (iptal/beklemede) gerçekleştiğinde bağlam taşır).
+      { id: 'method', accessorFn: (r) => METHOD_LABELS[r.method] ?? r.method, header: 'Yöntem', meta: { width: 120, mobile: 'hidden', defaultHidden: true } },
+      { accessorKey: 'unallocatedAmount', header: 'Tahsissiz', meta: { align: 'right', width: 110, mobile: 'hidden', defaultHidden: true }, cell: ({ row }) => <MoneyCell value={row.original.unallocatedAmount} currency={row.original.currency} muted={Number(row.original.unallocatedAmount) <= 0} /> },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 110, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="payment" /> },
       // paymentDate mobile:'meta' (tur 2 P1 muhasebe-tahsilatlar-01 kök nedeni): tarih önceden "rest"
       // grubunun SONUNCUSUYDU, mobil kalıp tek metriği oradan alıyordu — 17/17 kartta tutar hiç

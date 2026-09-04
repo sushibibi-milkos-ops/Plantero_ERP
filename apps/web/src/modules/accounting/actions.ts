@@ -279,7 +279,10 @@ export const ignoreBankTransactionAction = withAudit('accounting.ignoreTransacti
 /* Yevmiye                                                              */
 /* ==================================================================== */
 
-const journalLineSchema = z.object({ accountCode: z.string().min(1, 'Hesap seçin'), partnerId: z.string().trim().optional().nullable(), description: z.string().trim().optional().nullable(), debit: z.string().optional(), credit: z.string().optional() });
+// debit/credit .nullable() — istemci tarafındaki number-input.tsx (ORTAK, değiştirilemez) boş
+// alanda onChange(null) çağırır; sunucu şeması istemciyle aynı biçimi kabul etmeli (bkz.
+// manual-journal-form.tsx lineSchema'daki eşlenik not, P0 kök neden).
+const journalLineSchema = z.object({ accountCode: z.string().min(1, 'Hesap seçin'), partnerId: z.string().trim().optional().nullable(), description: z.string().trim().optional().nullable(), debit: z.string().optional().nullable(), credit: z.string().optional().nullable() });
 const manualJournalSchema = z.object({
   ledger: z.enum(['VUK', 'UFRS', 'both']), journalCode: z.string().min(1), entryDate: z.string().min(1, 'Tarih girin'),
   description: z.string().trim().min(3, 'Açıklama girin'), lines: z.array(journalLineSchema).min(2, 'En az iki satır olmalı'),
