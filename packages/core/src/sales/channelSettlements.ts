@@ -7,6 +7,7 @@ import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { getChannelPartner } from './channels.js';
 import { recordPayment, getOpenInvoicesForPartner } from '../finance/payments.js';
 import { importStatement } from '../finance/bankReconciliation.js';
+import { writeAudit } from '../audit/index.js';
 import type { ActorCtx } from '../types.js';
 
 /**
@@ -203,13 +204,25 @@ export async function markChannelSettlementPaid(tx: DbOrTx, settlementId: string
   // geçerli sayılır (mutabakat ekranındaki AYNI değişmez) — `kind='marketplace_payout'` (birden çok
   // faturaya bölünmüş TEK kanal hakedişi, `kind='invoice'`in varsaydığı 1 hareket↔1 fatura eşleşmesinden
   // farklı bir tür — reconMatchKindEnum bunun için ayrı tanımlı).
-  await tx.insert(reconciliationMatches).values({
-    bankTransactionId: bt.id, kind: 'marketplace_payout', status: 'approved', partnerId: partner.id,
-    invoiceIds: allocations.map((a) => a.invoiceId),
-    allocations: allocations.map((a) => ({ invoiceId: a.invoiceId, amount: toDb(a.amount) })),
-    confidence: toDb(1), rationale: `Kanal hakedişi: ${channel.name} ${settlement.periodStart}–${settlement.periodEnd}`,
-    source: 'system', decidedBy: ctx.userId ?? null, decidedAt: new Date(), paymentId: payment.id,
-  });
+  const [matchRow] = await tx
+    .insert(reconciliationMatches)
+    .values({
+      bankTransactionId: bt.id, kind: 'marketplace_payout', status: 'approved', partnerId: partner.id,
+      invoiceIds: allocations.map((a) => a.invoiceId),
+      allocations: allocations.map((a) => ({ invoiceId: a.invoiceId, amount: toDb(a.amount) })),
+      confidence: toDb(1), rationale: `Kanal hakedişi: ${channel.name} ${settlement.periodStart}–${settlement.periodEnd}`,
+      source: 'system', decidedBy: ctx.userId ?? null, decidedAt: new Date(), paymentId: payment.id,
+    })
+    .returning({ id: reconciliationMatches.id });
+  // (I17, tur 15 P1 kök neden — bankReconciliation.ts ile aynı örüntü) Kanal hakedişinin ürettiği
+  // reconciliation_matches satırı da kendi kayıt-bazlı audit izini burada bırakır.
+  await writeAudit(tx, {
+    action: 'create',
+    tableName: 'reconciliation_matches',
+    recordId: matchRow!.id,
+    summary: `Kanal hakedişi mutabakatı: ${channel.name} ${settlement.periodStart}–${settlement.periodEnd} → tahsilat ${payment.docNo}`,
+    after: { bankTransactionId: bt.id, partnerId: partner.id, kind: 'marketplace_payout', status: 'approved', source: 'system', paymentId: payment.id },
+  }, ctx);
 
   const [updated] = await tx
     .update(channelSettlements)

@@ -1,0 +1,26 @@
+{
+  "module": "core",
+  "round": 15,
+  "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I35, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz.",
+  "findings": [
+    {
+      "id": "core-bankrecon-audit-01",
+      "module": "core",
+      "severity": "P1",
+      "rule": "I17",
+      "file": "packages/core/src/finance/bankReconciliation.ts",
+      "route": "/finans/banka",
+      "status": "closed",
+      "closedRound": 15,
+      "description": "importStatement/runReconciliation'ın ürettiği bank_transactions (8/8) ve reconciliation_matches (12/13) satırlarının hiçbirinin kayıt-bazlı (record_id dolu) audit_log izi yoktu — yalnızca çağıran katmanın (actions.ts/seed) yazdığı tek bir record_id=NULL özet satırı vardı.",
+      "measureBefore": "pnpm db:reset && pnpm db:check → I17 İHLAL, 20 ihlal (8 bank_transactions + 12 reconciliation_matches, checks/17_audit_coverage.sql)",
+      "fix": "writeAudit çağrısı postStockMove/postJournalEntry örüntüsünde CORE katmanına taşındı: importStatement (her içe aktarılan bank_transactions satırı için 'create'), runReconciliation (auto_applied + suggested dallarının ürettiği her reconciliation_matches satırı için 'create'), approveMatch ('approve'), rejectMatch ('reject'), manualMatch ('create'). Aynı kök nedenden etkilenen packages/core/src/sales/channelSettlements.ts::markChannelSettlementPaid (doğrudan reconciliation_matches insert eden ikinci bir CORE çağrı yolu) de aynı örüntüyle düzeltildi.",
+      "measureAfter": "pnpm db:reset && pnpm db:check → I17 GEÇTİ, 0 ihlal (35/35 kural GEÇTİ). Regresyon koruması: packages/core/src/finance/bankReconciliation.test.ts (7 test, her fonksiyon için auditLog satırı doğrulanıyor) ve packages/core/src/sales/channelSettlements.test.ts güncellendi; pnpm --filter @plantero/core exec vitest run → 33 dosya / 148 test GEÇTİ; pnpm typecheck, pnpm lint temiz.",
+      "verifiedBy": "pnpm db:check (SQL ölçüm — I17), vitest birim testleri"
+    }
+  ],
+  "open": [],
+  "closed": [
+    { "id": "core-bankrecon-audit-01", "closedRound": 15, "verifiedBy": "pnpm db:check — I17 0 ihlal" }
+  ]
+}

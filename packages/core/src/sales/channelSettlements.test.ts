@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { journals, salesChannels, partners, bankAccounts, bankTransactions, payments, deliveryLines, invoices, type Tx } from '@plantero/db';
+import { journals, salesChannels, partners, bankAccounts, bankTransactions, payments, deliveryLines, invoices, reconciliationMatches, auditLog, type Tx } from '@plantero/db';
 import { createSalesDoc, confirmOrder } from './orders.js';
 import { createInvoiceFromDelivery } from './invoicing.js';
 import { createLot, postStockMove } from '../stock/ledger.js';
@@ -133,6 +133,15 @@ describe('sales/channelSettlements — hakediş: gerçek toplamlar + gerçek öd
       const [invAfter] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
       expect(invAfter!.residual).toBe('430.0000'); // 2020 - 1590 tahsis edildi, kalan 430 hâlâ açık
       expect(invAfter!.status).toBe('partially_paid');
+
+      // I17 (tur 15 P1 regresyon): markChannelSettlementPaid'in doğrudan oluşturduğu reconciliation_matches
+      // satırı da kendi kayıt-bazlı audit_log kaydına sahip olmalı (bankReconciliation.ts ile aynı örüntü).
+      const [settlementMatch] = await tx.select().from(reconciliationMatches).where(eq(reconciliationMatches.bankTransactionId, result.bankTransactionId));
+      expect(settlementMatch).toBeTruthy();
+      const settlementMatchAudits = await tx.select().from(auditLog).where(eq(auditLog.recordId, settlementMatch!.id));
+      expect(settlementMatchAudits).toHaveLength(1);
+      expect(settlementMatchAudits[0]!.tableName).toBe('reconciliation_matches');
+      expect(settlementMatchAudits[0]!.action).toBe('create');
 
       // İdempotent: tekrar çağrılırsa aynı sonucu döner, ikinci bir tahsilat/banka hareketi üretmez
       const again = await markChannelSettlementPaid(tx, settlement.id, { paymentDate: today(), bankAccountId: bank.id }, ctx);

@@ -7,6 +7,7 @@ import {
 import { D, toDb, round4 } from '../money.js';
 import { businessDate } from '../dates.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
+import { writeAudit } from '../audit/index.js';
 import { recordPayment } from './payments.js';
 import type { ActorCtx } from '../types.js';
 
@@ -16,6 +17,14 @@ import type { ActorCtx } from '../types.js';
  * tabanlı skorlanır (tutar + cari adı benzerliği + tarih yakınlığı); `packages/ai` entegrasyonu bu
  * modülün kapsamı dışında bırakıldı (schemaRequests/issues'te not edilmiştir) — skorlama fonksiyonu
  * ileride `@plantero/ai matchBankTransaction` ile değiştirilebilecek şekilde izole (`scoreInvoiceCandidate`).
+ *
+ * (I17, tur 15 P1 kök neden düzeltmesi) `postStockMove`/`postJournalEntry` örüntüsü: her mutasyon
+ * kendi kayıt-bazlı `writeAudit` satırını BURADA (CORE katmanında) yazar, çağıran katmanın (actions.ts,
+ * seed) yazıp yazmamasına bağlı kalmaz — `importStatement` içe aktardığı her `bank_transactions`
+ * satırı için, `runReconciliation`/`manualMatch` oluşturduğu her `reconciliation_matches` satırı için,
+ * `approveMatch`/`rejectMatch` verdiği her karar için ayrı bir audit izi bırakır. Çağıran katmandaki
+ * tekil özet audit satırı (ör. "N hareket içe aktarıldı, M otomatik uygulandı") ek bağlam olarak kalabilir
+ * ama artık tek kanıt değildir.
  */
 
 /* ------------------------------------------------------------------ */
@@ -88,7 +97,23 @@ export async function importStatement(tx: DbOrTx, input: ImportStatementInput, c
       })
       .onConflictDoNothing({ target: [bankTransactions.bankAccountId, bankTransactions.externalRef] })
       .returning({ id: bankTransactions.id });
-    if (row) importedCount++; else duplicateCount++;
+    if (row) {
+      importedCount++;
+      // (I17) Her içe aktarılan hareket kendi kayıt-bazlı audit izini burada bırakır.
+      await writeAudit(tx, {
+        action: 'create',
+        tableName: 'bank_transactions',
+        recordId: row.id,
+        summary: `Banka hareketi içe aktarıldı (${input.source}): ${line.description} — ${toDb(line.amount)} ${line.currency ?? account.currency} [${line.externalRef}]`,
+        after: {
+          bankAccountId: account.id, importId, externalRef: line.externalRef, txDate: businessDate(line.txDate),
+          amount: toDb(line.amount), currency: line.currency ?? account.currency, description: line.description,
+          counterpartyName: line.counterpartyName ?? null,
+        },
+      }, ctx);
+    } else {
+      duplicateCount++;
+    }
   }
 
   await tx.update(bankStatementImports).set({ importedCount, duplicateCount }).where(eq(bankStatementImports.id, importId));
@@ -241,23 +266,44 @@ export async function runReconciliation(tx: DbOrTx, opts: RunReconciliationOpts,
     if (best.confidence >= AUTO_APPLY_THRESHOLD && unique) {
       const applyAmount = best.residual.lt(D(bt.amount).abs()) ? best.residual : D(bt.amount).abs();
       const { paymentId } = await applyInvoiceAllocation(tx, { bankTransactionId: bt.id, partnerId: best.partnerId, invoiceId: best.invoiceId, amount: applyAmount, bankAccountId: bt.bankAccountId }, ctx);
-      await tx.insert(reconciliationMatches).values({
-        bankTransactionId: bt.id, kind: 'invoice', status: 'auto_applied', partnerId: best.partnerId, invoiceIds: [best.invoiceId],
-        allocations: [{ invoiceId: best.invoiceId, amount: toDb(applyAmount) }], confidence: toDb(best.confidence), rationale: best.rationale,
-        source: 'rule', decidedAt: new Date(), paymentId,
-      });
+      const [matchRow] = await tx
+        .insert(reconciliationMatches)
+        .values({
+          bankTransactionId: bt.id, kind: 'invoice', status: 'auto_applied', partnerId: best.partnerId, invoiceIds: [best.invoiceId],
+          allocations: [{ invoiceId: best.invoiceId, amount: toDb(applyAmount) }], confidence: toDb(best.confidence), rationale: best.rationale,
+          source: 'rule', decidedAt: new Date(), paymentId,
+        })
+        .returning({ id: reconciliationMatches.id });
+      // (I17) Otomatik uygulanan her eşleşme kendi kayıt-bazlı audit izini burada bırakır.
+      await writeAudit(tx, {
+        action: 'create',
+        tableName: 'reconciliation_matches',
+        recordId: matchRow!.id,
+        summary: `Mutabakat otomatik uygulandı: ${bt.description} → fatura ${best.docNo} (güven %${Math.round(best.confidence * 100)}, ${best.rationale})`,
+        after: { bankTransactionId: bt.id, invoiceId: best.invoiceId, partnerId: best.partnerId, confidence: best.confidence, rationale: best.rationale, status: 'auto_applied', paymentId },
+      }, ctx);
       await learnFromDecision(tx, bt, best.partnerId, 'invoice');
       autoApplied++;
     } else {
-      await tx
-        .insert(reconciliationMatches)
-        .values(
-          candidates.slice(0, 3).map((c) => ({
-            bankTransactionId: bt.id, kind: 'invoice' as const, status: 'suggested' as const, partnerId: c.partnerId, invoiceIds: [c.invoiceId],
-            allocations: [{ invoiceId: c.invoiceId, amount: toDb(c.residual.lt(D(bt.amount).abs()) ? c.residual : D(bt.amount).abs()) }],
-            confidence: toDb(c.confidence), rationale: c.rationale, source: 'rule' as const,
-          })),
-        );
+      for (const c of candidates.slice(0, 3)) {
+        const applyAmount = c.residual.lt(D(bt.amount).abs()) ? c.residual : D(bt.amount).abs();
+        const [matchRow] = await tx
+          .insert(reconciliationMatches)
+          .values({
+            bankTransactionId: bt.id, kind: 'invoice', status: 'suggested', partnerId: c.partnerId, invoiceIds: [c.invoiceId],
+            allocations: [{ invoiceId: c.invoiceId, amount: toDb(applyAmount) }],
+            confidence: toDb(c.confidence), rationale: c.rationale, source: 'rule',
+          })
+          .returning({ id: reconciliationMatches.id });
+        // (I17) Her üretilen öneri kendi kayıt-bazlı audit izini burada bırakır (onay/red beklemeden).
+        await writeAudit(tx, {
+          action: 'create',
+          tableName: 'reconciliation_matches',
+          recordId: matchRow!.id,
+          summary: `Mutabakat önerisi üretildi: ${bt.description} → fatura ${c.docNo} (güven %${Math.round(c.confidence * 100)}, ${c.rationale})`,
+          after: { bankTransactionId: bt.id, invoiceId: c.invoiceId, partnerId: c.partnerId, confidence: c.confidence, rationale: c.rationale, status: 'suggested' },
+        }, ctx);
+      }
       await tx.update(bankTransactions).set({ status: 'suggested' }).where(eq(bankTransactions.id, bt.id));
       suggested++;
     }
@@ -281,6 +327,14 @@ export async function approveMatch(tx: DbOrTx, matchId: string, ctx: ActorCtx): 
   const { paymentId } = await applyInvoiceAllocation(tx, { bankTransactionId: bt.id, partnerId: match.partnerId, invoiceId, amount: D(alloc.amount), bankAccountId: bt.bankAccountId }, ctx);
   await tx.update(reconciliationMatches).set({ status: 'approved', decidedBy: ctx.userId ?? null, decidedAt: new Date(), paymentId }).where(eq(reconciliationMatches.id, matchId));
   await tx.update(reconciliationMatches).set({ status: 'superseded' }).where(and(eq(reconciliationMatches.bankTransactionId, bt.id), eq(reconciliationMatches.status, 'suggested')));
+  // (I17) Onay kararı kendi kayıt-bazlı audit izini burada bırakır.
+  await writeAudit(tx, {
+    action: 'approve',
+    tableName: 'reconciliation_matches',
+    recordId: matchId,
+    summary: `Mutabakat önerisi onaylandı: ${bt.description} → fatura ${invoiceId}, tahsilat/ödeme ${paymentId} üretildi`,
+    after: { status: 'approved', paymentId, decidedBy: ctx.userId ?? null },
+  }, ctx);
   await learnFromDecision(tx, bt, match.partnerId, 'invoice');
   return { paymentId };
 }
@@ -291,6 +345,14 @@ export async function rejectMatch(tx: DbOrTx, matchId: string, reason: string | 
   if (!match) throw new NotFoundError('Mutabakat önerisi', matchId);
   if (match.status !== 'suggested') throw new DomainError('MATCH_NOT_SUGGESTED', `Öneri durumu ${match.status}; reddedilemez`);
   await tx.update(reconciliationMatches).set({ status: 'rejected', decidedBy: ctx.userId ?? null, decidedAt: new Date(), rationale: reason ? `${match.rationale ?? ''} — red: ${reason}` : match.rationale }).where(eq(reconciliationMatches.id, matchId));
+  // (I17) Red kararı kendi kayıt-bazlı audit izini burada bırakır.
+  await writeAudit(tx, {
+    action: 'reject',
+    tableName: 'reconciliation_matches',
+    recordId: matchId,
+    summary: `Mutabakat önerisi reddedildi${reason ? `: ${reason}` : ''}`,
+    after: { status: 'rejected', decidedBy: ctx.userId ?? null, reason: reason ?? null },
+  }, ctx);
 
   const remaining = await tx.select({ id: reconciliationMatches.id }).from(reconciliationMatches).where(and(eq(reconciliationMatches.bankTransactionId, match.bankTransactionId), inArray(reconciliationMatches.status, ['suggested', 'approved', 'auto_applied'])));
   if (!remaining.length) await tx.update(bankTransactions).set({ status: 'unmatched' }).where(eq(bankTransactions.id, match.bankTransactionId));
@@ -303,11 +365,22 @@ export async function manualMatch(tx: DbOrTx, bankTransactionId: string, input: 
   if (bt.status === 'matched') throw new DomainError('BANK_TX_ALREADY_MATCHED', `${bt.description} zaten eşleşmiş`);
 
   const { paymentId } = await applyInvoiceAllocation(tx, { bankTransactionId: bt.id, partnerId: input.partnerId, invoiceId: input.invoiceId, amount: round4(input.amount), bankAccountId: bt.bankAccountId }, ctx);
-  await tx.insert(reconciliationMatches).values({
-    bankTransactionId: bt.id, kind: 'invoice', status: 'approved', partnerId: input.partnerId, invoiceIds: [input.invoiceId],
-    allocations: [{ invoiceId: input.invoiceId, amount: toDb(input.amount) }], confidence: toDb(1), rationale: 'Elle eşleştirildi', source: 'manual',
-    decidedBy: ctx.userId ?? null, decidedAt: new Date(), paymentId,
-  });
+  const [matchRow] = await tx
+    .insert(reconciliationMatches)
+    .values({
+      bankTransactionId: bt.id, kind: 'invoice', status: 'approved', partnerId: input.partnerId, invoiceIds: [input.invoiceId],
+      allocations: [{ invoiceId: input.invoiceId, amount: toDb(input.amount) }], confidence: toDb(1), rationale: 'Elle eşleştirildi', source: 'manual',
+      decidedBy: ctx.userId ?? null, decidedAt: new Date(), paymentId,
+    })
+    .returning({ id: reconciliationMatches.id });
+  // (I17) Elle eşleştirme kendi kayıt-bazlı audit izini burada bırakır.
+  await writeAudit(tx, {
+    action: 'create',
+    tableName: 'reconciliation_matches',
+    recordId: matchRow!.id,
+    summary: `Banka hareketi elle eşleştirildi: ${bt.description} → fatura ${input.invoiceId}, tahsilat/ödeme ${paymentId} üretildi`,
+    after: { bankTransactionId: bt.id, invoiceId: input.invoiceId, partnerId: input.partnerId, status: 'approved', source: 'manual', paymentId },
+  }, ctx);
   await tx.update(reconciliationMatches).set({ status: 'superseded' }).where(and(eq(reconciliationMatches.bankTransactionId, bt.id), eq(reconciliationMatches.status, 'suggested')));
   await learnFromDecision(tx, bt, input.partnerId, 'invoice');
   return { paymentId };

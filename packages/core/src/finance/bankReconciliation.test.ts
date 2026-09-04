@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { journals, invoices, bankAccounts, bankTransactions, reconciliationMatches, type Tx } from '@plantero/db';
+import { journals, invoices, bankAccounts, bankTransactions, reconciliationMatches, auditLog, type Tx } from '@plantero/db';
 import { postJournalEntry } from '../accounting/journal.js';
 import { importStatement, runReconciliation, approveMatch, rejectMatch, manualMatch, findInvoiceCandidates, AUTO_APPLY_THRESHOLD } from './bankReconciliation.js';
 import { withRollback, seedBase, ctx, d, today, expectReject, type Base } from '../__tests__/helpers.js';
@@ -55,6 +55,14 @@ describe('finance/bankReconciliation', () => {
 
       const rows = await tx.select().from(bankTransactions).where(eq(bankTransactions.bankAccountId, account.id));
       expect(rows).toHaveLength(1);
+
+      // I17 (tur 15 P1 regresyon): importStatement'ın oluşturduğu her bank_transactions satırı kendi
+      // kayıt-bazlı audit_log kaydına sahip olmalı (postStockMove örüntüsü — CORE katmanında yazılır).
+      // Tekrarlanan (duplicate) çağrı ikinci bir audit satırı üretmemeli — tam olarak 1 satır beklenir.
+      const audits = await tx.select().from(auditLog).where(eq(auditLog.recordId, rows[0]!.id));
+      expect(audits).toHaveLength(1);
+      expect(audits[0]!.tableName).toBe('bank_transactions');
+      expect(audits[0]!.action).toBe('create');
     });
   });
 
@@ -111,6 +119,12 @@ describe('finance/bankReconciliation', () => {
       const matches = await tx.select().from(reconciliationMatches).where(eq(reconciliationMatches.bankTransactionId, bt!.id));
       expect(matches).toHaveLength(1);
       expect(matches[0]!.status).toBe('auto_applied');
+
+      // I17 (tur 15 P1 regresyon): otomatik uygulanan eşleşme kendi kayıt-bazlı audit_log kaydına sahip olmalı.
+      const matchAudits = await tx.select().from(auditLog).where(eq(auditLog.recordId, matches[0]!.id));
+      expect(matchAudits).toHaveLength(1);
+      expect(matchAudits[0]!.tableName).toBe('reconciliation_matches');
+      expect(matchAudits[0]!.action).toBe('create');
     });
   });
 
@@ -140,6 +154,15 @@ describe('finance/bankReconciliation', () => {
       expect(match).toBeTruthy();
       expect(match!.status).toBe('suggested');
 
+      // I17 (tur 15 P1 regresyon): üretilen HER öneri (yalnızca sonradan onaylanan değil) kendi
+      // kayıt-bazlı audit_log kaydına sahip olmalı — runReconciliation'ın suggested dalı.
+      for (const m of candidateMatches) {
+        const suggestAudits = await tx.select().from(auditLog).where(eq(auditLog.recordId, m.id));
+        expect(suggestAudits).toHaveLength(1);
+        expect(suggestAudits[0]!.tableName).toBe('reconciliation_matches');
+        expect(suggestAudits[0]!.action).toBe('create');
+      }
+
       const { paymentId } = await approveMatch(tx, match!.id, ctx);
       expect(paymentId).toBeTruthy();
 
@@ -149,6 +172,11 @@ describe('finance/bankReconciliation', () => {
       const [btAfter] = await tx.select().from(bankTransactions).where(eq(bankTransactions.id, bt!.id));
       expect(btAfter!.status).toBe('matched');
       expect(btAfter!.matchedPaymentId).toBe(paymentId);
+
+      // I17: onay kararının kendi (ikinci) audit izi de olmalı — 'create' (öneri) + 'approve' (karar) = 2 satır.
+      const auditsAfterApprove = await tx.select().from(auditLog).where(eq(auditLog.recordId, match!.id));
+      expect(auditsAfterApprove).toHaveLength(2);
+      expect(auditsAfterApprove.map((a) => a.action).sort()).toEqual(['approve', 'create']);
     });
   });
 
@@ -173,6 +201,12 @@ describe('finance/bankReconciliation', () => {
       expect(btAfter!.status).toBe('unmatched');
       const [matchAfter] = await tx.select().from(reconciliationMatches).where(eq(reconciliationMatches.id, match!.id));
       expect(matchAfter!.status).toBe('rejected');
+
+      // I17 (tur 15 P1 regresyon): red kararı kendi kayıt-bazlı audit_log kaydına sahip olmalı.
+      const rejectAudits = await tx.select().from(auditLog).where(eq(auditLog.recordId, match!.id));
+      expect(rejectAudits).toHaveLength(1);
+      expect(rejectAudits[0]!.tableName).toBe('reconciliation_matches');
+      expect(rejectAudits[0]!.action).toBe('reject');
     });
   });
 
@@ -191,6 +225,14 @@ describe('finance/bankReconciliation', () => {
       expect(btAfter!.status).toBe('matched');
       const [updatedInvoice] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
       expect(updatedInvoice!.status).toBe('paid');
+
+      // I17 (tur 15 P1 regresyon): elle eşleştirmenin oluşturduğu reconciliation_matches satırı da
+      // kendi kayıt-bazlı audit_log kaydına sahip olmalı (yalnızca runReconciliation değil).
+      const [manualMatchRow] = await tx.select().from(reconciliationMatches).where(eq(reconciliationMatches.bankTransactionId, bt!.id));
+      const manualAudits = await tx.select().from(auditLog).where(eq(auditLog.recordId, manualMatchRow!.id));
+      expect(manualAudits).toHaveLength(1);
+      expect(manualAudits[0]!.tableName).toBe('reconciliation_matches');
+      expect(manualAudits[0]!.action).toBe('create');
     });
   });
 });
