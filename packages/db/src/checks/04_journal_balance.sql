@@ -57,4 +57,15 @@ JOIN journal_entries twin ON twin.id = je.twin_entry_id
 WHERE je.twin_entry_id IS NOT NULL
   AND (twin.twin_entry_id IS DISTINCT FROM je.id OR twin.ledger = je.ledger)
 
+UNION ALL
+
+-- Tur 11, YENİ alt kural: twin_entry_id boş bırakılmış posted/reversed fiş — I4'ün eski
+-- sürümü yalnızca twin_entry_id DOLU iken tutarsızlığı yakalıyordu, tamamen eksik twin'i
+-- (tek deftere düşüp diğerine hiç düşmemiş bir kayıt) hiç yakalamıyordu.
+SELECT
+  'I4', 'journal_entry_twin_missing', je.id::text,
+  1::numeric(18, 4), 0::numeric(18, 4), 1::numeric(18, 4)
+FROM journal_entries je
+WHERE je.status IN ('posted', 'reversed') AND je.twin_entry_id IS NULL
+
 ORDER BY id;

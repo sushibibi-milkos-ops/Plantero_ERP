@@ -251,6 +251,24 @@ describe('finance/payments', () => {
     });
   });
 
+  it('I33 (tur 13 P0 regresyon): bugünden ileri tarihli tahsilat/ödeme reddedilir', async () => {
+    await withRollback(async (tx) => {
+      const b: Base = await seedBase(tx);
+      await ensureJournals(tx);
+      const invoice = await makeInvoice(tx, { partnerId: b.customer.id, kind: 'sales', grandTotal: '100' });
+      const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+
+      const err = await expectReject(tx, (sp) =>
+        recordPayment(sp, { direction: 'inbound', partnerId: b.customer.id, paymentDate: tomorrow, amount: d(100), allocations: [{ invoiceId: invoice.id, amount: d(100) }] }, ctx),
+      );
+      expect(String((err as Error).message)).toMatch(/bugünden ileri olamaz/);
+
+      // Bugünün tarihi (sınırda) hâlâ kabul edilir — yalnızca gelecek reddedilir.
+      const { payment } = await recordPayment(tx, { direction: 'inbound', partnerId: b.customer.id, paymentDate: today(), amount: d(100), allocations: [{ invoiceId: invoice.id, amount: d(100) }] }, ctx);
+      expect(payment.paymentDate).toBe(today());
+    });
+  });
+
   it('I30 (tur 10 P1 regresyon): banka hesabı para birimi tahsilat/ödeme para biriminden farklıysa reddedilir', async () => {
     await withRollback(async (tx) => {
       const b: Base = await seedBase(tx);

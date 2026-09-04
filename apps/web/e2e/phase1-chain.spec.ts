@@ -102,7 +102,7 @@ async function operatorPinLogin(page: Page) {
 test.describe.configure({ mode: 'serial' });
 
 test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebilirlik zinciri (phase1)', () => {
-  test.setTimeout(90_000);
+  test.setTimeout(120_000);
 
   const ctx: {
     receiptId?: string; rawLotNo?: string; quarantineLotNo?: string;
@@ -114,9 +114,54 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
 
   let page: Page;
 
-  test.beforeAll(async ({ browser }) => {
+  /**
+   * Next.js dev sunucusu rotaları TALEP ÜZERİNE (lazy) derler — bir rotaya ilk kez gidildiğinde
+   * derleme 15-60s sürebiliyor (bkz. rapor: cold-compile). Bu zincir onlarca farklı rotaya
+   * (`/depo/mal-kabul/[id]`, `/operator/[lineId]`, `/satis/siparisler/[id]`, …) İLK KEZ bu testte
+   * gidiyor; derleme süresi adım başına 90s test bütçesini tüketip GERÇEK bir uygulama hatası
+   * yokken testi "timeout" ile kırabiliyor (turda ilk koşuda tam olarak bu yaşandı: adım 1 GET
+   * 63.6s + [id] derleme 34.6s tek başına 90s'yi aştı; ikinci koşuda ise `/operator/*` üç rotası
+   * art arda ilk kez derlenip toplamda ~117s tuttu). Bu; test beklentisini gevşetmek değil —
+   * derleme maliyetini zamanlı adımların DIŞINA, süresiz bir ön-ısıtma adımına taşımak: her rota
+   * paylaşılan admin oturumuyla (tüm izinlere sahip) bir kez GET edilir, modül derlenir ve önbelleğe
+   * alınır; ardından gerçek (zamanlı) adımlar aynı modülü SICAK bulur. Hiçbir assertion burada
+   * çalışmaz — yalnızca derleyiciyi tetiklemek amaçlıdır, best-effort (hata yutulur).
+   */
+  async function warmRoutes(p: Page, paths: string[]) {
+    for (const path of paths) {
+      await p.goto(path, { timeout: 120_000, waitUntil: 'domcontentloaded' }).catch(() => {});
+    }
+  }
+
+  test.beforeAll(async ({ browser }, testInfo) => {
+    testInfo.setTimeout(600_000);
     page = await browser.newPage();
     await loginAs(page, 'admin');
+
+    const seedReceiptId = psqlOne('select id from receipts limit 1');
+    const seedWoId = psqlOne('select id from work_orders limit 1');
+    const seedOrderId = psqlOne('select id from sales_orders limit 1');
+    const seedDeliveryId = psqlOne('select id from deliveries limit 1');
+    const seedLotId = psqlOne('select id from stock_lots limit 1');
+    const seedPartnerId = psqlOne("select id from partners where code = 'C-000005'");
+    const hat3Id = psqlOne("select id from production_lines where code = 'HAT3'");
+
+    await warmRoutes(page, [
+      '/depo/mal-kabul/yeni',
+      ...(seedReceiptId ? [`/depo/mal-kabul/${seedReceiptId}`] : []),
+      '/depo/stok',
+      '/uretim/is-emirleri',
+      '/uretim/is-emirleri/yeni',
+      ...(seedWoId ? [`/uretim/is-emirleri/${seedWoId}`] : []),
+      '/operator/giris',
+      '/operator',
+      ...(hat3Id ? [`/operator/${hat3Id}`] : []),
+      '/satis/siparisler/yeni',
+      ...(seedOrderId ? [`/satis/siparisler/${seedOrderId}`] : []),
+      ...(seedDeliveryId ? [`/depo/sevkiyat/${seedDeliveryId}`, `/depo/sevkiyat/${seedDeliveryId}/topla`] : []),
+      ...(seedLotId ? [`/depo/lotlar/${seedLotId}`] : []),
+      ...(seedPartnerId ? [`/ana-veri/cariler/${seedPartnerId}`] : []),
+    ]);
   });
   test.afterAll(async () => {
     await page.close();
@@ -610,6 +655,144 @@ test.describe('Negatifler', () => {
     // Süresi geçmiş lot hiç rezerve edilmedi
     const expiredReserved = psqlOne(`select coalesce(sum(reserved_qty),0) from stock_quants where lot_id = (select id from stock_lots where lot_no='${expiredLotNo}')`);
     expect(Number(expiredReserved)).toBe(0);
+  });
+
+  test('karantinadaki lot sevk edilemez: FEFO karantina lotunu göz ardı eder', async ({ page }) => {
+    // FINDIK BAZI (110020001) — bu akışın ana zincirinde hiç kullanılmayan, izole bir mamul.
+    const productId = psqlOne(`select id from products where sku='110020001'`)!;
+    const availBefore = Number(
+      psqlOne(`
+        select coalesce(sum(sq.qty - sq.reserved_qty),0)
+        from stock_quants sq join stock_lots l on l.id = sq.lot_id
+        where l.product_id = '${productId}' and l.status='released'
+      `) ?? '0',
+    );
+
+    await loginAs(page, 'admin');
+    const quarantineFgLotNo = `QA-QFG-${RUN}`;
+    await page.goto('/depo/mal-kabul/yeni');
+    await comboboxSelect(page, 'Tedarikçi seçin', 'Anadolu', /Anadolu Kuruyemiş/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020001', /FINDIK BAZI/);
+    await page.getByLabel(/^Miktar/).fill('50');
+    await page.getByLabel('Birim maliyet').fill('100');
+    await page.getByLabel('Tedarikçi lot no').fill(quarantineFgLotNo);
+    await page.getByLabel('Karar').click();
+    await page.getByRole('option', { name: 'Karantina', exact: true }).click();
+    await comboboxSelect(page, 'Lokasyon', 'TIRE/KARANTINA', 'TIRE/KARANTINA');
+    await page.getByRole('button', { name: 'Kabul et' }).click();
+    await page.waitForURL(/\/depo\/mal-kabul\/[0-9a-f-]{36}$/);
+
+    const qLot = psqlOne(`select status from stock_lots where lot_no='${quarantineFgLotNo}'`);
+    expect(qLot).toBe('quarantine');
+
+    // Talep: mevcut serbest stoktan fazla ama karantinadaki lot dahil toplamdan az — yalnızca
+    // FEFO'nun karantinadaki lotu hariç tuttuğu doğrulanırsa karşılanamaz (pickFefo allowStatuses
+    // yalnızca 'released' — packages/core/src/stock/ledger.ts).
+    const orderQty = Math.floor(availBefore) + 15;
+    await page.goto('/satis/siparisler/yeni');
+    await comboboxSelect(page, 'Müşteri seçin', 'Doğal Yaşam', /Doğal Yaşam Market/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020001', /FINDIK BAZI/);
+    await page.getByLabel(/^Miktar/).fill(String(orderQty));
+    await page.keyboard.press('Tab');
+    await page.getByRole('button', { name: 'Siparişi kaydet' }).click();
+    await page.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
+    const orderId = page.url().split('/').pop()!;
+    await page.getByRole('button', { name: 'Onayla' }).click();
+    await expect(page.locator('[data-status="confirmed"]').first()).toBeVisible({ timeout: 10_000 });
+
+    const deliveryId = psqlOne(`select id from deliveries where sales_order_id = '${orderId}'`)!;
+    await page.goto(`/depo/sevkiyat/${deliveryId}`);
+    await page.getByRole('button', { name: 'FEFO ile rezerve et' }).click();
+    await expect(page.getByText(/yeterli serbest stok yok/i)).toBeVisible({ timeout: 10_000 });
+
+    // Karantinadaki lot hiç rezerve/sevk edilmedi ve durum hâlâ karantinada (sevkedilemedi kanıtı)
+    const qReserved = psqlOne(`select coalesce(sum(reserved_qty),0) from stock_quants where lot_id = (select id from stock_lots where lot_no='${quarantineFgLotNo}')`);
+    expect(Number(qReserved)).toBe(0);
+    const qOnDelivery = psqlOne(`select count(*) from delivery_lines where lot_id = (select id from stock_lots where lot_no='${quarantineFgLotNo}')`);
+    expect(qOnDelivery).toBe('0');
+    const status = psqlOne(`select status from deliveries where id='${deliveryId}'`);
+    expect(status).toBe('draft');
+  });
+
+  test('çift tahsilat engeli: fazla tahsis reddedilir, tam ödenen fatura ikinci kez tahsis edilemez', async ({ page }) => {
+    await loginAs(page, 'admin');
+
+    // İzole bir fatura: kendi ufak siparişimiz (2x Fındık, 2 adet) → onayla → sevk et → faturalandır.
+    await page.goto('/satis/siparisler/yeni');
+    await comboboxSelect(page, 'Müşteri seçin', 'Doğal Yaşam', /Doğal Yaşam Market/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020002', /2x Fındık/);
+    await page.getByLabel(/^Miktar/).fill('2');
+    await page.keyboard.press('Tab');
+    await page.getByRole('button', { name: 'Siparişi kaydet' }).click();
+    await page.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
+    const orderId = page.url().split('/').pop()!;
+    await page.getByRole('button', { name: 'Onayla' }).click();
+    await expect(page.locator('[data-status="confirmed"]').first()).toBeVisible({ timeout: 10_000 });
+
+    const deliveryId = psqlOne(`select id from deliveries where sales_order_id = '${orderId}'`)!;
+    await page.goto(`/depo/sevkiyat/${deliveryId}`);
+    await page.getByRole('button', { name: 'FEFO ile rezerve et' }).click();
+    await expect(page.locator('[data-status="reserved"]').first()).toBeVisible({ timeout: 10_000 });
+    const lotNo = psqlOne(`select l.lot_no from delivery_lines dl join stock_lots l on l.id=dl.lot_id where dl.delivery_id='${deliveryId}'`)!;
+
+    await page.getByRole('link', { name: 'Toplama ekranı' }).click();
+    await page.waitForURL(/\/topla$/);
+    const pickInput = page.getByPlaceholder('Lot okut…');
+    await pickInput.fill(lotNo);
+    await pickInput.press('Enter');
+    await expect(page.getByText('Toplama tamamlandı')).toBeVisible({ timeout: 10_000 });
+    await page.getByRole('button', { name: 'İrsaliyeye dön ve sevk et' }).click();
+    await page.waitForURL(new RegExp(`/depo/sevkiyat/${deliveryId}$`));
+    await page.getByRole('button', { name: 'Sevk et' }).click();
+    await expect(page.locator('[data-status="shipped"]').first()).toBeVisible({ timeout: 10_000 });
+
+    await page.goto(`/satis/siparisler/${orderId}`);
+    await page.getByRole('button', { name: 'Fatura oluştur' }).click();
+    await expect(page.getByText('Faturalandı', { exact: true }).first()).toBeVisible({ timeout: 10_000 });
+
+    const invRow = psqlRows(`select id, doc_no, residual from invoices where delivery_id='${deliveryId}'`)[0]!;
+    const [invoiceId, invoiceDocNo, residualStr] = invRow;
+    const residual = Number(residualStr);
+    expect(residual).toBeGreaterThan(0);
+    const toTr = (n: number) => n.toFixed(2).replace('.', ',');
+    const overAmount = residual + 100;
+
+    // 1) Fazla tahsis: fatura kalanından (residual) daha büyük bir tutar tahsis edilmeye çalışılır —
+    //    packages/core/src/finance/payments.ts::recordPayment "kalan tutarı ... küçük" ile reddeder.
+    await page.goto('/finans/tahsilat/yeni');
+    await expect(page.getByRole('heading', { name: 'Yeni Tahsilat / Ödeme' })).toBeVisible();
+    await comboboxSelect(page, 'Cari seçin…', 'Doğal Yaşam', /Doğal Yaşam Market/);
+    await expect(page.getByText(invoiceDocNo!)).toBeVisible({ timeout: 10_000 });
+    await page.getByLabel('Tutar').fill(toTr(overAmount));
+
+    await page.getByRole('checkbox', { name: `${invoiceDocNo} tahsis et` }).click();
+    const invoiceRow = page.locator('tr').filter({ hasText: invoiceDocNo! });
+    await invoiceRow.getByRole('textbox').fill(toTr(overAmount));
+
+    await page.getByRole('button', { name: 'Tahsilatı kaydet' }).click();
+    await expect(page.getByText(/kalan tutarı/i)).toBeVisible({ timeout: 10_000 });
+    // Reddedildi: hiçbir ödeme/tahsis satırı oluşmadı, fatura kalanı değişmedi
+    expect(psqlOne(`select count(*) from payment_allocations where invoice_id='${invoiceId}'`)).toBe('0');
+    expect(Number(psqlOne(`select residual from invoices where id='${invoiceId}'`))).toBeCloseTo(residual, 2);
+
+    // 2) Düzelt: tam kalan tutarla gönder → başarılı, fatura kapanır
+    await invoiceRow.getByRole('textbox').fill(toTr(residual));
+    await page.getByLabel('Tutar').fill(toTr(residual));
+    await page.getByRole('button', { name: 'Tahsilatı kaydet' }).click();
+    await page.waitForURL(/\/finans\/tahsilat$/, { timeout: 15_000 });
+
+    const invAfter = psqlRows(`select residual, status from invoices where id='${invoiceId}'`)[0]!;
+    expect(Number(invAfter[0])).toBeCloseTo(0, 2);
+    expect(invAfter[1]).toBe('paid');
+    expect(psqlOne(`select count(*) from payment_allocations where invoice_id='${invoiceId}'`)).toBe('1');
+
+    // 3) Çift tahsilat engeli: fatura artık tam ödendi — açık faturalar listesinde bir daha hiç
+    //    görünmez (getOpenInvoicesForPartner residual>0 && status in (posted,partially_paid) filtreler),
+    //    yani normal akıştan ikinci kez tahsis edilmesi yapısal olarak imkânsız.
+    await page.goto('/finans/tahsilat/yeni');
+    await comboboxSelect(page, 'Cari seçin…', 'Doğal Yaşam', /Doğal Yaşam Market/);
+    await expect(page.getByText('Açık faturalar yükleniyor…')).toBeHidden({ timeout: 10_000 });
+    await expect(page.getByText(invoiceDocNo!)).toHaveCount(0);
   });
 });
 

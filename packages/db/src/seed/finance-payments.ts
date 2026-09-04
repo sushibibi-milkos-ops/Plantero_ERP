@@ -46,6 +46,19 @@ const addDays = (iso: string, days: number): string => {
   return d.toISOString().slice(0, 10);
 };
 
+/**
+ * I33 / tur 13 P0 kök neden düzeltmesi: bu seed'in tüm tarih formülleri faturanın VADE tarihine göre
+ * ("vadeden N gün önce/sonra") hesaplanıyordu, `CURRENT_DATE`'e göre DEĞİL — sipariş tarihleri
+ * `2026-08-01…TODAY` aralığına yayıldığından (bkz. `sales.ts`), 30 günlük vade + "vadeden 2 gün önce
+ * tahsilat" bugünden onlarca gün İLERİDE bir "tahsilat/ödeme/banka hareketi" üretiyordu — canlı
+ * `recordPayment` artık bunu zaten reddediyor (packages/core/src/finance/payments.ts). Bu yardımcı,
+ * doğal (vadeye göre) tarih bugünü aşarsa onu bugünün bir gün gerisine sabitler; vade zaten geçmişse
+ * doğal tarih aynen kullanılır — yalnızca `due_date < bugün` olan faturalar "vadesinden önce tahsil
+ * edilmiş" kurgusuna tam olarak girer, geleceğe düşenler bugünün gerisine sıkıştırılır.
+ */
+const TODAY = new Date().toISOString().slice(0, 10);
+const capFuture = (iso: string): string => (iso > TODAY ? addDays(TODAY, -1) : iso);
+
 /** Bir faturayı doğrudan (banka hareketi olmadan — "geçmişte manuel girilmiş") tam ya da kısmi tahsil/öder */
 async function directPay(tx: DbOrTx, docNo: string, opts: { partialAmount?: string; bankAccountId?: string; method?: 'bank_transfer' | 'cash' } = {}) {
   const invoice = await invoiceByDocNo(tx, docNo);
@@ -53,7 +66,7 @@ async function directPay(tx: DbOrTx, docNo: string, opts: { partialAmount?: stri
   const amount = opts.partialAmount ? D(opts.partialAmount) : D(invoice.residual);
   const { payment } = await recordPayment(tx, {
     direction, method: opts.method ?? 'bank_transfer', partnerId: invoice.partnerId, bankAccountId: opts.bankAccountId ?? null,
-    paymentDate: addDays(invoice.dueDate, -2), currency: invoice.currency, amount,
+    paymentDate: capFuture(addDays(invoice.dueDate, -2)), currency: invoice.currency, amount,
     allocations: [{ invoiceId: invoice.id, amount }], origin: 'manual',
     note: 'Seed geriye dönük dolgu — geçmiş tahsilat/ödeme kaydı',
   }, SYSTEM_ACTOR);
@@ -83,7 +96,7 @@ export async function seedFinancePayments(tx: DbOrTx, summary: SeedSummary): Pro
   // Dövizli fatura: tahsilat KENDİ tarihinde farklı bir TCMB kuruyla yapılır ⇒ gerçek kur farkı fişi
   // doğar (I13 b/c — fx_difference + fx_journal_entry_id, o zamana kadar hiçbir kod yolu bunu üretmiyordu).
   const eurInvoice = await invoiceByDocNo(tx, 'INV-2026-000012');
-  const eurPaymentDate = addDays(eurInvoice.dueDate, 1);
+  const eurPaymentDate = capFuture(addDays(eurInvoice.dueDate, 1));
   await tx
     .insert(exchangeRates)
     .values({ currency: 'EUR', rateDate: eurPaymentDate, buying: '38.500000', selling: '38.700000', source: 'TCMB' })
@@ -126,17 +139,20 @@ export async function seedFinancePayments(tx: DbOrTx, summary: SeedSummary): Pro
     bankAccountId: vkfTl.id, source: 'open_banking',
     lines: [
       // Tutar birebir + cari adı + vadeye yakın ⇒ otomatik uygulanır (auto_applied)
-      { externalRef: 'SEED-BT-001', txDate: inv9.dueDate, amount: D(inv9.residual), description: `Havale — ${p9.name}`, counterpartyName: p9.name, txType: 'havale' },
-      { externalRef: 'SEED-BT-002', txDate: inv10.dueDate, amount: D(inv10.residual), description: `EFT — ${p10.name}`, counterpartyName: p10.name, txType: 'eft' },
-      { externalRef: 'SEED-BT-003', txDate: inv11.dueDate, amount: D(inv11.residual), description: `Havale — ${p11.name}`, counterpartyName: p11.name, txType: 'havale' },
+      // (I33) `runReconciliation`/`approveMatch` otomatik uygulanan hareketler için `recordPayment`'ı
+      // hareketin `txDate`'iyle çağırır — o da artık bugünden ileri tarihi reddeder; bu yüzden
+      // `txDate`'ler de `capFuture` ile bugünün gerisine sabitlenir (aksi halde seed burada patlar).
+      { externalRef: 'SEED-BT-001', txDate: capFuture(inv9.dueDate), amount: D(inv9.residual), description: `Havale — ${p9.name}`, counterpartyName: p9.name, txType: 'havale' },
+      { externalRef: 'SEED-BT-002', txDate: capFuture(inv10.dueDate), amount: D(inv10.residual), description: `EFT — ${p10.name}`, counterpartyName: p10.name, txType: 'eft' },
+      { externalRef: 'SEED-BT-003', txDate: capFuture(inv11.dueDate), amount: D(inv11.residual), description: `Havale — ${p11.name}`, counterpartyName: p11.name, txType: 'havale' },
       // Tedarikçiye ödeme yönünde otomatik eşleşme (negatif tutar = çıkış)
-      { externalRef: 'SEED-BT-004', txDate: pinv6.dueDate, amount: D(pinv6.residual).neg(), description: `EFT — ${pinv6Partner.name}`, counterpartyName: pinv6Partner.name, txType: 'eft' },
+      { externalRef: 'SEED-BT-004', txDate: capFuture(pinv6.dueDate), amount: D(pinv6.residual).neg(), description: `EFT — ${pinv6Partner.name}`, counterpartyName: pinv6Partner.name, txType: 'eft' },
       // Belirsiz: tutar ±%1 içinde ama cari adı yok, tarih uzak ⇒ düşük güven, öneri olarak kalır
-      { externalRef: 'SEED-BT-005', txDate: addDays(inv13.dueDate, 45), amount: D('2700.0000'), description: 'Havale', txType: 'havale' },
+      { externalRef: 'SEED-BT-005', txDate: capFuture(addDays(inv13.dueDate, 45)), amount: D('2700.0000'), description: 'Havale', txType: 'havale' },
       // Gerçekten eşleşmeyen hareketler (banka masrafı / tanınmayan pazaryeri hakedişi) — mutabakat
       // dışında kalır; bu modülün kapsamı gider/kredi taksiti eşleştirmeyi kapsamıyor (bkz. issues).
-      { externalRef: 'SEED-BT-006', txDate: addDays(inv13.dueDate, 10), amount: D('-450.7500'), description: 'SEDAŞ Elektrik Faturası', txType: 'fee' },
-      { externalRef: 'SEED-BT-007', txDate: addDays(inv13.dueDate, 12), amount: D('5000.0000'), description: 'Trendyol Hakediş — tanımsız dönem', txType: 'marketplace_payout' },
+      { externalRef: 'SEED-BT-006', txDate: capFuture(addDays(inv13.dueDate, 10)), amount: D('-450.7500'), description: 'SEDAŞ Elektrik Faturası', txType: 'fee' },
+      { externalRef: 'SEED-BT-007', txDate: capFuture(addDays(inv13.dueDate, 12)), amount: D('5000.0000'), description: 'Trendyol Hakediş — tanımsız dönem', txType: 'marketplace_payout' },
     ],
   }, SYSTEM_ACTOR);
 

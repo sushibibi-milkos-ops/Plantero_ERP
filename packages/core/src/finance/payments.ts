@@ -88,6 +88,12 @@ export async function recordPayment(tx: DbOrTx, input: RecordPaymentInput, ctx: 
   const currency = input.currency ?? 'TRY';
   const method = input.method ?? 'bank_transfer';
   const paymentDate = businessDate(input.paymentDate);
+  // I33 (tur 13, P0): bugün itibarıyla henüz gerçekleşmemiş bir tahsilat/ödeme "posted" olarak
+  // kaydedilemez (VUK/UFRS "işlemin gerçekleştiği tarihte kayıt" ilkesi) — fiscal_periods aralık
+  // kontrolü yalnızca "açık dönem"i doğrular, gelecek tarihi engellemez; bu yüzden ayrı bir kapı gerekir.
+  if (paymentDate > businessDate(new Date())) {
+    throw new ValidationError(`Tahsilat/ödeme tarihi (${paymentDate}) bugünden ileri olamaz`, { paymentDate });
+  }
 
   const [partner] = await tx.select().from(partners).where(eq(partners.id, input.partnerId)).limit(1);
   if (!partner) throw new NotFoundError('Cari', input.partnerId);
