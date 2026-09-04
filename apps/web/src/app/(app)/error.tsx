@@ -11,7 +11,7 @@ import { EmptyState } from '@/components/empty-state';
  * diğer hatalar için yeniden dene.
  */
 export default function AppError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  const forbidden = error.name === 'ForbiddenError' || /forbidden|yetki/i.test(error.message);
+  const forbidden = error.digest === 'FORBIDDEN' || error.name === 'ForbiddenError' || /forbidden|yetki/i.test(error.message);
 
   useEffect(() => {
     if (!forbidden) console.error(error);

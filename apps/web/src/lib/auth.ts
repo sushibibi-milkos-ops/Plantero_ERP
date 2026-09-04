@@ -61,7 +61,10 @@ export async function requireUser(): Promise<UserCtx> {
 export async function requirePermission(code: string): Promise<UserCtx> {
   const user = await requireUser();
   if (!hasPermission({ roles: user.roles, permissions: user.permissions }, code)) {
-    throw new ForbiddenError(code);
+    // Üretim derlemesinde Next.js sunucu hatasının mesajını/adını siler; yalnızca `digest` istemciye ulaşır.
+    const err = new ForbiddenError(code) as ForbiddenError & { digest?: string };
+    err.digest = 'FORBIDDEN';
+    throw err;
   }
   return user;
 }
