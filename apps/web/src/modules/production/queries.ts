@@ -416,9 +416,14 @@ export async function listNextPlannedWorkOrders(lineIds: string[]): Promise<Map<
     .from(workOrders)
     .where(and(inArray(workOrders.lineId, lineIds), eq(workOrders.status, 'planned')))
     .orderBy(asc(workOrders.plannedStart), asc(workOrders.docNo));
+  // businessDate (Europe/Istanbul iş günü) — dosyadaki her "bugün" karşılaştırması bunu kullanır
+  // (bkz. yukarıdaki `todayIso`/`today`). Burada UTC takvim günü (toISOString().slice(0,10))
+  // kullanılıyordu; /operator ekranı bu değeri businessDate(new Date()) ile karşılaştırıp "bugün
+  // planlandı" ayrımı yapar (Tur 13 bulgusu, P1) — 00:00–03:00 UTC (Türkiye gece yarısından sonrası)
+  // aralığında UTC günü ile İstanbul günü farklı olabileceğinden iki taraf da aynı tanımı kullanmalı.
   const map = new Map<string, NextPlannedWorkOrder>();
   for (const r of rows) {
-    if (!map.has(r.lineId)) map.set(r.lineId, { docNo: r.docNo, plannedStart: r.plannedStart ? r.plannedStart.toISOString().slice(0, 10) : null });
+    if (!map.has(r.lineId)) map.set(r.lineId, { docNo: r.docNo, plannedStart: r.plannedStart ? businessDate(r.plannedStart) : null });
   }
   return map;
 }

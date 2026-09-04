@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { formatTime, formatDate, formatQty } from '@/lib/format';
 import { D } from '@plantero/core';
+import { businessDate } from '@plantero/core/dates';
 import { DOWNTIME_REASON_LABELS } from '@/modules/production/labels';
 
 export const metadata: Metadata = { title: 'Operatör' };
@@ -35,6 +36,12 @@ export default async function OperatorHome() {
       return { line: l, queue, active };
     }),
   );
+
+  // Boş-durum metninin altındaki tarihli "Sıradaki" satırıyla çelişmemesi için kart metni de aynı
+  // iş günü tanımını (businessDate) kullanır — Tur 13 bulgusu, P1: "Bugün planlanan iş emri yok"
+  // koşulu aslında kuyruk uzunluğuna bakıyordu (tarihe değil), sonuçta bugüne tarihli bir "Sıradaki:
+  // WO-... · <bugünün tarihi>" satırıyla aynı kartta çelişiyordu.
+  const today = businessDate(new Date());
 
   const runningCount = withActive.filter((w) => w.active?.status === 'in_progress').length;
   const pausedCount = withActive.filter((w) => w.active?.status === 'paused').length;
@@ -126,12 +133,25 @@ export default async function OperatorHome() {
                       // "Aktif iş emri yok" tek başına eylemsiz/bağlamsızdı — operatör hattı açmadan
                       // bugün ne planlandığını göremiyordu (Tur 5 bulgusu, P1). Sıradaki henüz serbest
                       // bırakılmamış (status='planned') iş emri varsa doc no + tarih altta gösterilir.
+                      //
+                      // Kök neden (Tur 13 bulgusu, P1): bu koşul (active yok && queue.length===0)
+                      // kuyrukta released/in_progress/paused hiçbir iş emri kalmadığını anlatır —
+                      // "bugün" ile ilgisi yok. Sabit "Bugün planlanan iş emri yok" metni, altında
+                      // bugüne tarihli bir "Sıradaki" satırı varken kendiyle çelişiyordu. Üst satır artık
+                      // gösterdiği koşulu (kuyruk boş) anlatır; nextPlanned tam olarak bugüne
+                      // planlanmışsa (henüz serbest bırakılmamış) bunu ayrıca belirten bir alt-varyant
+                      // eklenir.
                       <div className="flex h-full flex-col items-center justify-center gap-1 text-center">
-                        <span className="text-sm text-muted-foreground">Bugün planlanan iş emri yok</span>
+                        <span className="text-sm text-muted-foreground">Kuyrukta serbest bırakılmış iş emri yok</span>
                         {nextPlanned ? (
                           <span className="text-[11px] text-muted-foreground/70">
-                            Sıradaki: <span className="font-mono">{nextPlanned.docNo}</span>
-                            {nextPlanned.plannedStart ? ` · ${formatDate(nextPlanned.plannedStart)}` : ''}
+                            {nextPlanned.plannedStart === today ? (
+                              <>Bugün planlandı — henüz serbest bırakılmadı · </>
+                            ) : (
+                              <>Sıradaki: </>
+                            )}
+                            <span className="font-mono">{nextPlanned.docNo}</span>
+                            {nextPlanned.plannedStart && nextPlanned.plannedStart !== today ? ` · ${formatDate(nextPlanned.plannedStart)}` : ''}
                           </span>
                         ) : null}
                       </div>
