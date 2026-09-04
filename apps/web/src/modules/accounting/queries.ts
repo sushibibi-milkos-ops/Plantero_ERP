@@ -1,6 +1,6 @@
 import 'server-only';
 import type Decimal from 'decimal.js';
-import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, like, or, sql } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
 import { D, ZERO, round4, listPeriods as coreListPeriods, getAging as coreGetAging, STOCK_LINKED_REF_TYPES } from '@plantero/core';
 
@@ -475,11 +475,28 @@ export async function getPartnerStatement(partnerId: string): Promise<PartnerSta
   if (!partner) return null;
 
   const isCustomer = partner.kind === 'customer' || partner.kind === 'both';
+  // Cari ekstresi yalnızca 120.cari (alıcı) / 320.cari (satıcı) alt hesabının kendi satırlarını
+  // running balance'a katmalı. journal_lines'ta 600/391 gibi P&L satırları da raporlama amaçlı
+  // partnerId taşıyabilir (bkz. sales/invoicing.ts) — bunlar cari hareketi DEĞİLDİR, hariç tutulur.
+  const isSupplier = partner.kind === 'supplier' || partner.kind === 'both';
+  const accountPrefixConditions = [];
+  if (isCustomer) accountPrefixConditions.push(like(journalLines.accountCode, '120%'));
+  if (isSupplier) accountPrefixConditions.push(like(journalLines.accountCode, '320%'));
+  if (!isCustomer && !isSupplier) {
+    // 'bank' | 'other' gibi beklenmeyen türler için de cari hesap dışı satırları (600/391 vb.) dışla
+    accountPrefixConditions.push(like(journalLines.accountCode, '120%'), like(journalLines.accountCode, '320%'));
+  }
   const rows = await db
     .select({ l: journalLines, e: journalEntries })
     .from(journalLines)
     .innerJoin(journalEntries, eq(journalEntries.id, journalLines.entryId))
-    .where(and(eq(journalLines.ledger, 'VUK'), eq(journalLines.partnerId, partnerId), inArray(journalEntries.refType, ['invoice', 'payment']), inArray(journalEntries.status, ['posted', 'reversed'])))
+    .where(and(
+      eq(journalLines.ledger, 'VUK'),
+      eq(journalLines.partnerId, partnerId),
+      inArray(journalEntries.refType, ['invoice', 'payment']),
+      inArray(journalEntries.status, ['posted', 'reversed']),
+      or(...accountPrefixConditions),
+    ))
     .orderBy(asc(journalEntries.entryDate), asc(journalEntries.createdAt));
 
   let running = ZERO;
