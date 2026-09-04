@@ -13,6 +13,7 @@ import { seedFinancePayments } from './finance-payments.js';
 import { seedAccountingDocs } from './accounting-docs.js';
 import { seedBank } from './bank.js';
 import { seedExport } from './export.js';
+import { seedQuality } from './quality.js';
 import { seedFinanceProjections } from './finance-projections.js';
 
 /**
@@ -52,6 +53,11 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   // bağlanır) — `purchasing-backfill`'den ÖNCE (kendi ürettiği irsaliyelerin PO'suz mal kabul
   // riski yok, sıra bu yüzden esnek ama modül sözleşmesi gereği belge akışının doğal sonunda).
   { name: 'export', run: seedExport },
+  // `quality`: geri çağırma simülasyonu için sevk edilmiş bir mamul lotu (production+sales) gerekir —
+  // bu yüzden ikisinden SONRA; kendi ürettiği mal kabuller `createAndReceive` üzerinden PO'ya
+  // otomatik bağlandığından `purchasing-backfill`e bağımlı değildir ama modül sözleşmesi gereği
+  // (yeni seed'ler son güvenlik ağının ÖNÜNE eklenir) yine de ondan önce çalışır.
+  { name: 'quality', run: seedQuality },
   { name: 'purchasing-backfill', run: seedPurchasingBackfill },
   // `finance-projections`: EN SONDA — 36 aylık nakit akışı projeksiyonunu (3 senaryo) kalıcı hale
   // getirir ve bütçe/nakit akışı "gerçekleşen" alanlarını muhasebeden (TÜM yukarıdaki adımların
