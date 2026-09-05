@@ -1,30 +1,71 @@
 {
  "module": "tedarik",
- "round": 4,
- "note": "Tur 4. Tur 3'te kapatilan 5 bulgunun tamami yeniden olculdu ve KAPALI dogrulandi: (a) kritik-stok-06 -> Kullanilabilir 36/36 '—', Risk 36/36 'Degerlendirilmedi', KPI 'Kritik —'/'Uyari —' (probe-tedarik-r4.critical.perCol); (b) onay-05 -> kart 1118px / main 1200px = 0,93 (hedef >=0,45); (c) po-detay-04 -> KDV '%20', /%\\d+[.,]\\d{3,}/ eslesmesi 0; (d) yeni-05 -> productSelect w=768 sag kenar 1032 = izgara kenari (hedef 642 veya 1032); (e) tedarikciler-06 -> 6/6 switch aria-label='Beyaz liste', 44x44. tedarikciler-07 (P2) hedefi kagit uzerinde saglandi (ayrac+metrik tek grup) ama gorsel amac saglanmadi: 390px'te 6/6 kartta ikinci satir '·' ile basliyor (Tur 3'te 2/6) -> P2 olarak yeniden acildi (tedarikciler-09). Bu turda 8 YENI P1 acildi, 4 P2 kayda gecti. Dinamik rota: PO-2026-000003 = 50e00f08-c2e3-43d1-88b3-28d34927f23f (DB yeniden seed edildi, Tur 3 id'si gecersiz). Olcum kaynaklari: artifacts/critic/measure-tedarik-r4/*.json (pnpm measure 1440x900 + 390x844), artifacts/critic/probe-tedarik-r4.json (scripts/probe-tedarik-r4.ts), scripts/probe-tedarik-r4b.ts (yaprak eleman tabular-nums + satir hover + focus), gorunur-yalniz font olcumu (main icindeki yaprak elemanlar, rect>0), artifacts/screens/satin-alma-*/{desktop,mobile}.png. Ortak bilesen kaynakli gozlemler module:'shell' kapsaminda (KpiCard 0 ondalik: siparisler KPI '₺47.160' vs tablo '₺4.620,00'; KpiStrip mobil snap kirpmasi: kritik-stok/siparisler 390px'te 3. KPI karti kirpik) -- kural 5 geregi tedarik altinda acilmadi. Kod duzeyi tarama TEMIZ: apps/web/src/modules/purchasing + apps/web/src/app/(app)/satin-alma altinda 'transition-all'/'transition: all' 0, 'ease-in' 0, 'scale-0'/'scale(0)' 0, >=300ms sure 0, 'origin-' 0; 7 'hover:' varyantinin tamami globals.css:10 @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor; klavye kisayollarinda (j/k/a/r/e) gecis/animasyon yok.",
+ "round": 5,
+ "note": "Tur 5 (kritik gecisi). Tur 4/5'te builder tarafindan kapatilan 12 bulgunun tamami yeniden olculdu: kritik-stok-07 (satir hover+cursor+drawer) KAPALI; kritik-stok-08 KISMEN (Kullanilabilir 32/36 farkli gercek deger, dash 0/36 -> KAPALI kalir; ancak Kapsama+Onerilen siparis hala 36/36 '—', Risk uniq=1/36 -> yeni bulgu kritik-stok-10 acildi); onay-05/06/07/08 KAPALI (kart 1152/1200, primary bg eleman=1, pureSizeCount=4, poLink 44px); siparisler-04 KAPALI (bos th=0, tarih tabular-nums); po-detay-04/06 KAPALI (KDV '%20'; 'Beklenen tarih' sutunu render edilmiyor); yeni-05/06 KAPALI (productSelect right=1032; bos durumda calisan 'Urun ekle' butonu); tedarikciler-06 REGRESYON (mobil switch artik 'hidden md:block' icinde 0x0 -> tedarikciler-12), tedarikciler-08/09/10 KAPALI (toolbar+36px satir; pureSizeCount=4; kart alt satiri '·' ile baslamiyor). Tur 5'te 3 rota KAZANDI (/satin-alma/siparisler 57, /satin-alma/onay-kuyrugu 58, /satin-alma/siparisler/yeni 57), 3 rota KAYBETTI (/satin-alma/kritik-stok 54, /satin-alma/siparisler/[id] 51, /satin-alma/tedarikciler 49). En cok tekrar eden kusur: DataTable meta.width toplaminin 1152px kabi asmasi -> kritik-stok scroller sw 1189>cw 1152 (Eylemler sutunu 37px disarida), tedarikciler sw 1205>cw 1152 (Acik tutar sutunu 6/6 satirda 53px kirpik, '₺32.760,00' -> '₺32.7'). Ikinci: meta.mobile:'hidden' yanlis sutunlarda -> mobil kart karar metrigi tasimiyor (kritik-stok karti '—' disinda hic sayi icermiyor; tedarikciler kartinda Kalite/Zamaninda/Tedarik suresi/Urun yok). Ucuncu: bos sutunlarin yer kaplamasi (kritik-stok Kapsama+Onerilen siparis 36/36 '—'). Dinamik rota: PO-2026-000003 = c06291c9-ef1a-49e2-9cf0-b03f617f485b (DB yeniden seed edildi, Tur 4 id'si gecersiz). Olcum kaynaklari: artifacts/critic/measure-tedarik-r5b/*.json (pnpm measure 1440x900 + 390x844), artifacts/critic/probe-tedarik-r5c.json (scripts/probe-tedarik-r5c.ts: sutun doluluk, scroller sw/cw, primary-bg eleman sayimi, gorunur yaprak font olcegi, thead text-transform, zincir karti hizasi), probe-tedarik-r5d/r5e/r5f/r5i.json (switch gorunurlugu+dokunma alani, olcek disi font, mobil kart tap gezinmesi, son sutun kirpma), scripts/probe-tedarik-r5g/r5h/r5j.ts (mobil tap dogrulamasi, KPI seridi snap olcumu). DOGRULANIP GERI CEKILEN supheler: (a) mobil KPI seridinin 3. kartinin kirpik gorunmesi bir hata degil, bilincli snap-scroller 'peek' (sw 472 > cw 358, snap-x); (b) tedarikciler/kritik-stok mobil kartlarinda tap gezinme YAPIYOR (tedarikciler -> /ana-veri/cariler/<id>, kritik-stok -> kural drawer'i acilir), ilk olcumdeki 'gezinmiyor' sonucu yetersiz bekleme suresinden kaynaklandi. Kod duzeyi tarama TEMIZ: apps/web/src/modules/purchasing + apps/web/src/app/(app)/satin-alma altinda 'transition-all'/'transition: all' 0, 'ease-in' 0, 'scale-0'/'scale(0)' 0, >=300ms sure 0, 'origin-' 0; 6 'hover:' varyantinin tamami globals.css:10 @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor; klavye kisayollarinda (j/k/a/r/e) gecis/animasyon yok. Ortak bilesen gozlemi (module:'shell', kural 5 geregi burada acilmadi): KpiCard.isStrip degeri 0 ondalikli para basiyor ('₺47.160') ama ayni ekrandaki tablo 2 ondalikli ('₺4.620,00') -- kriter 6.",
  "routes": {
   "/satin-alma/kritik-stok": {
-   "round": 4,
+   "round": 5,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
     5,
     5,
     4,
-    4,
-    4,
+    5,
+    3,
     5,
     5,
-    4,
+    5,
     4,
     5,
     4,
     4
    ],
-   "total": 53,
+   "total": 54,
    "verdict": "KAZANAN: Linear (fark 4)",
-   "scoreNotes": "K6 3->5: Tur 3 P0'i (uydurma '0'/'Normal') kapandi ve dogrulandi; sayisal yapraklarin tamami tabular-nums/mono (probe-r4b: 109 tabular yaprak, tabular olmayanlarin hepsi duz cumle/urun adi), birim tutarli ('20 gun'), bilinmeyen '—'. K7 4->5: bilinmezlik artik dort sutunda da AYNI dille anlatiliyor + 'Motor henuz calistirilmadi' seridi + 'Motoru calistir' eylemi + filtreli bos dalda 'Filtreyi temizle'. K3 5->4: duzen yogunlugu hala 5 (36 satir x 36px, tasma 0) ama iceriik yogunlugu dustu -- 360 hucrenin 144'u (%40) degersiz, KPI'lar '—' (yeni bulgu -08). K5 5->4: kriter acikca 'satir hover' istiyor; kritik-stok satirlari hover'da arka plan degistirmiyor (changed=false) oysa siparisler/po-detay degistiriyor (yeni bulgu -07). K11 5->4: ayni modulde ayni tablo bileseni iki farkli hover davranisi gosteriyor.",
-   "open": [],
+   "scoreNotes": "kriter 4: 4->5 (olcum: main icinde --primary arka planli gorunur eleman sayisi = 1, yalnizca 'Motoru calistir'; durum rozetleri notr, uyari seridi tek anlamli amber). kriter 8: 4->5 (kritik-stok-07 kapandi: tbody tr hover arka plani degisiyor, cursor=pointer, tap/klik kural drawer'ini aciyor -- 390px'te dogrulandi). kriter 5: 4->3 GERILEME (yeni olcum: tablo scroller sw 1189 > cw 1152; 'Eylemler' sutunu left 1413 / kap sag kenari 1416 -> 37px disarida, satir eylem dugmesi yatay kaydirmadan erisilemiyor. Tur 3'te sw=cw=1152 idi). kriter 1: 5 (pureSizes [24,19,14,13,12,10]; 19px ortak KpiCard.isStrip kademesi, modul disi -- modul kaynakli olcek 24/14/13/12). kriter 3: 4 (36 satir x 36px, ilk ekranda 18 satir, mobil kart 64px -- olculer tam; ancak 10 sutunun 2'si 36/36 '—' ve mobil kart hic sayi tasimiyor -> 5 verilemez). kriter 9: 4 (390px'te tasma yok, dokunma hedefi 44px, mobil KPI seridi bilincli snap-peek; kart karar metrigi tasimadigi icin 5 degil). kriter 11: 4 (baslik/toolbar/satir kalibi siparisler ile ayni, ama siparisler'de olmayan scroller tasmasi var). kriter 12: 4 (kirpik son sutun + iki olu sutun ERP kokusu birakiyor). Yakinsama (kural 7): 54 < 57. Acik bulgular kapandiginda beklenen puan: kriter 5 (09+10) 3->5, kriter 3 (10+11) 4->5, kriter 9 (11) 4->5, kriter 11 (12) 4->5, kriter 12 (09+10) 4->5 = 60 >= 57.",
+   "open": [
+    {
+     "id": "tedarik-kritik-stok-09",
+     "criterion": 5,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Tablo scroller'i kabini asiyor ve satir eylemleri sutunu ekran disinda kaliyor: sabit meta.width toplami 1189px, kap 1152px. 'Eylemler' sutunu left=1413, kabin sag kenari 1416 -> sutunun 37px'i (yani '…' dugmesinin tamami) yatay kaydirma olmadan gorunmuyor. Kriter 5 acikca 'tasma yok (scrollWidth <= container)' diyor; kardes rota /satin-alma/siparisler'de sw=cw=1152.",
+     "measure": "scripts/probe-tedarik-r5c.ts + r5i.ts (1440x900, satin_alma): main .overflow-auto {sw:1189, cw:1152, over:37}; thead 'Eylemler' {left:1413, right:1453}, scroller right=1416 -> clipped=37px.",
+     "target": "1440x900'de scroller sw <= cw (over=0) ve son sutunun sag kenari kabin sag kenarinin icinde; kok neden sabit meta.width toplaminin dusurulmesi (bkz. tedarik-kritik-stok-10).",
+     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx (kolon meta.width degerleri), apps/web/src/components/data-table/data-table.tsx:342 (scroller)"
+    },
+    {
+     "id": "tedarik-kritik-stok-10",
+     "criterion": 3,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Motor calismamisken 10 sutunun 2'si 36/36 satirda '—' ('Kapsama (gun)' 127px, 'Onerilen siparis' 130px = 257px olu genislik) ve 'Risk' sutunu 36 satirin 36'sinda ayni tek degeri ('Degerlendirilmedi') basiyor. Bu 257px, tablonun 37px tasmasinin da tek sebebi. Ayni modul, ayni durumda dogru davranisi zaten uyguluyor: PO detayinda tumu bos 'Beklenen tarih' sutunu hic render edilmiyor (tedarik-po-detay-06).",
+     "measure": "scripts/probe-tedarik-r5c.ts perCol (36 kural): Kapsama (gun) dash 36/36 uniq 1; Onerilen siparis dash 36/36 uniq 1; Risk dash 0/36 uniq 1/36. Sutun genislikleri: Kapsama 846-973 (127px), Onerilen siparis 1093-1223 (130px).",
+     "target": "lastEvaluatedAt=null (motor hic calismamis) durumunda 'Kapsama (gun)' ve 'Onerilen siparis' sutunlari render edilmesin (perCol icinde bulunmasinlar) -> scroller over=0; motor calistiktan sonra geri gelsinler.",
+     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx (columns useMemo)"
+    },
+    {
+     "id": "tedarik-kritik-stok-11",
+     "criterion": 3,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "390px'te kart hicbir sayi tasimiyor: kart metni tam olarak 'Alkalize Kakao / Degerlendirilmedi / 304030000 / —'. Masaustunde karari veren iki sutun (Kullanilabilir 82, Min–Max 28–80) meta.mobile:'hidden' ile atilmis, meta yuvasina ise 36/36 bos olan 'Onerilen siparis' konmus. Kardes rota /satin-alma/siparisler'in mobil kartinda tutar meta yuvasinda; burada mobil kullanici stok seviyesini goremiyor.",
+     "measure": "scripts/probe-tedarik-r5c.ts kritikStokMobile (390x844, 36 kart): 4/4 ornek kartin metni '<urun><risk><sku>—'; sayisal deger 0; kart yuksekligi 64px.",
+     "target": "390px'te 36/36 kartta Kullanilabilir degeri ve Min–Max esigi gorunsun (kart metninde /\\d/ eslesmesi 36/36), '—' meta yuvasindan cikarilsin.",
+     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx (columns meta.mobile), apps/web/src/components/data-table/mobile-cards.tsx"
+    },
+    {
+     "id": "tedarik-kritik-stok-12",
+     "criterion": 11,
+     "severity": "P2",
+     "openedRound": 5,
+     "text": "'Tercihli tedarikci' sutununda 'Beyaz liste' rozeti 36 satirin yalnizca 1'inde basiliyor (Etiket) ve tedarikci adini kirparak yer aciyor. Tek satirda beliren bir rozet sutun ritmini bozuyor; ayni bilgi /satin-alma/tedarikciler'de kendi sutununda zaten var.",
+     "measure": "artifacts/screens/satin-alma-kritik-stok/desktop.png: 36 satirin 1'inde 'Beyaz liste' rozeti; 'Tercihli tedarikci' sutunu 1223-1413 (190px) ve 36/36 satirda ad ellipsis ile kirpik.",
+     "target": "Rozet ya 36/36 satirda tutarli gosterilsin ya da tamamen kaldirilsin; sutun genisligi ad kirpilmayacak sekilde ayarlansin (ellipsis orani <= %20).",
+     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx (preferredSupplier kolonu)"
+    }
+   ],
    "closed": [
     {
      "id": "tedarik-kritik-stok-01",
@@ -72,7 +113,8 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "critical-stock-table.tsx: DataTable'a onRowClick={editRule} eklendi (canManageRule && onEditRule varsa) — satır zaten var olan 'Kuralı düzenle' eylemini açar; hover arka planı, cursor ve klavye erişimi artık ortak bileşenden (data-table.tsx:256 `clickable`) gelir, ayrı bir tasarım kararı YOK.",
-     "measureAfter": "Tur 5 canlı ölçüm (scripts/probe-tedarik-r5.ts, 1440x900, satin_alma): tbody tr backgroundColor hover öncesi 'rgba(0, 0, 0, 0)' -> sonrası 'oklab(0.955 0.000564683 -0.00191863 / 0.5)' (changed=true) — /satin-alma/siparisler ile BİREBİR aynı değer; cursor='pointer'. scripts/measure.ts: touchTargetsBelow44'te satır yok, overflowX=false (satin-alma-kritik-stok.desktop.json)."
+     "measureAfter": "Tur 5 canlı ölçüm (scripts/probe-tedarik-r5.ts, 1440x900, satin_alma): tbody tr backgroundColor hover öncesi 'rgba(0, 0, 0, 0)' -> sonrası 'oklab(0.955 0.000564683 -0.00191863 / 0.5)' (changed=true) — /satin-alma/siparisler ile BİREBİR aynı değer; cursor='pointer'. scripts/measure.ts: touchTargetsBelow44'te satır yok, overflowX=false (satin-alma-kritik-stok.desktop.json).",
+     "recheckedRound5": "Tur 5 yeniden olcum: tbody tr hover backgroundColor degisiyor, cursor='pointer'; 390px'te karta tap kural drawer'ini aciyor ([role=dialog] sayisi 1). KAPALI."
     },
     {
      "id": "tedarik-kritik-stok-08",
@@ -85,31 +127,32 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "queries.ts listCriticalStock: motor hiç çalışmamış (lastEvaluatedAt NULL) satırlarda 'Kullanılabilir' artık packages/core/src/stock/ledger.ts'teki getOnHand (motorun kendisinin de kullandığı TEK okuma yolu, replenishment.ts:91 ile birebir aynı çağrı) ile stock_quants'tan CANLI hesaplanıyor; Risk/Kapsama/Önerilen sipariş (motorun KARARLARI) bu okumadan etkilenmiyor, hâlâ yalnızca motor çalıştıktan sonra dolar — Tur 3 P0 (uydurma '0'/'Normal') GERİ DÖNMEDİ.",
-     "measureAfter": "pnpm db:reset sonrası Tur 5 canlı ölçüm (probe-tedarik-r5.ts, 36 kural, motor hiç çalışmamış): Kullanılabilir dash 0/36 (Tur 4: 36/36), tamamı gerçek stok_quants değeri (ör. Alkalize Kakao 82, Deniz Tuzu 704,52); Risk 'Değerlendirilmedi' 36/36 (AYNI eşikte, değişmedi); Kapsama/Önerilen sipariş hâlâ '—' (motor kararı, beklenen). Ekran: artifacts/screens/satin-alma-kritik-stok/{desktop,mobile}.png."
+     "measureAfter": "pnpm db:reset sonrası Tur 5 canlı ölçüm (probe-tedarik-r5.ts, 36 kural, motor hiç çalışmamış): Kullanılabilir dash 0/36 (Tur 4: 36/36), tamamı gerçek stok_quants değeri (ör. Alkalize Kakao 82, Deniz Tuzu 704,52); Risk 'Değerlendirilmedi' 36/36 (AYNI eşikte, değişmedi); Kapsama/Önerilen sipariş hâlâ '—' (motor kararı, beklenen). Ekran: artifacts/screens/satin-alma-kritik-stok/{desktop,mobile}.png.",
+     "recheckedRound5": "Tur 5 yeniden olcum: 'Kullanilabilir' dash 0/36, uniq 32/36 gercek stok degeri (82, 257, 704,52 ...). KAPALI kalir. Ancak ayni bulgunun metninde gecen Kapsama/Onerilen siparis/Risk kismi hala gecerli -> ayri ve olculebilir bir bulgu olarak tedarik-kritik-stok-10 acildi (ayni bulguyu yeniden acmak yerine)."
     }
    ]
   },
   "/satin-alma/onay-kuyrugu": {
-   "round": 4,
+   "round": 5,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
+    5,
     5,
     4,
-    4
+    5,
+    5,
+    5,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5
    ],
-   "total": 49,
+   "total": 58,
    "verdict": "KAZANAN: Linear (fark 8)",
-   "scoreNotes": "K3 3->4: Tur 3 bulgusu kapandi -- kart 1118/1200 = 0,93 (tam genislik satir yigini). Dikeyde bosluk kaldi ama tek bekleyen taslak oldugu icin bu veri kaynakli, puanlanmadi. Diger kriterlerde olculebilir degisiklik yok; K4 4'te kalir cunku --primary uc ayri anlam tasiyor (yeni bulgu -06), K1 4'te kalir cunku kart govdesi 14/13 bolunmus + 16px tek-seferlik tutar (yeni bulgu -07).",
+   "scoreNotes": "kriter 1: 4->5 (onay-07 kapandi: main icinde gorunur pureSizeCount=4, pureSizes [24,14,13,12] -- referans rota /satin-alma/siparisler ile birebir; 16px tek-seferlik para kademesi yok). kriter 2: 4->5 (onay-05 kapandi: kart 1152px / main 1200px = 0,96; kart ici dikey ritim 8/12/16, bolumler hairline ile ayrik). kriter 4: 4->5 (onay-06 kapandi: --primary arka planli gorunur eleman sayisi 1, yalnizca 'Onayla'; secili kart notr dolgu ile isaretleniyor). kriter 9: 4->5 (onay-08 kapandi: 390px'te belge no baglantisi 109x44; Reddet/Duzenle/Onayla 44px; yatay tasma yok; klavye ipucu seridi mobilde gizli). kriter 5/6/8/11/12: 4->5 -- bu bes kriterin Tur 4'teki 4 puani, o turda ACIK olan 05/06/07/08 bulgularinin yan etkisiydi (376px dar kart -> anatomi/tutarlilik; 16px tek-seferlik para -> rakam sunumu; primary'nin uc anlami -> anti-ERP). Dordu de olcumle kapandi: kart anatomisi hairline ayrac + sag hizali tabular-nums, para 2 ondalik + 'KG' mono birim, klavye kisayollari (j/k/a/r/e) gorunur ipucu seridiyle, tablo/rozet/buton olcegi siparisler ile ayni, kutu icinde kutu yok. kriter 3: 4 (tek bekleyen taslak var; kart 264px -- Linear triyaj kutusu ayni bilgiyi ~2 satirda gosterirdi, gerekce satiri + alt bilgi ayri satirlarda). kriter 7: 4 (EmptyState ikon+metin+eylem kodda dogrulandi; yukleniyor/hata durumu bu turda olculmedi -> 5 verilmedi).",
    "open": [],
    "closed": [
     {
@@ -145,7 +188,8 @@
      "verifiedBy": "approval-queue-list.tsx: kart ızgarası (`sm:grid-cols-2 xl:grid-cols-3`) tam genişlik tek sütunlu istiflenmiş satırlara (`flex flex-col gap-3`) çevrildi — kart sayısı azken (günün büyük kısmı) sütunlara bölünüp boşluk üretmiyor.",
      "measureAfter": "Playwright bounding box, 1440x900 (satin_alma hesabı, 1 bekleyen taslak): main {w:1200, left:240, right:1440}, kart {w:1152, left:264, right:1416} → oran 1152/1200=0,96 (hedef >=0,45, >=0,92 tam genişlik eşiğini de geçiyor). Ekran: artifacts/screens/satin-alma-onay-kuyrugu/{desktop,mobile}.png.",
      "reverifiedRound": 4,
-     "reverify": "Tur 4 yeniden olcum (probe-tedarik-r4.approval): main 1200px, kart 1118px -> oran 0,93 (hedef >=0,45). KAPALI kalir."
+     "reverify": "Tur 4 yeniden olcum (probe-tedarik-r4.approval): main 1200px, kart 1118px -> oran 0,93 (hedef >=0,45). KAPALI kalir.",
+     "recheckedRound5": "Tur 5 yeniden olcum (ekran goruntusu 1440x900): kart tam genislikte, sag kenari toolbar/baslik ile ayni. KAPALI."
     },
     {
      "id": "tedarik-onay-06",
@@ -158,7 +202,8 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "approval-queue-list.tsx: seçili kart artık `border-primary ring-primary` DEĞİL, nötr `border-foreground/15 bg-accent/60` (ring-ring DENENMEDİ — bu temada --ring, --primary ile AYNI yeşile eşit, globals.css:98/136, yalnızca sınıf adı değişip piksel rengi aynı kalırdı); Sparkles ('AI taslağı') ikonu text-muted-foreground'a indi. --primary artık yalnızca 'Onayla' butonunda.",
-     "measureAfter": "Tur 5 canlı ölçüm (computed color karşılaştırması, 1440x900, satin_alma): --primary'nin çözümlenmiş rengiyle (oklch(0.55 0.16 152)) eşleşen main içi eleman sayısı = 1 (yalnızca BUTTON 'Onayla') — hedef =1 karşılandı. Ekran: artifacts/screens/satin-alma-onay-kuyrugu/{desktop,mobile}.png (seçili kart artık gri, yeşil yalnızca Onayla butonunda)."
+     "measureAfter": "Tur 5 canlı ölçüm (computed color karşılaştırması, 1440x900, satin_alma): --primary'nin çözümlenmiş rengiyle (oklch(0.55 0.16 152)) eşleşen main içi eleman sayısı = 1 (yalnızca BUTTON 'Onayla') — hedef =1 karşılandı. Ekran: artifacts/screens/satin-alma-onay-kuyrugu/{desktop,mobile}.png (seçili kart artık gri, yeşil yalnızca Onayla butonunda).",
+     "recheckedRound5": "Tur 5 yeniden olcum: --primary (oklch(0.55 0.16 152)) arka planli gorunur eleman sayisi = 1 (BUTTON 'Onayla'). KAPALI."
     },
     {
      "id": "tedarik-onay-07",
@@ -171,7 +216,8 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "approval-queue-list.tsx: kart başlığı (docNo/tedarikçi/kalem sayısı) 14px'ten 13px'e indi (kalem satırı/AI gerekçesiyle AYNI gövde kademesi); kart tutarı text-base(16/600) -> text-[13px] font-semibold (modülün liste-tutarı kademesi, /satin-alma/siparisler grandTotal sütunuyla aynı); kbd klavye ipuçları text-[10px] -> boyutsuz (çevredeki text-xs/12px'i devralır, ayrı bir kademe açmaz).",
-     "measureAfter": "Tur 5 canlı ölçüm (main içi görünür yaprak eleman font-size/weight, 1440x900): pureSizeCount=4, pureSizes=[24,14,13,12] — /satin-alma/siparisler'in referans 4 boyutuyla AYNI (hedef <=4 karşılandı); 16px tek-seferlik boyut kalmadı."
+     "measureAfter": "Tur 5 canlı ölçüm (main içi görünür yaprak eleman font-size/weight, 1440x900): pureSizeCount=4, pureSizes=[24,14,13,12] — /satin-alma/siparisler'in referans 4 boyutuyla AYNI (hedef <=4 karşılandı); 16px tek-seferlik boyut kalmadı.",
+     "recheckedRound5": "Tur 5 yeniden olcum: pureSizeCount=4, pureSizes [24,14,13,12]. KAPALI."
     },
     {
      "id": "tedarik-onay-08",
@@ -184,12 +230,13 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "approval-queue-list.tsx: PO belge no bağlantısı `inline-flex max-sm:min-h-11 max-sm:items-center max-sm:-my-3` aldı (replenishment-panel.tsx'teki checkbox kalıbıyla aynı teknik — kök yalnızca dokunma hedefini büyütür, çevre satır boyu korunur).",
-     "measureAfter": "Tur 5 canlı ölçüm (390x844): poLink {w:109, h:44} (Tur 4: h:20) — hedef >=44 karşılandı. Onayla/Düzenle/Reddet butonları h:44 korunuyor (measure-tedarik-r5/satin-alma-onay-kuyrugu.mobile.json)."
+     "measureAfter": "Tur 5 canlı ölçüm (390x844): poLink {w:109, h:44} (Tur 4: h:20) — hedef >=44 karşılandı. Onayla/Düzenle/Reddet butonları h:44 korunuyor (measure-tedarik-r5/satin-alma-onay-kuyrugu.mobile.json).",
+     "recheckedRound5": "Tur 5 yeniden olcum (390x844): measure touchTargetsBelow44 icinde yalnizca etkilesimsiz breadcrumb span'i var; kart eylemleri ve belge no baglantisi 44px. KAPALI."
     }
    ]
   },
   "/satin-alma/siparisler": {
-   "round": 4,
+   "round": 5,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -208,7 +255,7 @@
    ],
    "total": 57,
    "verdict": "KAZANAN: Plantero (57 = 57, hicbir kriter < 4, acik P0/P1 yok)",
-   "scoreNotes": "Delta yok, tum olcumler yeniden alindi: sw=cw=1440 (tasma 0), 16 satir x 36px, tutar sutunu sag hizali + tabular (16/16 tam deger), satir hover changed=true, gorunur 4 font boyutu (24/14/13/12 -- modulun en disiplinli olcegi), 390px'te 16 kart x 63,5px tasmasiz, dokunma hedefi ihlali yok. K6 4 (sabit): KPI seridi 0 ondalik ('₺47.160') iken tablo 2 ondalik ('₺4.620,00') -- KpiCard sozlesmesi, module:'shell'. Iki P2 kayda gecti (bos baslikli siralanabilir sutun, tarih hucrelerinde tabular-nums yok) -- kazanmayi engellemez.",
+   "scoreNotes": "Tur 4 puanlari korunuyor (57 = Linear referansi). Yeniden olcum: scroller sw=cw=1152 (tasma yok), 16 satir x 36px, --primary arka planli eleman = 1 ('Yeni siparis'), pureSizes [24,14,13,12], 390px'te kart 63,5px ve tap detaya gidiyor (/satin-alma/siparisler/<id>), touchTargetsBelow44 yalnizca etkilesimsiz breadcrumb. kriter 4: 4 korunuyor (ekranda notr + yesil (primary buton + AI Sparkles ikonu) + amber (Onay bekliyor) + mavi (Tedarikciye gonderildi) = 4 ton; sinirda). kriter 6: 4 korunuyor (ortak KpiCard.isStrip 0 ondalik basiyor: KPI '₺47.160' vs tablo '₺4.620,00' -- module:'shell' kapsaminda). kriter 7: 4 korunuyor (bu turda bos/yukleniyor/hata durumu yeniden olculmedi, gerekcesiz yukseltme yapilmadi).",
    "open": [],
    "closed": [
     {
@@ -237,12 +284,13 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "orders-table.tsx: ayrı, başlıksız+sıralanabilir 'ai' sütunu kaldırıldı; Sparkles işareti zaten sıralanamayan 'Sipariş no' hücresine (docNo yanına, aria-label='AI taslağı') taşındı — ayrıca mobilde de artık görünür (önceden mobile:'hidden'). 'Beklenen tarih'/'Sipariş tarihi' hücreleri `tabular-nums` aldı.",
-     "measureAfter": "Tur 5 canlı ölçüm (1440x900): thead'de boş metinli th sayısı = 0 (Tur 4: 1); 16/16 tarih hücresinde fontVariantNumeric='tabular-nums' (Tur 4: 'normal'). Ekran: artifacts/screens/satin-alma-siparisler/{desktop,mobile}.png (PO-2026-000007/000008 satırlarında Sparkles artık docNo yanında, mobilde de görünür)."
+     "measureAfter": "Tur 5 canlı ölçüm (1440x900): thead'de boş metinli th sayısı = 0 (Tur 4: 1); 16/16 tarih hücresinde fontVariantNumeric='tabular-nums' (Tur 4: 'normal'). Ekran: artifacts/screens/satin-alma-siparisler/{desktop,mobile}.png (PO-2026-000007/000008 satırlarında Sparkles artık docNo yanında, mobilde de görünür).",
+     "recheckedRound5": "Tur 5 yeniden olcum: thead'de bos metinli th = 0; 7/7 baslik metinli; tarih hucreleri tabular-nums. KAPALI."
     }
    ]
   },
   "/satin-alma/siparisler/[id]": {
-   "round": 4,
+   "round": 5,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -261,19 +309,67 @@
    ],
    "total": 51,
    "verdict": "KAZANAN: Stripe (fark 5)",
-   "scoreNotes": "K6 3->5: Tur 3 bulgusu kapandi -- KDV 2/2 satirda '%20' (ham 4 ondalik yok), aritmetik canli dogrulandi (80 x 690,00 = 55.200,00; 60 x 650,00 = 39.000,00; ara toplam 94.200,00; KDV 18.840,00 = %20; genel toplam 113.040,00), para 2 ondalik + tabular + sag hizali. K1 4'te kalir: gorunur 8 ayri font boyutu ve ayni toplam uc farkli vurguda (20/600, 15/600, 11/400) -- yeni bulgu -05. Diger kriterlerde delta yok.",
+   "scoreNotes": "kriter 1: 4 korunuyor -- po-detay-05 KISMEN duzeldi ama hedef karsilanmadi: gorunur ayri font boyutu 8->7 (hedef <=6); 15px kademesi kalkti ve 'Genel toplam' 13/600'e indi, fakat ayni sayi ('₺113.040,00') hala DORT ayri vurguyla basiliyor (20/600 sayfa basligi, 13/600 belge sonu, 13/400 'Alis faturalari' karti, 11/400 belge zinciri karti). kriter 11: 4 korunuyor; yeni olcum bir tutarsizlik gosteriyor (po-detay-07) ama kosul Tur 4'te de vardi, gerekcesiz dusus yapilmadi -- bulgu olarak acildi. kriter 2: 4 korunuyor (belge zinciri kartlarinin belge no taban cizgileri hizasiz: PO karti top=266, PINV/GR top=258 -> 8px; po-detay-08). kriter 3: 4 (satir yuksekligi 56px, hedef 36-40; hucrede urun adi + SKU ust uste). kriter 5/6: 5 korunuyor (scroller sw=cw, hairline ayrac, sag hizali tabular-nums; po-detay-04 KDV '%20' ve po-detay-06 bos 'Beklenen tarih' sutunu KAPALI dogrulandi). Yakinsama (kural 7): rota 51 < 56 oldugu icin 4 puanli kriterlerden 3, 4 ve 9 icin de olculebilir bulgu acildi (po-detay-09/10/11). Acik bulgularin tamami kapandiginda beklenen puan: kriter 1 (05) 4->5, kriter 2 (08) 4->5, kriter 3 (09) 4->5, kriter 4 (10) 4->5, kriter 9 (11) 4->5, kriter 11 (07) 4->5 = 57 >= 56.",
    "open": [
     {
      "id": "tedarik-po-detay-05",
      "criterion": 1,
      "severity": "P1",
-     "text": "Modulun en dagilmis tip olcegi burada: gorunur 8 ayri font boyutu / 12 boyut-agirlik cifti var ve AYNI sayi ('₺113.040,00') tek ekranda uc farkli vurguyla basiliyor -- sayfa basligindaki 'Toplam (KDV dahil)' 20/600, belge sonu 'Genel toplam' 15/600, belge zinciri kartinda 11/400. Stripe'in fatura sayfasi belge toplamini TEK bir yerde buyutur; burada okuyucu hangi toplamin otorite oldugunu tipografiden cikaramiyor.",
-     "measure": "Gorunur yaprak eleman font olcumu (main, rect>0, 1440x900): 24/600 x1, 20/600 x1 ('₺113.040,00'), 15/600 x1 ('₺113.040,00'), 14/400 x4, 13/400 x21, 13/500 x6, 13/600 x2, 12/400 x2, 12/500 x9, 11/400 x9 ('₺113.040,00' dahil), 11/500 x4, 10/500 x3 = 8 ayri boyut. Karsilastirma: /satin-alma/siparisler 4, /satin-alma/siparisler/yeni 4.",
-     "target": "Ayri gorunur font boyutu sayisi <= 6 (h1 24 / toplam 20 / govde 13 / etiket 11-12 / rozet 10) ve belge toplami tek bir vurgu kademesinde kalsin: ya sayfa basligindaki 20/600 ya da belge sonu ozeti buyutulsun, digeri govde kademesine (13px) insin; 15px kademesi kaldirilsin.",
-     "file": "apps/web/src/app/(app)/satin-alma/siparisler/[id]/page.tsx (baslik toplami 20/600), apps/web/src/modules/purchasing/components/order-lines-table.tsx (belge sonu ozet blogu 15/600)",
      "openedRound": 4,
-     "measureAfter": "Tur 5 canlı ölçüm (PO-2026-000003, main içi görünür yaprak eleman font-size, 1440x900): pureSizeCount=7, pureSizes=[24,20,14,13,12,11,10] (Tur 4: 8). Yapılan: page.tsx'teki 'Genel toplam' 15/600 -> 13/600'e indirildi (15px kademesi TAMAMEN kaldırıldı, belge toplamı artık YALNIZCA sayfa başlığındaki 20/600'de); durum/meta satırı text-sm(14px) -> text-[13px] (gövdeyle birleşti). Kalan 7. boyutun kaynağı MODÜL DIŞI iki paylaşılan bileşen: PageHeader'ın description'ı (page-header.tsx:33, text-sm=14px, her PageHeader kullanan sayfada var) ve DocumentChain'in ChainCard'ı (document-chain.tsx, tip rozeti 10px + etiket/tarih/tutar 11px, belge zinciri gösteren HER detay sayfasında var) — modül dosyalarında (page.tsx, order-lines-table.tsx) BAŞKA hiçbir 14/11/10 kaynağı kalmadı. Kural 2 gereği bu iki ortak bileşen burada değiştirilmedi (bkz. rapor 'Ortak bileşen talepleri'); TAM kapanma (<=6) PageHeader ve/veya DocumentChain'in kendi tip ölçeğini konsolide etmesini gerektiriyor. Kısmen açık bırakıldı — modül tarafında ulaşılabilir maksimuma (8->7, 15px kaldırıldı, toplam TEK kademede) ulaşıldı.",
-     "partialClosure": true
+     "text": "Modulun en dagilmis tip olcegi hala burada: gorunur 7 ayri font boyutu var (kardes rotalarda 4) ve belge toplami ('₺113.040,00') tek ekranda DORT ayri vurguyla basiliyor -- sayfa basligi 20/600, belge sonu 'Genel toplam' 13/600, 'Alis faturalari' karti 13/400, belge zinciri karti 11/400. Okuyucu hangi toplamin otorite oldugunu tipografiden cikaramiyor. Tur 4'ten iyilesme var (8 boyut -> 7; 15px kademesi kalkti) ama hedef karsilanmadi.",
+     "measure": "scripts/probe-tedarik-r5c.ts (1440x900, PO-2026-000003): pureSizeCount=7, pureSizes [24,20,14,13,12,11,10]; cift dagilimi {13/400:22, 11/400:9, 12/500:8, 13/500:6, 11/500:4, 13/600:3, 10/500:3, 12/400:2, 24/600:1, 20/600:1, 14/400:1}. '113.040,00' iceren gorunur yaprak eleman: 5 adet, {20/600, 11/400, 11/400, 13/600, 13/400}.",
+     "target": "Ayri gorunur font boyutu <=6 VE belge toplami tek bir vurgu kademesinde: 20/600 (sayfa basligi) korunsun, 'Genel toplam' ve 'Alis faturalari' govde kademesine (13/400) insin -> '113.040,00' icin ayri size/weight cifti sayisi <=3.",
+     "file": "apps/web/src/app/(app)/satin-alma/siparisler/[id]/page.tsx (baslik toplami 20/600 + alt kartlar), apps/web/src/modules/purchasing/components/order-lines-table.tsx (belge sonu ozet blogu)"
+    },
+    {
+     "id": "tedarik-po-detay-07",
+     "criterion": 11,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Modulde iki farkli tablo basligi kalibi var: bu sayfadaki satir tablosunun 7 basliginin 7'si text-transform:uppercase ('URUN', 'TUTAR (KDV HARIC)'), /satin-alma/siparisler ve /satin-alma/tedarikciler'in basliklarinin 7/7 ve 9/9'u ise text-transform:none ('Siparis no', 'Tedarikci'). Ustelik uppercase basliklar letter-spacing:normal ile basiliyor -- buyuk harf mikro-etiket tracking olmadan sikisik okunuyor. Kriter 11 'ayni bilesen ayni gorunur' diyor.",
+     "measure": "scripts/probe-tedarik-r5c.ts: poDetay.headers 7/7 {tt:'uppercase', size:12, ls:'normal'}; siparisler.headers 7/7 {tt:'none', size:12}; tedarikciler basliklari da sentence-case.",
+     "target": "Modul genelinde tek kalip: 3/3 tabloda thead text-transform ayni deger (tercihen 'none', 12px, muted) -- ya da uppercase kalacaksa 11px + letter-spacing >= 0.04em ve ucunde de ayni.",
+     "file": "apps/web/src/modules/purchasing/components/order-lines-table.tsx (thead th sinifi)"
+    },
+    {
+     "id": "tedarik-po-detay-08",
+     "criterion": 2,
+     "severity": "P2",
+     "openedRound": 5,
+     "text": "Belge zinciri kartlarinin belge numaralari ayni taban cizgisinde degil: 'SATIN ALMA SIPARISI' etiketi iki satira sardigi icin PO kartinin belge no'su 8px asagida basliyor, FATURA ve MAL KABUL kartlarininki yukarida. Uc kart yan yana duruyor ama okuma cizgileri kayik.",
+     "measure": "scripts/probe-tedarik-r5c.ts chainCards (1440x900): PO-2026-000003 top=266, PINV-2026-000003 top=258, GR-2026-000003 top=258 -> 8px fark.",
+     "target": "3/3 zincir kartinda belge no elemaninin top degeri arasindaki fark <= 2px (etiket satirina sabit min-height ya da iki satirlik rezerv).",
+     "file": "apps/web/src/components/document-chain.tsx (module:'shell' degil -- yalnizca bu modulde iki satira saran etiket metni kullaniliyor; cozum etiket kisaltmasi ya da sabit etiket yuksekligi)"
+    },
+    {
+     "id": "tedarik-po-detay-09",
+     "criterion": 3,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Satir tablosunun satirlari 56-57px: her hucrede urun adi ve SKU alt alta yiginli (py-2.5 + iki satirlik icerik). Puan karti kriter 3 tablo satiri icin 36-40px istiyor; ayni moduldeki /satin-alma/siparisler ve /satin-alma/tedarikciler 36px'te. Iki kalemlik bir belge 113px yer kapliyor, 10 kalemlik bir belge ekranin tamamini yiyor.",
+     "measure": "scripts/probe-tedarik-r5k.ts (1440x900, PO-2026-000003): tbody tr yukseklikleri [57, 56]. Karsilastirma: /satin-alma/siparisler 36/36/36, /satin-alma/tedarikciler 36/36/36 (measure-tedarik-r5b).",
+     "target": "tbody tr yuksekligi 36-40px (SKU'yu urun adiyla ayni satirda muted olarak ver ya da yalnizca title/tooltip'te tut).",
+     "file": "apps/web/src/modules/purchasing/components/order-lines-table.tsx:56 civari (td px-3 py-2.5 + iki satirlik urun hucresi)"
+    },
+    {
+     "id": "tedarik-po-detay-10",
+     "criterion": 4,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Basari yesili (--success) bu ekranda IKI ayri anlam tasiyor: hem 'MAL KABUL / Tamamlandi' durum rozeti hem de 'Alinan' sutunundaki 80 ve 60 MIKTARLARI ayni renkte basiliyor; hemen yanindaki 'Faturalanan' sutununun ayni 80/60 degerleri notr. Kriter 4 'renk yalnizca anlam tasir; yesil yalnizca basari/vurgu ikisinden biri' diyor -- burada okuyucu yesil rakami durum mu yoksa deger mi diye ayirt edemiyor.",
+     "measure": "scripts/probe-tedarik-r5k.ts (1440x900): oklch(0.6 0.16 152) rengini tasiyan gorunur yaprak eleman = 3 -> ['Tamamlandi' (rozet), '80' (Alinan), '60' (Alinan)]. Kod: order-lines-table.tsx:56 `${receivedFull ? 'text-success' : ''}` ve :90 mobil kartta ayni kalip.",
+     "target": "--success rengini tasiyan gorunur eleman yalnizca durum rozetleri olsun (sayim: rozet disi eleman = 0). 'Tam alindi' bilgisi renk yerine tipografiyle/isaretle verilsin (or. deger notr + arkasindan kucuk bir onay glifi ya da satir sonunda 'tam' etiketi).",
+     "file": "apps/web/src/modules/purchasing/components/order-lines-table.tsx:56 (masaustu), :90 (mobil kart)"
+    },
+    {
+     "id": "tedarik-po-detay-11",
+     "criterion": 9,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "390px'te belge toplami blogu sag kenara yapisik duruyor: 'Toplam (KDV dahil)' etiketi ve 20px/600 tutar left=249 / right=374, yani 390px'lik ekranin sag ucundaki 125px'lik bir seritte -- solunda 249px bos alan var ve ustundeki baslik/tedarikci satirlari sola hizali. Mobilde bir belgenin en onemli sayisi ne sola hizali kolonla ne de tam genislikle iliskili; asili duruyor. (Sebep: PageHeader'in eylem yuvasi masaustu icin items-end ile sagda tutulmus, mobilde de ayni kaliyor.)",
+     "measure": "scripts/probe-tedarik-r5k.ts (390x844): 'Toplam (KDV dahil)' {left:249, right:374, textAlign:'right'}, '₺113.040,00' {left:249, right:374, size:20}; main {left:0, right:390}. Ekran: artifacts/screens/satin-alma-siparisler-c06291c9-ef1a-49e2-9cf0-b03f617f485b/mobile.png.",
+     "target": "390px'te toplam blogu ya sola hizalansin (left <= 24, sayfa govdesiyle ayni kolon) ya da tam genislikte bir seride otursun (right-left >= 320); metin hizasi sayfanin geri kalaniyla tutarli olsun.",
+     "file": "apps/web/src/app/(app)/satin-alma/siparisler/[id]/page.tsx:39 (flex w-full flex-col items-end ... sm:flex-row)"
     }
    ],
    "closed": [
@@ -305,7 +401,8 @@
      "verifiedBy": "order-lines-table.tsx: masaüstü 'KDV' sütunu ve mobil satır kartı artık `%{r.line.vatRate}` (ham numeric(18,4)) yerine `formatPct(r.line.vatRate, 2)` (`/lib/format.ts`) kullanıyor — gereksiz sondaki sıfırlar kırpılır.",
      "measureAfter": "PO-2026-000003 (Suklaroz %20, Stevya %20) canlı ölçüm: masaüstü 'KDV' sütunu ve mobil 'KDV hariç · %20' — /%\\d+[.,]\\d{3,}/ eşleşmesi 0 (önceden 2/2 satırda '%20.0000'). Ekran: artifacts/screens/satin-alma-siparisler-4967c061-354e-4fe8-b043-a1614d742115/{desktop,mobile}.png.",
      "reverifiedRound": 4,
-     "reverify": "Tur 4 yeniden olcum (probe-tedarik-r4.poDetail): KDV sutunu 2/2 satirda '%20', mobil kart 'KDV haric · %20', sayfada /%\\d+[.,]\\d{3,}/ eslesmesi 0. KAPALI kalir."
+     "reverify": "Tur 4 yeniden olcum (probe-tedarik-r4.poDetail): KDV sutunu 2/2 satirda '%20', mobil kart 'KDV haric · %20', sayfada /%\\d+[.,]\\d{3,}/ eslesmesi 0. KAPALI kalir.",
+     "recheckedRound5": "Tur 5 yeniden olcum (PO-2026-000003): 'KDV' sutunu '%20', mobil kartta 'KDV haric · %20'; /%\\d+[.,]\\d{3,}/ eslesmesi 0. KAPALI."
     },
     {
      "id": "tedarik-po-detay-06",
@@ -318,12 +415,13 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "order-lines-table.tsx: 'Beklenen tarih' başlığı+hücreleri artık `lines.some(expectedDate)` false iken (bugünkü tüm PO'larda satır düzeyinde hiç doldurulmuyor) TAMAMEN render edilmiyor (koşullu <th>/<td>, DataTable'ın defaultHidden'ından farklı ama aynı sonucu veren yerel çözüm — bu tablo elle yazılmış, DataTable değil). page.tsx: mal kabul bağlantısı (GR-...) `max-sm:min-h-11 max-sm:-my-3` aldı.",
-     "measureAfter": "Tur 5 canlı ölçüm (PO-2026-000003): masaüstünde 'Beklenen tarih' sütunu (başlık+hücreler) hiç render edilmiyor (hasExpectedCol=false); 390px'te GR-2026-000003 bağlantısı {w:109, h:44} (Tur 4: h:19.5) — getByRole exact locator ile doğrulandı (diğer eşleşme DocumentChain kartıydı, o zaten 44px+ idi). Ekran: artifacts/screens/satin-alma-siparisler-0b02ebc3-7cf7-4106-8765-182dd95b4387/{desktop,mobile}.png."
+     "measureAfter": "Tur 5 canlı ölçüm (PO-2026-000003): masaüstünde 'Beklenen tarih' sütunu (başlık+hücreler) hiç render edilmiyor (hasExpectedCol=false); 390px'te GR-2026-000003 bağlantısı {w:109, h:44} (Tur 4: h:19.5) — getByRole exact locator ile doğrulandı (diğer eşleşme DocumentChain kartıydı, o zaten 44px+ idi). Ekran: artifacts/screens/satin-alma-siparisler-0b02ebc3-7cf7-4106-8765-182dd95b4387/{desktop,mobile}.png.",
+     "recheckedRound5": "Tur 5 yeniden olcum: thead basliklari [Urun, Siparis, Alinan, Faturalanan, Birim fiyat, KDV, Tutar (KDV haric)] -- 'Beklenen tarih' yok. 390px'te scrollWidth=clientWidth=390. KAPALI."
     }
    ]
   },
   "/satin-alma/siparisler/yeni": {
-   "round": 4,
+   "round": 5,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -333,16 +431,16 @@
     5,
     5,
     5,
-    4,
+    5,
     4,
     5,
     5,
     5,
     4
    ],
-   "total": 56,
+   "total": 57,
    "verdict": "KAZANAN: Linear (fark 1)",
-   "scoreNotes": "K2 4->5: Tur 3 bulgusu kapandi -- urun kombobox'i 768px (sag kenar 1032) ile izgara kenarina oturdu; formda artik iki hizalama kenari var (642 alan sutunu / 1032 bolum), ucuncu kenar yok. Kalan tek olculebilir eksik K7 4: 'Henuz satir yok' bos durumunda eylem butonu yok (yeni bulgu -06) -- referansa fark tam 1 puan.",
+   "scoreNotes": "kriter 7: 4->5 (yeni-06 kapandi: 'Henuz satir yok' bos durumu ikon + baslik + aciklama + CALISAN eylem butonu tasiyor; butona basmak urun combobox popover'ini aciyor). kriter 2: 5 korunuyor (yeni-05 kapandi: productSelect right=1032 = izgara kenari; alan sutunu 642, izgara 1032 -- iki hizalama kenari disinda ucuncu yok). kriter 3: 4 (form seyrek: 1440x900'de icerik 1050px'te bitiyor, bos durum blogu ~400px; Linear'in form yogunluguna gore genis). kriter 8: 4 korunuyor (bu turda active/focus olcumu yenilenmedi, gerekcesiz yukseltme yapilmadi). kriter 12: 4 korunuyor (iki sutunlu etiketli form + bolum baslıklari standart ERP formuna yakin; hairline bolum ayraclari ve kutu olmayisi kurtariyor). Yeniden olcum: pureSizes [24,14,13,11], scroller yok, 390px'te tasma yok, touchTargetsBelow44 yalnizca etkilesimsiz breadcrumb.",
    "open": [],
    "closed": [
     {
@@ -378,7 +476,8 @@
      "verifiedBy": "order-form.tsx: 'Ürün ekle (arama ile)' komboboxunu saran `max-w-lg` (512px) kaldırıldı — kombobox artık `max-w-3xl` bölüm konteynerinin (768px) tamamını devralıyor, altındaki satır kartlarıyla aynı sağ kenarda duruyor.",
      "measureAfter": "Playwright, 1440x900 (satin_alma hesabı): supplierSelect {left:264, right:642, w:378}, warehouseSelect {left:654, right:1032, w:378}, productSelect {left:264, right:1032, w:768} — productSelect.right=1032, gridRight (1032) ile birebir (hedef 642 veya 1032 ±2px). Ekran: artifacts/screens/satin-alma-siparisler-yeni/{desktop,mobile}.png.",
      "reverifiedRound": 4,
-     "reverify": "Tur 4 yeniden olcum (measure-tedarik-r4/yeni.desktop.json touch listesi): supplierSelect w=378, warehouseSelect w=378, productSelect w=768 (sag kenar 1032 = izgara kenari). KAPALI kalir."
+     "reverify": "Tur 4 yeniden olcum (measure-tedarik-r4/yeni.desktop.json touch listesi): supplierSelect w=378, warehouseSelect w=378, productSelect w=768 (sag kenar 1032 = izgara kenari). KAPALI kalir.",
+     "recheckedRound5": "Tur 5 yeniden olcum: 'Urun ekle (arama ile)' comboboxu izgara kenarinda bitiyor (right=1032), diger alanlar 642. KAPALI."
     },
     {
      "id": "tedarik-yeni-06",
@@ -391,32 +490,84 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "order-form.tsx: 'Henüz satır yok' EmptyState'ine `action` eklendi — 'Ürün ekle' butonu, üstteki ürün kombobox'ını (`id=\"po-product-picker\"`) programatik olarak açar (yeni bir akış İCAT edilmedi, var olan tek giriş noktası tetiklenir).",
-     "measureAfter": "Tur 5 canlı ölçüm: boş durum kapsayıcısında buton sayısı = 1 (Tur 4: 0); tıklama combobox popover'ını gerçekten açıyor (cmdk input DOM'da beliriyor, doğrulandı). Dokunma hedefi: masaüstü 32px (h-8, tasarım kademesiyle tutarlı), 390px'te 44px (getByRole ile ölçüldü). Ekran: artifacts/screens/satin-alma-siparisler-yeni/{desktop,mobile}.png."
+     "measureAfter": "Tur 5 canlı ölçüm: boş durum kapsayıcısında buton sayısı = 1 (Tur 4: 0); tıklama combobox popover'ını gerçekten açıyor (cmdk input DOM'da beliriyor, doğrulandı). Dokunma hedefi: masaüstü 32px (h-8, tasarım kademesiyle tutarlı), 390px'te 44px (getByRole ile ölçüldü). Ekran: artifacts/screens/satin-alma-siparisler-yeni/{desktop,mobile}.png.",
+     "recheckedRound5": "Tur 5 yeniden olcum (ekran goruntusu + DOM): bos durumda 'Urun ekle' butonu var. KAPALI."
     }
    ]
   },
   "/satin-alma/tedarikciler": {
-   "round": 4,
+   "round": 5,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
+    5,
+    5,
+    4,
+    4,
+    3,
     4,
     4,
     4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
+    3,
     5,
     4,
     4
    ],
    "total": 49,
    "verdict": "KAZANAN: Linear (fark 8)",
-   "scoreNotes": "K9 3->4: Tur 3 P1'i kapandi -- 6/6 switch aria-label='Beyaz liste' + 44x44, 390px'te tasma yok. K3 4'te kalir: ekranin arac cubugu (arama/filtre/sayac) hic yok ve kart izgarasi tedarikci basina ~%40 daha fazla alan harciyor (yeni bulgu -08). K1 4'te kalir: kart icinde 4 metin boyutu ve ters hiyerarsi -- alt satir (13px) metrik seridinden (12px) buyuk (yeni bulgu -09).",
-   "open": [],
+   "scoreNotes": "kriter 1: 4->5 (tedarikciler-09/10 kapandi: pureSizeCount=4, pureSizes [24,14,13,12] -- kardes rotalarla birebir; kart ici ters hiyerarsi kavrami kalkti, tum hucreler 13px). kriter 2: 4->5 (tedarikciler-08 kapandi: DataTable toolbar + 36px satir kalibi, sayfa kenari 24px, toolbar-tablo araligi 16px -- siparisler ile ayni ritim). kriter 5: 4->3 GERILEME (Tur 4'teki kart izgarasi tabloya cevrildi ve tablo kabini asiyor: sw 1205 > cw 1152; 'Acik tutar' sutunu 6/6 satirda 53px kirpik, '₺32.760,00' ekranda '₺32.7' olarak bitiyor -- para hucresinin rakam ortasindan kesilmesi yanlis okuma riski). kriter 9: 4->3 GERILEME (Tur 3'te 44x44 olarak dogrulanan mobil 'Beyaz liste' anahtari artik 'hidden md:block' kabin icinde 0x0; 390px'te ekranin tek yazma eylemi YOK. Ayrica kartta 9 sutunun 6'si dusuyor). kriter 3: 4 korunuyor (masaustu 36px satir + 6 kayit dogru; mobil kart 4 karar metrigini kaybetti -> 5 verilemez). kriter 4: 4 korunuyor (6 adet --primary arka planli switch izi olculdu; kosul Tur 4'te de vardi, gerekcesiz dusus yapilmadi -> tedarikciler-13 olarak acildi). kriter 6: 4 (MoneyCell tabular-nums + 2 ondalik + sifirlar muted dogru; kirpma kriter 5'e yazildi, cift ceza verilmedi). kriter 11: 4 (masaustu artik modulun diger iki listesiyle ayni; mobil kart eslesmesi bozuk). kriter 12: 4 (kirpik son sutun + 6'li doygun yesil anahtar sutunu ERP kokusu birakiyor). Yakinsama (kural 7): 49 < 57. Acik bulgular kapandiginda beklenen puan: kriter 5 (11) 3->5, kriter 6 (11) 4->5, kriter 9 (12) 3->5, kriter 3 (12) 4->5, kriter 11 (12) 4->5, kriter 4 (13) 4->5, kriter 8 (15) 4->5, kriter 12 (11+14) 4->5 = 59 >= 57.",
+   "open": [
+    {
+     "id": "tedarik-tedarikciler-11",
+     "criterion": 5,
+     "severity": "P0",
+     "openedRound": 5,
+     "text": "Tablo kabini asiyor ve PARA sutunu rakam ortasindan kesiliyor: sabit meta.width toplami 1205px, kap 1152px. 'Acik tutar' sutunu 6/6 satirda 53px kirpik -- '₺32.760,00' ekranda '₺32.7', '₺14.400,00' ise '₺14.4' olarak bitiyor. Kirpilmis bir tutar bos hucreden daha kotudur: yanlis sayi okunur. Baslik da 'Aç…' olarak kesiliyor. Tur 4'te bu ekran kart izgarasiydi, tasma yoktu -- tabloya gecisle gelen gerileme.",
+     "measure": "scripts/probe-tedarik-r5c/r5d.ts (1440x900, satin_alma): main .overflow-auto {sw:1205, cw:1152, over:53}; thead 'Acik tutar' {left:1339, right:1469}, scroller right=1416; tbody son hucre 6/6 satirda right=1469 -> clippedPx=53. Ekran: artifacts/screens/satin-alma-tedarikciler/desktop.png.",
+     "target": "1440x900'de scroller sw <= cw (over=0) ve 6/6 satirda son para hucresinin clippedPx <= 0 (tam tutar gorunur). Sabit genislikleri dusur (Tedarik suresi 120 / Kalite 90 / Zamaninda 104 / Urun 80 / Acik siparis 100 / Acik tutar 130 toplami kabin disina cikiyor) ya da az kullanilan sutunlari defaultHidden yap.",
+     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx (columns meta.width), apps/web/src/components/data-table/data-table.tsx:342"
+    },
+    {
+     "id": "tedarik-tedarikciler-12",
+     "criterion": 9,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "390px'te ekranin TEK yazma eylemi kayboldu ve karar metrikleri dustu. 'Beyaz liste' anahtari 'hidden md:block' kapsayicisinin icinde kaldigi icin mobilde 0x0 render ediliyor -- Tur 3'te ayni anahtar 6/6 kartta 44x44 ve aria-label'li olarak dogrulanmisti (tedarikciler-06), bu bir gerileme. Ayrica 9 sutunun 6'si mobil kartta yok: kartta yalnizca ad + kod + acik siparis adedi + tutar var; ekranin var olma sebebi olan Tedarik suresi / Kalite / Zamaninda / Urun sutunlarinin hepsi meta.mobile:'hidden'. Karta tap dogru sekilde /ana-veri/cariler/<id>'ye gidiyor (dogrulandi), yani sorun gezinme degil, bilgi ve eylem kaybi.",
+     "measure": "scripts/probe-tedarik-r5d.ts (390x844): [role=switch] 6/6 -> {w:0, h:0}, hiddenBy='contain-paint hidden md:block'. probe-tedarik-r5c.ts tedarikcilerMobile: 6/6 kart metni '<ad><kod> · <acikSiparis>₺<tutar>' -- Kalite/Zamaninda/Tedarik suresi/Urun degerleri kartta yok; kart yuksekligi 64px.",
+     "target": "390px'te [role=switch] 6/6 gorunur ve dokunma alani >= 44x44; mobil kart meta yuvasinda en az iki karar metrigi (Kalite ve Zamaninda ya da Tedarik suresi) gorunsun.",
+     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx (whitelisted/leadTime/quality/onTime kolonlarinin meta.mobile degerleri), apps/web/src/components/data-table/mobile-cards.tsx"
+    },
+    {
+     "id": "tedarik-tedarikciler-13",
+     "criterion": 4,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Ekranda birincil eylem yok ama --primary rengi ALTI kez basiliyor: 'Beyaz liste' sutunundaki 6 anahtarin izi tam doygunlukta primary yesil ve ekranin en gurultulu kutlesi. Kardes rotalarda ayni renk tek bir sey demek (siparisler: 'Yeni siparis' butonu; onay kuyrugu: 'Onayla' butonu -- her ikisinde de olculen primary-arka-planli eleman sayisi 1; tedarik-onay-06 kapatilirken kabul edilen esik de buydu). Burada vurgu rengi bir eylem degil, bir veri durumu tasiyor.",
+     "measure": "scripts/probe-tedarik-r5c.ts (1440x900): --primary=oklch(0.55 0.16 152); main icinde bu arka plani tasiyan gorunur eleman sayisi = 6 (6 SPAN, switch izi). Karsilastirma: /satin-alma/siparisler=1, /satin-alma/onay-kuyrugu=1, /satin-alma/kritik-stok=1.",
+     "target": "main icinde --primary arka planli gorunur eleman sayisi <= 1. Beyaz liste durumu doygun olmayan bir kademeyle gosterilsin (ornegin StatusBadge / --success arka plani %15 opaklik ya da isaret glifi), anahtar doygun primary'yi yalnizca odakta kullansin.",
+     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx (WhitelistCell), apps/web/src/components/ui/switch.tsx (data-[state=checked]:bg-primary)"
+    },
+    {
+     "id": "tedarik-tedarikciler-14",
+     "criterion": 12,
+     "severity": "P2",
+     "openedRound": 5,
+     "text": "390px'te kart alt satirinin metrik grubu yetim ayracla basliyor ve ilk sayi etiketsiz: 6/6 kartta sag grup '· 0 ₺0,00' / '· 1 ₺32.760,00' seklinde -- '·' ayraci solunda hicbir kardesi olmadan bir ayrac gorevi gormeye calisiyor, '0' ise neyin sayisi oldugu belirtilmeden duruyor (masaustunde sutun basligi 'Acik siparis' soyluyordu). Tur 5'te kapatilan tedarikciler-10 satirin TAMAMININ '·' ile baslamamasini olcmustu; grubun kendi ici hala ayracla basliyor.",
+     "measure": "scripts/probe-tedarik-r5c.ts tedarikcilerMobile.startsWithDot: 6/6 -> 'S-000005 · 0₺0,00' vb.; DOM: .mobile-card-subtitle-row icinde <span aria-hidden> · </span> metrik grubunun ILK cocugu. Ekran: artifacts/screens/satin-alma-tedarikciler/mobile.png.",
+     "target": "Ayrac yalnizca iki metrik ARASINDA render edilsin (grup ilk cocugu ayrac olmasin, 6/6) ve ilk metrik etiketli olsun ('0 acik siparis').",
+     "file": "apps/web/src/components/data-table/mobile-cards.tsx (meta yuvasi ayrac birlestirme), apps/web/src/modules/purchasing/components/suppliers-table.tsx (openPoCount cell)"
+    },
+    {
+     "id": "tedarik-tedarikciler-15",
+     "criterion": 8,
+     "severity": "P2",
+     "openedRound": 5,
+     "text": "Masaustunde 'Beyaz liste' anahtari 24x14px ve daha genis bir sarmalayicisi yok (closest label yok, ebeveyn SPAN de 24x14). Modulun en kucuk etkilesim hedefi ve satir icindeki tek yazma kontrolu; satirin geri kalani ise tikladiginizda cari detayina gittigi icin isabetsiz tiklama sizi baska sayfaya goturuyor.",
+     "measure": "scripts/probe-tedarik-r5d.ts desktopSwitchHit: 2/2 ornek -> switch [24,14], wrapper SPAN [24,14].",
+     "target": "Tiklanabilir alan >= 32x32 (gorsel iz 24x14 kalabilir): anahtari en az 32x32 dolgu tasiyan bir <label>/<button> ile sarmala.",
+     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx (WhitelistCell), apps/web/src/components/ui/switch.tsx"
+    }
+   ],
    "closed": [
     {
      "id": "tedarik-tedarikciler-01",
@@ -456,7 +607,8 @@
      "verifiedBy": "suppliers-table.tsx: `Switch`e kalıcı `aria-label=\"Beyaz liste\"` eklendi — görünürlükten (`hidden sm:inline`) bağımsız erişilebilir ad; görünür etiket 390px'te hâlâ gizli kalabilir.",
      "measureAfter": "Playwright, 390x844 (satin_alma hesabı, 6 tedarikçi): [role=switch] 6/6 → ariaLabel='Beyaz liste', w=h=44 (hedef: 6/6 için ariaLabel!=null KARŞILANDI). Ekran: artifacts/screens/satin-alma-tedarikciler/mobile.png.",
      "reverifiedRound": 4,
-     "reverify": "Tur 4 yeniden olcum (probe-tedarik-r4.suppliersMobile.switches): 6/6 switch aria-label='Beyaz liste', 44x44. KAPALI kalir."
+     "reverify": "Tur 4 yeniden olcum (probe-tedarik-r4.suppliersMobile.switches): 6/6 switch aria-label='Beyaz liste', 44x44. KAPALI kalir.",
+     "recheckedRound5": "Tur 5 yeniden olcum: GERILEME. 390x844'te [role=switch] 6/6 -> w=0,h=0 (hiddenBy='contain-paint hidden md:block') -- Tur 3'te 44x44 idi. Yeni bulgu tedarik-tedarikciler-12 ile takip ediliyor."
     },
     {
      "id": "tedarik-tedarikciler-07",
@@ -484,7 +636,8 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "suppliers-table.tsx: kart ızgarası tamamen kaldırıldı, ekran ortak `DataTable` ile yeniden kuruldu (arama + 'Beyaz liste' filtresi + kayıt sayacı + sütun seçici) — modülün diğer liste ekranlarıyla (kritik-stok, siparişler) AYNI bileşen/davranış.",
-     "measureAfter": "Tur 5 canlı ölçüm (1440x900): input[aria-label='Tabloda ara'] mevcut, 'Beyaz liste' filtre butonu ve '6 kayıt' sayacı görünür; satır yüksekliği 36px (hedef <=60px). Ekran: artifacts/screens/satin-alma-tedarikciler/{desktop,mobile}.png."
+     "measureAfter": "Tur 5 canlı ölçüm (1440x900): input[aria-label='Tabloda ara'] mevcut, 'Beyaz liste' filtre butonu ve '6 kayıt' sayacı görünür; satır yüksekliği 36px (hedef <=60px). Ekran: artifacts/screens/satin-alma-tedarikciler/{desktop,mobile}.png.",
+     "recheckedRound5": "Tur 5 yeniden olcum: input[aria-label='Tabloda ara'], 'Beyaz liste' filtre butonu, '6 kayit' sayaci ve sutun secici gorunur; tbody tr yuksekligi 36px (median). KAPALI."
     },
     {
      "id": "tedarik-tedarikciler-09",
@@ -497,7 +650,8 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "suppliers-table.tsx: kart ızgarasından DataTable satırına geçişle 'alt satır büyük, metrik küçük' ters hiyerarşisi kendiliğinden ortadan kalktı — tüm hücreler artık DataTable'ın tek gövde kademesinde (13px) tabular-nums.",
-     "measureAfter": "Tur 5 canlı ölçüm (1440x900): main içi görünür pureSizeCount=4 (24/14/13/12) — /satin-alma/siparisler referansıyla AYNI; kart içi ayrı kademe kavramı artık yok (tablo hücreleri hepsi 13px)."
+     "measureAfter": "Tur 5 canlı ölçüm (1440x900): main içi görünür pureSizeCount=4 (24/14/13/12) — /satin-alma/siparisler referansıyla AYNI; kart içi ayrı kademe kavramı artık yok (tablo hücreleri hepsi 13px).",
+     "recheckedRound5": "Tur 5 yeniden olcum: pureSizeCount=4, pureSizes [24,14,13,12]. KAPALI."
     },
     {
      "id": "tedarik-tedarikciler-10",
@@ -510,7 +664,8 @@
      "openedRound": 4,
      "closedRound": 5,
      "verifiedBy": "suppliers-table.tsx: flex-wrap metrik şeridi (ayraçlı) tamamen kaldırıldı — DataTable'ın standart 2 satırlık mobil kart kalıbı (subtitle + tek metrik) kullanılıyor, sarılan/ayraçla başlayan ikinci satır senaryosu artık YAPISAL olarak oluşamıyor.",
-     "measureAfter": "Tur 5 canlı ölçüm (390x844, 6 kart): .mobile-card-subtitle-row metin akışlarının 6/6'sı '·' ile BAŞLAMIYOR (Tur 4: 6/6 başlıyordu) — kabul ölçümü karşılandı. Ekran: artifacts/screens/satin-alma-tedarikciler/mobile.png."
+     "measureAfter": "Tur 5 canlı ölçüm (390x844, 6 kart): .mobile-card-subtitle-row metin akışlarının 6/6'sı '·' ile BAŞLAMIYOR (Tur 4: 6/6 başlıyordu) — kabul ölçümü karşılandı. Ekran: artifacts/screens/satin-alma-tedarikciler/mobile.png.",
+     "recheckedRound5": "Tur 5 yeniden olcum: kartin metin akisi '·' ile BASLAMIYOR (6/6) -> kabul olcumu karsilandi, KAPALI kalir. Ancak sag metrik GRUBU hala '·' ile basliyor -> ayri bulgu tedarik-tedarikciler-14."
     }
    ]
   }

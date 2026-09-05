@@ -1,0 +1,101 @@
+{
+ "rows": [
+  57,
+  56
+ ],
+ "colors": [
+  {
+   "c": "oklch(0.552 0.016 285.9)",
+   "n": 33,
+   "sample": [
+    "Satın alma sipariş",
+    "Tatlısu Tatlandırı",
+    "Toplam (KDV dahil)",
+    "Sipariş: 05.09.202",
+    "Beklenen: 03.09.20"
+   ]
+  },
+  {
+   "c": "oklch(0.21 0.006 285.9)",
+   "n": 22,
+   "sample": [
+    "PO-2026-000003",
+    "₺113.040,00",
+    "PO-2026-000003",
+    "PINV-2026-000003",
+    "GR-2026-000003"
+   ]
+  },
+  {
+   "c": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+   "n": 1,
+   "sample": [
+    "Faturalandı"
+   ]
+  },
+  {
+   "c": "oklch(0.6 0.15 250)",
+   "n": 1,
+   "sample": [
+    "Kesildi"
+   ]
+  },
+  {
+   "c": "oklch(0.6 0.16 152)",
+   "n": 3,
+   "sample": [
+    "Tamamlandı",
+    "80",
+    "60"
+   ]
+  }
+ ],
+ "mobileTotal": [
+  {
+   "t": "Toplam (KDV dahil)",
+   "left": 249,
+   "right": 374,
+   "align": "right",
+   "size": 11
+  },
+  {
+   "t": "₺113.040,00",
+   "left": 249,
+   "right": 374,
+   "align": "right",
+   "size": 20
+  },
+  {
+   "t": "₺113.040,00",
+   "left": 237,
+   "right": 305,
+   "align": "left",
+   "size": 11
+  },
+  {
+   "t": "₺113.040,00",
+   "left": 573,
+   "right": 641,
+   "align": "left",
+   "size": 11
+  },
+  {
+   "t": "₺113.040,00",
+   "left": 293,
+   "right": 374,
+   "align": "right",
+   "size": 13
+  },
+  {
+   "t": "₺113.040,00",
+   "left": 276,
+   "right": 357,
+   "align": "right",
+   "size": 13
+  }
+ ],
+ "mobileMainBox": {
+  "left": 0,
+  "right": 390
+ }
+}

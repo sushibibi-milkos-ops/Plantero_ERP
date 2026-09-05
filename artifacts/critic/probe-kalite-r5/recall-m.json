@@ -1,0 +1,122 @@
+{
+ "label": "recall-m",
+ "route": "/kalite/geri-cagirma/ed92d2b0-4f48-4185-ae53-f46e41a36138",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory md:",
+   "scrollWidth": 1001,
+   "clientWidth": 358,
+   "overflowX": "auto",
+   "hidden": 643
+  },
+  {
+   "tag": "div",
+   "cls": "relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto px-1 py-1 snap-x snap-mandatory",
+   "scrollWidth": 957,
+   "clientWidth": 332,
+   "overflowX": "auto",
+   "hidden": 625
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [
+  {
+   "text": "Sevkiyat",
+   "left": 349,
+   "right": 475,
+   "vw": 390
+  },
+  {
+   "text": "Müşteri",
+   "left": 509,
+   "right": 635,
+   "vw": 390
+  },
+  {
+   "text": "Stoktaki miktar",
+   "left": 669,
+   "right": 844,
+   "vw": 390
+  },
+  {
+   "text": "75 ADET · 22,12 KG",
+   "left": 669,
+   "right": 844,
+   "vw": 390
+  },
+  {
+   "text": "Sevk edilen miktar",
+   "left": 878,
+   "right": 1004,
+   "vw": 390
+  },
+  {
+   "text": "İş emri",
+   "left": -296,
+   "right": -254,
+   "vw": 390
+  },
+  {
+   "text": "Kapatıldı",
+   "left": -69,
+   "right": -14,
+   "vw": 390
+  },
+  {
+   "text": "WO-2026-000001",
+   "left": -296,
+   "right": -14,
+   "vw": 390
+  },
+  {
+   "text": "05.09.2026",
+   "left": -296,
+   "right": -236,
+   "vw": 390
+  },
+  {
+   "text": "₺5.262,00",
+   "left": -68,
+   "right": -14,
+   "vw": 390
+  },
+  {
+   "text": "Devam belgesi yok",
+   "left": 341,
+   "right": 646,
+   "vw": 390
+  }
+ ],
+ "nonTabularNumbers": [
+  "05.09.2026 @span"
+ ],
+ "rowCount": 0,
+ "kpiValues": [
+  {
+   "text": "75 ADET · 22,12 KG",
+   "fontSize": 19,
+   "right": 844,
+   "gapToDivider": 21
+  }
+ ],
+ "interactiveCount": 13,
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 853,
+  "docH": 1697
+ }
+}
