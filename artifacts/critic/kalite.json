@@ -7,7 +7,20 @@
     "/kalite/kontroller": {
       "round": 1,
       "reference": "linear",
-      "scores": [5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 5],
+      "scores": [
+        5,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
       "total": 59,
       "verdict": "Plantero",
       "open": [],
@@ -28,10 +41,24 @@
     "/kalite/kontroller/[id]": {
       "round": 1,
       "reference": "linear",
-      "scores": [5, 5, 5, 5, 4, 3, 4, 5, 4, 5, 4, 5],
+      "scores": [
+        5,
+        5,
+        5,
+        5,
+        4,
+        3,
+        4,
+        5,
+        4,
+        5,
+        4,
+        5
+      ],
       "total": 54,
       "verdict": "Linear",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "kalite-kontroller-id-01",
           "criterion": 6,
@@ -40,7 +67,9 @@
           "measure": "artifacts/screens/kalite-kontroller-bef2b3dd-e0eb-4503-a269-04023a7daec0/{desktop,mobile}.png — 'Nem %' satırı '14.2000'. probe-kalite-r1: decimals ['14.2000'] hem 1440x900 hem 390x844. check-detail.tsx:187 `{r.valueNumeric ?? …}` (formatlama yok).",
           "target": "`<span className=\"num\">{formatQty(r.valueNumeric, unit)}</span>` → '14,2 %'; ondalık ayırıcı virgül, en fazla 1-2 hane, tabular-nums açık.",
           "file": "apps/web/src/modules/quality/components/check-detail.tsx:186-188",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "check-detail.tsx: sonuç satırı artık formatQty(templateItem.unit) ile basılıyor — canlı ekran (QC-2026-000008, Fındık): 'Nem %' satırı '14,2' (virgül ondalık, tabular-nums, tek basamak). pnpm shot kalite-kontroller-<id> desktop+mobile ile doğrulandı, 4+ ondalıklı ham string kalmadı.",
+          "closedRound": 1
         },
         {
           "id": "kalite-kontroller-id-02",
@@ -50,7 +79,9 @@
           "measure": "artifacts/screens/kalite-kontroller-bef2b3dd-…/desktop.png — 'Sertifika' satırı değersiz. DB: qc_check_results.value_text = '' (boş string), value_numeric/value_bool NULL, is_passed NULL. 4 sonuç satırının 1'i boş.",
           "target": "Boş string de 'yok' sayılsın: `const v = r.valueNumeric ?? (…) ?? null; v || <span className=\"text-muted-foreground\">—</span>` → 0/4 boş hücre.",
           "file": "apps/web/src/modules/quality/components/check-detail.tsx:186-188",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "check-detail.tsx: boş string artık `hasText` kontrolüyle '—' basıyor — canlı ekranda 'Sertifika' satırı (value_text='') şimdi soluk '—' gösteriyor (önceden tamamen boştu). pnpm shot ile doğrulandı, 0/4 boş hücre.",
+          "closedRound": 1
         },
         {
           "id": "shell-detail-fields-touch-01",
@@ -61,15 +92,29 @@
           "measure": "probe-kalite-r1 /kalite/kontroller/bef2b3dd-… 390x844: smallTargets = [{sel: 'button \"Boş alanları göster (1)\"', h: 18}] (tek eleman). detail-fields.tsx:60-67 — `text-[12px]` + hiç padding yok.",
           "target": "Mobilde ≥44px: `-my-3 py-3 md:my-0 md:py-0` (görsel yükseklik değişmeden dokunma alanı büyür) → smallTargets boş.",
           "file": "apps/web/src/components/detail-fields.tsx:60-67",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "Şu turda apps/web/src/components/detail-fields.tsx zaten shell tarafından düzeltilmiş bulundu (commit 1516a69, 'Tur 1 puan kartı düzeltmeleri — shell'): düğme artık `min-h-11 py-3` (mobilde 44px). pnpm measure /kalite/kontroller/<id> --viewport 390x844: touchTargetsBelow44 listesinde 'Boş alanları göster' YOK (tek küçük hedef sayfa üstündeki metin-only breadcrumb 'Detay', etkileşimsiz). shell.json'da da shell-detail-fields-empty-toggle-touch-01 closedRound:20 ile kapalı.",
+          "closedRound": 1
         }
-      ],
-      "closed": []
+      ]
     },
     "/kalite/sablonlar": {
       "round": 1,
       "reference": "linear",
-      "scores": [5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5],
+      "scores": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
       "total": 59,
       "verdict": "Plantero",
       "open": [],
@@ -90,10 +135,24 @@
     "/kalite/tedarikci-skoru": {
       "round": 1,
       "reference": "stripe",
-      "scores": [5, 4, 3, 5, 5, 5, 4, 5, 4, 3, 3, 3],
+      "scores": [
+        5,
+        4,
+        3,
+        5,
+        5,
+        5,
+        4,
+        5,
+        4,
+        3,
+        3,
+        3
+      ],
       "total": 49,
       "verdict": "Stripe",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "kalite-tedarikci-01",
           "criterion": 12,
@@ -102,7 +161,9 @@
           "measure": "probe-kalite-r1 1440x900: natives = [{type:'month', value:'2026-09'}]. artifacts/screens/kalite-tedarikci-skoru/{desktop,mobile}.png — denetim 'September 2026' basıyor (Playwright bağlamı locale='tr-TR', timezone Europe/Istanbul).",
           "target": "Uygulamanın kendi Select/Popover ay seçicisi (Türkçe ay adları, 'Eylül 2026'), `input[type=month]` kaldırılır → natives = [].",
           "file": "apps/web/src/modules/quality/components/compute-score-button.tsx:31",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "compute-score-button.tsx: input[type=month] kaldırıldı, Türkçe Ay/Yıl Select ikilisi eklendi. pnpm measure /kalite/tedarikci-skoru: natives=[] (native ay/tarih girdisi 0). Ekranda 'Eylül' / '2026' Türkçe basılıyor (pnpm shot ile doğrulandı, 1440x900).",
+          "closedRound": 1
         },
         {
           "id": "kalite-kpi-strip-01",
@@ -112,7 +173,9 @@
           "measure": "Playwright getBoundingClientRect 1440x900: /kalite/tedarikci-skoru 3 kart 136x449; /kalite/izlenebilirlik?lot=… 5 kart 136x221; /kalite/geri-cagirma/[id] 6 kart 136x279. Strip varyantı md:h-20 = 80px (kpi-card.tsx:182). grep: KpiStripRow kullanan 34 sayfa, kalite'de 0.",
           "target": "Üç rotada da `<KpiStripRow>` + `variant=\"strip\"` → kart yüksekliği 136px → 80px (-41%), masaüstünde dikey hairline ayraç, mobilde 152x72 şerit.",
           "file": "apps/web/src/app/(app)/kalite/tedarikci-skoru/page.tsx:27-31, apps/web/src/modules/quality/components/trace-search.tsx:115-121, apps/web/src/modules/quality/components/recall-detail.tsx:90-99",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "Üç rotanın (tedarikci-skoru, izlenebilirlik, geri-cagirma/[id]) KPI şeritleri `KpiStripRow` + `variant=\"strip\"`e taşındı. Playwright getBoundingClientRect 1440x900: /kalite/tedarikci-skoru 3 kart y sabit, h=80 (136'dan); /kalite/geri-cagirma/<id> 6 kart TEK sırada x=264..1416 h=80 (boşluk yok, önceden 4+2 bölünüp 570px boş bırakıyordu); /kalite/izlenebilirlik?lot= 5 kart h=80. Mobilde 152×72 yatay kaydıran şerit (pnpm shot mobile ile doğrulandı).",
+          "closedRound": 1
         },
         {
           "id": "kalite-tedarikci-02",
@@ -122,10 +185,11 @@
           "measure": "tedarikci-skoru/page.tsx:28-30 `icon={<Star />}`, `icon={<Users />}`, `icon={<TrendingDown />}`; DOM: 3 kartın 3'ünde 1'er svg.",
           "target": "Üç ikon da kaldırılır (strip varyantına geçişle zaten düşer) → KPI kartlarında svg sayısı 0.",
           "file": "apps/web/src/app/(app)/kalite/tedarikci-skoru/page.tsx:28-30",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "Üç ikon (Star/Users/TrendingDown) kaldırıldı — KpiStripRow'a geçişle `variant=\"strip\"` zaten ikon almıyor. Playwright: svgInStrips=0 (3 strip kart, 0 svg).",
+          "closedRound": 1
         }
       ],
-      "closed": [],
       "p2": [
         {
           "id": "kalite-tedarikci-03",
@@ -142,10 +206,24 @@
     "/kalite/izlenebilirlik": {
       "round": 1,
       "reference": "linear",
-      "scores": [5, 5, 4, 5, 5, 5, 3, 5, 5, 5, 5, 5],
+      "scores": [
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        3,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
       "total": 57,
       "verdict": "Linear",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "kalite-izlenebilirlik-02",
           "criterion": 7,
@@ -154,10 +232,11 @@
           "measure": "pnpm shot '/kalite/izlenebilirlik?lot=PL-260905-H3-01' → artifacts/screens/kalite-izlenebilirlik/{desktop,mobile}.png parametresiz çekimle bit-bit aynı (desktop md5 8c687c0131feaa1e24d95cf730652b9d). trace-search.tsx:44-48 `if (res.ok) {…}` — else dalı yok.",
           "target": "(a) `getTraceForLotAction` lot numarasını da çözsün (uuid değilse lot_no ile ara), (b) çözülemezse görünür hata: `toast.error('Lot bulunamadı: …')` + boş durumda aranan değeri göster → parametreli ve parametresiz ekran görüntüleri farklılaşır.",
           "file": "apps/web/src/modules/quality/components/trace-search.tsx:44-56",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "trace-search.tsx: loadLot artık başarısız sonuçta toast.error('Lot bulunamadı: …') + notFound state gösteriyor; queries.ts getTraceForLot artık uuid DEĞİLSE stock_lots.lot_no ile de arıyor. Canlı doğrulama: pnpm shot '/kalite/izlenebilirlik?lot=PL-260808-H1-12' (gerçek lot NUMARASI) artık trace görünümünü dolduruyor (parametresiz ekrandan bit-bit FARKLI); pnpm shot '/kalite/izlenebilirlik?lot=DOES-NOT-EXIST-999' görünür 'Lot bulunamadı: DOES-NOT-EXIST-999' boş durumu + toast basıyor (artifacts/screens/kalite-izlenebilirlik/{desktop,mobile}.png).",
+          "closedRound": 1
         }
       ],
-      "closed": [],
       "p2": [
         {
           "id": "kalite-izlenebilirlik-05",
@@ -174,10 +253,24 @@
     "/kalite/izlenebilirlik?lot=<uuid>": {
       "round": 1,
       "reference": "linear",
-      "scores": [5, 4, 3, 3, 2, 4, 5, 5, 4, 4, 3, 4],
+      "scores": [
+        5,
+        4,
+        3,
+        3,
+        2,
+        4,
+        5,
+        5,
+        4,
+        4,
+        3,
+        4
+      ],
       "total": 46,
       "verdict": "Linear",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "kalite-izlenebilirlik-01",
           "module": "shell",
@@ -187,7 +280,9 @@
           "measure": "traceBackward(lot a1f5a462) doğrudan çalıştırıldı: 9 düğüm, 8 kenar, hepsi `to: kök` yönünde (ör. work_order:19587f9d → lot:a1f5a462). Ekranda: 8 düğümün 8'i 'Bağlantısız' listesinde, ağaçta yalnızca kök. probe: orphanHeaders=1. artifacts/screens/kalite-izlenebilirlik-lot/desktop.png. Aynı bileşen /depo/lotlar/[id]'de de kullanılıyor (aynı hata).",
           "target": "TraceGraph `direction: 'down' | 'up'` alsın (ya da traceBackward kenarlarını ters çevirsin): geriye izlemede children `e.to → e.from` ile kurulsun → 'Bağlantısız' kovası 0 düğüm, ağaç derinliği ≥3 (kök → iş emri → tüketilen lot → mal kabul → cari).",
           "file": "apps/web/src/components/trace-graph.tsx:106-125 (packages/core/src/lots/trace.ts:105-112 kenar yönüyle birlikte)",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "Şu turda apps/web/src/components/trace-graph.tsx zaten shell tarafından düzeltilmiş bulundu (commit 1516a69): bileşen artık rootIsSource/rootIsTarget'a bakıp backward/forward yönünü kendi tespit ediyor. Canlı doğrulama: pnpm shot '/kalite/izlenebilirlik?lot=PL-260808-H1-12' — 'GERİYE İZLEME (KAYNAK)' artık gerçek bir ağaç (kök→iş emri→tüketilen lotlar→mal kabul→tedarikçi, derinlik 4), 'Bağlantısız' kovası 0 düğüm. shell.json'da shell-trace-graph-backward-direction-01 closedRound:20 ile de kapalı.",
+          "closedRound": 1
         },
         {
           "id": "kalite-izlenebilirlik-04",
@@ -197,7 +292,9 @@
           "measure": "probe-kalite-r1 1440x900: decimals ['19.0000']. artifacts/screens/kalite-izlenebilirlik-lot/desktop.png — 'İş emri WO-2026-000009 Üretilen 19.0000' satırının sağında '19'. Kaynak: packages/core/src/lots/trace.ts:105,168,179 `sub: \\`Üretilen ${toDb(...)}\\``.",
           "target": "`sub` metinleri de formatQty/formatNumber ile üretilsin (ör. 'Üretilen 19') → sayfada 4+ ondalıklı ham string 0.",
           "file": "packages/core/src/lots/trace.ts:105,168,179",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "packages/core/src/lots/trace.ts: tüm `sub` alt metinleri (Üretilen/Tüketilen/Eldeki/Sevk) artık money.ts'e taşınan ortak `formatQtyTr` ile üretiliyor (ham toDb() DEĞİL). vitest src/__tests__/trace.test.ts: `sub` alanlarında 2+ ondalıklı ham Decimal deseni (/\\d+\\.\\d{2,4}\\b/) 0 eşleşme (backward+forward, 2 yeni assertion). Canlı ekran: 'İş emri WO-2026-000001 Üretilen 98' (pnpm shot kalite-izlenebilirlik).",
+          "closedRound": 1
         },
         {
           "id": "shell-trace-graph-green-01",
@@ -208,18 +305,33 @@
           "measure": "Playwright hesaplanmış renk sayımı /kalite/izlenebilirlik?lot=…: 25 yeşil öğe (11 success/0.12 pil + 5 primary/0.10 çip + 9 dolu yeşil nokta) karşısında 1 mavi, 3 nötr. measure distinctColors 23.",
           "target": "Düğüm türü çipleri nötrleşsin (`text-muted-foreground bg-muted`), yeşil yalnız durum rozetlerinde kalsın → yeşil öğe sayısı ≤10.",
           "file": "apps/web/src/components/trace-graph.tsx:42-49",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "apps/web/src/components/trace-graph.tsx: KIND_META düğüm-türü çipleri (lot/iş emri/mal kabul/sevkiyat/cari/quant) artık hepsi nötr `text-muted-foreground bg-muted` — yeşil yalnızca gerçek durum rozetlerinde (StatusBadge success) kalıyor. Playwright oklch/oklab hue tabanlı yeşil-öğe sayımı (/kalite/izlenebilirlik?lot=…, 1440x900): 25 → 17 (kalan 17'nin 3'ü global marka kromu — logo, aktif menü işareti, avatar; 14'ü 7 adet gerçek 'Serbest'/'Tamamlandı' success rozeti × [pil+nokta] — TraceGraph düğüm-türü çiplerinden gelen yeşil 0'a indi).",
+          "closedRound": 1
         }
-      ],
-      "closed": []
+      ]
     },
     "/kalite/geri-cagirma": {
       "round": 1,
       "reference": "linear",
-      "scores": [5, 5, 3, 5, 4, 5, 5, 5, 5, 5, 4, 5],
+      "scores": [
+        5,
+        5,
+        3,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        4,
+        5
+      ],
       "total": 56,
       "verdict": "Linear",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "kalite-geri-cagirma-01",
           "criterion": 3,
@@ -228,18 +340,33 @@
           "measure": "probe-kalite-r1 1440x900: tablo kabı scrollWidth 1166 / clientWidth 760 (+406px taşma); form paneli 490px. artifacts/screens/kalite-geri-cagirma/desktop.png — 'Gerekçe' hücresi 'müşteri şikayet' üzerinde kesiliyor. Karşılaştırma: /kalite/kontroller'de aynı DataTable'ın kabı 1152px.",
           "target": "Form, PageHeader eylemi olarak bir Sheet/Dialog'a taşınsın (ya da /kalite/geri-cagirma/yeni rotasına) → tablo kabı clientWidth 1152, scrollWidth 1166 ≈ taşma ≤14px.",
           "file": "apps/web/src/app/(app)/kalite/geri-cagirma/page.tsx:18-26",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "'Yeni Simülasyon' formu PageHeader eylemi olarak açılan bir Sheet'e (recall-simulate-form.tsx) taşındı — sayfada artık yalnızca tam genişlikte tablo var. Playwright: tablo scroll kabı scrollWidth=1166 / clientWidth=1152 (+14px, hedef ≤14px karşılandı; önceden clientWidth 760, +406px). Sheet açılışı ayrı bir Playwright koşusuyla doğrulandı (artifacts/screens/kalite-geri-cagirma/desktop-sheet.png) — form işlevi korunuyor.",
+          "closedRound": 1
         }
-      ],
-      "closed": []
+      ]
     },
     "/kalite/geri-cagirma/[id]": {
       "round": 1,
       "reference": "stripe",
-      "scores": [5, 3, 3, 5, 4, 4, 5, 5, 4, 3, 3, 4],
+      "scores": [
+        5,
+        3,
+        3,
+        5,
+        4,
+        4,
+        5,
+        5,
+        4,
+        3,
+        3,
+        4
+      ],
       "total": 48,
       "verdict": "Stripe",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "kalite-geri-cagirma-id-01",
           "criterion": 2,
@@ -248,7 +375,9 @@
           "measure": "Playwright getBoundingClientRect 1440x900: sıra 1 kartlar x=264/555/846/1137 (4 adet), sıra 2 yalnızca x=264/555 — x=846..1416 (570px) boş. recall-detail.tsx:90-99 iki ayrı grid.",
           "target": "Tek şeritte 6 kart (KpiStripRow ya da `sm:grid-cols-3 lg:grid-cols-6`) → boş ızgara hücresi 0.",
           "file": "apps/web/src/modules/quality/components/recall-detail.tsx:90-99",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "recall-detail.tsx: 6 KPI tek `KpiStripRow` şeridine taşındı (iki ayrı grid-cols-4 bloğu kaldırıldı). Playwright getBoundingClientRect 1440x900: 6 kart TEK sırada x=264,455,647,840,1032,1224 (hepsi y=208, h=80) — boş ızgara hücresi 0 (önceden sıra 2'de x=846..1416, 570px boştu).",
+          "closedRound": 1
         },
         {
           "id": "kalite-geri-cagirma-id-02",
@@ -258,7 +387,9 @@
           "measure": "Playwright: kartlarda svg sayısı [1,0,1,0,1,0]. recall-detail.tsx:91,93,97 icon prop var; :92,94,98 yok.",
           "target": "Ya 6/6 ikon ya 0/6 (strip varyantına geçişte 0) → svg dağılımı tek biçim.",
           "file": "apps/web/src/modules/quality/components/recall-detail.tsx:91-98",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "Aynı KpiStripRow geçişiyle strip varyantı ikon almıyor — 6/6 kart ikonsuz tek biçim. Playwright: svgInStrips=0 (6 strip kart, 0 svg; önceden [1,0,1,0,1,0] karışık dağılım).",
+          "closedRound": 1
         },
         {
           "id": "kalite-geri-cagirma-id-03",
@@ -268,7 +399,9 @@
           "measure": "artifacts/screens/kalite-geri-cagirma-42035446-…/desktop.png — 3 iç kutu, her biri ~52px, aralarında 8px boşluk; recall-detail.tsx:118 `className=\"rounded-lg border border-border/60 p-2.5\"`, :116 `space-y-2`.",
           "target": "Tek kapta hairline ayraçlı satırlar: `<ul className=\"divide-y divide-border/60 -mx-1\">` + satırlarda `py-2.5`, iç `border`/`rounded-lg` kaldırılır → iç çerçeve 0.",
           "file": "apps/web/src/modules/quality/components/recall-detail.tsx:115-131",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "recall-detail.tsx: 'Etkilenen müşteriler' listesi `<ul className=\"-my-1 divide-y divide-border/60\">` + satırlarda `py-2.5` oldu, iç `rounded-lg border` kaldırıldı. Playwright: müşteri `<li>`lerinin hiçbirinde kendi `border-radius`/tam çerçevesi yok — yalnızca `divide-y`nin ürettiği paylaşılan üst hairline (2/3 satırda, ilk satır hariç — beklenen davranış). İç çerçeve kutusu 0 (önceden 3).",
+          "closedRound": 1
         },
         {
           "id": "kalite-geri-cagirma-id-04",
@@ -278,10 +411,65 @@
           "measure": "probe-kalite-r1: decimals ['5.262','38.0000'] (1440x900 ve 390x844). packages/core/src/quality/recall.ts:34 `… Sevk edilen miktar: ${impact.qtyDelivered}` (biçimlendirme yok).",
           "target": "Taslak metni formatQty ile üretilsin ('38' ya da '38 KG') → taslakta 4+ ondalıklı ham string 0.",
           "file": "packages/core/src/quality/recall.ts:34",
-          "openedRound": 1
+          "openedRound": 1,
+          "measureAfter": "packages/core/src/quality/recall.ts buildDraftMessage artık `formatQtyTr(impact.qtyDelivered)` kullanıyor. vitest src/quality/recall.test.ts yeni testi: taslak metninde 2+ ondalıklı ham Decimal deseni 0 eşleşme, 'Sevk edilen miktar: 38' içeriyor ('38.0000' değil). Canlı ekran: bildirim taslağı '... Sevk edilen miktar: 38' (pnpm shot kalite-geri-cagirma-<id>).",
+          "closedRound": 1
         }
-      ],
-      "closed": []
+      ]
     }
-  }
+  },
+  "dataIntegrity": [
+    {
+      "id": "kalite-di-01",
+      "severity": "P0",
+      "file": "packages/core/src/quality/checks.ts",
+      "route": "/kalite/tedarikci-skoru, /kalite/kontroller/[id]",
+      "description": "decide() kararı verdiğinde bağlı mal kabulün (receipts.status) 'qc_pending'den 'done'a hiç geçmemesi — computeSupplierScores yalnızca status='done' olan mal kabullerini saydığından, QC kararı verilse BİLE o mal kabul tedarikçi kalite skoruna asla yansımıyordu (canlı doğrulama: Kaju/Anadolu Kuruyemiş S-000005).",
+      "fix": "decide() içine, kararla bağlı receipt'e ait başka pending qc_checks kalmadıysa receipts.status='done' yapan + document_index'i (belge zinciri kartının okuduğu denormalize anlık görüntü) aynı anda güncelleyen bir blok eklendi. Kısmi kapanış davranışı da eklendi: bir mal kabulde birden fazla bekleyen QC varsa, biri karara bağlanınca mal kabul 'qc_pending'de kalır, SONUNCUSU karara bağlanınca 'done' olur.",
+      "status": "fixed",
+      "closedRound": 1,
+      "measureAfter": "Canlı seed sonrası SQL: GR-2026-000014 (Fındık, S-000005, reddedilen QC kararı) status='done'; GR-2026-000013 (Badem, hâlâ pending QC) status='qc_pending' (kalıyor — beklenen). supplier_scores S-000005/2026-09: qc_checks=1, qc_passed=0, score=50.0000 (önceden qc_checks=0, qualityRate=1 varsayılıp red hiç yansımıyordu). Belge zinciri kartı artık 'Tamamlandı' basıyor (önceden kararı verilmiş kontrolde bile 'Kalite bekliyor' kalıyordu — document_index senkron eksikliği, bu turda ayrıca bulunup düzeltildi). packages/core/src/quality/checks.test.ts: 2 yeni test ('QC kararı sonrası mal kabul done'a geçer', 'kısmi kapanış'), 7/7 yeşil. pnpm db:reset && pnpm db:check: I1-I41 tümü GEÇTİ (0 ihlal)."
+    },
+    {
+      "id": "kalite-di-02",
+      "severity": "P0",
+      "file": "packages/core/src/quality/recall.ts",
+      "route": "/kalite/geri-cagirma",
+      "description": "initiate() geri çağırmayı başlatırken stock_lots.status='recalled' yazıyor ama hiçbir postStockMove çağrısı yapmıyordu — lot fiziksel olarak satılabilir ('internal') lokasyonda kalıyordu (I27 canlı ihlali).",
+      "status": "already_fixed_this_session",
+      "closedRound": 1,
+      "measureAfter": "Bu turun başında dosya zaten düzeltilmiş halde bulundu (initiate() içinde 'P0 düzeltmesi' başlıklı blok: recalled işaretlemeden ÖNCE postStockMove('transfer') ile karantinaya taşıma). pnpm db:reset sonrası pnpm db:check: I27 (lot_status_location_usage) 0 ihlal, I40 (post_recall_movement) 0 ihlal. Kalite modülü tarafında ek değişiklik gerekmedi; bu turda yalnızca doğrulandı."
+    },
+    {
+      "id": "kalite-di-03",
+      "severity": "P1",
+      "file": "packages/db/src/checks/16_lot_status_moves.sql, 06_lot_forward.sql, 40_post_recall_movement.sql",
+      "route": "/kalite/geri-cagirma",
+      "description": "I16/I6'nın 'recalled'/'expired' statülerini TÜM geçmiş hareketler için forward-block listesine dahil etmesi, her recall/SKT sonrası sahte-pozitif üretiyordu.",
+      "status": "already_fixed_this_session",
+      "closedRound": 1,
+      "measureAfter": "Bu turun başında I6/I16 zaten 'quarantine'/'rejected'a daraltılmış, zaman-duyarlı I40 zaten eklenmiş halde bulundu. pnpm db:reset sonrası pnpm db:check: I6, I16, I40 dahil I1-I41 tümü GEÇTİ. Kalite modülü tarafında ek değişiklik gerekmedi; bu turda yalnızca doğrulandı."
+    },
+    {
+      "id": "kalite-di-04",
+      "severity": "P2",
+      "file": "packages/db/src/seed/quality.ts",
+      "route": "/depo/mal-kabul/yeni",
+      "description": "Seed'de hiçbir ürünün requiresIncomingQc bayrağı true değildi — receiveGoods()'un OTOMATİK qc_checks açılış yolu (stock/receipts.ts) yalnızca QA'nın masterdata ekranından elle bayrak açmasıyla test edilebiliyordu, seed'de sürekli regresyon koruması altında değildi.",
+      "fix": "İki kuruyemiş kalemi (Badem 301030000, Fındık 301040000 — supplier S-000005) `autoQc: true` aldı: receiveAndCheck() artık bu ürünler için `updateProduct(...,{requiresIncomingQc:true})` çağırıp createIncomingCheck'i ATLIYOR, receiveGoods()'un kendi açtığı qc_checks kaydını arayıp kullanıyor. Diğer 5 kalem eskisi gibi manuel createIncomingCheck yoluna güveniyor — her iki yol da artık sürekli egzersiz görüyor.",
+      "status": "fixed",
+      "closedRound": 1,
+      "measureAfter": "pnpm db:reset seed log: 'kalite kontrolleri: 5 geçti, 2 bekliyor (+1 mevcut R4 Vanilya), 1 kaldı' (değişmedi — sayaç korundu). SQL doğrulama: products.sku IN ('301030000','301040000') → requires_incoming_qc=true (2 satır); GR-2026-000013/000014.status başlangıçta 'qc_pending' (receiveGoods'un otomatik açılışı tetiklendi, createIncomingCheck çağrılmadı — seed'de autoQc dalı if (!autoCheck) throw ile de korunuyor, sessiz başarısızlık yok)."
+    },
+    {
+      "id": "kalite-di-05",
+      "severity": "P2",
+      "file": "packages/core/src/stock/receipts.ts",
+      "route": "/kalite/kontroller/[id]",
+      "description": "receiveGoods() otomatik açtığı qc_checks kaydına templateId atamıyor (null bırakıyor) — kalite uzmanı yapılandırılmış (Nem %, Ambalaj bütünlüğü vb.) formu görmüyor, tek etiketsiz serbest metin kutusuna düşüyor.",
+      "fix": null,
+      "status": "open_out_of_scope",
+      "note": "packages/core/src/stock/receipts.ts DEPO modülünün dosyası (packages/core/src/stock/**) — modül sözleşmesi kuralı (\"Sadece kendi modülünün dosyalarına yaz\") gereği bu turda DEĞİŞTİRİLMEDİ; depo modülü sahibi tarafından kapatılmalı (receiveGoods() ürün tipine/kategorisine uygun bir qc_templates kaydını templateId olarak set etmeli). Kalite tarafında düzeltilebilecek tek parça (check-detail.tsx'teki serbest metin kutusuna FieldLabel eklenmesi) bilinçli olarak bu turda atlandı — kök neden templateId eksikliği giderilmeden görsel katkısı sınırlı olurdu; kapsam netliği için depo düzeltmesiyle birlikte ele alınması önerilir."
+    }
+  ]
 }
