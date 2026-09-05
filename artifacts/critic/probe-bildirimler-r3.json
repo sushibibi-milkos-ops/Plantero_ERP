@@ -1,0 +1,346 @@
+{
+  "onaylarDesktop": {
+    "sizes": {
+      "10": {
+        "n": 4,
+        "sample": [
+          "J|400",
+          "K|400",
+          "A|400",
+          "R|400"
+        ]
+      },
+      "11": {
+        "n": 30,
+        "sample": [
+          "%60|500",
+          "20:27|400",
+          "Satın alma taslağı|500",
+          "05.09.2026 20:27|400"
+        ]
+      },
+      "12": {
+        "n": 1,
+        "sample": [
+          "/gezin ·onayla ·reddet|400"
+        ]
+      },
+      "13": {
+        "n": 33,
+        "sample": [
+          "Tümü|500",
+          "(14)|500",
+          "Satın alma taslağı|500",
+          "(2)|500"
+        ]
+      },
+      "14": {
+        "n": 4,
+        "sample": [
+          "14 onay bekliyor — satın a|400",
+          "Reddet|500",
+          "Detay|500",
+          "Onayla|500"
+        ]
+      },
+      "24": {
+        "n": 1,
+        "sample": [
+          "Onay Merkezi|600"
+        ]
+      }
+    },
+    "optionCount": 14,
+    "optionHeights": [
+      182,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      40
+    ],
+    "listboxWidth": 1152,
+    "firstOptionCursor": "default",
+    "badges": [
+      {
+        "t": "%60",
+        "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+        "c": "oklch(0.5 0.14 70)"
+      },
+      {
+        "t": "%60",
+        "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+        "c": "oklch(0.5 0.14 70)"
+      },
+      {
+        "t": "%75",
+        "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+        "c": "oklch(0.5 0.14 70)"
+      },
+      {
+        "t": "%85",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "c": "oklch(0.6 0.16 152)"
+      },
+      {
+        "t": "%75",
+        "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+        "c": "oklch(0.5 0.14 70)"
+      },
+      {
+        "t": "%40",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "c": "oklch(0.552 0.016 285.9)"
+      },
+      {
+        "t": "%80",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "c": "oklch(0.6 0.16 152)"
+      },
+      {
+        "t": "%90",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "c": "oklch(0.6 0.16 152)"
+      },
+      {
+        "t": "%85",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "c": "oklch(0.6 0.16 152)"
+      },
+      {
+        "t": "%33",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "c": "oklch(0.552 0.016 285.9)"
+      },
+      {
+        "t": "%33",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "c": "oklch(0.552 0.016 285.9)"
+      },
+      {
+        "t": "%23",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "c": "oklch(0.552 0.016 285.9)"
+      },
+      {
+        "t": "%15",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "c": "oklch(0.552 0.016 285.9)"
+      },
+      {
+        "t": "%15",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "c": "oklch(0.552 0.016 285.9)"
+      },
+      {
+        "t": "%82",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "c": "oklch(0.6 0.16 152)"
+      }
+    ],
+    "amountsTabular": [
+      {
+        "t": "Proteinsan Gıda Hammaddeleri Ltd. Şti. — ₺72000.00 — Kritik stok kuralı otomatik siparişe açık değil (isAutoOrderWhitelisted=false)",
+        "fvn": "normal",
+        "ta": "start"
+      },
+      {
+        "t": "-₺450,75",
+        "fvn": "tabular-nums",
+        "ta": "right"
+      },
+      {
+        "t": "-₺185,50",
+        "fvn": "tabular-nums",
+        "ta": "right"
+      },
+      {
+        "t": "-₺10.000,00",
+        "fvn": "tabular-nums",
+        "ta": "right"
+      }
+    ]
+  },
+  "onaylarHover": {
+    "before": "rgba(0, 0, 0, 0)",
+    "after": "oklab(0.955 0.000564683 -0.00191863 / 0.2)",
+    "changed": true
+  },
+  "bildirimlerDesktop": {
+    "sizes": {
+      "11": {
+        "n": 3,
+        "sample": [
+          "4 dakika önce|400",
+          "4 dakika önce|400",
+          "4 dakika önce|400"
+        ]
+      },
+      "13": {
+        "n": 7,
+        "sample": [
+          "Tümü|500",
+          "(3)|500",
+          "Okunmamış|500",
+          "(3)|500"
+        ]
+      },
+      "14": {
+        "n": 5,
+        "sample": [
+          "Size gönderilen uygulama i|400",
+          "Tümünü okundu işaretle|500",
+          "SKT GEÇMİŞ: 1 lot|500",
+          "SKT KRİTİK (30 gün): 50 lo|500"
+        ]
+      },
+      "16": {
+        "n": 3,
+        "sample": [
+          "SKT uyarısı|400",
+          "SKT uyarısı|400",
+          "SKT uyarısı|400"
+        ]
+      },
+      "24": {
+        "n": 1,
+        "sample": [
+          "Bildirimler|600"
+        ]
+      }
+    },
+    "rowCount": 12,
+    "rowHeights": [
+      93,
+      28,
+      28,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34,
+      88,
+      88,
+      87
+    ],
+    "listWidth": 223,
+    "bodyWidth": 0,
+    "bodyMaxW": null,
+    "markAllBtn": {
+      "w": 207,
+      "h": 36
+    },
+    "tabs": [
+      {
+        "t": "Tümü (3)",
+        "h": 32
+      },
+      {
+        "t": "Okunmamış (3)",
+        "h": 32
+      }
+    ],
+    "docScrollH": 900,
+    "lastRowBottom": 464,
+    "bottomNavTop": 0
+  },
+  "bildirimlerHover": {
+    "before": "rgba(0, 0, 0, 0)",
+    "after": "oklab(0.935 0.00112937 -0.00383726 / 0.7)",
+    "changed": true
+  },
+  "focusVisible": {
+    "tag": "A",
+    "text": "Plantero",
+    "outline": "0px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+  },
+  "bildirimlerMobile": {
+    "sizes": {
+      "11": {
+        "n": 3,
+        "sample": [
+          "4 dakika önce|400",
+          "4 dakika önce|400",
+          "4 dakika önce|400"
+        ]
+      },
+      "13": {
+        "n": 7,
+        "sample": [
+          "Tümü|500",
+          "(3)|500",
+          "Okunmamış|500",
+          "(3)|500"
+        ]
+      },
+      "14": {
+        "n": 5,
+        "sample": [
+          "Size gönderilen uygulama i|400",
+          "Tümünü okundu işaretle|500",
+          "SKT GEÇMİŞ: 1 lot|500",
+          "SKT KRİTİK (30 gün): 50 lo|500"
+        ]
+      },
+      "16": {
+        "n": 3,
+        "sample": [
+          "SKT uyarısı|400",
+          "SKT uyarısı|400",
+          "SKT uyarısı|400"
+        ]
+      },
+      "20": {
+        "n": 1,
+        "sample": [
+          "Bildirimler|600"
+        ]
+      }
+    },
+    "rowCount": 12,
+    "rowHeights": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      88,
+      88,
+      87
+    ],
+    "listWidth": 0,
+    "bodyWidth": 0,
+    "bodyMaxW": null,
+    "markAllBtn": {
+      "w": 207,
+      "h": 44
+    },
+    "tabs": [
+      {
+        "t": "Tümü (3)",
+        "h": 44
+      },
+      {
+        "t": "Okunmamış (3)",
+        "h": 44
+      }
+    ],
+    "docScrollH": 844,
+    "lastRowBottom": 512,
+    "bottomNavTop": 787
+  }
+}

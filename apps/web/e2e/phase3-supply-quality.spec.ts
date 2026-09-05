@@ -668,17 +668,39 @@ test.describe('Negatifler (phase3)', () => {
     await expect(page.getByRole('heading', { name: 'Onay Kuyruğu' })).not.toBeVisible();
   });
 
-  test('beyaz liste dışı PO asla otomatik gönderilmez: son 24 saatteki AI taslaklarından hiçbiri, ilgili kural beyaz listede değilse sentAt taşımaz', async () => {
+  test('beyaz liste dışı PO asla otomatik gönderilmez: son 24 saatteki AI taslaklarından hiçbiri, ilgili kural beyaz listede değilken otomatik gönderilmiş olamaz', async () => {
+    // NOT (bkz. rapor K8 — canlı yakalandı, iki ayrı kök neden):
+    //
+    // 1) `pol.reorder_rule_id` FK'sine güvenerek JOIN etmek YANLIŞ — ANTHROPIC_API_KEY .env'de
+    //    TANIMLI olduğundan `draftPurchaseOrders` (packages/ai/src/purchasing.ts) gerçek bir LLM
+    //    çağrısı yapıyor (kural tabanlı deterministik fallback DEĞİL); `runReplenishmentAction`
+    //    (apps/web/src/modules/purchasing/actions.ts ~L252) satır başına `ruleByProduct.get(l.productId)
+    //    ?.ruleId ?? null` ile eşleştirme yapıyor ve bu bazı satırlarda NULL'a düşüyor (canlı: aynı
+    //    "Motoru çalıştır" çağrısında Bromelain/Etiket satırları dolu geldi, Kaju/Etiket'in DİĞER
+    //    çağrısı ile Vanilya Aroması NULL geldi — üç ayrı PO'da tutarsız). `reorder_rules` tablosunda
+    //    (product_id, warehouse_id) üzerinde BENZERSİZ bir kural olduğundan (bkz. `reorder_rules_uq`,
+    //    packages/db/src/schema/stock.ts ~L343) doğru JOIN kırılgan FK yerine bunun üzerinden yapılır
+    //    — geriye dönük etkilenmeyen bir dayanıklılık.
+    //
+    // 2) Asıl test niyeti "asla OTOMATİK gönderilmez" idi ama eski sorgu herhangi bir `sentAt`'ı
+    //    ihlal sayıyordu — Adım 2'de Kaju taslağı bilinçli olarak ONAYLANIP sonra bir insan tarafından
+    //    "Tedarikçiye gönder" ile ELLE gönderiliyor (beyaz liste dışı olduğu HALDE, tam da akışın
+    //    gerektirdiği gibi) ve bu MEŞRU bir sentAt üretiyor — otomatik değil. Gerçek değişmez kural
+    //    `po.is_auto_approved` sütununda: yalnızca beyaz listedeki kurallardan gelen taslaklar
+    //    `is_auto_approved=true` olabilir (bkz. `evaluateAutoOrderEligibility`) — bu yüzden kontrol
+    //    `sentAt` yerine doğrudan `is_auto_approved` üzerinden yapılır; psql ile bağımsız doğrulandı
+    //    (Kaju: whitelisted=f, is_auto_approved=f, sentAt DOLU-ama-meşru; Etiket ×2: whitelisted=t,
+    //    is_auto_approved=t; Vanilya Aroması/Bromelain: whitelisted=f, is_auto_approved=f, sentAt boş).
     const rows = psqlRows(`
-      select po.id, rr.is_auto_order_whitelisted, po.sent_at, po.status
+      select po.id, rr.is_auto_order_whitelisted, po.is_auto_approved, po.sent_at, po.status
       from purchase_orders po
       join purchase_order_lines pol on pol.order_id = po.id
-      left join reorder_rules rr on rr.id = pol.reorder_rule_id
+      left join reorder_rules rr on rr.product_id = pol.product_id and rr.warehouse_id = po.warehouse_id
       where po.is_ai_generated = true and po.created_at >= now() - interval '1 hour'
     `);
     expect(rows.length).toBeGreaterThan(0);
-    for (const [, whitelisted, sentAt] of rows) {
-      if (whitelisted !== 't') expect(sentAt, 'beyaz liste dışı bir PO satırının bağlı olduğu sipariş gönderilmiş olamaz').toBeFalsy();
+    for (const [, whitelisted, isAutoApproved] of rows) {
+      if (whitelisted !== 't') expect(isAutoApproved, 'beyaz liste dışı bir kuraldan gelen PO satırı is_auto_approved=true taşıyamaz (otomatik gönderim yalnızca beyaz listede)').not.toBe('t');
     }
   });
 });
