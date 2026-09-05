@@ -132,8 +132,16 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
       const uomId = uomByLotId.get(l.id);
       if (!uomId) continue;
       await postStockMove(tx, {
+        // Tur 2 P0 düzeltmesi (kalite-geri-cagirma P0): `qty` burada quant'ın TÜM eldeki miktarı
+        // (`q.qty`) — rezervasyonlu kısmı da kapsar. `useReserved` verilmezse ledger.ts kullanılabilirliği
+        // onHand-reserved sayıp INSUFFICIENT_STOCK fırlatıyor ve tüm initiate() transaction'ı (lot
+        // bloklama + müşteri bildirimi dahil) sessizce rollback oluyordu — bekleyen bir siparişe
+        // rezerve edilmiş TEK bir lot bile geri çağırmayı tamamen durduruyordu. `useReserved:true`
+        // rezervasyonu da serbest bırakarak taşır: geri çağrılan lot artık hiçbir siparişi
+        // karşılayamayacağından rezervasyonun quarantine'e taşınması değil, düşürülmesi doğrudur.
         kind: 'transfer', productId: productByLotId.get(l.id)?.id ?? '', lotId: l.id, fromLocationId: q.locationId, toLocationId: quarantineLoc.id,
         qty: D(q.qty), uomId, refType: 'recall', refId: recallId, refNo: recall.docNo, origin: 'manual', movedAt, note: `Geri çağırma ${recall.docNo} — karantinaya alındı`,
+        useReserved: true,
       }, ctx);
     }
 
@@ -201,8 +209,12 @@ export async function recordRecallAction(tx: DbOrTx, itemId: string, action: Rec
         if (!loc?.warehouseId) continue; // sanal/depo-bağımsız lokasyonda fiziksel stok olamaz
         const scrapLoc = await getScrapLocation(tx, loc.warehouseId);
         await postStockMove(tx, {
+          // Tur 2 P0 düzeltmesi: aynı desen (üstteki `initiate()` yorumuna bakınız) — `q.qty` rezervasyonlu
+          // kısmı da kapsıyor, `useReserved:true` olmadan imha rezerveli lotlarda INSUFFICIENT_STOCK ile
+          // başarısız olur.
           kind: 'scrap', productId: lot.productId, lotId: lot.id, fromLocationId: q.locationId, toLocationId: scrapLoc.id,
           qty: D(q.qty), uomId: lot.uomId, refType: 'recall', refId: recall.id, refNo: recall.docNo, origin: 'manual', note: note ?? 'Geri çağırma — imha',
+          useReserved: true,
         }, ctx);
       }
     }

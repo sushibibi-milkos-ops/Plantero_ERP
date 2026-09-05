@@ -134,13 +134,15 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
               <Scale className="size-3.5" /> Miktar dengesi
             </div>
             {/* Tur 1 P1 kalite-kpi-strip-01: `variant="card"` (136px) yerine diğer 12 modülün kullandığı
-                Stripe tarzı şerit (80px, çerçevesiz, dikey hairline). */}
+                Stripe tarzı şerit (80px, çerçevesiz, dikey hairline).
+                Tur 2 P1 (uom eksikliği): tüm 5 miktar AYNI kök lota ait (tek birim) — `suffix`
+                ile birim yazılır; `view.uomCode` `queries.ts`teki `stock_lots.uom_id` join'inden gelir. */}
             <KpiStripRow>
-              <KpiCard title="Giriş" value={Number(view.balance.inQty)} format="qty" variant="strip" />
-              <KpiCard title="Tüketim" value={Number(view.balance.consumedQty)} format="qty" variant="strip" />
-              <KpiCard title="Sevkiyat" value={Number(view.balance.deliveredQty)} format="qty" variant="strip" />
-              <KpiCard title="Fire" value={Number(view.balance.scrapQty)} format="qty" variant="strip" />
-              <KpiCard title="Eldeki" value={Number(view.balance.onHandQty)} format="qty" variant="strip" />
+              <KpiCard title="Giriş" value={Number(view.balance.inQty)} format="qty" suffix={view.uomCode} variant="strip" />
+              <KpiCard title="Tüketim" value={Number(view.balance.consumedQty)} format="qty" suffix={view.uomCode} variant="strip" />
+              <KpiCard title="Sevkiyat" value={Number(view.balance.deliveredQty)} format="qty" suffix={view.uomCode} variant="strip" />
+              <KpiCard title="Fire" value={Number(view.balance.scrapQty)} format="qty" suffix={view.uomCode} variant="strip" />
+              <KpiCard title="Eldeki" value={Number(view.balance.onHandQty)} format="qty" suffix={view.uomCode} variant="strip" />
             </KpiStripRow>
           </div>
 

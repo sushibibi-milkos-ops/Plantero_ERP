@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
 import {
   receipts, receiptLines, boms, productionLines, workOrders, workOrderConsumptions, workOrderOutputs, deliveries, deliveryLines, stockLots,
+  uoms, products,
 } from '@plantero/db';
 import { postStockMove, createLot } from '../stock/ledger.js';
 import { traceBackward, traceForward, simulateRecall } from '../lots/trace.js';
@@ -90,6 +91,70 @@ describe('lot trace', () => {
       const both = await simulateRecall(tx, outLot.id, 'both');
       expect(both.counts.lots).toBe(2);
       expect(both.workOrders[0]!.docNo).toBe(wo!.docNo);
+    });
+  });
+
+  it('düğümlerde ölçü birimi taşınır; karışık birimli zincirde simulateRecall birim bazında kırılım üretir (tur 2 P1 kalite-izlenebilirlik + kalite-geri-cagirma-id-06)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+
+      // Mamul bu zincirde KG değil ADET — tur 2 kritiği tam da bu karışıklığı yakaladı: mamul lotu
+      // ADET, hammadde/yarı mamul lotu KG. `uoms` tablosuna ikinci bir birim ekleniyor (seed'de zaten
+      // gerçek Plantero verisinde ADET var — burada testin kendi izole transaction'ında oluşturuluyor).
+      await tx.insert(uoms).values({ code: 'ADET', name: 'Adet', category: 'unit' }).onConflictDoNothing({ target: uoms.code });
+      const [adet] = await tx.select().from(uoms).where(eq(uoms.code, 'ADET')).limit(1);
+
+      const [finishedAdet] = await tx.insert(products).values({
+        sku: `9${b.s}01`, name: `Badem Bazı Kutu ${b.s}`, type: 'finished', uomId: adet!.id, isLotTracked: true, isSellable: true, isManufactured: true, costMethod: 'lot',
+      }).returning();
+
+      const rawLot = await createLot(tx, { productId: b.raw.id, lotNo: `MIXU-${b.s}`, origin: 'receipt', supplierId: b.supplier.id, status: 'released' }, ctx);
+      await postStockMove(tx, { kind: 'receipt', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.sup.id, toLocationId: b.loc.hamR01.id, qty: d(100), uomId: b.kg.id, unitCost: d(10), refType: 'receipt', refId: rawLot.id }, ctx);
+
+      const [bom] = await tx.insert(boms).values({ code: `BOM-MIXU-${b.s}`, productId: finishedAdet!.id, version: 1, status: 'active', outputQty: '10', outputUomId: adet!.id }).returning();
+      const [line] = await tx.insert(productionLines).values({ code: `HAT-MIXU-${b.s}`, name: 'Hat', warehouseId: b.wh.id, locationId: b.loc.prod.id }).returning();
+      const [wo] = await tx.insert(workOrders).values({
+        docNo: `WO-MIXU-${b.s}`, status: 'closed', productId: finishedAdet!.id, bomId: bom!.id, lineId: line!.id, warehouseId: b.wh.id,
+        sourceLocationId: b.loc.ham.id, destLocationId: b.loc.mamul.id, plannedQty: '10', producedQty: '10', uomId: adet!.id,
+      }).returning();
+      const cons = await postStockMove(tx, { kind: 'consumption', productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.hamR01.id, toLocationId: b.loc.prod.id, qty: d(40), uomId: b.kg.id, refType: 'work_order', refId: wo!.id }, ctx);
+      await tx.insert(workOrderConsumptions).values({ workOrderId: wo!.id, productId: b.raw.id, lotId: rawLot.id, fromLocationId: b.loc.hamR01.id, qty: '40', uomId: b.kg.id, unitCost: '10', value: '400', stockMoveId: cons.moveId });
+
+      // Lot oluşturulurken `uomId` verilmez — `createLot` ürünün kendi biriminden (ADET) alır.
+      const outLot = await createLot(tx, { productId: finishedAdet!.id, lotNo: `PLU-${b.s}-H1-01`, origin: 'production', originWorkOrderId: wo!.id, productionDate: today() }, ctx);
+      expect(outLot.uomId).toBe(adet!.id);
+      const prod = await postStockMove(tx, { kind: 'production', productId: finishedAdet!.id, lotId: outLot.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.mamul.id, qty: d(10), uomId: adet!.id, unitCost: d(30), refType: 'work_order', refId: wo!.id }, ctx);
+      await tx.insert(workOrderOutputs).values({ workOrderId: wo!.id, productId: finishedAdet!.id, lotId: outLot.id, toLocationId: b.loc.mamul.id, qty: '10', uomId: adet!.id, unitCost: '30', value: '300', stockMoveId: prod.moveId });
+      await tx.update(workOrders).set({ outputLotId: outLot.id }).where(eq(workOrders.id, wo!.id));
+
+      const [dn] = await tx.insert(deliveries).values({ docNo: `DN-MIXU-${b.s}`, status: 'shipped', partnerId: b.customer.id, warehouseId: b.wh.id, shippedAt: new Date() }).returning();
+      await tx.insert(deliveryLines).values({ deliveryId: dn!.id, productId: finishedAdet!.id, qty: '3', pickedQty: '3', uomId: adet!.id, lotId: outLot.id, fromLocationId: b.loc.mamul.id, unitCost: '30' });
+      await postStockMove(tx, { kind: 'delivery', productId: finishedAdet!.id, lotId: outLot.id, fromLocationId: b.loc.mamul.id, toLocationId: b.loc.cust.id, qty: d(3), uomId: adet!.id, refType: 'delivery', refId: dn!.id, partnerId: b.customer.id }, ctx);
+
+      // İleri izleme: her miktar taşıyan düğümde birim dolu olmalı — Tur 2 P1 kök neden buydu
+      // (trace.ts hiç `uom` alanı üretmiyordu, ekranda 9/9 miktar birimsiz basılıyordu).
+      const fwd = await traceForward(tx, rawLot.id);
+      const withQty = fwd.nodes.filter((n) => n.qty !== undefined && n.qty !== null);
+      expect(withQty.length).toBeGreaterThan(0);
+      for (const n of withQty) expect(n.uom, `${n.kind}:${n.id} birimsiz`).toBeTruthy();
+      expect(fwd.nodes.find((n) => n.id === `lot:${rawLot.id}`)?.uom).toBe('KG');
+      expect(fwd.nodes.find((n) => n.id === `lot:${outLot.id}`)?.uom).toBe('ADET');
+      expect(fwd.nodes.find((n) => n.id === `delivery:${dn!.id}`)?.uom).toBe('ADET');
+      const quants = fwd.nodes.filter((n) => n.kind === 'quant');
+      expect(quants.map((q) => q.uom).sort()).toEqual(['ADET', 'KG']);
+
+      // simulateRecall: eski (geriye dönük uyumlu) `qtyInStock`/`qtyDelivered` toplamları hâlâ üretilir
+      // ama artık KARIŞIK BİRİM içerdiklerinden ekranda ASLA doğrudan basılmamalı — birim bazında
+      // kırılım (`qtyInStockByUom`/`qtyDeliveredByUom`) bunun için var.
+      const impact = await simulateRecall(tx, rawLot.id, 'forward');
+      expect(impact.qtyInStockByUom.sort((a, b2) => a.uom.localeCompare(b2.uom))).toEqual([
+        { uom: 'ADET', qty: '7.0000' }, // 10 üretildi - 3 sevk edildi
+        { uom: 'KG', qty: '60.0000' }, // 100 alındı - 40 tüketildi
+      ]);
+      expect(impact.qtyDeliveredByUom).toEqual([{ uom: 'ADET', qty: '3.0000' }]);
+      // Ham toplamlar hâlâ mevcut (e2e SQL doğrulaması ve `recall_items` bu alanlara bağımlı).
+      expect(Number(impact.qtyInStock)).toBeCloseTo(67, 4); // 60 + 7 — karışık birim, yalnızca geriye dönük uyumluluk
+      expect(Number(impact.qtyDelivered)).toBeCloseTo(3, 4);
     });
   });
 });

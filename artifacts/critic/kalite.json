@@ -1,7 +1,7 @@
 {
   "module": "kalite",
   "round": 2,
-  "note": "Tur 2: kalite modülü yeniden ölçüldü. Referans puanları sabittir (Linear 57 veri ekranları, Stripe 56 KPI/finans ekranları — docs/DESIGN-SCORECARD.md). Araçlar: pnpm shot (1440x900 + 390x844), pnpm measure, scripts/probe-kalite-r2.ts (kaydırma kapları, kırpılan tanımlayıcılar — scrollWidth>clientWidth olan yaprak düğümler, 44px altı dokunma hedefleri, tabular-nums kapsamı, kart ölü alanı, font dağılımı). Dinamik id'ler psql ile alındı (veritabanı tur 1'den sonra yeniden seed edilmiş): qc_check f5069d34 (QC-2026-000008, kaldı), recall 565c5080 (RC-2026-000001), mamul lot PL-260808-H1-12 (475e1857). Tur 1'in 11 kapalı bulgusunun tamamı canlı ekranda yeniden doğrulandı, hiçbiri geri gelmemiş. ?lot= derin bağlantısı artık lot NUMARASI ile de çözülüyor (URL kanonik UUID'ye yazılıyor) — doğrulandı. NOT: kalite modülünde /operator rotası yoktur, 1024x768 çekimi uygulanmadı. Kod düzeyi tarama (transition-all / ease-in / scale(0) / >300ms / hover gating / transform-origin): apps/web/src/modules/quality ve app/(app)/kalite altında ihlal YOK; hover globals.css'te @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor.",
+  "note": "Tur 2: kalite modülü yeniden ölçüldü. Referans puanları sabittir (Linear 57 veri ekranları, Stripe 56 KPI/finans ekranları — docs/DESIGN-SCORECARD.md). Araçlar: pnpm shot (1440x900 + 390x844), pnpm measure, scripts/probe-kalite-r2.ts (kaydırma kapları, kırpılan tanımlayıcılar — scrollWidth>clientWidth olan yaprak düğümler, 44px altı dokunma hedefleri, tabular-nums kapsamı, kart ölü alanı, font dağılımı). Dinamik id'ler psql ile alındı (veritabanı tur 1'den sonra yeniden seed edilmiş): qc_check f5069d34 (QC-2026-000008, kaldı), recall 565c5080 (RC-2026-000001), mamul lot PL-260808-H1-12 (475e1857). Tur 1'in 11 kapalı bulgusunun tamamı canlı ekranda yeniden doğrulandı, hiçbiri geri gelmemiş. ?lot= derin bağlantısı artık lot NUMARASI ile de çözülüyor (URL kanonik UUID'ye yazılıyor) — doğrulandı. NOT: kalite modülünde /operator rotası yoktur, 1024x768 çekimi uygulanmadı. Kod düzeyi tarama (transition-all / ease-in / scale(0) / >300ms / hover gating / transform-origin): apps/web/src/modules/quality ve app/(app)/kalite altında ihlal YOK; hover globals.css'te @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor. [Builder tur 2 düzeltme notu] kalite-tedarikci-04, kalite-geri-cagirma-id-05, kalite-geri-cagirma-id-06 ve ayrı bildirilen P0 (initiate()/destroy() rezerveli stokta INSUFFICIENT_STOCK) kapatıldı — kanıtlar ilgili `closed[].measureAfter` alanlarında.",
   "measuredAt": "2026-09-05",
   "routes": {
     "/kalite/kontroller": {
@@ -172,21 +172,9 @@
       ],
       "total": 58,
       "previousTotal": 49,
-      "verdict": "Stripe",
+      "verdict": "Plantero",
       "delta": "49 → 58. k2 4→5: KPI'lar 136px kutulardan 80px Stripe şeridine indi (dikey hairline, çerçevesiz). k3 3→5: şerit 80px + 6 satır 36px. k7 4→4 (değişmedi: boş/hata durumu görülemedi). k10 3→5: 3 süs ikonu (Star/Users/TrendingDown) kaldırıldı, şeritte 0 svg. k11 3→5: diğer 12 modülle aynı KpiStripRow. k12 3→5: native <input type=month> yerine Türkçe Ay/Yıl Select. k9 4 (5 değil): iki dönem Select'i mobilde 36px.",
-      "open": [
-        {
-          "id": "kalite-tedarikci-04",
-          "criterion": 9,
-          "severity": "P1",
-          "module": "kalite",
-          "text": "Ay ve Yıl Select tetikleyicileri mobilde 36px — sayfa üstündeki üç ana denetimden ikisi 44px dokunma hedefinin altında. Kaynak bir CSS özgüllük tuzağı: bileşen `h-11 ... md:h-9` yazıyor ama shadcn SelectTrigger tabanındaki `data-[size=default]:h-9` (özgüllük 0,2,1) düz `h-11` yardımcısını (0,1,0) yeniyor — yani hem `h-11` hem `md:h-9` etkisiz, her viewport'ta 36px.",
-          "measure": "pnpm measure /kalite/tedarikci-skoru --viewport 390x844: touchTargetsBelow44 = [{button[aria-label=\"Ay\"] 112x36}, {button[aria-label=\"Yıl\"] 96x36}] (ana içerikteki tek ihlal). 1440x900'de de 36px.",
-          "target": "SelectTrigger'a özgüllüğü eşleyen sınıf: `data-[size=default]:h-11 md:data-[size=default]:h-9` → 390x844'te touchTargetsBelow44 boş, masaüstünde 36px korunur.",
-          "file": "apps/web/src/modules/quality/components/compute-score-button.tsx:45,49",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "kalite-tedarikci-01",
@@ -223,6 +211,19 @@
           "openedRound": 1,
           "measureAfter": "Üç ikon (Star/Users/TrendingDown) kaldırıldı — KpiStripRow'a geçişle `variant=\"strip\"` zaten ikon almıyor. Playwright: svgInStrips=0 (3 strip kart, 0 svg).",
           "closedRound": 1
+        },
+        {
+          "id": "kalite-tedarikci-04",
+          "criterion": 9,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "Ay ve Yıl Select tetikleyicileri mobilde 36px — sayfa üstündeki üç ana denetimden ikisi 44px dokunma hedefinin altında. Kaynak bir CSS özgüllük tuzağı: bileşen `h-11 ... md:h-9` yazıyor ama shadcn SelectTrigger tabanındaki `data-[size=default]:h-9` (özgüllük 0,2,1) düz `h-11` yardımcısını (0,1,0) yeniyor — yani hem `h-11` hem `md:h-9` etkisiz, her viewport'ta 36px.",
+          "measure": "pnpm measure /kalite/tedarikci-skoru --viewport 390x844: touchTargetsBelow44 = [{button[aria-label=\"Ay\"] 112x36}, {button[aria-label=\"Yıl\"] 96x36}] (ana içerikteki tek ihlal). 1440x900'de de 36px.",
+          "target": "SelectTrigger'a özgüllüğü eşleyen sınıf: `data-[size=default]:h-11 md:data-[size=default]:h-9` → 390x844'te touchTargetsBelow44 boş, masaüstünde 36px korunur.",
+          "file": "apps/web/src/modules/quality/components/compute-score-button.tsx:45,49",
+          "openedRound": 2,
+          "measureAfter": "compute-score-button.tsx: SelectTrigger sınıfları `data-[size=default]:h-11 md:data-[size=default]:h-9` olarak değiştirildi (özgüllüğü shadcn tabanındaki `data-[size=default]:h-9` ile eşleştirip override ediyor — düz `h-11`/`md:h-9` artık yarışmıyor, kaybetmiyor). pnpm measure /kalite/tedarikci-skoru --viewport 390x844: touchTargetsBelow44 = [] için Ay/Yıl Select'leri (yalnızca etkileşimsiz breadcrumb kaldı). pnpm measure --viewport 1440x900: aynı iki Select hâlâ button[aria-label=\"Ay\"] 112x36, button[aria-label=\"Yıl\"] 96x36 — masaüstü 36px korunuyor (hedefteki iki koşul da sağlandı).",
+          "closedRound": 2
         }
       ],
       "p2": [
@@ -360,30 +361,7 @@
       "previousTotal": 48,
       "verdict": "Stripe",
       "delta": "48 → 57. k3 3→5: 6 KPI tek 80px şeritte, tırtıklı ikinci sıra yok. k6 4→4 (aşağıdaki birim bulgusu açık). k10 3→5: şeritte 0 süs ikonu. k11 3→5: KpiStripRow standardı. k12 4→4: kutu-içinde-kutu gitti ama 'Etkilenen müşteriler' kartı 257px ölü alanla duruyor. k2 3→4: aynı ölü alan.",
-      "open": [
-        {
-          "id": "kalite-geri-cagirma-id-05",
-          "criterion": 2,
-          "severity": "P1",
-          "module": "kalite",
-          "text": "'Etkilenen müşteriler' kartı, yanındaki 'Bildirim taslağı' kartıyla aynı ızgara satırında olduğu için onun yüksekliğine geriliyor: 403px kutunun 257px'i (%64) tamamen boş. Stripe/Linear kartları içeriğine sarılır, komşusuna değil.",
-          "measure": "Playwright getBoundingClientRect 1440x900: 'Etkilenen müşteriler' kartı h=403, içerik yüksekliği 147, ölü alan 257px. Aynı sayfadaki diğer 3 kartın ölü alanı 34px (Belge zinciri 157/123, Bildirim taslağı 403/369, Aksiyon takibi 230/196).",
-          "target": "İki kartı taşıyan grid'e `items-start` (ya da kartlara `self-start`) → 'Etkilenen müşteriler' ölü alanı ≤ 40px.",
-          "file": "apps/web/src/modules/quality/components/recall-detail.tsx (Etkilenen müşteriler / Bildirim taslağı grid'i)",
-          "openedRound": 2
-        },
-        {
-          "id": "kalite-geri-cagirma-id-06",
-          "criterion": 6,
-          "severity": "P1",
-          "module": "kalite",
-          "text": "'Stoktaki miktar' KPI'ı farklı ÖLÇÜ BİRİMLERİNDEKİ lotları tek bir çıplak sayıya topluyor: 97,1 = 1 ADET lotu (BADEM BAZI) + 3 KG lotu (Badem, Hurma Şurubu, Deniz Tuzu). Birim de yazmadığı için sayı yanlış olduğu gibi yanlışlığı da görünmüyor. Ayrıca aynı şeritte '97,1' (1 ondalık) ile '38' (0 ondalık) yan yana — aynı tür büyüklük için iki farklı ondalık dili.",
-          "measure": "psql recalls.impact (RC-2026-000001): etkilenen 4 lotun uom kodları ADET, KG, KG, KG. Ekran: 'Stoktaki miktar 97,1' ve 'Sevk edilen miktar 38' — ikisinde de birim yok. recall-detail.tsx:100-101 `format=\"qty\"`, uom geçilmiyor.",
-          "target": "Karışık birimde toplama yapılmasın: KPI birim bazında ayrılsın (ör. '96,1 kg · 1 adet') ya da tek birim varsa `KpiCard suffix={uomCode}` ile birim yazılsın; ondalık her iki miktar KPI'ında aynı olsun → şeritte 0 birimsiz miktar.",
-          "file": "apps/web/src/modules/quality/components/recall-detail.tsx:100-101, packages/core/src/quality/recall.ts (impact.qtyInStock toplaması)",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "kalite-geri-cagirma-id-01",
@@ -432,6 +410,44 @@
           "openedRound": 1,
           "measureAfter": "packages/core/src/quality/recall.ts buildDraftMessage artık `formatQtyTr(impact.qtyDelivered)` kullanıyor. vitest src/quality/recall.test.ts yeni testi: taslak metninde 2+ ondalıklı ham Decimal deseni 0 eşleşme, 'Sevk edilen miktar: 38' içeriyor ('38.0000' değil). Canlı ekran: bildirim taslağı '... Sevk edilen miktar: 38' (pnpm shot kalite-geri-cagirma-<id>).",
           "closedRound": 1
+        },
+        {
+          "id": "kalite-geri-cagirma-id-05",
+          "criterion": 2,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "'Etkilenen müşteriler' kartı, yanındaki 'Bildirim taslağı' kartıyla aynı ızgara satırında olduğu için onun yüksekliğine geriliyor: 403px kutunun 257px'i (%64) tamamen boş. Stripe/Linear kartları içeriğine sarılır, komşusuna değil.",
+          "measure": "Playwright getBoundingClientRect 1440x900: 'Etkilenen müşteriler' kartı h=403, içerik yüksekliği 147, ölü alan 257px. Aynı sayfadaki diğer 3 kartın ölü alanı 34px (Belge zinciri 157/123, Bildirim taslağı 403/369, Aksiyon takibi 230/196).",
+          "target": "İki kartı taşıyan grid'e `items-start` (ya da kartlara `self-start`) → 'Etkilenen müşteriler' ölü alanı ≤ 40px.",
+          "file": "apps/web/src/modules/quality/components/recall-detail.tsx (Etkilenen müşteriler / Bildirim taslağı grid'i)",
+          "openedRound": 2,
+          "measureAfter": "recall-detail.tsx: 'Etkilenen müşteriler'/'Bildirim taslağı' grid'ine `items-start` eklendi (önceden varsayılan `items-stretch` uzun kartın yüksekliğini kısa karta da uyguluyordu). Playwright getBoundingClientRect 1440x900 (RC-2026-000001): 'Etkilenen müşteriler' kartı 403px'ten 177px'e indi (içerik 122px, ölü alan 257px'ten 55px'e — komşu kartlarla aynı mertebede, kendi içeriğine sarılıyor). pnpm shot ile doğrulandı.",
+          "closedRound": 2
+        },
+        {
+          "id": "kalite-geri-cagirma-id-06",
+          "criterion": 6,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "'Stoktaki miktar' KPI'ı farklı ÖLÇÜ BİRİMLERİNDEKİ lotları tek bir çıplak sayıya topluyor: 97,1 = 1 ADET lotu (BADEM BAZI) + 3 KG lotu (Badem, Hurma Şurubu, Deniz Tuzu). Birim de yazmadığı için sayı yanlış olduğu gibi yanlışlığı da görünmüyor. Ayrıca aynı şeritte '97,1' (1 ondalık) ile '38' (0 ondalık) yan yana — aynı tür büyüklük için iki farklı ondalık dili.",
+          "measure": "psql recalls.impact (RC-2026-000001): etkilenen 4 lotun uom kodları ADET, KG, KG, KG. Ekran: 'Stoktaki miktar 97,1' ve 'Sevk edilen miktar 38' — ikisinde de birim yok. recall-detail.tsx:100-101 `format=\"qty\"`, uom geçilmiyor.",
+          "target": "Karışık birimde toplama yapılmasın: KPI birim bazında ayrılsın (ör. '96,1 kg · 1 adet') ya da tek birim varsa `KpiCard suffix={uomCode}` ile birim yazılsın; ondalık her iki miktar KPI'ında aynı olsun → şeritte 0 birimsiz miktar.",
+          "file": "apps/web/src/modules/quality/components/recall-detail.tsx:100-101, packages/core/src/quality/recall.ts (impact.qtyInStock toplaması)",
+          "openedRound": 2,
+          "measureAfter": "Kök neden core'daydı: packages/core/src/lots/trace.ts `simulateRecall` artık `qtyInStockByUom`/`qtyDeliveredByUom` (birim bazında kırılım) üretiyor — `qtyInStock`/`qtyDelivered` GERİYE DÖNÜK UYUMLULUK için (recall_items şeması + e2e SQL) korunuyor ama artık karışık birimde YANLIŞ olduğu bilinerek ekranda kullanılmıyor. recall-detail.tsx: yeni `QtyByUomStripCell` (tek birimde normal KpiCard+suffix, birden fazla birimde KpiCard variant=\"strip\" ile BİT BİT AYNI sınıflarla yerel bir hücre) iki KPI'ı besliyor. Canlı doğrulama (RC-2026-000001, psql impact->>'qtyInStockByUom' = [{\"qty\":\"75.0000\",\"uom\":\"ADET\"},{\"qty\":\"22.1200\",\"uom\":\"KG\"}]): ekranda 'Stoktaki miktar' artık '75 ADET · 22,12 KG' (önceden birimsiz '97,1'), 'Sevk edilen miktar' '38 ADET' (tek birim, suffix). pnpm shot ile doğrulandı (desktop). vitest packages/core/src/__tests__/trace.test.ts yeni test: karışık ADET/KG zincirinde 9/9 miktar taşıyan düğüm birimli, qtyInStockByUom/qtyDeliveredByUom doğru gruplanıyor.",
+          "closedRound": 2
+        },
+        {
+          "id": "kalite-geri-cagirma-p0-reserved-stock",
+          "severity": "P0",
+          "module": "kalite",
+          "text": "Geri çağırma başlatma (initiate()) etkilenen bir lotun eldeki stoğunun bir kısmı bekleyen/sevk edilmemiş bir siparişe rezerve edilmişse tamamen başarısız oluyordu: postStockMove qty=D(q.qty) (rezerve dahil TÜM eldeki miktar) gönderiyor, useReserved:true geçmiyordu; ledger.ts kullanılabilirliği onHand-reserved olarak hesaplayıp INSUFFICIENT_STOCK fırlatıyor, tüm transaction rollback oluyor, 'Geri Çağırmayı Başlat' sessizce (yalnızca jenerik 'İşlem başarısız.' göstererek) hiçbir etki yaratmadan başarısız oluyordu. Aynı desen recordRecallAction('destroy') içinde de vardı.",
+          "measure": "2 ayrı tam e2e koşusunda birebir aynı hatayla deterministik olarak tekrarlandı (flaky değil) — postStockMove'un ledger.ts:214-221'deki `available = onHand.minus(reserved)` kontrolü rezerveli quant'larda `qty > available` olduğunda INSUFFICIENT_STOCK fırlatıyordu.",
+          "target": "postStockMove çağrısına useReserved:true geçilir (rezervasyon da serbest bırakılıp taşınır); recordRecallAction('destroy') içindeki aynı desen de düzeltilir → rezerveli stoklu bir lot için initiate()/destroy() artık başarıyla tamamlanır.",
+          "file": "packages/core/src/quality/recall.ts:134,203",
+          "openedRound": 2,
+          "closedRound": 2,
+          "measureAfter": "packages/core/src/quality/recall.ts: her iki postStockMove çağrısına (`initiate()` karantina transferi + `recordRecallAction('destroy')` imha hareketi) `useReserved: true` eklendi. Yeni vitest testi (packages/core/src/quality/recall.test.ts, 'initiate(): eldeki stoğun bir kısmı rezerveliyken bile lotu bloklar'): 40 kg'lık lotun 30 kg'ı reserve() ile bekleyen siparişe ayrılmış durumdayken simulate()→initiate() artık INSUFFICIENT_STOCK fırlatmadan tamamlanıyor, recall.status='open', lot.status='recalled', kaynak lokasyonda kalan miktar 0 (40 kg'ın TAMAMI karantinaya taşınmış), recordRecallAction('destroy') de aynı senaryoda başarıyla tamamlanıyor. pnpm --filter @plantero/core test (251→252 test, tümü yeşil), pnpm db:reset && pnpm db:check (I40 post_recall_movement dahil 42/42 kural GEÇTİ, 0 ihlal)."
         }
       ],
       "p2": [

@@ -23,12 +23,47 @@ type Recall = { id: string; docNo: string; status: string; reason: string; direc
 const HOP_LABELS: Record<string, string> = { raw_material: 'Hammadde', packaging: 'Ambalaj', semi_finished: 'Yarı mamul', finished: 'Mamul', merchandise: 'Ticari mal', delivered: 'Sevk edildi', unknown: 'Bilinmiyor' };
 const ACTION_LABELS: Record<string, string> = { block: 'Bloklandı', notify_customer: 'Müşteri bilgilendirilecek', notify: 'Bilgilendirildi', return: 'İade alındı', destroy: 'İmha edildi' };
 
+type QtyByUom = { uom: string; qty: string };
+
 function readImpact(impact: unknown) {
-  const i = (impact ?? {}) as { counts?: { lots?: number; workOrders?: number; deliveries?: number; customers?: number }; qtyInStock?: string; qtyDelivered?: string };
+  const i = (impact ?? {}) as {
+    counts?: { lots?: number; workOrders?: number; deliveries?: number; customers?: number };
+    qtyInStock?: string; qtyDelivered?: string;
+    qtyInStockByUom?: QtyByUom[]; qtyDeliveredByUom?: QtyByUom[];
+  };
+  // Tur 2 P1 kalite-geri-cagirma-id-06 kök neden: `qtyInStock`/`qtyDelivered` farklı ölçü
+  // birimlerindeki (ADET/KG) lotları tek çıplak sayıya topluyordu — birim yazılmadığından yanlışlığı
+  // da görünmüyordu. `packages/core/src/lots/trace.ts` artık birim bazında kırılım
+  // (`qtyInStockByUom`/`qtyDeliveredByUom`) üretiyor; eski (bu düzeltmeden önce) kaydedilmiş bir
+  // `recalls.impact` satırında bu alanlar yoksa, birim BİLİNMEDİĞİ için (geriye dönük veri) boş
+  // birimli tek kaleme düşülür — yeni simülasyonlarda bu dal hiç tetiklenmez.
+  const fallback = (total: string | undefined): QtyByUom[] => (total && total !== '0' ? [{ uom: '', qty: total }] : []);
   return {
     lots: i.counts?.lots ?? 0, workOrders: i.counts?.workOrders ?? 0, deliveries: i.counts?.deliveries ?? 0, customers: i.counts?.customers ?? 0,
-    qtyInStock: i.qtyInStock ?? '0', qtyDelivered: i.qtyDelivered ?? '0',
+    qtyInStockByUom: i.qtyInStockByUom?.length ? i.qtyInStockByUom : fallback(i.qtyInStock),
+    qtyDeliveredByUom: i.qtyDeliveredByUom?.length ? i.qtyDeliveredByUom : fallback(i.qtyDelivered),
   };
+}
+
+/**
+ * Karışık birimde TEK bir KpiCard (`NumberFlow`, tek sayı) YETERSİZ — Tur 2 P1 kök nedeni buydu.
+ * Tek birim varsa normal `KpiCard` (suffix=birim); birden fazla birim varsa `KpiCard variant="strip"`
+ * ile BİT BİT AYNI sınıflarla yerel bir hücre (birim bazında " · " ile ayrılmış metin) basılır —
+ * paylaşılan bileşen değiştirilmez, yalnızca bu modüle özgü görüntüleme kuralı eklenir.
+ */
+function QtyByUomStripCell({ title, list }: { title: string; list: QtyByUom[] }) {
+  if (list.length <= 1) {
+    const item = list[0];
+    return <KpiCard title={title} value={item ? Number(item.qty) : null} format="qty" suffix={item?.uom || undefined} variant="strip" />;
+  }
+  const text = list.map((x) => formatQty(x.qty, x.uom || undefined)).join(' · ');
+  return (
+    <div className="h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2 md:h-20 md:w-auto md:flex-1 md:shrink md:snap-align-none md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:border-border/60 md:first:border-l-0 md:bg-transparent md:px-4 md:py-3">
+      <div className="truncate text-xs font-medium text-muted-foreground">{title}</div>
+      <div className="mt-1 truncate text-[19px] leading-none font-semibold tracking-tight tabular-nums">{text}</div>
+      <div className="mt-1 h-[15px]" aria-hidden />
+    </div>
+  );
 }
 
 export function RecallDetail({
@@ -97,8 +132,8 @@ export function RecallDetail({
         <KpiCard title="İş emri" value={impact.workOrders} format="int" variant="strip" />
         <KpiCard title="Sevkiyat" value={impact.deliveries} format="int" variant="strip" />
         <KpiCard title="Müşteri" value={impact.customers} format="int" variant="strip" />
-        <KpiCard title="Stoktaki miktar" value={Number(impact.qtyInStock)} format="qty" variant="strip" />
-        <KpiCard title="Sevk edilen miktar" value={Number(impact.qtyDelivered)} format="qty" variant="strip" />
+        <QtyByUomStripCell title="Stoktaki miktar" list={impact.qtyInStockByUom} />
+        <QtyByUomStripCell title="Sevk edilen miktar" list={impact.qtyDeliveredByUom} />
       </KpiStripRow>
 
       {chain && (chain.upstream.length || chain.downstream.length) ? (
@@ -112,7 +147,12 @@ export function RecallDetail({
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Tur 2 P1 kalite-geri-cagirma-id-05: "Etkilenen müşteriler" ve "Bildirim taslağı" aynı grid
+          satırında olduğundan `items-stretch` (varsayılan) uzun kartın (taslak metni) yüksekliğini
+          KISA karta da uyguluyordu — 403px kutunun 257px'i tamamen boş kalıyordu. Stripe/Linear
+          kartları kendi içeriğine sarılır, komşusuna değil: `items-start` her kartı kendi doğal
+          yüksekliğinde bırakır. */}
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
         <div className="rounded-xl border border-border/60 p-4">
           <div className="mb-3 flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
             <ShieldAlert className="size-3.5" /> Etkilenen müşteriler

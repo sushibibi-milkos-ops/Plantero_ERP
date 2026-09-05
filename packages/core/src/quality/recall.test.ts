@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { schema } from '@plantero/db';
 import { seedBase, withRollback, expectReject, ctx, d } from '../__tests__/helpers.js';
-import { createLot, postStockMove } from '../stock/ledger.js';
+import { createLot, postStockMove, reserve } from '../stock/ledger.js';
 import { simulate, initiate, closeRecall, recordRecallAction, buildDraftMessage } from './recall.js';
 import type { RecallImpact } from '../lots/trace.js';
 
@@ -71,10 +71,45 @@ describe('quality/recall', () => {
     });
   });
 
+  it('initiate(): eldeki stoğun bir kısmı rezerveliyken bile lotu bloklar (tur 2 P0 kalite-geri-cagirma)', async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx);
+      const lot = await createLot(tx, { productId: base.raw.id, lotNo: `RC4-${base.s}`, origin: 'receipt', unitCost: d(50), status: 'released' }, ctx);
+      await postStockMove(tx, { kind: 'receipt', productId: base.raw.id, lotId: lot.id, fromLocationId: base.loc.sup.id, toLocationId: base.loc.hamR01.id, qty: d(40), uomId: base.kg.id, unitCost: d(50), refType: 'receipt', refId: lot.id }, ctx);
+      // Eldeki 40 kg'ın 30'u bekleyen bir siparişe rezerve — önceki davranışta bu, initiate()'in
+      // postStockMove(qty=40, useReserved verilmeden) çağırmasıyla INSUFFICIENT_STOCK (mevcut
+      // kullanılabilir 10) fırlatıp tüm transaction'ı sessizce rollback ediyordu.
+      await reserve(tx, { productId: base.raw.id, lotId: lot.id, locationId: base.loc.hamR01.id, qty: d(30) });
+
+      const { recall } = await simulate(tx, { rootLotId: lot.id, direction: 'both', reason: 'Aflatoksin şüphesi' }, ctx);
+      const initRes = await initiate(tx, recall.id, ctx);
+      expect(initRes.blockedLots).toBeGreaterThanOrEqual(1);
+      expect(initRes.recall.status).toBe('open');
+
+      const [blocked] = await tx.select().from(stockLots).where(eq(stockLots.id, lot.id));
+      expect(blocked!.status).toBe('recalled');
+
+      // Tüm 40 kg karantinaya taşınmış olmalı (rezervasyon dahil) — kaynak lokasyonda eldeki miktar 0.
+      const { stockQuants } = schema;
+      const remaining = await tx.select().from(stockQuants).where(eq(stockQuants.lotId, lot.id));
+      const remainingAtSource = remaining.find((q) => q.locationId === base.loc.hamR01.id);
+      expect(remainingAtSource ? Number(remainingAtSource.qty) : 0).toBe(0);
+
+      const item = await tx.select().from(recallItems).where(eq(recallItems.recallId, recall.id));
+      const blockItem = item.find((i) => i.action === 'block');
+      expect(Number(blockItem!.qtyInStock)).toBeCloseTo(40, 4);
+
+      // destroy() aynı desenle rezerveli-eldeki miktarı da imha edebilmeli.
+      const destroyed = await recordRecallAction(tx, blockItem!.id, 'destroy', 'İmha edildi', ctx);
+      expect(destroyed.actionStatus).toBe('done');
+    });
+  });
+
   it('buildDraftMessage(): müşteriye giden taslak ham Decimal string basmaz (tur 1 P1 core-recall-01)', () => {
     const impact: RecallImpact = {
       lots: [], workOrders: [], deliveries: [], customers: [],
       qtyInStock: '5.2620', qtyDelivered: '38.0000',
+      qtyInStockByUom: [{ uom: 'KG', qty: '5.2620' }], qtyDeliveredByUom: [{ uom: 'KG', qty: '38.0000' }],
       counts: { lots: 4, workOrders: 1, deliveries: 3, customers: 2 },
     };
     const msg = buildDraftMessage('Aflatoksin şüphesi', impact);

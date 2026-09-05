@@ -7,7 +7,7 @@ import type { RecallImpact } from '@plantero/core/lots/trace';
 
 const {
   qcChecks, qcCheckResults, qcTemplates, qcTemplateItems, stockLots, stockQuants, products, partners,
-  receipts, locations, warehouses, supplierScores, recalls, recallItems, users,
+  receipts, locations, warehouses, supplierScores, recalls, recallItems, users, uoms,
 } = schema;
 
 /* ==================================================================== */
@@ -243,6 +243,11 @@ export type TraceView = {
   forward: Awaited<ReturnType<typeof traceForward>>;
   backward: Awaited<ReturnType<typeof traceBackward>>;
   balance: { inQty: string; consumedQty: string; deliveredQty: string; scrapQty: string; onHandQty: string };
+  /**
+   * Tur 2 P1 kalite-izlenebilirlik (Miktar dengesi şeridi): tüm hareketler AYNI kök lota ait
+   * olduğundan (stock_moves.lot_id = lotId) tek bir birim yeterli — lotun kendi `uom_id`'si.
+   */
+  uomCode: string;
 };
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -255,7 +260,13 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
  */
 export async function getTraceForLot(idOrLotNo: string): Promise<TraceView | null> {
   const cond = UUID_RE.test(idOrLotNo) ? eq(stockLots.id, idOrLotNo) : eq(stockLots.lotNo, idOrLotNo);
-  const [row] = await db.select({ lot: stockLots, productName: products.name, sku: products.sku }).from(stockLots).innerJoin(products, eq(products.id, stockLots.productId)).where(cond).limit(1);
+  const [row] = await db
+    .select({ lot: stockLots, productName: products.name, sku: products.sku, uomCode: uoms.code })
+    .from(stockLots)
+    .innerJoin(products, eq(products.id, stockLots.productId))
+    .innerJoin(uoms, eq(uoms.id, stockLots.uomId))
+    .where(cond)
+    .limit(1);
   if (!row) return null;
   const lotId = row.lot.id;
   const [forward, backward] = await Promise.all([traceForward(db, lotId), traceBackward(db, lotId)]);
@@ -272,6 +283,7 @@ export async function getTraceForLot(idOrLotNo: string): Promise<TraceView | nul
   return {
     lot: { ...row.lot, productName: row.productName, sku: row.sku }, forward, backward,
     balance: { inQty: inQty.toFixed(4), consumedQty: consumedQty.toFixed(4), deliveredQty: deliveredQty.toFixed(4), scrapQty: scrapQty.toFixed(4), onHandQty: onHand?.qty ?? '0' },
+    uomCode: row.uomCode,
   };
 }
 
