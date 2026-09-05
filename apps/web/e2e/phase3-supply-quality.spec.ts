@@ -224,8 +224,11 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     expect(etiketAuto).toBe('t');
     expect(etiketSentVia).toContain('email');
 
-    await page.reload();
+    // Ekran doğrulaması: sipariş listesinde her iki taslak da (Kaju pending_approval, Etiket sent)
+    // gerçek durumlarıyla görünüyor.
+    await page.goto('/satin-alma/siparisler');
     await expect(visibleText(page, kajuPoDocNo!)).toBeVisible();
+    await expect(visibleText(page, etiketPoDocNo!)).toBeVisible();
   });
 
   test('Adım 2 — /satin-alma/onay-kuyrugu: Kaju taslağını Onayla → sipariş detayında "Tedarikçiye gönder"', async () => {
@@ -368,7 +371,12 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     expect(lot[0]).toBe('released');
     expect(lot[1]).toBe('internal');
 
-    const move = psqlRows(`select journal_entry_id from stock_moves where kind='quarantine_release' and lot_id='${ctx.qcLotId2}'`)[0]!;
+    // NOT (bkz. rapor K7): `psql -t -A` tek sütunlu bir satırda o sütun NULL ise TAMAMEN BOŞ bir satır
+    // yazdırır — bu da `psqlRows` yardımcısının "satır yok" (`''`) durumuyla ayırt edilemez hale gelip
+    // `[0]` çağrısını `undefined` yapar (canlı olarak yakalandı). Bu yüzden NULL beklenen tek bir sütunu
+    // asla YALNIZ başına seçmiyoruz — yanına asla null olmayan bir eşlik sütunu (`kind`) eklenir.
+    const move = psqlRows(`select journal_entry_id, kind from stock_moves where kind='quarantine_release' and lot_id='${ctx.qcLotId2}'`)[0]!;
+    expect(move, 'quarantine_release hareketi bulunamalı').toBeTruthy();
     expect(move[0], 'quarantine_release değersiz olmalı — journal_entry_id NULL').toBeFalsy();
   });
 
@@ -414,7 +422,8 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     expect(mamul, 'Seed: sevk edilmiş VE hâlâ eldeki stoğu olan bir mamul lotu bulunmalı').toBeTruthy();
     [ctx.mamulLotId, ctx.mamulLotNo, ctx.mamulProductId] = mamul!;
 
-    const wo = psqlRows(`select origin_work_order_id from stock_lots where id = '${ctx.mamulLotId}'`)[0]!;
+    const wo = psqlRows(`select origin_work_order_id, lot_no from stock_lots where id = '${ctx.mamulLotId}'`)[0]!;
+    expect(wo[0], `mamul lotu (${ctx.mamulLotNo}) bir iş emrine bağlı olmalı (origin='production')`).toBeTruthy();
     ctx.woId = wo[0]!;
     const woRow = psqlRows(`select doc_no from work_orders where id = '${ctx.woId}'`)[0]!;
     ctx.woDocNo = woRow[0]!;
