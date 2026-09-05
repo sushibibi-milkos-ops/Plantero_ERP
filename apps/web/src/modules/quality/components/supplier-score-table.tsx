@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { DataTable, type ColumnDef } from '@/components/data-table';
 import { Sparkline } from '@/components/sparkline';
-import { QtyCell } from '@/components/qty-cell';
+import { formatPct } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { SupplierBoardRow } from '../queries';
 
@@ -37,7 +37,7 @@ export function SupplierScoreTable({ rows }: { rows: SupplierBoardRow[] }) {
       { id: 'trend', accessorFn: () => 0, header: 'Trend', meta: { width: 110, mobile: 'hidden', noSort: true }, cell: ({ row }) => (row.original.trend.length > 1 ? <Sparkline data={row.original.trend} tone={scoreTone(row.original.score) === 'danger' ? 'danger' : scoreTone(row.original.score) === 'warning' ? 'info' : 'success'} /> : <span className="text-xs text-muted-foreground">—</span>) },
       { id: 'onTime', accessorFn: (r) => (r.receipts ? r.onTimeReceipts / r.receipts : 0), header: 'Zamanında', meta: { align: 'right', width: 100, mobile: 'hidden' }, cell: ({ row }) => <span className="num text-[13px]">{row.original.onTimeReceipts}/{row.original.receipts}</span> },
       { id: 'qc', accessorFn: (r) => (r.qcChecks ? r.qcPassed / r.qcChecks : 1), header: 'QC geçme', meta: { align: 'right', width: 100, mobile: 'hidden' }, cell: ({ row }) => <span className="num text-[13px]">{row.original.qcChecks ? `${row.original.qcPassed}/${row.original.qcChecks}` : '—'}</span> },
-      { id: 'rejected', accessorFn: (r) => r.rejectedQty, header: 'Red miktarı', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <QtyCell value={row.original.rejectedQty} /> },
+      { id: 'qtyAccuracy', accessorFn: (r) => r.qtyAccuracyPct, header: 'Miktar doğruluğu', meta: { align: 'right', width: 130, mobile: 'hidden' }, cell: ({ row }) => <span className="num text-[13px]">{formatPct(row.original.qtyAccuracyPct, 1)}</span> },
     ],
     [],
   );

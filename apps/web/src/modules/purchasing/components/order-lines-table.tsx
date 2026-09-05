@@ -20,6 +20,13 @@ type Lines = NonNullable<Awaited<ReturnType<typeof getPurchaseOrderDetail>>>['li
  * araya `line.vatRate` gösteren bir 'KDV' sütunu girdi — belge sonundaki Ara toplam/KDV/Genel
  * toplam bloğu (page.tsx) satırların toplamını doğrulanabilir kılıyor. */
 export function OrderLinesTable({ lines }: { lines: Lines }) {
+  // Tur 4 P2 tedarik-po-detay-06 kök neden: 'Beklenen tarih' sütunu satır düzeyinde HİÇ
+  // doldurulmuyor (mal kabul planlaması belge başlığındaki tek tarihe göre yapılıyor, satır
+  // bazında ayrı bir teslim tarihi girilmiyor) — sütun her PO'da 0/N dolulukla ~250px boş yer
+  // kaplıyordu; aynı bilgi zaten sayfa başlığında ("Beklenen: dd.MM.yyyy") var. Hiçbir satırda
+  // dolu değilse sütun (başlık+hücreler) tamamen gizlenir; herhangi bir satırda doluysa (gelecekte
+  // satır bazlı tarih girilirse) geri döner.
+  const hasExpectedDate = lines.some((r) => r.line.expectedDate);
   return (
     <>
       <div className="hidden overflow-x-auto rounded-lg border border-border/60 md:block">
@@ -33,7 +40,7 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
               <th className="px-3 py-2 text-right font-medium">Birim fiyat</th>
               <th className="px-3 py-2 text-right font-medium">KDV</th>
               <th className="px-3 py-2 text-right font-medium">Tutar (KDV hariç)</th>
-              <th className="px-3 py-2 font-medium">Beklenen tarih</th>
+              {hasExpectedDate ? <th className="px-3 py-2 font-medium">Beklenen tarih</th> : null}
             </tr>
           </thead>
           <tbody>
@@ -55,7 +62,7 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                       kırpar: "%20", "%8,5". */}
                   <td className="px-3 py-2.5 text-right font-mono text-[13px] tabular-nums text-muted-foreground">{formatPct(r.line.vatRate, 2)}</td>
                   <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.lineSubtotal} /></td>
-                  <td className="px-3 py-2.5 text-muted-foreground">{r.line.expectedDate ? formatDate(r.line.expectedDate) : '—'}</td>
+                  {hasExpectedDate ? <td className="px-3 py-2.5 text-muted-foreground">{r.line.expectedDate ? formatDate(r.line.expectedDate) : '—'}</td> : null}
                 </tr>
               );
             })}

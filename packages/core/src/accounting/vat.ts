@@ -19,14 +19,18 @@ import type { ActorCtx } from '../types.js';
  * (`=`) aradığı için alt hesabı görmez, dolayısıyla bozulmaz. `190`/`360` ise checks/21'in
  * beklediği gibi doğrudan bu dönemin tarihiyle, ham kodla işlenir.
  *
- * checks/21_vat_carryforward.sql formülü (değiştirilemez, harfiyen uygulanır):
+ * Standart KDV mahsup formülü (checks/21_vat_carryforward.sql, Tur 4'te düzeltildi — bkz. o
+ * dosyanın başındaki not; `packages/db/src/checks/*.sql` veri-critic'in kendi yazma alanıdır,
+ * şema gibi dondurulmuş DEĞİLDİR):
  *   net = carriedFromPrev + inputVat − outputVat
- *   payable = max(net, 0); carriedToNext = max(−net, 0)
- * NOT: Bu, standart KDV mahsup mantığının (payable = outputVat − inputVat − carriedFromPrev)
- * TERSİDİR — checks/21 dosyasında payable/carriedToNext etiketleri klasik muhasebeye göre
- * yer değiştirmiş görünüyor. Şema ve kontrol dosyaları dondurulmuş olduğundan burada
- * DEĞİŞTİRİLMEDİ; servis kontrolün kendi formülünü birebir uygular (aksi halde db:check
- * kırmızı kalır). Bu, ileride kontrol sahibi tarafından gözden geçirilmeli — bkz. görev raporu.
+ *   net ≥ 0 ⇒ indirilecek+devreden hesaplananı karşılıyor/aşıyor ⇒ ödenecek KDV yok,
+ *             fark bir sonraki aya DEVREDEN KDV alacağı (190, borç) olarak taşınır
+ *   net < 0 ⇒ hesaplanan KDV indirilecek+devreden'i aşıyor ⇒ aradaki fark vergi dairesine
+ *             ÖDENECEK KDV'dir (360, alacak)
+ *   ⇒ payable = max(−net, 0); carriedToNext = max(net, 0)
+ * (Önceki bir tur bunun tersini uygulamıştı — net pozitifken, yani işletme net KDV alacaklısıyken
+ * bunu 360'a "ödenecek KDV" olarak yazıyor, gerçek 190 devreden alacağını hiç kaydetmiyordu;
+ * bkz. Tur 4 P0 düzeltmesi.)
  */
 
 export type VatCloseResult = {
@@ -103,8 +107,8 @@ export async function closeVatPeriod(tx: DbOrTx, period: string, ctx: ActorCtx):
 
   // checks/21_vat_carryforward.sql formülü — birebir (bkz. dosya başı not)
   const net = carriedFromPrev.plus(inputVat).minus(outputVat);
-  const payable = max(net, ZERO);
-  const carriedToNext = max(net.neg(), ZERO);
+  const payable = max(net.neg(), ZERO);
+  const carriedToNext = max(net, ZERO);
 
   await ensureCoreAccounts(tx);
 

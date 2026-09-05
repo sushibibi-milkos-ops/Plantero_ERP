@@ -151,7 +151,7 @@ export function PurchaseOrderForm({
            * sağ kenar 1032px) doğrudan devralıyor. */}
           <div className="space-y-1.5">
             <FieldLabel>Ürün ekle (arama ile)</FieldLabel>
-            <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
+            <Combobox id="po-product-picker" value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
           </div>
 
           {form.formState.errors.lines?.message ? <p className="mt-2 text-xs text-destructive">{form.formState.errors.lines.message}</p> : null}
@@ -192,7 +192,23 @@ export function PurchaseOrderForm({
               );
             })}
             {fields.length === 0 ? (
-              <EmptyState compact icon={ShoppingBag} title="Henüz satır yok" description="Ürün arayarak satır ekleyin." />
+              // Tur 4 P1 tedarik-yeni-06 kök neden: bu boş durum ikon+başlık+açıklama taşıyordu
+              // ama EYLEM taşımıyordu (kriter 7 "ikon+metin+eylem" istiyor; modülün diğer boş
+              // durumları — onay kuyruğu EmptyState action, kritik stok "Filtreyi temizle" — eylem
+              // geçiyor). Yukarıdaki ürün kombobox'ı zaten var olan tek giriş noktası — ayrı bir
+              // "ürün ekle" akışı İCAT ETMEK yerine (kriter 2/11) o kombobox'ı `id` üzerinden açan
+              // bir buton: h-11 (>=44px dokunma hedefi, 390px'te de).
+              <EmptyState
+                compact
+                icon={ShoppingBag}
+                title="Henüz satır yok"
+                description="Ürün arayarak satır ekleyin."
+                action={
+                  <Button type="button" variant="outline" size="sm" className="h-11 sm:h-8" onClick={() => document.getElementById('po-product-picker')?.click()}>
+                    Ürün ekle
+                  </Button>
+                }
+              />
             ) : null}
           </div>
         </div>

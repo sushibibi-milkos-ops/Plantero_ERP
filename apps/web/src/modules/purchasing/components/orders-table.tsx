@@ -12,7 +12,19 @@ import type { PurchaseOrderRow } from '../queries';
 export function OrdersTable({ orders }: { orders: PurchaseOrderRow[] }) {
   const columns = useMemo<ColumnDef<PurchaseOrderRow, unknown>[]>(
     () => [
-      { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Sipariş no', meta: { width: 150, mobile: 'title', className: 'font-mono' } },
+      {
+        // Tur 4 P2 tedarik-siparisler-04 kök neden: 'AI' işareti başlıksız (`header:''`) ama
+        // SIRALANABİLİR ayrı bir sütundaydı (`Durum`/`Alınan` arasında boş bir th + 16.6x28px
+        // sıralama düğmesi) — Linear'da adsız sıralanabilir sütun yok. İşaret, zaten sıralanamayan
+        // (aria-label taşıyan) belge no hücresine taşındı; ayrı sütun tamamen kaldırıldı.
+        id: 'docNo', accessorFn: (r) => r.docNo, header: 'Sipariş no', meta: { width: 150, mobile: 'title', className: 'font-mono' },
+        cell: ({ row }) => (
+          <span className="inline-flex items-center gap-1.5">
+            {row.original.docNo}
+            {row.original.isAiGenerated ? <Sparkles className="size-3.5 shrink-0 text-primary" aria-label="AI taslağı" /> : null}
+          </span>
+        ),
+      },
       // width + iç inline-block (tur 2 P0 tedarik-siparisler-03 kök nedeni — DÜZELTME 2): yalnızca
       // `meta.className:'truncate'` (td üzerinde) YETMEZ — `table-layout:auto`'da bir td'nin
       // min-content genişliği İÇERİĞİNDEN (burada `white-space:nowrap` bir metin, "Kahve Dünyası
@@ -27,19 +39,19 @@ export function OrdersTable({ orders }: { orders: PurchaseOrderRow[] }) {
       // YOKTUR, `max-w-full truncate` üst bağlamın kendi genişliğine göre küçülür.
       { accessorKey: 'partnerName', header: 'Tedarikçi', meta: { width: 280, mobile: 'subtitle' }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[280px]" title={row.original.partnerName}>{row.original.partnerName}</span> },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 160, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="purchase_order" /> },
-      {
-        id: 'ai', accessorFn: (r) => r.isAiGenerated, header: '', meta: { width: 36, mobile: 'hidden' },
-        cell: ({ row }) => (row.original.isAiGenerated ? <Sparkles className="size-3.5 text-primary" aria-label="AI taslağı" /> : null),
-      },
       { accessorKey: 'receivedPct', header: 'Alınan', meta: { align: 'right', width: 90 }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">%{Math.round(row.original.receivedPct)}</span> },
-      { accessorKey: 'expectedDate', header: 'Beklenen tarih', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => (row.original.expectedDate ? formatDate(row.original.expectedDate) : <span className="text-muted-foreground">—</span>) },
+      // Tur 4 P2 tedarik-siparisler-04 kök neden (devamı): tarih hücreleri orantılı rakamla
+      // (fontVariantNumeric:'normal') basılıyordu — sütun ragged hizalanıyordu. `tabular-nums`
+      // eklendi (mono YAPILMADI — modülün tarih hücreleri hiçbir yerde mono değil, yalnızca
+      // rakam genişliği sabitlenir).
+      { accessorKey: 'expectedDate', header: 'Beklenen tarih', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => (row.original.expectedDate ? <span className="tabular-nums">{formatDate(row.original.expectedDate)}</span> : <span className="text-muted-foreground">—</span>) },
       // Tur 1 P1 tedarik-siparisler-01/02 kök neden: mobil kartın tek metriği "rest" hücrelerinin
       // SONUNCUSU (DataTableMobileCards) — `orderDate` tutardan SONRA tanımlıydı ve mobil rolü yoktu,
       // metrik yuvasına tutar yerine sipariş tarihi düşüyordu. `mobile:'meta'` ile tarih artık 2.
       // satırda cari adının yanında bir ipucu olarak görünür (muhasebe/invoices-table.tsx'teki
       // `dueDate` ile aynı kalıp — kriter 11), `grandTotal` tabloda SONA alınarak "rest" grubunun
       // son (ve tek gösterilen) elemanı, dolayısıyla mobil metrik, oldu.
-      { accessorKey: 'orderDate', header: 'Sipariş tarihi', meta: { width: 120, mobile: 'meta' }, cell: ({ row }) => formatDate(row.original.orderDate) },
+      { accessorKey: 'orderDate', header: 'Sipariş tarihi', meta: { width: 120, mobile: 'meta' }, cell: ({ row }) => <span className="tabular-nums">{formatDate(row.original.orderDate)}</span> },
       { accessorKey: 'grandTotal', header: 'Tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => <MoneyCell value={row.original.grandTotal} /> },
     ],
     [],

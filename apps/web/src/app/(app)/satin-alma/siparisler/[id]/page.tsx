@@ -47,7 +47,10 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
           </div>
         }
       >
-        <div className="flex flex-wrap items-center gap-2 text-sm">
+        {/* Tur 4 P1 tedarik-po-detay-05 kök neden (kısmi): bu satır `text-sm` (14px) taşıyordu —
+         * sayfanın geri kalanı (gövde 13px) ile aynı rolde ikinci bir boyut açıyordu, görünür ayrı
+         * font boyutu sayısını 8'e çıkarıyordu (hedef <=6). Gövde kademesine (13px) indirildi. */}
+        <div className="flex flex-wrap items-center gap-2 text-[13px]">
           <StatusBadge status={po.status} kind="purchase_order" size="md" />
           {po.isAiGenerated ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
@@ -85,7 +88,14 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
           </div>
           <div className="flex items-center justify-between border-t border-border/60 pt-1.5">
             <dt className="text-[13px] font-medium">Genel toplam</dt>
-            <dd><MoneyCell value={po.grandTotal} className="text-[15px] font-semibold tabular-nums" /></dd>
+            {/* Tur 4 P1 tedarik-po-detay-05 kök neden: bu satır 15/600 taşıyordu — sayfa
+             * başlığındaki 20/600 (satır 44) ile AYNI sayıyı ('₺113.040,00') ÜÇÜNCÜ bir vurguda
+             * (20/600, 15/600, belge zincirinde 11/400) tekrar ediyordu; okuyucu hangi toplamın
+             * otorite olduğunu tipografiden çıkaramıyordu. Belgenin TEK büyütülmüş toplamı sayfa
+             * başlığında kalır (Stripe faturasındaki gibi); bu özet satırı gövde kademesine (13px)
+             * iner — kalın kalır (bu blokta hâlâ "son satır" vurgusu taşır) ama artık AYRI bir
+             * boyut kademesi AÇMAZ. */}
+            <dd><MoneyCell value={po.grandTotal} className="text-[13px] font-semibold" /></dd>
           </div>
         </dl>
       </div>
@@ -98,7 +108,12 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
               <ul className="space-y-1.5 text-[13px]">
                 {receipts.map((r) => (
                   <li key={r.id} className="flex items-center justify-between gap-2">
-                    <Link href={`/depo/mal-kabul/${r.id}`} className="font-mono hover:underline">{r.docNo}</Link>
+                    {/* Tur 4 P2 tedarik-po-detay-06: 390px'te bu bağlantı (mal kabul detayına giden
+                     * TEK yol) 109x19,5px'ti — 44px dokunma hedefinin altında. `max-sm:min-h-11` +
+                     * dengeleyici negatif dikey kenar boşluğu (replenishment-panel.tsx'teki
+                     * checkbox kalıbıyla aynı teknik) çevredeki satır aralığını büyütmeden hedefi
+                     * büyütür. */}
+                    <Link href={`/depo/mal-kabul/${r.id}`} className="inline-flex items-center font-mono hover:underline max-sm:min-h-11 max-sm:-my-3">{r.docNo}</Link>
                     <StatusBadge status={r.status} kind="receipt" />
                   </li>
                 ))}

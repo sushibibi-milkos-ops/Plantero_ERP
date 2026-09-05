@@ -170,6 +170,12 @@ export async function getSupplierScoreTrend(partnerId: string): Promise<Supplier
 export type SupplierBoardRow = {
   partnerId: string; partnerName: string; partnerCode: string; period: string; score: number;
   receipts: number; onTimeReceipts: number; qcChecks: number; qcPassed: number; rejectedQty: string; receivedQty: string;
+  /** 0-100, `1 − rejectedQty/receivedQty` (packages/core/src/quality/supplierScore.ts ile birebir aynı formül).
+   *  kalite-tedarikci-06 (tur 4, P1) kök neden: receipt_lines.rejectedQty karışık birimli (ADET+KG) satırların
+   *  ham toplamı birimsiz basılıyordu. `supplier_scores` şeması dondurulmuş olduğundan (birim kolonu yok) ve
+   *  bu oran zaten skorun %20 ağırlıklı bileşeni olduğundan, sütun birimsiz orana çevrilir — karışık birim
+   *  sorunu miktarları toplamadan ortadan kalkar. */
+  qtyAccuracyPct: number;
   trend: number[];
 };
 
@@ -181,10 +187,13 @@ export function boardFromScores(rows: SupplierScoreRow[]): SupplierBoardRow[] {
   for (const [partnerId, list] of byPartner) {
     const sorted = [...list].sort((a, b) => a.period.localeCompare(b.period));
     const last = sorted[sorted.length - 1]!;
+    const received = D(last.receivedQty);
+    const rawAccuracy = received.gt(0) ? D(1).minus(D(last.rejectedQty).div(received)) : D(1);
+    const qtyAccuracyPct = (rawAccuracy.lt(0) ? D(0) : rawAccuracy).mul(100).toNumber();
     out.push({
       partnerId, partnerName: last.partnerName, partnerCode: last.partnerCode, period: last.period, score: Number(last.score),
       receipts: last.receipts, onTimeReceipts: last.onTimeReceipts, qcChecks: last.qcChecks, qcPassed: last.qcPassed,
-      rejectedQty: last.rejectedQty, receivedQty: last.receivedQty, trend: sorted.map((s) => Number(s.score)),
+      rejectedQty: last.rejectedQty, receivedQty: last.receivedQty, qtyAccuracyPct, trend: sorted.map((s) => Number(s.score)),
     });
   }
   return out.sort((a, b) => a.score - b.score);

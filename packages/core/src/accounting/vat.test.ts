@@ -49,27 +49,29 @@ describe('accounting/vat — closeVatPeriod (checks/21_vat_carryforward.sql form
 
       expect(previousPeriod('2031-02')).toBe('2031-01');
 
-      await makeInvoice(tx, b, 'sales', '100.0000', '2031-01-15', 1);
-      await makeInvoice(tx, b, 'purchase', '40.0000', '2031-01-20', 2);
+      // Sadece alış (satış yok) — standart KDV mantığında bu ay ÖDENECEK KDV YOK, tamamı
+      // bir sonraki aya DEVREDEN KDV alacağı (190, borç) olarak taşınır (Tur 4 P0 düzeltmesi:
+      // eski kod bunun tersini yapıp 360'a hayali bir "ödenecek KDV" yazıyordu).
+      await makeInvoice(tx, b, 'purchase', '1000.0000', '2031-01-20', 2);
 
       const probe1 = await balanceProbe(tx);
       const r1 = await closeVatPeriod(tx, '2031-01', ctx);
-      expect(r1.outputVat.toFixed(4)).toBe('100.0000');
-      expect(r1.inputVat.toFixed(4)).toBe('40.0000');
+      expect(r1.outputVat.toFixed(4)).toBe('0.0000');
+      expect(r1.inputVat.toFixed(4)).toBe('1000.0000');
       expect(r1.carriedFromPrev.toFixed(4)).toBe('0.0000');
-      // checks/21 formülü: net = carriedFromPrev + inputVat - outputVat = 0+40-100 = -60
-      // payable = max(net,0) = 0 ; carriedToNext = max(-net,0) = 60
+      // checks/21 formülü (standart KDV mahsubu): net = carriedFromPrev + inputVat - outputVat = 0+1000-0 = 1000
+      // net ≥ 0 ⇒ ödenecek KDV yok, tamamı devreden: payable = max(-net,0) = 0 ; carriedToNext = max(net,0) = 1000
       expect(r1.payable.toFixed(4)).toBe('0.0000');
-      expect(r1.carriedToNext.toFixed(4)).toBe('60.0000');
+      expect(r1.carriedToNext.toFixed(4)).toBe('1000.0000');
       expect(r1.journalEntryId).toBeTruthy();
       expect(r1.skipped).toBeFalsy();
 
-      // Fiş dengeli atılmış: 190 borç 60, 391.99 alacak 60 (getAccountBalance/probe alt hesapları
+      // Fiş dengeli atılmış: 190 borç 1000, 391.99 alacak 1000 (getAccountBalance/probe alt hesapları
       // ana hesaba yuvarladığı için '391.99' hareketi '391' sondasında da görünür — bu satır
       // checks/12_vat.sql'in TAM eşleşmesini (jl.account_code = '391', LIKE değil) bozmaz;
       // aşağıda ham satırlar üzerinden ayrıca doğrulanıyor.
-      expect((await probe1.bal('190', 'VUK')).toFixed(4)).toBe('60.0000');
-      expect((await probe1.bal('391.99', 'VUK')).toFixed(4)).toBe('-60.0000');
+      expect((await probe1.bal('190', 'VUK')).toFixed(4)).toBe('1000.0000');
+      expect((await probe1.bal('391.99', 'VUK')).toFixed(4)).toBe('-1000.0000');
       expect((await probe1.bal('360', 'VUK')).toFixed(4)).toBe('0.0000');
       // I12'nin aradığı TAM eşleşme (`account_code = '391'` / `'191'`) hiçbir satırda yok —
       // fiş yalnızca 190/360/391.99 kullanır, ham 391/191 asla dokunulmaz.
@@ -81,24 +83,25 @@ describe('accounting/vat — closeVatPeriod (checks/21_vat_carryforward.sql form
       expect(r1again.skipped).toBe(true);
       expect(r1again.journalEntryId).toBe(r1.journalEntryId);
 
-      // İkinci ay: devreden zinciri (carriedFromPrev = önceki ayın carriedToNext)
-      await makeInvoice(tx, b, 'sales', '10.0000', '2031-02-05', 3);
+      // İkinci ay: devreden alacak (1000) bu ayın büyük bir satışını karşılamaya yetmiyor —
+      // hesaplanan KDV devreden+indirilecek'i aşıyor, fark vergi dairesine ÖDENECEK KDV'dir (360, alacak)
+      await makeInvoice(tx, b, 'sales', '1200.0000', '2031-02-05', 3);
       await makeInvoice(tx, b, 'purchase', '5.0000', '2031-02-10', 4);
 
       const probe2 = await balanceProbe(tx);
       const r2 = await closeVatPeriod(tx, '2031-02', ctx);
       expect(r2.carriedFromPrev.toFixed(4)).toBe(r1.carriedToNext.toFixed(4));
-      // net = 60 + 5 - 10 = 55 ⇒ payable=55, carriedToNext=0
-      expect(r2.payable.toFixed(4)).toBe('55.0000');
+      // net = 1000 + 5 - 1200 = -195 ⇒ payable = max(195,0) = 195, carriedToNext = max(-195,0) = 0
+      expect(r2.payable.toFixed(4)).toBe('195.0000');
       expect(r2.carriedToNext.toFixed(4)).toBe('0.0000');
-      expect((await probe2.bal('360', 'VUK')).toFixed(4)).toBe('-55.0000');
-      expect((await probe2.bal('391.99', 'VUK')).toFixed(4)).toBe('55.0000');
+      expect((await probe2.bal('360', 'VUK')).toFixed(4)).toBe('-195.0000');
+      expect((await probe2.bal('391.99', 'VUK')).toFixed(4)).toBe('195.0000');
       const entryLines2 = await tx.select({ code: journalLines.accountCode }).from(journalLines).where(eq(journalLines.entryId, r2.journalEntryId!));
       expect(entryLines2.map((l) => l.code).sort()).toEqual(['360', '391.99']);
 
       // vat_periods zinciri: I21(a) — bu ayın carried_from_prev = önceki ayın carried_to_next
       const [row2] = await tx.select().from(vatPeriods).where(eq(vatPeriods.period, '2031-02'));
-      expect(row2!.carriedFromPrev).toBe('60.0000');
+      expect(row2!.carriedFromPrev).toBe('1000.0000');
     });
   });
 });

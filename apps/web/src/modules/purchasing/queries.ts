@@ -1,7 +1,7 @@
 import 'server-only';
 import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
-import { D, getChain } from '@plantero/core';
+import { D, toDb, getChain, getOnHand } from '@plantero/core';
 
 const {
   purchaseOrders, purchaseOrderLines, partners, products, uoms, warehouses, reorderRules,
@@ -201,6 +201,25 @@ export async function listCriticalStock(): Promise<CriticalStockRow[]> {
     .where(eq(reorderRules.isActive, true))
     .orderBy(asc(products.name));
 
+  // Tur 4 P1 tedarik-kritik-stok-08 kök neden: motor hiç çalışmamışken ('lastEvaluatedAt' NULL)
+  // "Kullanılabilir" yalnızca motorun bıraktığı son değere (`lastOnHand`, o zaman da NULL)
+  // bağımlıydı — oysa bu, motorun KARARINDAN (Risk/Kapsama/Önerilen) bağımsız, `stock_quants`'tan
+  // HER ZAMAN bilinen bir değer. Motor hiç değerlendirmediği satırlarda `getOnHand` (core'un TEK
+  // okuma yolu — motorun kendisinin de kullandığı fonksiyon, packages/core/src/purchasing/
+  // replenishment.ts:91 ile BİREBİR aynı çağrı imzası) ile canlı hesaplanır; motor bir kez
+  // çalıştıktan sonra onun ürettiği `lastOnHand`'a güvenilmeye devam edilir (ekstra sorgu yok).
+  // Risk/Kapsama (gün)/Önerilen sipariş — motorun KARARLARI — bu canlı okumadan ETKİLENMEZ, hâlâ
+  // yalnızca motor çalıştıktan sonra dolar (Tur 3 P0 tedarik-kritik-stok-06 uydurma '0' rejeksiyonu
+  // GERİ GELMEZ: "Kullanılabilir" artık gerçek ama "Risk" hâlâ 'Değerlendirilmedi' kalır).
+  const unevaluated = rows.filter((r) => r.rule.lastEvaluatedAt === null);
+  const liveOnHandByRuleId = new Map<string, string>();
+  if (unevaluated.length) {
+    const live = await Promise.all(
+      unevaluated.map((r) => getOnHand(db, { productId: r.rule.productId, warehouseId: r.rule.warehouseId, includeQuarantine: false })),
+    );
+    unevaluated.forEach((r, i) => liveOnHandByRuleId.set(r.rule.id, toDb(live[i].available)));
+  }
+
   return rows.map((r) => {
     const daysOfCover = r.rule.lastDaysOfCover;
     const leadTimeDays = r.rule.leadTimeDays;
@@ -224,9 +243,10 @@ export async function listCriticalStock(): Promise<CriticalStockRow[]> {
     } else if (r.rule.lastEvaluatedAt && D(r.rule.lastSuggestedQty ?? 0).gt(0)) {
       risk = 'critical';
     }
+    const available = r.rule.lastOnHand ?? liveOnHandByRuleId.get(r.rule.id) ?? null;
     return {
       ruleId: r.rule.id, productId: r.rule.productId, sku: r.sku, productName: r.productName, warehouseCode: r.warehouseCode,
-      onHand: r.rule.lastOnHand, reserved: '0', available: r.rule.lastOnHand,
+      onHand: available, reserved: '0', available,
       minQty: r.rule.minQty, maxQty: r.rule.maxQty, dailyConsumption: r.rule.dailyConsumption, daysOfCover,
       leadTimeDays, safetyDays, suggestedQty: r.rule.lastSuggestedQty ?? '0',
       preferredSupplierId: r.rule.preferredSupplierId, preferredSupplierName: r.supplierName,

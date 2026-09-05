@@ -117,6 +117,14 @@ export function CriticalStockTable({
     { columnId: 'risk', title: 'Risk', options: [{ value: 'critical', label: 'Kritik' }, { value: 'warning', label: 'Uyarı' }, { value: 'none', label: 'Normal' }, { value: 'unknown', label: 'Değerlendirilmedi' }] },
   ];
 
+  // Tur 4 P1 tedarik-kritik-stok-07 kök neden: DataTable hover'ı yalnızca `clickable`
+  // (rowHref||onRowClick) satırlara veriyor (data-table.tsx:256) — bu tablo ikisini de geçmiyordu,
+  // satır arka planı hover'da değişmiyordu ama satır aksiyon düğmesi ('…') yine de beliriyordu.
+  // Satır zaten var olan "Kuralı düzenle" eylemini açsın: `onRowClick` ile aynı davranış —
+  // hover arka planı, imleç ve klavye erişimi artık ortak bileşenden gelir, modülün geri kalanıyla
+  // (siparişler, sipariş detayı) aynı satır davranışı.
+  const editRule = canManageRule ? onEditRule : undefined;
+
   return (
     <DataTable
       columns={columns}
@@ -128,7 +136,8 @@ export function CriticalStockTable({
       emptyTitle={filterEmptied ? 'Filtreye uyan kural yok' : 'Kritik stok kuralı yok'}
       emptyDescription={filterEmptied ? `${rows.length} kuralın hiçbiri kritik/uyarı değil.` : 'Kural tanımlı ürün bulunamadı.'}
       emptyAction={filterEmptied && onClearFilter ? <Button variant="outline" size="sm" onClick={onClearFilter}>Filtreyi temizle</Button> : undefined}
-      rowActions={canManageRule && onEditRule ? (row) => [{ label: 'Kuralı düzenle', icon: SlidersHorizontal, onSelect: () => onEditRule(row) }] : undefined}
+      onRowClick={editRule}
+      rowActions={editRule ? (row) => [{ label: 'Kuralı düzenle', icon: SlidersHorizontal, onSelect: () => editRule(row) }] : undefined}
     />
   );
 }

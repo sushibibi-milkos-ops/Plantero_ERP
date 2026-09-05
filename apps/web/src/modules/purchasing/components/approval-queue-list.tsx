@@ -86,12 +86,16 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Tur 4 P1 tedarik-onay-07 kök neden (kısmi): kbd ipuçları tek-seferlik 10px taşıyordu —
+       * modülün geri kalanı (bkz. /satin-alma/siparisler PageHeader description) en fazla 4 boyut
+       * (24/14/13/12) kullanırken bu ekranda 10px BEŞİNCİ bir kademe açıyordu. Açık boyut yok,
+       * çevredeki `text-xs` (12px) etiket kademesini DEVRALIR (kbd üzerinde ayrı boyut sınıfı yok). */}
       <div className="hidden items-center gap-3 text-xs text-muted-foreground sm:flex">
         <Keyboard className="size-3.5" />
-        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">j</kbd>/<kbd className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">k</kbd> gezin</span>
-        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">a</kbd> onayla</span>
-        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">r</kbd> reddet</span>
-        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">e</kbd> düzenle</span>
+        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono">j</kbd>/<kbd className="rounded bg-muted px-1 py-0.5 font-mono">k</kbd> gezin</span>
+        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono">a</kbd> onayla</span>
+        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono">r</kbd> reddet</span>
+        <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono">e</kbd> düzenle</span>
       </div>
 
       {/* Tur 3 P1 tedarik-onay-05 kök neden: `sm:grid-cols-2 xl:grid-cols-3` yalnızca kuyruk ≥2-3
@@ -106,15 +110,29 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
           <div
             key={item.approvalId}
             onClick={() => setSelected(i)}
-            className={`flex flex-col gap-3 rounded-xl border p-4 ${i === selected ? 'border-primary ring-1 ring-primary' : 'border-border/60'}`}
+            // Tur 4 P1 tedarik-onay-06 kök neden: seçim durumu `border-primary ring-primary`
+            // kullanıyordu — birincil renk (--primary) aynı ekranda "Onayla" butonuyla da
+            // taşınıyordu, seçili kart zaten onaylanmış gibi okunuyordu. Seçim artık NÖTR
+            // (`bg-accent/40` + `ring-ring/40`) — DataTable'ın kendi tıklanabilir-satır seçim
+            // kalıbıyla (data-table.tsx:256) aynı token'lar, kriter 11 tutarlılık. `--primary`
+            // ekranda yalnızca "Onayla" butonunda kalır.
+            className={`flex flex-col gap-3 rounded-xl border p-4 ${i === selected ? 'border-border bg-accent/40 ring-1 ring-ring/40' : 'border-border/60'}`}
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <Sparkles className="size-3.5 shrink-0 text-primary" />
-                  <Link href={`/satin-alma/siparisler/${item.orderId}`} className="truncate font-mono text-sm font-medium hover:underline">{item.docNo}</Link>
+                  {/* Tur 4 P1 tedarik-onay-06: Sparkles ("AI taslağı" işareti) `text-primary`
+                   * taşıyordu — üçüncü bir --primary rolü. Bilgi rozeti muted/secondary tona iner,
+                   * --primary yalnızca birincil eyleme (Onayla) ayrılır. */}
+                  <Sparkles className="size-3.5 shrink-0 text-muted-foreground" aria-label="AI taslağı" />
+                  {/* Tur 4 P1 tedarik-onay-07 kök neden: baslık satırı 14px (text-sm) iken kartın
+                   * geri kalanı (kalem satırı, AI gerekçesi) 13px — aynı rolde iki gövde boyutu.
+                   * Kart artık TEK gövde boyutu (13px) konuşuyor; touch hedefi Tur 4 P2 tedarik-onay-08
+                   * (`max-sm:min-h-11` — replenishment-panel.tsx'teki checkbox kalıbıyla aynı teknik:
+                   * kök yalnızca dokunma hedefini büyütür, `-my-3` çevre satırların boyunu korur). */}
+                  <Link href={`/satin-alma/siparisler/${item.orderId}`} className="inline-flex max-sm:min-h-11 max-sm:items-center max-sm:-my-3 truncate font-mono text-[13px] font-medium hover:underline">{item.docNo}</Link>
                 </div>
-                <div className="mt-0.5 flex items-baseline gap-1.5 text-sm text-muted-foreground">
+                <div className="mt-0.5 flex items-baseline gap-1.5 text-[13px] text-muted-foreground">
                   {/* min-w-0 + truncate: cari adı küçülür, kalem sayısı (shrink-0) her genişlikte
                    * TAM görünür kalır — Tur 1 P1 tedarik-onay-03 kök neden: önceden tek bir truncate
                    * akışında birleşiyordu, 520px kart genişliğinde '· 1 kalem' tamamen kesiliyordu. */}
@@ -122,7 +140,10 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
                   <span className="shrink-0">· {item.lineCount} kalem</span>
                 </div>
               </div>
-              <MoneyCell value={item.grandTotal} className="shrink-0 text-base font-semibold" />
+              {/* Tur 4 P1 tedarik-onay-07: tutar `text-base` (16px) — modülde başka HİÇBİR yerde
+               * kullanılmayan tek-seferlik bir kademe. Liste-tutarı kademesine (13/600 tabular,
+               * /satin-alma/siparisler'deki `grandTotal` sütunuyla aynı görünür boyut) oturtuldu. */}
+              <MoneyCell value={item.grandTotal} className="shrink-0 text-[13px] font-semibold" />
             </div>
 
             {item.linePreview.length ? (
