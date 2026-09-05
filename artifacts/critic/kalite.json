@@ -1,7 +1,7 @@
 {
   "module": "kalite",
   "round": 4,
-  "note": "Tur 4: kalite modülü yeniden ölçüldü (Referans sabit: Linear 57 veri, Stripe 56 KPI/finans — docs/DESIGN-SCORECARD.md). Araçlar: pnpm shot (1440x900 + 390x844), pnpm measure (satır yüksekliği, scrollWidth/clientWidth, <44px dokunma hedefi, font dağılımı, renk sayısı) → artifacts/critic/measure-kalite-r4/, scripts/probe-kalite-r4.ts (taşan kap + kırpılan yaprak + viewport dışına taşan metin + miktar sütunlarında birim eki + `--scroll-ends` ile yatay kaydırıcıları uca sürüp yeniden ölçme), scripts/probe-kalite-r4-deeplink.ts (?lot= çözülürken 100 ms aralıklı DOM örneklemesi), scripts/shot-kalite-lot.ts. Dinamik id'ler psql ile: qc_check 9a772fd6 (QC-2026-000001, pending, şablonsuz) + c94394de (QC-2026-000008, failed, 4 sonuç kalemi — karar verilmiş durum da ölçüldü), recall eb95da92 (RC-2026-000001), mamul lot PL-260808-H1-12. Tur 3'ün 5 açık P1 bulgusunun BEŞİ DE ölçümle doğrulandı ve kapalı kaldı (closed[].verifiedRound=4). Tur 4'te 1 yeni ölçülebilir P1 bulgu açıldı (tedarikçi skoru \"Red miktarı\" sütunu birimsiz ve karışık-birim toplamı). Kod düzeyi tarama (transition-all / çıplak ease-in / scale(0) / >=300ms / hover gating / transform-origin): apps/web/src/modules/quality ve app/(app)/kalite altında İHLAL YOK; hover globals.css:10 @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor. NOT: kalite modülünde /operator rotası yok, 1024x768 çekimi uygulanmadı.",
+  "note": "Tur 4: kalite modülü yeniden ölçüldü (Referans sabit: Linear 57 veri, Stripe 56 KPI/finans — docs/DESIGN-SCORECARD.md). Araçlar: pnpm shot (1440x900 + 390x844), pnpm measure (satır yüksekliği, scrollWidth/clientWidth, <44px dokunma hedefi, font dağılımı, renk sayısı) → artifacts/critic/measure-kalite-r4/, scripts/probe-kalite-r4.ts (taşan kap + kırpılan yaprak + viewport dışına taşan metin + miktar sütunlarında birim eki + `--scroll-ends` ile yatay kaydırıcıları uca sürüp yeniden ölçme), scripts/probe-kalite-r4-deeplink.ts (?lot= çözülürken 100 ms aralıklı DOM örneklemesi), scripts/shot-kalite-lot.ts. Dinamik id'ler psql ile: qc_check 9a772fd6 (QC-2026-000001, pending, şablonsuz) + c94394de (QC-2026-000008, failed, 4 sonuç kalemi — karar verilmiş durum da ölçüldü), recall eb95da92 (RC-2026-000001), mamul lot PL-260808-H1-12. Tur 3'ün 5 açık P1 bulgusunun BEŞİ DE ölçümle doğrulandı ve kapalı kaldı (closed[].verifiedRound=4). Tur 4'te 1 yeni ölçülebilir P1 bulgu açıldı (tedarikçi skoru \"Red miktarı\" sütunu birimsiz ve karışık-birim toplamı). Kod düzeyi tarama (transition-all / çıplak ease-in / scale(0) / >=300ms / hover gating / transform-origin): apps/web/src/modules/quality ve app/(app)/kalite altında İHLAL YOK; hover globals.css:10 @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor. NOT: kalite modülünde /operator rotası yok, 1024x768 çekimi uygulanmadı. GÜNCELLEME (aynı tur, düzeltme sonrası): tedarikci-06 (P1) kapatıldı — \"Red miktarı\" sütunu \"Miktar doğruluğu\" %'sine çevrildi (packages/core/src/quality/supplierScore.ts'deki qtyAccuracy formülüyle birebir), probe-kalite-r4.ts ile yeniden ölçüldü (qtyCols hücreleri artık %100/%95,3, birimsiz ham sayı yok). /kalite/tedarikci-skoru toplamı 57→58 (Stripe referans 56), verdict Plantero.",
   "measuredAt": "2026-09-05",
   "routes": {
     "/kalite/kontroller": {
@@ -214,7 +214,7 @@
         5,
         5,
         5,
-        4,
+        5,
         4,
         5,
         4,
@@ -222,22 +222,11 @@
         5,
         5
       ],
-      "total": 57,
+      "total": 58,
       "previousTotal": 57,
-      "verdict": "Stripe",
-      "delta": "57 → 57 (referans Stripe 56). k2 4→5: tur 3'ün P1'i kapandı, 390px'te başlık eylem grubu sayfa oluğunun içinde (sol 17px / sağ 16,5px). k6 5→4: \"Red miktarı\" sütununun 6 hücresinin 6'sı da birimsiz ve değer karışık birimli bir toplam (aşağıdaki yeni P1). k9=4 sabit: KPI şeridi 390px'te kaydırılabilir (472/358) — bilinçli desen. Diğerleri sabit: tabular 12/13, satır 36px, mobil kart 60px.",
-      "open": [
-        {
-          "id": "kalite-tedarikci-06",
-          "criterion": 6,
-          "severity": "P1",
-          "text": "\"Red miktarı\" sütunu birimsiz çıplak sayı basıyor (\"0\", \"8\"); okuyucu 8'in KG mi ADET mi olduğunu bilemez. Dahası değerin kendisi karışık birimli bir toplam: supplierScore.ts:48 `sum(lines.map(l => l.rejectedQty))` satırların uom'unu gruplamadan topluyor — Proteinsan'ın 1470 ADET + 421 KG teslimatı tek sayıya iniyor, dolayısıyla sütuna tek bir birim eklemek de doğru olmaz. Modülün geri kalanı (izlenebilirlik, geri çağırma detayı, kontrol detayı) her miktarda birim gösteriyor; bu sütun modülün kendi kuralını bozan tek yer. QtyCell zaten `uom` prop'unu destekliyor ama çağrıda geçilmiyor.",
-          "measure": "probe-kalite-r4 /kalite/tedarikci-skoru 1440x900: qtyCols = [{ head: \"Red miktarı\", cells: [\"0\",\"8\",\"0\",\"0\",\"0\",\"0\"] }] — 6/6 hücre birimsiz. psql: receipt_lines × uoms → Tatlısu 8,0000 KG; Proteinsan aynı dönemde 1470 ADET + 421 KG (tek tedarikçide 2 farklı uom). supplier_scores tablosunda uom kolonu yok (şema dondurulmuş).",
-          "target": "Sütun ya birimsiz orana çevrilir (\"Miktar doğruluğu\" %, skorun zaten %20 ağırlıklı bileşeni — şema değişikliği gerektirmez), ya da queries.ts'te receipt_lines → uoms ile dönemin birim kümesi türetilip tek birimli tedarikçide `<QtyCell uom={...} />`, çok birimlide \"—\" + ipucu basılır. Kabul eşiği: qtyCols[*].cells içinde birimsiz ham miktar 0.",
-          "file": "apps/web/src/modules/quality/components/supplier-score-table.tsx:40 (cell: <QtyCell value={row.original.rejectedQty} /> — uom yok), apps/web/src/modules/quality/queries.ts:172,187, packages/core/src/quality/supplierScore.ts:46-48",
-          "openedRound": 4
-        }
-      ],
+      "verdict": "Plantero",
+      "delta": "57 → 58 (referans Stripe 56). k6 4→5: kalite-tedarikci-06 (P1) kapandı — “Red miktarı” sütunu (birimsiz, karışık birimli ham toplam) “Miktar doğruluğu” yüzdesine çevrildi (queries.ts boardFromScores, supplier-score-table.tsx). Diğerleri sabit: k7=4 (boş/yükleniyor durumu, bu turun bulgu listesinde değil), k9=4 (KPI şeridi 390px'te kaydırılabilir, bilinçli desen).",
+      "open": [],
       "closed": [
         {
           "id": "kalite-tedarikci-01",
@@ -302,6 +291,20 @@
           "closedRound": 4,
           "verifiedRound": 4,
           "verifiedBy": "Tur 4 yeniden ölçüm: 390x844 çekimde başlık eylem grubu sayfa oluğunun içinde (sol 17px / sağ 16,5px), Ay+Yıl seçicileri tek satır, birincil düğme tam genişlik. pnpm measure 390x844: scrollWidth 390 = clientWidth 390, overflowX false."
+        },
+        {
+          "id": "kalite-tedarikci-06",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "\"Red miktarı\" sütunu birimsiz çıplak sayı basıyor (\"0\", \"8\"); okuyucu 8'in KG mi ADET mi olduğunu bilemez. Dahası değerin kendisi karışık birimli bir toplam: supplierScore.ts:48 `sum(lines.map(l => l.rejectedQty))` satırların uom'unu gruplamadan topluyor — Proteinsan'ın 1470 ADET + 421 KG teslimatı tek sayıya iniyor, dolayısıyla sütuna tek bir birim eklemek de doğru olmaz. Modülün geri kalanı (izlenebilirlik, geri çağırma detayı, kontrol detayı) her miktarda birim gösteriyor; bu sütun modülün kendi kuralını bozan tek yer. QtyCell zaten `uom` prop'unu destekliyor ama çağrıda geçilmiyor.",
+          "measure": "probe-kalite-r4 /kalite/tedarikci-skoru 1440x900: qtyCols = [{ head: \"Red miktarı\", cells: [\"0\",\"8\",\"0\",\"0\",\"0\",\"0\"] }] — 6/6 hücre birimsiz. psql: receipt_lines × uoms → Tatlısu 8,0000 KG; Proteinsan aynı dönemde 1470 ADET + 421 KG (tek tedarikçide 2 farklı uom). supplier_scores tablosunda uom kolonu yok (şema dondurulmuş).",
+          "target": "Sütun ya birimsiz orana çevrilir (\"Miktar doğruluğu\" %, skorun zaten %20 ağırlıklı bileşeni — şema değişikliği gerektirmez), ya da queries.ts'te receipt_lines → uoms ile dönemin birim kümesi türetilip tek birimli tedarikçide `<QtyCell uom={...} />`, çok birimlide \"—\" + ipucu basılır. Kabul eşiği: qtyCols[*].cells içinde birimsiz ham miktar 0.",
+          "file": "apps/web/src/modules/quality/components/supplier-score-table.tsx:40 (cell: <QtyCell value={row.original.rejectedQty} /> — uom yok), apps/web/src/modules/quality/queries.ts:172,187, packages/core/src/quality/supplierScore.ts:46-48",
+          "openedRound": 4,
+          "closedRound": 4,
+          "verifiedRound": 4,
+          "measureAfter": "queries.ts boardFromScores: “Red miktarı” sütunu kaldırıldı, yerine supplierScore.ts:59'daki qtyAccuracy formülüyle (1 − rejectedQty/receivedQty, 0'da clamp) birebir aynı hesapla türetilen birimsiz “Miktar doğruluğu” oranı (formatPct) eklendi — (a) seçeneği uygulandı, supplier_scores şemasına dokunulmadı. pnpm tsx scripts/probe-kalite-r4.ts /kalite/tedarikci-skoru --viewport 1440x900: qtyCols = [{\"head\":\"Miktar doğruluğu\",\"cells\":[\"%100\",\"%95,3\",\"%100\",\"%100\",\"%100\",\"%100\"]}] — 6/6 hücre birimsiz ham sayı değil, yüzde oranı (Tatlısu artık %95,3, önceki karmaşık birimli “8” değerinin yerine). overflowing/clippedCount 0. Mobil kart görünümünde sütun hala meta.mobile:'hidden' (diğer ikincil sütunlarla aynı kalıp) — pnpm shot ile doğrulandı.",
+          "verifiedBy": "Tur 4 (aynı tur) düzeltme + yeniden ölçüm: probe-kalite-r4.ts."
         }
       ],
       "p2": [
