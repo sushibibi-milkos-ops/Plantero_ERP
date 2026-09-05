@@ -5,7 +5,7 @@ import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { postStockMove } from '../stock/ledger.js';
-import { getScrapLocation } from '../stock/locations.js';
+import { getScrapLocation, getQuarantineLocation } from '../stock/locations.js';
 import { simulateRecall as traceSimulateRecall, type RecallImpact } from '../lots/trace.js';
 import { notify } from '../notifications/send.js';
 import { indexDocument, linkDocuments } from '../documents/chain.js';
@@ -104,17 +104,43 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
 
   const lotIds = impact.lots.map((l) => l.id);
   const productByLotId = new Map<string, typeof products.$inferSelect>();
+  const uomByLotId = new Map<string, string>();
   if (lotIds.length) {
-    const lotRows = await tx.select({ lotId: stockLots.id, product: products }).from(stockLots).innerJoin(products, eq(products.id, stockLots.productId)).where(inArray(stockLots.id, lotIds));
-    for (const r of lotRows) productByLotId.set(r.lotId, r.product);
+    const lotRows = await tx.select({ lotId: stockLots.id, uomId: stockLots.uomId, product: products }).from(stockLots).innerJoin(products, eq(products.id, stockLots.productId)).where(inArray(stockLots.id, lotIds));
+    for (const r of lotRows) { productByLotId.set(r.lotId, r.product); uomByLotId.set(r.lotId, r.uomId); }
   }
 
   let blockedLots = 0;
   for (const l of impact.lots) {
+    /**
+     * Fiziksel blok (P0 düzeltmesi — docs/INVARIANTS.md I27 canlı ihlali): lot durumu 'recalled'
+     * yazılmadan ÖNCE, satılabilir ('internal') lokasyondaki eldeki miktar `postStockMove` ile
+     * karantinaya taşınır — `recordRecallAction('destroy')` içindeki aynı kalıp (lokasyon →
+     * depo → karantina lokasyonu). Sıra kasıtlı: `stock/ledger.ts` `enforceLotRules`, lot statüsü
+     * zaten 'recalled' (BAD_LOT_STATUSES) iken YALNIZCA `scrap/return_out/recall_return/count_loss`
+     * hareketine izin verir — 'transfer' bunların dışında olduğundan statü güncellemesi ÖNCE
+     * yapılırsa bu blok kendi hareketini ledger'a reddettirir. Önceden bu blok hiç yoktu: lot
+     * `recalled` işaretleniyor ama fiziksel olarak satılabilir rafta kalıyordu (I27
+     * `bad_lot_status_in_internal_location`, canlı egzersizle kanıtlandı).
+     */
+    const quantRows = await tx.select({ id: stockQuants.id, qty: stockQuants.qty, locationId: stockQuants.locationId }).from(stockQuants).where(and(eq(stockQuants.lotId, l.id), gt(stockQuants.qty, '0')));
+    for (const q of quantRows) {
+      const [loc] = await tx.select({ warehouseId: locations.warehouseId, usage: locations.usage }).from(locations).where(eq(locations.id, q.locationId)).limit(1);
+      if (!loc?.warehouseId || loc.usage !== 'internal') continue; // sanal lokasyon ya da zaten karantina/red/hurda — dokunma
+      const quarantineLoc = await getQuarantineLocation(tx, loc.warehouseId);
+      if (quarantineLoc.id === q.locationId) continue;
+      const uomId = uomByLotId.get(l.id);
+      if (!uomId) continue;
+      await postStockMove(tx, {
+        kind: 'transfer', productId: productByLotId.get(l.id)?.id ?? '', lotId: l.id, fromLocationId: q.locationId, toLocationId: quarantineLoc.id,
+        qty: D(q.qty), uomId, refType: 'recall', refId: recallId, refNo: recall.docNo, origin: 'manual', movedAt, note: `Geri çağırma ${recall.docNo} — karantinaya alındı`,
+      }, ctx);
+    }
+
     await tx.update(stockLots).set({ status: 'recalled', recallId, updatedBy: ctx.userId ?? null }).where(eq(stockLots.id, l.id));
     blockedLots += 1;
-    const quantRows = await tx.select({ qty: stockQuants.qty }).from(stockQuants).where(and(eq(stockQuants.lotId, l.id), gt(stockQuants.qty, '0')));
-    const qtyInStock = sum(quantRows.map((q) => q.qty));
+    const afterQuantRows = await tx.select({ qty: stockQuants.qty }).from(stockQuants).where(and(eq(stockQuants.lotId, l.id), gt(stockQuants.qty, '0')));
+    const qtyInStock = sum(afterQuantRows.map((q) => q.qty));
     const hop = productByLotId.get(l.id)?.type ?? 'unknown';
     await tx.insert(recallItems).values({
       recallId, lotId: l.id, hop, depth: l.depth, qtyInStock: toDb(qtyInStock), qtyDelivered: toDb(0),
