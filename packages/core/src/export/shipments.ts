@@ -360,16 +360,28 @@ export async function closeShipment(tx: DbOrTx, shipmentId: string, ctx: ActorCt
   return updated!;
 }
 
-/** İptal — henüz yüklenmemiş sevkiyatlar için. */
+/**
+ * İptal — henüz yüklenmemiş sevkiyatlar için. `linkInvoice`'ın kendi `assertStatus` kısıtı
+ * olmadığından (draft..customs arası herhangi bir durumda gerçek bir faturaya bağlanabilir),
+ * iptal edilen sevkiyatın kendi `invoiceId`/`deliveryId` alanları VE karşı taraftaki
+ * `invoices.exportShipmentId` de burada temizlenir (docs/INVARIANTS.md I44) — aksi halde
+ * iptal edilmiş bir sevkiyat kaydına, hâlâ gerçek/ödenmiş bir fatura üzerinden geri işaret
+ * eden bir belge zinciri kalır (mandate #5 ihlali). `salesOrders.exportShipmentId` için zaten
+ * uygulanan temizleme örüntüsü burada `invoiceId`/`deliveryId` için de tekrarlanır.
+ */
 export async function cancelShipment(tx: DbOrTx, shipmentId: string, reason: string | null, ctx: ActorCtx): Promise<typeof exportShipments.$inferSelect> {
   const s = await getShipmentOrThrow(tx, shipmentId);
   assertStatus(s, ['draft', 'proforma_sent', 'confirmed', 'packing', 'customs']);
   const [updated] = await tx
     .update(exportShipments)
-    .set({ status: 'cancelled', note: reason ? `${s.note ? `${s.note}\n` : ''}İptal: ${reason}` : s.note, updatedBy: ctx.userId ?? null })
+    .set({
+      status: 'cancelled', invoiceId: null, deliveryId: null,
+      note: reason ? `${s.note ? `${s.note}\n` : ''}İptal: ${reason}` : s.note, updatedBy: ctx.userId ?? null,
+    })
     .where(eq(exportShipments.id, shipmentId))
     .returning();
   if (s.salesOrderId) await tx.update(salesOrders).set({ exportShipmentId: null }).where(eq(salesOrders.id, s.salesOrderId));
+  if (s.invoiceId) await tx.update(invoices).set({ exportShipmentId: null }).where(eq(invoices.id, s.invoiceId));
   await reindex(tx, updated!);
   return updated!;
 }

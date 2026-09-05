@@ -185,6 +185,39 @@ describe('export/shipments — sipariş → sevkiyat → proforma → çeki list
     });
   });
 
+  it('faturaya bağlı bir sevkiyat iptal edilince kendi invoiceId/deliveryId alanları VE invoices.exportShipmentId de temizlenir (I44)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const channel = await seedExportFixtures(tx, b);
+      const { order, delivery } = await buildExportOrder(tx, b, channel.id, '10', '50');
+      const shipment = await createFromOrder(tx, { salesOrderId: order.id }, ctx);
+      const linked = await linkDelivery(tx, shipment.id, delivery.id, ctx);
+      expect(linked.status).toBe('confirmed');
+
+      await reserveFefo(tx, delivery.id, ctx);
+      const dLines = await tx.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, delivery.id));
+      for (const line of dLines) await confirmPick(tx, { deliveryId: delivery.id, lineId: line.id, scannedLotId: line.lotId }, ctx);
+      await shipDelivery(tx, delivery.id, ctx);
+
+      const { invoice } = await createInvoiceFromDelivery(tx, delivery.id, ctx);
+      const withInvoice = await linkInvoice(tx, shipment.id, invoice.id, ctx);
+      expect(withInvoice.invoiceId).toBe(invoice.id);
+      expect(withInvoice.deliveryId).toBe(delivery.id);
+      const [invoiceBefore] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
+      expect(invoiceBefore!.exportShipmentId).toBe(shipment.id);
+
+      const cancelled = await cancelShipment(tx, shipment.id, 'gümrük reddi', ctx);
+      expect(cancelled.status).toBe('cancelled');
+      expect(cancelled.invoiceId).toBeNull();
+      expect(cancelled.deliveryId).toBeNull();
+
+      const [invoiceAfter] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
+      expect(invoiceAfter!.exportShipmentId).toBeNull(); // I44 — iptal edilmiş sevkiyata geri işaret edemez
+      const [orderAfter] = await tx.select().from(salesOrders).where(eq(salesOrders.id, order.id));
+      expect(orderAfter!.exportShipmentId).toBeNull();
+    });
+  });
+
   it('markShipped bağlı irsaliye sevk edilmeden çağrılırsa hata verir', async () => {
     await withRollback(async (tx) => {
       const b = await seedBase(tx);
