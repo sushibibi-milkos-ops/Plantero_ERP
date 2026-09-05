@@ -1,0 +1,290 @@
+{
+ "onaylar@1440": {
+  "rowCount": 13,
+  "rowHeights": [
+   181.5,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   40
+  ],
+  "titleWidths": [
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8,
+   868.8
+  ],
+  "truncatedTitles": 0,
+  "truncatedTitleTexts": [],
+  "amountWidths": [
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112
+  ],
+  "amountRightGap": [
+   70,
+   70,
+   70
+  ],
+  "amountTabular": [
+   "tabular-nums",
+   "tabular-nums"
+  ],
+  "mainFonts": {
+   "11": 33,
+   "13": 33,
+   "14": 4,
+   "24": 1
+  },
+  "mainRect": {
+   "x": 240,
+   "w": 1200
+  },
+  "mainPaddingBottom": "40px",
+  "listWidth": 1152,
+  "tablist": {
+   "w": 410.4,
+   "scrollW": 410,
+   "clientW": 410,
+   "overflow": false
+  },
+  "tabHeights": [
+   32,
+   32,
+   32
+  ],
+  "fixedBottom": [],
+  "lastRowBottomVsViewport": 873.5,
+  "docScrollHeight": 915,
+  "innerHeight": 900,
+  "selectedRowH": 181.5,
+  "buttonHeights": [
+   36,
+   36,
+   36
+  ],
+  "buttonFonts": [
+   "14px",
+   "14px",
+   "14px"
+  ]
+ },
+ "onaylar@390": {
+  "rowCount": 13,
+  "rowHeights": [
+   215.5,
+   67,
+   67,
+   67,
+   67,
+   67,
+   67,
+   67,
+   67,
+   67,
+   67,
+   67,
+   66
+  ],
+  "titleWidths": [
+   306,
+   306,
+   306,
+   306,
+   306,
+   306,
+   306,
+   306,
+   306,
+   306,
+   306,
+   306,
+   306
+  ],
+  "truncatedTitles": 1,
+  "truncatedTitleTexts": [
+   "EFT — Kahve Dünyası Yeşil Kahve ve Egzot"
+  ],
+  "amountWidths": [
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112,
+   112
+  ],
+  "amountRightGap": [
+   144.8,
+   144.8,
+   144.8
+  ],
+  "amountTabular": [
+   "tabular-nums",
+   "tabular-nums"
+  ],
+  "mainFonts": {
+   "11": 20,
+   "13": 33,
+   "14": 4,
+   "20": 1
+  },
+  "mainRect": {
+   "x": 0,
+   "w": 390
+  },
+  "mainPaddingBottom": "128px",
+  "listWidth": 358,
+  "tablist": {
+   "w": 358,
+   "scrollW": 410,
+   "clientW": 358,
+   "overflow": true
+  },
+  "tabHeights": [
+   44,
+   44,
+   44
+  ],
+  "fixedBottom": [
+   {
+    "tag": "nav",
+    "h": 57,
+    "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border-border/60"
+   }
+  ],
+  "lastRowBottomVsViewport": 1260,
+  "docScrollHeight": 1389,
+  "innerHeight": 844,
+  "selectedRowH": 215.5,
+  "buttonHeights": [
+   44,
+   44,
+   44
+  ],
+  "buttonFonts": [
+   "14px",
+   "14px",
+   "14px"
+  ]
+ },
+ "bildirimler@1440": {
+  "count": 3,
+  "heights": [
+   72,
+   72,
+   71
+  ],
+  "listWidth": 768,
+  "mainWidth": 1200,
+  "mainPaddingBottom": "40px",
+  "mainFonts": {
+   "11": 3,
+   "13": 10,
+   "14": 2,
+   "16": 3,
+   "24": 1
+  },
+  "tabHeights": [
+   32,
+   32
+  ],
+  "markAll": {
+   "h": 36,
+   "w": 207.1,
+   "font": "14px"
+  },
+  "bodyClamped": [
+   false,
+   true,
+   true
+  ],
+  "titleFonts": [
+   "13px/500",
+   "13px/500",
+   "13px/500"
+  ],
+  "timeFonts": [
+   "11px",
+   "11px",
+   "11px"
+  ],
+  "docScroll": "1440/1440"
+ },
+ "bildirimler@390": {
+  "count": 3,
+  "heights": [
+   72,
+   72,
+   71
+  ],
+  "listWidth": 358,
+  "mainWidth": 390,
+  "mainPaddingBottom": "128px",
+  "mainFonts": {
+   "11": 3,
+   "13": 10,
+   "14": 2,
+   "16": 3,
+   "20": 1
+  },
+  "tabHeights": [
+   44,
+   44
+  ],
+  "markAll": {
+   "h": 44,
+   "w": 207.1,
+   "font": "14px"
+  },
+  "bodyClamped": [
+   true,
+   true,
+   true
+  ],
+  "titleFonts": [
+   "13px/500",
+   "13px/500",
+   "13px/500"
+  ],
+  "timeFonts": [
+   "11px",
+   "11px",
+   "11px"
+  ],
+  "docScroll": "390/390"
+ }
+}

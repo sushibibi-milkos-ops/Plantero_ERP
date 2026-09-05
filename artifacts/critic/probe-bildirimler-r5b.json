@@ -1,0 +1,78 @@
+{
+ "bildirimler": {
+  "before": "rgba(0, 0, 0, 0)",
+  "hovered": "oklab(0.955 0.000564683 -0.00191863 / 0.4)",
+  "tabFocus": {
+   "tag": "A",
+   "text": "Plantero",
+   "outline": "none 0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+  },
+  "rowFocus": {
+   "outline": "none 0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412"
+  },
+  "iconStyles": [
+   {
+    "color": "oklch(0.552 0.016 285.9)",
+    "w": 16
+   },
+   {
+    "color": "oklch(0.552 0.016 285.9)",
+    "w": 16
+   },
+   {
+    "color": "oklch(0.552 0.016 285.9)",
+    "w": 16
+   }
+  ],
+  "transitions": [
+   "all",
+   "color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), outline-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), text-decoration-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), fill 0.15s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.15s cubic-bezier(0.4, 0, 0.2, 1), --tw-gradient-from 0.15s cubic-bezier(0.4, 0, 0.2, 1), --tw-gradient-via 0.15s cubic-bezier(0.4, 0, 0.2, 1), --tw-gradient-to 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+   "color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)"
+  ]
+ },
+ "bildirimlerEmpty": {
+  "hasList": false,
+  "text": "BildirimlerSize gönderilen uygulama içi bildirimlerHenüz bildiriminiz yokYeni bir bildirim geldiğinde burada görünür.Onay Merkezi'ne git",
+  "boxWidth": 768,
+  "boxHeight": 290
+ },
+ "onaylar": {
+  "before": "rgba(0, 0, 0, 0)",
+  "hovered": "oklab(0.955 0.000564683 -0.00191863 / 0.2)",
+  "afterJ": {
+   "index": 1,
+   "bg": "oklab(0.955 0.000564683 -0.00191863 / 0.4)",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412",
+   "isActiveElement": true,
+   "title": "Hesap İşletim Ücreti"
+  },
+  "btnStyles": {
+   "transition": "color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+   "h": 36,
+   "font": "14px",
+   "bg": "oklch(0.55 0.16 152)"
+  },
+  "transitions": [
+   "all",
+   "color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), outline-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), text-decoration-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), fill 0.15s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.15s cubic-bezier(0.4, 0, 0.2, 1), --tw-gradient-from 0.15s cubic-bezier(0.4, 0, 0.2, 1), --tw-gradient-via 0.15s cubic-bezier(0.4, 0, 0.2, 1), --tw-gradient-to 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+   "color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)"
+  ],
+  "colors": [
+   "oklch(0.21 0.006 285.9)",
+   "oklch(0.552 0.016 285.9)",
+   "bg:oklch(0.967 0.001 286.4)",
+   "bg:oklch(0.985 0.002 250)",
+   "oklch(0.5 0.14 70)",
+   "bg:oklab(0.72 0.0581434 0.159748 / 0.15)",
+   "bg:oklab(0.955 0.000564683 -0.00191863 / 0.4)",
+   "oklch(0.6 0.16 152)",
+   "bg:oklab(0.6 -0.141272 0.0751154 / 0.12)",
+   "bg:oklab(0.967 0.000282341 -0.000959314 / 0.2)",
+   "oklch(0.55 0.16 152)",
+   "oklch(0.985 0.01 152)",
+   "bg:oklch(0.55 0.16 152)"
+  ]
+ }
+}
