@@ -25,7 +25,7 @@ export function ReplenishmentPanel({
   // Varsayılan artık veriye bakar: yalnızca gerçekten filtrelenecek (risk != 'none') bir kayıt VARSA
   // ve motor en az bir kez çalışmışsa açık başlar.
   const neverEvaluated = useMemo(() => rows.every((r) => r.lastEvaluatedAt === null), [rows]);
-  const hasCritical = useMemo(() => rows.some((r) => r.risk !== 'none'), [rows]);
+  const hasCritical = useMemo(() => rows.some((r) => r.risk === 'critical' || r.risk === 'warning'), [rows]);
   const [onlyCritical, setOnlyCritical] = useState(() => !neverEvaluated && hasCritical);
   const [pending, startTransition] = useTransition();
   const [editingRule, setEditingRule] = useState<CriticalStockRow | null>(null);

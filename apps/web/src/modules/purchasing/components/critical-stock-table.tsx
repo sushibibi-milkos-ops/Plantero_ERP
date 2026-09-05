@@ -12,11 +12,16 @@ import { D } from '@plantero/core/money';
 import { cn } from '@/lib/utils';
 import type { CriticalStockRow } from '../queries';
 
-const RISK_LABEL: Record<CriticalStockRow['risk'], string> = { critical: 'Kritik', warning: 'Uyarı', none: 'Normal' };
+// 'unknown' (motor hiç çalışmadı) 'none' (Normal — motor değerlendirdi, risk yok) ile KASITLI
+// olarak ayrı bir rozet: ikisini aynı göstermek "bilinmiyor" u "risk yok" gibi sunar (Tur 3 P0
+// tedarik-kritik-stok-06). 'Normal' yeşil değil nötr — burada yalnızca 'unknown' ile ayrışması
+// gereken görsel budur; 'none' zaten var olan nötr `bg-muted` tonunu korur.
+const RISK_LABEL: Record<CriticalStockRow['risk'], string> = { critical: 'Kritik', warning: 'Uyarı', none: 'Normal', unknown: 'Değerlendirilmedi' };
 const RISK_CLASS: Record<CriticalStockRow['risk'], string> = {
   critical: 'bg-destructive/10 text-destructive',
   warning: 'bg-warning/15 text-[oklch(0.5_0.14_70)] dark:text-warning',
   none: 'bg-muted/60 text-muted-foreground',
+  unknown: 'bg-muted/40 text-muted-foreground/70',
 };
 
 export function CriticalStockTable({
@@ -26,7 +31,9 @@ export function CriticalStockTable({
   /** "Sadece kritik/uyarı" filtresini kapatır — filtre kaynaklı boş durumun eylemi (Tur 1 P0 tedarik-kritik-stok-02). */
   onClearFilter?: () => void;
 }) {
-  const filtered = useMemo(() => (onlyCritical ? rows.filter((r) => r.risk !== 'none') : rows), [rows, onlyCritical]);
+  // 'unknown' (motor hiç çalışmadı) "kritik/uyarı" DEĞİLDİR — `!== 'none'` filtresi 'unknown'ı da
+  // içeri alıp "Sadece kritik/uyarı" açıkken değerlendirilmemiş satırları kritikmiş gibi gösterirdi.
+  const filtered = useMemo(() => (onlyCritical ? rows.filter((r) => r.risk === 'critical' || r.risk === 'warning') : rows), [rows, onlyCritical]);
   // Tur 1 P0 tedarik-kritik-stok-02 kök neden: `onlyCritical` panelde tutulan, DataTable'ın
   // KENDİ arama/sütun-filtre state'inin dışında bir ön-filtre — DataTable'ın "filtreli boş" dalı
   // (SearchX ikonu, "Eşleşen kayıt yok") bunu hiç bilmediği için tetiklenmiyor, `rows.length===0`
@@ -55,7 +62,12 @@ export function CriticalStockTable({
         id: 'risk', accessorFn: (r) => r.risk, header: 'Risk', meta: { width: 100, mobile: 'badge' },
         cell: ({ row }) => <span className={cn('inline-flex h-5 items-center rounded-full px-2 text-xs font-medium', RISK_CLASS[row.original.risk])}>{RISK_LABEL[row.original.risk]}</span>,
       },
-      { accessorKey: 'available', header: 'Kullanılabilir', meta: { align: 'right', width: 110 }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums">{formatQty(row.original.available)}</span> },
+      {
+        // 'available' null ise (motor hiç çalışmadı) '0' DEĞİL '—' — 'Kapsama'/'Önerilen sipariş'
+        // sütunlarıyla aynı dil (Tur 3 P0 tedarik-kritik-stok-06).
+        accessorKey: 'available', header: 'Kullanılabilir', meta: { align: 'right', width: 110 },
+        cell: ({ row }) => (row.original.available === null ? <span className="text-muted-foreground">—</span> : <span className="font-mono text-[13px] tabular-nums">{formatQty(row.original.available)}</span>),
+      },
       // Min/Max tek 'Min–Max' sütununda birleştirildi (80+80=160 -> 110, 50px kazanç; tur 2 P0
       // tedarik-kritik-stok-04 suggestedFix). Değerler kural düzenleme drawer'ında ayrı ayrı kalır.
       {
@@ -102,7 +114,7 @@ export function CriticalStockTable({
   );
 
   const filters: DataTableFilter[] = [
-    { columnId: 'risk', title: 'Risk', options: [{ value: 'critical', label: 'Kritik' }, { value: 'warning', label: 'Uyarı' }, { value: 'none', label: 'Normal' }] },
+    { columnId: 'risk', title: 'Risk', options: [{ value: 'critical', label: 'Kritik' }, { value: 'warning', label: 'Uyarı' }, { value: 'none', label: 'Normal' }, { value: 'unknown', label: 'Değerlendirilmedi' }] },
   ];
 
   return (

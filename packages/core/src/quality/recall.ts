@@ -1,5 +1,5 @@
 import { and, eq, gt, inArray } from 'drizzle-orm';
-import { recalls, recallItems, stockLots, stockQuants, products, partners, partnerContacts, locations, type DbOrTx } from '@plantero/db';
+import { recalls, recallItems, stockLots, stockQuants, products, partners, partnerContacts, locations, deliveries, deliveryLines, type DbOrTx } from '@plantero/db';
 import { D, toDb, sum, formatQtyTr } from '../money.js';
 import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
@@ -83,7 +83,14 @@ export async function simulate(tx: DbOrTx, input: SimulateInput, ctx: ActorCtx):
   return { recall: row, impact, customers, draftMessage };
 }
 
-export type InitiateResult = { recall: typeof recalls.$inferSelect; blockedLots: number; notifiedCustomers: number; pendingNotificationIds: string[] };
+export type InitiateResult = {
+  recall: typeof recalls.$inferSelect;
+  blockedLots: number;
+  notifiedCustomers: number;
+  pendingNotificationIds: string[];
+  cancelledDeliveries: number;
+  cancelledDeliveryDocNos: string[];
+};
 
 /**
  * Geri çağırmayı başlatır: etki taze hesaplanır (simülasyondan bu yana stok değişmiş olabilir),
@@ -163,6 +170,55 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
     });
   }
 
+  /**
+   * I43 düzeltmesi (docs/INVARIANTS.md, canlı olarak kanıtlandı — `open_delivery_line_blocked_lot`):
+   * üstteki blok, bloklanan lotun `stock_quants.reserved_qty`'sini `postStockMove(useReserved:true)`
+   * ile ledger düzeyinde zaten doğru şekilde sıfırlıyor, ama bu rezervasyonu YARATAN irsaliye
+   * (`deliveries`/`delivery_lines`) kaydına hiç dokunmuyordu: henüz sevk edilmemiş (draft/reserved/
+   * picking/picked) bir irsaliye satırı, recall sonrası da artık `recalled` (karantinadaki) bir lotu
+   * referans etmeye devam ediyor, ekranda/sorguda hâlâ "reserved" (aktif, ilerleyen bir teslimat)
+   * görünüyor — depo/satış ekibi bunu fark etmeden bekletebilir, `enforceLotRules` fiili sevkiyatı
+   * reddedecek olsa da sipariş sessizce askıda kalırdı. Şema donmuş olduğundan `delivery_lines`'a
+   * satır bazlı bir iptal/yeniden-planlama alanı eklenemiyor (bu turun kapsamı sadece `packages/core/
+   * src/quality/**`); en az müdahaleli düzeltme: etkilenen irsaliyenin TAMAMI `cancelled`a alınır
+   * (bu irsaliyelerde `salesOrderLines.deliveredQty` henüz artırılmamıştı — I8 miktar zinciri
+   * bozulmaz) ve satış ekibine irsaliyenin yeniden planlanması gerektiğini bildiren bir uyarı
+   * üretilir. `packages/core/src/stock/expiry.ts::scrapExpired`de aynı boşluk olabilir — bu turda
+   * yalnızca recall tarafı ele alındı (schemaRequests/sharedComponentRequests dışında, ayrı bir
+   * modül dosyası — depo/kalite ortak sınırı; SKT tarafı depo modülü sahibinin kapsamında).
+   */
+  const cancelledDeliveryDocNos: string[] = [];
+  if (lotIds.length) {
+    const blockedLines = await tx
+      .select({ deliveryId: deliveryLines.deliveryId })
+      .from(deliveryLines)
+      .innerJoin(deliveries, eq(deliveries.id, deliveryLines.deliveryId))
+      .where(and(inArray(deliveryLines.lotId, lotIds), inArray(deliveries.status, ['draft', 'reserved', 'picking', 'picked'])));
+
+    const affectedDeliveryIds = Array.from(new Set(blockedLines.map((l) => l.deliveryId)));
+    for (const deliveryId of affectedDeliveryIds) {
+      const [delivery] = await tx.select().from(deliveries).where(eq(deliveries.id, deliveryId)).for('update');
+      if (!delivery || delivery.status === 'cancelled') continue;
+      await tx.update(deliveries).set({ status: 'cancelled', updatedBy: ctx.userId ?? null }).where(eq(deliveries.id, deliveryId));
+      await indexDocument(tx, { type: 'delivery', recordId: deliveryId, docNo: delivery.docNo, partnerId: delivery.partnerId, status: 'cancelled', origin: delivery.origin, title: `İrsaliye ${delivery.docNo}` });
+      cancelledDeliveryDocNos.push(delivery.docNo);
+      await writeAudit(tx, {
+        action: 'update', tableName: 'deliveries', recordId: deliveryId,
+        summary: `Geri çağırma ${recall.docNo}: irsaliye ${delivery.docNo} bloklanan lota bağlı olduğu için iptal edildi — yeniden sevkiyat planlanmalı`,
+        before: { status: delivery.status }, after: { status: 'cancelled' },
+      }, ctx);
+    }
+
+    if (cancelledDeliveryDocNos.length) {
+      await notify(tx, {
+        roleCodes: ['satis', 'genel_mudur'],
+        title: `Geri çağırma nedeniyle irsaliye iptal edildi — ${recall.docNo}`,
+        body: `${cancelledDeliveryDocNos.length} açık irsaliye (${cancelledDeliveryDocNos.join(', ')}) bloklanan lota bağlı olduğu için iptal edildi; ilgili siparişler için yeni irsaliye açıp FEFO ile serbest bir lota yeniden rezervasyon yapın.`,
+        href: `/kalite/geri-cagirma/${recallId}`, channel: ['in_app'], refTable: 'recalls', refId: recallId,
+      }, ctx);
+    }
+  }
+
   const customerIds = Array.from(new Set(impact.customers.map((c) => c.id)));
   const pendingNotificationIds: string[] = [];
   for (const c of customerIds) {
@@ -176,7 +232,7 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
   // İç ekipler (kalite + satış) de haberdar edilir.
   await notify(tx, {
     roleCodes: ['kalite', 'satis', 'genel_mudur'], title: `Geri çağırma başlatıldı — ${recall.docNo}`,
-    body: `${blockedLots} lot bloklandı, ${customerIds.length} müşteri bilgilendiriliyor. Gerekçe: ${recall.reason}`,
+    body: `${blockedLots} lot bloklandı, ${customerIds.length} müşteri bilgilendiriliyor${cancelledDeliveryDocNos.length ? `, ${cancelledDeliveryDocNos.length} açık irsaliye iptal edildi` : ''}. Gerekçe: ${recall.reason}`,
     href: `/kalite/geri-cagirma/${recallId}`, channel: ['in_app'], refTable: 'recalls', refId: recallId,
   }, ctx);
 
@@ -185,10 +241,13 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
 
   await writeAudit(tx, {
     action: 'other', tableName: 'recalls', recordId: recallId,
-    summary: `Geri çağırma ${recall.docNo} başlatıldı — ${blockedLots} lot bloklandı, ${customerIds.length} müşteri bilgilendiriliyor`,
+    summary: `Geri çağırma ${recall.docNo} başlatıldı — ${blockedLots} lot bloklandı, ${customerIds.length} müşteri bilgilendiriliyor${cancelledDeliveryDocNos.length ? `, ${cancelledDeliveryDocNos.length} açık irsaliye iptal edildi` : ''}`,
   }, ctx);
 
-  return { recall: updated!, blockedLots, notifiedCustomers: customerIds.length, pendingNotificationIds };
+  return {
+    recall: updated!, blockedLots, notifiedCustomers: customerIds.length, pendingNotificationIds,
+    cancelledDeliveries: cancelledDeliveryDocNos.length, cancelledDeliveryDocNos,
+  };
 }
 
 export type RecallActionKind = 'block' | 'notify' | 'return' | 'destroy';

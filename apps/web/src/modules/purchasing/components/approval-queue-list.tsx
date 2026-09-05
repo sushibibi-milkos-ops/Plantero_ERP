@@ -94,7 +94,14 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
         <span className="flex items-center gap-1"><kbd className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">e</kbd> düzenle</span>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      {/* Tur 3 P1 tedarik-onay-05 kök neden: `sm:grid-cols-2 xl:grid-cols-3` yalnızca kuyruk ≥2-3
+       * taslak taşırken sütunları doldurur — kuyrukta 1 (ya da 2) bekleyen taslak varken (günün
+       * büyük kısmı) grid yine de tam genişliği eşit sütunlara böler, kart kendi sütununa (376px)
+       * sıkışıp kalır ve içerik sütununun %69'u kalıcı olarak boş kalır. Linear'in triyaj kutusu
+       * gibi tam genişlikte istiflenmiş satırlara geçildi — kart sayısı ne olursa olsun ana
+       * sütunun tamamını kullanır (oran ≈1); onay kartının kendisi zaten (tarih/gerekçe/kalemler/
+       * eylemler) yatay şeritler halinde kurulu olduğu için genişlemesi boşluk üretmiyor. */}
+      <div className="flex flex-col gap-3">
         {items.map((item, i) => (
           <div
             key={item.approvalId}

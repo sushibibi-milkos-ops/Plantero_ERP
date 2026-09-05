@@ -42,7 +42,7 @@ export async function listChecks(): Promise<QcCheckRow[]> {
 export type QcCheckDetail = {
   check: typeof qcChecks.$inferSelect;
   product: typeof products.$inferSelect;
-  lot: (typeof stockLots.$inferSelect & { onHandQty: string; locationCode: string | null; warehouseId: string | null }) | null;
+  lot: (typeof stockLots.$inferSelect & { onHandQty: string; locationCode: string | null; warehouseId: string | null; uomCode: string | null }) | null;
   supplier: { id: string; name: string } | null;
   receipt: { id: string; docNo: string } | null;
   template: (typeof qcTemplates.$inferSelect & { items: Array<typeof qcTemplateItems.$inferSelect> }) | null;
@@ -56,6 +56,12 @@ export async function getCheckDetail(id: string): Promise<QcCheckDetail | null> 
   if (!row) return null;
   const [product] = await db.select().from(products).where(eq(products.id, row.productId)).limit(1);
   if (!product) return null;
+
+  // kalite-kontroller-id-04 (tur 3, P1, kriter 6) kök neden: lotun eldeki miktarı (ve numune
+  // miktarı) birimsiz basılıyordu — ürünün `uoms.code`'u hiç sorgulanmıyordu. Tur 2'de
+  // izlenebilirlik grafiğinde kapatılan aynı bulgunun bu ekrandaki eşleniği.
+  const [uom] = product.uomId ? await db.select({ code: uoms.code }).from(uoms).where(eq(uoms.id, product.uomId)).limit(1) : [];
+  const uomCode = uom?.code ?? null;
 
   let lot: QcCheckDetail['lot'] = null;
   if (row.lotId) {
@@ -72,7 +78,7 @@ export async function getCheckDetail(id: string): Promise<QcCheckDetail | null> 
         locationCode = loc?.code ?? null;
         warehouseId = loc?.warehouseId ?? null;
       }
-      lot = { ...l, onHandQty: q?.qty ?? '0', locationCode, warehouseId };
+      lot = { ...l, onHandQty: q?.qty ?? '0', locationCode, warehouseId, uomCode };
     }
   }
 

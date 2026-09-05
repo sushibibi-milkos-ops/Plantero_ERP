@@ -79,8 +79,14 @@ function SupplierCard({ supplier, canManageWhitelist }: { supplier: SupplierCard
             // cari detayına yönlenirdi.
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Tur 3 P1 tedarik-tedarikciler-06 kök neden: görünür etiket `hidden sm:inline` ile
+             * 390px'te tamamen kayboluyordu, Switch'te aria-label/aria-labelledby yoktu, sarmalayıcı
+             * <label>'ın innerText'i de bu yüzden boştu — geriye yalnızca dokunmatikte çalışmayan
+             * `title` kalıyordu, ekran okuyucu adsız bir switch anons ediyordu. Switch'e KALICI
+             * (genişlikten bağımsız) bir erişilebilir ad verildi; görünür etiket 390px'te hâlâ gizli
+             * kalabilir çünkü artık ad kaynağı görünürlüğe bağlı değil. */}
             <span className="hidden sm:inline">Beyaz liste</span>
-            <Switch checked={whitelisted} onCheckedChange={toggle} disabled={pending} />
+            <Switch checked={whitelisted} onCheckedChange={toggle} disabled={pending} aria-label="Beyaz liste" />
           </label>
         ) : (
           <span className={cn('shrink-0 text-[11px]', whitelisted ? 'text-success' : 'text-muted-foreground')}>
@@ -92,25 +98,36 @@ function SupplierCard({ supplier, canManageWhitelist }: { supplier: SupplierCard
       {/* Tek satır metrik özeti: etiket+değer aynı satırda, "gün" tam kelime (tedarik-tedarikciler-02
        * rejeksiyonu — İngilizce "lead time" ya da "g" kısaltması yasak), sıra kart altındaki
        * açık sipariş satırıyla aynı sola yaslı hizalama sistemini korur. */}
+      {/* Tur 3 P2 tedarik-tedarikciler-07 kök neden: ayraç (`·`) ve ondan sonraki metrik iki BAĞIMSIZ
+       * flex item'dı — `flex-wrap` satır sonunu iki item ARASINDAN geçirebiliyordu (ayraç bir
+       * satırın sonunda, metriğin kendisi bir sonraki satırın başında yalnız kalıyordu). Ayraç artık
+       * kendinden sonraki metrikle AYNI flex item'da (`inline-flex` grup) — kırılma yalnızca
+       * grupların ARASINDA olabilir, ayraç asla bir satırın son/ilk karakteri olarak yalnız kalmaz. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/60 pt-2 text-[12px] text-muted-foreground">
         <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.leadTimeDays !== null ? supplier.leadTimeDays : '—'}</span> gün tedarik</span>
-        <span aria-hidden className="text-border">·</span>
-        <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.qualityScore ? Math.round(Number(supplier.qualityScore)) : '—'}/100</span> kalite</span>
-        <span aria-hidden className="text-border">·</span>
-        <span
-          title={supplier.deliveryCount > 0 ? `Son ${supplier.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
-          className={cn(
-            // Tur 1 P1 tedarik-tedarikciler-01 kök neden: ham Tailwind paleti (emerald/amber/
-            // red-600) tema/dark-mode token zincirinin dışındaydı — modülün geri kalanı (bkz.
-            // critical-stock-table.tsx RISK_CLASS) `text-success`/`text-warning`/`text-destructive`
-            // token sınıflarını kullanıyor.
-            supplier.onTimeDeliveryPct !== null && (supplier.onTimeDeliveryPct >= 90 ? 'text-success' : supplier.onTimeDeliveryPct >= 70 ? 'text-warning' : 'text-destructive'),
-          )}
-        >
-          <span className="font-mono font-semibold tabular-nums">{supplier.onTimeDeliveryPct === null ? '—' : `%${supplier.onTimeDeliveryPct}`}</span> zamanında
+        <span className="inline-flex items-center gap-1.5">
+          <span aria-hidden className="text-border">·</span>
+          <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.qualityScore ? Math.round(Number(supplier.qualityScore)) : '—'}/100</span> kalite</span>
         </span>
-        <span aria-hidden className="text-border">·</span>
-        <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.productCount}</span> ürün</span>
+        <span className="inline-flex items-center gap-1.5">
+          <span aria-hidden className="text-border">·</span>
+          <span
+            title={supplier.deliveryCount > 0 ? `Son ${supplier.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
+            className={cn(
+              // Tur 1 P1 tedarik-tedarikciler-01 kök neden: ham Tailwind paleti (emerald/amber/
+              // red-600) tema/dark-mode token zincirinin dışındaydı — modülün geri kalanı (bkz.
+              // critical-stock-table.tsx RISK_CLASS) `text-success`/`text-warning`/`text-destructive`
+              // token sınıflarını kullanıyor.
+              supplier.onTimeDeliveryPct !== null && (supplier.onTimeDeliveryPct >= 90 ? 'text-success' : supplier.onTimeDeliveryPct >= 70 ? 'text-warning' : 'text-destructive'),
+            )}
+          >
+            <span className="font-mono font-semibold tabular-nums">{supplier.onTimeDeliveryPct === null ? '—' : `%${supplier.onTimeDeliveryPct}`}</span> zamanında
+          </span>
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span aria-hidden className="text-border">·</span>
+          <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.productCount}</span> ürün</span>
+        </span>
       </div>
 
       <div className="flex items-center justify-between border-t border-border/60 pt-2 text-[13px]">

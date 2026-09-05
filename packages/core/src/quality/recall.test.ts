@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { eq } from 'drizzle-orm';
+import { eq, inArray, and } from 'drizzle-orm';
 import { schema } from '@plantero/db';
 import { seedBase, withRollback, expectReject, ctx, d } from '../__tests__/helpers.js';
 import { createLot, postStockMove, reserve } from '../stock/ledger.js';
 import { simulate, initiate, closeRecall, recordRecallAction, buildDraftMessage } from './recall.js';
 import type { RecallImpact } from '../lots/trace.js';
 
-const { stockLots, recallItems } = schema;
+const { stockLots, recallItems, deliveries, deliveryLines } = schema;
 
 describe('quality/recall', () => {
   it('simulate(): etkiyi hesaplar ve bir simülasyon kaydı açar, stoğa dokunmaz', async () => {
@@ -102,6 +102,41 @@ describe('quality/recall', () => {
       // destroy() aynı desenle rezerveli-eldeki miktarı da imha edebilmeli.
       const destroyed = await recordRecallAction(tx, blockItem!.id, 'destroy', 'İmha edildi', ctx);
       expect(destroyed.actionStatus).toBe('done');
+    });
+  });
+
+  it('initiate(): henüz sevk edilmemiş bir irsaliyeyi de iptal eder (I43 kök neden düzeltmesi, tur 3)', async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx);
+      const lot = await createLot(tx, { productId: base.raw.id, lotNo: `RC5-${base.s}`, origin: 'receipt', unitCost: d(50), status: 'released' }, ctx);
+      await postStockMove(tx, { kind: 'receipt', productId: base.raw.id, lotId: lot.id, fromLocationId: base.loc.sup.id, toLocationId: base.loc.hamR01.id, qty: d(40), uomId: base.kg.id, unitCost: d(50), refType: 'receipt', refId: lot.id }, ctx);
+      // Lotun 15 kg'ı HENÜZ SEVK EDİLMEMİŞ (status='reserved') bir irsaliyeye rezerve/atanmış —
+      // önceki davranışta initiate() bu irsaliyeye hiç dokunmuyordu (I43: open_delivery_line_blocked_lot).
+      await reserve(tx, { productId: base.raw.id, lotId: lot.id, locationId: base.loc.hamR01.id, qty: d(15) });
+      const [delivery] = await tx
+        .insert(deliveries)
+        .values({ docNo: `DN-TEST-${base.s}`, status: 'reserved', partnerId: base.customer.id, warehouseId: base.wh.id, origin: 'chain' })
+        .returning();
+      await tx.insert(deliveryLines).values({
+        deliveryId: delivery!.id, productId: base.raw.id, qty: '15.0000', uomId: base.kg.id,
+        lotId: lot.id, fromLocationId: base.loc.hamR01.id,
+      });
+
+      const { recall } = await simulate(tx, { rootLotId: lot.id, direction: 'both', reason: 'Aflatoksin şüphesi' }, ctx);
+      const initRes = await initiate(tx, recall.id, ctx);
+      expect(initRes.cancelledDeliveries).toBe(1);
+      expect(initRes.cancelledDeliveryDocNos).toContain(delivery!.docNo);
+
+      const [updatedDelivery] = await tx.select().from(deliveries).where(eq(deliveries.id, delivery!.id));
+      expect(updatedDelivery!.status).toBe('cancelled');
+
+      // I43: açık (draft/reserved/picking/picked) hiçbir irsaliye satırı artık bloklanan lota bağlı kalmamalı.
+      const openBlockedLines = await tx
+        .select({ id: deliveryLines.id })
+        .from(deliveryLines)
+        .innerJoin(deliveries, eq(deliveries.id, deliveryLines.deliveryId))
+        .where(and(eq(deliveryLines.lotId, lot.id), inArray(deliveries.status, ['draft', 'reserved', 'picking', 'picked'])));
+      expect(openBlockedLines.length).toBe(0);
     });
   });
 

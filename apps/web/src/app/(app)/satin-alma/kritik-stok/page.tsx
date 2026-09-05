@@ -24,9 +24,12 @@ export default async function CriticalStockPage() {
         description={`${rows.length} kural — kapsama süresi lead time altındaysa kritik, lead+güvenlik altındaysa uyarı`}
       />
 
+      {/* Motor hiç çalışmamışsa 'Kritik'/'Uyarı' 0 DEĞİL '—' — 36/36 kuralın hiçbiri değerlendirilmemişken
+          "0" basmak "risk yok" gibi okunuyordu (Tur 3 P0 tedarik-kritik-stok-06); 'Toplam kural' her
+          zaman gerçek bir sayımdır (motor durumundan bağımsız), o yüzden hep sayı basar. */}
       <KpiStripRow>
-        <KpiCard variant="strip" title="Kritik" value={critical} format="int" />
-        <KpiCard variant="strip" title="Uyarı" value={warning} format="int" />
+        <KpiCard variant="strip" title="Kritik" value={neverEvaluated ? null : critical} format="int" />
+        <KpiCard variant="strip" title="Uyarı" value={neverEvaluated ? null : warning} format="int" />
         <KpiCard variant="strip" title="Toplam kural" value={rows.length} format="int" />
       </KpiStripRow>
 

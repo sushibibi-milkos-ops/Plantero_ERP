@@ -143,7 +143,13 @@ export function PurchaseOrderForm({
          * yaslanıyordu. Aynı max-w-3xl burada da uygulanıyor. */}
         <div className="max-w-3xl border-t border-border/60 pt-5">
           <h2 className="mb-3 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Satırlar</h2>
-          <div className="max-w-lg space-y-1.5">
+          {/* Tur 3 P1 tedarik-yeni-05 kök neden: `max-w-lg` (512px) formun hiçbir hizalama kenarına
+           * oturmuyordu — sağ kenarı 776px'te, üstündeki alan sütunu 642px'te, altındaki satır
+           * kartları ve bölüm hairline'ı 1032px'te bitiyordu (üç farklı sağ kenar). Kombobox hemen
+           * altındaki satır kartlarıyla (`max-w-3xl` bölüm konteynerinin TAMAMI, ekstra max-w yok)
+           * aynı sağ kenarda dursun diye kendi max-w'si kaldırıldı — artık bölüm genişliğini (768px,
+           * sağ kenar 1032px) doğrudan devralıyor. */}
+          <div className="space-y-1.5">
             <FieldLabel>Ürün ekle (arama ile)</FieldLabel>
             <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
           </div>

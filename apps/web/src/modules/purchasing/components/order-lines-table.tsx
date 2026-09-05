@@ -1,6 +1,6 @@
 import { MoneyCell } from '@/components/money-cell';
 import { D } from '@plantero/core';
-import { formatDate, formatQty } from '@/lib/format';
+import { formatDate, formatPct, formatQty } from '@/lib/format';
 import type { getPurchaseOrderDetail } from '../queries';
 
 type Lines = NonNullable<Awaited<ReturnType<typeof getPurchaseOrderDetail>>>['lines'];
@@ -49,7 +49,11 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                   <td className={`px-3 py-2.5 text-right font-mono tabular-nums ${receivedFull ? 'text-success' : ''}`}>{formatQty(r.line.receivedQty)}</td>
                   <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">{formatQty(r.line.invoicedQty)}</td>
                   <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.unitPrice} /></td>
-                  <td className="px-3 py-2.5 text-right font-mono text-[13px] tabular-nums text-muted-foreground">%{r.line.vatRate}</td>
+                  {/* Tur 3 P1 tedarik-po-detay-04 kök nedeni: oran ham numeric(18,4) ("20.0000") ile
+                      basılıyordu — bir para tutarı değil, 4 ondalık bilgi taşımıyor. `formatPct`
+                      (`/satin-alma/siparisler/yeni` özet bloğuyla aynı yardımcı) gereksiz sıfırları
+                      kırpar: "%20", "%8,5". */}
+                  <td className="px-3 py-2.5 text-right font-mono text-[13px] tabular-nums text-muted-foreground">{formatPct(r.line.vatRate, 2)}</td>
                   <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.lineSubtotal} /></td>
                   <td className="px-3 py-2.5 text-muted-foreground">{r.line.expectedDate ? formatDate(r.line.expectedDate) : '—'}</td>
                 </tr>
@@ -71,7 +75,7 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                 </div>
                 <div className="shrink-0 text-right">
                   <MoneyCell value={r.line.lineSubtotal} className="text-[13px] font-semibold tabular-nums" />
-                  <div className="text-[10px] text-muted-foreground">KDV hariç · %{r.line.vatRate}</div>
+                  <div className="text-[10px] text-muted-foreground">KDV hariç · {formatPct(r.line.vatRate, 2)}</div>
                 </div>
               </div>
               <div className="mt-1 flex items-baseline justify-between gap-2 text-xs text-muted-foreground">

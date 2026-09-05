@@ -45,7 +45,11 @@ export function ComputeScoreButton() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    // kalite-tedarikci-05 (tur 3, P1, kriter 2): `flex-wrap` yoktu — 390px'te 112 (w-28) + 96 (w-24)
+    // + 2×8 gap + 145 (buton) = 369px, sayfa oluğu (374px) az taşıyor, tek hizasız öğe. Artık mobilde
+    // sarıyor (select'ler ilk satırda, buton `w-full` ile ikinci satırda), masaüstünde `sm:` ile eski
+    // tek satır düzeni korunuyor.
+    <div className="flex flex-wrap items-center gap-2">
       <Select value={String(month)} onValueChange={(v) => setMonth(Number(v))}>
         <SelectTrigger className="w-28 text-[13px] data-[size=default]:h-11 md:data-[size=default]:h-9" aria-label="Ay"><SelectValue /></SelectTrigger>
         <SelectContent>{MONTHS.map((m, i) => <SelectItem key={m} value={String(i + 1)}>{m}</SelectItem>)}</SelectContent>
@@ -54,7 +58,7 @@ export function ComputeScoreButton() {
         <SelectTrigger className="w-24 text-[13px] data-[size=default]:h-11 md:data-[size=default]:h-9" aria-label="Yıl"><SelectValue /></SelectTrigger>
         <SelectContent>{years.map((y) => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}</SelectContent>
       </Select>
-      <Button onClick={run} disabled={pending}>
+      <Button onClick={run} disabled={pending} className="w-full sm:w-auto">
         {pending ? <Loader2 className="size-4 animate-spin" /> : <Calculator className="size-4" />} Skoru Hesapla
       </Button>
     </div>

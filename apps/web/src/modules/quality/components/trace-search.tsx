@@ -7,6 +7,7 @@ import { Search, ArrowDownToLine, ArrowUpFromLine, Scale, SearchX } from 'lucide
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
+import { Skeleton } from '@/components/ui/skeleton';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
 import { StatusBadge } from '@/components/status-badge';
@@ -27,6 +28,12 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
   // görünmüyordu. Artık aranan değer saklanır ve görünür bir "Lot bulunamadı" durumu + toast gösterilir.
   const [notFound, setNotFound] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  // kalite-izlenebilirlik-05 (tur 3, P1, kriter 7): `?lot=` derin bağlantısıyla gelen kullanıcı,
+  // lot çözülene kadar "Aramaya başlayın" boş durumunu görüyordu — `pending`'in değeri hiç render
+  // edilmiyordu, paylaşılan bir bağlantıyı açan kişi ekranın çalışmadığını sanırdı. Yalnızca İLK
+  // yüklemede (URL'den `?lot=` varken) true başlar; `loadLot` sonuçlanınca (başarılı ya da
+  // "bulunamadı") false olur — sonraki aramalarda "Sonuç yok"/"Aramaya başlayın" akışını etkilemez.
+  const [initialLoading, setInitialLoading] = useState<boolean>(() => Boolean(initialLotId ?? searchParams.get('lot')));
 
   function search(value: string) {
     setQ(value);
@@ -66,6 +73,7 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
         setNotFound(lotId);
         toast.error(`Lot bulunamadı: ${lotId}`);
       }
+      setInitialLoading(false);
     });
   }
 
@@ -78,7 +86,7 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy={initialLoading}>
       <div className="relative max-w-lg">
         <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input value={q} onChange={(e) => search(e.target.value)} placeholder="Lot no, ürün, müşteri veya tedarikçi ara…" className="h-11 pl-9 text-[13px] md:h-9" />
@@ -165,6 +173,27 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
                 <TraceGraph nodes={view.forward.nodes} edges={view.forward.edges} rootId={view.forward.rootId} />
               </div>
             </div>
+          </div>
+        </div>
+      ) : initialLoading ? (
+        // kalite-izlenebilirlik-05: `?lot=` çözülürken görünen iskelet — KPI şeridi + iki grafik
+        // kartıyla aynı hizada, aria-busy zaten üst kapta işaretli. "Aramaya başlayın" YALNIZCA
+        // gerçekten hiç arama yokken (aşağıdaki dal) gösterilir.
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border/60 p-4">
+            <Skeleton className="h-6 w-28" />
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-4 w-40" />
+          </div>
+          <div>
+            <Skeleton className="mb-2 h-3 w-24" />
+            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border/60 sm:grid-cols-5">
+              {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-20 rounded-none" />)}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <Skeleton className="h-64 rounded-xl" />
+            <Skeleton className="h-64 rounded-xl" />
           </div>
         </div>
       ) : notFound ? (

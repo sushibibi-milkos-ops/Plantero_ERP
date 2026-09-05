@@ -228,11 +228,18 @@ export const initiateRecallAction = withAudit('quality.initiateRecall', async (r
   revalidatePath('/kalite/geri-cagirma');
   revalidatePath(`/kalite/geri-cagirma/${input.id}`);
   revalidatePath('/depo/lotlar');
+  revalidatePath('/depo/sevkiyat');
   revalidatePath('/bildirimler');
   const auditEntries: AuditInfo[] = [
-    { action: 'other', tableName: 'recalls', recordId: result.recall.id, summary: `Geri çağırma ${result.recall.docNo} başlatıldı — ${result.blockedLots} lot bloklandı, ${result.notifiedCustomers} müşteri bilgilendirildi` },
+    {
+      action: 'other', tableName: 'recalls', recordId: result.recall.id,
+      summary: `Geri çağırma ${result.recall.docNo} başlatıldı — ${result.blockedLots} lot bloklandı, ${result.notifiedCustomers} müşteri bilgilendirildi${result.cancelledDeliveries ? `, ${result.cancelledDeliveries} açık irsaliye iptal edildi` : ''}`,
+    },
   ];
-  return { data: { blockedLots: result.blockedLots, notifiedCustomers: result.notifiedCustomers }, audit: auditEntries };
+  return {
+    data: { blockedLots: result.blockedLots, notifiedCustomers: result.notifiedCustomers, cancelledDeliveries: result.cancelledDeliveries, cancelledDeliveryDocNos: result.cancelledDeliveryDocNos },
+    audit: auditEntries,
+  };
 });
 
 const recallActionSchema = z.object({ itemId: z.string().uuid(), action: z.enum(['block', 'notify', 'return', 'destroy']), note: z.string().trim().optional().nullable() });

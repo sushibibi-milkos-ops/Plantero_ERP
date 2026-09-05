@@ -106,7 +106,7 @@ export function CheckDetail({ detail, releaseLocations, rejectLocations }: { det
       title: 'Genel', fields: [
         { label: 'Ürün', value: product.name, node: <span>{product.name} <span className="text-muted-foreground">· {product.sku}</span></span> },
         { label: 'Lot', value: lot?.lotNo, node: lot ? <LotBadge lotNo={lot.lotNo} id={lot.id} status={lot.status} /> : <span className="text-muted-foreground">—</span> },
-        { label: 'Eldeki miktar', value: lot?.onHandQty, node: lot ? <span className="num">{formatQty(lot.onHandQty)} {lot.locationCode ? `· ${lot.locationCode}` : ''}</span> : <span className="text-muted-foreground">—</span> },
+        { label: 'Eldeki miktar', value: lot?.onHandQty, node: lot ? <span className="num">{formatQty(lot.onHandQty, lot.uomCode)} {lot.locationCode ? `· ${lot.locationCode}` : ''}</span> : <span className="text-muted-foreground">—</span> },
         { label: 'Tedarikçi', value: supplier?.name, node: supplier?.name ?? <span className="text-muted-foreground">—</span> },
         { label: 'Mal kabul', value: receipt?.docNo, node: receipt?.docNo ?? <span className="text-muted-foreground">—</span> },
         { label: 'Şablon', value: template?.name, node: template?.name ?? <span className="text-muted-foreground">Yok — genel değerlendirme</span> },
@@ -155,8 +155,14 @@ export function CheckDetail({ detail, releaseLocations, rejectLocations }: { det
 
         {isPending ? (
           <Form {...form}>
+            {/* kalite-kontroller-id-04/-05 (tur 3, P1, kriter 2/3/6/11): sayısal alanlar artık
+                kod tabanındaki diğer 6 FormQty kullanımıyla aynı ızgara kolonunda (`max-w-[200px]`)
+                ve lotun birimini (`uom`) taşıyor — önceden tek kolon `space-y-4` sayısal alanı
+                kartın tamamına (1118px) yayıyordu ve hiçbir yerde birim yoktu. */}
             <form onSubmit={form.handleSubmit(onSaveResults)} className="space-y-4">
-              <FormQty control={form.control} name="sampledQty" label="Numune miktarı" placeholder="0" />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <FormQty control={form.control} name="sampledQty" label="Numune miktarı" placeholder="0" uom={lot?.uomCode ?? undefined} className="max-w-[200px]" />
+              </div>
               <div className="space-y-3">
                 {fields.map((f, i) => {
                   const kind = form.watch(`items.${i}.kind`);
@@ -169,11 +175,15 @@ export function CheckDetail({ detail, releaseLocations, rejectLocations }: { det
                         {kind === 'numeric' && (min || max) ? <span className="text-xs text-muted-foreground">{min ?? '–'} … {max ?? '–'} {f.unit ?? ''}</span> : null}
                       </div>
                       {kind === 'numeric' ? (
-                        <FormQty control={form.control} name={`items.${i}.valueNumeric`} placeholder="Ölçülen değer" />
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                          <FormQty control={form.control} name={`items.${i}.valueNumeric`} placeholder="Ölçülen değer" uom={f.unit ?? undefined} className="max-w-[200px]" />
+                        </div>
                       ) : kind === 'boolean' ? (
                         <FormCheckbox control={form.control} name={`items.${i}.valueBool`} label="Uygun" />
                       ) : (
-                        <FormText control={form.control} name={`items.${i}.valueText`} placeholder={kind === 'document' ? 'Belge referansı / no' : 'Not'} />
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                          <FormText control={form.control} name={`items.${i}.valueText`} placeholder={kind === 'document' ? 'Belge referansı / no' : 'Not'} className="max-w-[340px]" />
+                        </div>
                       )}
                     </div>
                   );

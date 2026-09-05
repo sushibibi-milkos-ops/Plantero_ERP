@@ -169,7 +169,11 @@ export async function listApprovalQueue(): Promise<ApprovalQueueRow[]> {
 
 export type CriticalStockRow = {
   ruleId: string; productId: string; sku: string; productName: string; warehouseCode: string;
-  onHand: string; reserved: string; available: string;
+  /** Motor hiç çalışmamışsa (`lastEvaluatedAt === null`) `null` — "0" DEĞİL: gerçek eldeki stok
+   *  bilinmiyor (`stock_quants` doğrudan okunmuyor, motorun ürettiği son değer gösterilir). Tur 3
+   *  P0 bulgusu (tedarik-kritik-stok-06): eskiden `?? '0'` ile sessizce sıfıra düşüyordu ve
+   *  ekranda "stok 0" + "risk normal" gibi kendi içinde çelişen iki uydurma ifade oluşuyordu. */
+  onHand: string | null; reserved: string; available: string | null;
   minQty: string; maxQty: string; dailyConsumption: string; daysOfCover: string | null;
   leadTimeDays: number; safetyDays: number; suggestedQty: string;
   preferredSupplierId: string | null; preferredSupplierName: string | null;
@@ -177,7 +181,9 @@ export type CriticalStockRow = {
   /** Otomatik onay tutar sınırı (`null` = sınırsız) — `ReorderRuleDrawer`'ın form.reset'i bunu
    *  DOLU tutmalı, aksi halde kaydedilmiş tutar sınırı sessizce kaldırılır (Tur 1 P1 bulgusu). */
   autoOrderMaxAmount: string | null;
-  lastEvaluatedAt: Date | null; risk: 'none' | 'warning' | 'critical';
+  /** `unknown`: motor bu kural için hiç çalışmadı — "Normal" (risk yok) ile KARIŞTIRILMAMALI;
+   *  ikisi ayrı rozet/renk taşır (Tur 3 P0 bulgusu, bkz. `onHand`). */
+  lastEvaluatedAt: Date | null; risk: 'none' | 'warning' | 'critical' | 'unknown';
 };
 
 /**
@@ -207,7 +213,10 @@ export async function listCriticalStock(): Promise<CriticalStockRow[]> {
     // ama açık bir sipariş zaten 30 birim karşılıyordu, motor haklı olarak "önerilen: 0" demişti). Tek
     // doğruluk kaynağı: `lastSuggestedQty` (motorun ürettiği tek karar alanı) — kapsama günü hesaplanmışsa
     // onunla, hesaplanamıyorsa "motor sipariş önerdi mi" ile sınıflandırılır.
-    let risk: CriticalStockRow['risk'] = 'none';
+    // Motor bu kural için hiç çalışmadıysa ('lastEvaluatedAt' NULL) risk 'none' (Normal) DEĞİL,
+    // 'unknown' (Değerlendirilmedi) olmalı — Tur 3 P0 bulgusu: eskiden bilinmeyen durum sessizce
+    // "Normal" a düşüyor, "stok 0" + "risk normal" gibi ikisi de yanlış çelişen bir ifade üretiyordu.
+    let risk: CriticalStockRow['risk'] = r.rule.lastEvaluatedAt ? 'none' : 'unknown';
     if (daysOfCover !== null) {
       const d = D(daysOfCover);
       if (d.lt(leadTimeDays)) risk = 'critical';
@@ -217,7 +226,7 @@ export async function listCriticalStock(): Promise<CriticalStockRow[]> {
     }
     return {
       ruleId: r.rule.id, productId: r.rule.productId, sku: r.sku, productName: r.productName, warehouseCode: r.warehouseCode,
-      onHand: r.rule.lastOnHand ?? '0', reserved: '0', available: r.rule.lastOnHand ?? '0',
+      onHand: r.rule.lastOnHand, reserved: '0', available: r.rule.lastOnHand,
       minQty: r.rule.minQty, maxQty: r.rule.maxQty, dailyConsumption: r.rule.dailyConsumption, daysOfCover,
       leadTimeDays, safetyDays, suggestedQty: r.rule.lastSuggestedQty ?? '0',
       preferredSupplierId: r.rule.preferredSupplierId, preferredSupplierName: r.supplierName,

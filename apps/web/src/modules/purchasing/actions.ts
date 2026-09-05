@@ -232,12 +232,25 @@ export const runReplenishmentAction = withAudit('purchasing.runReplenishment', a
     let autoOrdered = 0;
     const purchaseOrderIds: string[] = [];
     for (const draft of drafts) {
+      // Tur 3 P2 bulgusu: `draftPurchaseOrders` gerçek Anthropic çağrısıyla çalışırken (fallback DEĞİL)
+      // LLM satır listesinde bazen bu çalıştırmanın `rulesForAi`'sinde (kritik kümede) OLMAYAN bir
+      // productId dönebiliyor — `consumptionForAi` prompt'a TÜM ürünlerin tüketim hızını taşıdığı için
+      // model bazen kritik olmayan gerçek bir ürünü satıra karıştırıyor. Böyle bir satır eskiden
+      // `reorderRuleId: null` ile PO'ya sessizce giriyordu — is_auto_approved kararı doğru kalsa da
+      // (aşağıdaki `rulesForOrder` zaten bunu filtreliyor) o satırın hangi kritik-stok kuralından
+      // geldiği FK ile sonradan izlenemiyordu (audit/lot zinciri boşluğu). Kesin çözüm: satır
+      // `rulesForAi`'nin verdiği productId kümesiyle DOĞRULANMADAN PO'ya girmez — eşleşmeyen satır
+      // (nadir bir model hatası) uyarı ile reddedilir, izlenemeyen FK ile kalıcılaştırılmaz.
       const lines = draft.lines
         .map((l) => {
           const product = productById.get(l.productId);
           if (!product) return null;
           const rule = ruleByProduct.get(l.productId);
-          return { productId: l.productId, qty: D(l.qty), uomId: product.uomId, unitPrice: D(l.unitPrice), reorderRuleId: rule?.ruleId ?? null };
+          if (!rule) {
+            console.warn(`[purchasing] runReplenishment: AI taslağı kritik kümede olmayan productId döndürdü, satır reddedildi (productId=${l.productId}, tedarikçi=${draft.partnerId})`);
+            return null;
+          }
+          return { productId: l.productId, qty: D(l.qty), uomId: product.uomId, unitPrice: D(l.unitPrice), reorderRuleId: rule.ruleId };
         })
         .filter((l): l is NonNullable<typeof l> => l !== null);
       if (!lines.length) continue;

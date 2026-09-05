@@ -58,9 +58,14 @@ function QtyByUomStripCell({ title, list }: { title: string; list: QtyByUom[] })
   }
   const text = list.map((x) => formatQty(x.qty, x.uom || undefined)).join(' · ');
   return (
-    <div className="h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2 md:h-20 md:w-auto md:flex-1 md:shrink md:snap-align-none md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:border-border/60 md:first:border-l-0 md:bg-transparent md:px-4 md:py-3">
+    // kalite-geri-cagirma-id-08 (tur 3, P1, kriter 6/9): mobilde sabit `w-[152px]` + `truncate`,
+    // çok birimli değeri ("75 ADET · 22,12 KG") hiçbir kaydırma konumunda görünmez şekilde
+    // kırpıyordu. Şerit zaten yatay kayıyor (snap-x) — hücre artık içeriğine göre genişliyor
+    // (`w-auto min-w-[152px] max-w-[260px]`), `truncate` yerine `whitespace-nowrap` ile değer
+    // sığdığı sürece tam basılır.
+    <div className="h-[72px] w-auto min-w-[152px] max-w-[260px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2 md:h-20 md:w-auto md:max-w-none md:flex-1 md:shrink md:snap-align-none md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:border-border/60 md:first:border-l-0 md:bg-transparent md:px-4 md:py-3">
       <div className="truncate text-xs font-medium text-muted-foreground">{title}</div>
-      <div className="mt-1 truncate text-[19px] leading-none font-semibold tracking-tight tabular-nums">{text}</div>
+      <div className="mt-1 whitespace-nowrap text-[19px] leading-none font-semibold tracking-tight tabular-nums">{text}</div>
       <div className="mt-1 h-[15px]" aria-hidden />
     </div>
   );
@@ -81,7 +86,13 @@ export function RecallDetail({
 
   async function initiate() {
     const res = await initiateRecallAction({ id: recall.id });
-    if (res.ok) { toast.success(`Geri çağırma başlatıldı — ${res.data.blockedLots} lot bloklandı, ${res.data.notifiedCustomers} müşteri bilgilendirildi`); router.refresh(); }
+    if (res.ok) {
+      toast.success(`Geri çağırma başlatıldı — ${res.data.blockedLots} lot bloklandı, ${res.data.notifiedCustomers} müşteri bilgilendirildi`);
+      if (res.data.cancelledDeliveries) {
+        toast.warning(`${res.data.cancelledDeliveries} açık irsaliye (${res.data.cancelledDeliveryDocNos.join(', ')}) bloklanan lota bağlı olduğu için iptal edildi — satış ekibi yeniden sevkiyat planlamalı`);
+      }
+      router.refresh();
+    }
     else toast.error(res.error);
   }
 
