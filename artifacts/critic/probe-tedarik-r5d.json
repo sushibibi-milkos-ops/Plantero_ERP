@@ -1,0 +1,114 @@
+{
+ "mobileSwitch": [
+  {
+   "w": 0,
+   "h": 0,
+   "display": "flex",
+   "hiddenBy": "contain-paint hidden md:block"
+  },
+  {
+   "w": 0,
+   "h": 0,
+   "display": "flex",
+   "hiddenBy": "contain-paint hidden md:block"
+  },
+  {
+   "w": 0,
+   "h": 0,
+   "display": "flex",
+   "hiddenBy": "contain-paint hidden md:block"
+  },
+  {
+   "w": 0,
+   "h": 0,
+   "display": "flex",
+   "hiddenBy": "contain-paint hidden md:block"
+  },
+  {
+   "w": 0,
+   "h": 0,
+   "display": "flex",
+   "hiddenBy": "contain-paint hidden md:block"
+  },
+  {
+   "w": 0,
+   "h": 0,
+   "display": "flex",
+   "hiddenBy": "contain-paint hidden md:block"
+  }
+ ],
+ "mobileCardLinks": [
+  {
+   "tag": "none",
+   "w": 358,
+   "h": 64
+  },
+  {
+   "tag": "none",
+   "w": 358,
+   "h": 64
+  }
+ ],
+ "desktopSwitchHit": [
+  {
+   "sw": [
+    24,
+    14
+   ],
+   "wrapper": "SPAN",
+   "wrapperSize": [
+    24,
+    14
+   ]
+  },
+  {
+   "sw": [
+    24,
+    14
+   ],
+   "wrapper": "SPAN",
+   "wrapperSize": [
+    24,
+    14
+   ]
+  }
+ ],
+ "lastColClip": [
+  {
+   "text": "₺0,00",
+   "right": 1469,
+   "scRight": 1416,
+   "clippedPx": 53
+  },
+  {
+   "text": "₺32.760,00",
+   "right": 1469,
+   "scRight": 1416,
+   "clippedPx": 53
+  },
+  {
+   "text": "₺14.400,00",
+   "right": 1469,
+   "scRight": 1416,
+   "clippedPx": 53
+  },
+  {
+   "text": "₺0,00",
+   "right": 1469,
+   "scRight": 1416,
+   "clippedPx": 53
+  },
+  {
+   "text": "₺0,00",
+   "right": 1469,
+   "scRight": 1416,
+   "clippedPx": 53
+  },
+  {
+   "text": "₺0,00",
+   "right": 1469,
+   "scRight": 1416,
+   "clippedPx": 53
+  }
+ ]
+}

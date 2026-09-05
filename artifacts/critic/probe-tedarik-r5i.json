@@ -1,0 +1,74 @@
+{
+ "kritikClip": {
+  "scRight": 1416,
+  "sw": 1189,
+  "cw": 1152,
+  "ths": [
+   {
+    "t": "Ürün",
+    "left": 264,
+    "right": 394,
+    "clipped": -1022
+   },
+   {
+    "t": "SKU",
+    "left": 394,
+    "right": 484,
+    "clipped": -932
+   },
+   {
+    "t": "Risk",
+    "left": 484,
+    "right": 626,
+    "clipped": -790
+   },
+   {
+    "t": "Kullanılabilir",
+    "left": 626,
+    "right": 736,
+    "clipped": -680
+   },
+   {
+    "t": "Min–Max",
+    "left": 736,
+    "right": 846,
+    "clipped": -570
+   },
+   {
+    "t": "Kapsama (gün)",
+    "left": 846,
+    "right": 973,
+    "clipped": -443
+   },
+   {
+    "t": "Tedarik süresi",
+    "left": 973,
+    "right": 1093,
+    "clipped": -323
+   },
+   {
+    "t": "Önerilen sipariş",
+    "left": 1093,
+    "right": 1223,
+    "clipped": -193
+   },
+   {
+    "t": "Tercihli tedarikçi",
+    "left": 1223,
+    "right": 1413,
+    "clipped": -3
+   },
+   {
+    "t": "Eylemler",
+    "left": 1413,
+    "right": 1453,
+    "clipped": 37
+   }
+  ]
+ },
+ "cariHedef": {
+  "url": "http://localhost:3000/ana-veri/cariler/76ed0058-2c5a-47b5-b6e6-ba87e86ab2d2",
+  "h1": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+  "body": "TedarikçiAnadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.AktifS-000005 DüzenleGenelAdreslerKişilerBakiye & HareketlerTedarikçi ÜrünleriKalite SkoruDenetimBakiye-₺1"
+ }
+}

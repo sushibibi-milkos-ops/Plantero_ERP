@@ -1,0 +1,37 @@
+{
+ "kritikOdd": [
+  {
+   "s": 19,
+   "w": "600",
+   "t": "—",
+   "cls": "text-muted-foreground/60"
+  },
+  {
+   "s": 19,
+   "w": "600",
+   "t": "—",
+   "cls": "text-muted-foreground/60"
+  }
+ ],
+ "kritikMobileRow": [
+  {
+   "role": null,
+   "tabindex": null,
+   "inner": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\"><span class=\"inline-block max-w-full truncate align-bottom md:w-[106px]\" title=\"Alkalize Kakao\">Alkalize Kakao</span></div>",
+   "h": 64
+  },
+  {
+   "role": null,
+   "tabindex": null,
+   "inner": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\"><span class=\"inline-block max-w-full truncate align-bottom md:w-[106px]\" title=\"Badem\">Badem</span></div><div class=\"max-w-",
+   "h": 64
+  }
+ ],
+ "tedMobileRow": [
+  {
+   "role": null,
+   "tabindex": null,
+   "inner": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\">Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.</div></div><div class=\"mt-0.5 flex items-baseline justify-between gap-2\"><div class=\"mobile-card-subtitle-row flex min-w-0 flex-1 items-baseline text-xs text-muted-foreground\"><span class=\"min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap\">S-000005</span><span class=\"max-w-[55%] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap\"><span><span aria-hidden=\"true\" class=\"text-muted-foreground/40\"> · </span><span class=\"font-mono text-[13px] tabular-nums text"
+  }
+ ]
+}

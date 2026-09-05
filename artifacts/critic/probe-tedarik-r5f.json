@@ -1,0 +1,84 @@
+{
+ "kpi": [
+  {
+   "t": "—",
+   "size": 19,
+   "weight": "600",
+   "top": 182,
+   "cls": "text-muted-foreground/60"
+  },
+  {
+   "t": "—",
+   "size": 19,
+   "weight": "600",
+   "top": 182,
+   "cls": "text-muted-foreground/60"
+  },
+  {
+   "t": "—",
+   "size": 13,
+   "weight": "400",
+   "top": 459,
+   "cls": "text-muted-foreground"
+  },
+  {
+   "t": "—",
+   "size": 13,
+   "weight": "400",
+   "top": 459,
+   "cls": "text-muted-foreground"
+  },
+  {
+   "t": "—",
+   "size": 13,
+   "weight": "400",
+   "top": 495,
+   "cls": "text-muted-foreground"
+  },
+  {
+   "t": "—",
+   "size": 13,
+   "weight": "400",
+   "top": 495,
+   "cls": "text-muted-foreground"
+  },
+  {
+   "t": "—",
+   "size": 13,
+   "weight": "400",
+   "top": 531,
+   "cls": "text-muted-foreground"
+  },
+  {
+   "t": "—",
+   "size": 13,
+   "weight": "400",
+   "top": 531,
+   "cls": "text-muted-foreground"
+  }
+ ],
+ "mobileClick_ted": {
+  "before": "http://localhost:3000/satin-alma/tedarikciler",
+  "after": "http://localhost:3000/satin-alma/tedarikciler",
+  "navigated": false,
+  "err": "",
+  "hasAnchor": false,
+  "liRole": null
+ },
+ "mobileClick_kritik": {
+  "before": "http://localhost:3000/satin-alma/kritik-stok",
+  "after": "http://localhost:3000/satin-alma/kritik-stok",
+  "navigated": false,
+  "err": "",
+  "hasAnchor": false,
+  "liRole": null
+ },
+ "mobileClick_sip": {
+  "before": "http://localhost:3000/satin-alma/siparisler",
+  "after": "http://localhost:3000/satin-alma/siparisler",
+  "navigated": false,
+  "err": "",
+  "hasAnchor": false,
+  "liRole": null
+ }
+}

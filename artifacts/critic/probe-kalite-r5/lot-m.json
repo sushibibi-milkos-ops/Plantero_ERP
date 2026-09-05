@@ -1,0 +1,71 @@
+{
+ "label": "lot-m",
+ "route": "/kalite/izlenebilirlik?lot=PL-260808-H1-12",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex min-w-0 flex-1 flex-col overflow-x-clip",
+   "scrollWidth": 393,
+   "clientWidth": 390,
+   "overflowX": "clip",
+   "hidden": 3
+  },
+  {
+   "tag": "div",
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory md:",
+   "scrollWidth": 792,
+   "clientWidth": 358,
+   "overflowX": "auto",
+   "hidden": 434
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [
+  {
+   "text": "Sevkiyat",
+   "left": 349,
+   "right": 475,
+   "vw": 390
+  },
+  {
+   "text": "Fire",
+   "left": 509,
+   "right": 635,
+   "vw": 390
+  },
+  {
+   "text": "Eldeki",
+   "left": 669,
+   "right": 795,
+   "vw": 390
+  },
+  {
+   "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+   "left": 153,
+   "right": 393,
+   "vw": 390
+  }
+ ],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 28,
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 801,
+  "docH": 1645
+ }
+}

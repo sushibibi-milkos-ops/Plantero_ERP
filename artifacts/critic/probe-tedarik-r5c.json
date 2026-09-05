@@ -1,0 +1,606 @@
+{
+ "kritikStokDesktop": {
+  "perCol": [
+   {
+    "header": "Ürün",
+    "n": 36,
+    "dash": 0,
+    "uniq": 36,
+    "sample": "Alkalize Kakao"
+   },
+   {
+    "header": "SKU",
+    "n": 36,
+    "dash": 0,
+    "uniq": 36,
+    "sample": "304030000"
+   },
+   {
+    "header": "Risk",
+    "n": 36,
+    "dash": 0,
+    "uniq": 1,
+    "sample": "Değerlendirilmedi"
+   },
+   {
+    "header": "Kullanılabilir",
+    "n": 36,
+    "dash": 0,
+    "uniq": 32,
+    "sample": "82"
+   },
+   {
+    "header": "Min–Max",
+    "n": 36,
+    "dash": 0,
+    "uniq": 23,
+    "sample": "28–80"
+   },
+   {
+    "header": "Kapsama (gün)",
+    "n": 36,
+    "dash": 36,
+    "uniq": 1,
+    "sample": "—"
+   },
+   {
+    "header": "Tedarik süresi",
+    "n": 36,
+    "dash": 0,
+    "uniq": 6,
+    "sample": "20 gün"
+   },
+   {
+    "header": "Önerilen sipariş",
+    "n": 36,
+    "dash": 36,
+    "uniq": 1,
+    "sample": "—"
+   },
+   {
+    "header": "Tercihli tedarikçi",
+    "n": 36,
+    "dash": 0,
+    "uniq": 7,
+    "sample": "Aromatik Kimya Aroma ve Katkı Ltd. Şti."
+   },
+   {
+    "header": "Eylemler",
+    "n": 36,
+    "dash": 36,
+    "uniq": 1,
+    "sample": ""
+   }
+  ],
+  "scrollers": [
+   {
+    "cls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto",
+    "sw": 1189,
+    "cw": 1152,
+    "over": 37
+   }
+  ],
+  "primary": {
+   "primary": "oklch(0.55 0.16 152)",
+   "count": 1,
+   "hits": [
+    "BUTTON.bg \"Motoru çalıştır\""
+   ]
+  },
+  "fonts": {
+   "pairs": {
+    "24/600": 1,
+    "14/400": 2,
+    "12/500": 49,
+    "19/600": 2,
+    "13/400": 253,
+    "12/400": 37,
+    "10/500": 3
+   },
+   "pureSizeCount": 6,
+   "pureSizes": [
+    "24",
+    "19",
+    "14",
+    "13",
+    "12",
+    "10"
+   ]
+  }
+ },
+ "kritikStokMobile": [
+  {
+   "text": "Alkalize KakaoDeğerlendirilmedi304030000—",
+   "h": 64
+  },
+  {
+   "text": "BademDeğerlendirilmedi301030000—",
+   "h": 64
+  },
+  {
+   "text": "Brokoli + IspanakDeğerlendirilmedi306030000—",
+   "h": 64
+  },
+  {
+   "text": "BromelainDeğerlendirilmedi306050000—",
+   "h": 64
+  }
+ ],
+ "tedarikcilerDesktop": {
+  "scrollers": [
+   {
+    "cls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto",
+    "sw": 1205,
+    "cw": 1152,
+    "over": 53
+   }
+  ],
+  "table": {
+   "tableWidth": 1205,
+   "headers": [
+    {
+     "t": "Tedarikçi",
+     "left": 264,
+     "right": 619
+    },
+    {
+     "t": "Kod",
+     "left": 619,
+     "right": 729
+    },
+    {
+     "t": "Beyaz liste",
+     "left": 729,
+     "right": 839
+    },
+    {
+     "t": "Tedarik süresi",
+     "left": 839,
+     "right": 959
+    },
+    {
+     "t": "Kalite",
+     "left": 959,
+     "right": 1049
+    },
+    {
+     "t": "Zamanında",
+     "left": 1049,
+     "right": 1153
+    },
+    {
+     "t": "Ürün",
+     "left": 1153,
+     "right": 1233
+    },
+    {
+     "t": "Açık sipariş",
+     "left": 1233,
+     "right": 1339
+    },
+    {
+     "t": "Açık tutar",
+     "left": 1339,
+     "right": 1469
+    }
+   ],
+   "mainRight": 1440
+  },
+  "switches": [
+   {
+    "aria": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. beyaz liste",
+    "w": 24,
+    "h": 14,
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "aria": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. beyaz liste",
+    "w": 24,
+    "h": 14,
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "aria": "Ege Ambalaj Sanayi ve Ticaret A.Ş. beyaz liste",
+    "w": 24,
+    "h": 14,
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "aria": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. beyaz liste",
+    "w": 24,
+    "h": 14,
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "aria": "Proteinsan Gıda Hammaddeleri Ltd. Şti. beyaz liste",
+    "w": 24,
+    "h": 14,
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "aria": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. beyaz liste",
+    "w": 24,
+    "h": 14,
+    "bg": "rgba(0, 0, 0, 0)"
+   }
+  ],
+  "primary": {
+   "primary": "oklch(0.55 0.16 152)",
+   "count": 6,
+   "hits": [
+    "SPAN.bg \"\"",
+    "SPAN.bg \"\"",
+    "SPAN.bg \"\"",
+    "SPAN.bg \"\"",
+    "SPAN.bg \"\"",
+    "SPAN.bg \"\""
+   ]
+  },
+  "fonts": {
+   "pairs": {
+    "24/600": 1,
+    "14/400": 1,
+    "12/400": 7,
+    "12/500": 9,
+    "13/400": 42
+   },
+   "pureSizeCount": 4,
+   "pureSizes": [
+    "24",
+    "14",
+    "13",
+    "12"
+   ]
+  }
+ },
+ "tedarikcilerMobile": {
+  "switches": 6,
+  "cards": [
+   {
+    "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.S-000005 · 0₺0,00",
+    "h": 64,
+    "leaves": [
+     "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+     "S-000005",
+     "·",
+     "0",
+     "₺0,00"
+    ]
+   },
+   {
+    "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.S-000003 · 1₺32.760,00",
+    "h": 64,
+    "leaves": [
+     "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+     "S-000003",
+     "·",
+     "1",
+     "₺32.760,00"
+    ]
+   },
+   {
+    "text": "Ege Ambalaj Sanayi ve Ticaret A.Ş.S-000004 · 1₺14.400,00",
+    "h": 64,
+    "leaves": [
+     "Ege Ambalaj Sanayi ve Ticaret A.Ş.",
+     "S-000004",
+     "·",
+     "1",
+     "₺14.400,00"
+    ]
+   },
+   {
+    "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.S-000006 · 0₺0,00",
+    "h": 64,
+    "leaves": [
+     "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+     "S-000006",
+     "·",
+     "0",
+     "₺0,00"
+    ]
+   },
+   {
+    "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.S-000001 · 0₺0,00",
+    "h": 64,
+    "leaves": [
+     "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+     "S-000001",
+     "·",
+     "0",
+     "₺0,00"
+    ]
+   },
+   {
+    "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.S-000002 · 0₺0,00",
+    "h": 64,
+    "leaves": [
+     "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+     "S-000002",
+     "·",
+     "0",
+     "₺0,00"
+    ]
+   }
+  ],
+  "startsWithDot": [
+   "S-000005 · 0₺0,00",
+   "S-000003 · 1₺32.760,00",
+   "S-000004 · 1₺14.400,00",
+   "S-000006 · 0₺0,00",
+   "S-000001 · 0₺0,00",
+   "S-000002 · 0₺0,00"
+  ]
+ },
+ "poDetay": {
+  "fonts": {
+   "pairs": {
+    "12/500": 8,
+    "24/600": 1,
+    "14/400": 1,
+    "11/500": 4,
+    "20/600": 1,
+    "13/400": 22,
+    "10/500": 3,
+    "13/500": 6,
+    "11/400": 9,
+    "12/400": 2,
+    "13/600": 3
+   },
+   "pureSizeCount": 7,
+   "pureSizes": [
+    "24",
+    "20",
+    "14",
+    "13",
+    "12",
+    "11",
+    "10"
+   ]
+  },
+  "totalOccurrences": [
+   {
+    "text": "₺113.040,00",
+    "size": 20,
+    "weight": "600",
+    "top": 89,
+    "visible": true
+   },
+   {
+    "text": "₺113.040,00",
+    "size": 11,
+    "weight": "400",
+    "top": 292,
+    "visible": true
+   },
+   {
+    "text": "₺113.040,00",
+    "size": 11,
+    "weight": "400",
+    "top": 283,
+    "visible": true
+   },
+   {
+    "text": "₺113.040,00",
+    "size": 13,
+    "weight": "600",
+    "top": 587,
+    "visible": true
+   },
+   {
+    "text": "₺113.040,00",
+    "size": 13,
+    "weight": "400",
+    "top": 675,
+    "visible": true
+   }
+  ],
+  "headers": [
+   {
+    "t": "Ürün",
+    "tt": "uppercase",
+    "size": 12,
+    "ls": "normal"
+   },
+   {
+    "t": "Sipariş",
+    "tt": "uppercase",
+    "size": 12,
+    "ls": "normal"
+   },
+   {
+    "t": "Alınan",
+    "tt": "uppercase",
+    "size": 12,
+    "ls": "normal"
+   },
+   {
+    "t": "Faturalanan",
+    "tt": "uppercase",
+    "size": 12,
+    "ls": "normal"
+   },
+   {
+    "t": "Birim fiyat",
+    "tt": "uppercase",
+    "size": 12,
+    "ls": "normal"
+   },
+   {
+    "t": "KDV",
+    "tt": "uppercase",
+    "size": 12,
+    "ls": "normal"
+   },
+   {
+    "t": "Tutar (KDV hariç)",
+    "tt": "uppercase",
+    "size": 12,
+    "ls": "normal"
+   }
+  ],
+  "chainCards": [
+   {
+    "t": "PO-2026-000003",
+    "top": 266,
+    "left": 275
+   },
+   {
+    "t": "PINV-2026-000003",
+    "top": 258,
+    "left": 483
+   },
+   {
+    "t": "GR-2026-000003",
+    "top": 258,
+    "left": 691
+   },
+   {
+    "t": "GR-2026-000003",
+    "top": 675,
+    "left": 281
+   }
+  ],
+  "scrollers": [
+   {
+    "cls": "relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto px-1 py-1 snap-x snap-mandator",
+    "sw": 1160,
+    "cw": 1160,
+    "over": 0
+   },
+   {
+    "cls": "hidden overflow-x-auto rounded-lg border border-border/60 md:block",
+    "sw": 1150,
+    "cw": 1150,
+    "over": 0
+   }
+  ],
+  "primary": {
+   "primary": "oklch(0.55 0.16 152)",
+   "count": 0,
+   "hits": []
+  }
+ },
+ "siparisler": {
+  "headers": [
+   {
+    "t": "Sipariş no",
+    "tt": "none",
+    "size": 12
+   },
+   {
+    "t": "Tedarikçi",
+    "tt": "none",
+    "size": 12
+   },
+   {
+    "t": "Durum",
+    "tt": "none",
+    "size": 12
+   },
+   {
+    "t": "Alınan",
+    "tt": "none",
+    "size": 12
+   },
+   {
+    "t": "Beklenen tarih",
+    "tt": "none",
+    "size": 12
+   },
+   {
+    "t": "Sipariş tarihi",
+    "tt": "none",
+    "size": 12
+   },
+   {
+    "t": "Tutar",
+    "tt": "none",
+    "size": 12
+   }
+  ],
+  "scrollers": [
+   {
+    "cls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto",
+    "sw": 1152,
+    "cw": 1152,
+    "over": 0
+   }
+  ],
+  "primary": {
+   "primary": "oklch(0.55 0.16 152)",
+   "count": 1,
+   "hits": [
+    "A.bg \"Yeni sipariş\""
+   ]
+  },
+  "fonts": {
+   "pairs": {
+    "24/600": 1,
+    "14/400": 1,
+    "12/500": 11,
+    "12/400": 1,
+    "13/400": 94
+   },
+   "pureSizeCount": 4,
+   "pureSizes": [
+    "24",
+    "14",
+    "13",
+    "12"
+   ]
+  }
+ },
+ "onay": {
+  "fonts": {
+   "pairs": {
+    "24/600": 1,
+    "14/400": 1,
+    "12/400": 6,
+    "13/500": 1,
+    "13/400": 6,
+    "13/600": 1
+   },
+   "pureSizeCount": 4,
+   "pureSizes": [
+    "24",
+    "14",
+    "13",
+    "12"
+   ]
+  },
+  "primary": {
+   "primary": "oklch(0.55 0.16 152)",
+   "count": 1,
+   "hits": [
+    "BUTTON.bg \"Onayla\""
+   ]
+  },
+  "scrollers": []
+ },
+ "yeni": {
+  "fonts": {
+   "pairs": {
+    "24/600": 1,
+    "14/400": 1,
+    "11/600": 2,
+    "13/500": 5,
+    "13/400": 4,
+    "14/500": 4
+   },
+   "pureSizeCount": 4,
+   "pureSizes": [
+    "24",
+    "14",
+    "13",
+    "11"
+   ]
+  },
+  "primary": {
+   "primary": "oklch(0.55 0.16 152)",
+   "count": 0,
+   "hits": []
+  },
+  "scrollers": []
+ }
+}
