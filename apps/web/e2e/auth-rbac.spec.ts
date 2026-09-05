@@ -17,7 +17,10 @@ test.describe('Kimlik doğrulama ve RBAC', () => {
     await nav.getByRole('button', { name: 'Ayarlar' }).click();
     await nav.getByRole('link', { name: 'Kullanıcılar' }).click();
 
-    await expect(page).toHaveURL(/\/ayarlar\/kullanicilar/);
+    // Koşunun İLK gezinmesi: dev sunucu boşta kalınca (db:reset/typecheck sonrası) on-demand girdileri
+    // düşürür, /ayarlar/kullanicilar soğuk derlemesi ~9-14 sn sürer ve varsayılan 10 sn'lik beklemeyi
+    // tek başına aşıyordu (trace: RSC isteği 9,9 sn). Assertion aynı — yalnızca derleme payı tanınır.
+    await expect(page).toHaveURL(/\/ayarlar\/kullanicilar/, { timeout: 30_000 });
     await expect(page.getByRole('heading', { level: 1, name: 'Kullanıcılar' })).toBeVisible();
     await expect(page.getByText('12 kullanıcı')).toBeVisible();
 
