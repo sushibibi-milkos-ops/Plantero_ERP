@@ -52,11 +52,18 @@ export type ExpiryAlertResult = {
 
 const fmtMoney = (v: ReturnType<typeof D>) => `₺${round2(v).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
 
+// Tur 1 P1 bildirimler-04: `D(qty).toFixed(2)` nokta ondalık üretiyordu ("245.00 KG") ve aynı cümlede
+// `fmtMoney` (virgül ondalık, "₺3.675,00") ile çakışıyordu. Miktar da aynı tr-TR ayracından geçer —
+// `money.ts`'deki `formatQtyTr` gereksiz sıfırları atıyor (ör. "245") ve bu özet için "245,00" gibi
+// sabit 2 ondalıklı bir görünüm isteniyor (tutarla aynı hizada okunur); bu yüzden burada aynı kalıpla
+// (nokta→virgül, binlik nokta) ayrı, sabit-2-ondalıklı bir yardımcı tanımlanır.
+const fmtQty = (v: ReturnType<typeof D>) => v.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
 function digestBody(bucket: ExpiryBucket, rows: ExpiryRow[]): string {
   const total = sum(rows.map((r) => D(r.value)));
   const head = rows.slice(0, 5).map((r) => {
     const when = r.daysLeft < 0 ? `${Math.abs(r.daysLeft)} gün önce doldu` : r.daysLeft === 0 ? 'bugün doluyor' : `${r.daysLeft} gün kaldı`;
-    return `${r.lotNo} · ${r.productName} (${when}, ${D(r.qty).toFixed(2)} ${r.uomCode})`;
+    return `${r.lotNo} · ${r.productName} (${when}, ${fmtQty(D(r.qty))} ${r.uomCode})`;
   });
   const more = rows.length > 5 ? ` … ve ${rows.length - 5} lot daha` : '';
   const verb = bucket === 'expired' ? 'son kullanma tarihi geçmiş' : 'son kullanma tarihi yaklaşan';

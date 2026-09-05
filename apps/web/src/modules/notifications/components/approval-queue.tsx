@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { CheckCircle2, XCircle, ArrowRight, Sparkles, ShoppingBag, ClipboardList, Landmark, Receipt, FlaskConical, Tag } from 'lucide-react';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { EmptyState } from '@/components/empty-state';
 import { ConfirmDialog } from '@/components/confirm-dialog';
-import { formatDateTime } from '@/lib/format';
+import { formatDateTime, formatMoney, formatTime } from '@/lib/format';
 import { approveQueueItemAction, rejectQueueItemAction } from '../actions';
 import type { ApprovalQueueItem } from '../queries';
 
@@ -26,15 +26,52 @@ function kindMeta(kind: string) {
   return KIND_META[kind] ?? { label: kind, icon: Sparkles };
 }
 
+/** Güven eşiği: yeşil YALNIZCA yüksek güveni işaretler — düşük güveni de aynı yeşille göstermek
+ *  rengi anlamsızlaştırır (Tur 1 P0 onaylar-02). Nötr/uyarı/başarı — StatusBadge ile aynı token'lar. */
+function confidenceBadgeClass(c: number): string {
+  if (c >= 0.8) return 'bg-success/12 text-success';
+  if (c >= 0.5) return 'bg-warning/15 text-[oklch(0.5_0.14_70)] dark:text-warning';
+  return 'bg-muted text-muted-foreground';
+}
+
+function rowKey(item: Pick<ApprovalQueueItem, 'kind' | 'id'>): string {
+  return `${item.kind}:${item.id}`;
+}
+
 export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [selected, setSelected] = useState(0);
+  const [kindFilter, setKindFilter] = useState<string>('all');
+  const [selectedKey, setSelectedKey] = useState<string | null>(items[0] ? rowKey(items[0]) : null);
   const [rejectTarget, setRejectTarget] = useState<ApprovalQueueItem | null>(null);
   const [reason, setReason] = useState('');
+  const rowRefs = useRef(new Map<string, HTMLDivElement>());
 
-  useEffect(() => setSelected((s) => Math.min(s, Math.max(0, items.length - 1))), [items.length]);
+  // Sekmeler: tür başına adet (Tur 1 P1 onaylar-07 — tek kuyruk sekmesiz ve ayırt edilemezdi).
+  const tabs = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const item of items) counts.set(item.kind, (counts.get(item.kind) ?? 0) + 1);
+    return [{ key: 'all', label: 'Tümü', count: items.length }, ...[...counts.entries()].map(([key, count]) => ({ key, label: kindMeta(key).label, count }))];
+  }, [items]);
 
-  const current = items[selected] ?? null;
+  const filtered = useMemo(() => (kindFilter === 'all' ? items : items.filter((i) => i.kind === kindFilter)), [items, kindFilter]);
+
+  // Filtre değişince ya da liste küçülünce seçim geçerli kalmıyorsa ilk satıra düş.
+  useEffect(() => {
+    if (!filtered.length) { setSelectedKey(null); return; }
+    if (!filtered.some((i) => rowKey(i) === selectedKey)) setSelectedKey(rowKey(filtered[0]!));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtered]);
+
+  // Seçim her değiştiğinde görünür alana kaydır + odağı taşı (Tur 1 P0 onaylar-01 — seçim viewport
+  // dışına çıkabiliyor, "A" tuşu görünmeyen bir kaydı onaylayabiliyordu).
+  useEffect(() => {
+    if (!selectedKey) return;
+    const el = rowRefs.current.get(selectedKey);
+    el?.scrollIntoView({ block: 'nearest' });
+    el?.focus({ preventScroll: true });
+  }, [selectedKey]);
+
+  const current = filtered.find((i) => rowKey(i) === selectedKey) ?? null;
 
   const approve = useMemo(
     () => async (item: ApprovalQueueItem) => {
@@ -61,15 +98,16 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
       if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
-      if (!items.length) return;
-      if (e.key === 'j' || e.key === 'J') { e.preventDefault(); setSelected((s) => Math.min(items.length - 1, s + 1)); }
-      else if (e.key === 'k' || e.key === 'K') { e.preventDefault(); setSelected((s) => Math.max(0, s - 1)); }
+      if (!filtered.length) return;
+      const idx = current ? filtered.findIndex((i) => rowKey(i) === selectedKey) : -1;
+      if (e.key === 'j' || e.key === 'J') { e.preventDefault(); setSelectedKey(rowKey(filtered[Math.min(filtered.length - 1, idx + 1)]!)); }
+      else if (e.key === 'k' || e.key === 'K') { e.preventDefault(); setSelectedKey(rowKey(filtered[Math.max(0, idx - 1)]!)); }
       else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); if (current) void approve(current); }
-      else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); if (current) void reject(current, null); }
+      else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); if (current) { setRejectTarget(current); setReason(''); } }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [items, current, approve, reject]);
+  }, [filtered, current, selectedKey, approve]);
 
   if (!items.length) {
     return <EmptyState icon={Sparkles} title="Onay bekleyen kayıt yok" description="Yeni bir taslak, sayım farkı ya da mutabakat önerisi oluştuğunda burada görünür." />;
@@ -77,52 +115,95 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-muted-foreground">
-        Klavye: <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">J</kbd>/<kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">K</kbd> gezin ·{' '}
-        <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">A</kbd> onayla · <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">R</kbd> reddet
-      </p>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {items.map((item, i) => {
-          const meta = kindMeta(item.kind);
-          const Icon = meta.icon;
-          const isSelected = i === selected;
-          return (
-            <div
-              key={`${item.kind}:${item.id}`}
-              onClick={() => setSelected(i)}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div role="tablist" aria-label="Onay türü" className="flex flex-wrap items-center gap-1 rounded-lg bg-muted p-0.5">
+          {tabs.map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              role="tab"
+              aria-selected={kindFilter === t.key}
+              onClick={() => setKindFilter(t.key)}
               className={cn(
-                'flex cursor-default flex-col gap-3 rounded-xl border p-4 transition-colors',
-                isSelected ? 'border-primary/60 ring-2 ring-primary/15' : 'border-border/60 hover:border-border',
+                'h-8 rounded-md px-2.5 text-[13px] font-medium whitespace-nowrap transition-colors',
+                kindFilter === t.key ? 'bg-background text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground',
               )}
             >
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                    <Icon className="size-3.5 shrink-0 text-primary" /> {meta.label}
-                  </div>
-                  <div className="mt-1 truncate text-sm font-medium">{item.title}</div>
-                </div>
+              {t.label} <span className="tabular-nums text-muted-foreground">({t.count})</span>
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">J</kbd>/<kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">K</kbd> gezin ·{' '}
+          <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">A</kbd> onayla · <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">R</kbd> reddet
+        </p>
+      </div>
+
+      <div role="listbox" aria-label="Onay kuyruğu" className="divide-y divide-border/60 rounded-xl border border-border/60">
+        {filtered.map((item) => {
+          const meta = kindMeta(item.kind);
+          const Icon = meta.icon;
+          const key = rowKey(item);
+          const isSelected = key === selectedKey;
+          return (
+            <div
+              key={key}
+              ref={(el) => { if (el) rowRefs.current.set(key, el); else rowRefs.current.delete(key); }}
+              role="option"
+              aria-selected={isSelected}
+              tabIndex={isSelected ? 0 : -1}
+              onClick={() => setSelectedKey(key)}
+              onFocus={() => setSelectedKey(key)}
+              className={cn(
+                'cursor-default outline-none',
+                isSelected ? 'bg-accent/40' : 'hover:bg-accent/20',
+                'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50',
+              )}
+            >
+              {/* Yoğun satır — 44px (dokunma hedefi) mobilde, masaüstünde 40px (Linear tablo yoğunluğu). */}
+              <div className="flex h-11 items-center gap-2.5 px-3 sm:h-10">
+                <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{item.title}</span>
                 {item.confidence !== null ? (
-                  <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary tabular-nums">%{Math.round(item.confidence * 100)}</span>
+                  <span className={cn('hidden shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium tabular-nums sm:inline-block', confidenceBadgeClass(item.confidence))}>
+                    %{Math.round(item.confidence * 100)}
+                  </span>
                 ) : null}
+                {item.amount !== null ? (
+                  <span className="hidden w-28 shrink-0 text-right text-[13px] font-medium tabular-nums sm:inline-block">{formatMoney(item.amount)}</span>
+                ) : null}
+                <span className="hidden w-12 shrink-0 text-right text-[11px] text-muted-foreground tabular-nums md:inline-block">{formatTime(item.createdAt)}</span>
               </div>
 
-              {item.summary ? <p className="line-clamp-3 text-[13px] text-muted-foreground">{item.summary}</p> : null}
-
-              <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3">
-                <span className="text-xs text-muted-foreground">{formatDateTime(item.createdAt)}</span>
-                <div className="flex items-center gap-1.5">
-                  <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-destructive" disabled={busyId === item.id} onClick={() => { setRejectTarget(item); setReason(''); }}>
-                    <XCircle className="size-3.5" /> Reddet
-                  </Button>
-                  <Button size="sm" variant="outline" asChild>
-                    <Link href={item.href}>Detay <ArrowRight className="size-3.5" /></Link>
-                  </Button>
-                  <Button size="sm" disabled={busyId === item.id} onClick={() => approve(item)}>
-                    <CheckCircle2 className="size-3.5" /> Onayla
-                  </Button>
+              {isSelected ? (
+                <div className="space-y-3 border-t border-border/60 bg-muted/20 px-3 py-3 sm:px-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                      <Icon className="size-3.5 shrink-0 text-primary" /> {meta.label}
+                    </span>
+                    {item.confidence !== null ? (
+                      <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-medium tabular-nums sm:hidden', confidenceBadgeClass(item.confidence))}>
+                        %{Math.round(item.confidence * 100)}
+                      </span>
+                    ) : null}
+                    {item.amount !== null ? <span className="text-[13px] font-medium tabular-nums sm:hidden">{formatMoney(item.amount)}</span> : null}
+                    <span className="text-[11px] text-muted-foreground tabular-nums">{formatDateTime(item.createdAt)}</span>
+                  </div>
+                  {item.summary ? <p className="max-w-[70ch] text-[13px] text-muted-foreground">{item.summary}</p> : null}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button variant="outline" className="text-muted-foreground hover:text-destructive" disabled={busyId === item.id} onClick={(e) => { e.stopPropagation(); setRejectTarget(item); setReason(''); }}>
+                      <XCircle className="size-3.5" /> Reddet
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link href={item.href}>Detay <ArrowRight className="size-3.5" /></Link>
+                    </Button>
+                    {/* Ekranda en fazla 1 dolgulu birincil buton — yalnızca seçili kartta (Tur 1 P1 onaylar-04). */}
+                    <Button disabled={busyId === item.id} onClick={(e) => { e.stopPropagation(); void approve(item); }}>
+                      <CheckCircle2 className="size-3.5" /> Onayla
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
           );
         })}

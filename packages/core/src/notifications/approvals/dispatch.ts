@@ -27,6 +27,9 @@ export type ApprovalQueueItem = {
   refId: string;
   title: string;
   summary: string | null;
+  /** numeric(18,4) ham string — ekran `formatMoney` ile biçimlendirir (tabular-nums, sağa hizalı, ayrı alan). Yapısal
+   *  tutarı olmayan türlerde (ör. `dunning_message`) `null`; ekran o zaman tutar alanını hiç render etmez. */
+  amount: string | null;
   confidence: number | null;
   createdAt: Date;
   requestedBy: string | null;
@@ -47,21 +50,37 @@ export function permissionForKind(kind: string): string {
   return KIND_META[kind]?.permission ?? 'admin.settings';
 }
 
+/** `reconciliation_matches.kind` (recon_match_kind enum) → Türkçe etiket — ham İngilizce enum ekrana asla sızmaz. */
+const MATCH_KIND_LABEL: Record<string, string> = {
+  invoice: 'Fatura', partner_on_account: 'Cari avans', loan_installment: 'Kredi taksiti', expense: 'Gider',
+  transfer: 'Transfer', marketplace_payout: 'Pazaryeri ödemesi', tax: 'Vergi', fee: 'Ücret', unknown: 'Bilinmiyor',
+};
+
 /** Tek kuyruk: `approvals` (pending) + mutabakat önerileri (suggested), tarihe göre azalan. */
 export async function listApprovalQueue(tx: DbOrTx): Promise<ApprovalQueueItem[]> {
   const rows = await tx.select().from(approvals).where(eq(approvals.status, 'pending')).orderBy(desc(approvals.createdAt));
   const items: ApprovalQueueItem[] = rows.map((r) => ({
     id: r.id, kind: r.kind, refTable: r.refTable, refId: r.refId, title: r.title, summary: r.summary,
+    // `approvals` şemasında yapısal bir tutar kolonu yok (dondurulmuş şema — bkz. rapor "Şema talepleri");
+    // tutar bugün yalnızca `summary` metnine gömülü. Kartla ayrı bir tutar alanı göstermek metni yeniden
+    // ayrıştırmayı gerektirir — kırılgan olur; bu türler için `amount` bilinçli olarak `null` kalır.
+    amount: null,
     confidence: r.confidence !== null ? Number(r.confidence) : null, createdAt: r.createdAt, requestedBy: r.requestedBy,
     href: (KIND_META[r.kind]?.href ?? (() => '/kokpit'))(r.refId), requiredPermission: permissionForKind(r.kind),
   }));
 
   const recon = await listPendingMatches(tx);
   for (const r of recon) {
+    // Başlık artık tür ön eki taşımıyor (kart zaten "Mutabakat önerisi" rozetini gösteriyor — Tur 1 P1
+    // onaylar-05, tekrar 376px sütunda başlığın ayırt edici kısmını kırpıyordu). Özet, ham İngilizce
+    // `kind` enumunu değil Türkçe karşılığını taşır ve güveni tekrarlamaz (rozet zaten gösteriyor —
+    // onaylar-06); tutar artık metne gömülü değil, kendi yapısal alanında (onaylar-08).
+    const kindLabel = MATCH_KIND_LABEL[r.m.kind] ?? MATCH_KIND_LABEL.unknown!;
     items.push({
       id: r.m.id, kind: 'reconciliation', refTable: 'reconciliation_matches', refId: r.m.id,
-      title: `Mutabakat önerisi — ${r.bt.description}`,
-      summary: `${r.m.kind} · ₺${Number(r.bt.amount).toLocaleString('tr-TR', { minimumFractionDigits: 2 })} · güven %${Math.round(Number(r.m.confidence) * 100)}`,
+      title: r.bt.description,
+      summary: r.m.rationale ? `${kindLabel} — ${r.m.rationale}` : kindLabel,
+      amount: r.bt.amount,
       confidence: Number(r.m.confidence), createdAt: r.m.createdAt, requestedBy: null,
       href: KIND_META.reconciliation!.href(r.m.id), requiredPermission: KIND_META.reconciliation!.permission,
     });
