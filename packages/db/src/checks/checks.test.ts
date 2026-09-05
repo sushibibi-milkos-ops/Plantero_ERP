@@ -32,7 +32,7 @@ const FILES = await checkFiles();
 // (sınırsız) taşıdığında DİĞER satırların sonlu tutar sınırının sessizce iptal olması (kod incelemesiyle
 // doğrulandı, bkz. checks/42_reorder_auto_order_cap.sql üst yorumu) — bugün seed'de tetiklenmiyor,
 // saf regresyon güvenlik ağı.
-const RULE_COUNT = 42;
+const RULE_COUNT = 43;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
