@@ -1,0 +1,78 @@
+{
+ "transitionAll": [
+  {
+   "tag": "div",
+   "cls": "mx-auto w-full max-w-[1400px]",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Onay Merkezi14 onay bekliyor —"
+  },
+  {
+   "tag": "div",
+   "cls": "mb-5 md:mb-6",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Onay Merkezi14 onay bekliyor —"
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Onay Merkezi14 onay bekliyor —"
+  },
+  {
+   "tag": "div",
+   "cls": "min-w-0",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Onay Merkezi14 onay bekliyor —"
+  },
+  {
+   "tag": "h1",
+   "cls": "truncate text-xl font-semibold tracking-tight md:text-2xl",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Onay Merkezi"
+  },
+  {
+   "tag": "div",
+   "cls": "mt-1 text-sm text-muted-foreground",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "14 onay bekliyor — satın alma "
+  },
+  {
+   "tag": "div",
+   "cls": "space-y-3",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Tümü (14)Satın alma taslağı (2"
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-wrap items-center justify-between gap-2",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Tümü (14)Satın alma taslağı (2"
+  },
+  {
+   "tag": "div",
+   "cls": "flex max-w-full flex-nowrap items-center gap-1 overflow-x-auto rounded-lg bg-muted p-0.5 [scrollbar-",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "Tümü (14)Satın alma taslağı (2"
+  },
+  {
+   "tag": "span",
+   "cls": "tabular-nums text-muted-foreground",
+   "dur": "0s",
+   "timing": "ease",
+   "text": "(14)"
+  }
+ ],
+ "onaylarEmptyKalite": {
+  "rows": 0,
+  "text": "Onay Merkezi0 onay bekliyor — satın alma taslağı, sayım farkı, tahsilat hatırlatma, mutabakat önerisi tek kuyruktaOnay bekleyen kayıt yokYeni bir taslak, sayım farkı ya da mutabakat önerisi oluştuğunda burada görünür.Mut"
+ }
+}
