@@ -1,0 +1,335 @@
+{
+  "onaylar@1440": {
+    "rowCount": 13,
+    "rowHeights": [
+      181.5,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      40
+    ],
+    "innerRowHeights": [
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40
+    ],
+    "amountRightGap": [
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58
+    ],
+    "amountRightGapMax": 58,
+    "rowInnerWidth": 1150,
+    "tablist": {
+      "scrollWidth": 410,
+      "clientWidth": 410,
+      "overflow": false,
+      "maskImage": "none",
+      "webkitMaskImage": "none",
+      "lastTabRight": 672.4,
+      "tabHeights": [
+        32,
+        32,
+        32
+      ],
+      "viewportW": 1440
+    },
+    "listboxScroll": {
+      "scrollWidth": 1150,
+      "clientWidth": 1150
+    },
+    "rowsFitFirstScreen": 13
+  },
+  "onaylar@390": {
+    "rowCount": 13,
+    "rowHeights": [
+      215.5,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      66
+    ],
+    "innerRowHeights": [
+      66,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66
+    ],
+    "amountRightGap": [
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8
+    ],
+    "amountRightGapMax": 132.8,
+    "rowInnerWidth": 356,
+    "tablist": {
+      "scrollWidth": 410,
+      "clientWidth": 358,
+      "overflow": true,
+      "maskImage": "none",
+      "webkitMaskImage": "none",
+      "lastTabRight": 424.4,
+      "tabHeights": [
+        44,
+        44,
+        44
+      ],
+      "viewportW": 390
+    },
+    "listboxScroll": {
+      "scrollWidth": 356,
+      "clientWidth": 356
+    },
+    "rowsFitFirstScreen": 6
+  },
+  "bildirimler@1440": {
+    "rowCount": 3,
+    "rowHeights": [
+      72,
+      72,
+      71
+    ],
+    "listWidth": 768,
+    "mainWidth": 1200,
+    "iconStyles": [
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16"
+    ],
+    "distinctIconStyles": 1,
+    "dots": [
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)"
+    ],
+    "distinctDots": 1,
+    "rowBgs": [
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)"
+    ],
+    "titles": [
+      "SKT uyarısıSKT GEÇMİŞ: 1 lot1 dakika önc",
+      "SKT uyarısıSKT KRİTİK (30 gün): 50 lot1 ",
+      "SKT uyarısıSKT UYARI (60 gün): 30 lot1 d"
+    ],
+    "rowsFitFirstScreen": 3,
+    "viewportH": 900,
+    "tabHeights": [
+      32,
+      32
+    ],
+    "markAllBtn": {
+      "h": 36,
+      "w": 207.1
+    },
+    "fontLadder": {
+      "11": 3,
+      "13": 10,
+      "14": 2,
+      "16": 3,
+      "24": 1
+    }
+  },
+  "bildirimler@390": {
+    "rowCount": 3,
+    "rowHeights": [
+      72,
+      72,
+      71
+    ],
+    "listWidth": 358,
+    "mainWidth": 390,
+    "iconStyles": [
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16"
+    ],
+    "distinctIconStyles": 1,
+    "dots": [
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)"
+    ],
+    "distinctDots": 1,
+    "rowBgs": [
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)"
+    ],
+    "titles": [
+      "SKT uyarısıSKT GEÇMİŞ: 1 lot1 dakika önc",
+      "SKT uyarısıSKT KRİTİK (30 gün): 50 lot1 ",
+      "SKT uyarısıSKT UYARI (60 gün): 30 lot1 d"
+    ],
+    "rowsFitFirstScreen": 3,
+    "viewportH": 844,
+    "tabHeights": [
+      44,
+      44
+    ],
+    "markAllBtn": {
+      "h": 44,
+      "w": 207.1
+    },
+    "fontLadder": {
+      "11": 3,
+      "13": 10,
+      "14": 2,
+      "16": 3,
+      "20": 1
+    }
+  },
+  "bildirimler-admin@1440": {
+    "rowCount": 14,
+    "rowHeights": [
+      32,
+      93,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34,
+      34
+    ],
+    "listWidth": 223,
+    "mainWidth": 1200,
+    "iconStyles": [
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16"
+    ],
+    "distinctIconStyles": 1,
+    "dots": [
+      null,
+      "oklch(0.55 0.16 152)",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "distinctDots": 1,
+    "rowBgs": [
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)",
+      "rgba(0, 0, 0, 0)"
+    ],
+    "titles": [
+      "Kokpit",
+      "BildirimlerOnay MerkeziBildirimler",
+      "Ana Veri",
+      "Depo",
+      "Üretim",
+      "Satış & CRM",
+      "Satın Alma",
+      "Kalite",
+      "Muhasebe",
+      "Finans",
+      "İhracat",
+      "Bakım",
+      "Ar-Ge",
+      "Ayarlar"
+    ],
+    "rowsFitFirstScreen": 14,
+    "viewportH": 900,
+    "tabHeights": [],
+    "markAllBtn": null,
+    "fontLadder": {
+      "13": 1,
+      "14": 2,
+      "16": 1,
+      "24": 1
+    }
+  }
+}
