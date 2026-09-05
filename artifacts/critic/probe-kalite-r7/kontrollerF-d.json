@@ -1,0 +1,67 @@
+{
+ "label": "kontrollerF-d",
+ "route": "/kalite/kontroller/28a504c7-32d7-453d-9040-15f720abc3fe",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "truncate text-[11px] text-muted-foreground",
+   "scrollWidth": 235,
+   "clientWidth": 154,
+   "overflowX": "hidden",
+   "hidden": 81
+  },
+  {
+   "tag": "div",
+   "cls": "truncate text-[11px] text-muted-foreground",
+   "scrollWidth": 235,
+   "clientWidth": 154,
+   "overflowX": "hidden",
+   "hidden": 81
+  },
+  {
+   "tag": "div",
+   "cls": "truncate text-[11px] text-muted-foreground",
+   "scrollWidth": 235,
+   "clientWidth": 154,
+   "overflowX": "hidden",
+   "hidden": 81
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "w": 154,
+   "full": 235
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "w": 154,
+   "full": 235
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "w": 154,
+   "full": 235
+  }
+ ],
+ "clippedCount": 3,
+ "outsideViewport": [],
+ "nonTabularNumbers": [
+  "07.09.2026 @span",
+  "06.09.2026 @span",
+  "06.09.2026 @span"
+ ],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 32,
+ "bottomNav": null
+}

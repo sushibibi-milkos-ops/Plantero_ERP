@@ -1,0 +1,121 @@
+{
+ "label": "kontrollerF-m",
+ "route": "/kalite/kontroller/28a504c7-32d7-453d-9040-15f720abc3fe",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto px-1 py-1 snap-x snap-mandatory",
+   "scrollWidth": 1293,
+   "clientWidth": 332,
+   "overflowX": "auto",
+   "hidden": 961
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [
+  {
+   "text": "Satın alma siparişi",
+   "left": -632,
+   "right": -512,
+   "vw": 390
+  },
+  {
+   "text": "Teslim alındı",
+   "left": -429,
+   "right": -350,
+   "vw": 390
+  },
+  {
+   "text": "PO-2026-000016",
+   "left": -632,
+   "right": -350,
+   "vw": 390
+  },
+  {
+   "text": "07.09.2026",
+   "left": -632,
+   "right": -574,
+   "vw": 390
+  },
+  {
+   "text": "₺4.620,00",
+   "left": -404,
+   "right": -350,
+   "vw": 390
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "left": -632,
+   "right": -350,
+   "vw": 390
+  },
+  {
+   "text": "Mal kabul",
+   "left": -296,
+   "right": -229,
+   "vw": 390
+  },
+  {
+   "text": "Tamamlandı",
+   "left": -91,
+   "right": -14,
+   "vw": 390
+  },
+  {
+   "text": "GR-2026-000014",
+   "left": -296,
+   "right": -14,
+   "vw": 390
+  },
+  {
+   "text": "06.09.2026",
+   "left": -296,
+   "right": -236,
+   "vw": 390
+  },
+  {
+   "text": "₺3.850,00",
+   "left": -68,
+   "right": -14,
+   "vw": 390
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "left": -296,
+   "right": -14,
+   "vw": 390
+  },
+  {
+   "text": "Devam belgesi yok",
+   "left": 342,
+   "right": 646,
+   "vw": 390
+  }
+ ],
+ "nonTabularNumbers": [
+  "07.09.2026 @span",
+  "06.09.2026 @span",
+  "06.09.2026 @span"
+ ],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 15,
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 528,
+  "docH": 1372
+ }
+}

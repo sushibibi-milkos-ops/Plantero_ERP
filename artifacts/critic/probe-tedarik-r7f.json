@@ -1,0 +1,42 @@
+{
+ "opened": true,
+ "items": [
+  {
+   "t": "Ürün",
+   "checked": "true"
+  },
+  {
+   "t": "SKU",
+   "checked": "true"
+  },
+  {
+   "t": "Kullanılabilir",
+   "checked": "true"
+  },
+  {
+   "t": "Min–Max",
+   "checked": "true"
+  },
+  {
+   "t": "Tedarik süresi",
+   "checked": "true"
+  },
+  {
+   "t": "Tercihli tedarikçi",
+   "checked": "true"
+  },
+  {
+   "t": "Son değerlendirme",
+   "checked": "false"
+  }
+ ],
+ "dialogText": [
+  "SütunlarÜrünSKUKullanılabilirMin–MaxTedarik süresiTercihli tedarikçiSon değerlendirme"
+ ],
+ "msgs": [
+  "Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "[Table] Column with id 'suggestedQty' does not exist.",
+  "[Table] Column with id 'risk' does not exist.",
+  "[Table] Column with id 'risk' does not exist."
+ ]
+}

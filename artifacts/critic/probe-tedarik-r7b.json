@@ -1,0 +1,450 @@
+{
+ "kritik-stok": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Ürün",
+    "thW": 228,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 1,
+    "head": "SKU",
+    "thW": 108,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 2,
+    "head": "Kullanılabilir",
+    "thW": 132,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Min–Max",
+    "thW": 132,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Tedarik süresi",
+    "thW": 145,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "Tercihli tedarikçi",
+    "thW": 360,
+    "clipped": 1,
+    "rows": 36,
+    "maxClip": 55,
+    "innerW": 276,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. "
+   },
+   {
+    "i": 6,
+    "head": "Eylemler",
+    "thW": 48,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   }
+  ],
+  "theadW": [
+   {
+    "h": "Ürün",
+    "w": 228
+   },
+   {
+    "h": "SKU",
+    "w": 108
+   },
+   {
+    "h": "Kullanılabilir",
+    "w": 132
+   },
+   {
+    "h": "Min–Max",
+    "w": 132
+   },
+   {
+    "h": "Tedarik süresi",
+    "w": 145
+   },
+   {
+    "h": "Tercihli tedarikçi",
+    "w": 360
+   },
+   {
+    "h": "Eylemler",
+    "w": 48
+   }
+  ],
+  "overflowNodes": []
+ },
+ "siparisler": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Sipariş no",
+    "thW": 161,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 1,
+    "head": "Tedarikçi",
+    "thW": 319,
+    "clipped": 2,
+    "rows": 16,
+    "maxClip": 51,
+    "innerW": 280,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. "
+   },
+   {
+    "i": 2,
+    "head": "Durum",
+    "thW": 179,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Alınan",
+    "thW": 94,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Beklenen tarih",
+    "thW": 136,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "Sipariş tarihi",
+    "thW": 126,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 6,
+    "head": "Tutar",
+    "thW": 136,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   }
+  ],
+  "theadW": [
+   {
+    "h": "Sipariş no",
+    "w": 161
+   },
+   {
+    "h": "Tedarikçi",
+    "w": 319
+   },
+   {
+    "h": "Durum",
+    "w": 179
+   },
+   {
+    "h": "Alınan",
+    "w": 94
+   },
+   {
+    "h": "Beklenen tarih",
+    "w": 136
+   },
+   {
+    "h": "Sipariş tarihi",
+    "w": 126
+   },
+   {
+    "h": "Tutar",
+    "w": 136
+   }
+  ],
+  "overflowNodes": []
+ },
+ "po-detay": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Ürün",
+    "thW": 588,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 1,
+    "head": "Sipariş",
+    "thW": 84,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 2,
+    "head": "Alınan",
+    "thW": 80,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Faturalanan",
+    "thW": 104,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Birim fiyat",
+    "thW": 108,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "KDV",
+    "thW": 64,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 6,
+    "head": "Tutar",
+    "thW": 122,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   }
+  ],
+  "theadW": [
+   {
+    "h": "Ürün",
+    "w": 588
+   },
+   {
+    "h": "Sipariş",
+    "w": 84
+   },
+   {
+    "h": "Alınan",
+    "w": 80
+   },
+   {
+    "h": "Faturalanan",
+    "w": 104
+   },
+   {
+    "h": "Birim fiyat",
+    "w": 108
+   },
+   {
+    "h": "KDV",
+    "w": 64
+   },
+   {
+    "h": "Tutar",
+    "w": 122
+   }
+  ],
+  "overflowNodes": []
+ },
+ "tedarikciler": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Tedarikçi",
+    "thW": 334,
+    "clipped": 1,
+    "rows": 6,
+    "maxClip": 35,
+    "innerW": 296,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. "
+   },
+   {
+    "i": 1,
+    "head": "Kod",
+    "thW": 92,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 2,
+    "head": "Beyaz liste",
+    "thW": 90,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Tedarik süresi",
+    "thW": 126,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Kalite",
+    "thW": 84,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "Zamanında",
+    "thW": 108,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 6,
+    "head": "Ürün",
+    "thW": 71,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 7,
+    "head": "Açık sipariş",
+    "thW": 111,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   },
+   {
+    "i": 8,
+    "head": "Açık tutar",
+    "thW": 136,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "sample": ""
+   }
+  ],
+  "theadW": [
+   {
+    "h": "Tedarikçi",
+    "w": 334
+   },
+   {
+    "h": "Kod",
+    "w": 92
+   },
+   {
+    "h": "Beyaz liste",
+    "w": 90
+   },
+   {
+    "h": "Tedarik süresi",
+    "w": 126
+   },
+   {
+    "h": "Kalite",
+    "w": 84
+   },
+   {
+    "h": "Zamanında",
+    "w": 108
+   },
+   {
+    "h": "Ürün",
+    "w": 71
+   },
+   {
+    "h": "Açık sipariş",
+    "w": 111
+   },
+   {
+    "h": "Açık tutar",
+    "w": 136
+   }
+  ],
+  "overflowNodes": []
+ }
+}

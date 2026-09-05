@@ -1,0 +1,158 @@
+{
+ "kritik-stok": [
+  {
+   "h": 61,
+   "subW": 264,
+   "subRight": 291,
+   "subTextRight": 95,
+   "chainLeft": 291,
+   "chainW": 72,
+   "gap": 196,
+   "sepCount": 2,
+   "txt": "304030000 · 82 · 28–80"
+  },
+  {
+   "h": 61,
+   "subW": 257,
+   "subRight": 284,
+   "subTextRight": 92,
+   "chainLeft": 284,
+   "chainW": 80,
+   "gap": 192,
+   "sepCount": 2,
+   "txt": "301030000 · 257 · 21–60"
+  },
+  {
+   "h": 61,
+   "subW": 249,
+   "subRight": 276,
+   "subTextRight": 95,
+   "chainLeft": 276,
+   "chainW": 87,
+   "gap": 181,
+   "sepCount": 2,
+   "txt": "306030000 · 100 · 35–100"
+  },
+  {
+   "h": 61,
+   "subW": 257,
+   "subRight": 284,
+   "subTextRight": 94,
+   "chainLeft": 284,
+   "chainW": 80,
+   "gap": 190,
+   "sepCount": 2,
+   "txt": "306050000 · 50 · 65–100"
+  },
+  {
+   "h": 61,
+   "subW": 264,
+   "subRight": 291,
+   "subTextRight": 91,
+   "chainLeft": 291,
+   "chainW": 72,
+   "gap": 200,
+   "sepCount": 2,
+   "txt": "307010000 · 65 · 21–60"
+  },
+  {
+   "h": 61,
+   "subW": 218,
+   "subRight": 245,
+   "subTextRight": 94,
+   "chainLeft": 245,
+   "chainW": 119,
+   "gap": 151,
+   "sepCount": 2,
+   "txt": "307020000 · 704,52 · 245–700"
+  }
+ ],
+ "tedarikciler": [
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  }
+ ],
+ "siparisler": [
+  {
+   "h": 64,
+   "subW": 188,
+   "subRight": 215,
+   "subTextRight": 283,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -68,
+   "sepCount": 1,
+   "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 07.09.2026"
+  },
+  {
+   "h": 64,
+   "subW": 188,
+   "subRight": 215,
+   "subTextRight": 283,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -68,
+   "sepCount": 1,
+   "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 07.09.2026"
+  },
+  {
+   "h": 64,
+   "subW": 188,
+   "subRight": 215,
+   "subTextRight": 332,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -117,
+   "sepCount": 1,
+   "txt": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subW": 180,
+   "subRight": 207,
+   "subTextRight": 248,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -41,
+   "sepCount": 1,
+   "txt": "Proteinsan Gıda Hammaddeleri Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subW": 172,
+   "subRight": 199,
+   "subTextRight": 283,
+   "chainLeft": 199,
+   "chainW": 76,
+   "gap": -84,
+   "sepCount": 1,
+   "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subW": 180,
+   "subRight": 207,
+   "subTextRight": 251,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -44,
+   "sepCount": 1,
+   "txt": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. · 06.09.2026"
+  }
+ ]
+}

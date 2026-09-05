@@ -1,0 +1,25 @@
+{
+ "label": "sablonlar-d",
+ "route": "/kalite/sablonlar",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 2,
+ "rowHeight": 36,
+ "rowBorderBottom": "1px oklab(0.92 0.00112267 -0.00383922 / 0.5)",
+ "kpiValues": [],
+ "interactiveCount": 34,
+ "bottomNav": null
+}

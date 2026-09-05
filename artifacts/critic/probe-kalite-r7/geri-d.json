@@ -1,0 +1,33 @@
+{
+ "label": "geri-d",
+ "route": "/kalite/geri-cagirma",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto",
+   "scrollWidth": 1166,
+   "clientWidth": 1152,
+   "overflowX": "auto",
+   "hidden": 14
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 1,
+ "rowHeight": 36,
+ "rowBorderBottom": "0px oklab(0.92 0.00112267 -0.00383922 / 0.5)",
+ "kpiValues": [],
+ "interactiveCount": 35,
+ "bottomNav": null
+}

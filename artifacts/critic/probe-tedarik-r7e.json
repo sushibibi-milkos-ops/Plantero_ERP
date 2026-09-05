@@ -1,0 +1,12 @@
+{
+ "/satin-alma/kritik-stok": [
+  "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "error: [Table] Column with id 'suggestedQty' does not exist.",
+  "error: [Table] Column with id 'risk' does not exist.",
+  "error: [Table] Column with id 'risk' does not exist."
+ ],
+ "/satin-alma/onay-kuyrugu": [],
+ "/satin-alma/siparisler": [],
+ "/satin-alma/tedarikciler": [],
+ "/satin-alma/siparisler/yeni": []
+}
