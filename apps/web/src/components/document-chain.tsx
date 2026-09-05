@@ -57,14 +57,21 @@ function ChainCard({ node, current }: { node: ChainNode; current: boolean }) {
         // her zaman ~22% "peek" olarak görünür kalır, bu da kaydırılabilir olduğunu ima eder (Tur 5
         // P2 bulgusu — önceki sabit w-44, 390px'te ~2.2 kart sığdırıp kaydırma ipucusuz duruyordu).
         'flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-lg border bg-card p-2.5 text-left md:w-44',
-        current ? 'border-primary/50 ring-2 ring-primary/15' : 'border-border/70 hover:border-border hover:bg-accent/40',
+        // Tur 6 P1 shell-documentchain-current-color-01 kök neden: 'mevcut belge' işareti --primary
+        // kullanıyordu, oysa aynı kartın içindeki StatusBadge --success kullanıyor — iki token neredeyse
+        // aynı yeşil (oklch 0.55 0.16 152 vs 0.6 0.16 152), yeşil aynı anda hem "burdasın" hem "tamamlandı"
+        // anlamına geliyordu. Nötr işaretleme (border-foreground/15 bg-accent/60) tedarik-onay-06'da (Tur 4)
+        // kabul edilen kalıptır — bkz. approval-queue-list.tsx. ring-primary/15 tamamen kaldırıldı.
+        current ? 'border-foreground/15 bg-accent/60' : 'border-border/70 hover:border-border hover:bg-accent/40',
       )}
     >
       <div className="flex items-center justify-between gap-2">
         <span className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
           {DOCUMENT_TYPE_LABELS[node.type] ?? node.type}
         </span>
-        {node.status ? <StatusBadge status={node.status} kind={TYPE_TO_KIND[node.type]} dot={false} className="h-4 px-1.5 text-[10px]" /> : null}
+        {/* Tur 6 P1 shell-documentchain-size-01 kök neden: 10px, karttaki 11px'ten yalnızca 1px küçük —
+            ayırt edilemeyen ama ölçekte fazladan bir kademe açan boyut. 11px'e hizalandı. */}
+        {node.status ? <StatusBadge status={node.status} kind={TYPE_TO_KIND[node.type]} dot={false} className="h-4 px-1.5 text-[11px]" /> : null}
       </div>
       <div className="code truncate text-[13px] font-medium">{node.docNo}</div>
       <div className="flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
