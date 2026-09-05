@@ -83,9 +83,11 @@ export function CriticalStockTable({
       // span'ine `min-w-0` verildi ki flex item olarak kendi içeriğine göre büyümeye direnmesin,
       // `truncate` gerçekten bu 170px'in İÇİNDE kırpabilsin (rozet `shrink-0` ile sabit kalır).
       {
-        id: 'preferredSupplierName', accessorFn: (r) => r.preferredSupplierName, header: 'Tercihli tedarikçi', meta: { width: 170, mobile: 'hidden' },
+        id: 'preferredSupplierName', accessorFn: (r) => r.preferredSupplierName, header: 'Tercihli tedarikçi', meta: { width: 190, mobile: 'hidden' },
         cell: ({ row }) => (
-          <div className="flex w-[170px] items-center gap-1.5 overflow-hidden">
+          // w-[166px] = meta.width(190) - td dolgusu(24) — bkz. yukarıdaki `productName` notu, ölçüm
+          // ile doğrulanan aynı formül (iç kutu td'nin dolgusu KADAR dar seçilirse td tam meta.width'te durur).
+          <div className="flex w-[166px] items-center gap-1.5 overflow-hidden">
             <span className="min-w-0 truncate" title={row.original.preferredSupplierName ?? undefined}>{row.original.preferredSupplierName ?? <span className="text-muted-foreground">—</span>}</span>
             {row.original.isAutoOrderWhitelisted && row.original.supplierWhitelisted ? <span className="inline-flex h-4 shrink-0 items-center rounded-full bg-success/12 px-1.5 text-[10px] font-medium text-success">Beyaz liste</span> : null}
           </div>

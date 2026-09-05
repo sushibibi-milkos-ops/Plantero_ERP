@@ -6,9 +6,10 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { db, schema } from '@plantero/db';
-import { createSession, destroySession } from '@plantero/core/auth/session';
+import { createSession, destroySession, loadUserAccess } from '@plantero/core/auth/session';
 import { writeAudit } from '@plantero/core/audit/index';
 import { SESSION_COOKIE, sessionCookieOptions } from '@/lib/auth';
+import { NAV, makeCan } from '@/lib/nav';
 
 const loginSchema = z.object({
   email: z.string().trim().toLowerCase().email('Geçerli bir e-posta girin'),
@@ -18,10 +19,30 @@ const loginSchema = z.object({
 
 export type LoginState = { error?: string; fieldErrors?: Record<string, string[]>; /** Hatada formda kalsın */ email?: string } | null;
 
-/** Güvenli yönlendirme: yalnızca site içi mutlak yollar */
-function safeNext(next: string | undefined): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//')) return '/kokpit';
+/** Güvenli yönlendirme: yalnızca site içi mutlak yollar. `fallback` yoksa çağıran '/kokpit' varsayar. */
+function safeNext(next: string | undefined, fallback = '/kokpit'): string {
+  if (!next || !next.startsWith('/') || next.startsWith('//')) return fallback;
   return next;
+}
+
+/**
+ * Kök neden (Tur 21 P1, shell-middleware-login-redirect-cockpit-loop-01): `next` parametresi
+ * olmadan girişte varsayılan hedef HER ZAMAN '/kokpit' idi — ama depo/satın_alma/kalite gibi
+ * `cockpit.view` izni OLMAYAN roller ilk girişte doğrudan ForbiddenError alıyordu, ve (app)/error.tsx
+ * içindeki tek eylem butonu ('Kokpite dön') de yine '/kokpit'e gittiğinden kullanıcı çıkışsız bir
+ * döngüde kalıyordu. Artık varsayılan hedef `nav.ts`teki menü sırasına göre kullanıcının GERÇEKTEN
+ * erişebileceği ilk kalem — kendi rolünün ana modülü (ör. depo → /depo/stok). Kalıcı olarak izinsiz
+ * (herhangi bir modül izni olmayan, teorik) bir kullanıcı için son çare '/onaylar' — o kalem `nav.ts`te
+ * `permission` taşımıyor (herkese açık onay merkezi), bu yüzden döngüye asla girmez.
+ */
+function defaultLandingRoute(roles: string[], permissions: string[]): string {
+  const can = makeCan(roles, permissions);
+  for (const group of NAV) {
+    for (const item of group.items) {
+      if (item.permission && can(item.permission)) return item.href;
+    }
+  }
+  return '/onaylar';
 }
 
 export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {

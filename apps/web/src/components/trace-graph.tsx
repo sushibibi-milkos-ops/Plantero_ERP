@@ -60,7 +60,20 @@ function NodeRow({ node, depth }: { node: TraceNode; depth: number }) {
   const content = (
     <div
       className={cn(
-        'flex min-h-9 items-center gap-2.5 rounded-md px-2 py-1 text-[13px]',
+        // Kök neden (Tur 21 P1×2): satır önceden `flex-nowrap` + tek satırlık `min-h-9` idi ve HİÇBİR
+        // öğe `shrink-0` almadan `truncate` yalnızca kimlik (node.label) span'ine verilmişti. Flexbox'ın
+        // "otomatik minimum boyut" kuralı gereği `overflow` değeri `visible` olmayan (truncate →
+        // overflow:hidden) bir flex öğesinin taban genişliği 0'a iner — bu yüzden dar viewport'ta
+        // tarayıcı önce KİMLİĞİ (asıl kritik jeton) küçültüyordu, tür etiketi (meta.label, overflow:visible)
+        // ise kendi min-content tabanına (en uzun tek kelime) kadar küçülüp iki kelimeli etiketleri
+        // ("İş emri") satır içi kelime sarmasıyla ikiye bölüyordu. Şimdi: meta.label + kimlik ikisi de
+        // `shrink-0` (asla küçülmez/kırpılmaz) — kırpılacak tek aday `node.sub` (zaten mobilde
+        // `hidden sm:inline`, en az kritik jeton). `flex-wrap` eklendi: shrink-0'lı öğelerin toplamı dar
+        // viewport'ta satıra sığmadığında (kimlik zaten kırpılamayacağı için) sağdaki miktar/rozet grubu
+        // `ml-auto` ile kendi satırına düşüp sağa yaslanır — sayfa genelinde yatay taşma/kırpma olmadan
+        // (bkz. shell-kokpit-overflow-01'in aynı sınıfı: app-shell'in overflow-x-clip'i taşmayı SESSİZCE
+        // kırpıyordu, burada da aynı risk vardı).
+        'flex min-h-11 flex-wrap items-center gap-x-2.5 gap-y-1 rounded-md px-2 py-1.5 text-[13px] md:min-h-9 md:flex-nowrap md:py-1',
         node.href && 'hover:bg-accent/60',
         depth === 0 && 'bg-accent/40 font-medium',
       )}
@@ -68,10 +81,10 @@ function NodeRow({ node, depth }: { node: TraceNode; depth: number }) {
       <span className={cn('grid size-6 shrink-0 place-items-center rounded-md', meta.cls)}>
         <Icon className="size-3.5" strokeWidth={1.75} />
       </span>
-      <span className="text-[11px] text-muted-foreground">{meta.label}</span>
-      <span className={cn('truncate', node.kind === 'lot' && 'font-mono')}>{node.label}</span>
-      {node.sub ? <span className="hidden truncate text-xs text-muted-foreground sm:inline">{node.sub}</span> : null}
-      <span className="ml-auto flex items-center gap-2">
+      <span className="shrink-0 text-[11px] whitespace-nowrap text-muted-foreground">{meta.label}</span>
+      <span className={cn('shrink-0', node.kind === 'lot' && 'font-mono')}>{node.label}</span>
+      {node.sub ? <span className="hidden min-w-0 truncate text-xs text-muted-foreground sm:inline">{node.sub}</span> : null}
+      <span className="ml-auto flex shrink-0 items-center gap-2">
         {node.qty !== null && node.qty !== undefined ? <span className="num text-xs">{formatQty(node.qty, node.uom)}</span> : null}
         {node.status ? (
           node.kind === 'quant' ? (

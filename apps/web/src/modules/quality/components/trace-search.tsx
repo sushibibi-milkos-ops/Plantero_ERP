@@ -126,7 +126,9 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
             <LotBadge lotNo={view.lot.lotNo} status={view.lot.status} id={view.lot.id} />
             <StatusBadge status={view.lot.status} kind="lot" />
             <span className="text-sm text-muted-foreground">{view.lot.productName} · {view.lot.sku}</span>
-            <Button variant="ghost" size="sm" className="ml-auto" onClick={() => { setView(null); setNotFound(null); router.replace('/kalite/izlenebilirlik', { scroll: false }); }}>Yeni arama</Button>
+            {/* Tur 21 P1 (44px dokunma hedefi): size="sm" varsayılanı 32px'ti — kod tabanındaki
+                yerleşik `h-11 md:h-8` deseni (bkz. order-actions.tsx, loan-panel.tsx vb.) uygulandı. */}
+            <Button variant="ghost" size="sm" className="ml-auto h-11 md:h-8" onClick={() => { setView(null); setNotFound(null); router.replace('/kalite/izlenebilirlik', { scroll: false }); }}>Yeni arama</Button>
           </div>
 
           <div>
