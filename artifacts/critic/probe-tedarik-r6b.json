@@ -1,0 +1,3019 @@
+{
+ "kritik-stok": {
+  "desktop": {
+   "bgs": {
+    "oklab(0.72 0.0581434 0.159748 / 0.1)": 1,
+    "oklch(0.55 0.16 152)": 1,
+    "oklch(1 0 0)": 2,
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(0.967 0.001 286.4)": 1,
+    "oklab(0.967 0.000282341 -0.000959314 / 0.4)": 36,
+    "oklab(0.955 0.000564683 -0.00191863 / 0.5)": 1
+   },
+   "fills": [
+    {
+     "bg": "oklab(0.72 0.0581434 0.159748 / 0.1)",
+     "txt": "Motor henüz çalıştırıl",
+     "w": 1152,
+     "h": 38,
+     "tag": "p",
+     "cls": "mb-4 rounded-lg border border-warning/30 bg-warning/10 px-3 "
+    },
+    {
+     "bg": "oklch(0.55 0.16 152)",
+     "txt": "Motoru çalıştır",
+     "w": 144,
+     "h": 36,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center gap-2 round"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Risk",
+     "w": 68,
+     "h": 32,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center font-medium"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 32,
+     "h": 32,
+     "tag": "button",
+     "cls": "shrink-0 items-center justify-center gap-2 rounded-md text-s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "ÜrünSKURiskKullanılabi",
+     "w": 1152,
+     "h": 644,
+     "tag": "div",
+     "cls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] over"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "ÜrünSKURiskKullanılabi",
+     "w": 1152,
+     "h": 36,
+     "tag": "tr",
+     "cls": "border-b border-border/60 bg-[var(--muted)]"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+     "txt": "Bromelain306050000Değe",
+     "w": 1152,
+     "h": 36,
+     "tag": "tr",
+     "cls": "group/row h-9 border-b border-border/50 last:border-0 cursor"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklab(0.72 0.0581434 0.159748 / 0.3)",
+     "w": "1px",
+     "txt": "Motor henüz çalıştırıl"
+    },
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Risk"
+    },
+    {
+     "c": "oklch(0.92 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Kritik Stok",
+     "Sadece kritik/uy",
+     "Alkalize Kakao",
+     "304030000"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "36 kural — kapsa",
+     "Kritik",
+     "Uyarı",
+     "Toplam kural"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.6)": [
+     "—",
+     "—"
+    ],
+    "oklab(0.21 0.00164376 -0.00577045 / 0.8)": [
+     "Motor henüz çalı"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.7)": [
+     "Değerlendirilmed",
+     "Değerlendirilmed",
+     "Değerlendirilmed",
+     "Değerlendirilmed"
+    ]
+   }
+  },
+  "mobile": {
+   "bgs": {
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(1 0 0)": 40,
+    "oklab(0.72 0.0581434 0.159748 / 0.1)": 1,
+    "oklch(0.55 0.16 152)": 1,
+    "oklab(0.967 0.000282341 -0.000959314 / 0.4)": 36
+   },
+   "fills": [
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "Kritik—Uyarı—Toplam ku",
+     "w": 358,
+     "h": 76,
+     "tag": "div",
+     "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Kritik—",
+     "w": 152,
+     "h": 72,
+     "tag": "div",
+     "cls": "group relative block text-left h-[72px] w-[152px] shrink-0 s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Uyarı—",
+     "w": 152,
+     "h": 72,
+     "tag": "div",
+     "cls": "group relative block text-left h-[72px] w-[152px] shrink-0 s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Toplam kural",
+     "w": 152,
+     "h": 72,
+     "tag": "div",
+     "cls": "group relative block text-left h-[72px] w-[152px] shrink-0 s"
+    },
+    {
+     "bg": "oklab(0.72 0.0581434 0.159748 / 0.1)",
+     "txt": "Motor henüz çalıştırıl",
+     "w": 358,
+     "h": 77,
+     "tag": "p",
+     "cls": "mb-4 rounded-lg border border-warning/30 bg-warning/10 px-3 "
+    },
+    {
+     "bg": "oklch(0.55 0.16 152)",
+     "txt": "Motoru çalıştır",
+     "w": 144,
+     "h": 44,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center gap-2 round"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Risk",
+     "w": 68,
+     "h": 44,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center font-medium"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Alkalize KakaoDeğerlen",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "BademDeğerlendirilmedi",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Brokoli + IspanakDeğer",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "BromelainDeğerlendiril",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "CreamDeğerlendirilmedi",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Deniz TuzuDeğerlendiri",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Doypack 1kgDeğerlendir",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "EtiketDeğerlendirilmed",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "FındıkDeğerlendirilmed",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Guar GumDeğerlendirilm",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "HibiskusDeğerlendirilm",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Hurma (Kuru, Çekirdeks",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Hurma ŞurubuDeğerlendi",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "InulinDeğerlendirilmed",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Isolated Pea ProteinDe",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Kahve Çekirdeği (Yeşil",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+     "txt": "Değerlendirilmedi",
+     "w": 118,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex h-5 items-center rounded-full px-2 text-xs font-"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "KajuDeğerlendirilmedi3",
+     "w": 358,
+     "h": 61,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Kritik—"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Uyarı—"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Toplam kural"
+    },
+    {
+     "c": "oklab(0.72 0.0581434 0.159748 / 0.3)",
+     "w": "1px",
+     "txt": "Motor henüz çalıştırıl"
+    },
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Risk"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Alkalize KakaoDeğerlen"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "BademDeğerlendirilmedi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Brokoli + IspanakDeğer"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "BromelainDeğerlendiril"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "CreamDeğerlendirilmedi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Deniz TuzuDeğerlendiri"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Doypack 1kgDeğerlendir"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "EtiketDeğerlendirilmed"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "FındıkDeğerlendirilmed"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Guar GumDeğerlendirilm"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "HibiskusDeğerlendirilm"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Hurma (Kuru, Çekirdeks"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Hurma ŞurubuDeğerlendi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "InulinDeğerlendirilmed"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Isolated Pea ProteinDe"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Kahve Çekirdeği (Yeşil"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "KajuDeğerlendirilmedi3"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "KapakDeğerlendirilmedi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Kavanoz 500mlDeğerlend"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Koli 6'lıDeğerlendiril"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Kraft Kahve Torbası 25"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Matcha Tozu (Toptan)De"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Nohut TozuDeğerlendiri"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Saşe 10gDeğerlendirilm"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "SprilunaDeğerlendirilm"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "StrawberryDeğerlendiri"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "SuklarozDeğerlendirilm"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Vanilya AromasıDeğerle"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Vanilya Tozu (Toptan)D"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Xhantam GumDeğerlendir"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "YulafDeğerlendirilmedi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "b2+b12+eDeğerlendirilm"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "maskerDeğerlendirilmed"
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Kritik Stok",
+     "Sadece kritik/uy",
+     "Alkalize Kakao",
+     "Badem"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "36 kural — kapsa",
+     "Kritik",
+     "Uyarı",
+     "Toplam kural"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.6)": [
+     "—",
+     "—"
+    ],
+    "oklab(0.21 0.00164376 -0.00577045 / 0.8)": [
+     "Motor henüz çalı"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.7)": [
+     "Değerlendirilmed",
+     "Değerlendirilmed",
+     "Değerlendirilmed",
+     "Değerlendirilmed"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.4)": [
+     "·",
+     "·",
+     "·",
+     "·"
+    ]
+   }
+  }
+ },
+ "onay-kuyrugu": {
+  "desktop": {
+   "bgs": {
+    "oklch(0.967 0.001 286.4)": 5,
+    "oklab(0.955 0.000564683 -0.00191863 / 0.6)": 1,
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(0.55 0.16 152)": 1
+   },
+   "fills": [
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "j",
+     "w": 15,
+     "h": 20,
+     "tag": "kbd",
+     "cls": "rounded bg-muted px-1 py-0.5 font-mono"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "k",
+     "w": 15,
+     "h": 20,
+     "tag": "kbd",
+     "cls": "rounded bg-muted px-1 py-0.5 font-mono"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "a",
+     "w": 15,
+     "h": 20,
+     "tag": "kbd",
+     "cls": "rounded bg-muted px-1 py-0.5 font-mono"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "r",
+     "w": 15,
+     "h": 20,
+     "tag": "kbd",
+     "cls": "rounded bg-muted px-1 py-0.5 font-mono"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "e",
+     "w": 15,
+     "h": 20,
+     "tag": "kbd",
+     "cls": "rounded bg-muted px-1 py-0.5 font-mono"
+    },
+    {
+     "bg": "oklab(0.955 0.000564683 -0.00191863 / 0.6)",
+     "txt": "PO-2026-000007Aromatik",
+     "w": 1152,
+     "h": 206,
+     "tag": "div",
+     "cls": "flex flex-col gap-3 rounded-xl border p-4 border-foreground/"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "Düzenle",
+     "w": 97,
+     "h": 32,
+     "tag": "a",
+     "cls": "inline-flex shrink-0 items-center justify-center text-sm fon"
+    },
+    {
+     "bg": "oklch(0.55 0.16 152)",
+     "txt": "Onayla",
+     "w": 86,
+     "h": 32,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center text-sm fon"
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklab(0.21 0.00164376 -0.00577045 / 0.15)",
+     "w": "1px",
+     "txt": "PO-2026-000007Aromatik"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Vanilya Aroması30 KG₺3"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "06.09.2026 00:30 · %82"
+    },
+    {
+     "c": "oklch(0.92 0.004 286.3)",
+     "w": "1px",
+     "txt": "Düzenle"
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Onay Kuyruğu",
+     "PO-2026-000007",
+     "₺32.760,00",
+     "Vanilya Aroması"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "1 AI taslağı ona",
+     "j",
+     "k",
+     "a"
+    ]
+   }
+  },
+  "mobile": {
+   "bgs": {
+    "oklab(0.955 0.000564683 -0.00191863 / 0.6)": 1,
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(0.55 0.16 152)": 1
+   },
+   "fills": [
+    {
+     "bg": "oklab(0.955 0.000564683 -0.00191863 / 0.6)",
+     "txt": "PO-2026-000007Aromatik",
+     "w": 358,
+     "h": 262,
+     "tag": "div",
+     "cls": "flex flex-col gap-3 rounded-xl border p-4 border-foreground/"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "Düzenle",
+     "w": 104,
+     "h": 44,
+     "tag": "a",
+     "cls": "inline-flex shrink-0 items-center justify-center text-sm fon"
+    },
+    {
+     "bg": "oklch(0.55 0.16 152)",
+     "txt": "Onayla",
+     "w": 104,
+     "h": 44,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center text-sm fon"
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklab(0.21 0.00164376 -0.00577045 / 0.15)",
+     "w": "1px",
+     "txt": "PO-2026-000007Aromatik"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Vanilya Aroması30 KG₺3"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "06.09.2026 00:30 · %82"
+    },
+    {
+     "c": "oklch(0.92 0.004 286.3)",
+     "w": "1px",
+     "txt": "Düzenle"
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Onay Kuyruğu",
+     "PO-2026-000007",
+     "₺32.760,00",
+     "Vanilya Aroması"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "1 AI taslağı ona",
+     "Aromatik Kimya A",
+     "· 1 kalem",
+     "30 KG"
+    ]
+   }
+  }
+ },
+ "siparisler": {
+  "desktop": {
+   "bgs": {
+    "oklch(0.55 0.16 152)": 1,
+    "oklch(1 0 0)": 2,
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(0.967 0.001 286.4)": 15,
+    "oklab(0.21 0.00164376 -0.00577045 / 0.5)": 14,
+    "oklab(0.955 0.000564683 -0.00191863 / 0.5)": 1,
+    "oklab(0.72 0.0581434 0.159748 / 0.15)": 1,
+    "oklch(0.72 0.17 70)": 1,
+    "oklab(0.6 -0.051303 -0.140954 / 0.1)": 1,
+    "oklch(0.6 0.15 250)": 1
+   },
+   "fills": [
+    {
+     "bg": "oklch(0.55 0.16 152)",
+     "txt": "Yeni sipariş",
+     "w": 125,
+     "h": 36,
+     "tag": "a",
+     "cls": "inline-flex shrink-0 items-center justify-center gap-2 round"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Durum",
+     "w": 84,
+     "h": 32,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center font-medium"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 32,
+     "h": 32,
+     "tag": "button",
+     "cls": "shrink-0 items-center justify-center gap-2 rounded-md text-s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Sipariş noTedarikçiDur",
+     "w": 1152,
+     "h": 612,
+     "tag": "div",
+     "cls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] over"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Sipariş noTedarikçiDur",
+     "w": 1152,
+     "h": 36,
+     "tag": "tr",
+     "cls": "border-b border-border/60 bg-[var(--muted)]"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+     "txt": "PO-2026-000005Ege Amba",
+     "w": 1152,
+     "h": 36,
+     "tag": "tr",
+     "cls": "group/row h-9 border-b border-border/50 last:border-0 cursor"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+     "txt": "Onay bekliyor",
+     "w": 102,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklab(0.6 -0.051303 -0.140954 / 0.1)",
+     "txt": "Tedarikçiye gönderildi",
+     "w": 146,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Durum"
+    },
+    {
+     "c": "oklch(0.92 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Onay bekliyor"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Tedarikçiye gönderildi"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Satın Alma Sipar",
+     "Sipariş tarihi",
+     "PO-2026-000016",
+     "Anadolu Kuruyemi"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "16 sipariş · 1 o",
+     "Açık sipariş",
+     "Açık sipariş tut",
+     "Onay bekleyen"
+    ]
+   }
+  },
+  "mobile": {
+   "bgs": {
+    "oklch(0.55 0.16 152)": 1,
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(1 0 0)": 21,
+    "oklch(0.967 0.001 286.4)": 14,
+    "oklab(0.21 0.00164376 -0.00577045 / 0.5)": 14,
+    "oklab(0.72 0.0581434 0.159748 / 0.15)": 1,
+    "oklch(0.72 0.17 70)": 1,
+    "oklab(0.6 -0.051303 -0.140954 / 0.1)": 1,
+    "oklch(0.6 0.15 250)": 1
+   },
+   "fills": [
+    {
+     "bg": "oklch(0.55 0.16 152)",
+     "txt": "Yeni sipariş",
+     "w": 358,
+     "h": 44,
+     "tag": "a",
+     "cls": "inline-flex shrink-0 items-center justify-center gap-2 round"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "Açık siparişAçık sipar",
+     "w": 358,
+     "h": 76,
+     "tag": "div",
+     "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Açık sipariş",
+     "w": 152,
+     "h": 72,
+     "tag": "div",
+     "cls": "group relative block text-left h-[72px] w-[152px] shrink-0 s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Açık sipariş tutarı",
+     "w": 152,
+     "h": 72,
+     "tag": "div",
+     "cls": "group relative block text-left h-[72px] w-[152px] shrink-0 s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Onay bekleyen",
+     "w": 152,
+     "h": 72,
+     "tag": "div",
+     "cls": "group relative block text-left h-[72px] w-[152px] shrink-0 s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "AI taslağı",
+     "w": 152,
+     "h": 72,
+     "tag": "div",
+     "cls": "group relative block text-left h-[72px] w-[152px] shrink-0 s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Durum",
+     "w": 84,
+     "h": 44,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center font-medium"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000016Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000015Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000014Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000009Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000002Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000004Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000005Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000006Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000007Onay bek",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+     "txt": "Onay bekliyor",
+     "w": 102,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000001Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000008Tedarikç",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklab(0.6 -0.051303 -0.140954 / 0.1)",
+     "txt": "Tedarikçiye gönderildi",
+     "w": 146,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000003Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000013Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000011Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000012Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "PO-2026-000010Faturala",
+     "w": 358,
+     "h": 64,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5 cursor-poin"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 89,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Açık sipariş"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Açık sipariş tutarı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Onay bekleyen"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "AI taslağı"
+    },
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Durum"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000016Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000015Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000014Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000009Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000002Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000004Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000005Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000006Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000007Onay bek"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Onay bekliyor"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000001Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000008Tedarikç"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Tedarikçiye gönderildi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000003Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000013Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000011Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000012Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "PO-2026-000010Faturala"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Satın Alma Sipar",
+     "PO-2026-000016",
+     "₺4.620,00",
+     "PO-2026-000015"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "16 sipariş · 1 o",
+     "Açık sipariş",
+     "Açık sipariş tut",
+     "Onay bekleyen"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.4)": [
+     "·",
+     "·",
+     "·",
+     "·"
+    ]
+   }
+  }
+ },
+ "po-detay": {
+  "desktop": {
+   "bgs": {
+    "oklch(0.967 0.001 286.4)": 2,
+    "oklab(0.21 0.00164376 -0.00577045 / 0.5)": 1,
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(1 0 0)": 3,
+    "oklab(0.6 -0.141272 0.0751154 / 0.12)": 2,
+    "oklab(0.6 -0.051303 -0.140954 / 0.1)": 1,
+    "oklch(0.6 0.16 152)": 1
+   },
+   "fills": [
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 98,
+     "h": 24,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "Satın alma siparişiFat",
+     "w": 1160,
+     "h": 134,
+     "tag": "div",
+     "cls": "relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto "
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Satın alma siparişiFat",
+     "w": 176,
+     "h": 126,
+     "tag": "a",
+     "cls": "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-l"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 67,
+     "h": 16,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Mal kabulTamamlandıGR-",
+     "w": 176,
+     "h": 109,
+     "tag": "a",
+     "cls": "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-l"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+     "txt": "Tamamlandı",
+     "w": 72,
+     "h": 16,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "FaturaKesildiPINV-2026",
+     "w": 176,
+     "h": 109,
+     "tag": "a",
+     "cls": "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-l"
+    },
+    {
+     "bg": "oklab(0.6 -0.051303 -0.140954 / 0.1)",
+     "txt": "Kesildi",
+     "w": 45,
+     "h": 16,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+     "txt": "Tamamlandı",
+     "w": 94,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    }
+   ],
+   "borders": [
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+     "w": "1px",
+     "txt": "Satın alma siparişiFat"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Mal kabulTamamlandıGR-"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Tamamlandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "FaturaKesildiPINV-2026"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Kesildi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "ÜrünSiparişAlınanFatur"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Genel toplam₺113.040,0"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Mal kabullerGR-2026-00"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Tamamlandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Alış faturalarıPINV-20"
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.552 0.016 285.9)": [
+     "Satın alma sipar",
+     "Tatlısu Tatlandı",
+     "Toplam (KDV dahi",
+     "Sipariş: 06.09.2"
+    ],
+    "oklch(0.21 0.006 285.9)": [
+     "PO-2026-000003",
+     "₺113.040,00",
+     "PO-2026-000003",
+     "GR-2026-000003"
+    ],
+    "oklab(0.21 0.00164376 -0.00577045 / 0.8)": [
+     "Faturalandı"
+    ],
+    "oklch(0.6 0.16 152)": [
+     "Tamamlandı"
+    ],
+    "oklch(0.6 0.15 250)": [
+     "Kesildi"
+    ]
+   }
+  },
+  "mobile": {
+   "bgs": {
+    "oklch(0.967 0.001 286.4)": 2,
+    "oklab(0.21 0.00164376 -0.00577045 / 0.5)": 1,
+    "oklch(0.985 0.002 250)": 1,
+    "oklch(1 0 0)": 5,
+    "oklab(0.6 -0.141272 0.0751154 / 0.12)": 2,
+    "oklab(0.6 -0.051303 -0.140954 / 0.1)": 1,
+    "oklch(0.6 0.16 152)": 1
+   },
+   "fills": [
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 98,
+     "h": 24,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "Satın alma siparişiFat",
+     "w": 366,
+     "h": 117,
+     "tag": "div",
+     "cls": "relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto "
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Satın alma siparişiFat",
+     "w": 304,
+     "h": 109,
+     "tag": "a",
+     "cls": "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-l"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "Faturalandı",
+     "w": 67,
+     "h": 16,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Mal kabulTamamlandıGR-",
+     "w": 304,
+     "h": 109,
+     "tag": "a",
+     "cls": "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-l"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+     "txt": "Tamamlandı",
+     "w": 72,
+     "h": 16,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "FaturaKesildiPINV-2026",
+     "w": 304,
+     "h": 109,
+     "tag": "a",
+     "cls": "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 rounded-l"
+    },
+    {
+     "bg": "oklab(0.6 -0.051303 -0.140954 / 0.1)",
+     "txt": "Kesildi",
+     "w": 45,
+     "h": 16,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Suklaroz302010000₺55.2",
+     "w": 358,
+     "h": 81,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "stevya302020000₺39.000",
+     "w": 358,
+     "h": 81,
+     "tag": "li",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+     "txt": "Tamamlandı",
+     "w": 94,
+     "h": 20,
+     "tag": "span",
+     "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde"
+    }
+   ],
+   "borders": [
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+     "w": "1px",
+     "txt": "Satın alma siparişiFat"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Faturalandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Mal kabulTamamlandıGR-"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Tamamlandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "FaturaKesildiPINV-2026"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Kesildi"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Suklaroz302010000₺55.2"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "stevya302020000₺39.000"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Genel toplam₺113.040,0"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Mal kabullerGR-2026-00"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": "Tamamlandı"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+     "w": "1px",
+     "txt": "Alış faturalarıPINV-20"
+    }
+   ],
+   "switches": [],
+   "textColors": {
+    "oklch(0.552 0.016 285.9)": [
+     "Satın alma sipar",
+     "Tatlısu Tatlandı",
+     "Toplam (KDV dahi",
+     "Sipariş: 06.09.2"
+    ],
+    "oklch(0.21 0.006 285.9)": [
+     "PO-2026-000003",
+     "₺113.040,00",
+     "PO-2026-000003",
+     "GR-2026-000003"
+    ],
+    "oklab(0.21 0.00164376 -0.00577045 / 0.8)": [
+     "Faturalandı"
+    ],
+    "oklch(0.6 0.16 152)": [
+     "Tamamlandı"
+    ],
+    "oklch(0.6 0.15 250)": [
+     "Kesildi"
+    ]
+   }
+  }
+ },
+ "tedarikciler": {
+  "desktop": {
+   "bgs": {
+    "oklch(1 0 0)": 2,
+    "oklch(0.985 0.002 250)": 7,
+    "oklch(0.967 0.001 286.4)": 1,
+    "oklab(0.6 -0.141272 0.0751154 / 0.55)": 6
+   },
+   "fills": [
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Beyaz liste",
+     "w": 109,
+     "h": 32,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center font-medium"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 32,
+     "h": 32,
+     "tag": "button",
+     "cls": "shrink-0 items-center justify-center gap-2 rounded-md text-s"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "TedarikçiKodBeyaz list",
+     "w": 1152,
+     "h": 252,
+     "tag": "div",
+     "cls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] over"
+    },
+    {
+     "bg": "oklch(0.967 0.001 286.4)",
+     "txt": "TedarikçiKodBeyaz list",
+     "w": 1152,
+     "h": 36,
+     "tag": "tr",
+     "cls": "border-b border-border/60 bg-[var(--muted)]"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Beyaz liste"
+    },
+    {
+     "c": "oklch(0.92 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    }
+   ],
+   "switches": [
+    {
+     "w": 32,
+     "h": 32,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Ege Ambalaj Sanayi ve Ticaret A.Ş. beyaz liste"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Proteinsan Gıda Hammaddeleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Ege Ambalaj Sanayi ve Ticaret A.Ş. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Proteinsan Gıda Hammaddeleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. beyaz liste"
+    }
+   ],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Tedarikçiler",
+     "Tedarikçi",
+     "Anadolu Kuruyemi",
+     "S-000005"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "6 tedarikçi · 6 ",
+     "6 kayıt",
+     "Kod",
+     "Beyaz liste"
+    ],
+    "oklch(0.6 0.16 152)": [
+     "%100",
+     "%100"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.7)": [
+     "₺0,00",
+     "₺0,00",
+     "₺0,00",
+     "₺0,00"
+    ],
+    "oklch(0.577 0.245 27.3)": [
+     "%50",
+     "%50",
+     "%0",
+     "%0"
+    ]
+   }
+  },
+  "mobile": {
+   "bgs": {
+    "oklch(1 0 0)": 7,
+    "oklab(0.6 -0.141272 0.0751154 / 0.55)": 6,
+    "oklch(0.985 0.002 250)": 6
+   },
+   "fills": [
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Beyaz liste",
+     "w": 109,
+     "h": 44,
+     "tag": "button",
+     "cls": "inline-flex shrink-0 items-center justify-center font-medium"
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Anadolu Kuruyemiş ve T",
+     "w": 358,
+     "h": 88,
+     "tag": "div",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Aromatik Kimya Aroma v",
+     "w": 358,
+     "h": 88,
+     "tag": "div",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Ege Ambalaj Sanayi ve ",
+     "w": 358,
+     "h": 88,
+     "tag": "div",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Kahve Dünyası Yeşil Ka",
+     "w": 358,
+     "h": 88,
+     "tag": "div",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Proteinsan Gıda Hammad",
+     "w": 358,
+     "h": 88,
+     "tag": "div",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    },
+    {
+     "bg": "oklch(1 0 0)",
+     "txt": "Tatlısu Tatlandırıcı v",
+     "w": 358,
+     "h": 88,
+     "tag": "div",
+     "cls": "rounded-lg border border-border/70 bg-card p-2.5"
+    },
+    {
+     "bg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "txt": "",
+     "w": 24,
+     "h": 14,
+     "tag": "span",
+     "cls": "pointer-events-none flex h-3.5 w-6 shrink-0 items-center rou"
+    },
+    {
+     "bg": "oklch(0.985 0.002 250)",
+     "txt": "",
+     "w": 12,
+     "h": 12,
+     "tag": "span",
+     "cls": "pointer-events-none block size-3 rounded-full bg-background "
+    }
+   ],
+   "borders": [
+    {
+     "c": "oklch(0.9 0.004 286.3)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Beyaz liste"
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Anadolu Kuruyemiş ve T"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Aromatik Kimya Aroma v"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Ege Ambalaj Sanayi ve "
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Kahve Dünyası Yeşil Ka"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Proteinsan Gıda Hammad"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    },
+    {
+     "c": "oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+     "w": "1px",
+     "txt": "Tatlısu Tatlandırıcı v"
+    },
+    {
+     "c": "rgba(0, 0, 0, 0)",
+     "w": "1px",
+     "txt": ""
+    }
+   ],
+   "switches": [
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Ege Ambalaj Sanayi ve Ticaret A.Ş. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Proteinsan Gıda Hammaddeleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. beyaz liste"
+    },
+    {
+     "w": 44,
+     "h": 44,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 44,
+     "h": 44,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 44,
+     "h": 44,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Ege Ambalaj Sanayi ve Ticaret A.Ş. beyaz liste"
+    },
+    {
+     "w": 44,
+     "h": 44,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 44,
+     "h": 44,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Proteinsan Gıda Hammaddeleri Ltd. Şti. beyaz liste"
+    },
+    {
+     "w": 44,
+     "h": 44,
+     "state": "checked",
+     "innerBg": "oklab(0.6 -0.141272 0.0751154 / 0.55)",
+     "selfBg": "rgba(0, 0, 0, 0)",
+     "aria": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. beyaz liste"
+    }
+   ],
+   "textColors": {
+    "oklch(0.21 0.006 285.9)": [
+     "Tedarikçiler",
+     "Anadolu Kuruyemi",
+     "Aromatik Kimya A",
+     "₺32.760,00"
+    ],
+    "oklch(0.552 0.016 285.9)": [
+     "6 tedarikçi · 6 ",
+     "S-000005",
+     "S-000003",
+     "S-000004"
+    ],
+    "oklab(0.552 0.00438335 -0.0153879 / 0.7)": [
+     "₺0,00",
+     "₺0,00",
+     "₺0,00",
+     "₺0,00"
+    ]
+   }
+  }
+ }
+}

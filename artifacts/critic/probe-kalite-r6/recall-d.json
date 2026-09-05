@@ -1,0 +1,32 @@
+{
+ "label": "recall-d",
+ "route": "/kalite/geri-cagirma/278448f5-86a4-43ba-b2dc-8441f7688682",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [
+  "06.09.2026 @span"
+ ],
+ "rowCount": 0,
+ "kpiValues": [
+  {
+   "text": "75 ADET · 22,12 KG",
+   "fontSize": 19,
+   "right": 1208,
+   "gapToDivider": 16
+  }
+ ],
+ "interactiveCount": 30,
+ "bottomNav": null
+}

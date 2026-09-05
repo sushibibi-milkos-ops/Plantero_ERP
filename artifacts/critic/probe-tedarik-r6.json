@@ -1,0 +1,1043 @@
+{
+ "kritik-stok": {
+  "desktop": {
+   "sizes": {
+    "12": 84,
+    "13": 181,
+    "14": 2,
+    "19": 2,
+    "24": 1
+   },
+   "colors": [
+    [
+     "oklch(0.21 0.006 285.9)",
+     146
+    ],
+    [
+     "oklch(0.552 0.016 285.9)",
+     85
+    ],
+    [
+     "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+     36
+    ],
+    [
+     "oklab(0.552 0.00438335 -0.0153879 / 0.6)",
+     2
+    ],
+    [
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+     1
+    ]
+   ],
+   "primary": "oklch(0.55 0.16 152)",
+   "bgEls": [],
+   "cols": [
+    {
+     "i": 0,
+     "head": "Ürün",
+     "rows": 36,
+     "uniq": 36,
+     "empty": 0,
+     "ellipsis": 7,
+     "maxClipPx": 56,
+     "width": 161
+    },
+    {
+     "i": 1,
+     "head": "SKU",
+     "rows": 36,
+     "uniq": 36,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 111
+    },
+    {
+     "i": 2,
+     "head": "Risk",
+     "rows": 36,
+     "uniq": 1,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 175
+    },
+    {
+     "i": 3,
+     "head": "Kullanılabilir",
+     "rows": 36,
+     "uniq": 32,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 136
+    },
+    {
+     "i": 4,
+     "head": "Min–Max",
+     "rows": 36,
+     "uniq": 23,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 136
+    },
+    {
+     "i": 5,
+     "head": "Tedarik süresi",
+     "rows": 36,
+     "uniq": 6,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 149
+    },
+    {
+     "i": 6,
+     "head": "Tercihli tedarikçi",
+     "rows": 36,
+     "uniq": 6,
+     "empty": 0,
+     "ellipsis": 36,
+     "maxClipPx": 165,
+     "width": 235
+    },
+    {
+     "i": 7,
+     "head": "Eylemler",
+     "rows": 36,
+     "uniq": 1,
+     "empty": 36,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 49
+    }
+   ],
+   "scroller": {
+    "sw": 1152,
+    "cw": 1152,
+    "over": 0
+   },
+   "chain": [],
+   "switches": [],
+   "mainW": 1200
+  },
+  "mobile": {
+   "cards": [
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "Alkalize KakaoDeğerlendirilmedi304030000 · 82 · 28–80"
+    },
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "BademDeğerlendirilmedi301030000 · 257 · 21–60"
+    },
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "Brokoli + IspanakDeğerlendirilmedi306030000 · 100 · 35–100"
+    },
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "BromelainDeğerlendirilmedi306050000 · 50 · 65–100"
+    },
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "CreamDeğerlendirilmedi307010000 · 65 · 21–60"
+    },
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "Deniz TuzuDeğerlendirilmedi307020000 · 704,52 · 245–700"
+    },
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "Doypack 1kgDeğerlendirilmedi402010000 · 1.650 · 525–1.500"
+    },
+    {
+     "h": 61,
+     "hasDigit": true,
+     "txt": "EtiketDeğerlendirilmedi401030000 · 7.450 · 1.750–5.000"
+    }
+   ],
+   "cardCount": 36,
+   "sizes": {
+    "12": 147,
+    "13": 73,
+    "14": 38,
+    "19": 2,
+    "20": 1
+   },
+   "switches": [],
+   "sw": 390,
+   "cw": 390
+  }
+ },
+ "onay-kuyrugu": {
+  "desktop": {
+   "sizes": {
+    "12": 6,
+    "13": 8,
+    "14": 1,
+    "24": 1
+   },
+   "colors": [
+    [
+     "oklch(0.552 0.016 285.9)",
+     11
+    ],
+    [
+     "oklch(0.21 0.006 285.9)",
+     5
+    ]
+   ],
+   "primary": "oklch(0.55 0.16 152)",
+   "bgEls": [],
+   "cols": [],
+   "scroller": null,
+   "chain": [
+    {
+     "t": "PO-2026-000007",
+     "top": 201,
+     "left": 301
+    }
+   ],
+   "switches": [],
+   "mainW": 1200
+  },
+  "mobile": {
+   "cards": [
+    {
+     "h": 20,
+     "hasDigit": true,
+     "txt": "Vanilya Aroması30 KG₺32.760,00"
+    }
+   ],
+   "cardCount": 1,
+   "sizes": {
+    "12": 1,
+    "13": 8,
+    "14": 1,
+    "20": 1
+   },
+   "switches": [],
+   "sw": 390,
+   "cw": 390
+  }
+ },
+ "siparisler": {
+  "desktop": {
+   "sizes": {
+    "12": 12,
+    "13": 94,
+    "14": 1,
+    "24": 1
+   },
+   "colors": [
+    [
+     "oklch(0.21 0.006 285.9)",
+     77
+    ],
+    [
+     "oklch(0.552 0.016 285.9)",
+     31
+    ]
+   ],
+   "primary": "oklch(0.55 0.16 152)",
+   "bgEls": [],
+   "cols": [
+    {
+     "i": 0,
+     "head": "Sipariş no",
+     "rows": 16,
+     "uniq": 16,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 161
+    },
+    {
+     "i": 1,
+     "head": "Tedarikçi",
+     "rows": 16,
+     "uniq": 6,
+     "empty": 0,
+     "ellipsis": 2,
+     "maxClipPx": 51,
+     "width": 319
+    },
+    {
+     "i": 2,
+     "head": "Durum",
+     "rows": 16,
+     "uniq": 3,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 179
+    },
+    {
+     "i": 3,
+     "head": "Alınan",
+     "rows": 16,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 94
+    },
+    {
+     "i": 4,
+     "head": "Beklenen tarih",
+     "rows": 16,
+     "uniq": 10,
+     "empty": 3,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 136
+    },
+    {
+     "i": 5,
+     "head": "Sipariş tarihi",
+     "rows": 16,
+     "uniq": 5,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 126
+    },
+    {
+     "i": 6,
+     "head": "Tutar",
+     "rows": 16,
+     "uniq": 16,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 136
+    }
+   ],
+   "scroller": {
+    "sw": 1152,
+    "cw": 1152,
+    "over": 0
+   },
+   "chain": [
+    {
+     "t": "PO-2026-000016",
+     "top": 344,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000015",
+     "top": 380,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000014",
+     "top": 416,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000009",
+     "top": 452,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000002",
+     "top": 488,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000004",
+     "top": 524,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000005",
+     "top": 560,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000006",
+     "top": 596,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000001",
+     "top": 668,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000003",
+     "top": 740,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000013",
+     "top": 776,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000011",
+     "top": 812,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000012",
+     "top": 848,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000010",
+     "top": 885,
+     "left": 276
+    },
+    {
+     "t": "PO-2026-000016",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000015",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000014",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000009",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000002",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000004",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000005",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000006",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000001",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000003",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000013",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000011",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000012",
+     "top": 0,
+     "left": 0
+    },
+    {
+     "t": "PO-2026-000010",
+     "top": 0,
+     "left": 0
+    }
+   ],
+   "switches": [],
+   "mainW": 1200
+  },
+  "mobile": {
+   "cards": [
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000016FaturalandıAnadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 07.09.2026₺4.620,"
+    },
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000015FaturalandıAnadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 07.09.2026₺9.450,"
+    },
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000014FaturalandıKahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. · 06.09.20"
+    },
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000009FaturalandıProteinsan Gıda Hammaddeleri Ltd. Şti. · 06.09.2026₺95.316,00"
+    },
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000002FaturalandıAnadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 06.09.2026₺125.10"
+    },
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000004FaturalandıAromatik Kimya Aroma ve Katkı Ltd. Şti. · 06.09.2026₺43.680,00"
+    },
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000005FaturalandıEge Ambalaj Sanayi ve Ticaret A.Ş. · 06.09.2026₺66.600,00"
+    },
+    {
+     "h": 64,
+     "hasDigit": true,
+     "txt": "PO-2026-000006FaturalandıKahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. · 06.09.20"
+    }
+   ],
+   "cardCount": 16,
+   "sizes": {
+    "12": 52,
+    "13": 16,
+    "14": 15,
+    "20": 1
+   },
+   "switches": [],
+   "sw": 390,
+   "cw": 390
+  }
+ },
+ "po-detay": {
+  "desktop": {
+   "sizes": {
+    "10": 3,
+    "11": 13,
+    "12": 10,
+    "13": 29,
+    "14": 1,
+    "20": 1,
+    "24": 1
+   },
+   "colors": [
+    [
+     "oklch(0.552 0.016 285.9)",
+     33
+    ],
+    [
+     "oklch(0.21 0.006 285.9)",
+     22
+    ],
+    [
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+     1
+    ],
+    [
+     "oklch(0.6 0.16 152)",
+     1
+    ],
+    [
+     "oklch(0.6 0.15 250)",
+     1
+    ]
+   ],
+   "primary": "oklch(0.55 0.16 152)",
+   "bgEls": [],
+   "cols": [
+    {
+     "i": 0,
+     "head": "Ürün",
+     "rows": 2,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 292
+    },
+    {
+     "i": 1,
+     "head": "Sipariş",
+     "rows": 2,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 116
+    },
+    {
+     "i": 2,
+     "head": "Alınan",
+     "rows": 2,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 110
+    },
+    {
+     "i": 3,
+     "head": "Faturalanan",
+     "rows": 2,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 168
+    },
+    {
+     "i": 4,
+     "head": "Birim fiyat",
+     "rows": 2,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 150
+    },
+    {
+     "i": 5,
+     "head": "KDV",
+     "rows": 2,
+     "uniq": 1,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 89
+    },
+    {
+     "i": 6,
+     "head": "Tutar (KDV hariç)",
+     "rows": 2,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 224
+    }
+   ],
+   "scroller": {
+    "sw": 1156,
+    "cw": 1152,
+    "over": 4
+   },
+   "chain": [
+    {
+     "t": "PO-2026-000003",
+     "top": 92,
+     "left": 264
+    },
+    {
+     "t": "PO-2026-000003",
+     "top": 266,
+     "left": 275
+    },
+    {
+     "t": "GR-2026-000003",
+     "top": 258,
+     "left": 483
+    },
+    {
+     "t": "PINV-2026-000003",
+     "top": 258,
+     "left": 691
+    },
+    {
+     "t": "GR-2026-000003",
+     "top": 637,
+     "left": 281
+    },
+    {
+     "t": "PINV-2026-000003",
+     "top": 637,
+     "left": 865
+    }
+   ],
+   "switches": [],
+   "mainW": 1200
+  },
+  "mobile": {
+   "cards": [
+    {
+     "h": 81,
+     "hasDigit": true,
+     "txt": "Suklaroz302010000₺55.200,00KDV hariç · %2080 KG sipariş · 80 alınan₺690,00"
+    },
+    {
+     "h": 81,
+     "hasDigit": true,
+     "txt": "stevya302020000₺39.000,00KDV hariç · %2060 KG sipariş · 60 alınan₺650,00"
+    },
+    {
+     "h": 20,
+     "hasDigit": true,
+     "txt": "GR-2026-000003Tamamlandı"
+    },
+    {
+     "h": 20,
+     "hasDigit": true,
+     "txt": "PINV-2026-000003₺113.040,00"
+    }
+   ],
+   "cardCount": 4,
+   "sizes": {
+    "10": 5,
+    "11": 13,
+    "12": 5,
+    "13": 19,
+    "14": 3,
+    "20": 2
+   },
+   "switches": [],
+   "sw": 390,
+   "cw": 390
+  }
+ },
+ "yeni": {
+  "desktop": {
+   "sizes": {
+    "11": 2,
+    "13": 9,
+    "14": 5,
+    "24": 1
+   },
+   "colors": [
+    [
+     "oklch(0.552 0.016 285.9)",
+     9
+    ],
+    [
+     "oklch(0.21 0.006 285.9)",
+     8
+    ]
+   ],
+   "primary": "oklch(0.55 0.16 152)",
+   "bgEls": [],
+   "cols": [],
+   "scroller": null,
+   "chain": [],
+   "switches": [],
+   "mainW": 1200
+  },
+  "mobile": {
+   "cards": [],
+   "cardCount": 0,
+   "sizes": {
+    "11": 2,
+    "13": 9,
+    "14": 5,
+    "20": 1
+   },
+   "switches": [],
+   "sw": 390,
+   "cw": 390
+  }
+ },
+ "tedarikciler": {
+  "desktop": {
+   "sizes": {
+    "12": 16,
+    "13": 42,
+    "14": 1,
+    "24": 1
+   },
+   "colors": [
+    [
+     "oklch(0.552 0.016 285.9)",
+     28
+    ],
+    [
+     "oklch(0.21 0.006 285.9)",
+     22
+    ],
+    [
+     "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+     4
+    ],
+    [
+     "oklch(0.577 0.245 27.3)",
+     4
+    ],
+    [
+     "oklch(0.6 0.16 152)",
+     2
+    ]
+   ],
+   "primary": "oklch(0.55 0.16 152)",
+   "bgEls": [],
+   "cols": [
+    {
+     "i": 0,
+     "head": "Tedarikçi",
+     "rows": 6,
+     "uniq": 6,
+     "empty": 0,
+     "ellipsis": 6,
+     "maxClipPx": 135,
+     "width": 237
+    },
+    {
+     "i": 1,
+     "head": "Kod",
+     "rows": 6,
+     "uniq": 6,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 118
+    },
+    {
+     "i": 2,
+     "head": "Beyaz liste",
+     "rows": 6,
+     "uniq": 1,
+     "empty": 6,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 118
+    },
+    {
+     "i": 3,
+     "head": "Tedarik süresi",
+     "rows": 6,
+     "uniq": 6,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 130
+    },
+    {
+     "i": 4,
+     "head": "Kalite",
+     "rows": 6,
+     "uniq": 5,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 97
+    },
+    {
+     "i": 5,
+     "head": "Zamanında",
+     "rows": 6,
+     "uniq": 3,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 112
+    },
+    {
+     "i": 6,
+     "head": "Ürün",
+     "rows": 6,
+     "uniq": 6,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 86
+    },
+    {
+     "i": 7,
+     "head": "Açık sipariş",
+     "rows": 6,
+     "uniq": 2,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 114
+    },
+    {
+     "i": 8,
+     "head": "Açık tutar",
+     "rows": 6,
+     "uniq": 3,
+     "empty": 0,
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 140
+    }
+   ],
+   "scroller": {
+    "sw": 1152,
+    "cw": 1152,
+    "over": 0
+   },
+   "chain": [],
+   "switches": [
+    {
+     "w": 32,
+     "h": 32,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 32,
+     "h": 32,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "bg": "rgba(0, 0, 0, 0)"
+    },
+    {
+     "w": 0,
+     "h": 0,
+     "bg": "rgba(0, 0, 0, 0)"
+    }
+   ],
+   "mainW": 1200
+  },
+  "mobile": {
+   "cards": [
+    {
+     "h": 88,
+     "hasDigit": true,
+     "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.S-000005 · 50/100 · %100 · 0 açık sipariş₺0,0"
+    },
+    {
+     "h": 88,
+     "hasDigit": true,
+     "txt": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.S-000003 · 70/100 · %50 · 1 açık sipariş₺32.760,00"
+    },
+    {
+     "h": 88,
+     "hasDigit": true,
+     "txt": "Ege Ambalaj Sanayi ve Ticaret A.Ş.S-000004 · 100/100 · %100 · 1 açık sipariş₺14.400,00"
+    },
+    {
+     "h": 88,
+     "hasDigit": true,
+     "txt": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.S-000006 · 85/100 · %50 · 0 açık sip"
+    },
+    {
+     "h": 88,
+     "hasDigit": true,
+     "txt": "Proteinsan Gıda Hammaddeleri Ltd. Şti.S-000001 · 70/100 · %0 · 0 açık sipariş₺0,00"
+    },
+    {
+     "h": 88,
+     "hasDigit": true,
+     "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.S-000002 · 69/100 · %0 · 0 açık sipariş₺0,00"
+    }
+   ],
+   "cardCount": 6,
+   "sizes": {
+    "12": 6,
+    "13": 6,
+    "14": 7,
+    "20": 1
+   },
+   "switches": [
+    {
+     "w": 0,
+     "h": 0
+    },
+    {
+     "w": 0,
+     "h": 0
+    },
+    {
+     "w": 0,
+     "h": 0
+    },
+    {
+     "w": 0,
+     "h": 0
+    },
+    {
+     "w": 0,
+     "h": 0
+    },
+    {
+     "w": 0,
+     "h": 0
+    },
+    {
+     "w": 44,
+     "h": 44
+    },
+    {
+     "w": 44,
+     "h": 44
+    },
+    {
+     "w": 44,
+     "h": 44
+    },
+    {
+     "w": 44,
+     "h": 44
+    },
+    {
+     "w": 44,
+     "h": 44
+    },
+    {
+     "w": 44,
+     "h": 44
+    }
+   ],
+   "sw": 390,
+   "cw": 390
+  }
+ }
+}
