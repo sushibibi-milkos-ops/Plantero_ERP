@@ -1,0 +1,73 @@
+{
+  "module": "bildirimler",
+  "round": 1,
+  "note": "Tur 1 — kart ilk kez oluşturuldu. Ölçümler: artifacts/critic/measure-bildirimler-r1/*.json (pnpm measure) + scripts/probe-bildirimler-r1.ts. /bildirimler admin'de BOŞ döndüğü için dolu liste depo kullanıcısıyla ayrıca çekildi (artifacts/screens/bildirimler-depo/). Ortak bileşen kaynaklı bulgular (üst bar zil 36x36 < 44) shell modülüne yazıldı, burada tekrarlanmadı. Kod düzeyi animasyon taraması TEMİZ: transition-all / ease-in / scale(0) / >300ms süre yok; hover globals.css'te @custom-variant hover ile (hover:hover) and (pointer:fine) altında gated.",
+  "routes": {
+    "/onaylar": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [3, 4, 3, 2, 3, 3, 4, 2, 2, 3, 3, 3],
+      "total": 35,
+      "winner": "linear",
+      "measurements": {
+        "cards": 16,
+        "cardHeightsDesktop": [163, 163, 183],
+        "cardHeightsMobile": [163, 163, 183],
+        "fullyVisibleFirstScreen": 12,
+        "truncatedTitlesDesktop": "12/16",
+        "truncatedTitlesMobile": "14/16",
+        "filledPrimaryButtons": 16,
+        "mobileActionButtons": 48,
+        "mobileActionButtonsBelow44": 48,
+        "actionButtonHeight": 32,
+        "distinctConfidenceBadgeStyles": 1,
+        "contentFontSteps": [10, 11, 12, 13, 14],
+        "h1": { "size": 24, "weight": 600 },
+        "overflowX": false,
+        "distinctColors": 13,
+        "pageScrollHeightMobile": 3120
+      },
+      "open": [
+        { "id": "onaylar-01", "criterion": 8, "severity": "P0", "text": "J/K klavye gezinmesi seçimi görünür alanın dışına taşıyor ve seçili kart odaklanabilir değil; A tuşu görünmeyen kaydı onaylayabiliyor (ERP'de kör onay). Kartta scrollIntoView, tabindex, role/aria-selected ve focus-visible halkası yok.", "measure": "15 kez J sonrası seçili kart top=1055 / bottom=1238, viewport 900, scrollY=0, inViewport=false; kart tabindex=null, role=null, cursor=default", "target": "seçim değişince scrollIntoView({block:'nearest'}); kart tabindex=0 + role=\"option\" + aria-selected; focus-visible:ring-2; seçim her zaman viewport içinde", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:60-97", "openedRound": 1 },
+        { "id": "onaylar-02", "criterion": 4, "severity": "P0", "text": "Güven rozeti değere bakmaksızın marka yeşili: %0 ile %90 birebir aynı renk. Yeşil 'başarı/güven' anlamını taşırken %0 güveni yeşil göstermek rengi anlamsızlaştırıyor.", "measure": "16 rozetin tamamı color oklch(0.55 0.16 152) / bg primary/10 — distinctBadgeStyles=1 (%0, %15, %23, %33, %90 hepsi aynı)", "target": "eşikli renk: <%50 bg-muted/text-muted-foreground, %50-79 amber/warning, ≥%80 yeşil — en az 3 farklı rozet stili", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:104", "openedRound": 1 },
+        { "id": "onaylar-03", "criterion": 9, "severity": "P1", "text": "390px'te kart aksiyonları (Reddet / Detay / Onayla) 32px yüksekliğinde — 48 dokunma hedefinin tamamı 44px altında ve üçü tek satırda sıkışık.", "measure": "390x844: actionButtons=48, actionButtonsBelow44=48, tek yükseklik değeri 32px", "target": "mobilde h≥44px (örn. size='default' + h-11) ya da 44x44 ikon buton; touchTargetsBelow44 içinde kart aksiyonu kalmayacak", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:113-121", "openedRound": 1 },
+        { "id": "onaylar-04", "criterion": 4, "severity": "P1", "text": "Tek ekranda 16 adet dolgulu yeşil birincil buton (her kartta bir 'Onayla'). Linear/Stripe bir görünümde tek birincil eylem kullanır; burada yeşil zemin gürültüsü ekranın ağırlık merkezini yok ediyor.", "measure": "1440x900: dolgulu primary buton sayısı = 16 (grid içi)", "target": "ekranda en fazla 1 dolgulu birincil buton (yalnızca seçili kart ya da sabit alt eylem çubuğu); diğerleri variant='outline'/'ghost'", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:119-121", "openedRound": 1 },
+        { "id": "onaylar-05", "criterion": 5, "severity": "P1", "text": "Kart başlığı üstündeki tür rozetini kelimesi kelimesine tekrar ediyor ('MUTABAKAT ÖNERİSİ' rozeti + 'Mutabakat önerisi — …' başlık); bu tekrar 376px sütunda başlığın asıl ayırt edici kısmını kırpıyor.", "measure": "1440x900: 12/16 başlık truncate (scrollWidth > clientWidth); 390px: 14/16", "target": "başlıktan tür ön eki kaldırılır (yalnızca karşı taraf/açıklama); kırpılan başlık ≤2/16", "file": "packages/core/src/notifications/approvals/dispatch.ts:60 (title) + approval-queue.tsx:101", "openedRound": 1 },
+        { "id": "onaylar-06", "criterion": 11, "severity": "P1", "text": "Türkçe arayüzde ham İngilizce enum/veri sızıntısı: özet satırlarında 'unknown', 'expense', 'fee', 'invoice' görünüyor; ayrıca özet 'güven %x' bilgisini rozetle ikinci kez tekrarlıyor.", "measure": "/onaylar main metninde 4 İngilizce token: unknown, expense, fee, invoice", "target": "kind→Türkçe eşlemesi (Gider / Ücret / Fatura / Bilinmiyor); ekranda 0 İngilizce token; özetten 'güven %x' çıkarılır (rozet zaten var)", "file": "packages/core/src/notifications/approvals/dispatch.ts:61 (summary)", "openedRound": 1 },
+        { "id": "onaylar-07", "criterion": 3, "severity": "P1", "text": "Tek kuyruk sekmesiz ve filtresiz (modül şartnamesi 'sekmeli' diyor); 16 kaydın 12'si ilk ekrana sığıyor, mobilde 16 kayıt 3120px kaydırma demek — kuyruk taraması pahalı.", "measure": "1440x900 tam görünen kart = 12 (hedef ≥15); mobil kart yüksekliği medyan 163px (hedef 56-72px); mobil sayfa yüksekliği 3120px; [role=tablist] sayısı 0", "target": "PageHeader children'da tür sekmeleri (etiket + adet); masaüstünde ilk ekranda ≥15 kayıt; mobil kart ≤96px", "file": "apps/web/src/app/(app)/onaylar/page.tsx + approval-queue.tsx:87", "openedRound": 1 },
+        { "id": "onaylar-08", "criterion": 6, "severity": "P1", "text": "Tutarlar cümle içinde düz metin: sağa hizalı değil, tabular-nums yok, negatif işaret ve para birimi kartlar arasında hizalanmıyor ('₺-111,11' vs '₺-150.000,00').", "measure": "özet <p> içinde tutar; font-variant-numeric yalnızca güven rozetinde tanımlı", "target": "tutar kendi alanında, tabular-nums + sağa hizalı, 2 ondalık, negatifler tutarlı ('-₺150.000,00')", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:108 + dispatch.ts:61", "openedRound": 1 }
+      ],
+      "closed": []
+    },
+    "/bildirimler": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [4, 3, 3, 4, 3, 3, 4, 3, 3, 4, 4, 4],
+      "total": 42,
+      "winner": "linear",
+      "measurements": {
+        "adminState": "empty (EmptyState — 'Henüz bildiriminiz yok')",
+        "depoState": "3 in_app bildirim (SKT geçmiş / 30 gün / 60 gün)",
+        "itemHeights": [87, 105.5, 106.5],
+        "bodyWidthPx": 1100,
+        "bodyFontSize": 13,
+        "approxCharsPerLine": 169,
+        "typeIconsInRows": 0,
+        "filterTabs": 0,
+        "overflowX": false,
+        "h1": { "size": 24, "weight": 600 },
+        "distinctColors": 16,
+        "touchTargetsBelow44Mobile": ["button 'Tümünü okundu işaretle' 201.1x32"]
+      },
+      "open": [
+        { "id": "bildirimler-01", "criterion": 2, "severity": "P1", "text": "Bildirim gövdesi kabın tüm genişliğine yayılıyor: 1440px'te satır uzunluğu ~169 karakter. Okunabilir ölçü 45-90 karakter; şu hâliyle iki satırlık kırpma da metnin ortasında kesiliyor ('… ve …').", "measure": "bildirim <p> genişliği 1100px @13px ≈ 169 ch/satır; ul max-width: none", "target": "gövde ve liste için max-w-[72ch] (~700px) ya da liste kabı max-w-3xl; ≤90 ch/satır", "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:52-62", "openedRound": 1 },
+        { "id": "bildirimler-02", "criterion": 9, "severity": "P1", "text": "390px'te 'Tümünü okundu işaretle' butonu 32px yükseklikte — tek eylem butonu ve 44px dokunma hedefinin altında.", "measure": "390x844 touchTargetsBelow44: button 'Tümünü okundu işaretle' 201.1x32", "target": "mobilde h≥44px (h-11) ya da tam genişlik satır butonu", "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:44-47", "openedRound": 1 },
+        { "id": "bildirimler-03", "criterion": 5, "severity": "P1", "text": "Satırlarda tür göstergesi yok (0 ikon/rozet): SKT uyarısı, kritik stok, mutabakat özeti hepsi aynı görünüyor; okunmamış/tümü filtresi de yok, tarih grubu (Bugün/Dün) yok. Zaman damgası gövdenin altında, sağa hizalı değil.", "measure": "main ul > li içinde svg=0, [role=tablist]=0; relativeTime satır altında, sol hizalı", "target": "her satırda 16px tür ikonu + 11px muted tür etiketi; 'Okunmamış / Tümü' filtresi; zaman damgası satırın sağ üstünde", "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:55-64", "openedRound": 1 },
+        { "id": "bildirimler-04", "criterion": 6, "severity": "P1", "text": "Aynı cümlede iki farklı ondalık ayracı: para TR formatında ('₺3.675,00') ama miktar US formatında ('245.00 KG', '33.00 KG').", "measure": "systemAlerts.ts:59 `D(r.qty).toFixed(2)` → nokta ondalık; fmtMoney (satır 53) virgül ondalık", "target": "miktar da tr-TR formatlayıcıdan geçer ('245,00 KG'); ekranda tek ondalık ayracı", "file": "packages/core/src/notifications/systemAlerts.ts:59", "openedRound": 1 }
+      ],
+      "closed": []
+    }
+  }
+}

@@ -1,6 +1,16 @@
 -- I6 — Lot ileri izlenebilirlik
 --   a) lot takipli üründe her delivery_lines satırının lot_id'si dolu
---   b) o lot 'released' durumunda olmalı (karantina/red/geri çağrılmış/süresi dolmuş lot sevk edilemez)
+--   b) o lot ASLA 'quarantine'/'rejected' durumunda SEVK EDİLMEMİŞ olmalı (CLAUDE.md kural 2 — yalnızca
+--      karantina/red için forward-block; bu ikisi lotun HİÇBİR ZAMAN meşru "released" penceresi olmadığı
+--      giriş-zamanlı durumlardır, dolayısıyla bu statülerdeki bir lotun geçmişte sevk edilmiş olması her
+--      zaman bir ihlaldir).
+--      'recalled'/'expired' KASITLI OLARAK bu listede DEĞİL: bunlar lot zaten meşru şekilde 'released'
+--      iken sevk/tüketim geçmişi oluştuktan SONRA geriye dönük atanan terminal durumlardır (geri çağırma
+--      tam olarak "zaten sevk edilmiş" bir lotu hedefler — packages/core/src/quality/recall.ts initiate()).
+--      Bu geçmiş kayıtları burada `<> 'released'` ile kapsamak recall/SKT sonrası HER ZAMAN yanlış-pozitif
+--      üretir (bkz. Tur — canlı doğrulama: RC-2026-000001 initiate() sonrası 3 satır burada patlıyordu).
+--      Recalled/expired lotun MEVCUT konumu I27 (anlık usage kontrolü) ile, recall SONRASI oluşan YENİ
+--      (meşru olmayan) hareketler ise I40 (moved_at > lot.updated_at zaman damgası) ile ayrı ayrı kapsanır.
 --   c) Σ tüketim + Σ sevk + Σ fire (iş emri + genel) + eldeki stok ≤ initial_qty (+ sayım fazlası)
 
 SELECT
@@ -21,7 +31,7 @@ SELECT
   0::numeric(18, 4), 1::numeric(18, 4), 1::numeric(18, 4)
 FROM delivery_lines dl
 JOIN stock_lots l ON l.id = dl.lot_id
-WHERE l.status <> 'released'
+WHERE l.status IN ('quarantine', 'rejected')
 
 UNION ALL
 

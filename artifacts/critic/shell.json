@@ -479,6 +479,23 @@
     }
    ],
    "scoreNote": "Ortak bileşen bulgusu (protokol kural 5): /muhasebe/tahsilatlar tur 6'da bu yüzden KAZANAMADI (k1 5→4, k5 5→4). mobile:'badge' kullanan 41 sütun tanımı var; çoğu StatusBadge/LotBadge ya da açık text-xs taşıdığı için bugün yalnız payments-table'da görünüyor, ama taban eksikliği bileşende."
+  },
+  "genel (üst bar — mobil dokunma hedefleri)": {
+   "round": 1,
+   "open": [
+    {
+     "id": "shell-topbar-touch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px üst barda zil (bildirim) düğmesi 36x36 — 44px dokunma hedefinin altında. Tüm (app) rotalarında görünür; bildirimler modülü turunda ölçüldü, ortak bileşen kaynaklı olduğu için shell'e yazıldı.",
+     "measure": "pnpm measure /bildirimler --viewport 390x844 → a[data-slot=\"button\"][aria-label=\"Bildirimler (3 okunmamış)\"] 36x36",
+     "target": "mobilde 44x44 (min-h-11 min-w-11); 390px ölçümünde üst bar ikonları touchTargetsBelow44 listesinde kalmayacak",
+     "file": "apps/web/src/components/app-shell/topbar.tsx (zil düğmesi)",
+     "openedRound": 1,
+     "openedBy": "gorsel-critic / bildirimler turu 1"
+    }
+   ],
+   "closed": []
   }
  },
  "measuredAt": "2026-09-04T19:36:19.000000Z"

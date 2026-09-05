@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /bildirimler --viewport 390x844
+
+{"route":"/bildirimler","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":0,"heights":[0,0,0]},"fontSizes":{"10":5,"11":1,"13":2,"14":2,"16":1,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Bildirimler\"","w":62.3,"h":19.5},{"selector":"a[data-slot=\"button\"][aria-label=\"Bildirimler\"]","w":36,"h":36}],"distinctColors":13,"h1":{"size":20,"weight":600},"images":0}

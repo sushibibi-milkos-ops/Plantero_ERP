@@ -1,0 +1,287 @@
+{
+  "module": "kalite",
+  "round": 1,
+  "note": "Tur 1: kalite modülü ilk kez puanlandı. Referans puanları sabittir (Linear 57 veri ekranları, Stripe 56 KPI/finans ekranları — docs/DESIGN-SCORECARD.md). Ölçümler: pnpm shot (1440x900 + 390x844), pnpm measure, scripts/probe-kalite-r1.ts (tablo/kart kaydırma kapları, KpiCard yükseklikleri, 4+ ondalıklı ham sayı metinleri, tabular-nums, 44px altı dokunma hedefleri, native tarih girdileri, renk sayımı). Dinamik id'ler psql ile alındı: qc_check bef2b3dd (QC-2026-000008), recall 42035446 (RC-2026-000001), mamul lot a1f5a462 (PL-260905-H3-01). NOT: /kalite/izlenebilirlik?lot= parametresi lot NUMARASI değil lot UUID'si bekliyor; 'PL-260905-H3-01' ile açıldığında sessizce boş duruma düşüyor (kalite-izlenebilirlik-02).",
+  "measuredAt": "2026-09-05",
+  "routes": {
+    "/kalite/kontroller": {
+      "round": 1,
+      "reference": "linear",
+      "scores": [5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 5],
+      "total": 59,
+      "verdict": "Plantero",
+      "open": [],
+      "closed": [],
+      "p2": [
+        {
+          "id": "kalite-kontroller-01",
+          "criterion": 5,
+          "severity": "P2",
+          "text": "Tedarikçi sütunu tam şirket unvanını kırpmadan basıyor; tablo kabı 260px taşıyor ve son sütun (Mal kabul) ilk ekranda 'Ma…' olarak kesiliyor. scroll-fade-x affordance'ı var, bu yüzden bozuk değil — ama 8 sütunun 1152px'e sığmamasının tek nedeni bu sütun.",
+          "measure": "probe-kalite-r1 1440x900: div.scrollbar-thin.scroll-fade-x scrollWidth 1412 / clientWidth 1152 (+260px). En uzun tedarikçi hücresi 'Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.' kırpılmadan ~470px.",
+          "target": "checks-table.tsx tedarikçi sütunu meta.width ~220 + `truncate` → scrollWidth ≤ 1152 (taşma 0).",
+          "file": "apps/web/src/modules/quality/components/checks-table.tsx",
+          "openedRound": 1
+        }
+      ]
+    },
+    "/kalite/kontroller/[id]": {
+      "round": 1,
+      "reference": "linear",
+      "scores": [5, 5, 5, 5, 4, 3, 4, 5, 4, 5, 4, 5],
+      "total": 54,
+      "verdict": "Linear",
+      "open": [
+        {
+          "id": "kalite-kontroller-id-01",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "'Sonuç girişi' okuma listesinde sayısal sonuç ham DB string'i olarak basılıyor: nokta ondalık, 4 hane, birim yok, tabular-nums yok. Aynı sayfanın 'Genel' kartı aynı veri türü için formatQty + `.num` kullanıyor — tek ekranda iki ayrı sayı dili.",
+          "measure": "artifacts/screens/kalite-kontroller-bef2b3dd-e0eb-4503-a269-04023a7daec0/{desktop,mobile}.png — 'Nem %' satırı '14.2000'. probe-kalite-r1: decimals ['14.2000'] hem 1440x900 hem 390x844. check-detail.tsx:187 `{r.valueNumeric ?? …}` (formatlama yok).",
+          "target": "`<span className=\"num\">{formatQty(r.valueNumeric, unit)}</span>` → '14,2 %'; ondalık ayırıcı virgül, en fazla 1-2 hane, tabular-nums açık.",
+          "file": "apps/web/src/modules/quality/components/check-detail.tsx:186-188",
+          "openedRound": 1
+        },
+        {
+          "id": "kalite-kontroller-id-02",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Değeri boş string olan sonuç satırı hiçbir şey basmıyor — satırın sağ tarafı tamamen boş kalıyor. Kalıp `x ?? '—'` yalnızca null'ı yakalıyor, '' değerini geçiriyor; aynı sayfanın Genel/Karar kartları 6 yerde dürüstçe '—' basıyor.",
+          "measure": "artifacts/screens/kalite-kontroller-bef2b3dd-…/desktop.png — 'Sertifika' satırı değersiz. DB: qc_check_results.value_text = '' (boş string), value_numeric/value_bool NULL, is_passed NULL. 4 sonuç satırının 1'i boş.",
+          "target": "Boş string de 'yok' sayılsın: `const v = r.valueNumeric ?? (…) ?? null; v || <span className=\"text-muted-foreground\">—</span>` → 0/4 boş hücre.",
+          "file": "apps/web/src/modules/quality/components/check-detail.tsx:186-188",
+          "openedRound": 1
+        },
+        {
+          "id": "shell-detail-fields-touch-01",
+          "module": "shell",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Paylaşılan DetailFields bileşenindeki 'Boş alanları göster (n)' düğmesi yalnızca 12px metin — dolgusuz, 18px yüksekliğinde. Mobilde ana içerikteki TEK 44px altı dokunma hedefi bu.",
+          "measure": "probe-kalite-r1 /kalite/kontroller/bef2b3dd-… 390x844: smallTargets = [{sel: 'button \"Boş alanları göster (1)\"', h: 18}] (tek eleman). detail-fields.tsx:60-67 — `text-[12px]` + hiç padding yok.",
+          "target": "Mobilde ≥44px: `-my-3 py-3 md:my-0 md:py-0` (görsel yükseklik değişmeden dokunma alanı büyür) → smallTargets boş.",
+          "file": "apps/web/src/components/detail-fields.tsx:60-67",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/kalite/sablonlar": {
+      "round": 1,
+      "reference": "linear",
+      "scores": [5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5],
+      "total": 59,
+      "verdict": "Plantero",
+      "open": [],
+      "closed": [],
+      "p2": [
+        {
+          "id": "kalite-sablonlar-01",
+          "criterion": 6,
+          "severity": "P2",
+          "text": "Mobil kartta 'Kalem' metriği etiketsiz çıplak sayı olarak basılıyor ('4', '5'); masaüstünde sütun başlığı bağlamı veriyor, mobilde hiçbir bağlam yok. Aynı sınıf bulgu depo modülünde de P2 (depo-stok-05).",
+          "measure": "artifacts/screens/kalite-sablonlar/mobile.png — kart 1 sağ alt '4', kart 2 '5'; hiçbir birim/etiket düğümü yok.",
+          "target": "Mobil kart metriğine birim ekle: '4 kalem' (ya da 'Kalem 4').",
+          "file": "apps/web/src/modules/quality/components/templates-table.tsx",
+          "openedRound": 1
+        }
+      ]
+    },
+    "/kalite/tedarikci-skoru": {
+      "round": 1,
+      "reference": "stripe",
+      "scores": [5, 4, 3, 5, 5, 5, 4, 5, 4, 3, 3, 3],
+      "total": 49,
+      "verdict": "Stripe",
+      "open": [
+        {
+          "id": "kalite-tedarikci-01",
+          "criterion": 12,
+          "severity": "P1",
+          "text": "Dönem seçici ham `<input type=\"month\">` — tarayıcının yerel denetimi. Ay adı sayfa diline değil tarayıcı UI diline bağlı olduğu için tr-TR bağlamında bile İngilizce basıyor ve yanına tarayıcının kendi takvim ikonu geliyor. Ekrandaki tek 'varsayılan HTML görünümü' öğesi ve UI dili Türkçe kuralının tek ihlali.",
+          "measure": "probe-kalite-r1 1440x900: natives = [{type:'month', value:'2026-09'}]. artifacts/screens/kalite-tedarikci-skoru/{desktop,mobile}.png — denetim 'September 2026' basıyor (Playwright bağlamı locale='tr-TR', timezone Europe/Istanbul).",
+          "target": "Uygulamanın kendi Select/Popover ay seçicisi (Türkçe ay adları, 'Eylül 2026'), `input[type=month]` kaldırılır → natives = [].",
+          "file": "apps/web/src/modules/quality/components/compute-score-button.tsx:31",
+          "openedRound": 1
+        },
+        {
+          "id": "kalite-kpi-strip-01",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Kalite, 13 modül içinde KPI şeridi için hâlâ KpiCard `variant='card'` (136px kutu) kullanan TEK modül; depo, finans, muhasebe, satış, üretim, ihracat, satın alma ve kokpit KpiStripRow + `variant='strip'` (80px, çerçevesiz, dikey hairline) kullanıyor. Kart başına ~56px ölü alan, KPI bandı 136px yerine 80px olmalı. Aynı kök neden 3 rotada.",
+          "measure": "Playwright getBoundingClientRect 1440x900: /kalite/tedarikci-skoru 3 kart 136x449; /kalite/izlenebilirlik?lot=… 5 kart 136x221; /kalite/geri-cagirma/[id] 6 kart 136x279. Strip varyantı md:h-20 = 80px (kpi-card.tsx:182). grep: KpiStripRow kullanan 34 sayfa, kalite'de 0.",
+          "target": "Üç rotada da `<KpiStripRow>` + `variant=\"strip\"` → kart yüksekliği 136px → 80px (-41%), masaüstünde dikey hairline ayraç, mobilde 152x72 şerit.",
+          "file": "apps/web/src/app/(app)/kalite/tedarikci-skoru/page.tsx:27-31, apps/web/src/modules/quality/components/trace-search.tsx:115-121, apps/web/src/modules/quality/components/recall-detail.tsx:90-99",
+          "openedRound": 1
+        },
+        {
+          "id": "kalite-tedarikci-02",
+          "criterion": 10,
+          "severity": "P1",
+          "text": "Üç KPI kartının üçünde de süs ikonu var: 'Ortalama skor' yanında yıldız, 'Değerlendirilen tedarikçi' yanında kişiler, 'En düşük skor' yanında düşen ok. Hiçbiri metnin söylemediği bir şey söylemiyor; yıldız 'favori' çağrışımı yapıp yanlış yönlendiriyor. Stripe KPI blokları ikonsuzdur (strip varyantı da bilinçli olarak ikon almaz — kpi-card.tsx:140 yorumu).",
+          "measure": "tedarikci-skoru/page.tsx:28-30 `icon={<Star />}`, `icon={<Users />}`, `icon={<TrendingDown />}`; DOM: 3 kartın 3'ünde 1'er svg.",
+          "target": "Üç ikon da kaldırılır (strip varyantına geçişle zaten düşer) → KPI kartlarında svg sayısı 0.",
+          "file": "apps/web/src/app/(app)/kalite/tedarikci-skoru/page.tsx:28-30",
+          "openedRound": 1
+        }
+      ],
+      "closed": [],
+      "p2": [
+        {
+          "id": "kalite-tedarikci-03",
+          "criterion": 3,
+          "severity": "P2",
+          "text": "'Trend' sütunu 110px yer kaplıyor ve tüm satırlarda '—' basıyor (sparkline en az 2 dönem ister, seed'de tek dönem var). Veri gelince dolacağı için tasarım kusuru değil, ama tek dönemli kurulumda ilk ekranda boş sütun duruyor.",
+          "measure": "artifacts/screens/kalite-tedarikci-skoru/desktop.png — 6/6 satır '—'; supplier-score-table.tsx:37 meta.width 110.",
+          "target": "Hiçbir satırda trend yoksa sütun render edilmesin (rows.every(r => r.trend.length < 2) → sütunu at).",
+          "file": "apps/web/src/modules/quality/components/supplier-score-table.tsx:37",
+          "openedRound": 1
+        }
+      ]
+    },
+    "/kalite/izlenebilirlik": {
+      "round": 1,
+      "reference": "linear",
+      "scores": [5, 5, 4, 5, 5, 5, 3, 5, 5, 5, 5, 5],
+      "total": 57,
+      "verdict": "Linear",
+      "open": [
+        {
+          "id": "kalite-izlenebilirlik-02",
+          "criterion": 7,
+          "severity": "P1",
+          "text": "?lot= derin bağlantısı çözülemediğinde ekran sessizce 'Aramaya başlayın' boş durumuna düşüyor — hata mesajı, toast ya da 'lot bulunamadı' bilgisi yok. Parametre lot NUMARASI değil lot UUID'si bekliyor; kullanıcının elindeki tek görünür kimlik olan lot no ile paylaşılan/yapıştırılan her bağlantı bu sessiz hataya düşer.",
+          "measure": "pnpm shot '/kalite/izlenebilirlik?lot=PL-260905-H3-01' → artifacts/screens/kalite-izlenebilirlik/{desktop,mobile}.png parametresiz çekimle bit-bit aynı (desktop md5 8c687c0131feaa1e24d95cf730652b9d). trace-search.tsx:44-48 `if (res.ok) {…}` — else dalı yok.",
+          "target": "(a) `getTraceForLotAction` lot numarasını da çözsün (uuid değilse lot_no ile ara), (b) çözülemezse görünür hata: `toast.error('Lot bulunamadı: …')` + boş durumda aranan değeri göster → parametreli ve parametresiz ekran görüntüleri farklılaşır.",
+          "file": "apps/web/src/modules/quality/components/trace-search.tsx:44-56",
+          "openedRound": 1
+        }
+      ],
+      "closed": [],
+      "p2": [
+        {
+          "id": "kalite-izlenebilirlik-05",
+          "criterion": 7,
+          "severity": "P2",
+          "text": "Boş durum özenli (ikon + başlık + açıklama) ama eylemsiz; 1440x900'de 350px yüksekliğinde kesikli kutu ve sayfanın kalanı boş. Linear boş durumları her zaman bir sonraki adımı önerir.",
+          "measure": "artifacts/screens/kalite-izlenebilirlik/desktop.png — kesikli kutu y=298..648 (350px), altında 600px boş sayfa; kutuda hiç düğme/bağlantı yok.",
+          "target": "Boş duruma 3-5 kestirme ekle (son kontrol edilen lotlar / son üretilen mamul lotları) → boş durumda ≥1 tıklanabilir öğe.",
+          "file": "apps/web/src/modules/quality/components/trace-search.tsx",
+          "openedRound": 1
+        }
+      ]
+    },
+    "/kalite/izlenebilirlik?lot=<uuid>": {
+      "round": 1,
+      "reference": "linear",
+      "scores": [5, 4, 3, 3, 2, 4, 5, 5, 4, 4, 3, 4],
+      "total": 46,
+      "verdict": "Linear",
+      "open": [
+        {
+          "id": "kalite-izlenebilirlik-01",
+          "module": "shell",
+          "criterion": 5,
+          "severity": "P0",
+          "text": "GERİYE İZLEME grafiği hiç ağaç çizmiyor: kök düğüm dışındaki TÜM düğümler 'Bağlantısız' başlığı altında düz liste olarak dökülüyor. Kök neden yön uyuşmazlığı — traceBackward kenarları köke DOĞRU üretiyor (from: kaynak → to: kök), TraceGraph ise children haritasını `e.from → e.to` ile kuruyor, dolayısıyla kökten çıkan kenar bulamıyor. Modülün manşet özelliği ('iki yönlü izleme grafiği') iki yönden birinde hiç grafik üretmiyor.",
+          "measure": "traceBackward(lot a1f5a462) doğrudan çalıştırıldı: 9 düğüm, 8 kenar, hepsi `to: kök` yönünde (ör. work_order:19587f9d → lot:a1f5a462). Ekranda: 8 düğümün 8'i 'Bağlantısız' listesinde, ağaçta yalnızca kök. probe: orphanHeaders=1. artifacts/screens/kalite-izlenebilirlik-lot/desktop.png. Aynı bileşen /depo/lotlar/[id]'de de kullanılıyor (aynı hata).",
+          "target": "TraceGraph `direction: 'down' | 'up'` alsın (ya da traceBackward kenarlarını ters çevirsin): geriye izlemede children `e.to → e.from` ile kurulsun → 'Bağlantısız' kovası 0 düğüm, ağaç derinliği ≥3 (kök → iş emri → tüketilen lot → mal kabul → cari).",
+          "file": "apps/web/src/components/trace-graph.tsx:106-125 (packages/core/src/lots/trace.ts:105-112 kenar yönüyle birlikte)",
+          "openedRound": 1
+        },
+        {
+          "id": "kalite-izlenebilirlik-04",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Düğüm alt metinleri ham DB Decimal string'i basıyor ('Üretilen 19.0000', 'Eldeki 19.0000'): nokta ondalık, 4 hane, birim yok. Aynı satırın sağındaki miktar rozeti aynı sayıyı formatQty + `.num` ile '19' olarak basıyor — tek satırda aynı sayı iki farklı biçimde.",
+          "measure": "probe-kalite-r1 1440x900: decimals ['19.0000']. artifacts/screens/kalite-izlenebilirlik-lot/desktop.png — 'İş emri WO-2026-000009 Üretilen 19.0000' satırının sağında '19'. Kaynak: packages/core/src/lots/trace.ts:105,168,179 `sub: \\`Üretilen ${toDb(...)}\\``.",
+          "target": "`sub` metinleri de formatQty/formatNumber ile üretilsin (ör. 'Üretilen 19') → sayfada 4+ ondalıklı ham string 0.",
+          "file": "packages/core/src/lots/trace.ts:105,168,179",
+          "openedRound": 1
+        },
+        {
+          "id": "shell-trace-graph-green-01",
+          "module": "shell",
+          "criterion": 4,
+          "severity": "P2",
+          "text": "TraceGraph'ta 'lot' düğüm çipi marka yeşilini (`text-primary bg-primary/10`), 'mal kabul' çipi başarı yeşilini (`text-success bg-success/12`) kullanıyor; üstüne 'Serbest'/'Bitti'/'Tamamlandı' rozetleri de yeşil. Ekranda yeşil hem marka vurgusu hem başarı durumu — puan kartı kriter 4 'yeşil yalnızca başarı/vurgu ikisinden biri' diyor.",
+          "measure": "Playwright hesaplanmış renk sayımı /kalite/izlenebilirlik?lot=…: 25 yeşil öğe (11 success/0.12 pil + 5 primary/0.10 çip + 9 dolu yeşil nokta) karşısında 1 mavi, 3 nötr. measure distinctColors 23.",
+          "target": "Düğüm türü çipleri nötrleşsin (`text-muted-foreground bg-muted`), yeşil yalnız durum rozetlerinde kalsın → yeşil öğe sayısı ≤10.",
+          "file": "apps/web/src/components/trace-graph.tsx:42-49",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/kalite/geri-cagirma": {
+      "round": 1,
+      "reference": "linear",
+      "scores": [5, 5, 3, 5, 4, 5, 5, 5, 5, 5, 4, 5],
+      "total": 56,
+      "verdict": "Linear",
+      "open": [
+        {
+          "id": "kalite-geri-cagirma-01",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "'Yeni Simülasyon' formu sayfaya kalıcı olarak yerleşik (lg:grid-cols-3'ün 1 sütunu) ve masaüstü genişliğinin 1/3'ünü sürekli işgal ediyor; asıl veri tablosu 760px'e sıkışıyor ve 406px taşıyor. Linear/Stripe'ta oluşturma formu asla listeyle yan yana duraklamaz — düğme + sheet/dialog ya da ayrı rota olur (bu depoda da kalıp bu: /depo/mal-kabul/yeni, /satis/siparisler/yeni).",
+          "measure": "probe-kalite-r1 1440x900: tablo kabı scrollWidth 1166 / clientWidth 760 (+406px taşma); form paneli 490px. artifacts/screens/kalite-geri-cagirma/desktop.png — 'Gerekçe' hücresi 'müşteri şikayet' üzerinde kesiliyor. Karşılaştırma: /kalite/kontroller'de aynı DataTable'ın kabı 1152px.",
+          "target": "Form, PageHeader eylemi olarak bir Sheet/Dialog'a taşınsın (ya da /kalite/geri-cagirma/yeni rotasına) → tablo kabı clientWidth 1152, scrollWidth 1166 ≈ taşma ≤14px.",
+          "file": "apps/web/src/app/(app)/kalite/geri-cagirma/page.tsx:18-26",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/kalite/geri-cagirma/[id]": {
+      "round": 1,
+      "reference": "stripe",
+      "scores": [5, 3, 3, 5, 4, 4, 5, 5, 4, 3, 3, 4],
+      "total": 48,
+      "verdict": "Stripe",
+      "open": [
+        {
+          "id": "kalite-geri-cagirma-id-01",
+          "criterion": 2,
+          "severity": "P1",
+          "text": "6 KPI, 4'lü ızgarada iki ayrı `grid-cols-2 sm:grid-cols-4` bloğuna bölünmüş: ikinci sırada 2 kart var, sağda 570px'lik boş delik kalıyor. Stripe KPI şeridi asla tırtıklı ikinci sıra bırakmaz.",
+          "measure": "Playwright getBoundingClientRect 1440x900: sıra 1 kartlar x=264/555/846/1137 (4 adet), sıra 2 yalnızca x=264/555 — x=846..1416 (570px) boş. recall-detail.tsx:90-99 iki ayrı grid.",
+          "target": "Tek şeritte 6 kart (KpiStripRow ya da `sm:grid-cols-3 lg:grid-cols-6`) → boş ızgara hücresi 0.",
+          "file": "apps/web/src/modules/quality/components/recall-detail.tsx:90-99",
+          "openedRound": 1
+        },
+        {
+          "id": "kalite-geri-cagirma-id-02",
+          "criterion": 10,
+          "severity": "P1",
+          "text": "6 KPI kartının 3'ünde ikon var, 3'ünde yok (Etkilenen lot ✓, İş emri ✗, Sevkiyat ✓, Müşteri ✗, Stoktaki miktar ✓, Sevk edilen miktar ✗). Aynı şeritte yarısı ikonlu yarısı ikonsuz kartlar başlık taban çizgisini bozuyor ve ikon anlam değil rastlantı taşıyor.",
+          "measure": "Playwright: kartlarda svg sayısı [1,0,1,0,1,0]. recall-detail.tsx:91,93,97 icon prop var; :92,94,98 yok.",
+          "target": "Ya 6/6 ikon ya 0/6 (strip varyantına geçişte 0) → svg dağılımı tek biçim.",
+          "file": "apps/web/src/modules/quality/components/recall-detail.tsx:91-98",
+          "openedRound": 1
+        },
+        {
+          "id": "kalite-geri-cagirma-id-03",
+          "criterion": 12,
+          "severity": "P1",
+          "text": "'Etkilenen müşteriler' listesinde her müşteri kendi çerçeveli kutusunda (`rounded-lg border p-2.5`) ve bu kutular zaten çerçeveli bir kartın içinde — klasik 'kutu içinde kutu'. 3 müşteri için 3 iç çerçeve + 1 dış çerçeve = 4 çerçeve.",
+          "measure": "artifacts/screens/kalite-geri-cagirma-42035446-…/desktop.png — 3 iç kutu, her biri ~52px, aralarında 8px boşluk; recall-detail.tsx:118 `className=\"rounded-lg border border-border/60 p-2.5\"`, :116 `space-y-2`.",
+          "target": "Tek kapta hairline ayraçlı satırlar: `<ul className=\"divide-y divide-border/60 -mx-1\">` + satırlarda `py-2.5`, iç `border`/`rounded-lg` kaldırılır → iç çerçeve 0.",
+          "file": "apps/web/src/modules/quality/components/recall-detail.tsx:115-131",
+          "openedRound": 1
+        },
+        {
+          "id": "kalite-geri-cagirma-id-04",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Müşteriye gidecek bildirim taslağında miktar ham Decimal string'i olarak yazılı: 'Sevk edilen miktar: 38.0000'. Hemen üstündeki KPI aynı sayıyı '38' basıyor. Bu metin gerçekten gönderilecek içerik.",
+          "measure": "probe-kalite-r1: decimals ['5.262','38.0000'] (1440x900 ve 390x844). packages/core/src/quality/recall.ts:34 `… Sevk edilen miktar: ${impact.qtyDelivered}` (biçimlendirme yok).",
+          "target": "Taslak metni formatQty ile üretilsin ('38' ya da '38 KG') → taslakta 4+ ondalıklı ham string 0.",
+          "file": "packages/core/src/quality/recall.ts:34",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    }
+  }
+}

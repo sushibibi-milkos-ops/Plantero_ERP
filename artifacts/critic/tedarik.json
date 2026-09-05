@@ -1,0 +1,271 @@
+{
+  "module": "tedarik",
+  "round": 1,
+  "note": "Tur 1 — tedarik.json bu turda ilk kez oluşturuldu. Referans puanları docs/DESIGN-SCORECARD.md'de sabittir (Linear 57 veri ekranları, Stripe 56 finans ekranları); kritik referansı yeniden puanlamaz. Tüm ölçümler artifacts/critic/measure-tedarik-r1/*.json (pnpm measure, 1440x900 + 390x844) ve scripts/probe-tedarik-r1.ts (hedefli Playwright bounding-box probu) çıktılarından alınmıştır. Ekran görüntüleri artifacts/screens/satin-alma-*/{desktop,mobile}.png. Ortak bileşen kaynaklı bulgular (StatusBadge durum tonu tablosu, KpiStrip mobil kırpma) module:'shell' ile işaretlendi — kural 5 gereği tedarik altında tekrar açılmadı. /satin-alma/siparisler/[id] için PO-2026-000003 (04019b27-9b1c-4098-974a-e94d4d05929e, invoiced, tam zincir) ve doğrulama amaçlı PO-2026-000008 (113cdac8-…, sent, aksiyonlu) kullanıldı. Kod düzeyi tarama (transition:all, ease-in, scale(0), >300ms süre, hover gating) TEMİZ: modül dosyalarında hiçbir antipattern yok; `hover:` varyantı globals.css:10'da `@custom-variant hover { @media (hover:hover) and (pointer:fine) }` ile zaten korunuyor.",
+  "routes": {
+    "/satin-alma/kritik-stok": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [5, 5, 1, 4, 4, 4, 1, 4, 3, 5, 4, 4],
+      "total": 44,
+      "verdict": "KAZANAN: Linear",
+      "scoreNotes": "K1 5: h1 24px/600, gövde 13px (24 el), etiket 11-12px — ölçüldü. K3 1: ilk boyamada 0/36 satır. K7 1: boş durum metni yanlış + eylem yok. K9 3: onay kutusu 16x16 dokunma hedefi, KPI şeridi 3. kartı kırpıyor (shell).",
+      "open": [
+        {
+          "id": "tedarik-kritik-stok-01",
+          "criterion": 3,
+          "severity": "P0",
+          "text": "Varsayılan 'Sadece kritik/uyarı' filtresi açık geliyor; motor hiç çalışmadığı için tüm kuralların risk'i 'none' ve ekran 36 kuralın 0'ını gösteriyor. Ekranın ilk izlenimi 'veri yok' — oysa 36 kural var (min/max/lead time/tedarikçi dolu, gösterilebilir).",
+          "measure": "1440x900: tbody tr = 0, sayaç '0 kayıt', başlık açıklaması '36 kural'. probe.criticalDesktop.rows=0, rulesHint='36 kural'",
+          "target": "İlk boyamada ≥15 satır (DESIGN-SCORECARD kriter 3). Motor hiç çalışmamışsa (neverEvaluated) ya da filtreli sonuç boşsa onlyCritical false başlamalı.",
+          "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx:24 (useState(true))",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-kritik-stok-02",
+          "criterion": 7,
+          "severity": "P0",
+          "text": "Boş durum yalan söylüyor: 36 kural varken 'Kritik stok kuralı yok — Kural tanımlı ürün bulunamadı.' yazıyor. Bu bir FİLTRE sonucu boşluğu; ne doğru metin ne de 'Filtreyi temizle' eylemi var. (DataTable yalnızca kendi arama/filtre state'ini 'filtered' sayıyor; onlyCritical panelde tutulduğu için filtreli-boş dalı hiç tetiklenmiyor.)",
+          "measure": "probe.criticalDesktop.empty='Kritik stok kuralı yokKural tanımlı ürün bulunamadı.', rows.length=36, emptyActions=0",
+          "target": "Filtre kaynaklı boşlukta metin 'Filtreye uyan kural yok — 36 kuralın hiçbiri kritik/uyarı değil' + birincil eylem 'Filtreyi temizle' (EmptyState.action). Boş durumda eylem sayısı ≥1.",
+          "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:70-72 (emptyTitle/emptyDescription), replenishment-panel.tsx (onlyCritical DataTable'a bildirilmiyor)",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-kritik-stok-03",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "'Sadece kritik/uyarı' onay kutusu mobilde 16x16px — parmakla isabet ettirilemez. Etiket tıklanabilir ama kutunun kendi hit alanı büyütülmemiş.",
+          "measure": "390x844: button#only-critical w=16 h=16 (measure-tedarik-r1/kritik-stok.mobile.json touchTargetsBelow44)",
+          "target": "Mobilde ≥44x44px etkin dokunma alanı (ör. label'a min-h-11 + -m-2 p-2 pseudo hit alanı).",
+          "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx:48",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/satin-alma/onay-kuyrugu": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [4, 4, 3, 3, 2, 4, 3, 4, 2, 5, 4, 4],
+      "total": 42,
+      "verdict": "KAZANAN: Linear",
+      "scoreNotes": "K5/K9 2: aksiyon satırı 390px'te kartın 32px dışına taşıyor + butonlar 32px yüksek. K3 3: kalem listesi yok, '· N kalem' truncate ile yutuluyor, 3 sütunlu ızgarada tek kart 1150px'in 1/3'ünü kullanıyor. K8 4: j/k/a/r/e kısayolları animasyonsuz — Linear seviyesinde; ancak kartlar tabIndex almıyor.",
+      "open": [
+        {
+          "id": "tedarik-onay-01",
+          "criterion": 5,
+          "severity": "P0",
+          "text": "390px'te kart alt aksiyon satırı (tarih+güven metni | Reddet | Düzenle | Onayla) sığmıyor; buton grubu shrink-0 olduğu için kartın sağ kenarını 32px aşıyor ve birincil eylem 'Onayla' ekran kenarına yapışıp kart çerçevesinin dışında kalıyor. Kartta overflow:visible olduğu için sayfa taşması ölçülmüyor ama görsel kırılma gerçek.",
+          "measure": "390x844: kart kutusu x=33 → right=357; 'Onayla' butonu x=302 → right=389 (viewport 390). Taşma 32px. probe.approvalMobile",
+          "target": "Onayla butonunun sağ kenarı ≤ kart sağ kenarı − 16px iç boşluk (390px'te ≤341). Aksiyon satırı mobilde flex-col / flex-wrap olmalı; buton grubu w-full.",
+          "file": "apps/web/src/modules/purchasing/components/approval-queue-list.tsx:102 (flex items-center justify-between gap-2 border-t pt-3)",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-onay-02",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Reddet / Düzenle / Onayla butonları mobilde size='sm' ile 32px yüksek — onay kuyruğu tamamen bu üç butondan ibaret bir ekran, dokunma hedefi eşiğinin altında.",
+          "measure": "390x844: Reddet 87x32, Düzenle 97x32, Onayla 86x32 (probe.approvalMobile.btns)",
+          "target": "Mobilde yükseklik ≥44px (h-11 sm:h-8 kalıbı); masaüstünde 32px kalabilir.",
+          "file": "apps/web/src/modules/purchasing/components/approval-queue-list.tsx:105-113",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-onay-03",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Onaylayan kişi NE onayladığını göremiyor: kalem listesi hiç yok, üstelik '{partnerName} · {lineCount} kalem' tek bir truncate akışında olduğu için 520px kart genişliğinde '· 1 kalem' kısmı tamamen kesiliyor (masaüstü görüntüsünde 'Aromatik Kimya Aroma ve Katkı Ltd...' ile bitiyor). docs/modules/tedarik.md §2 kartta 'kalemler'i şart koşuyor.",
+          "measure": "1440x900 desktop.png: alt başlık 'Aromatik Kimya Aroma ve Katkı Ltd…' — kalem sayısı görünmüyor; kartta satır/kalem listesi 0 satır",
+          "target": "Kalem sayısı shrink-0 ayrı bit olarak her genişlikte görünür (shell MetaChain kalıbı) + kart içinde ilk 3 kalem (ürün · miktar · tutar) satırı; kartta ≥3 veri satırı.",
+          "file": "apps/web/src/modules/purchasing/components/approval-queue-list.tsx:94",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/satin-alma/siparisler": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [5, 5, 5, 3, 5, 5, 4, 5, 3, 5, 3, 5],
+      "total": 53,
+      "verdict": "KAZANAN: Linear (fark 4)",
+      "scoreNotes": "Modülün en iyi ekranı. K1/K3/K5/K6/K8/K12 5: satır 36px, 20 satır, 13px baskın (142 el), sticky hairline başlık, MoneyCell tabular-nums, hover+focus-visible halka, yatay taşma yok. K4 3: 20 rozetin 17'si aynı yeşil ve yeşil aynı anda marka birincil rengi. K9/K11 3: mobil kartta Tutar düşüyor, muhasebe modülünün kalıbıyla çelişiyor.",
+      "open": [
+        {
+          "id": "tedarik-siparisler-01",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Mobil kartta Tutar hiç görünmüyor; metrik yuvasında sipariş TARİHİ var. Kök neden: DataTableMobileCards metrik olarak 'rest' hücrelerinin SONUNCUSUNU alıyor, orders-table'da orderDate grandTotal'dan SONRA tanımlı ve mobile rolü yok. Satın alma sipariş listesinde taranan birincil sayı tutardır.",
+          "measure": "390x844 mobile.png: 20 kartın 20'sinde '₺' yok; metrik yuvası '05.09.2026'. Kök neden: components/data-table/mobile-cards.tsx:191 metric = rest[rest.length-1]",
+          "target": "Mobil kartların tamamında ₺ tutar metrik yuvasında (kart başına ≥1 '₺'); orderDate meta:{mobile:'meta'} ya da 'hidden' olmalı ki grandTotal son 'rest' hücresi olsun.",
+          "file": "apps/web/src/modules/purchasing/components/orders-table.tsx:27-29 (grandTotal / expectedDate / orderDate sütun sırası ve mobile meta'ları)",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-siparisler-02",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Aynı desen muhasebe modülünde DOĞRU kurulmuş: accounting/invoices-table.tsx'te tarih sütunları mobile:'meta'/'hidden', grandTotal en son — /muhasebe/faturalar mobil kartında tutar görünüyor. Satın alma siparişleri aynı bilgiyi aynı bileşenle farklı gösteriyor; kullanıcı iki listede farklı zihinsel model kuruyor.",
+          "measure": "invoices-table.tsx:41 invoiceDate mobile:'hidden', :45 grandTotal son sütun ↔ orders-table.tsx:29 orderDate son sütun, mobile rolü yok",
+          "target": "Modüller arası tek kural: para sütunu her zaman son 'rest' hücresi; tarih sütunları mobile:'meta'|'hidden'. İki rotanın mobil kartı aynı alan setini göstermeli.",
+          "file": "apps/web/src/modules/purchasing/components/orders-table.tsx:29",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/satin-alma/siparisler/[id]": {
+      "round": 1,
+      "reference": "stripe",
+      "referenceTotal": 56,
+      "scores": [3, 4, 3, 4, 2, 4, 4, 4, 2, 5, 4, 4],
+      "total": 43,
+      "verdict": "KAZANAN: Stripe",
+      "scoreNotes": "Finans/belge ekranı → Stripe referansı. K5/K9 2: satır tablosu mobilde %41 kırpılıyor, kart kalıbı yok, tfoot toplam satırı yok. K1 3: belgenin genel toplamı 16px, etiketsiz, sarma yapan meta akışının içinde ml-auto ile. K3 3: PDF / gönderim geçmişi yok (docs/modules/tedarik.md §3).",
+      "open": [
+        {
+          "id": "tedarik-po-detay-01",
+          "criterion": 9,
+          "severity": "P0",
+          "text": "Sipariş satırları tablosunun 7 sütunundan 3'ü (Birim fiyat, Tutar, Beklenen tarih) 390px'te tamamen ekran dışında kalıyor; DataTable'ın mobil kart karşılığı bu elle yazılmış tabloda yok, yalnızca yatay kaydırma var. Telefonda bir satın alma siparişinin birim fiyatı ve satır tutarı görünmüyor.",
+          "measure": "390x844: kapsayıcı clientWidth=356, scrollWidth=599 (%41 kırpma). th sağ kenarları: Birim fiyat 433, Tutar 529, Beklenen tarih 616 — hepsi viewport 390'ın dışında (probe.poDetailMobile.tableHeaders visible=false)",
+          "target": "390px'te birim fiyat ve satır tutarı görünür olmalı: md altında kart kalıbı (ürün+SKU başlık, miktar/alınan meta, tutar metrik) ya da scrollWidth ≤ clientWidth.",
+          "file": "apps/web/src/modules/purchasing/components/order-lines-table.tsx:10 (overflow-x-auto tek çare)",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-po-detay-02",
+          "criterion": 1,
+          "severity": "P1",
+          "text": "Belgenin genel toplamı — sayfanın en önemli sayısı — etiketsiz, 16px ve sarma yapan meta şeridinin içinde `ml-auto` ile konumlandırılmış. 390px'te şerit sarınca tutar 'Gönderildi: 05.09.2026 13:18 (email)' metninin hemen yanına yapışıyor; bir gönderim zaman damgası ile 113 bin TL aynı satırda, aynı ağırlık düzleminde.",
+          "measure": "390x844 mobile.png: '(email) ₺113.040,00' aynı flex satırında, etiket yok; MoneyCell className='ml-auto text-base font-semibold' → 16px/600",
+          "target": "Toplam kendi bloğunda: 11px muted 'Toplam' etiketi + 20-24px/600 tabular-nums değer; meta akışından ayrık, her genişlikte sabit konumda.",
+          "file": "apps/web/src/app/(app)/satin-alma/siparisler/[id]/page.tsx:43",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/satin-alma/siparisler/yeni": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [3, 3, 4, 5, 4, 3, 4, 4, 5, 5, 4, 4],
+      "total": 48,
+      "verdict": "KAZANAN: Linear",
+      "scoreNotes": "K9 5: mobilde tek kolon, ≥44px alanlar, sticky aksiyon şeridi, taşma yok — modülün en iyi mobil ekranı. K1 3: bölüm başlığı ile alan etiketi aynı 13px. K2 3: alanlar 768px'te bitiyor, bölüm hairline'ı ve FormActions 1150px sürüyor. K6 3: satır tutarı float + elle ₺.",
+      "open": [
+        {
+          "id": "tedarik-yeni-01",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Satır tutarı ortak para altyapısını atlıyor: `Number(qty) * Number(unitPrice)` float çarpımı + elle yazılmış '₺' öneki + toLocaleString. Ortak MoneyCell/formatMoney ve decimal.js (D) devre dışı; sıfır/negatif kuralları, para birimi ve ondalık politikası bu tek hücrede farklı. CLAUDE.md kural 4 (float yasak) ile de çelişiyor — sunucunun decimal.js toplamıyla ekranda gösterilen ara toplam ayrışabilir.",
+          "measure": "order-form.tsx:128 `₺{(qty * unitPrice).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2})}`; aynı ekrandaki diğer tüm para MoneyCell",
+          "target": "`<MoneyCell value={D(qty).mul(D(unitPrice)).toString()} />` — modülde elle ₺ formatlama 0 adet.",
+          "file": "apps/web/src/modules/purchasing/components/order-form.tsx:128",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-yeni-02",
+          "criterion": 1,
+          "severity": "P1",
+          "text": "Bölüm başlıkları ('Sipariş başlığı', 'Satırlar') ile alan etiketleri ('Tedarikçi', 'Depo') aynı 13px boyutta; aralarındaki tek fark 100 birim font-weight. Formda iki farklı hiyerarşi seviyesi tipografik olarak ayrışmıyor, tarama sırasında bölüm sınırı görünmüyor.",
+          "measure": "order-form.tsx:92,107 h2 = text-[13px] font-semibold; fields.tsx:49 FieldLabel = text-[13px] (font-medium). 1440x900 font dağılımı: 13px 35 el — başlık ve etiket aynı kademede",
+          "target": "Bölüm başlığı ayrı kademe: 11px uppercase tracking-[0.04em] text-muted-foreground (uygulamanın micro-label kalıbı) ya da 15px/600. Başlık ile etiket arasında en az bir boyut kademesi.",
+          "file": "apps/web/src/modules/purchasing/components/order-form.tsx:92, 107",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-yeni-03",
+          "criterion": 2,
+          "severity": "P1",
+          "text": "Form alanları max-w-3xl (768px) ile sınırlı ama 'Satırlar' bölümünün üst hairline'ı ve alt FormActions şeridi içerik alanının tamamını (1150px) kat ediyor. Çizgiler formun bittiği yerin ~380px ötesinde sonlanıyor; sayfa iki farklı ölçü sistemine yaslanıyor ve form 'boşlukta yüzüyor'.",
+          "measure": "1440x900 desktop.png: alan ızgarası sağ kenarı ≈1030px CSS (max-w-3xl), bölüm hairline'ı ve aksiyon şeridi ≈1414px CSS — 384px fark",
+          "target": "Bölüm sarmalayıcısı ve FormActions da max-w-3xl; hairline sağ kenarı ile alan ızgarası sağ kenarı arasındaki fark ≤8px.",
+          "file": "apps/web/src/modules/purchasing/components/order-form.tsx:106 (border-t pt-5), :151 (FormActions)",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/satin-alma/tedarikciler": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [3, 4, 3, 2, 3, 3, 4, 3, 4, 5, 3, 3],
+      "total": 40,
+      "verdict": "KAZANAN: Linear",
+      "scoreNotes": "Modülün en zayıf ekranı. K4 2: ham Tailwind paleti (emerald/amber/red-600) token yerine + 6 yüksek doygunluklu yeşil switch karttaki en gürültülü öğe. K6 3: birimsiz sayılar. K1 3: 5 gövde kademesi (14/13/12/11/10). K12 3: ortalanmış metrik kümeleri + toggle'lar ekranı bir ayarlar sayfasına benzetiyor.",
+      "open": [
+        {
+          "id": "tedarik-tedarikciler-01",
+          "criterion": 4,
+          "severity": "P1",
+          "text": "Zamanında teslimat yüzdesi tasarım token'ları yerine ham Tailwind paletiyle boyanıyor (emerald-600 / amber-600 / red-600). Aynı modülün critical-stock-table.tsx'i doğru yolu kullanıyor (text-destructive, bg-warning/15, text-success). Ham palet tema/dark-mode token zincirinin dışında kalıyor ve ekranda 4'ten fazla renk tonu üretiyor.",
+          "measure": "suppliers-table.tsx:66-68 text-emerald-600 dark:text-emerald-400 / text-amber-600 / text-red-600. probe.suppliersDesktop.pctColors: oklch(0.596 0.145 163.225) ve oklch(0.577 0.245 27.325) — token paletinde olmayan iki renk. distinctColors 14",
+          "target": "text-success / text-warning / text-destructive token sınıfları; modülde ham palet sınıfı 0 adet.",
+          "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:64-69",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-tedarikciler-02",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Metrikler birimsiz: 'LEAD TIME 10' (gün mü?), 'KALİTE SKORU 50' (100 üzerinden mi?). Üstelik aynı alan aynı modülün /satin-alma/kritik-stok tablosunda '10g' olarak basılıyor — ki bir gıda ERP'sinde 'g' gram okunur, lead time için felaket bir kısaltma. Tek modül, iki farklı (ve ikisi de hatalı) birim kuralı. Ayrıca CSS uppercase Türkçe locale'de 'Lead time'ı 'LEAD TİME' yapıyor.",
+          "measure": "suppliers-table.tsx:56 `{supplier.leadTimeDays ?? '—'}` birimsiz, :60 kalite skoru birimsiz ↔ critical-stock-table.tsx:44 `{row.original.leadTimeDays}g`. probe.suppliersDesktop.labels: 'Lead time' 11px textTransform=uppercase → 'LEAD TİME'",
+          "target": "Tek kural: lead time '10 gün' (kısaltma gerekirse '10 gn'), kalite skoru '50/100'. 'g' kısaltması modülde 0 adet; ekranda görünen etiket metni 'TİME' içermemeli.",
+          "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:55-62, critical-stock-table.tsx:44",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-tedarikciler-03",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Kart metrikleri 4 sütunlu, ortalanmış (text-center) bir ızgarada; etiketler 11px uppercase. 390px'te 'KALİTE SKORU' iki satıra sarıyor, diğer üç etiket tek satırda kalıyor — dört sütunun taban çizgisi bozuluyor ve kart yüksekliği tedarikçiden tedarikçiye oynuyor. Ortalanmış istatistik kümesi ayrıca kartın altındaki sola yaslı satırlarla (açık sipariş, beyaz liste) çelişiyor: tek kartta iki hizalama sistemi.",
+          "measure": "390x844 mobile.png: 6 kartın 6'sında 'KALİTE / SKORU' 2 satır, 'LEAD TİME'/'ZAMANINDA'/'ÜRÜN' 1 satır. suppliers-table.tsx:53 grid-cols-4 ... text-center",
+          "target": "Etiket satır sayısı 390px'te tüm sütunlarda eşit (1). Metrikler sola yaslı 2x2 ızgara ya da kısaltılmış tek satırlık etiket ('Skor'); kart içinde tek hizalama sistemi.",
+          "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:53-79",
+          "openedRound": 1
+        },
+        {
+          "id": "tedarik-tedarikciler-04",
+          "criterion": 8,
+          "severity": "P1",
+          "text": "Tedarikçi kartları ölü: hover yok, focus yok, tıklanabilir değil, hiçbir detaya gitmiyor. Kart görünümündeki tek etkileşimli öğe beyaz liste switch'i. Kullanıcı 'Kalite skoru 50' gören ama nedenini açamayan bir ekranla kalıyor; /ana-veri/cariler/[id] detayı mevcut olmasına rağmen bağlanmamış.",
+          "measure": "suppliers-table.tsx:51 düz <div>, rowHref/Link/onClick yok, hover: sınıfı yok. probe: karttaki tek interaktif öğe [role=switch] (6 adet)",
+          "target": "Kart tıklanabilir (Link → /ana-veri/cariler/{id}) + hover:bg-accent/50 + focus-visible:outline-2 halka; switch tıklaması kart navigasyonunu tetiklemeyecek (stopPropagation).",
+          "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:51",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    }
+  },
+  "p2": [
+    { "id": "tedarik-po-detay-03", "route": "/satin-alma/siparisler/[id]", "criterion": 5, "text": "Sipariş satırları tablosunda tfoot toplam satırı yok; çok satırlı siparişte kalemlerin toplamı okunamıyor.", "measure": "order-lines-table.tsx: <tfoot> yok", "target": "Sağa yaslı 'Toplam' tfoot satırı, MoneyCell tabular-nums." },
+    { "id": "tedarik-po-detay-04", "route": "/satin-alma/siparisler/[id]", "criterion": 11, "text": "Belge zinciri süreç sırasına aykırı: PO → FATURA → MAL KABUL. Aynı derinlikteki (depth=1) düğümler yalnızca tarihe göre sıralanıyor, aynı gün tarihli GR ve PINV'de sıra rastgele kalıyor.", "measure": "desktop.png: kartlar soldan sağa Satın alma siparişi, Fatura, Mal kabul. packages/core/src/documents/chain.ts:149 sort(depth, date)", "target": "Aynı derinlikte belge tipi süreç sırası (receipt < invoice) ile ikincil sıralama." },
+    { "id": "tedarik-po-detay-05", "route": "/satin-alma/siparisler/[id]", "criterion": 6, "text": "'Alınan 0' tam kontrastla, hemen yanındaki 'Faturalanan 0' muted basılıyor — aynı satırda iki farklı sıfır politikası.", "measure": "order-lines-table.tsx:31 receivedFull ? 'text-success' : '' (sıfırda muted yok) ↔ :32 text-muted-foreground", "target": "Sıfır değerler her sütunda soluk (DESIGN-SCORECARD kriter 6)." },
+    { "id": "tedarik-po-detay-06", "route": "/satin-alma/siparisler/[id]", "criterion": 3, "text": "docs/modules/tedarik.md §3'te şart koşulan PDF ve gönderim geçmişi ekranda yok; sayfanın alt ~700px'i boş.", "measure": "order-actions.tsx: PDF aksiyonu 0 adet; sayfada gönderim geçmişi bloğu yok", "target": "PDF indirme aksiyonu + gönderim geçmişi listesi (sentAt/sentVia kayıtları)." },
+    { "id": "tedarik-onay-05", "route": "/satin-alma/onay-kuyrugu", "criterion": 3, "text": "Tek kart xl:grid-cols-3 ızgarada 1150px içerik alanının yalnızca ~520px'ini kullanıyor; kalan ~630px boş.", "measure": "1440x900: kart genişliği 520px, içerik alanı 1150px", "target": "Az sayıda öğede tek kolonlu geniş liste kalıbı ya da max-w ile ortalanmış kolon." },
+    { "id": "tedarik-tedarikciler-05", "route": "/satin-alma/tedarikciler", "criterion": 11, "text": "Micro-label iki farklı kalıpta: KpiCard (kritik-stok) 13px sentence-case muted, tedarikçi kartı 11px uppercase.", "measure": "kpi-card.tsx:150 text-[13px] font-medium ↔ suppliers-table.tsx:57 text-[11px] uppercase", "target": "Modül genelinde tek micro-label kalıbı." }
+  ],
+  "shellRefs": [
+    { "id": "shell-status-badge-terminal-tone-01", "severity": "P1", "criterion": 4, "route": "/satin-alma/siparisler (ve StatusBadge kullanan tüm listeler)", "text": "Terminal durum ('Faturalandı') yüksek doygunluklu yeşil rozetle basılıyor; 20 satırın 17'si aynı yeşil dolgu. Yeşil aynı anda marka birincil rengi (logo, 'Yeni sipariş' butonu, aktif menü, sıralama oku) — tek renk hem 'marka' hem 'bitti' anlamı taşıyor, tarama sırasında aksiyon gerektiren satırlar (Onay bekliyor / Tedarikçiye gönderildi) yeşil duvarın içinde kayboluyor.", "measure": "probe.ordersDesktop: 20 rozet, 3 varyant; 'Faturalandı' color oklch(0.6 0.16 152) bg oklab(...0.12) — 17 satırda aynı. distinctColors 18", "target": "Terminal/başarı durumları nötr rozet (bg-muted, text-muted-foreground); renk yalnızca aksiyon/uyarı taşıyan durumlarda. Bir liste ekranında aynı renkli rozet oranı ≤%50.", "file": "apps/web/src/components/status-badge.tsx, apps/web/src/lib/status.ts (purchase_order ton eşlemesi)" },
+    { "id": "shell-kpi-strip-mobile-clip-01", "severity": "P2", "criterion": 9, "route": "/satin-alma/kritik-stok, /satin-alma/siparisler (KpiStripRow, 390px)", "text": "KPI şeridi mobilde yatay kayıyor ve 3. kart ('Toplam kural' / 'Onay bekleyen') yarıdan kesiliyor; kaydırma göstergesi yalnızca soluk bir gradyan.", "measure": "390x844 mobile.png: 3. KPI kartı ~55px kırpık", "target": "Mobilde 2 sütunlu sarma ızgara ya da tam kart snap + görünür kaydırma göstergesi." }
+  ],
+  "codeScan": {
+    "result": "temiz",
+    "checked": ["transition: all / transition-all", "ease-in (out olmayan)", "scale-0 / scale(0)", "duration ≥300ms", "hover'ın (hover:hover) ile korunması", "transform-origin", "klavye aksiyonlarında animasyon"],
+    "notes": [
+      "modules/purchasing/** ve app/(app)/satin-alma/** içinde transition-all, ease-in, scale-0, duration-300+ eşleşmesi YOK.",
+      "hover: varyantı globals.css:7-12'de @custom-variant hover { @media (hover: hover) and (pointer: fine) } ile küresel olarak korunuyor — modülde ayrıca gating gerekmez.",
+      "approval-queue-list.tsx: j/k/a/r/e kısayolları ve seçim halkası bilinçli olarak animasyonsuz (docs/modules/tedarik.md §2 ile uyumlu) — doğru.",
+      "Tek animasyon: Loader2 animate-spin (bekleme göstergesi) — meşru."
+    ]
+  }
+}

@@ -22,8 +22,13 @@ const FILES = await checkFiles();
 // (ihracat sevkiyat zinciri boşluğu), I37 (yevmiye ters kayıt koruması — stok/üretim kaynaklı fiş
 // reversed olamaz), I38 (iş emri tüketim/çıktı/fire satırları ↔ bağlı stock_moves birebir tutarlılığı)
 // ve I39 (değerli stok hareketi tutarı = bağlı yevmiye fişi tutarı, VUK+UFRS — tur 7) sonraki turlarda
-// eklendi; dosya sayısı/aralığı buna göre güncellendi.
-const RULE_COUNT = 39;
+// eklendi; I40 (geri çağırma/SKT sonrası zaman-duyarlı yeni hareket yasağı — veri-critic turu, canlı
+// doğrulama: RC-2026-000001 initiate() sonrası I6/I16'nın recalled/expired'ı da kapsayan eski hali
+// yanlış-pozitif üretiyordu; kapsam I6/I16'da quarantine/rejected'a daraltıldı, I40 zaman damgası ile
+// gerçek regresyonu ayrıca yakalar) ve I41 (tedarikçi kalite skoru formülü + partners.supplier_quality_score
+// güncelliği — kalite modülünde daha önce hiç doğrulanmayan bir kör nokta) eklendi; dosya sayısı/aralığı
+// buna göre güncellendi.
+const RULE_COUNT = 41;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
