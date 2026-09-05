@@ -18,6 +18,12 @@
 #   4) Temizlik yalnızca bizim başlattığımız PID'i durdurur — sistemdeki başka bir oturumun
 #      next dev/start sürecine ASLA dokunulmaz (eskiden `pkill -f "next dev|next start|..."`
 #      TÜM oturumların sunucularını öldürüyordu — bu satır kaldırıldı).
+#   5) Build+start+e2e bloğu makine-genelinde tek bir flock ile serileştirilir: aynı makinede
+#      İKİ `scripts/gate.sh` koşusu (iki farklı ajan oturumu) aynı anda çalışırsa, izole port
+#      seçimi/health-check tek başına yetmez — ikisi de `next build`'in yazdığı paylaşılan
+#      `apps/web/tsconfig.json` "include" alanını aynı anda güncelleyip birbirinin build'ini
+#      yarıda bozabilir (gözlemlenen gerçek çakışma: "ENOENT ... pages-manifest.json").
+#      Kilit bunu tamamen önler; ikinci koşu ilkinin bitmesini bekler, çakışmaz.
 set -uo pipefail
 GREP=${1:-phase1}; L=${2:-/tmp/plantero-gate}; mkdir -p "$L"
 cd "$(dirname "$0")/.."
@@ -47,10 +53,22 @@ pids_listening_on_port() {
   done
 }
 
+# Makine-genelinde sabit kilit dosyası (log dizininden bağımsız — farklı $L ile çağrılsa
+# bile aynı host'taki tüm gate.sh koşuları aynı kilidi paylaşır).
+GATE_LOCK=/tmp/plantero-gate-build.lock
+exec 9>"$GATE_LOCK"
+echo "== build kilidi bekleniyor (paylaşılan makinede eşzamanlı başka bir gate.sh koşusu olabilir)"
+flock 9
+
 echo "== build (izole port + izole .next)"
-# Bu koşuya özgü boş bir port ve ayrı bir build çıktı dizini seç.
+# Bu koşuya özgü boş bir port seç (asla sabit 3000 — eşzamanlı `pnpm dev:web` ile çakışmasın).
+# .next çıktı dizini SABİT bir isimle (".next-gate") izole edilir: next.config.ts bunu okur ve
+# dev'in kullandığı `.next`'ten tamamen ayrı tutar. İsim kasıtlı olarak PID'e göre DEĞİŞMEZ —
+# aksi halde `next build` her koşuda apps/web/tsconfig.json'ın "include" listesine yeni bir
+# glob eklerdi (bkz. üstteki not 5); sabit isimle bu ekleme tek seferlik ve committed'dir
+# (apps/web/tsconfig.json → ".next-gate/types/**/*.ts"), her koşuda tekrar tetiklenmez.
 GATE_PORT=$(node -e "const net=require('net');const s=net.createServer();s.listen(0,'127.0.0.1',()=>{console.log(s.address().port);s.close();});")
-export PLANTERO_NEXT_DIST_DIR=".next-gate-$$"
+export PLANTERO_NEXT_DIST_DIR=".next-gate"
 BASE_URL="http://127.0.0.1:$GATE_PORT"
 echo "gate_port:$GATE_PORT dist_dir:$PLANTERO_NEXT_DIST_DIR"
 rm -rf "apps/web/$PLANTERO_NEXT_DIST_DIR"
@@ -64,8 +82,12 @@ if [ -f "$L/gate.pid" ]; then
 fi
 
 pnpm --filter @plantero/web build > "$L/build.log" 2>&1; echo build_exit:$?
-# next build, özel distDir için tsconfig.json include listesine ".next-gate-<pid>/types" ekler — çalışma ağacını kirletmemesi için geri al
-git -C "$ROOT" checkout -q -- apps/web/tsconfig.json 2>/dev/null || true
+# NOT: burada apps/web/tsconfig.json'ı `git checkout` ile "geri almaya" ÇALIŞMIYORUZ —
+# `.next-gate/types/**/*.ts` girdisi bilerek KALICI/committed (next build her koşuda yeniden
+# yazmasın diye). Körlemesine `git checkout -- tsconfig.json` bir geliştiricinin o dosyada
+# duran, henüz commit edilmemiş GERÇEK değişikliklerini de sessizce silerdi — canlı doğrulamada
+# tam olarak bu oldu (bu script'in kendi eski taslağı, henüz commit edilmemiş tsconfig.json
+# düzenlemesini fark ettirmeden geri aldı). Bu yüzden burada dosyaya dokunulmuyor.
 
 echo "== start (izole port: $GATE_PORT)"
 (cd apps/web && exec node_modules/.bin/next start -p "$GATE_PORT") > "$L/start.log" 2>&1 &
