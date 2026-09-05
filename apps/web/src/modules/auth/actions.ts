@@ -31,9 +31,11 @@ function safeNext(next: string | undefined, fallback = '/kokpit'): string {
  * `cockpit.view` izni OLMAYAN roller ilk girişte doğrudan ForbiddenError alıyordu, ve (app)/error.tsx
  * içindeki tek eylem butonu ('Kokpite dön') de yine '/kokpit'e gittiğinden kullanıcı çıkışsız bir
  * döngüde kalıyordu. Artık varsayılan hedef `nav.ts`teki menü sırasına göre kullanıcının GERÇEKTEN
- * erişebileceği ilk kalem — kendi rolünün ana modülü (ör. depo → /depo/stok). Kalıcı olarak izinsiz
- * (herhangi bir modül izni olmayan, teorik) bir kullanıcı için son çare '/onaylar' — o kalem `nav.ts`te
- * `permission` taşımıyor (herkese açık onay merkezi), bu yüzden döngüye asla girmez.
+ * erişebileceği ilk kalem (ör. `depo` rolü `masterdata.view` de taşıdığından /ana-veri/urunler'e,
+ * yalnızca kendi modül iznine sahip bir rol ise doğrudan kendi modülüne düşer — önemli olan hedefin
+ * ForbiddenError ATMAYACAĞININ garanti olması). Kalıcı olarak izinsiz (herhangi bir modül izni
+ * olmayan, teorik) bir kullanıcı için son çare '/onaylar' — o kalem `nav.ts`te `permission`
+ * taşımıyor (herkese açık onay merkezi), bu yüzden döngüye asla girmez.
  */
 function defaultLandingRoute(roles: string[], permissions: string[]): string {
   const can = makeCan(roles, permissions);
@@ -82,9 +84,11 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
     return s;
   });
 
+  const { roles: roleCodes, permissions: permCodes } = await loadUserAccess(db, user.id);
+
   const jar = await cookies();
   jar.set(SESSION_COOKIE, session.token, sessionCookieOptions(new Date(session.expiresAt)));
-  redirect(safeNext(next));
+  redirect(safeNext(next, defaultLandingRoute(roleCodes, permCodes)));
 }
 
 export async function logout(): Promise<void> {
