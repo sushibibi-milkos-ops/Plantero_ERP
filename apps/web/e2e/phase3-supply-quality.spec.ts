@@ -476,11 +476,17 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     await expect(backward.getByText(ctx.woDocNo!)).toBeVisible();
     await expect(backward.getByText(ctx.rawLotNo!)).toBeVisible();
 
-    const forward = page.getByText('İleriye izleme (varış)').locator('..').locator('..');
+    // NOT (canlı yakalandı — yazım hatası): gerçek buton metni "İleri izleme (varış)" — "İleriye" DEĞİL
+    // (bkz. `trace-search.tsx` satır ~158). Eski metin hiçbir zaman eşleşmiyordu, bu yüzden `forward`
+    // locator'ı hep BOŞ resolve olup hangi teslimat no'su seçilirse seçilsin aynı "element(s) not found"
+    // hatasını üretiyordu (Adım 6'nın kök nedeni asıl bu, delivery seçim sorgusu değil).
+    const forward = page.getByText('İleri izleme (varış)').locator('..').locator('..');
     await expect(forward.getByText(ctx.deliveryDocNo!)).toBeVisible();
     await expect(forward.getByText(new RegExp(ctx.customerName!.split(' ')[0]!))).toBeVisible();
 
-    await expect(page.getByText('Miktar dengesi')).toBeVisible();
+    // NOT (canlı yakalandı): sayfada "Miktar dengesi" alt-dize eşleşmesi TEK başına strict-mode ihlali
+    // veriyor (sayfanın başka bir açıklama metniyle çakışıyor) — asıl başlık `exact:true` ile tektir.
+    await expect(page.getByText('Miktar dengesi', { exact: true })).toBeVisible();
     for (const label of ['Giriş', 'Tüketim', 'Sevkiyat', 'Fire', 'Eldeki']) {
       await expect(page.getByText(label, { exact: true }).first()).toBeVisible();
     }
@@ -502,11 +508,20 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     await page.goto('/kalite/geri-cagirma');
     await expect(page.getByRole('heading', { name: 'Geri Çağırma' })).toBeVisible();
 
+    // NOT (Tur 2 güncellemesi — bkz. `recall-simulate-form.tsx` "Tur 1 P1 kalite-geri-cagirma-01"):
+    // form artık sayfaya kalıcı yerleşik DEĞİL — masaüstünün 1/3'ünü sürekli işgal etmesin diye
+    // `PageHeader` eylemi olan bir Sheet'e taşındı ("Yeni Simülasyon" butonu açıyor). Eski test doğrudan
+    // combobox'ı arıyordu — Sheet kapalıyken bu hiç bulunamayıp 120s test timeout'una kadar asılı
+    // kalıyordu (canlı yakalandı). Önce Sheet açılır.
+    await page.getByRole('button', { name: 'Yeni Simülasyon' }).click();
+    const sheet = page.getByRole('dialog');
+    await expect(sheet).toBeVisible();
+
     // `RecallSimulateForm`'daki "Kök lot" alanı FormField bağlamı DIŞINDA bir `Combobox` (`FieldLabel`
     // burada gerçek bir `htmlFor` bağlamıyor — bkz. phase1-chain.spec.ts K-A11Y notu), ayrıca kendi
     // özel `searchPlaceholder`'ı var (genel "Ara…" değil) — bu yüzden paylaşılan `comboboxSelect`
     // yardımcısı yerine burada özel akış kullanılır.
-    await page.getByRole('combobox').filter({ hasText: 'Lot no ara…' }).click();
+    await sheet.getByRole('combobox').filter({ hasText: 'Lot no ara…' }).click();
     await page.getByPlaceholder('Lot no yazın (en az 2 karakter)').fill(ctx.rawLotNo!);
     await page.getByRole('option', { name: new RegExp(ctx.rawLotNo!) }).first().click();
     await page.getByLabel('Yön').click();
