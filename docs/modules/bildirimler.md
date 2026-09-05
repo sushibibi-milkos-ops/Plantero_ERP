@@ -6,3 +6,6 @@ Route `/bildirimler` ve `/onaylar`, izinler mevcut modül izinleri, core `packag
 2. `/bildirimler` — kullanıcı bildirimleri (in_app), okundu; üst bar zil ikonu sayaç (Realtime gerekmez; 30 sn polling).
 3. Sistem bildirimleri (worker): SKT 30/60/90 uyarıları (depo + kalite rolleri), kritik stok, geciken alacak, arıza bildirimi (bakım), mutabakat sabah özeti (muhasebe), pazaryeri sync hatası. Kanal: in_app + e-posta (sandbox) + WhatsApp (sandbox) kullanıcı tercihine göre (`settings` / kullanıcı meta).
 4. `packages/core/src/notifications/send.ts`: `notify({ userIds | roleCodes, title, body, href, channel[] })`.
+
+## Seed
+`seed/notifications.ts` (quality'den sonra, purchasing-backfill'den önce): worker `expiry-alerts` ile AYNI core fonksiyonu (`notifications/systemAlerts.ts` `generateExpiryAlerts`) çalışır — depo + kalite kullanıcılarına SKT 30/60/90 kova özetleri (kova başına tek `in_app` bildirim, `refTable='expiry_digest'`, 20 saat tekrar koruması). Kritik stok bildirimi (`satin_alma`) gece motorunun (`replenishment-engine`) çalışma anında üretilir; diğer sistem bildirimleri ilgili worker job'larında.

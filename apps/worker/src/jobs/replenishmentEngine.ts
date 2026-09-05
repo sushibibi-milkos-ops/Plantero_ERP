@@ -5,6 +5,7 @@ import {
   evaluateRules, computeConsumptionRates, evaluateAutoOrderEligibility, isSupplierWhitelisted,
   createPurchaseOrder, approvePurchaseOrder, markPurchaseOrderSent,
 } from '@plantero/core';
+import { notify } from '@plantero/core/notifications/send';
 import { draftPurchaseOrders, type ReplenishRule, type ConsumptionPoint, type SupplierProductOption } from '@plantero/ai';
 import { email } from '@plantero/integrations';
 
@@ -102,6 +103,19 @@ export async function runReplenishmentEngine(): Promise<Record<string, unknown>>
       items: critical.map((r) => ({ productId: r.productId, productName: r.productName, suggestedQty: toDb(r.suggestedQty), risk: r.risk })),
       purchaseOrderIds,
     });
+
+    // Sistem bildirimi (docs/modules/bildirimler.md §3 "kritik stok"): gece çalışmasını kimse izlemez —
+    // satın alma rolü sabah gelen kutusunda kaç kalemin kritik olduğunu ve kaç taslağın onay beklediğini görür.
+    const pendingCount = purchaseOrderIds.length - autoOrdered;
+    const names = critical.slice(0, 5).map((r) => r.productName).join(', ') + (critical.length > 5 ? ` … ve ${critical.length - 5} kalem daha` : '');
+    await notify(tx, {
+      roleCodes: ['satin_alma'],
+      title: `Kritik stok: ${critical.length} kalem`,
+      body: `${names}. ${purchaseOrderIds.length} taslak PO oluşturuldu (${autoOrdered} beyaz listeden otomatik gönderildi, ${pendingCount} onay bekliyor).`,
+      href: pendingCount > 0 ? '/satin-alma/onay-kuyrugu' : '/satin-alma/kritik-stok',
+      channel: ['in_app'],
+      refTable: 'replenishment_runs',
+    }, SYSTEM_ACTOR);
 
     return { evaluated: rules.length, suggested: critical.length, draftedOrders: purchaseOrderIds.length, autoOrdered, purchaseOrderIds };
   });

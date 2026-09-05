@@ -64,6 +64,8 @@ export function LocationLabelDialog({
         </DialogHeader>
 
         <div id="location-print-label" className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-6 print:border-0">
+          {/* QR bir data: URI (istemcide üretilir, yazdırma diyaloğunda kullanılır) — next/image optimizasyonu uygulanamaz */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           {qr ? <img src={qr} alt={`QR ${code}`} className="size-40" /> : <div className="size-40 animate-pulse rounded bg-muted" />}
           <div className="font-mono text-lg font-semibold">{code}</div>
           <div className="text-sm text-muted-foreground">{name}</div>

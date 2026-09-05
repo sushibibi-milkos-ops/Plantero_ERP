@@ -386,12 +386,15 @@ export async function importNakitAkisi(db: DbOrTx, parsed: ParsedNakitAkisi): Pr
     if (row) loanIdByCode.set(l.code, row.id);
   }
 
-  const today = new Date();
+  // "Bugün" İstanbul iş günü (core `businessDate` ile aynı takvim). Tarih-saat karşılaştırması
+  // (`dueDate < new Date()`) vadesi BUGÜN olan taksidi (UTC gece yarısı < şu an) daha ödeme günü
+  // geçmeden `overdue` yapıyordu; vade yalnızca gün olarak geçmişse gecikmiştir.
+  const todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
   let installmentCount = 0;
   for (const inst of parsed.installments) {
     const loanId = loanIdByCode.get(inst.loanCode);
     if (!loanId) continue;
-    const status = inst.dueDate < today ? 'overdue' : 'scheduled';
+    const status = inst.dueDate.toISOString().slice(0, 10) < todayStr ? 'overdue' : 'scheduled';
     await db
       .insert(loanInstallments)
       .values({

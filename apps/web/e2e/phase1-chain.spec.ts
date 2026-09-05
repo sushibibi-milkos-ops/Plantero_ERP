@@ -733,6 +733,12 @@ test.describe('Negatifler', () => {
     // Sipariş → sevk → fatura → tahsilat zincirinin tamamı tek testte; dev sunucuda soğuk derlemeyle 60 sn'yi aşabiliyor.
     test.slow();
     await loginAs(page, 'admin');
+    // Ön-ısıtma (bkz. yukarıdaki warmRoutes gerekçesi): bu describe ana akışın beforeAll'ını paylaşmaz;
+    // /finans/tahsilat listesi ilk derlemede ~16 sn sürüyor ve kayıt sonrası yönlendirme beklemesini
+    // (15 sn) tek başına aşıyordu — derleme maliyeti zamanlı adımın dışına alınır, assertion yok.
+    for (const path of ['/finans/tahsilat', '/finans/tahsilat/yeni']) {
+      await page.goto(path, { timeout: 120_000, waitUntil: 'domcontentloaded' }).catch(() => {});
+    }
 
     // İzole bir fatura: kendi ufak siparişimiz (2x Fındık, 2 adet) → onayla → sevk et → faturalandır.
     await page.goto('/satis/siparisler/yeni');
@@ -800,7 +806,7 @@ test.describe('Negatifler', () => {
     await invoiceRow.getByRole('textbox').fill(toTr(residual));
     await page.getByLabel('Tutar').fill(toTr(residual));
     await page.getByRole('button', { name: 'Tahsilatı kaydet' }).click();
-    await page.waitForURL(/\/finans\/tahsilat$/, { timeout: 15_000 });
+    await page.waitForURL(/\/finans\/tahsilat$/, { timeout: 30_000 });
 
     const invAfter = psqlRows(`select residual, status from invoices where id='${invoiceId}'`)[0]!;
     expect(Number(invAfter[0])).toBeCloseTo(0, 2);

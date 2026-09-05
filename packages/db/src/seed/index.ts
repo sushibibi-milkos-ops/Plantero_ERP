@@ -14,6 +14,7 @@ import { seedAccountingDocs } from './accounting-docs.js';
 import { seedBank } from './bank.js';
 import { seedExport } from './export.js';
 import { seedQuality } from './quality.js';
+import { seedNotifications } from './notifications.js';
 import { seedFinanceProjections } from './finance-projections.js';
 
 /**
@@ -58,6 +59,9 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   // otomatik bağlandığından `purchasing-backfill`e bağımlı değildir ama modül sözleşmesi gereği
   // (yeni seed'ler son güvenlik ağının ÖNÜNE eklenir) yine de ondan önce çalışır.
   { name: 'quality', run: seedQuality },
+  // `notifications`: SKT 30/60/90 özetleri (depo + kalite) — tüm lot üreten adımlardan (stock/production/
+  // quality) SONRA ki eldeki stok tam olsun; yalnızca `notifications` satırı yazar, belge/stok üretmez.
+  { name: 'notifications', run: seedNotifications },
   { name: 'purchasing-backfill', run: seedPurchasingBackfill },
   // `finance-projections`: EN SONDA — 36 aylık nakit akışı projeksiyonunu (3 senaryo) kalıcı hale
   // getirir ve bütçe/nakit akışı "gerçekleşen" alanlarını muhasebeden (TÜM yukarıdaki adımların
