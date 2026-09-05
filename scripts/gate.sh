@@ -64,6 +64,8 @@ if [ -f "$L/gate.pid" ]; then
 fi
 
 pnpm --filter @plantero/web build > "$L/build.log" 2>&1; echo build_exit:$?
+# next build, özel distDir için tsconfig.json include listesine ".next-gate-<pid>/types" ekler — çalışma ağacını kirletmemesi için geri al
+git -C "$ROOT" checkout -q -- apps/web/tsconfig.json 2>/dev/null || true
 
 echo "== start (izole port: $GATE_PORT)"
 (cd apps/web && exec node_modules/.bin/next start -p "$GATE_PORT") > "$L/start.log" 2>&1 &
