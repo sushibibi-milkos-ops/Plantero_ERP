@@ -1,0 +1,547 @@
+{
+  "onaylar@1440": {
+    "fontLadder": {
+      "11": [
+        "J/K gezin · A onayla · R red [400]",
+        "J [400]",
+        "K [400]",
+        "A [400]",
+        "R [400]",
+        "%75 [500]",
+        "02:14 [400]",
+        "Mutabakat önerisi [500]",
+        "06.09.2026 02:14 [400]",
+        "%85 [500]",
+        "02:14 [400]",
+        "%75 [500]",
+        "02:14 [400]",
+        "%40 [500]",
+        "02:14 [400]",
+        "%80 [500]",
+        "02:14 [400]",
+        "%90 [500]",
+        "02:14 [400]",
+        "%85 [500]",
+        "02:14 [400]",
+        "%33 [500]",
+        "02:14 [400]",
+        "%33 [500]",
+        "02:14 [400]",
+        "%23 [500]",
+        "02:14 [400]",
+        "%15 [500]",
+        "02:14 [400]",
+        "%15 [500]",
+        "02:14 [400]",
+        "%82 [500]",
+        "02:14 [400]"
+      ],
+      "13": [
+        "Tümü (13) [500]",
+        "(13) [500]",
+        "Mutabakat önerisi (12) [500]",
+        "(12) [500]",
+        "Satın alma taslağı (1) [500]",
+        "(1) [500]",
+        "SEDAŞ Elektrik Faturası [500]",
+        "-₺450,75 [500]",
+        "Gider — Açıklama \"Elektrik F [400]",
+        "Hesap İşletim Ücreti [500]",
+        "-₺185,50 [500]",
+        "Mali Müşavirlik Ücreti [500]",
+        "-₺10.000,00 [500]",
+        "Mali Müşavirlik Ücreti [500]",
+        "-₺10.000,00 [500]",
+        "Kira Ödemesi — Tire OSB [500]",
+        "-₺150.000,00 [500]",
+        "Havale — Migros Ticaret A.Ş. [500]",
+        "₺3.800,00 [500]",
+        "EFT — Kahve Dünyası Yeşil Ka [500]",
+        "-₺54.900,00 [500]",
+        "Trendyol Hakediş — tanımsız  [500]",
+        "₺5.000,00 [500]",
+        "Trendyol Hakediş — tanımsız  [500]",
+        "₺5.000,00 [500]",
+        "Trendyol Hakediş — tanımsız  [500]",
+        "₺5.000,00 [500]",
+        "Havale — Migros Ticaret A.Ş. [500]",
+        "₺3.800,00 [500]",
+        "Havale — Migros Ticaret A.Ş. [500]",
+        "₺3.800,00 [500]",
+        "Satın alma taslağı PO-2026-0 [500]",
+        "₺32.760,00 [500]"
+      ],
+      "14": [
+        "13 onay bekliyor — satın alm [400]",
+        "Reddet [500]",
+        "Detay [500]",
+        "Onayla [500]"
+      ],
+      "24": [
+        "Onay Merkezi [600]"
+      ]
+    },
+    "rowCount": 13,
+    "rowHeights": [
+      181.5,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      40
+    ],
+    "amountRightGap": [
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58
+    ],
+    "amountRightGapMax": 58,
+    "rowInnerWidth": 1150,
+    "tablist": {
+      "scrollWidth": 410,
+      "clientWidth": 410,
+      "overflow": false,
+      "maskImage": "none",
+      "webkitMaskImage": "none",
+      "lastTabRight": 672.4,
+      "tabHeights": [
+        32,
+        32,
+        32
+      ],
+      "viewportW": 1440
+    },
+    "listboxScroll": {
+      "scrollWidth": 1150,
+      "clientWidth": 1150
+    },
+    "rowsFitFirstScreen": 13,
+    "viewportH": 900,
+    "distinctBadgeStyles": 3,
+    "badges": [
+      "oklab(0.72 0.0581434 0.159748 / 0.15)|oklch(0.5 0.14 70)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklab(0.72 0.0581434 0.159748 / 0.15)|oklch(0.5 0.14 70)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)"
+    ],
+    "tabularNums": [
+      "%75 → tabular-nums",
+      "-₺450,75 → tabular-nums",
+      "06.09.2026 02: → tabular-nums",
+      "%85 → tabular-nums",
+      "-₺185,50 → tabular-nums",
+      "%75 → tabular-nums"
+    ],
+    "focusRing": {
+      "outline": "none 0px",
+      "boxShadow": "none"
+    }
+  },
+  "onaylar@390": {
+    "fontLadder": {
+      "11": [
+        "J/K gezin · A onayla · R red [400]",
+        "J [400]",
+        "K [400]",
+        "A [400]",
+        "R [400]",
+        "%75 [500]",
+        "Mutabakat önerisi [500]",
+        "06.09.2026 02:14 [400]",
+        "%85 [500]",
+        "%75 [500]",
+        "%40 [500]",
+        "%80 [500]",
+        "%90 [500]",
+        "%85 [500]",
+        "%33 [500]",
+        "%33 [500]",
+        "%23 [500]",
+        "%15 [500]",
+        "%15 [500]",
+        "%82 [500]"
+      ],
+      "13": [
+        "Tümü (13) [500]",
+        "(13) [500]",
+        "Mutabakat önerisi (12) [500]",
+        "(12) [500]",
+        "Satın alma taslağı (1) [500]",
+        "(1) [500]",
+        "SEDAŞ Elektrik Faturası [500]",
+        "-₺450,75 [500]",
+        "Gider — Açıklama \"Elektrik F [400]",
+        "Hesap İşletim Ücreti [500]",
+        "-₺185,50 [500]",
+        "Mali Müşavirlik Ücreti [500]",
+        "-₺10.000,00 [500]",
+        "Mali Müşavirlik Ücreti [500]",
+        "-₺10.000,00 [500]",
+        "Kira Ödemesi — Tire OSB [500]",
+        "-₺150.000,00 [500]",
+        "Havale — Migros Ticaret A.Ş. [500]",
+        "₺3.800,00 [500]",
+        "EFT — Kahve Dünyası Yeşil Ka [500]",
+        "-₺54.900,00 [500]",
+        "Trendyol Hakediş — tanımsız  [500]",
+        "₺5.000,00 [500]",
+        "Trendyol Hakediş — tanımsız  [500]",
+        "₺5.000,00 [500]",
+        "Trendyol Hakediş — tanımsız  [500]",
+        "₺5.000,00 [500]",
+        "Havale — Migros Ticaret A.Ş. [500]",
+        "₺3.800,00 [500]",
+        "Havale — Migros Ticaret A.Ş. [500]",
+        "₺3.800,00 [500]",
+        "Satın alma taslağı PO-2026-0 [500]",
+        "₺32.760,00 [500]"
+      ],
+      "14": [
+        "13 onay bekliyor — satın alm [400]",
+        "Reddet [500]",
+        "Detay [500]",
+        "Onayla [500]"
+      ],
+      "20": [
+        "Onay Merkezi [600]"
+      ]
+    },
+    "rowCount": 13,
+    "rowHeights": [
+      215.5,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      66
+    ],
+    "amountRightGap": [
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8
+    ],
+    "amountRightGapMax": 132.8,
+    "rowInnerWidth": 356,
+    "tablist": {
+      "scrollWidth": 410,
+      "clientWidth": 358,
+      "overflow": true,
+      "maskImage": "none",
+      "webkitMaskImage": "none",
+      "lastTabRight": 424.4,
+      "tabHeights": [
+        44,
+        44,
+        44
+      ],
+      "viewportW": 390
+    },
+    "listboxScroll": {
+      "scrollWidth": 356,
+      "clientWidth": 356
+    },
+    "rowsFitFirstScreen": 6,
+    "viewportH": 844,
+    "distinctBadgeStyles": 3,
+    "badges": [
+      "oklab(0.72 0.0581434 0.159748 / 0.15)|oklch(0.5 0.14 70)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklab(0.72 0.0581434 0.159748 / 0.15)|oklch(0.5 0.14 70)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklch(0.967 0.001 286.4)|oklch(0.552 0.016 285.9)",
+      "oklab(0.6 -0.141272 0.0751154 / 0.12)|oklch(0.6 0.16 152)"
+    ],
+    "tabularNums": [
+      "%75 → tabular-nums",
+      "-₺450,75 → tabular-nums",
+      "06.09.2026 02: → tabular-nums",
+      "%85 → tabular-nums",
+      "-₺185,50 → tabular-nums",
+      "%75 → tabular-nums"
+    ],
+    "focusRing": {
+      "outline": "none 0px",
+      "boxShadow": "none"
+    }
+  },
+  "onaylar-empty@1440": {
+    "fontLadder": {
+      "13": [
+        "Yeni bir taslak, sayım farkı [400]"
+      ],
+      "14": [
+        "0 onay bekliyor — satın alma [400]",
+        "Mutabakat panosuna git [500]"
+      ],
+      "16": [
+        "Onay bekleyen kayıt yok [500]"
+      ],
+      "24": [
+        "Onay Merkezi [600]"
+      ]
+    },
+    "rowCount": 0,
+    "rowHeights": [],
+    "amountRightGap": [],
+    "amountRightGapMax": null,
+    "rowInnerWidth": null,
+    "tablist": null,
+    "listboxScroll": null,
+    "rowsFitFirstScreen": 0,
+    "viewportH": 900,
+    "distinctBadgeStyles": 0,
+    "badges": [],
+    "tabularNums": [],
+    "focusRing": null
+  },
+  "bildirimler@1440": {
+    "fontLadder": {
+      "11": [
+        "az önce [400]",
+        "az önce [400]",
+        "az önce [400]"
+      ],
+      "13": [
+        "Tümü (3) [500]",
+        "(3) [500]",
+        "Okunmamış (3) [500]",
+        "(3) [500]",
+        "SKT GEÇMİŞ: 1 lot [500]",
+        "1 lot, toplam stok değeri ₺3 [400]",
+        "SKT KRİTİK (30 gün): 50 lot [500]",
+        "50 lot, toplam stok değeri ₺ [400]",
+        "SKT UYARI (60 gün): 30 lot [500]",
+        "30 lot, toplam stok değeri ₺ [400]"
+      ],
+      "14": [
+        "Size gönderilen uygulama içi [400]",
+        "Tümünü okundu işaretle [500]"
+      ],
+      "16": [
+        "SKT uyarısı [400]",
+        "SKT uyarısı [400]",
+        "SKT uyarısı [400]"
+      ],
+      "24": [
+        "Bildirimler [600]"
+      ]
+    },
+    "rowCount": 3,
+    "rowHeights": [
+      72,
+      72,
+      71
+    ],
+    "listWidth": 768,
+    "mainWidth": 1200,
+    "iconStyles": [
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16"
+    ],
+    "distinctIconStyles": 1,
+    "dots": [
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)"
+    ],
+    "distinctDots": 1,
+    "rowBgs": [
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)"
+    ],
+    "distinctRowBgs": 1,
+    "titles": [
+      "SKT uyarısıSKT GEÇMİŞ: 1 lotaz önce1 lot, to",
+      "SKT uyarısıSKT KRİTİK (30 gün): 50 lotaz önc",
+      "SKT uyarısıSKT UYARI (60 gün): 30 lotaz önce"
+    ],
+    "rowsFitFirstScreen": 3,
+    "viewportH": 900,
+    "tabHeights": [
+      32,
+      32
+    ],
+    "tablistOverflow": {
+      "sw": 209,
+      "cw": 209
+    },
+    "markAllBtn": {
+      "h": 36,
+      "w": 207.1
+    },
+    "focusRing": {
+      "outline": "none 0px",
+      "boxShadow": "none"
+    },
+    "bodyTabular": "normal",
+    "timeStamps": [
+      {
+        "t": "az önce",
+        "w": 41,
+        "fvn": "tabular-nums"
+      },
+      {
+        "t": "az önce",
+        "w": 41,
+        "fvn": "tabular-nums"
+      },
+      {
+        "t": "az önce",
+        "w": 41,
+        "fvn": "tabular-nums"
+      }
+    ]
+  },
+  "bildirimler@390": {
+    "fontLadder": {
+      "11": [
+        "az önce [400]",
+        "az önce [400]",
+        "az önce [400]"
+      ],
+      "13": [
+        "Tümü (3) [500]",
+        "(3) [500]",
+        "Okunmamış (3) [500]",
+        "(3) [500]",
+        "SKT GEÇMİŞ: 1 lot [500]",
+        "1 lot, toplam stok değeri ₺3 [400]",
+        "SKT KRİTİK (30 gün): 50 lot [500]",
+        "50 lot, toplam stok değeri ₺ [400]",
+        "SKT UYARI (60 gün): 30 lot [500]",
+        "30 lot, toplam stok değeri ₺ [400]"
+      ],
+      "14": [
+        "Size gönderilen uygulama içi [400]",
+        "Tümünü okundu işaretle [500]"
+      ],
+      "16": [
+        "SKT uyarısı [400]",
+        "SKT uyarısı [400]",
+        "SKT uyarısı [400]"
+      ],
+      "20": [
+        "Bildirimler [600]"
+      ]
+    },
+    "rowCount": 3,
+    "rowHeights": [
+      72,
+      72,
+      71
+    ],
+    "listWidth": 358,
+    "mainWidth": 390,
+    "iconStyles": [
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16",
+      "oklch(0.552 0.016 285.9)|16"
+    ],
+    "distinctIconStyles": 1,
+    "dots": [
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)",
+      "oklch(0.55 0.16 152)"
+    ],
+    "distinctDots": 1,
+    "rowBgs": [
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)",
+      "oklab(0.55 -0.141272 0.0751154 / 0.03)"
+    ],
+    "distinctRowBgs": 1,
+    "titles": [
+      "SKT uyarısıSKT GEÇMİŞ: 1 lotaz önce1 lot, to",
+      "SKT uyarısıSKT KRİTİK (30 gün): 50 lotaz önc",
+      "SKT uyarısıSKT UYARI (60 gün): 30 lotaz önce"
+    ],
+    "rowsFitFirstScreen": 3,
+    "viewportH": 844,
+    "tabHeights": [
+      44,
+      44
+    ],
+    "tablistOverflow": {
+      "sw": 209,
+      "cw": 209
+    },
+    "markAllBtn": {
+      "h": 44,
+      "w": 207.1
+    },
+    "focusRing": {
+      "outline": "none 0px",
+      "boxShadow": "none"
+    },
+    "bodyTabular": "normal",
+    "timeStamps": [
+      {
+        "t": "az önce",
+        "w": 41,
+        "fvn": "tabular-nums"
+      },
+      {
+        "t": "az önce",
+        "w": 41,
+        "fvn": "tabular-nums"
+      },
+      {
+        "t": "az önce",
+        "w": 41,
+        "fvn": "tabular-nums"
+      }
+    ]
+  }
+}

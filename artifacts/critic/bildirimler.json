@@ -1,10 +1,10 @@
 {
   "module": "bildirimler",
-  "round": 6,
-  "note": "Tur 5 (kritik geçişi). /onaylar: Tur 4 P1 onaylar-18 ÖLÇÜMLE KAPANDI — 390px titleWidth 133→306px, kırpık başlık 11/14→1/13 (kalan tek kırpma 56 karakterlik tedarikçi adı), satır 67px, mobil 2. hat rozet+tutar; masaüstünde regresyon yok (satır 40-41px, titleWidth 869, 0 kırpma). Kriter 1: 4→5 (onaylar-17 hedefi \"≤4 kademe\" ölçümle karşılandı: main içi görünür kademeler {24,14,13,11}; 14px yalnızca ortak Button/PageHeader açıklaması — shell.json'da kasıtlı uygulama geneli konvansiyon olarak belgeli), kriter 9: 4→4 (P1 kapandı ama iki yeni ölçülebilir P2 var: mobil 2. hatta tutar satır sağ kenarından 144,8px önce bitiyor; sekme şeridi scrollW 410 > clientW 358 ve kaydırma göstergesi yok). Toplam 57→58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → /onaylar KAZANDI. /bildirimler: bildirimler-p2-focus KAPANDI (satır odak halkası artık boxShadow ring 2px inset primary/50, outline none — tarayıcı varsayılanı değil), bildirimler-p2-reltime KAPANDI (ölçüm yeniden üretilemiyor: 390px'te zaman damgası 72,7px = satırın %20'si, başlıklar tek satır ve kırpılmıyor). Kriter 3: 4→4 gerekçe değişti (satır 88→71,5px ile mobil kart hedefi 56-72 karşılandı, ancak masaüstünde de 71,5px satır + 768px kolon → 900px viewport'ta ~11 satır; Linear gelen kutusu aynı yükseklikte ~14-16 satır gösterir — yeni P2 bildirimler-12), kriter 8: 4→5 (odak halkası + hover ölçümle doğrulandı). Toplam 57→58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → /bildirimler KAZANDI (Tur 3-4 kararı korunuyor). Kod taraması temiz: modül dosyalarında transition-all / ease-in / >300ms / scale(0) yok; hover globals.css @custom-variant ile (hover:hover) and (pointer:fine) altında; :active scale(0.97) :not(:focus-visible) ile klavye aktivasyonundan muaf; prefers-reduced-motion bloğu var; scrollIntoView({block:\"nearest\"}) smooth değil. Ölçümler: artifacts/critic/measure-bildirimler-r5/*.json + probe-bildirimler-r5{,b,c,d,e}.json. NOT: /bildirimler admin hesabında boştur; dolu durum `--as depo` (3 kayıt), boş durum admin ile ölçüldü; /onaylar boş durumu `--as kalite` ile doğrulandı.",
+  "round": 7,
+  "note": "Tur 7 (doğrulama turu). Tur 6'dan bu yana bildirimler modülünde kod değişikliği YOK (git log 2ef11b2..HEAD — yalnızca shell/DocumentChain ve tedarik dokundu), bu yüzden tüm açık P2'ler yeniden ölçüldü ve aynı değerlerle AÇIK kaldı; puanlarda delta yok. /onaylar: satır 41px x13, 1440x900'de 13/13 satır ilk ekranda, listbox scrollWidth=clientWidth=1150 (taşma yok), rozet 3 farklı anlam tonu, tüm sayılar tabular-nums, J tuşu ile satır odağı :focus-visible + ring (boxShadow, outline none) ölçümle doğrulandı, font kademesi {11,13,14,24} (mobilde 20). Toplam 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANDI. /bildirimler: satır 71-72px, liste 768/main 1200, sekme 32/44px, Tab ile satır bağlantısı :focus-visible ring doğrulandı, boş durum (BellOff + eylem) ve okunmamış-boş alt durumu yerinde, 390px'te taşma yok ve <44px dokunma hedefi yok. Görünür font kademesi {11,13,14,24}: ölçümdeki 16px x3 sr-only tür etiketi (\"SKT uyarısı\"), görsel kademe değil. Toplam 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANDI. Kod taraması yine temiz: modül dosyalarında transition-all / transition: all / ease-in / scale(0) / >300ms süre / transform-origin yok; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) altında; :active scale(0.97) globals.css:179-182'de :not(:focus-visible) ile klavye aktivasyonundan muaf; prefers-reduced-motion bloğu var. Yeni P2: onaylar-22 (klavye kısayol ipucu 390px dokunmatik viewport'ta 195x17px yer kaplıyor). Ölçümler: artifacts/critic/measure-bildirimler-r7/*.json, probe-bildirimler-r7.json, probe-bildirimler-r7b.json; görüntüler artifacts/screens/{onaylar,bildirimler}/ + artifacts/screens/_bildirimler-r7-empty/.",
   "routes": {
     "/onaylar": {
-      "round": 6,
+      "round": 7,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -118,7 +118,7 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Mobil (<sm) satırın 2. hattında tutar sabit w-28 kutusunda duruyor ve satırın sağ kenarına hizalanmıyor — her satırda sağda 144,8px (satır genişliğinin %40'ı) boş kalıyor; rozet+tutar sola yığılıyor, Linear/Stripe mobil liste kalıbında sayı sağ kenara yaslanır.",
-          "measure": "Tur 6 (390x844): amountRightGap = 132,8px (13/13 satır, sabit), satır iç genişliği 356px, tutar kutusu w-28=112px. Tur 5: 144,8px — satır iç genişliği değiştiği için sayı düştü, kusur aynı.",
+          "measure": "Tur 7 (390x844): amountRightGap = 132,8px (13/13 satır, sabit), satır iç genişliği 356px, tutar kutusu w-28=112px. Tur 6 ile birebir aynı — kod değişmedi.",
           "target": "amountRightGap ≤ 16px (ör. tutar span'ine `ml-auto sm:ml-0`, masaüstündeki 40px tek hat düzeni ve `w-28` hizası korunarak).",
           "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:216-226",
           "round6": "AÇIK"
@@ -129,7 +129,7 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Mobilde sekme şeridi taşıyor ve taştığına dair hiçbir görsel ipucu yok (scrollbar gizli, kenar maskesi yok): \"Satın alma taslağı (2)\" sekmesi 390px'te sağ kenarda yarıda kesiliyor, kullanıcı kaydırılabildiğini göremiyor. (Şerit gerçekten kaydırılabiliyor — kalıcı kırpma hatası YOK.)",
-          "measure": "Tur 6 (390x844): tablist scrollWidth 410 > clientWidth 358 (maxScroll 52px), son sekmenin sağ kenarı x=424,4 (viewport 390), maskImage: none, [scrollbar-width:none] duruyor.",
+          "measure": "Tur 7 (390x844): tablist scrollWidth 410 > clientWidth 358 (maxScroll 52px), son sekmenin sağ kenarı x=424,4 (viewport 390), maskImage: none, [scrollbar-width:none] duruyor. Tur 6 ile birebir aynı.",
           "target": "Sağ kenarda 24px `mask-image` gradyanı ya da aktif sekme değişince `scrollIntoView({inline:\"nearest\"})`; taşma varlığı 390px'te görsel olarak belli olsun.",
           "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:149",
           "round6": "AÇIK"
@@ -140,10 +140,20 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Yükleniyor iskeleti mobil satır yüksekliğiyle uyumsuz: iskelet satırı 44px (h-11), gerçek satır 67px (Tur 4'te satır 2 hatta açıldı, iskelet güncellenmedi) — 13 satırda ~299px'lik yerleşim sıçraması. Masaüstünde uyumlu (40 vs 40-41px).",
-          "measure": "Tur 6: onaylar/loading.tsx:20 hâlâ `h-11 rounded-none sm:h-10`; ölçülen gerçek satır 390px'te 66-67px, 1440px'te 40-41px. Mobil fark 23px x 13 satır = ~300px sıçrama.",
+          "measure": "Tur 7: onaylar/loading.tsx:20 hâlâ `h-11 rounded-none sm:h-10`; ölçülen gerçek satır 390px'te 66-67px, 1440px'te 40-41px. Mobil fark 23px x 13 satır = ~300px sıçrama. Tur 6 ile aynı.",
           "target": "İskelet satırı mobilde 64-68px (ör. `h-[67px] sm:h-10`); |iskelet − gerçek| ≤ 4px.",
           "file": "apps/web/src/app/(app)/onaylar/loading.tsx:19",
           "round6": "AÇIK"
+        },
+        {
+          "id": "onaylar-22",
+          "criterion": 3,
+          "severity": "P2",
+          "openedRound": 7,
+          "text": "Klavye kısayol ipucu (\"J/K gezin · A onayla · R reddet\") dokunmatik 390px viewport'ta da render ediliyor: fiziksel klavyesi olmayan cihazda 195x17px + 8px boşluk yer kaplıyor ve ilk kuyruk satırını aşağı itiyor. Linear kısayol ipuçlarını yalnızca işaretleyici+klavye bağlamında gösterir.",
+          "measure": "Tur 7 (390x844): p.text-[11px] display=block, 195x17px, top=212px — sekme şeridinin hemen altında görünür; 1440x900'de aynı öğe sekme şeridiyle aynı hatta (justify-between) oturuyor.",
+          "target": "İpucu `hidden sm:block` (ya da `@media (hover:hover) and (pointer:fine)`) ile 390px'te gizlensin; mobilde ilk satırın top değeri ≥25px yukarı çıksın.",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:170-173"
         }
       ],
       "closed": [
@@ -396,12 +406,12 @@
       ],
       "verdict": "Plantero",
       "scoreNotes": {
-        "9": "4 — 390px'te yatay taşma yok (scrollWidth 390 = clientWidth), dokunma hedefleri ≥44px (sekmeler 44px, satır 66-67px); ancak tutar hizası (onaylar-19, gap 132,8px) ve sekme taşma ipucu (onaylar-20) eksik. Tur 5 ile aynı, delta yok.",
-        "11": "4 — sekme şeridi ortak ui/tabs.tsx yerine iki modül dosyasında elle yazılı (bildirimler-10); görsel fark yok (44/32px her iki ekranda da aynı), yalnızca kod tekilliği. Tur 5 ile aynı, delta yok."
+        "9": "4 — 390px'te yatay taşma yok (scrollWidth 390 = clientWidth 390), <44px dokunma hedefi yok (sekmeler 44px, satır 66-67px, tek istisna etkileşimsiz breadcrumb metni); ancak tutar hizası (onaylar-19: amountRightGap 132,8px) ve sekme taşma ipucu (onaylar-20: tablist 410 > 358, maskImage none) hâlâ açık, üstüne onaylar-22 (mobilde klavye ipucu). Tur 6 ile aynı, delta yok.",
+        "11": "4 — sekme şeridi ortak ui/tabs.tsx yerine iki modül dosyasında elle yazılı (bildirimler-10); görsel fark yok (44/32px her iki ekranda da aynı), yalnızca kod tekilliği. Tur 6 ile aynı, delta yok."
       }
     },
     "/bildirimler": {
-      "round": 6,
+      "round": 7,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -500,7 +510,7 @@
           "severity": "P2",
           "openedRound": 4,
           "text": "Tablist ortak `ui/tabs.tsx` yerine iki modül dosyasında elle yazılmış (karakter-birebir kopya). Font kısmı Tur 4'te kapandı (satır başlığı 13px/500 = /onaylar). Kod tekilliği hedefi ortak bileşendeki hata (justify-center + TabsTrigger flex-1, taşan şeritte ilk sekmeyi kalıcı kırpıyor) giderilmeden kapanamaz — shell.",
-          "measure": "Tur 6: notifications-list.tsx:84-103 ve approval-queue.tsx:149-165 hâlâ ayrı ayrı aynı deseni taşıyor; ölçülen sekme yükseklikleri her iki ekranda da 44px (390) / 32px (1440) — görsel fark YOK.",
+          "measure": "Tur 7: notifications-list.tsx:84-103 ve approval-queue.tsx:149-165 hâlâ ayrı ayrı aynı deseni taşıyor; ölçülen sekme yükseklikleri her iki ekranda da 44px (390) / 32px (1440) — görsel fark YOK.",
           "target": "İki ekran da tek ortak tablist bileşeninden beslensin (ortak `ui/tabs.tsx` taşma hatası düzeltildikten sonra).",
           "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:84 + approval-queue.tsx:149 (kök neden: apps/web/src/components/ui/tabs.tsx)",
           "round6": "AÇIK"
@@ -511,7 +521,7 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Yükleniyor iskeleti satır yüksekliği gerçeğiyle uyuşmuyor: iskelet 88px, gerçek satır 71,5px — her yüklemede liste ~50px kısalıyor (3 satır x 16,5px).",
-          "measure": "Tur 6: bildirimler/loading.tsx:19 hâlâ `h-[88px]`; ölçülen gerçek satır 71-72px (hem 1440x900 hem 390x844).",
+          "measure": "Tur 7: bildirimler/loading.tsx:19 hâlâ `h-[88px]`; ölçülen gerçek satır 71-72px (hem 1440x900 hem 390x844). Fark 16px x 3 satır = ~50px sıçrama.",
           "target": "İskelet satırı 72px (`h-[72px]`); |iskelet − gerçek| ≤ 4px.",
           "file": "apps/web/src/app/(app)/bildirimler/loading.tsx:20",
           "round6": "AÇIK"
@@ -522,7 +532,7 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Masaüstünde besleme yoğunluğu düşük: satır 71,5px (başlık + 2 satır line-clamp gövde) ve kolon 768px ile sınırlı — 900px viewport'ta ~11 satır sığıyor; referans gelen kutusu aynı yükseklikte 14-16 satır gösterir. Kolonun sağındaki 432px (main genişliğinin %36'sı) hiçbir şeye ayrılmamış.",
-          "measure": "Tur 6 (1440x900): rowHeights [72,72,71], listWidth 768, mainWidth 1200. Besleme bu turda 3 satıra düştüğü için \"ilk ekranda kaç satır\" ölçülemiyor; satır yüksekliği hedefi (≤64px) hâlâ karşılanmıyor ve 768px kolonun sağındaki 432px hâlâ boş.",
+          "measure": "Tur 7 (1440x900): rowHeights [72,72,71], listWidth 768, mainWidth 1200, rowsFitFirstScreen 3/3 (besleme yalnızca 3 kayıt içerdiği için doluluk sınırı ölçülemiyor). Satır yüksekliği hedefi (≤64px) karşılanmıyor; 768px kolonun sağındaki 432px hâlâ boş.",
           "target": "Masaüstünde satır ≤ 64px (ör. gövde md+ ekranda `line-clamp-1`, mobilde 2 satır kalsın) → ilk ekranda ≥ 12 satır; ya da 768px kolonun sağındaki alan bir işe yarasın (seçili bildirim detayı).",
           "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:112-136",
           "round6": "AÇIK"
@@ -533,7 +543,7 @@
           "severity": "P2",
           "openedRound": 4,
           "text": "SKT GEÇMİŞ (gerçekleşmiş kayıp) ile SKT UYARI (60 gün) görsel olarak birebir aynı: aynı Clock4 ikonu, aynı muted renk, aynı okunmamış noktası — ciddiyet sinyali yalnızca metinde.",
-          "measure": "Tur 6 (depo, 1440 ve 390): 3 satırın 3'ünde de ikon rengi oklch(0.552 0.016 285.9) ve boyut 16px, okunmamış noktası 3/3 oklch(0.55 0.16 152), satır zemini 3/3 aynı — distinctIconStyles = 1, distinctDots = 1. \"SKT GEÇMİŞ: 1 lot\" (gerçekleşmiş ₺3.675 kayıp) ile \"SKT UYARI (60 gün)\" görsel olarak ayırt edilemiyor.",
+          "measure": "Tur 7 (depo, 1440 ve 390): 3 satırın 3'ünde de ikon rengi oklch(0.552 0.016 285.9) / 16px, okunmamış noktası 3/3 oklch(0.55 0.16 152), satır zemini 3/3 oklab(0.55 -0.141 0.075 / 0.03) — distinctIconStyles=1, distinctDots=1, distinctRowBgs=1. \"SKT GEÇMİŞ: 1 lot\" (gerçekleşmiş ₺3.675 kayıp), \"SKT KRİTİK (30 gün)\" ve \"SKT UYARI (60 gün)\" görsel olarak ayırt edilemiyor.",
           "target": "Geçmiş SKT için destructive, 30 gün için warning tonlu ikon/rozet (StatusBadge token'ları); distinctTypeStyles ≥ 2.",
           "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:18-27,127 + packages/core/src/notifications/systemAlerts.ts",
           "round6": "AÇIK"
@@ -679,9 +689,9 @@
       "verdict": "Plantero",
       "dataNote": "Tur 6: admin kullanıcısının hiç bildirimi yok (notifications tablosundaki 6 satır depo@ ve kalite@ kullanıcılarına ait) — /bildirimler admin ile BOŞ DURUM, depo ile 3 satırlık besleme render ediyor. Dolu besleme ölçümleri depo hesabıyla alındı.",
       "scoreNotes": {
-        "3": "4 — satır 71-72px (1440 ve 390), liste kolonu 768px / main 1200px; besleme satırı Linear ilham çıtasının (36-40px tablo satırı) üstünde, mobil kart hedefinin (56-72px) üst sınırında. bildirimler-12 açık. Tur 5 ile aynı, delta yok.",
-        "11": "4 — sekme şeridi ortak ui/tabs.tsx yerine elle yazılı (bildirimler-10, /onaylar ile aynı kök neden); görsel çıktı /onaylar ile birebir aynı (44/32px). Tur 5 ile aynı, delta yok.",
-        "7": "5 — boş durum (BellOff + başlık + açıklama + \"Onay Merkezi'ne git\" eylemi, liste ile aynı 768px kolonda), okunmamış-boş alt durumu (compact EmptyState), rotaya özel iskelet ve (app)/error.tsx sınırı mevcut; bildirimler-11 (iskelet 88px vs gerçek 72px) tek P2 nit olarak açık kalıyor."
+        "3": "4 — satır 71-72px (hem 1440x900 hem 390x844), liste kolonu 768px / main 1200px; besleme satırı Linear ilham çıtasının (36-40px tablo satırı) üstünde, mobil kart hedefinin (56-72px) üst sınırında; 768px kolonun sağındaki 432px hâlâ boş. bildirimler-12 açık. Tur 6 ile aynı, delta yok.",
+        "7": "5 — boş durum (BellOff + başlık + açıklama + \"Onay Merkezi'ne git\" eylemi, liste ile aynı 768px kolonda — Tur 7'de görüntüyle doğrulandı), okunmamış-boş alt durumu (compact EmptyState), rotaya özel iskelet ve (app)/error.tsx sınırı mevcut; bildirimler-11 (iskelet 88px vs gerçek 72px) tek P2 nit olarak açık.",
+        "11": "4 — sekme şeridi ortak ui/tabs.tsx yerine elle yazılı (bildirimler-10, /onaylar ile aynı kök neden); görsel çıktı /onaylar ile birebir aynı (44/32px). Tur 6 ile aynı, delta yok."
       }
     }
   },
