@@ -1,34 +1,90 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
 import { MoneyCell } from '@/components/money-cell';
-import { EmptyState } from '@/components/empty-state';
-import { Building2 } from 'lucide-react';
+import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { cn } from '@/lib/utils';
 import { setSupplierWhitelistAction } from '../actions';
 import type { SupplierCardRow } from '../queries';
 
+/**
+ * Tur 4 P1 tedarik-tedarikciler-08/09/10 kök neden: bu ekran modülün TEK liste ekranıydı ama kendi
+ * kart ızgarasını (arama/filtre/sayaç YOK, kayıt başına ~58.000px²) elle çiziyordu — modülün geri
+ * kalanı (`/satin-alma/kritik-stok`, `/satin-alma/siparisler`) zaten paylaşılan `DataTable`'ı
+ * kullanıyor. Kök çözüm YENİ bir kart tasarımı İCAT ETMEK değil, ekranı da aynı ortak bileşene
+ * taşımak: araç çubuğu (arama+filtre+sayaç), satır yoğunluğu (36px) ve tipografi (13px tek gövde
+ * kademesi) otomatik gelir; "ayraçla başlayan sarılmış satır" (tedarikciler-10) sorunu da kendiliğinden
+ * ortadan kalkar (artık flex-wrap bir metrik şeridi yok — tablo hücreleri).
+ */
 export function SuppliersTable({ suppliers, canManageWhitelist }: { suppliers: SupplierCardRow[]; canManageWhitelist: boolean }) {
-  if (!suppliers.length) {
-    return <EmptyState icon={Building2} title="Tedarikçi yok" description="Ana veri'den tedarikçi tanımlayın." />;
-  }
+  const columns = useMemo<ColumnDef<SupplierCardRow, unknown>[]>(
+    () => [
+      { id: 'name', accessorFn: (r) => r.name, header: 'Tedarikçi', meta: { width: 220, mobile: 'title' } },
+      { id: 'code', accessorFn: (r) => r.code, header: 'Kod', meta: { width: 110, mobile: 'subtitle', className: 'font-mono text-xs' } },
+      {
+        // Beyaz liste hem bir FİLTRE hem bir sütun — değer 'true'/'false' (arrIncludesSome ile
+        // eşleşen filtre seçenekleri), hücre canManageWhitelist'e göre ya Switch ya salt-okunur rozet.
+        id: 'whitelisted', accessorFn: (r) => (r.isPurchaseWhitelisted ? 'true' : 'false'), header: 'Beyaz liste', meta: { width: 110, align: 'center', mobile: 'hidden', noSort: true },
+        cell: ({ row }) => <WhitelistCell supplier={row.original} canManage={canManageWhitelist} />,
+      },
+      { accessorKey: 'leadTimeDays', header: 'Tedarik süresi', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays !== null ? `${row.original.leadTimeDays} gün` : '—'}</span> },
+      { accessorKey: 'qualityScore', header: 'Kalite', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums">{row.original.qualityScore ? `${Math.round(Number(row.original.qualityScore))}/100` : <span className="text-muted-foreground">—</span>}</span> },
+      {
+        accessorKey: 'onTimeDeliveryPct', header: 'Zamanında', meta: { align: 'right', width: 100, mobile: 'hidden' },
+        cell: ({ row }) => {
+          const v = row.original.onTimeDeliveryPct;
+          return (
+            <span
+              title={row.original.deliveryCount > 0 ? `Son ${row.original.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
+              className={cn(
+                'font-mono text-[13px] tabular-nums',
+                v === null ? 'text-muted-foreground' : v >= 90 ? 'text-success' : v >= 70 ? 'text-warning' : 'text-destructive',
+              )}
+            >
+              {v === null ? '—' : `%${v}`}
+            </span>
+          );
+        },
+      },
+      { accessorKey: 'productCount', header: 'Ürün', meta: { align: 'right', width: 80, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.productCount}</span> },
+      { accessorKey: 'openPoCount', header: 'Açık sipariş', meta: { align: 'right', width: 100, mobile: 'meta' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.openPoCount}</span> },
+      { accessorKey: 'openPoValue', header: 'Açık tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => <MoneyCell value={row.original.openPoValue} muted={Number(row.original.openPoValue) === 0} /> },
+    ],
+    [canManageWhitelist],
+  );
+
+  const filters: DataTableFilter[] = [
+    { columnId: 'whitelisted', title: 'Beyaz liste', options: [{ value: 'true', label: 'Beyaz listede' }, { value: 'false', label: 'Beyaz listede değil' }] },
+  ];
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-      {suppliers.map((s) => (
-        <SupplierCard key={s.id} supplier={s} canManageWhitelist={canManageWhitelist} />
-      ))}
-    </div>
+    <DataTable
+      columns={columns}
+      data={suppliers}
+      getRowId={(r) => r.id}
+      rowHref={(r) => `/ana-veri/cariler/${r.id}`}
+      searchPlaceholder="Tedarikçi, kod ara…"
+      filters={filters}
+      initialSorting={[{ id: 'name', desc: false }]}
+      emptyTitle="Tedarikçi yok"
+      emptyDescription="Ana veri'den tedarikçi tanımlayın."
+    />
   );
 }
 
-function SupplierCard({ supplier, canManageWhitelist }: { supplier: SupplierCardRow; canManageWhitelist: boolean }) {
-  const router = useRouter();
+function WhitelistCell({ supplier, canManage }: { supplier: SupplierCardRow; canManage: boolean }) {
   const [whitelisted, setWhitelisted] = useState(supplier.isPurchaseWhitelisted);
   const [pending, startTransition] = useTransition();
+
+  if (!canManage) {
+    return (
+      <span className={cn('text-[13px]', whitelisted ? 'text-success' : 'text-muted-foreground')}>
+        {whitelisted ? 'Evet' : 'Hayır'}
+      </span>
+    );
+  }
 
   function toggle(next: boolean) {
     setWhitelisted(next);
@@ -42,98 +98,12 @@ function SupplierCard({ supplier, canManageWhitelist }: { supplier: SupplierCard
     });
   }
 
-  const goToDetail = () => router.push(`/ana-veri/cariler/${supplier.id}`);
-
   return (
-    // Tur 1 P1 tedarik-tedarikciler-04 kök neden: kart ölüydü (hover/focus/tıklama yok), tek
-    // etkileşimli öğe beyaz liste switch'iydi — "Kalite skoru 50" görüp nedenini açacak bir yer
-    // yoktu. DataTable'ın kendi tıklanabilir-satır kalıbıyla (rowProps, data-table.tsx) BİREBİR
-    // aynı sınıflar (kriter 11 tutarlılık): hover/focus arka planı + görünür focus halkası.
-    // <a> yerine div+router.push: içeride zaten etkileşimli bir kontrol (Switch) var, anchor
-    // içine iç içe etkileşimli öğe koymak (geçersiz HTML) yerine DataTable'ın kullandığı yöntem.
-    <div
-      role="link"
-      tabIndex={0}
-      onClick={goToDetail}
-      onKeyDown={(e) => { if (e.key === 'Enter') goToDetail(); }}
-      // Tur 2 P1 tedarik-tedarikciler-05 kök neden: kart 6 kayıt için 265px yüksekliğe (alan
-      // başına ~33px) çıkıyordu — ad/kod başlığı, 2x2 metrik ızgarası (kendi hairline'ı) ve switch
-      // satırı (kendi hairline'ı) üç ayrı hizalama bölgesi oluşturuyordu ("kutu içinde kutu").
-      // Beyaz liste anahtarı artık başlıkla AYNI satırda (kendi hairline/padding bloğu yok);
-      // 4 metrik tek bir küçük-metin satırına indi (etiket+değer aynı satırda, "gün" TAM kelime
-      // korunur — tedarik-tedarikciler-02 rejeksiyonu). Sonuç: 4 hizalama bölgesi yerine 3 kompakt
-      // satır (~132px, hedef ≤160px).
-      className="flex cursor-pointer flex-col gap-1.5 rounded-xl border border-border/60 p-3.5 hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-    >
-      <div className="flex items-center justify-between gap-2">
-        <div className="min-w-0">
-          <div className="truncate text-sm font-medium">{supplier.name}</div>
-          <div className="font-mono text-xs text-muted-foreground">{supplier.code}</div>
-        </div>
-        {canManageWhitelist ? (
-          <label
-            className="flex shrink-0 items-center gap-1.5 text-[11px] text-muted-foreground"
-            title="Satın alma beyaz listesi"
-            // Kart tıklanabilir (üstte) — switch'in kendi tıklaması kart navigasyonunu
-            // TETİKLEMEMELİ (stopPropagation), yoksa beyaz liste değiştirilirken her seferinde
-            // cari detayına yönlenirdi.
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Tur 3 P1 tedarik-tedarikciler-06 kök neden: görünür etiket `hidden sm:inline` ile
-             * 390px'te tamamen kayboluyordu, Switch'te aria-label/aria-labelledby yoktu, sarmalayıcı
-             * <label>'ın innerText'i de bu yüzden boştu — geriye yalnızca dokunmatikte çalışmayan
-             * `title` kalıyordu, ekran okuyucu adsız bir switch anons ediyordu. Switch'e KALICI
-             * (genişlikten bağımsız) bir erişilebilir ad verildi; görünür etiket 390px'te hâlâ gizli
-             * kalabilir çünkü artık ad kaynağı görünürlüğe bağlı değil. */}
-            <span className="hidden sm:inline">Beyaz liste</span>
-            <Switch checked={whitelisted} onCheckedChange={toggle} disabled={pending} aria-label="Beyaz liste" />
-          </label>
-        ) : (
-          <span className={cn('shrink-0 text-[11px]', whitelisted ? 'text-success' : 'text-muted-foreground')}>
-            {whitelisted ? 'Beyaz listede' : 'Beyaz listede değil'}
-          </span>
-        )}
-      </div>
-
-      {/* Tek satır metrik özeti: etiket+değer aynı satırda, "gün" tam kelime (tedarik-tedarikciler-02
-       * rejeksiyonu — İngilizce "lead time" ya da "g" kısaltması yasak), sıra kart altındaki
-       * açık sipariş satırıyla aynı sola yaslı hizalama sistemini korur. */}
-      {/* Tur 3 P2 tedarik-tedarikciler-07 kök neden: ayraç (`·`) ve ondan sonraki metrik iki BAĞIMSIZ
-       * flex item'dı — `flex-wrap` satır sonunu iki item ARASINDAN geçirebiliyordu (ayraç bir
-       * satırın sonunda, metriğin kendisi bir sonraki satırın başında yalnız kalıyordu). Ayraç artık
-       * kendinden sonraki metrikle AYNI flex item'da (`inline-flex` grup) — kırılma yalnızca
-       * grupların ARASINDA olabilir, ayraç asla bir satırın son/ilk karakteri olarak yalnız kalmaz. */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/60 pt-2 text-[12px] text-muted-foreground">
-        <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.leadTimeDays !== null ? supplier.leadTimeDays : '—'}</span> gün tedarik</span>
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden className="text-border">·</span>
-          <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.qualityScore ? Math.round(Number(supplier.qualityScore)) : '—'}/100</span> kalite</span>
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden className="text-border">·</span>
-          <span
-            title={supplier.deliveryCount > 0 ? `Son ${supplier.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
-            className={cn(
-              // Tur 1 P1 tedarik-tedarikciler-01 kök neden: ham Tailwind paleti (emerald/amber/
-              // red-600) tema/dark-mode token zincirinin dışındaydı — modülün geri kalanı (bkz.
-              // critical-stock-table.tsx RISK_CLASS) `text-success`/`text-warning`/`text-destructive`
-              // token sınıflarını kullanıyor.
-              supplier.onTimeDeliveryPct !== null && (supplier.onTimeDeliveryPct >= 90 ? 'text-success' : supplier.onTimeDeliveryPct >= 70 ? 'text-warning' : 'text-destructive'),
-            )}
-          >
-            <span className="font-mono font-semibold tabular-nums">{supplier.onTimeDeliveryPct === null ? '—' : `%${supplier.onTimeDeliveryPct}`}</span> zamanında
-          </span>
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden className="text-border">·</span>
-          <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.productCount}</span> ürün</span>
-        </span>
-      </div>
-
-      <div className="flex items-center justify-between border-t border-border/60 pt-2 text-[13px]">
-        <span className="text-muted-foreground">{supplier.openPoCount} açık sipariş</span>
-        <MoneyCell value={supplier.openPoValue} />
-      </div>
-    </div>
+    // Satır tıklanabilir (cari detayına gider) — switch'in kendi tıklaması satır navigasyonunu
+    // TETİKLEMEMELİ (stopPropagation), aksi halde beyaz liste her değiştirildiğinde cari detayına
+    // yönlenirdi (suppliers-table.tsx'in önceki kart sürümüyle aynı kök çözüm).
+    <span onClick={(e) => e.stopPropagation()} className="inline-flex">
+      <Switch size="sm" checked={whitelisted} onCheckedChange={toggle} disabled={pending} aria-label={`${supplier.name} beyaz liste`} />
+    </span>
   );
 }

@@ -215,9 +215,9 @@ export async function listCriticalStock(): Promise<CriticalStockRow[]> {
   const liveOnHandByRuleId = new Map<string, string>();
   if (unevaluated.length) {
     const live = await Promise.all(
-      unevaluated.map((r) => getOnHand(db, { productId: r.rule.productId, warehouseId: r.rule.warehouseId, includeQuarantine: false })),
+      unevaluated.map(async (r) => ({ ruleId: r.rule.id, ...(await getOnHand(db, { productId: r.rule.productId, warehouseId: r.rule.warehouseId, includeQuarantine: false })) })),
     );
-    unevaluated.forEach((r, i) => liveOnHandByRuleId.set(r.rule.id, toDb(live[i].available)));
+    for (const l of live) liveOnHandByRuleId.set(l.ruleId, toDb(l.available));
   }
 
   return rows.map((r) => {
