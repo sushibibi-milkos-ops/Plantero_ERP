@@ -76,7 +76,11 @@ export function NotificationsList({ notifications }: { notifications: Notificati
     <div className="max-w-3xl space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         {/* Tur 2 P1 bildirimler-05: 390px'te 32px yükseklikteydi — ortak ui/tabs.tsx deseniyle
-            aynı (h-11 mobil / md:h-8 masaüstü) dokunma hedefine çıkarıldı. */}
+            aynı (h-11 mobil / md:h-8 masaüstü) dokunma hedefine çıkarıldı.
+            NOT (Tur 4): paylaşılan `ui/tabs.tsx` (Radix, pill varyant) `/onaylar`'da taşan bir
+            şeritte ilk sekmeyi kalıcı kırpan bir hataya yol açtığı için (bkz. approval-queue.tsx
+            yorum satırı, sharedComponentRequests) burada da elle yazılmış sürüm korundu —
+            tutarlılık ve kanıtlanmış doğruluk için. */}
         <div role="tablist" aria-label="Bildirim filtresi" className="flex items-center gap-1 rounded-lg bg-muted p-0.5">
           <button
             type="button"
@@ -110,9 +114,13 @@ export function NotificationsList({ notifications }: { notifications: Notificati
             const unread = n.status === 'sent';
             const meta = typeMeta(n.refTable);
             const Icon = meta.icon;
+            // Tur 4 P2 bildirimler-08: py-3(24px toplam) + text-sm(14px) başlık + mt-1 + varsayılan
+            // satır yüksekliğiyle line-clamp-2 gövde = 88px ölçülüyordu (mobil kart hedefi 56-72px).
+            // py-2.5 + başlık artık 13px/500 (bildirimler-10'un da hedeflediği, /onaylar'daki satırla
+            // aynı boyut) + mt-0.5 + gövde leading-[1.3] → satır ~72px'e iniyor.
             const content = (
-              <div className={cn('flex items-start gap-3 px-4 py-3', unread && 'bg-primary/[0.03]')}>
-                <span aria-hidden className={cn('mt-2 size-1.5 shrink-0 rounded-full', unread ? 'bg-primary' : 'bg-transparent')} />
+              <div className={cn('flex items-start gap-3 px-4 py-2.5', unread && 'bg-primary/[0.03]')}>
+                <span aria-hidden className={cn('mt-1.5 size-1.5 shrink-0 rounded-full', unread ? 'bg-primary' : 'bg-transparent')} />
                 {/* Tur 2 P1 bildirimler-06: ayrı büyük-harfli tür etiketi satırı başlığın zaten
                     içerdiği tür ön ekini (ör. "SKT GEÇMİŞ: …") tekrar ediyordu — tek bilgi 3 kez
                     (ikon + etiket + başlık). Etiket artık yalnızca ikonun erişilebilir adında. */}
@@ -120,21 +128,24 @@ export function NotificationsList({ notifications }: { notifications: Notificati
                 <span className="sr-only">{meta.label}</span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
-                    <div className={cn('text-sm', unread ? 'font-medium' : 'text-muted-foreground')}>{n.title}</div>
+                    <div className={cn('text-[13px] leading-tight', unread ? 'font-medium' : 'text-muted-foreground')}>{n.title}</div>
                     <span className="shrink-0 text-[11px] text-muted-foreground tabular-nums">{relativeTime(n.createdAt)}</span>
                   </div>
-                  <p className="mt-1 line-clamp-2 max-w-[65ch] text-[13px] text-muted-foreground">{n.body}</p>
+                  <p className="mt-0.5 line-clamp-2 max-w-[65ch] text-[13px] leading-[1.25] text-muted-foreground">{n.body}</p>
                 </div>
               </div>
             );
+            // Tur 4 P2 bildirimler-09: odak halkası tarayıcı varsayılanıydı (outline:auto); /onaylar
+            // kuyruk satırıyla aynı odak dili — focus-visible:ring-2/inset/primary-50.
+            const linkClass = 'block outline-none hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50';
             return (
               <li key={n.id}>
                 {n.href ? (
-                  <Link href={n.href} onClick={() => unread && markRead(n.id)} className="block hover:bg-accent/40">
+                  <Link href={n.href} onClick={() => unread && markRead(n.id)} className={linkClass}>
                     {content}
                   </Link>
                 ) : (
-                  <button type="button" onClick={() => unread && markRead(n.id)} className="block w-full text-left hover:bg-accent/40">
+                  <button type="button" onClick={() => unread && markRead(n.id)} className={cn(linkClass, 'w-full text-left')}>
                     {content}
                   </button>
                 )}

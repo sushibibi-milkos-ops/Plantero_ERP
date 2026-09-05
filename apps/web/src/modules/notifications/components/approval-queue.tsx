@@ -140,7 +140,12 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         {/* Tur 2 P1 onaylar-10: sarmalayan (flex-wrap) şerit 390px'te 2 satıra taşıp sekmeleri
             32px'e sıkıştırıyordu. Ortak ui/tabs.tsx desenindeki gibi tek satır + yatay kaydırma
-            (flex-nowrap overflow-x-auto) ve mobilde 44px dokunma hedefi (h-11 md:h-8). */}
+            (flex-nowrap overflow-x-auto) ve mobilde 44px dokunma hedefi (h-11 md:h-8).
+            NOT (Tur 4): paylaşılan `ui/tabs.tsx` (Radix, varsayılan pill varyant) denendi ama
+            `justify-center` + `TabsTrigger`'ın `flex-1`'i, bu şerit taştığında (scrollWidth>clientWidth)
+            ilk sekmenin başını KALICI olarak kırpan bir hataya yol açtı (ölçüm: buton[0].rect.x=-5px,
+            scrollLeft sonsuza kadar 0'da kilitli — negatif taşma sola kaydırarak ulaşılamıyor). Kök
+            neden ortak bileşende; sharedComponentRequests'te bildirildi, geri alındı. */}
         <div role="tablist" aria-label="Onay türü" className="flex max-w-full flex-nowrap items-center gap-1 overflow-x-auto rounded-lg bg-muted p-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.map((t) => (
             <button
@@ -189,10 +194,22 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
                 'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50',
               )}
             >
-              {/* Yoğun satır — 44px (dokunma hedefi) mobilde, masaüstünde 40px (Linear tablo yoğunluğu). */}
-              <div className="flex h-11 items-center gap-2.5 px-3 sm:h-10">
-                <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-                <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{item.title}</span>
+              {/* Yoğun satır — masaüstünde tek satır 40px (Linear tablo yoğunluğu). Mobilde (<sm) satır
+                  2 satıra açılır (Tur 4 P1 onaylar-18): sabit w-28 tutar + güven rozeti aynı satırda
+                  başlığı 133px'e sıkıştırıp 14 satırın 11'ini kırpıyordu, iki satın alma taslağı satırı
+                  PO numarasını tamamen kaybediyordu. Başlık artık kendi grubunda `basis-full` ile satırın
+                  TAMAMINI kaplıyor (flex-wrap zorunlu satır sonu) — rozet/tutar/saat 2. satıra kayıyor.
+                  Tek `title`/`amount` elemanı korunuyor (ölçüm probu `span.truncate` / `span[class*="w-28"]`
+                  ile TEK eşleşme bekliyor — kopyalanmış markup yanlış genişlik ölçtürür). */}
+              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 px-3 py-2.5 sm:h-10 sm:flex-nowrap sm:py-0">
+                <div className="flex min-w-0 basis-full items-center gap-2.5 sm:basis-0 sm:flex-1">
+                  <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                  <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{item.title}</span>
+                </div>
+                {/* İkon + boşluk genişliğinde görünmez hizalayıcı — 2. satırdaki rozet/tutar, 1. satırdaki
+                    başlıkla aynı sol kenardan başlasın diye (yalnızca mobilde; masaüstünde tek satır olduğu
+                    için gerekmez). */}
+                <span aria-hidden className="h-px w-[26px] shrink-0 sm:hidden" />
                 {/* Tur 3 P2 onaylar-16: rozet 640px altında tamamen gizliydi — kuyruk güvene göre
                     taranıyor, mobil kullanıcı sıralama sinyalini yalnızca kartı açarak görebiliyordu.
                     Artık her genişlikte görünür (onaylar-11'de tutar için yapılan düzeltmeyle aynı desen). */}
