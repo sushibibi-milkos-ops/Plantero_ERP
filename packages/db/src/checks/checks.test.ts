@@ -27,8 +27,12 @@ const FILES = await checkFiles();
 // yanlış-pozitif üretiyordu; kapsam I6/I16'da quarantine/rejected'a daraltıldı, I40 zaman damgası ile
 // gerçek regresyonu ayrıca yakalar) ve I41 (tedarikçi kalite skoru formülü + partners.supplier_quality_score
 // güncelliği — kalite modülünde daha önce hiç doğrulanmayan bir kör nokta) eklendi; dosya sayısı/aralığı
-// buna göre güncellendi.
-const RULE_COUNT = 41;
+// buna göre güncellendi. I42 (veri-critic, Aşama-3 tur 2) eklendi: kritik stok motorunun tedarikçi
+// bazında birleştirilmiş AI taslak PO'larında, tek bir satırın reorder_rule'u autoOrderMaxAmount=NULL
+// (sınırsız) taşıdığında DİĞER satırların sonlu tutar sınırının sessizce iptal olması (kod incelemesiyle
+// doğrulandı, bkz. checks/42_reorder_auto_order_cap.sql üst yorumu) — bugün seed'de tetiklenmiyor,
+// saf regresyon güvenlik ağı.
+const RULE_COUNT = 42;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);

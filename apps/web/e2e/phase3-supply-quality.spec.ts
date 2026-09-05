@@ -179,10 +179,16 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     await page.goto('/satin-alma/kritik-stok');
     await expect(page.getByRole('heading', { name: 'Kritik Stok' })).toBeVisible();
 
-    // "Sadece kritik/uyarı" varsayılan açık — motor hiç çalışmadığından `risk` alanı henüz 'none'
-    // (bkz. queries.ts `listCriticalStock`: risk `lastDaysOfCover`/`lastEvaluatedAt`den türer, canlı
-    // hesap DEĞİL) — kural satırlarını görebilmek için filtre kapatılır.
-    await page.getByLabel('Sadece kritik/uyarı').click();
+    // NOT (Tur 2 güncellemesi — bkz. `replenishment-panel.tsx` "Tur 1 P0 tedarik-kritik-stok-01"):
+    // varsayılan artık motor hiç çalışmamışken (`neverEvaluated`) OTOMATİK KAPALI — önceki turda
+    // burada koşulsuz bir tıklama vardı (o zamanki varsayılan hep açıktı); düzeltmeden sonra o
+    // koşulsuz tıklama filtreyi AÇIYOR ve "0 kayıt" durumuna düşürüyordu (canlı yakalandı). Bu yüzden
+    // yalnızca gerçekten işaretliyse kapatılır — mevcut durumu okuyup davranışa uyarlanır.
+    const onlyCriticalCheckbox = page.getByLabel('Sadece kritik/uyarı');
+    if ((await onlyCriticalCheckbox.getAttribute('aria-checked')) === 'true' || (await onlyCriticalCheckbox.isChecked().catch(() => false))) {
+      await onlyCriticalCheckbox.click();
+    }
+    await expect(onlyCriticalCheckbox).toHaveAttribute('aria-checked', 'false');
 
     const etiketId = psqlOne("select id from products where sku = '401030000'")!;
     expect(etiketId, 'Seed: Etiket (401030000, beyaz listeli kritik stok kuralı) bulunmalı').toBeTruthy();
@@ -389,9 +395,17 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
 
     await page.goto('/kalite/tedarikci-skoru');
     await expect(page.getByRole('heading', { name: 'Tedarikçi Kalite Skoru' })).toBeVisible();
-    // Dönem alanı (`type=month`) varsayılan olarak zaten CARİ ay — dokunulmuyor.
+    // NOT (Tur 2 güncellemesi — bkz. `compute-score-button.tsx` "Tur 1 P1 kalite-tedarikci-01"): ham
+    // `<input type=month>` Türkçe Ay/Yıl `Select` çiftiyle değiştirildi (tarayıcı yereline değil sayfa
+    // diline bağlı ay adları için) — varsayılan yine CARİ ay/yıl olduğundan dokunulmuyor, ama başarı
+    // tost'u artık ISO "yyyy-mm" değil Türkçe ay adı + yıl basıyor ("N tedarikçi için Eylül 2026 skoru
+    // hesaplandı") — eski ISO regex'i eşleşmiyordu (canlı yakalandı).
+    const TR_MONTHS = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+    const now = new Date();
+    const currentMonthTr = TR_MONTHS[now.getMonth()]!;
+    const currentYear = now.getFullYear();
     await page.getByRole('button', { name: 'Skoru Hesapla' }).click();
-    await expect(page.getByText(new RegExp(`için ${currentPeriod} skoru hesaplandı`))).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(new RegExp(`için ${currentMonthTr} ${currentYear} skoru hesaplandı`))).toBeVisible({ timeout: 15_000 });
 
     const afterRow = psqlRows(`select qc_checks, qc_passed, score from supplier_scores where partner_id='${ctx.supplierS5Id}' and period='${currentPeriod}'`)[0]!;
     const after = { qcChecks: Number(afterRow[0]), qcPassed: Number(afterRow[1]), score: Number(afterRow[2]) };
@@ -403,7 +417,12 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     if (ctx.scoreBefore) expect(after.score).toBeLessThanOrEqual(ctx.scoreBefore.score);
 
     await page.getByPlaceholder('Tedarikçi ara…').fill('Anadolu');
-    await expect(visibleText(page, /Anadolu Kuruyemiş/)).toBeVisible();
+    // NOT (Tur 2 güncellemesi): "KPI şeridi ... variant=strip'e taşındı" düzeltmesi artık ekranda ayrıca
+    // bir "en düşük skor" özet kartı gösteriyor — tam da bu adımda skorunu düşürdüğümüz tedarikçi orada
+    // da adıyla görünüyor, bu yüzden paylaşılan `visibleText` (tabloyla + kartla) İKİ eşleşmeye çarpıp
+    // strict-mode ihlali veriyordu (canlı yakalandı). Arama sonucu doğrulaması burada özellikle TABLO
+    // hücresine daraltılır.
+    await expect(page.getByRole('cell', { name: /Anadolu Kuruyemiş/ }).filter({ visible: true })).toBeVisible();
   });
 
   test('Adım 6 — /kalite/izlenebilirlik: seed\'deki sevk edilmiş bir mamul lotu — geri (iş emri→hammadde→mal kabul/tedarikçi) ve ileri (sevkiyat→müşteri) zincir, miktar dengesi', async () => {
@@ -431,10 +450,15 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     const raw = psqlRows(`select rl.id, rl.lot_no from work_order_consumptions wc join stock_lots rl on rl.id = wc.lot_id where wc.work_order_id = '${ctx.woId}' order by rl.lot_no limit 1`)[0]!;
     [ctx.rawLotId, ctx.rawLotNo] = raw;
 
+    // NOT (canlı yakalandı): bu mamul lotu BİRDEN FAZLA sevkiyata satır veriyor olabilir (bazıları
+    // yalnızca 'rezerve', henüz sevk edilmemiş) — yukarıdaki `mamul` seçimi özellikle
+    // status in ('shipped','delivered') şartına dayanıyor, bu ikinci sorgu AYNI şartı taşımazsa
+    // (yalnızca created_at DESC ile en SON sevkiyatı alırsa) hiç sevk edilmemiş, yalnız rezerve bir
+    // sevkiyatı seçip "İleriye izleme"de arayabileceğimizden FARKLI bir belge no'suna kilitlenebiliyordu.
     const delivery = psqlRows(`
       select d.id, d.doc_no, d.partner_id, p.name
       from delivery_lines dl join deliveries d on d.id = dl.delivery_id join partners p on p.id = d.partner_id
-      where dl.lot_id = '${ctx.mamulLotId}' order by d.created_at desc limit 1
+      where dl.lot_id = '${ctx.mamulLotId}' and d.status in ('shipped','delivered') order by d.created_at desc limit 1
     `)[0]!;
     [ctx.deliveryId, ctx.deliveryDocNo, ctx.customerId, ctx.customerName] = delivery;
 
