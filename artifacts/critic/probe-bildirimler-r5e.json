@@ -1,0 +1,40 @@
+{
+ "bildirimler390": [
+  {
+   "rowW": 356,
+   "titleW": 112,
+   "titleH": 16.3,
+   "timeW": 72.7,
+   "timePct": 20,
+   "lineHeight": "16.25px",
+   "text": "SKT GEÇMİŞ: 1 lot"
+  },
+  {
+   "rowW": 356,
+   "titleW": 170.6,
+   "titleH": 16.3,
+   "timeW": 72.7,
+   "timePct": 20,
+   "lineHeight": "16.25px",
+   "text": "SKT KRİTİK (30 gün): 50 lot"
+  },
+  {
+   "rowW": 356,
+   "titleW": 167.9,
+   "titleH": 16.3,
+   "timeW": 72.7,
+   "timePct": 20,
+   "lineHeight": "16.25px",
+   "text": "SKT UYARI (60 gün): 30 lot"
+  }
+ ],
+ "onaylar390tabs": {
+  "scrollW": 410,
+  "clientW": 358,
+  "maxScroll": 52,
+  "firstTabX": 18,
+  "firstTabXAfterScroll": -34,
+  "lastTabRightAtStart": 424,
+  "viewportW": 390
+ }
+}

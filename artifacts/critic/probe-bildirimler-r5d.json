@@ -1,0 +1,636 @@
+{
+ "bildirimler@1440": [
+  {
+   "size": "24px",
+   "weight": "600",
+   "tag": "h1",
+   "cls": "truncate text-xl font-semibold tracking-tight md:text-2xl",
+   "text": "Bildirimler"
+  },
+  {
+   "size": "14px",
+   "weight": "400",
+   "tag": "div",
+   "cls": "mt-1 text-sm text-muted-foreground",
+   "text": "Size gönderilen uygulama içi bildirimler"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "h-11 rounded-md px-3 text-[13px] font-medium transition-colo",
+   "text": "Tümü (3)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "tabular-nums text-muted-foreground",
+   "text": "(3)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "h-11 rounded-md px-3 text-[13px] font-medium transition-colo",
+   "text": "Okunmamış (3)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "tabular-nums text-muted-foreground",
+   "text": "(3)"
+  },
+  {
+   "size": "14px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "inline-flex shrink-0 items-center justify-center gap-2 round",
+   "text": "Tümünü okundu işaretle"
+  },
+  {
+   "size": "16px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "sr-only",
+   "text": "SKT uyarısı"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "div",
+   "cls": "text-[13px] leading-tight font-medium",
+   "text": "SKT GEÇMİŞ: 1 lot"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "shrink-0 text-[11px] text-muted-foreground tabular-nums",
+   "text": "az önce"
+  },
+  {
+   "size": "13px",
+   "weight": "400",
+   "tag": "p",
+   "cls": "mt-0.5 line-clamp-2 max-w-[65ch] text-[13px] leading-[1.25] ",
+   "text": "1 lot, toplam stok değeri ₺3.675,00 — so"
+  },
+  {
+   "size": "16px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "sr-only",
+   "text": "SKT uyarısı"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "div",
+   "cls": "text-[13px] leading-tight font-medium",
+   "text": "SKT KRİTİK (30 gün): 50 lot"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "shrink-0 text-[11px] text-muted-foreground tabular-nums",
+   "text": "az önce"
+  },
+  {
+   "size": "13px",
+   "weight": "400",
+   "tag": "p",
+   "cls": "mt-0.5 line-clamp-2 max-w-[65ch] text-[13px] leading-[1.25] ",
+   "text": "50 lot, toplam stok değeri ₺314.650,80 —"
+  },
+  {
+   "size": "16px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "sr-only",
+   "text": "SKT uyarısı"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "div",
+   "cls": "text-[13px] leading-tight font-medium",
+   "text": "SKT UYARI (60 gün): 30 lot"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "shrink-0 text-[11px] text-muted-foreground tabular-nums",
+   "text": "az önce"
+  },
+  {
+   "size": "13px",
+   "weight": "400",
+   "tag": "p",
+   "cls": "mt-0.5 line-clamp-2 max-w-[65ch] text-[13px] leading-[1.25] ",
+   "text": "30 lot, toplam stok değeri ₺272.210,00 —"
+  }
+ ],
+ "onaylar@1440": [
+  {
+   "size": "24px",
+   "weight": "600",
+   "tag": "h1",
+   "cls": "truncate text-xl font-semibold tracking-tight md:text-2xl",
+   "text": "Onay Merkezi"
+  },
+  {
+   "size": "14px",
+   "weight": "400",
+   "tag": "div",
+   "cls": "mt-1 text-sm text-muted-foreground",
+   "text": "13 onay bekliyor — satın alma taslağı, s"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "h-11 shrink-0 rounded-md px-2.5 text-[13px] font-medium whit",
+   "text": "Tümü (13)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "tabular-nums text-muted-foreground",
+   "text": "(13)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "h-11 shrink-0 rounded-md px-2.5 text-[13px] font-medium whit",
+   "text": "Mutabakat önerisi (12)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "tabular-nums text-muted-foreground",
+   "text": "(12)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "h-11 shrink-0 rounded-md px-2.5 text-[13px] font-medium whit",
+   "text": "Satın alma taslağı (1)"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "tabular-nums text-muted-foreground",
+   "text": "(1)"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "p",
+   "cls": "text-[11px] text-muted-foreground",
+   "text": "J/K gezin · A onayla · R reddet"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "kbd",
+   "cls": "rounded border bg-muted px-1 py-px font-mono text-[11px]",
+   "text": "J"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "kbd",
+   "cls": "rounded border bg-muted px-1 py-px font-mono text-[11px]",
+   "text": "K"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "kbd",
+   "cls": "rounded border bg-muted px-1 py-px font-mono text-[11px]",
+   "text": "A"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "kbd",
+   "cls": "rounded border bg-muted px-1 py-px font-mono text-[11px]",
+   "text": "R"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "SEDAŞ Elektrik Faturası"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%75"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "-₺450,75"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "inline-flex items-center gap-1.5 text-[11px] font-medium tra",
+   "text": "Mutabakat önerisi"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "text-[11px] text-muted-foreground tabular-nums",
+   "text": "05.09.2026 23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "400",
+   "tag": "p",
+   "cls": "max-w-[70ch] text-[13px] text-muted-foreground",
+   "text": "Gider — Açıklama \"Elektrik Faturası\" (SE"
+  },
+  {
+   "size": "14px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "inline-flex shrink-0 items-center justify-center gap-2 round",
+   "text": "Reddet"
+  },
+  {
+   "size": "14px",
+   "weight": "500",
+   "tag": "a",
+   "cls": "inline-flex shrink-0 items-center justify-center gap-2 round",
+   "text": "Detay"
+  },
+  {
+   "size": "14px",
+   "weight": "500",
+   "tag": "button",
+   "cls": "inline-flex shrink-0 items-center justify-center gap-2 round",
+   "text": "Onayla"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Hesap İşletim Ücreti"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%85"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "-₺185,50"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Mali Müşavirlik Ücreti"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%75"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "-₺10.000,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Mali Müşavirlik Ücreti"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%40"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "-₺10.000,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Kira Ödemesi — Tire OSB"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%80"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "-₺150.000,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Havale — Migros Ticaret A.Ş."
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%90"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "₺3.800,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "EFT — Kahve Dünyası Yeşil Kahve ve Egzot"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%85"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "-₺54.900,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Trendyol Hakediş — tanımsız dönem"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%33"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "₺5.000,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Trendyol Hakediş — tanımsız dönem"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%33"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "₺5.000,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Trendyol Hakediş — tanımsız dönem"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%23"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "₺5.000,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Havale — Migros Ticaret A.Ş."
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%15"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "₺3.800,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Havale — Migros Ticaret A.Ş."
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%15"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "₺3.800,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "min-w-0 flex-1 truncate text-[13px] font-medium",
+   "text": "Satın alma taslağı PO-2026-000007"
+  },
+  {
+   "size": "11px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ta",
+   "text": "%82"
+  },
+  {
+   "size": "13px",
+   "weight": "500",
+   "tag": "span",
+   "cls": "w-28 shrink-0 text-right text-[13px] font-medium tabular-num",
+   "text": "₺32.760,00"
+  },
+  {
+   "size": "11px",
+   "weight": "400",
+   "tag": "span",
+   "cls": "hidden w-12 shrink-0 text-right text-[11px] text-muted-foreg",
+   "text": "23:55"
+  }
+ ]
+}
