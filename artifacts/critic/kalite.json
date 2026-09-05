@@ -1,11 +1,11 @@
 {
   "module": "kalite",
-  "round": 2,
-  "note": "Tur 2: kalite modülü yeniden ölçüldü. Referans puanları sabittir (Linear 57 veri ekranları, Stripe 56 KPI/finans ekranları — docs/DESIGN-SCORECARD.md). Araçlar: pnpm shot (1440x900 + 390x844), pnpm measure, scripts/probe-kalite-r2.ts (kaydırma kapları, kırpılan tanımlayıcılar — scrollWidth>clientWidth olan yaprak düğümler, 44px altı dokunma hedefleri, tabular-nums kapsamı, kart ölü alanı, font dağılımı). Dinamik id'ler psql ile alındı (veritabanı tur 1'den sonra yeniden seed edilmiş): qc_check f5069d34 (QC-2026-000008, kaldı), recall 565c5080 (RC-2026-000001), mamul lot PL-260808-H1-12 (475e1857). Tur 1'in 11 kapalı bulgusunun tamamı canlı ekranda yeniden doğrulandı, hiçbiri geri gelmemiş. ?lot= derin bağlantısı artık lot NUMARASI ile de çözülüyor (URL kanonik UUID'ye yazılıyor) — doğrulandı. NOT: kalite modülünde /operator rotası yoktur, 1024x768 çekimi uygulanmadı. Kod düzeyi tarama (transition-all / ease-in / scale(0) / >300ms / hover gating / transform-origin): apps/web/src/modules/quality ve app/(app)/kalite altında ihlal YOK; hover globals.css'te @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor. [Builder tur 2 düzeltme notu] kalite-tedarikci-04, kalite-geri-cagirma-id-05, kalite-geri-cagirma-id-06 ve ayrı bildirilen P0 (initiate()/destroy() rezerveli stokta INSUFFICIENT_STOCK) kapatıldı — kanıtlar ilgili `closed[].measureAfter` alanlarında.",
+  "round": 3,
+  "note": "Tur 3: kalite modülü yeniden ölçüldü (Referans sabit: Linear 57 veri, Stripe 56 KPI/finans — docs/DESIGN-SCORECARD.md). Araçlar: pnpm shot (1440x900 + 390x844), scripts/probe-kalite-r3.ts (taşan kap + kırpılan yaprak + tabular-nums + <44px dokunma hedefi + font dağılımı), scripts/probe-kalite-r3-clip.ts / -clip2.ts (viewport sağ kenarını aşan öğeler; bilinçli kaydırıcı içindekiler hariç), scripts/probe-kalite-r3-deeplink.ts (?lot= çözülme süresi), scripts/shot-kalite-lot.ts (?lot= çözüldükten sonra çekim — 'pnpm shot' slug'ı sorgu dizesini attığı için ayrı klasör: artifacts/screens/kalite-izlenebilirlik-lot/). Dinamik id'ler psql ile: qc_check a8daccb2 (QC-2026-000001, pending — tur 2'deki kayıt yeniden seed ile değişti, bu kez SONUÇ GİRİŞİ formu ölçüldü), recall 1160dab7 (RC-2026-000001), mamul lot PL-260808-H1-12. Tur 2'nin 3 açık bulgusunun ÜÇÜ DE kapandı (kanıtlar closed[].measureAfter). Tur 3'te 5 yeni ölçülebilir bulgu açıldı (2 P1 kontrol detayı, 1 P1 tedarikçi skoru, 1 P1 geri çağırma detayı, 1 P1 izlenebilirlik derin bağlantı). Kod düzeyi tarama (transition-all / bare ease-in / scale(0) / >=300ms / hover gating / transform-origin): apps/web/src/modules/quality ve app/(app)/kalite altında İHLAL YOK; hover globals.css:10 @custom-variant hover { @media (hover:hover) and (pointer:fine) } ile korunuyor. NOT: kalite modülünde /operator rotası yok, 1024x768 çekimi uygulanmadı.",
   "measuredAt": "2026-09-05",
   "routes": {
     "/kalite/kontroller": {
-      "round": 2,
+      "round": 3,
       "reference": "linear",
       "scores": [
         5,
@@ -24,7 +24,7 @@
       "total": 59,
       "previousTotal": 59,
       "verdict": "Plantero",
-      "delta": "Tur 1 ile aynı (59). pnpm measure 1440x900: h1 24px/600, tbody tr 36/36/36, font dağılımı 13px×71 + 12px×17 + 11px×10, sayfa taşması yok; 390x844: kart 63,5px, ana içerikte 44px altı dokunma hedefi yok.",
+      "delta": "59 → 59, değişiklik yok. Yeniden ölçüm: tbody satırları 36px, gövde 13px (70 düğüm), h1 24px/600/-0.6px, mobil kart 64px, 390px'te kırpılan öğe 0, <44px dokunma hedefi 0. k5=4 sabit: tablo kaydırıcısı scrollWidth 1412 > clientWidth 1152 (260px), scroll-fade-x afordansı var — P2.",
       "open": [],
       "closed": [],
       "p2": [
@@ -42,27 +42,50 @@
       ]
     },
     "/kalite/kontroller/[id]": {
-      "round": 2,
+      "round": 3,
       "reference": "linear",
       "scores": [
         5,
+        4,
+        4,
+        5,
+        5,
+        3,
         5,
         5,
         5,
         5,
         4,
-        5,
-        5,
-        5,
-        5,
-        5,
-        5
+        4
       ],
-      "total": 59,
-      "previousTotal": 54,
-      "verdict": "Plantero",
-      "delta": "54 → 59. k5 4→5: tur-1'in boş string hücresi artık '—' basıyor, satırlar 36/37px hairline, 1440'ta taşma yok. k6 3→4: ham '14.2000' gitti, '14,2' (virgül ondalık, .num tabular) — kalan tek eksik 'Eldeki miktar 14'te uom yok (P2). k7 4→5: eksik alanlarda '—', 'Devam belgesi yok' zincir yer tutucusu, 'Karar verildi — düzenlenemez' kilidi. k9 4→5: pnpm measure 390x844 touchTargetsBelow44 = [] (yalnızca etkileşimsiz breadcrumb). k11 4→5: PageHeader + DetailFields + DocumentChain diğer modüllerle aynı.",
-      "open": [],
+      "total": 54,
+      "previousTotal": 59,
+      "verdict": "Linear",
+      "delta": "59 → 54. Tur 2 KARAR VERİLMİŞ bir kontrolü ölçmüştü; tur 3'te aynı rotanın SONUÇ GİRİŞİ (pending) durumu ölçüldü ve iki ölçülebilir kusur çıktı. k6 4→3: ekranın ana miktarı birimsiz (\"Eldeki miktar 40\", psql: uom=KG) ve numune miktarı alanında birim son eki yok. k2 5→4 ve k3 5→4: tek sayısal alan 1118px genişlikte, 1152px tuvalde tek kolon. k11 5→4: diğer 6 modülde FormQty ızgara kolonunda, burada tam genişlik. k12 5→4: kart içinde kart (her şablon kalemi ayrı çerçeveli kutu).",
+      "open": [
+        {
+          "id": "kalite-kontroller-id-04",
+          "criterion": 6,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "Kontrol detayının ana miktarı BİRİMSİZ: 'Eldeki miktar' 40 · TIRE/KARANTINA yazıyor, ürünün birimi KG. Aynı formda 'Numune miktarı' girdisine de birim son eki geçilmiyor — kullanıcı 40'ın kg mı adet mi olduğunu ekrandan öğrenemiyor. Modülün tur 2'de izleme grafiğinde kapattığı bulgunun (kalite-trace-uom-01) aynısı, bu ekranda açık.",
+          "measure": "check-detail.tsx:107 `formatQty(lot.onHandQty)` tek argümanla çağrılıyor (uom yok); check-detail.tsx:159 `FormQty ... ` uom prop'u yok. psql: QC-2026-000001 → Vanilya Aroması, uoms.code=KG, qty=40.0000. Ekran: artifacts/screens/kalite-kontroller-a8daccb2-…/desktop.png → '40 · TIRE/KARANTINA'.",
+          "target": "queries.ts getCheckDetail'e `uoms` join'i (products.uom_id → uoms.code) eklenip `formatQty(lot.onHandQty, uomCode)` → '40 KG · TIRE/KARANTINA'; FormQty'ye `uom={uomCode}`. Kabul: ekranda birimsiz miktar 0.",
+          "file": "apps/web/src/modules/quality/components/check-detail.tsx:107,159 + apps/web/src/modules/quality/queries.ts:44-60 (getCheckDetail)",
+          "openedRound": 3
+        },
+        {
+          "id": "kalite-kontroller-id-05",
+          "criterion": 2,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "'Numune miktarı' sayısal girdisi kartın tamamına yayılıyor: 1118px genişliğinde tek alan, etiket solda, girilen değer 1100px ötede sağda. Linear/Stripe sayısal alanı içeriğine göre ölçer; aynı kod tabanındaki diğer FormQty kullanımlarının hepsi ızgara kolonunda (2-3 kolon).",
+          "measure": "probe-kalite-r3 /kalite/kontroller/a8daccb2-… 1440x900: input w=1118px, h=36px (form tek kolon `space-y-4`). Şablon kalemi girdisi de aynı: w=1092px.",
+          "target": "Sonuç girişi formu `grid grid-cols-1 gap-4 md:grid-cols-3`; sayısal alan `max-w-[200px]`. Kabul: numune miktarı input genişliği ≤ 200px, kalem girdileri ≤ 360px.",
+          "file": "apps/web/src/modules/quality/components/check-detail.tsx:156-180",
+          "openedRound": 3
+        }
+      ],
       "closed": [
         {
           "id": "kalite-kontroller-id-01",
@@ -113,11 +136,22 @@
           "target": "`formatQty(lot.onHandQty, lot.uomCode)` → '14 kg · TIRE/RED'; queries.ts getCheckDetail lot seçimine uoms.code join'i eklenir.",
           "file": "apps/web/src/modules/quality/components/check-detail.tsx:109",
           "openedRound": 2
+        },
+        {
+          "id": "kalite-kontroller-id-06",
+          "criterion": 12,
+          "severity": "P2",
+          "module": "kalite",
+          "text": "Her şablon kalemi çerçeveli kartın içinde ayrı çerçeveli kutuya alınıyor — kutu içinde kutu.",
+          "measure": "check-detail.tsx:165 `rounded-lg border border-border/60 p-3` zaten `rounded-xl border` kartın içinde; 1 kalemli kontrolde tek kutu boşuna çerçeve.",
+          "target": "Kalem satırları `divide-y divide-border/60` ile ayrılsın, iç çerçeve kalksın.",
+          "file": "apps/web/src/modules/quality/components/check-detail.tsx:165",
+          "openedRound": 3
         }
       ]
     },
     "/kalite/sablonlar": {
-      "round": 2,
+      "round": 3,
       "reference": "linear",
       "scores": [
         5,
@@ -136,7 +170,7 @@
       "total": 59,
       "previousTotal": 59,
       "verdict": "Plantero",
-      "delta": "Tur 1 ile aynı (59). pnpm measure: h1 24px/600, satır 36px, mobil kart 63,5px, 44px altı hedef yok, sayfa taşması yok.",
+      "delta": "59 → 59, değişiklik yok. Yeniden ölçüm: satır 36px, mobil kart 64px, tabular-nums 2/2, 390px'te kırpılan öğe 0, taşma yok.",
       "open": [],
       "closed": [],
       "p2": [
@@ -150,15 +184,26 @@
           "target": "templates-table.tsx mobil kart şablonunda `{n} kalem` → sayı bağlamlı basılsın.",
           "file": "apps/web/src/modules/quality/components/templates-table.tsx",
           "openedRound": 1
+        },
+        {
+          "id": "kalite-sablonlar-03",
+          "criterion": 6,
+          "severity": "P2",
+          "module": "kalite",
+          "text": "Mobil kartta kalem sayısı çıplak '4' / '5' olarak sağ altta duruyor; masaüstünde 'Kalem' başlığı var, mobilde etiketsiz.",
+          "measure": "artifacts/screens/kalite-sablonlar/mobile.png — kart sağ alt köşesinde etiketsiz sayı.",
+          "target": "'4 kalem' ya da 11px muted 'Kalem' öneki. Kabul: mobil kartta etiketsiz çıplak sayı 0.",
+          "file": "apps/web/src/modules/quality/components/templates-table.tsx",
+          "openedRound": 3
         }
       ]
     },
     "/kalite/tedarikci-skoru": {
-      "round": 2,
+      "round": 3,
       "reference": "stripe",
       "scores": [
         5,
-        5,
+        4,
         5,
         5,
         5,
@@ -170,11 +215,23 @@
         5,
         5
       ],
-      "total": 58,
-      "previousTotal": 49,
-      "verdict": "Plantero",
-      "delta": "49 → 58. k2 4→5: KPI'lar 136px kutulardan 80px Stripe şeridine indi (dikey hairline, çerçevesiz). k3 3→5: şerit 80px + 6 satır 36px. k7 4→4 (değişmedi: boş/hata durumu görülemedi). k10 3→5: 3 süs ikonu (Star/Users/TrendingDown) kaldırıldı, şeritte 0 svg. k11 3→5: diğer 12 modülle aynı KpiStripRow. k12 3→5: native <input type=month> yerine Türkçe Ay/Yıl Select. k9 4 (5 değil): iki dönem Select'i mobilde 36px.",
-      "open": [],
+      "total": 57,
+      "previousTotal": 58,
+      "verdict": "Stripe",
+      "delta": "58 → 57 (referans Stripe 56). k2 5→4: mobilde başlık eylem grubu sayfa oluğunu kırıyor (aşağıdaki P1). k9 4 sabit: KPI şeridi 390px'te kaydırılabilir (472/358) — bilinçli desen, ama eylem grubu taşması yeni. Diğer kriterler değişmedi: tabular 12/13, satır 36px, mobil kart 60px.",
+      "open": [
+        {
+          "id": "kalite-tedarikci-05",
+          "criterion": 2,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "390px'te 'Skoru Hesapla' eylem grubu (Ay + Yıl select + buton) sayfa oluğunu taşıyor: butonun sağ kenarı 385px, oysa arama kutusu ve tüm kartlar 374px'te bitiyor (main padding 16px). Buton ekran kenarına 5px kalıyor, sayfadaki tek hizasız öğe.",
+          "measure": "Playwright 390x844 getBoundingClientRect: buton left=240 right=385, main paddingLeft/Right=16px → içerik sağ kenarı 374px; probe-kalite-r3: `div.flex.shrink-0.flex-wrap.items-center` scrollWidth 369 > clientWidth 358 (11px). Kap `flex items-center gap-2` (compute-score-button.tsx:66) — flex-wrap YOK: 112 (w-28) + 96 (w-24) + 2×8 gap + 145 buton = 369.",
+          "target": "compute-score-button.tsx kabına `flex-wrap` + mobilde `w-full` buton (`w-full sm:w-auto`) ya da select'lere `flex-1 min-w-0`. Kabul: 390px'te grubun sağ kenarı ≤ 374px ve scrollWidth ≤ clientWidth.",
+          "file": "apps/web/src/modules/quality/components/compute-score-button.tsx:66",
+          "openedRound": 3
+        }
+      ],
       "closed": [
         {
           "id": "kalite-tedarikci-01",
@@ -241,7 +298,7 @@
       ]
     },
     "/kalite/izlenebilirlik": {
-      "round": 2,
+      "round": 3,
       "reference": "linear",
       "scores": [
         5,
@@ -258,9 +315,9 @@
         5
       ],
       "total": 58,
-      "previousTotal": 57,
+      "previousTotal": 58,
       "verdict": "Plantero",
-      "delta": "57 → 58. k7 3→4: tur-1'de ?lot= çözülemediğinde ekran SESSİZCE bu boş duruma düşüyordu; artık ayrı bir 'Lot bulunamadı: …' durumu + toast var ve lot NUMARASI da çözülüyor (probe-kalite-r2: ?lot=PL-260808-H1-12 → URL ?lot=475e1857-… kanonikleşiyor, grafik doluyor). Boş durum ikon+başlık+açıklama taşıyor; 5 olmamasının nedeni eylemsizliği (P2). k3 4: arama-öncesi ekran, yoğunluk verisiz.",
+      "delta": "58 → 58, değişiklik yok. Arama öncesi durum; k3=4 doğası gereği (tek arama kutusu + boş durum), k7=4: boş durumda eylem düğmesi yok, metin ve ikon özenli. 390px'te taşma/kırpma 0.",
       "open": [],
       "closed": [
         {
@@ -291,7 +348,7 @@
       ]
     },
     "/kalite/geri-cagirma": {
-      "round": 2,
+      "round": 3,
       "reference": "linear",
       "scores": [
         5,
@@ -308,9 +365,9 @@
         5
       ],
       "total": 58,
-      "previousTotal": 56,
+      "previousTotal": 58,
       "verdict": "Plantero",
-      "delta": "56 → 58. k3 3→4: 'Yeni Simülasyon' formu Sheet'e taşındığı için tablo artık tam genişlikte (satır 36px, 6 sütun); 5 olmamasının nedeni seed'de tek kayıt olması — tasarım değil veri. k11 4→5: DataTable + Sheet diğer modüllerle aynı. k5 4: tablo satırı 1166px, kap 1152px (14px).",
+      "delta": "58 → 58, değişiklik yok. Yeniden ölçüm: satır 36px, mobil kart 64px, 390px'te kırpılan öğe 0. k5=4 sabit: masaüstü tablo kaydırıcısı 1166 > 1152 (14px, görünmez seviyede) — P2. k3=4: veri 1 kayıt.",
       "open": [],
       "closed": [
         {
@@ -341,7 +398,7 @@
       ]
     },
     "/kalite/geri-cagirma/[id]": {
-      "round": 2,
+      "round": 3,
       "reference": "stripe",
       "scores": [
         5,
@@ -349,19 +406,31 @@
         5,
         5,
         5,
+        3,
+        5,
+        5,
         4,
-        5,
-        5,
-        5,
         5,
         5,
         4
       ],
-      "total": 57,
-      "previousTotal": 48,
+      "total": 55,
+      "previousTotal": 57,
       "verdict": "Stripe",
-      "delta": "48 → 57. k3 3→5: 6 KPI tek 80px şeritte, tırtıklı ikinci sıra yok. k6 4→4 (aşağıdaki birim bulgusu açık). k10 3→5: şeritte 0 süs ikonu. k11 3→5: KpiStripRow standardı. k12 4→4: kutu-içinde-kutu gitti ama 'Etkilenen müşteriler' kartı 257px ölü alanla duruyor. k2 3→4: aynı ölü alan.",
-      "open": [],
+      "delta": "57 → 55 (referans Stripe 56). k6 4→3 ve k9 5→4: mobilde çok birimli KPI değeri kırpılıyor ve hiçbir kaydırma konumunda okunamıyor (aşağıdaki P1). Diğer kriterler tur 2 seviyesinde: masaüstünde 6 KPI tek şeritte, birimler tam (75 ADET / 22,12 KG ve 38 ADET).",
+      "open": [
+        {
+          "id": "kalite-geri-cagirma-id-08",
+          "criterion": 6,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "390px'te 'Stoktaki miktar' KPI'ı '75 ADET · 2…' diye kırpılıyor — 22,12 KG değeri hiçbir kaydırma konumunda görünmüyor (kart sabit 152px, değer `truncate`). Geri çağırmanın en kritik iki sayısından biri mobilde okunamıyor.",
+          "measure": "Playwright 390x844: değer düğümü `.mt-1.truncate.text-[19px]` scrollWidth 175 > clientWidth 126, white-space:nowrap, overflow:hidden; metin '75 ADET · 22,12 KG'. Şerit sağa sonuna kadar kaydırılmış ekran görüntüsü: artifacts/screens/kalite-geri-cagirma-1160dab7-…/mobile-kpi-scrolled.png → '75 ADET · 2…'.",
+          "target": "QtyByUomStripCell çok birimli durumda mobilde sabit `w-[152px]` + `truncate` kullanmasın: `w-auto min-w-[152px] max-w-[260px] whitespace-nowrap` (şerit zaten yatay kayıyor) ya da birimleri alt alta iki satır (`text-[15px] leading-tight`). Kabul: 390px'te değer düğümünde scrollWidth ≤ clientWidth.",
+          "file": "apps/web/src/modules/quality/components/recall-detail.tsx:61-63",
+          "openedRound": 3
+        }
+      ],
       "closed": [
         {
           "id": "kalite-geri-cagirma-id-01",
@@ -465,62 +534,65 @@
       ]
     },
     "/kalite/izlenebilirlik?lot=<lot no|uuid>": {
-      "round": 2,
+      "round": 3,
       "reference": "linear",
       "scores": [
         5,
         5,
         5,
         5,
-        3,
         4,
         5,
-        5,
         3,
+        5,
+        4,
         5,
         5,
         5
       ],
-      "total": 55,
-      "previousTotal": 46,
+      "total": 56,
+      "previousTotal": 55,
       "verdict": "Linear",
-      "delta": "46 → 55. k3 3→5: ağaç artık çiziliyor (13 düğüm, 36-39px satır, iki panel). k4 3→5: düğüm çipleri nötrleştirildi, yeşil yalnızca durum rozetinde. k5 2→3: 'Bağlantısız düz liste' hatası kapandı AMA tanımlayıcı kırpılması açıldı (aşağıda). k6 4→4: ham '19.0000' gitti (tabular 10/10, nonTabular []), ama hiçbir miktarda birim yok. k11 3→5: KpiStripRow + StatusBadge + LotBadge standart. k12 4→5: kutu içinde kutu yok. k9 4→3: mobilde 16 dokunma hedefi 44px altında.",
+      "delta": "55 → 56 (referans Linear 57). k5 3→4: kimlik kırpması giderildi (kırpılan yaprak 10→0); 390px'te en derin düğümde partner adı viewport'u 3px aşıyor, o yüzden 5 değil. k9 3→4: <44px dokunma hedefi 16→0; aynı 3px sessiz kırpma nedeniyle 5 değil. k6 4→5: tüm miktarlarda birim var (ADET/KG), tabular 10/10. k7 5→3: ?lot= derin bağlantısı çözülürken ekranda YANLIŞ durum (\"Aramaya başlayın\") gösteriliyor, iskelet/yükleniyor yok (aşağıdaki P1).",
       "open": [
+        {
+          "id": "kalite-izlenebilirlik-05",
+          "criterion": 7,
+          "severity": "P1",
+          "module": "kalite",
+          "text": "?lot= derin bağlantısıyla gelen kullanıcı, lot çözülene kadar 'Aramaya başlayın — Lot no, ürün adı… girin' boş durumunu görüyor: hiçbir iskelet/yükleniyor göstergesi yok ve mesaj 'hiç arama yapılmadı' diyor. Paylaşılan bir lot bağlantısını açan kişi ekranın çalışmadığını sanır. `useTransition`'ın `pending` değeri hiç render edilmiyor.",
+          "measure": "trace-search.tsx: `pending` yalnızca 111. satırdaki `!pending` kontrolünde kullanılıyor; `?lot=` yolunda (useEffect → loadLot → sunucu eylemi) view=null, q='', notFound=null olduğu için 189. satırdaki 'Aramaya başlayın' EmptyState render ediliyor. Kanıt: openRoute (networkidle + aria-busy=0 + 600ms) sonrası alınan ilk çekimde ekran tamamen boş durum — artifacts/screens/kalite-izlenebilirlik-lot/ ilk sürüm; ikinci ölçümde grafik 17ms sonra geldi (probe-kalite-r3-deeplink), yani pencere sunucu eylemi gecikmesine bağlı ve DOM'da hiçbir aria-busy/skeleton işareti yok.",
+          "target": "trace-search.tsx: `?lot=` varken ilk render'da `loading` durumu (KPI şeridi + iki grafik kartı için `Skeleton`, `aria-busy=\"true\"`); 'Aramaya başlayın' yalnızca gerçekten hiç arama yokken. Kabul: derin bağlantıda ilk boyada aria-busy=1 ve 'Aramaya başlayın' metni yok.",
+          "file": "apps/web/src/modules/quality/components/trace-search.tsx:86-92, 186-190",
+          "openedRound": 3
+        }
+      ],
+      "closed": [
         {
           "id": "shell-trace-graph-truncate-01",
           "criterion": 5,
           "severity": "P1",
-          "module": "shell",
-          "text": "TraceGraph düğüm satırında `truncate` en kritik jetonun — belge/lot NUMARASININ — üzerinde; tür etiketi (`meta.label`) ise `shrink-0` almadığı için yer kapıyor ve mobilde iki satıra sarıyor ('İş\\nemri', 'Mal\\nkabul', 'Eldeki\\nstok'). Sonuç: 390px'te üç sevkiyatın üçü de 'DN-2026-0…', 'DN-2026-…', 'DN-2026…' olarak kırpılıyor — hangisinin hangisi olduğu ekrandan ayırt edilemiyor. Aynı bileşen /depo/lotlar/[id]'de de kullanılıyor.",
-          "measure": "probe-kalite-r2 (yaprak düğümlerde scrollWidth>clientWidth): 390x844'te 10 kırpılmış tanımlayıcı — GR-2026-000007 110→48px (%56 gizli), DN-2026-000003 112→86, DN-2026-000012 109→79, DN-2026-000017 108→71, SEED-URT-302030000 140→87, OP-301030000-A 109→87, WO-2026-000001 113→107. 1440x900'de 3 kırpılmış: SEED-URT-302030000 140→132, GR-2026-000007 110→94, 'İrsaliye SEED-URT-TEDARIK' 158→136.",
-          "target": "trace-graph.tsx NodeRow: `meta.label` span'ine `shrink-0 whitespace-nowrap`, kimlik span'ine `truncate` yerine `shrink-0` (kırpılacak olan `node.sub` olsun, o zaten mobilde `hidden`) → her iki viewport'ta kırpılmış tanımlayıcı sayısı 0.",
-          "file": "apps/web/src/components/trace-graph.tsx:71-73",
-          "openedRound": 2
+          "closedRound": 3,
+          "verifiedBy": "ölçüm",
+          "measureAfter": "probe-kalite-r3 /kalite/izlenebilirlik?lot=PL-260808-H1-12 390x844: kırpılmış yaprak düğüm 0 (tur 2'de 10). 1440x900'de kırpılan tek jeton `node.sub` (ürün adı) — kimlik jetonları (GR-2026-000007, SEED-URT-302030000, DN-2026-000003) tam. trace-graph.tsx:71-73 `shrink-0` + `flex-wrap` uygulanmış; ekran: artifacts/screens/kalite-izlenebilirlik-lot/{desktop,mobile}.png."
         },
         {
           "id": "shell-trace-graph-touch-01",
           "criterion": 9,
           "severity": "P1",
-          "module": "shell",
-          "text": "TraceGraph düğüm satırları `min-h-9` (36px) ve tamamı `<Link>` — mobilde izleme grafiğinin TEK gezinme yüzeyi 44px dokunma hedefinin altında. Aynı ekranda 'Yeni arama' düğmesi de 32px.",
-          "measure": "probe-kalite-r2 /kalite/izlenebilirlik?lot=PL-260808-H1-12 --viewport 390x844: smallTargets 16 adet — 13'ü düğüm bağlantısı (36px ×10, 39px ×3), 'Yeni arama' 32px, arama girdisi dahil. 1440x900'de sorun değil (fare).",
-          "target": "NodeRow kabına `min-h-11 md:min-h-9` (44px mobil / 36px masaüstü), 'Yeni arama' Button'a `size=\"sm\"` yerine mobilde `min-h-11` → 390x844'te smallTargets ≤ 1 (etkileşimsiz breadcrumb).",
-          "file": "apps/web/src/components/trace-graph.tsx:63 (min-h-9), apps/web/src/modules/quality/components/trace-search.tsx:126",
-          "openedRound": 2
+          "closedRound": 3,
+          "verifiedBy": "ölçüm",
+          "measureAfter": "probe-kalite-r3 390x844: main içinde <44px dokunma hedefi 0 (tur 2'de 16). NodeRow `min-h-11 md:min-h-9`, 'Yeni arama' butonu `h-11 md:h-8`."
         },
         {
           "id": "kalite-trace-uom-01",
           "criterion": 6,
           "severity": "P1",
-          "module": "kalite",
-          "text": "İzleme grafiğinin ve 'Miktar dengesi' şeridinin hiçbir miktarında birim yok. Aynı ağaçta ADET (BADEM BAZI mamul lotu) ile KG (Badem, Hurma Şurubu, Deniz Tuzu hammadde lotları) yan yana çıplak sayı olarak duruyor: '98' ile '21' farklı birimde ama ekranda ayırt edilemiyor. Kök neden: packages/core/src/lots/trace.ts düğümlere uom hiç koymuyor, bu yüzden trace-graph.tsx'teki `formatQty(node.qty, node.uom)` her zaman birimsiz basıyor.",
-          "measure": "packages/core/src/lots/trace.ts: 'uom' geçen satır YOK (grep 0 eşleşme) → node.uom her düğümde undefined. psql: PL-260808-H1-12 uom=ADET, OP-301030000-A/SEED-URT-302030000/SEED-URT-307020000 uom=KG. Ekranda 13 düğümün 9'unda miktar var, 9/9'u birimsiz; KPI şeridi (Giriş 98 / Sevkiyat 23 / Eldeki 75) de birimsiz.",
-          "target": "trace.ts düğüm üreticilerine stock_lots.uom_id → uoms.code join'i eklenip TraceNode.uom doldurulsun → grafikte ve şeritte 9/9 miktar '98 adet' / '21 kg' biçiminde birimli. (packages/core değişikliği; şema değişikliği gerekmiyor.)",
-          "file": "packages/core/src/lots/trace.ts (TraceNode üretimi), apps/web/src/modules/quality/components/trace-search.tsx:130-136 (KPI şeridi)",
-          "openedRound": 2
+          "closedRound": 3,
+          "verifiedBy": "ölçüm",
+          "measureAfter": "packages/core/src/lots/trace.ts artık `uoms` join'i yapıp her düğüme uom yazıyor (satır 17, 101, 126, 183, 192, 205, 234). Ekranda: kök lot 98 ADET, OP-301030000-A 21 KG, SEED-URT-302030000 20 KG, SEED-URT-307020000 5 KG; KPI şeridi 'Giriş 98 ADET … Eldeki 75 ADET'. probe: tabular-nums 10/10."
         }
       ],
-      "closed": [],
       "p2": [
         {
           "id": "kalite-izlenebilirlik-06",
@@ -532,6 +604,17 @@
           "target": "`pending && !view` iken EmptyState yerine grafik iskeleti (Skeleton) gösterilsin; ilk render'da `initial` durumu 'yükleniyor' olsun.",
           "file": "apps/web/src/modules/quality/components/trace-search.tsx:70-77",
           "openedRound": 2
+        },
+        {
+          "id": "shell-trace-graph-clip-02",
+          "criterion": 5,
+          "severity": "P2",
+          "module": "shell",
+          "text": "390px'te en derin (5. seviye) düğümde uzun cari adı viewport'u 3px aşıp app-shell'in overflow-x-clip'iyle sessizce kesiliyor (kimlik jetonları `shrink-0` olduğu için kırpılamıyor).",
+          "measure": "probe-kalite-r3-clip 390x844: 'Proteinsan Gıda Hammaddeleri Ltd. Şti.' right=393 > vw=390 (3px); ilgili satır kabı scrollWidth 248 > clientWidth 212.",
+          "target": "`partner` türü düğümlerde kimlik span'i `shrink-0` yerine `min-w-0 truncate` (belge/lot numaraları shrink-0 kalsın) ya da mobilde iç girinti `ml-[15px] pl-3` → `ml-2 pl-2`. Kabul: 390px'te viewport'u aşan öğe 0.",
+          "file": "apps/web/src/components/trace-graph.tsx:71-73, 118-124",
+          "openedRound": 3
         }
       ],
       "previousKey": "/kalite/izlenebilirlik?lot=<uuid>"

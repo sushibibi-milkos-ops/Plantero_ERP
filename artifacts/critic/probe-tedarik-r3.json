@@ -1,0 +1,223 @@
+{
+ "critical": {
+  "headers": [
+   "Ürün",
+   "SKU",
+   "Risk",
+   "Kullanılabilir",
+   "Min–Max",
+   "Kapsama (gün)",
+   "Tedarik süresi",
+   "Önerilen sipariş",
+   "Tercihli tedarikçi",
+   "Eylemler"
+  ],
+  "rowCount": 36,
+  "availZero": 36,
+  "riskNormal": 36,
+  "sample": [
+   [
+    "Alkalize Kakao",
+    "304030000",
+    "Normal",
+    "0",
+    "28–80",
+    "—",
+    "20 gün",
+    "—",
+    "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+    ""
+   ],
+   [
+    "Badem",
+    "301030000",
+    "Normal",
+    "0",
+    "21–60",
+    "—",
+    "10 gün",
+    "—",
+    "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+    ""
+   ],
+   [
+    "Brokoli + Ispanak",
+    "306030000",
+    "Normal",
+    "0",
+    "35–100",
+    "—",
+    "18 gün",
+    "—",
+    "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+    ""
+   ]
+  ],
+  "scroller": {
+   "sw": 1152,
+   "cw": 1152
+  }
+ },
+ "approval": {
+  "cardW": 342,
+  "cardH": 20,
+  "mainW": 1200,
+  "mainH": 852,
+  "ratio": 0.28
+ },
+ "poDetail": {
+  "vatStrings": [
+   "%20.0000",
+   "%20.0000"
+  ],
+  "chainRefs": [
+   "PINV-2026-000003",
+   "GR-2026-000003",
+   "GR-2026-000003"
+  ]
+ },
+ "newOrderDesktop": {
+  "productSelect": {
+   "left": 264,
+   "right": 776,
+   "w": 512
+  },
+  "supplierSelect": {
+   "left": 264,
+   "right": 642,
+   "w": 378
+  },
+  "gridRight": 1032,
+  "formRight": 1416
+ },
+ "newOrderMobile": {
+  "submit": {
+   "top": 846,
+   "bottom": 890,
+   "h": 44,
+   "w": 128
+  },
+  "navBox": {
+   "top": 787,
+   "bottom": 844,
+   "pos": "fixed"
+  },
+  "navs": [
+   {
+    "pos": "static",
+    "top": 0,
+    "bottom": 0,
+    "h": 0
+   },
+   {
+    "pos": "static",
+    "top": 14,
+    "bottom": 33,
+    "h": 20
+   },
+   {
+    "pos": "fixed",
+    "top": 787,
+    "bottom": 844,
+    "h": 57
+   }
+  ],
+  "docH": 1102,
+  "vh": 844
+ },
+ "suppliersMobile": {
+  "switches": [
+   {
+    "id": null,
+    "w": 44,
+    "h": 44,
+    "ariaLabel": null,
+    "ariaLabelledby": null,
+    "labelVisible": false
+   },
+   {
+    "id": null,
+    "w": 44,
+    "h": 44,
+    "ariaLabel": null,
+    "ariaLabelledby": null,
+    "labelVisible": false
+   },
+   {
+    "id": null,
+    "w": 44,
+    "h": 44,
+    "ariaLabel": null,
+    "ariaLabelledby": null,
+    "labelVisible": false
+   },
+   {
+    "id": null,
+    "w": 44,
+    "h": 44,
+    "ariaLabel": null,
+    "ariaLabelledby": null,
+    "labelVisible": false
+   },
+   {
+    "id": null,
+    "w": 44,
+    "h": 44,
+    "ariaLabel": null,
+    "ariaLabelledby": null,
+    "labelVisible": false
+   },
+   {
+    "id": null,
+    "w": 44,
+    "h": 44,
+    "ariaLabel": null,
+    "ariaLabelledby": null,
+    "labelVisible": false
+   }
+  ],
+  "cards": 6,
+  "orphanSeparatorCards": 6,
+  "sample": [
+   [
+    "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+    "S-000005",
+    "10 gün tedarik",
+    "·",
+    "50/100 kalite",
+    "·",
+    "%100 zamanında",
+    "·",
+    "4 ürün",
+    "0 açık sipariş",
+    "₺0,00"
+   ],
+   [
+    "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+    "S-000003",
+    "20 gün tedarik",
+    "·",
+    "100/100 kalite",
+    "·",
+    "%100 zamanında",
+    "·",
+    "10 ürün",
+    "1 açık sipariş",
+    "₺32.760,00"
+   ],
+   [
+    "Ege Ambalaj Sanayi ve Ticaret A.Ş.",
+    "S-000004",
+    "12 gün tedarik",
+    "·",
+    "100/100 kalite",
+    "·",
+    "%100 zamanında",
+    "·",
+    "7 ürün",
+    "1 açık sipariş",
+    "₺14.400,00"
+   ]
+  ]
+ }
+}

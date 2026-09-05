@@ -1,5 +1,1 @@
-
-> plantero-erp@ measure /home/user/Plantero_ERP
-> tsx scripts/measure.ts /satin-alma/onay-kuyrugu --viewport 390x844
-
 {"route":"/satin-alma/onay-kuyrugu","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":1,"heights":[19.5,19.5,19.5]},"fontSizes":{"10":5,"11":1,"12":1,"13":5,"14":8,"16":1,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Onay Kuyruğu\"","w":88.4,"h":19.5},{"selector":"a \"PO-2026-000007\"","w":117.6,"h":20}],"distinctColors":13,"h1":{"size":20,"weight":600},"images":0}
