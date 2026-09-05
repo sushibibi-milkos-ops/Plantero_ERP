@@ -2,7 +2,7 @@
  "kritik-stok": {
   "desktop": {
    "sizes": {
-    "12": 84,
+    "12": 47,
     "13": 181,
     "14": 2,
     "19": 2,
@@ -15,11 +15,7 @@
     ],
     [
      "oklch(0.552 0.016 285.9)",
-     85
-    ],
-    [
-     "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
-     36
+     84
     ],
     [
      "oklab(0.552 0.00438335 -0.0153879 / 0.6)",
@@ -39,9 +35,9 @@
      "rows": 36,
      "uniq": 36,
      "empty": 0,
-     "ellipsis": 7,
-     "maxClipPx": 56,
-     "width": 161
+     "ellipsis": 0,
+     "maxClipPx": 0,
+     "width": 228
     },
     {
      "i": 1,
@@ -51,67 +47,57 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 111
+     "width": 108
     },
     {
      "i": 2,
-     "head": "Risk",
-     "rows": 36,
-     "uniq": 1,
-     "empty": 0,
-     "ellipsis": 0,
-     "maxClipPx": 0,
-     "width": 175
-    },
-    {
-     "i": 3,
      "head": "Kullanılabilir",
      "rows": 36,
      "uniq": 32,
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 136
+     "width": 132
     },
     {
-     "i": 4,
+     "i": 3,
      "head": "Min–Max",
      "rows": 36,
      "uniq": 23,
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 136
+     "width": 132
     },
     {
-     "i": 5,
+     "i": 4,
      "head": "Tedarik süresi",
      "rows": 36,
      "uniq": 6,
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 149
+     "width": 145
     },
     {
-     "i": 6,
+     "i": 5,
      "head": "Tercihli tedarikçi",
      "rows": 36,
      "uniq": 6,
      "empty": 0,
-     "ellipsis": 36,
-     "maxClipPx": 165,
-     "width": 235
+     "ellipsis": 1,
+     "maxClipPx": 55,
+     "width": 360
     },
     {
-     "i": 7,
+     "i": 6,
      "head": "Eylemler",
      "rows": 36,
      "uniq": 1,
      "empty": 36,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 49
+     "width": 48
     }
    ],
    "scroller": {
@@ -128,47 +114,47 @@
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "Alkalize KakaoDeğerlendirilmedi304030000 · 82 · 28–80"
+     "txt": "Alkalize Kakao304030000 · 82 · 28–80"
     },
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "BademDeğerlendirilmedi301030000 · 257 · 21–60"
+     "txt": "Badem301030000 · 257 · 21–60"
     },
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "Brokoli + IspanakDeğerlendirilmedi306030000 · 100 · 35–100"
+     "txt": "Brokoli + Ispanak306030000 · 100 · 35–100"
     },
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "BromelainDeğerlendirilmedi306050000 · 50 · 65–100"
+     "txt": "Bromelain306050000 · 50 · 65–100"
     },
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "CreamDeğerlendirilmedi307010000 · 65 · 21–60"
+     "txt": "Cream307010000 · 65 · 21–60"
     },
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "Deniz TuzuDeğerlendirilmedi307020000 · 704,52 · 245–700"
+     "txt": "Deniz Tuzu307020000 · 704,52 · 245–700"
     },
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "Doypack 1kgDeğerlendirilmedi402010000 · 1.650 · 525–1.500"
+     "txt": "Doypack 1kg402010000 · 1.650 · 525–1.500"
     },
     {
      "h": 61,
      "hasDigit": true,
-     "txt": "EtiketDeğerlendirilmedi401030000 · 7.450 · 1.750–5.000"
+     "txt": "Etiket401030000 · 7.450 · 1.750–5.000"
     }
    ],
    "cardCount": 36,
    "sizes": {
-    "12": 147,
+    "12": 111,
     "13": 73,
     "14": 38,
     "19": 2,
@@ -531,8 +517,7 @@
  "po-detay": {
   "desktop": {
    "sizes": {
-    "10": 3,
-    "11": 13,
+    "11": 16,
     "12": 10,
     "13": 29,
     "14": 1,
@@ -572,7 +557,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 292
+     "width": 332
     },
     {
      "i": 1,
@@ -582,7 +567,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 116
+     "width": 115
     },
     {
      "i": 2,
@@ -592,7 +577,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 110
+     "width": 109
     },
     {
      "i": 3,
@@ -602,7 +587,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 168
+     "width": 174
     },
     {
      "i": 4,
@@ -612,7 +597,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 150
+     "width": 154
     },
     {
      "i": 5,
@@ -622,17 +607,17 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 89
+     "width": 85
     },
     {
      "i": 6,
-     "head": "Tutar (KDV hariç)",
+     "head": "Tutar",
      "rows": 2,
      "uniq": 2,
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 224
+     "width": 180
     }
    ],
    "scroller": {
@@ -678,14 +663,14 @@
   "mobile": {
    "cards": [
     {
-     "h": 81,
+     "h": 63,
      "hasDigit": true,
-     "txt": "Suklaroz302010000₺55.200,00KDV hariç · %2080 KG sipariş · 80 alınan₺690,00"
+     "txt": "Suklaroz· 302010000₺55.200,0080 KG sipariş · 80 alınan₺690,00 · %20"
     },
     {
-     "h": 81,
+     "h": 63,
      "hasDigit": true,
-     "txt": "stevya302020000₺39.000,00KDV hariç · %2060 KG sipariş · 60 alınan₺650,00"
+     "txt": "stevya· 302020000₺39.000,0060 KG sipariş · 60 alınan₺650,00 · %20"
     },
     {
      "h": 20,
@@ -700,11 +685,10 @@
    ],
    "cardCount": 4,
    "sizes": {
-    "10": 5,
-    "11": 13,
+    "11": 16,
     "12": 5,
     "13": 19,
-    "14": 3,
+    "14": 1,
     "20": 2
    },
    "switches": [],
@@ -767,7 +751,7 @@
     ],
     [
      "oklch(0.21 0.006 285.9)",
-     22
+     24
     ],
     [
      "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
@@ -776,10 +760,6 @@
     [
      "oklch(0.577 0.245 27.3)",
      4
-    ],
-    [
-     "oklch(0.6 0.16 152)",
-     2
     ]
    ],
    "primary": "oklch(0.55 0.16 152)",
@@ -791,9 +771,9 @@
      "rows": 6,
      "uniq": 6,
      "empty": 0,
-     "ellipsis": 6,
-     "maxClipPx": 135,
-     "width": 237
+     "ellipsis": 1,
+     "maxClipPx": 35,
+     "width": 334
     },
     {
      "i": 1,
@@ -803,7 +783,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 118
+     "width": 92
     },
     {
      "i": 2,
@@ -813,7 +793,7 @@
      "empty": 6,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 118
+     "width": 90
     },
     {
      "i": 3,
@@ -823,7 +803,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 130
+     "width": 126
     },
     {
      "i": 4,
@@ -833,7 +813,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 97
+     "width": 84
     },
     {
      "i": 5,
@@ -843,7 +823,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 112
+     "width": 108
     },
     {
      "i": 6,
@@ -853,7 +833,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 86
+     "width": 71
     },
     {
      "i": 7,
@@ -863,7 +843,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 114
+     "width": 111
     },
     {
      "i": 8,
@@ -873,7 +853,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 140
+     "width": 136
     }
    ],
    "scroller": {
@@ -949,32 +929,32 @@
   "mobile": {
    "cards": [
     {
-     "h": 88,
+     "h": 64,
      "hasDigit": true,
      "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.S-000005 · 50/100 · %100 · 0 açık sipariş₺0,0"
     },
     {
-     "h": 88,
+     "h": 64,
      "hasDigit": true,
      "txt": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.S-000003 · 70/100 · %50 · 1 açık sipariş₺32.760,00"
     },
     {
-     "h": 88,
+     "h": 64,
      "hasDigit": true,
      "txt": "Ege Ambalaj Sanayi ve Ticaret A.Ş.S-000004 · 100/100 · %100 · 1 açık sipariş₺14.400,00"
     },
     {
-     "h": 88,
+     "h": 64,
      "hasDigit": true,
      "txt": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.S-000006 · 85/100 · %50 · 0 açık sip"
     },
     {
-     "h": 88,
+     "h": 64,
      "hasDigit": true,
      "txt": "Proteinsan Gıda Hammaddeleri Ltd. Şti.S-000001 · 70/100 · %0 · 0 açık sipariş₺0,00"
     },
     {
-     "h": 88,
+     "h": 64,
      "hasDigit": true,
      "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.S-000002 · 69/100 · %0 · 0 açık sipariş₺0,00"
     }

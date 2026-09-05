@@ -65,16 +65,25 @@ export function CriticalStockTable({
       // `meta.width`'inden TAM 24px daha dar seçilir (106 = 130-24) — td tam 130px'te durur. Ürün
       // adları bugünkü veride ≤25 karakter (~186px) — bounded kutu bunu kırparak karşılar (tam ad
       // `title`'da).
-      { id: 'productName', accessorFn: (r) => r.productName, header: 'Ürün', meta: { width: 130, mobile: 'title' }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[106px]" title={row.original.productName}>{row.original.productName}</span> },
+      // width 130 -> 190 (Tur 6 P1 tedarik-kritik-stok-13): motor hiç çalışmamışken 'Risk' sütunu
+      // tamamen kaldırılır (aşağıda), boşalan genişlik iki kimlik sütunu ('Ürün', 'Tercihli
+      // tedarikçi') arasında paylaştırılır — ikisi de 36/36 satırda kırpılıyordu.
+      { id: 'productName', accessorFn: (r) => r.productName, header: 'Ürün', meta: { width: 190, mobile: 'title' }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[166px]" title={row.original.productName}>{row.original.productName}</span> },
       { id: 'sku', accessorFn: (r) => r.sku, header: 'SKU', meta: { width: 90, mobile: 'subtitle', className: 'font-mono text-xs' } },
-      {
-        // width 100 -> 132: 'Değerlendirilmedi' (18 karakter) rozeti 100px'te td'nin `meta.width`
-        // ipucunu (yalnızca bir öneri, bkz. yukarıdaki `productName` notu) aşıp tabloyu genişletiyordu
-        // — Tur 5 P1 tedarik-kritik-stok-09 taşmasının BİR PARÇASI bu satırın kendisiydi, iki ölü
-        // sütunu kaldırmak (aşağıda `hasEvaluation`) tek başına yetmiyordu.
-        id: 'risk', accessorFn: (r) => r.risk, header: 'Risk', meta: { width: 132, mobile: 'badge' },
-        cell: ({ row }) => <span className={cn('inline-flex h-5 items-center rounded-full px-2 text-xs font-medium', RISK_CLASS[row.original.risk])}>{RISK_LABEL[row.original.risk]}</span>,
-      },
+      // Tur 6 P1 tedarik-kritik-stok-13 kök neden: motor hiç çalışmamışken (hasEvaluation=false)
+      // 'Risk' sütunu 36/36 satırda AYNI tek değeri ('Değerlendirilmedi') basıyordu — bilgi taşımayan
+      // bu sütun tablonun %15,2'sini yiyip iki kimlik sütununu ('Ürün', 'Tercihli tedarikçi') kırpmaya
+      // zorluyordu. Üstteki amber şerit zaten "Motor henüz çalıştırılmadı" diyor; 'Kapsama (gün)' /
+      // 'Önerilen sipariş' ile AYNI kalıp (tedarik-kritik-stok-10): veri hiç yoksa sütun render
+      // edilmez, motor çalışıp herhangi bir satırda gerçek risk değeri oluşunca geri döner.
+      ...(hasEvaluation
+        ? ([
+            {
+              id: 'risk', accessorFn: (r: CriticalStockRow) => r.risk, header: 'Risk', meta: { width: 132, mobile: 'badge' },
+              cell: ({ row }: { row: { original: CriticalStockRow } }) => <span className={cn('inline-flex h-5 items-center rounded-full px-2 text-xs font-medium', RISK_CLASS[row.original.risk])}>{RISK_LABEL[row.original.risk]}</span>,
+            },
+          ] as ColumnDef<CriticalStockRow, unknown>[])
+        : []),
       {
         // 'available' null ise (motor hiç çalışmadı) '0' DEĞİL '—' — 'Kapsama'/'Önerilen sipariş'
         // sütunlarıyla aynı dil (Tur 3 P0 tedarik-kritik-stok-06). mobile:'meta' (Tur 5 P1
@@ -136,11 +145,13 @@ export function CriticalStockTable({
         // kırparak yer açıyordu — aynı bilgi zaten `/satin-alma/tedarikciler` kendi sütununda var.
         // Rozet tamamen kaldırıldı; ad kutusu artık rozet için ayrılan `gap-1.5 shrink-0` alanı
         // olmadan meta.width'in (190) TAMAMINI (166 = 190 - td dolgusu 24) kırpmadan kullanıyor.
-        id: 'preferredSupplierName', accessorFn: (r) => r.preferredSupplierName, header: 'Tercihli tedarikçi', meta: { width: 190, mobile: 'hidden' },
+        // width 190 -> 300 (Tur 6 P1 tedarik-kritik-stok-13): 'Risk' sütununün kaldırdığı genişlikle
+        // birlikte bu kolon büyütüldü — 36/36 satırda kırpılan tedarikçi adı artık %20'nin altına iner.
+        id: 'preferredSupplierName', accessorFn: (r) => r.preferredSupplierName, header: 'Tercihli tedarikçi', meta: { width: 300, mobile: 'hidden' },
         cell: ({ row }) => (
-          // w-[166px] = meta.width(190) - td dolgusu(24) — bkz. yukarıdaki `productName` notu, ölçüm
+          // w-[276px] = meta.width(300) - td dolgusu(24) — bkz. yukarıdaki `productName` notu, ölçüm
           // ile doğrulanan aynı formül (iç kutu td'nin dolgusu KADAR dar seçilirse td tam meta.width'te durur).
-          <span className="inline-block w-[166px] truncate align-bottom" title={row.original.preferredSupplierName ?? undefined}>
+          <span className="inline-block w-[276px] truncate align-bottom" title={row.original.preferredSupplierName ?? undefined}>
             {row.original.preferredSupplierName ?? <span className="text-muted-foreground">—</span>}
           </span>
         ),

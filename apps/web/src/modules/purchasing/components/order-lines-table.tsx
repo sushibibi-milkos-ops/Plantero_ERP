@@ -40,12 +40,17 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                 th ile birebir (`text-[12px] font-medium text-muted-foreground`). */}
             <tr className="border-b border-border/60 text-left text-[12px] font-medium text-muted-foreground">
               <th className="px-3 py-2">Ürün</th>
-              <th className="px-3 py-2 text-right">Sipariş</th>
-              <th className="px-3 py-2 text-right">Alınan</th>
-              <th className="px-3 py-2 text-right">Faturalanan</th>
-              <th className="px-3 py-2 text-right">Birim fiyat</th>
-              <th className="px-3 py-2 text-right">KDV</th>
-              <th className="px-3 py-2 text-right">Tutar (KDV hariç)</th>
+              {/* Tur 6 P1 tedarik-po-detay-13 kök neden: sabit `px-3` (6 sayısal sütunda) + 'Tutar
+                  (KDV hariç)' başlığının uzun metni bu tabloyu kabının (1152px) 4px dışına taşırıyordu
+                  — modülün diğer üç tablosunda sw=cw=1152. Başlık kısaltıldı (`title` tam etiketi
+                  taşır, yandaki ayrı 'KDV' sütunu zaten oranı gösteriyor) VE sayısal sütunların yatay
+                  dolgusu `px-3`→`px-2` indirildi (6 sütun × 4px = 24px kazanç, taşmayı fazlasıyla giderir). */}
+              <th className="px-2 py-2 text-right">Sipariş</th>
+              <th className="px-2 py-2 text-right">Alınan</th>
+              <th className="px-2 py-2 text-right">Faturalanan</th>
+              <th className="px-2 py-2 text-right">Birim fiyat</th>
+              <th className="px-2 py-2 text-right">KDV</th>
+              <th className="px-2 py-2 text-right" title="Tutar (KDV hariç)">Tutar</th>
               {hasExpectedDate ? <th className="px-3 py-2">Beklenen tarih</th> : null}
             </tr>
           </thead>
@@ -63,26 +68,26 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                     <span className="font-medium">{r.productName}</span>
                     <span className="ml-1.5 font-mono text-xs text-muted-foreground">· {r.sku}</span>
                   </td>
-                  <td className="px-3 py-2 text-right font-mono tabular-nums">{formatQty(r.line.qty, r.uomCode)}</td>
+                  <td className="px-2 py-2 text-right font-mono tabular-nums">{formatQty(r.line.qty, r.uomCode)}</td>
                   {/* Tur 5 P1 tedarik-po-detay-10 kök neden: `text-success` bu ekranda hem durum
                       rozetinin ('MAL KABUL / Tamamlandı') hem de bu MİKTARIN anlamını taşıyordu —
                       okuyucu yeşil rakamın durum mu değer mi olduğunu ayırt edemiyordu (kriter 4: yeşil
                       yalnızca BİR anlam). Renk kaldırıldı; "tam alındı" bilgisi artık nötr bir onay
                       glifiyle (rozetlerle asla karışmayan bir şekil, renk değil) veriliyor. */}
-                  <td className="px-3 py-2 text-right font-mono tabular-nums">
+                  <td className="px-2 py-2 text-right font-mono tabular-nums">
                     <span className="inline-flex items-center justify-end gap-1">
                       {formatQty(r.line.receivedQty)}
                       {receivedFull ? <Check className="size-3 shrink-0 text-muted-foreground" aria-label="Tam alındı" /> : null}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-right font-mono tabular-nums text-muted-foreground">{formatQty(r.line.invoicedQty)}</td>
-                  <td className="px-3 py-2 text-right"><MoneyCell value={r.line.unitPrice} /></td>
+                  <td className="px-2 py-2 text-right font-mono tabular-nums text-muted-foreground">{formatQty(r.line.invoicedQty)}</td>
+                  <td className="px-2 py-2 text-right"><MoneyCell value={r.line.unitPrice} /></td>
                   {/* Tur 3 P1 tedarik-po-detay-04 kök nedeni: oran ham numeric(18,4) ("20.0000") ile
                       basılıyordu — bir para tutarı değil, 4 ondalık bilgi taşımıyor. `formatPct`
                       (`/satin-alma/siparisler/yeni` özet bloğuyla aynı yardımcı) gereksiz sıfırları
                       kırpar: "%20", "%8,5". */}
-                  <td className="px-3 py-2 text-right font-mono text-[13px] tabular-nums text-muted-foreground">{formatPct(r.line.vatRate, 2)}</td>
-                  <td className="px-3 py-2 text-right"><MoneyCell value={r.line.lineSubtotal} /></td>
+                  <td className="px-2 py-2 text-right font-mono text-[13px] tabular-nums text-muted-foreground">{formatPct(r.line.vatRate, 2)}</td>
+                  <td className="px-2 py-2 text-right"><MoneyCell value={r.line.lineSubtotal} /></td>
                   {hasExpectedDate ? <td className="px-3 py-2 text-muted-foreground">{r.line.expectedDate ? formatDate(r.line.expectedDate) : '—'}</td> : null}
                 </tr>
               );
@@ -95,16 +100,18 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
         {lines.map((r) => {
           const receivedFull = D(r.line.receivedQty).gte(D(r.line.qty));
           return (
+            // Tur 6 P1 tedarik-po-detay-12 kök neden: kart üç ayrı satıra yığılıyordu (ürün+SKU alt
+            // alta, tutar+'KDV hariç · %oran' alt alta, miktar satırı) — 81px, hedef (kriter 3) 56-72px.
+            // Masaüstü tabloda po-detay-09'da SKU ürün adıyla AYNI satıra alınmıştı; aynı kalıp burada
+            // da: SKU tek satırda ada eklendi, 'KDV hariç · %oran' ayrı satırdan kaldırılıp birim
+            // fiyatla birlikte İKİNCİ (miktar) satırın akışına katıldı — kart artık 2 satır.
             <li key={r.line.id} className="rounded-lg border border-border/70 bg-card p-2.5">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <div className="truncate text-[14px] leading-5 font-medium">{r.productName}</div>
-                  <div className="font-mono text-xs text-muted-foreground">{r.sku}</div>
+              <div className="flex items-baseline justify-between gap-2">
+                <div className="min-w-0 truncate text-[14px] leading-5 font-medium" title={`${r.productName} · ${r.sku}`}>
+                  {r.productName}
+                  <span className="ml-1.5 font-mono text-xs font-normal text-muted-foreground">· {r.sku}</span>
                 </div>
-                <div className="shrink-0 text-right">
-                  <MoneyCell value={r.line.lineSubtotal} className="text-[13px] font-semibold tabular-nums" />
-                  <div className="text-[10px] text-muted-foreground">KDV hariç · {formatPct(r.line.vatRate, 2)}</div>
-                </div>
+                <MoneyCell value={r.line.lineSubtotal} className="shrink-0 text-[13px] font-semibold tabular-nums" />
               </div>
               <div className="mt-1 flex items-baseline justify-between gap-2 text-xs text-muted-foreground">
                 {/* tedarik-po-detay-10 ile aynı düzeltme: renk yerine nötr onay glifi. */}
@@ -112,7 +119,9 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                   {formatQty(r.line.qty, r.uomCode)} sipariş · {formatQty(r.line.receivedQty)} alınan
                   {receivedFull ? <Check className="ml-0.5 inline size-3 align-[-1px]" aria-label="Tam alındı" /> : null}
                 </span>
-                <MoneyCell value={r.line.unitPrice} className="shrink-0 tabular-nums" digits={2} />
+                <span className="shrink-0 tabular-nums">
+                  <MoneyCell value={r.line.unitPrice} className="inline tabular-nums" digits={2} /> · {formatPct(r.line.vatRate, 2)}
+                </span>
               </div>
               {r.line.expectedDate ? <div className="mt-0.5 text-[11px] text-muted-foreground">Beklenen: {formatDate(r.line.expectedDate)}</div> : null}
             </li>

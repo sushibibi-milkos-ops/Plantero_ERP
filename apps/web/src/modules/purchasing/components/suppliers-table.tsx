@@ -30,11 +30,13 @@ export function SuppliersTable({ suppliers, canManageWhitelist }: { suppliers: S
   const columns = useMemo<ColumnDef<SupplierCardRow, unknown>[]>(
     () => [
       {
-        id: 'name', accessorFn: (r) => r.name, header: 'Tedarikçi', meta: { width: 220, mobile: 'title' },
-        // w-[196px] = meta.width(220) - td dolgusu(24) — bkz. yukarıdaki dosya notu.
-        cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[196px]" title={row.original.name}>{row.original.name}</span>,
+        // width 220 -> 320 (Tur 6 P1 tedarik-tedarikciler-18): ekranın kimlik sütunu 6/6 satırda
+        // kırpıktı (en fazla 135px gizli); genişlik, kardeş sütunlardan (aşağıda) alınan payla büyütüldü.
+        id: 'name', accessorFn: (r) => r.name, header: 'Tedarikçi', meta: { width: 320, mobile: 'title' },
+        // w-[296px] = meta.width(320) - td dolgusu(24) — bkz. yukarıdaki dosya notu.
+        cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[296px]" title={row.original.name}>{row.original.name}</span>,
       },
-      { accessorKey: 'code', header: 'Kod', meta: { width: 110, mobile: 'subtitle', className: 'font-mono text-xs' } },
+      { accessorKey: 'code', header: 'Kod', meta: { width: 88, mobile: 'subtitle', className: 'font-mono text-xs' } },
       {
         // Beyaz liste hem bir FİLTRE hem bir sütun — değer 'true'/'false' (arrIncludesSome ile
         // eşleşen filtre seçenekleri), hücre canManageWhitelist'e göre ya Switch ya salt-okunur rozet.
@@ -43,30 +45,31 @@ export function SuppliersTable({ suppliers, canManageWhitelist }: { suppliers: S
         // veriliyor (Tur 5 P1 tedarik-tedarikciler-12): generic 'meta'/'badge' yuvalarının ikisi de
         // (MetaChain kendi `overflow-hidden`i, rozet yuvası `leading-4` sabit yüksekliği) 44px'lik
         // bir anahtarı dikeyde kırpar — bkz. `WhitelistCell` notu.
-        id: 'whitelisted', accessorFn: (r) => (r.isPurchaseWhitelisted ? 'true' : 'false'), header: 'Beyaz liste', meta: { width: 110, align: 'center', mobile: 'hidden', noSort: true },
+        id: 'whitelisted', accessorFn: (r) => (r.isPurchaseWhitelisted ? 'true' : 'false'), header: 'Beyaz liste', meta: { width: 72, align: 'center', mobile: 'hidden', noSort: true },
         cell: ({ row }) => <WhitelistCell supplier={row.original} canManage={canManageWhitelist} />,
       },
       { accessorKey: 'leadTimeDays', header: 'Tedarik süresi', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays !== null ? `${row.original.leadTimeDays} gün` : '—'}</span> },
-      { accessorKey: 'qualityScore', header: 'Kalite', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums">{row.original.qualityScore ? `${Math.round(Number(row.original.qualityScore))}/100` : <span className="text-muted-foreground">—</span>}</span> },
+      { accessorKey: 'qualityScore', header: 'Kalite', meta: { align: 'right', width: 80, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums">{row.original.qualityScore ? `${Math.round(Number(row.original.qualityScore))}/100` : <span className="text-muted-foreground">—</span>}</span> },
       {
+        // Tur 6 P1 tedarik-tedarikciler-17 kök neden: yeşil bu ekranda iki anlama geliyordu — beyaz
+        // liste anahtarı (durum) VE bu sütundaki '%100' (veri). success/warning/destructive üçlüsü
+        // kaldırıldı; değer artık nötr (yalnızca <70 uyarı için destructive kalır — bu kırmızı, yeşille
+        // ÇAKIŞMAZ), ekranda yeşil taşıyan tek semantik rol anahtarda kalır.
         accessorKey: 'onTimeDeliveryPct', header: 'Zamanında', meta: { align: 'right', width: 100, mobile: 'hidden' },
         cell: ({ row }) => {
           const v = row.original.onTimeDeliveryPct;
           return (
             <span
               title={row.original.deliveryCount > 0 ? `Son ${row.original.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
-              className={cn(
-                'font-mono text-[13px] tabular-nums',
-                v === null ? 'text-muted-foreground' : v >= 90 ? 'text-success' : v >= 70 ? 'text-warning' : 'text-destructive',
-              )}
+              className={cn('font-mono text-[13px] tabular-nums', v === null ? 'text-muted-foreground' : v < 70 ? 'text-destructive' : 'text-foreground')}
             >
               {v === null ? '—' : `%${v}`}
             </span>
           );
         },
       },
-      { accessorKey: 'productCount', header: 'Ürün', meta: { align: 'right', width: 80, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.productCount}</span> },
-      { accessorKey: 'openPoCount', header: 'Açık sipariş', meta: { align: 'right', width: 100, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.openPoCount}</span> },
+      { accessorKey: 'productCount', header: 'Ürün', meta: { align: 'right', width: 64, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.productCount}</span> },
+      { accessorKey: 'openPoCount', header: 'Açık sipariş', meta: { align: 'right', width: 80, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.openPoCount}</span> },
       { accessorKey: 'openPoValue', header: 'Açık tutar', meta: { align: 'right', width: 130, mobile: 'hidden' }, cell: ({ row }) => <MoneyCell value={row.original.openPoValue} muted={Number(row.original.openPoValue) === 0} /> },
     ],
     [canManageWhitelist],
@@ -173,7 +176,12 @@ function WhitelistCell({ supplier, canManage }: { supplier: SupplierCardRow; can
       onClick={(e) => e.stopPropagation()}
       disabled={pending}
       aria-label={`${supplier.name} beyaz liste`}
-      className="peer inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:min-h-8 md:min-w-8"
+      // Tur 6 P1 tedarik-tedarikciler-16 kök neden: dokunma hedefi kökü (`min-h-11`, 44px) mobil
+      // kartın üst satırını 44px'e şişiriyordu — görsel iz yalnızca 24x14 (approval-queue-list.tsx:135
+      // ile AYNI kalıp: `-my-3` kökün ÇEVRESİNE negatif dikey marj verir, satırın akış yüksekliğini
+      // görsel ize geri döndürür, dokunma alanının KENDİSİ 44x44 kalır — ikisi çelişmiyor). `md:my-0`
+      // masaüstü tablo hücresindeki (`td h-9 align-middle`) yerleşimi değiştirmez.
+      className="peer -my-3 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:my-0 md:min-h-8 md:min-w-8"
     >
       <span
         aria-hidden
