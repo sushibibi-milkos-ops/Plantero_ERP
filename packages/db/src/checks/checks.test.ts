@@ -31,8 +31,15 @@ const FILES = await checkFiles();
 // bazında birleştirilmiş AI taslak PO'larında, tek bir satırın reorder_rule'u autoOrderMaxAmount=NULL
 // (sınırsız) taşıdığında DİĞER satırların sonlu tutar sınırının sessizce iptal olması (kod incelemesiyle
 // doğrulandı, bkz. checks/42_reorder_auto_order_cap.sql üst yorumu) — bugün seed'de tetiklenmiyor,
-// saf regresyon güvenlik ağı.
-const RULE_COUNT = 44;
+// saf regresyon güvenlik ağı. I43 (irsaliye+lot durumu, tur 3), I44 (ihracat sevkiyatı iptali sonrası
+// belge zinciri temizliği, tur 5) eklendi. I45 (veri-critic Tur 6, YENİ): `budget_lines.actual` /
+// `cashflow_lines.actual*` (`/finans/butce` "Yenile" düğmesi, `refreshActuals`) muhasebeye yeni bir
+// fiş posted olduğunda OTOMATİK güncellenmiyor — canlı egzersizle kanıtlandı (bkz.
+// checks/45_budget_cashflow_actual_freshness.sql üst yorumu): fresh seed sonrası doğrudan
+// `postJournalEntry` ile 770.02 hesabına 5.000 TL'lik posted bir fiş yazıldı, I1-I44'ün HİÇBİRİ
+// bunu yakalamadı ama `budget_lines.actual`/`cashflow_lines.actual_fixed_expenses` eski (0,00 TL)
+// değerde donuk kaldı — test verisi temizlenip `db:reset` ile taze seed'e dönüldü.
+const RULE_COUNT = 45;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
