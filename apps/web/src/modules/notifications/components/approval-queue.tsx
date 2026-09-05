@@ -158,10 +158,11 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
             </button>
           ))}
         </div>
-        {/* Tur 3 P2 onaylar-17: kbd çipleri 10px ayrı bir kademe açıyordu (içerikte 5 font kademesi:
-            24/14/13/11/10). "meta" kademesiyle (11px) birleştirildi — h1 24 + gövde 13 + meta 11
-            içinde ≤4 kademeye indi (PageHeader açıklaması ortak bileşen, bkz. sharedComponentRequests). */}
-        <p className="text-xs text-muted-foreground">
+        {/* Tur 3 P2 onaylar-17: kbd çipleri 10px + saran metin 12px (`text-xs`) 2 ayrı ek kademe
+            açıyordu (içerikte 5 font kademesi: 24/14/13/11/10, üstelik 12 de gizliydi). Hepsi "meta"
+            kademesiyle (11px) birleştirildi — h1 24 + gövde 13 + meta 11, ≤4 kademeye indi
+            (PageHeader açıklaması ortak bileşen, bkz. sharedComponentRequests). */}
+        <p className="text-[11px] text-muted-foreground">
           <kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">J</kbd>/<kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">K</kbd> gezin ·{' '}
           <kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">A</kbd> onayla · <kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">R</kbd> reddet
         </p>
