@@ -16,13 +16,18 @@ import { log, type SeedSummary } from './_helpers.js';
  * Dönem kısıtı `stock.ts` ile AYNI: yalnızca Ağustos 2026 ve sonrası mali dönemi açık (`accounting.ts`
  * seed'i), bu yüzden değerli hareket üreten her mal kabul `OPEN_FROM`dan sonra tarihlenir.
  *
- * `requiresIncomingQc` bayrağı mevcut hiçbir ürüne Excel importundan gelmiyor (hepsi `false`) — bu
- * yüzden yeni QC kontrolleri, mal kabulün OTOMATİK açtığı yola değil, `quality/checks.ts`nin KENDİ
+ * `requiresIncomingQc` bayrağı hiçbir ürüne Excel importundan gelmiyor (hepsi `false`) — bu yüzden
+ * çoğu QC koşusu, mal kabulün OTOMATİK açtığı yola değil, `quality/checks.ts`nin KENDİ
  * `createIncomingCheck`ine (ürün bayrağından bağımsız, manuel/ek kontrol için tasarlanmış — bkz. o
- * dosyanın başlık yorumu) güvenir; lotlar yine `disposition:'quarantine'` ile normal karantina akışına
- * girer, yalnızca otomatik `qc_checks` açılışı bu üründe tetiklenmediği için burada açıkça açılır.
- * Mevcut R4 (Vanilya, `stock.ts`) zaten 1 bekleyen kayıt bırakmıştı — o + burada bırakılan 1 bekleyen
- * = doc kabulündeki "2 bekliyor".
+ * dosyanın başlık yorumu) güvenir.
+ * P2 düzeltmesi (bulgu: "seed'de hiçbir üründe requiresIncomingQc=true değil, otomatik açılış yolu
+ * yalnızca QA'nın masterdata ekranından elle bayrak açmasıyla test edilebiliyordu"): kuruyemiş
+ * kalemleri (`autoQc: true`) için bayrak burada `updateProduct` ile GERÇEKTEN açılır ve
+ * `receiveGoods()`in otomatik `qc_checks` açılışı (stock/receipts.ts) kullanılır — `createIncomingCheck`
+ * ÇAĞRILMAZ, otomatik açılan kayıt aranıp karara bağlanır. Diğer kalemler (bayrak kapalı) eskisi gibi
+ * manuel `createIncomingCheck` yoluna güvenmeye devam eder — böylece HER İKİ yol da seed'de sürekli
+ * egzersiz görür. Mevcut R4 (Vanilya, `stock.ts`) zaten 1 bekleyen kayıt bırakmıştı — o + burada
+ * bırakılan 1 bekleyen = doc kabulündeki "2 bekliyor".
  */
 
 const OPEN_FROM = '2026-08-01';
@@ -62,12 +67,19 @@ type Decision = 'pass' | 'pending' | 'fail';
 
 async function receiveAndCheck(
   tx: DbOrTx,
-  opts: { sku: string; supplierCode: string; qty: number; unitCost: number; supplierLotNo: string; day: number; templateId: string; decision: Decision },
+  opts: { sku: string; supplierCode: string; qty: number; unitCost: number; supplierLotNo: string; day: number; templateId: string; decision: Decision; autoQc?: boolean },
 ): Promise<{ checkId: string; lotId: string }> {
   const tire = await wh(tx, 'TIRE');
   const kg = await uom(tx, 'KG');
   const supplier = await partnerByCode(tx, opts.supplierCode);
-  const product = await productBySku(tx, opts.sku);
+  let product = await productBySku(tx, opts.sku);
+
+  if (opts.autoQc && !product.requiresIncomingQc) {
+    // P2 düzeltmesi: bu ürün üzerinde bayrağı gerçekten açıyoruz ki aşağıdaki mal kabul
+    // `receiveGoods()`in OTOMATİK qc_checks açılış yolunu (stock/receipts.ts) tetiklesin —
+    // `createIncomingCheck` bu koşuda hiç çağrılmaz (bkz. aşağı).
+    product = await updateProduct(tx, product.id, { requiresIncomingQc: true });
+  }
 
   const lines: ReceiptLineInput[] = [{
     productId: product.id, qty: D(opts.qty), uomId: kg.id, unitCost: D(opts.unitCost),
@@ -86,14 +98,25 @@ async function receiveAndCheck(
     await writeAudit(tx, { action: 'create', tableName: 'stock_lots', recordId: id, summary: `Mal kabul ${receipt.docNo} ile lot oluşturuldu` }, SYSTEM_ACTOR);
   }
 
-  const check = await createIncomingCheck(tx, {
-    productId: product.id, lotId, receiptId: receipt.id, receiptLineId: line.id, supplierId: supplier.id, templateId: opts.templateId, kind: 'incoming',
-  }, SYSTEM_ACTOR);
+  let checkId: string;
+  if (opts.autoQc) {
+    // `receiveGoods()` bu ürün için (requiresIncomingQc=true + karantina) kendi `qc_checks` kaydını
+    // ZATEN açtı (receipt.status='qc_pending') — burada ikinci bir manuel kayıt açılırsa aynı lot için
+    // iki bekleyen QC oluşur ve doc kabulündeki sayaç bozulur. Otomatik açılan kayıt bulunup kullanılır.
+    const [autoCheck] = await tx.select().from(qcChecks).where(eq(qcChecks.lotId, lotId)).limit(1);
+    if (!autoCheck) throw new Error(`seed:quality — requiresIncomingQc=true olmasına rağmen otomatik QC kaydı açılmadı (lot ${lotId})`);
+    checkId = autoCheck.id;
+  } else {
+    const check = await createIncomingCheck(tx, {
+      productId: product.id, lotId, receiptId: receipt.id, receiptLineId: line.id, supplierId: supplier.id, templateId: opts.templateId, kind: 'incoming',
+    }, SYSTEM_ACTOR);
+    checkId = check.id;
+  }
 
-  if (opts.decision === 'pending') return { checkId: check.id, lotId };
+  if (opts.decision === 'pending') return { checkId, lotId };
 
   const pass = opts.decision === 'pass';
-  await recordResults(tx, check.id, [
+  await recordResults(tx, checkId, [
     { name: 'Nem %', kind: 'numeric', valueNumeric: pass ? D(6.5) : D(14.2) },
     { name: 'Koku', kind: 'boolean', valueBool: true },
     { name: 'Ambalaj bütünlüğü', kind: 'boolean', valueBool: pass },
@@ -102,12 +125,12 @@ async function receiveAndCheck(
 
   if (pass) {
     const target = await locByCode(tx, 'TIRE/HAM/R01/A');
-    await decide(tx, check.id, { decision: 'released', releaseToLocationId: target.id, note: 'Kontrol kalemleri şablon sınırları içinde' }, SYSTEM_ACTOR);
+    await decide(tx, checkId, { decision: 'released', releaseToLocationId: target.id, note: 'Kontrol kalemleri şablon sınırları içinde' }, SYSTEM_ACTOR);
   } else {
     const red = await locByCode(tx, 'TIRE/RED');
-    await decide(tx, check.id, { decision: 'rejected', rejectToLocationId: red.id, returnToSupplier: true, note: 'Nem oranı ve ambalaj bütünlüğü spesifikasyon dışı' }, SYSTEM_ACTOR);
+    await decide(tx, checkId, { decision: 'rejected', rejectToLocationId: red.id, returnToSupplier: true, note: 'Nem oranı ve ambalaj bütünlüğü spesifikasyon dışı' }, SYSTEM_ACTOR);
   }
-  return { checkId: check.id, lotId };
+  return { checkId, lotId };
 }
 
 export async function seedQuality(tx: DbOrTx, summary: SeedSummary): Promise<void> {
@@ -146,8 +169,11 @@ export async function seedQuality(tx: DbOrTx, summary: SeedSummary): Promise<voi
     { sku: '302020000', supplierCode: 'S-000002', qty: 10, unitCost: 650, supplierLotNo: 'TTM-QC-02', day: 34, templateId: genelHam.id, decision: 'pass' },
     { sku: '304010000', supplierCode: 'S-000003', qty: 12, unitCost: 910, supplierLotNo: 'ARK-QC-01', day: 35, templateId: genelHam.id, decision: 'pass' },
     { sku: '308010000', supplierCode: 'S-000006', qty: 18, unitCost: 255, supplierLotNo: 'KDN-QC-01', day: 36, templateId: genelHam.id, decision: 'pass' },
-    { sku: '301030000', supplierCode: 'S-000005', qty: 25, unitCost: 315, supplierLotNo: 'AKY-QC-01', day: 37, templateId: kuruyemis.id, decision: 'pending' },
-    { sku: '301040000', supplierCode: 'S-000005', qty: 14, unitCost: 275, supplierLotNo: 'AKY-QC-02', day: 37, templateId: kuruyemis.id, decision: 'fail' },
+    // `autoQc: true` — P2 düzeltmesi: bu iki kuruyemiş kalemi `requiresIncomingQc=true` alır ve
+    // `receiveGoods()`in OTOMATİK qc_checks açılış yolunu (stock/receipts.ts) kullanır, `createIncomingCheck`
+    // ÇAĞRILMAZ — önceden bu yol seed'de HİÇ egzersiz görmüyordu (bkz. yukarıdaki başlık yorumu).
+    { sku: '301030000', supplierCode: 'S-000005', qty: 25, unitCost: 315, supplierLotNo: 'AKY-QC-01', day: 37, templateId: kuruyemis.id, decision: 'pending', autoQc: true },
+    { sku: '301040000', supplierCode: 'S-000005', qty: 14, unitCost: 275, supplierLotNo: 'AKY-QC-02', day: 37, templateId: kuruyemis.id, decision: 'fail', autoQc: true },
   ];
   let passed = 0, pending = 0, failed = 0;
   for (const run of runs) {

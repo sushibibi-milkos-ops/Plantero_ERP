@@ -46,7 +46,7 @@ export function ComputeScoreButton() {
         <SelectContent>{MONTHS.map((m, i) => <SelectItem key={m} value={String(i + 1)}>{m}</SelectItem>)}</SelectContent>
       </Select>
       <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
-        <SelectTrigger className="h-11 w-[4.75rem] text-[13px] md:h-9" aria-label="Yıl"><SelectValue /></SelectTrigger>
+        <SelectTrigger className="h-11 w-24 text-[13px] md:h-9" aria-label="Yıl"><SelectValue /></SelectTrigger>
         <SelectContent>{years.map((y) => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}</SelectContent>
       </Select>
       <Button onClick={run} disabled={pending}>

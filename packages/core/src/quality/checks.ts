@@ -1,7 +1,7 @@
 import { and, eq, gt } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import {
-  qcChecks, qcCheckResults, qcTemplateItems, stockLots, stockQuants, products, receipts, type DbOrTx,
+  qcChecks, qcCheckResults, qcTemplateItems, stockLots, stockQuants, products, receipts, documentIndex, type DbOrTx,
 } from '@plantero/db';
 import { D, toDb } from '../money.js';
 import { nextDocNo } from '../sequences.js';
@@ -291,6 +291,17 @@ export async function decide(tx: DbOrTx, checkId: string, input: DecideInput, ct
       const [receipt] = await tx.select().from(receipts).where(eq(receipts.id, check.receiptId)).limit(1);
       if (receipt && receipt.status === 'qc_pending') {
         await tx.update(receipts).set({ status: 'done', updatedBy: ctx.userId ?? null }).where(eq(receipts.id, receipt.id));
+        // Belge dizini (`document_index`, belge zinciri kartlarının okuduğu denormalize anlık görüntü)
+        // burada da güncellenmezse "Belge zinciri" kartı ("Kalite bekliyor" rozeti) mal kabul GERÇEKTE
+        // 'done' olduktan SONRA da eskisini göstermeye devam eder — canlı ekran ölçümüyle yakalandı.
+        // `receipts.ts` `receiveGoods()`'un aynı belgeyi ilk indekslediği satırla AYNI alan kümesi
+        // (`onConflictDoUpdate` TÜM alanları `set` eder — yalnızca `status` göndermek docNo/partnerId/
+        // tutarı null'a düşürür), mevcut satırdan okunup yalnızca durum değiştirilerek yeniden yazılır.
+        const [existingDoc] = await tx.select().from(documentIndex).where(and(eq(documentIndex.type, 'receipt'), eq(documentIndex.recordId, receipt.id))).limit(1);
+        await indexDocument(tx, {
+          type: 'receipt', recordId: receipt.id, docNo: receipt.docNo, partnerId: receipt.partnerId, status: 'done',
+          origin: receipt.origin, title: existingDoc?.title ?? `Mal Kabul ${receipt.docNo}`, amount: existingDoc?.amount ?? null, docDate: existingDoc?.docDate ?? receipt.receivedAt ?? new Date(),
+        });
         await writeAudit(tx, {
           action: 'update', tableName: 'receipts', recordId: receipt.id,
           summary: `Mal kabul ${receipt.docNo}: bekleyen kalite kontrolü kalmadı — durum 'done'a geçti (${check.docNo} kararıyla)`,
