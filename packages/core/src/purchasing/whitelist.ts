@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import { partners, reorderRules, type DbOrTx } from '@plantero/db';
-import { D } from '../money.js';
+import { D, formatMoneyTr } from '../money.js';
 import { NotFoundError } from '../auth/errors.js';
 import type { ActorCtx } from '../types.js';
 
@@ -24,11 +24,14 @@ export function evaluateAutoOrderEligibility(opts: {
   orderAmount: Decimal;
 }): AutoOrderEligibility {
   if (!opts.supplierWhitelisted) return { eligible: false, reason: 'Tedarikçi genel satın alma beyaz listesinde değil' };
-  if (!opts.ruleWhitelisted) return { eligible: false, reason: 'Kritik stok kuralı otomatik siparişe açık değil (isAutoOrderWhitelisted=false)' };
+  // Tur 3 P1 bulgu (onaylar-14): eskiden ham kod tanımlayıcısı ("isAutoOrderWhitelisted=false")
+  // ekrana sızıyordu — kullanıcıya yalnızca Türkçe cümle gösterilir, alan adı asla değil.
+  if (!opts.ruleWhitelisted) return { eligible: false, reason: 'Bu ürün için otomatik sipariş kapalı (kritik stok kuralı beyaz listede değil)' };
   if (opts.autoOrderMaxAmount && opts.orderAmount.gt(opts.autoOrderMaxAmount)) {
     return {
       eligible: false,
-      reason: `Sipariş tutarı (₺${opts.orderAmount.toFixed(2)}) otomatik onay sınırını (₺${opts.autoOrderMaxAmount.toFixed(2)}) aşıyor`,
+      // Tur 3 P1 bulgu (onaylar-13): ham `toFixed(2)` ("₺72000.00") yerine TR biçimi ("₺72.000,00").
+      reason: `Sipariş tutarı (${formatMoneyTr(opts.orderAmount)}) otomatik onay sınırını (${formatMoneyTr(opts.autoOrderMaxAmount)}) aşıyor`,
     };
   }
   return { eligible: true, reason: 'Beyaz liste + tutar sınırı içinde — otomatik onay ve gönderim' };

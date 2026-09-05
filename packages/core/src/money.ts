@@ -57,4 +57,23 @@ export const formatQtyTr = (qty: Decimal | string | number): string => {
   return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 4 }).format(trimmed as unknown as number);
 };
 
+/**
+ * Kullanıcıya gösterilecek tutar — TR para biçimi (₺1.234,56, negatifte işaret sembolün önünde:
+ * "-₺450,75"). apps/web `formatMoney` ile aynı çıktıyı üretir. Kök neden (tur 3 P1 onaylar-13):
+ * `packages/core/src/purchasing/whitelist.ts` (ve onu çağıran satın alma taslağı özet metinleri)
+ * `${d.toFixed(2)}` ile ham İngilizce ondalık ("₺72000.00") üretiyordu — core katmanında üretilip
+ * doğrudan ekrana yazılan (DB'ye `summary` string'i olarak gömülen) metinler `apps/web/src/lib/format.ts`
+ * içindeki `formatMoney`'i kullanamaz (core → web bağımlılığı yasak); bu yüzden `formatQtyTr` ile
+ * aynı desende tek core noktasından üretilir.
+ */
+export const formatMoneyTr = (v: Decimal | string | number | null | undefined, currency = 'TRY'): string => {
+  const plain = D(v).toFixed(2);
+  return new Intl.NumberFormat('tr-TR', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(plain as unknown as number);
+};
+
 export { Decimal };

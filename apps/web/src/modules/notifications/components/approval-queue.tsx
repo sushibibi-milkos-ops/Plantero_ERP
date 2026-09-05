@@ -158,9 +158,12 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
             </button>
           ))}
         </div>
+        {/* Tur 3 P2 onaylar-17: kbd çipleri 10px ayrı bir kademe açıyordu (içerikte 5 font kademesi:
+            24/14/13/11/10). "meta" kademesiyle (11px) birleştirildi — h1 24 + gövde 13 + meta 11
+            içinde ≤4 kademeye indi (PageHeader açıklaması ortak bileşen, bkz. sharedComponentRequests). */}
         <p className="text-xs text-muted-foreground">
-          <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">J</kbd>/<kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">K</kbd> gezin ·{' '}
-          <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">A</kbd> onayla · <kbd className="rounded border bg-muted px-1 py-px font-mono text-[10px]">R</kbd> reddet
+          <kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">J</kbd>/<kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">K</kbd> gezin ·{' '}
+          <kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">A</kbd> onayla · <kbd className="rounded border bg-muted px-1 py-px font-mono text-[11px]">R</kbd> reddet
         </p>
       </div>
 
@@ -189,8 +192,11 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
               <div className="flex h-11 items-center gap-2.5 px-3 sm:h-10">
                 <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
                 <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{item.title}</span>
+                {/* Tur 3 P2 onaylar-16: rozet 640px altında tamamen gizliydi — kuyruk güvene göre
+                    taranıyor, mobil kullanıcı sıralama sinyalini yalnızca kartı açarak görebiliyordu.
+                    Artık her genişlikte görünür (onaylar-11'de tutar için yapılan düzeltmeyle aynı desen). */}
                 {item.confidence !== null ? (
-                  <span className={cn('hidden shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium tabular-nums sm:inline-block', confidenceBadgeClass(item.confidence))}>
+                  <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium tabular-nums', confidenceBadgeClass(item.confidence))}>
                     %{Math.round(item.confidence * 100)}
                   </span>
                 ) : null}
@@ -208,13 +214,9 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
                     <span className="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
                       <Icon className="size-3.5 shrink-0 text-primary" /> {meta.label}
                     </span>
-                    {item.confidence !== null ? (
-                      <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-medium tabular-nums sm:hidden', confidenceBadgeClass(item.confidence))}>
-                        %{Math.round(item.confidence * 100)}
-                      </span>
-                    ) : null}
-                    {/* Tutar artık ana satırda her genişlikte görünür (onaylar-11) — burada tekrar
-                        basmak mobilde aynı bilgiyi iki kez gösterirdi. */}
+                    {/* Güven rozeti artık ana satırda her genişlikte görünür (onaylar-16) — burada
+                        tekrar basmak aynı bilgiyi iki kez gösterirdi. Tutar da aynı sebeple (onaylar-11)
+                        burada tekrar yok. */}
                     <span className="text-[11px] text-muted-foreground tabular-nums">{formatDateTime(item.createdAt)}</span>
                   </div>
                   {item.summary ? <p className="max-w-[70ch] text-[13px] text-muted-foreground">{item.summary}</p> : null}

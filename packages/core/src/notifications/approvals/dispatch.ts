@@ -1,5 +1,5 @@
-import { desc, eq } from 'drizzle-orm';
-import { approvals, dunningActions, type DbOrTx } from '@plantero/db';
+import { desc, eq, inArray } from 'drizzle-orm';
+import { approvals, dunningActions, purchaseOrders, type DbOrTx } from '@plantero/db';
 import { NotFoundError, DomainError } from '../../auth/errors.js';
 import { writeAudit } from '../../audit/index.js';
 import { approvePurchaseOrder, rejectPurchaseOrder } from '../../purchasing/orders.js';
@@ -59,12 +59,24 @@ const MATCH_KIND_LABEL: Record<string, string> = {
 /** Tek kuyruk: `approvals` (pending) + mutabakat önerileri (suggested), tarihe göre azalan. */
 export async function listApprovalQueue(tx: DbOrTx): Promise<ApprovalQueueItem[]> {
   const rows = await tx.select().from(approvals).where(eq(approvals.status, 'pending')).orderBy(desc(approvals.createdAt));
+
+  // Tur 3 P1 bulgu (onaylar-15): `purchase_draft` satırlarında sağ hizalı tutar sütunu boştu — tutar
+  // yalnızca `summary` cümlesine gömülüydü. `approvals` şemasında yapısal bir tutar kolonu yok
+  // (dondurulmuş şema — bkz. rapor "Şema talepleri"), ama kaynak belge (`purchase_orders.refId`)
+  // zaten kendi `grandTotal`'ini taşıyor — metni yeniden ayrıştırmak yerine kaynağa join atıyoruz.
+  const purchaseDraftIds = rows.filter((r) => r.kind === 'purchase_draft').map((r) => r.refId);
+  const poAmountByOrderId = new Map<string, string>();
+  if (purchaseDraftIds.length > 0) {
+    const poRows = await tx.select({ id: purchaseOrders.id, grandTotal: purchaseOrders.grandTotal }).from(purchaseOrders).where(inArray(purchaseOrders.id, purchaseDraftIds));
+    for (const po of poRows) poAmountByOrderId.set(po.id, po.grandTotal);
+  }
+
   const items: ApprovalQueueItem[] = rows.map((r) => ({
     id: r.id, kind: r.kind, refTable: r.refTable, refId: r.refId, title: r.title, summary: r.summary,
-    // `approvals` şemasında yapısal bir tutar kolonu yok (dondurulmuş şema — bkz. rapor "Şema talepleri");
-    // tutar bugün yalnızca `summary` metnine gömülü. Kartla ayrı bir tutar alanı göstermek metni yeniden
-    // ayrıştırmayı gerektirir — kırılgan olur; bu türler için `amount` bilinçli olarak `null` kalır.
-    amount: null,
+    // `purchase_draft` için `purchase_orders.grandTotal`; yapısal tutarı olmayan diğer türlerde
+    // (ör. `dunning_message`, `count_variance`) bilinçli olarak `null` kalır — ekran o zaman tutar
+    // alanını hiç render etmez.
+    amount: r.kind === 'purchase_draft' ? (poAmountByOrderId.get(r.refId) ?? null) : null,
     confidence: r.confidence !== null ? Number(r.confidence) : null, createdAt: r.createdAt, requestedBy: r.requestedBy,
     href: (KIND_META[r.kind]?.href ?? (() => '/kokpit'))(r.refId), requiredPermission: permissionForKind(r.kind),
   }));

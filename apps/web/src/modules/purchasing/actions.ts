@@ -286,7 +286,10 @@ export const runReplenishmentAction = withAudit('purchasing.runReplenishment', a
         await tx.update(purchaseOrders).set({ status: 'pending_approval' }).where(eq(purchaseOrders.id, order.id));
         await tx.insert(approvals).values({
           kind: 'purchase_draft', refTable: 'purchase_orders', refId: order.id, title: `Satın alma taslağı ${order.docNo}`,
-          summary: `${partner?.name ?? draft.partnerName} — ₺${D(order.grandTotal).toFixed(2)} — ${eligibility.reason}`,
+          // Tur 3 P1 bulgu (onaylar-13/onaylar-15): tutar artık özet cümlesine gömülmüyor — onay
+          // kuyruğu (`notifications/approvals/dispatch.ts`) `purchase_orders.grandTotal`'i kendi
+          // yapısal `amount` alanında (formatMoney + tabular-nums) gösteriyor; burada tekrar etmiyoruz.
+          summary: `${partner?.name ?? draft.partnerName} — ${eligibility.reason}`,
           confidence: String(draft.confidence), status: 'pending', requestedBy: user.actor.userId,
         });
       }

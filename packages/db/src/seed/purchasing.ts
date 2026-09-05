@@ -191,7 +191,9 @@ async function seedDemoDrafts(tx: DbOrTx, tireId: string, summary: SeedSummary):
     .insert(approvals)
     .values({
       kind: 'purchase_draft', refTable: 'purchase_orders', refId: draftOrder.id, title: `Satın alma taslağı ${draftOrder.docNo}`,
-      summary: `${aromatik.name} — ₺${D(draftOrder.grandTotal).toFixed(2)} — AI: kritik stok motoru`, confidence: '0.82',
+      // Tur 3 P1 bulgu (onaylar-13/onaylar-15): tutar özet cümlesine gömülmez — onay kuyruğu
+      // (dispatch.ts) `purchase_orders.grandTotal`'i kendi yapısal `amount` alanında gösterir.
+      summary: `${aromatik.name} — AI: kritik stok motoru`, confidence: '0.82',
       status: 'pending', requestedBy: null,
     })
     .returning();
