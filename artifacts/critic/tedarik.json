@@ -24,18 +24,7 @@
       "total": 53,
       "verdict": "KAZANAN: Linear (fark 4)",
       "scoreNotes": "K3 1→5: ilk boyamada 36 satır, satır yüksekliği 36px (varsayılan filtre veriye bakıyor). K7 1→5: filtre kaynaklı boşluk doğru metin + 'Filtreyi temizle' eylemi; ayrıca 'Motor henüz çalıştırılmadı' dürüst uyarı şeridi. K9 3→4: onay kutusu 44x44, mobilde taşma yok, 36 kart 63.5px. K11 4→5: lead time birimi ('gün') tedarikçiler ekranıyla aynı. K5 4→3: 36 satır gelince tablo taşması ölçülebilir hale geldi — scrollWidth 1567 / clientWidth 1152, 'Eylemler' sütunu tamamen ekran dışı (yeni bulgu tedarik-kritik-stok-04).",
-      "open": [
-        {
-          "id": "tedarik-kritik-stok-04",
-          "criterion": 5,
-          "severity": "P0",
-          "text": "Tablo 1440×900'de kapsayıcısını 415px aşıyor. Sağdaki üç sütun — 'Tercihli tedarikçi' (kısmen), 'Son değerlendirme' ve satır aksiyonları ('Eylemler', ⋯ menüsü) — yatay kaydırma olmadan hiç görünmüyor. Kural düzenlemenin TEK yolu bu ⋯ menüsü; ekranın birincil aksiyonu 1440px masaüstünde erişilemez durumda. Kök neden: 12 sütunun sabit genişlikleri (100+110+80+80+127+120+130+150+40=937) üstüne 'Ürün' (186) ve 'Tercihli tedarikçi' (355 — 'Proteinsan Gıda Hammaddeleri Ltd. Şti.' min-content genişliği) sınırsız ekleniyor.",
-          "measure": "probe-tedarik-r2.tableOverflowCritical: scroller {cw:1152, sw:1567, right:1416}; th right değerleri — 'Tercihli tedarikçi' 1641 (clipped), 'Son değerlendirme' 1791 (clipped), 'Eylemler' 1831 (clipped); ilk 3 satırın son td'si right=1831, clipped=true.",
-          "target": "1440×900'de scrollWidth ≤ clientWidth (1152). 'Eylemler' sütunu her genişlikte görünür. Somut: 'Tercihli tedarikçi' sütununa meta.width ≤200 + truncate; 'Son değerlendirme' masaüstünde de gizlenebilir (satır detayına taşınır) ya da 'Min'/'Max' tek 'Min–Max' sütununda birleştirilir.",
-          "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:41-73 (sütun tanımları; :62 preferredSupplierName genişlik/kısaltma sınırı yok)",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "tedarik-kritik-stok-01",
@@ -51,6 +40,12 @@
           "id": "tedarik-kritik-stok-03",
           "closedRound": 2,
           "verifiedBy": "probe-tedarik-r2.criticalMobile.checkbox = {w:44,h:44} (önce 16x16). measure-tedarik-r2/kritik-stok.mobile.json touchTargetsBelow44 içinde #only-critical yok."
+        },
+        {
+          "id": "tedarik-kritik-stok-04",
+          "closedRound": 2,
+          "verifiedBy": "probe (scripts/lib/browser openRoute + page.evaluate, probe-tedarik-r2.ts ile aynı yöntem) 1440x900: scroller {sw:1152, cw:1152, right:1416} -- tasma 0. th 'Tercihli tedarikci' right=1376 clipped=false, th 'Eylemler' right=1416 clipped=false, menuBtnVisible=true (satir ⋯ menusu artik kaydirmadan erisilebilir). Kok neden duzeltmesi: productName + preferredSupplierName artik meta.width VE td dolgusu (px-3=24px) kadar dar bir ic kutu (inline-block/flex, w-[106px]/w-[166px]) ile bounded -- yalnizca meta.width vermek yetmiyordu (icerik onu asinca goz ardi ediliyordu, olculdu: ic kutu olmadan td 355px'e cikiyordu). Min/Max tek sutunda birlesti (160->110), 'Son degerlendirme' defaultHidden.",
+          "measureAfter": "pnpm measure /satin-alma/kritik-stok --viewport 1440x900 -> scrollWidth:1440, clientWidth:1440, overflowX:false (sayfa duzeyi); ozel probe (ic tablo scroller'i) -> {sw:1152, cw:1152}. artifacts/screens/satin-alma-kritik-stok/{desktop,mobile}.png yeniden cekildi, Eylemler (⋯) menusu ve Tercihli tedarikci sutunu kaydirmasiz gorunur dogrulandi."
         }
       ]
     },
@@ -75,18 +70,7 @@
       "total": 48,
       "verdict": "KAZANAN: Linear (fark 9)",
       "scoreNotes": "K3 3→4: karta kalem önizleme listesi (ürün · miktar · tutar) eklendi, kart başına veri satırı 0→1+ (PO-2026-000007 tek kalemli). K4 3→4: ekranda yeşil yalnızca vurgu (primary) rolünde — success tonu bu ekranda hiç kullanılmıyor, distinctColors 14. K5 2→4: 390px'te kart taşması giderildi, kalem listesi hairline ile ayrık. K9 2→4: buton yüksekliği 44px, aksiyon şeridi mobilde tek kolon. K7 3: boş durumda hâlâ eylem yok (yeni bulgu tedarik-onay-04).",
-      "open": [
-        {
-          "id": "tedarik-onay-04",
-          "criterion": 7,
-          "severity": "P1",
-          "text": "Onay kuyruğunun boş durumu (ekranın normal kararlı hali — kuyrukta bekleyen taslak yokken her gün görülen ekran) ikon + başlık + açıklamadan ibaret; hiçbir eylem sunmuyor. Kullanıcı 'taslak yok' bilgisini alıp çıkmaza giriyor; oysa taslak üreten motor bir tık ötede (/satin-alma/kritik-stok → 'Motoru çalıştır').",
-          "measure": "approval-queue-list.tsx:69 `<EmptyState icon={Sparkles} title description />` — `action` prop'u verilmemiş; boş durumda eylem sayısı 0.",
-          "target": "Boş durumda birincil eylem ≥1: EmptyState `action` yuvasına 'Kritik stok motorunu çalıştır' (→ /satin-alma/kritik-stok) veya 'Yeni sipariş' (→ /satin-alma/siparisler/yeni). DESIGN-SCORECARD K7: 'özenli empty state (ikon+metin+eylem)'.",
-          "file": "apps/web/src/modules/purchasing/components/approval-queue-list.tsx:69",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "tedarik-onay-01",
@@ -102,6 +86,12 @@
           "id": "tedarik-onay-03",
           "closedRound": 2,
           "verifiedBy": "probe-tedarik-r2.approvalDesktop.perCard[0]: lineRows=1 (kalem önizleme listesi eklendi, PO-2026-000007 tek kalemli), hasKalem=true ('· 1 kalem' shrink-0 olarak her genişlikte görünür), hasTL=true."
+        },
+        {
+          "id": "tedarik-onay-04",
+          "closedRound": 2,
+          "verifiedBy": "approval-queue-list.tsx bos dal (items.length===0) artik EmptyState'e `action` prop'u geciyor: Button asChild + Link href=/satin-alma/kritik-stok, metin 'Kritik stok motorunu calistir'. Kod incelemesiyle dogrulandi (typecheck+lint temiz); EmptyState'in `action` yuvasi ayni bilesende critical-stock-table.tsx'teki `onClearFilter` kullanimiyla zaten kanitlanmis bir kalip. Kuyruk su an 1 bekleyen taslak tasidigindan (seed sozlesmesi, docs/modules/tedarik.md) bos dali canli paylasimli dev DB'de zorlamak baska ajanlarin es zamanli calistigi seed durumunu bozacagindan tercih edilmedi; JSX/erisilebilirlik (role=link, href) statik olarak dogrulandi.",
+          "measureAfter": "Kod incelemesi + typecheck/lint (apps/web tsc --noEmit ve eslint src) temiz. Bos durumda beklenen buton/link sayisi >=1 (1 Link render edilir, href=/satin-alma/kritik-stok)."
         }
       ]
     },
@@ -126,18 +116,7 @@
       "total": 55,
       "verdict": "KAZANAN: Linear (fark 2)",
       "scoreNotes": "K4 3→4: shell-status-green-overload-01 kapandı; 16 satırda nötr/amber/mavi rozet ayrımı okunuyor, yeşil yalnızca birincil butonda. K9 3→5: mobil kartların 16/16'sında ₺ tutar metrik yuvasında, taşma yok, kart 63.5px. K11 3→5: mobil kart alan seti muhasebe/invoices-table ile aynı kural (para son 'rest' hücresi). K5 5→3 ve K6 5→4: 'Tutar' sütunu 16px kırpılıyor, her satırda tutarın son karakteri görünmüyor (yeni bulgu tedarik-siparisler-03).",
-      "open": [
-        {
-          "id": "tedarik-siparisler-03",
-          "criterion": 5,
-          "severity": "P0",
-          "text": "Ekranın en önemli sütunu — 'Tutar' — 1440×900'de kapsayıcı tarafından 16px kırpılıyor: hem başlık ('Tuta') hem de 16 satırın 16'sındaki tutar son karakterini kaybediyor ('₺4.620,0('). Yatay kaydırma çubuğu var ama kullanıcı sayının eksik olduğunu fark etmeden yanlış okuyor — finans tablosunda sessiz kırpma en kötü hata türü. Kök neden: 'Tedarikçi' sütununa genişlik/kısaltma verilmemiş; 'Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.' min-content olarak 355px istiyor, sabit sütunların toplamıyla birlikte tablo 1168px'e çıkıyor.",
-          "measure": "probe-tedarik-r2.tableOverflowOrders: scroller {cw:1152, sw:1168, right:1416}; th 'Tutar' right=1432 → clipped=true; ilk 3 satırın son td'si ('₺4.620,00','₺9.450,00','₺5.508,00') right=1432, clipped=true. Kırpma miktarı 1168−1152 = 16px.",
-          "target": "1440×900'de scrollWidth ≤ clientWidth (1152); para sütunu tam görünür. Somut: 'Tedarikçi' sütununa meta.flex + `truncate max-w-[280px]` (355→≤280px, 75px kazanç) — ya da 'Beklenen tarih' meta.width 130→110 ve 'Sipariş tarihi' 120→104.",
-          "file": "apps/web/src/modules/purchasing/components/orders-table.tsx:16 (partnerName sütunu), :23 expectedDate, :30 orderDate",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "tedarik-siparisler-01",
@@ -148,6 +127,12 @@
           "id": "tedarik-siparisler-02",
           "closedRound": 2,
           "verifiedBy": "orders-table.tsx:30-31 — orderDate meta.mobile='meta', grandTotal son sütun; muhasebe/invoices-table.tsx kalıbıyla aynı."
+        },
+        {
+          "id": "tedarik-siparisler-03",
+          "closedRound": 2,
+          "verifiedBy": "probe (probe-tedarik-r2.ts ile ayni yontem) 1440x900: scroller {sw:1152, cw:1152, right:1416} -- tasma 0. th 'Tutar' right=1416 clipped=false; ilk 3 satirin son td'si (890.620,00/9.450,00/5.508,00 TL) right=1416 clipped=false -- hicbir karakter eksik degil. Kok neden duzeltmesi: partnerName artik meta.width:280 VE td dolgusu kadar dar bir ic inline-block kutu (`md:w-[280px]` + `truncate`) ile bounded; yalnizca `flex:true` + td className:'truncate' (ilk deneme) YETMEDI -- td'ye verilen width icerik onu asinca goz ardi ediliyordu (olculup dogrulandi, kod yorumunda aciklandi).",
+          "measureAfter": "pnpm measure /satin-alma/siparisler --viewport 1440x900 -> scrollWidth:1440, clientWidth:1440, overflowX:false (sayfa duzeyi); ozel probe (ic tablo scroller'i) -> {sw:1152, cw:1152}. artifacts/screens/satin-alma-siparisler/desktop.png: 16 satirin 16'sinda tam tutar (or. 125.100,00 TL) kirpilmadan gorunuyor."
         }
       ]
     },
@@ -172,18 +157,7 @@
       "total": 48,
       "verdict": "KAZANAN: Stripe (fark 8)",
       "scoreNotes": "K1 3→4: 'Toplam' 11px etiket + 20px/600 tabular-nums kendi bloğunda; eyebrow/başlık/açıklama kademeleri ayrık (yine de 14px açıklama ile 13px meta bitişik kademeler). K3 3→4 ve K5 2→4: 390px'te satır kartı kalıbı, tablo yalnızca md+ görünür. K9 2→4: docScroll sw=cw=390. K6 4→3: satır tablosunda birim fiyat × miktar ≠ gösterilen tutar, KDV hiçbir yerde yok (yeni bulgu tedarik-po-detay-03).",
-      "open": [
-        {
-          "id": "tedarik-po-detay-03",
-          "criterion": 6,
-          "severity": "P1",
-          "text": "Belgedeki sayılar birbirini tutmuyor ve kullanıcı bunu ekrandan doğrulayamıyor: 'BİRİM FİYAT ₺690,00' × 'SİPARİŞ 80 KG' = 55.200 iken 'TUTAR' sütunu ₺66.240,00 basıyor (line_total KDV dahil, line_subtotal 55.200, vat_rate %20). Ne satırda KDV oranı/tutarı sütunu var, ne belgenin altında Ara toplam / KDV / Genel toplam bloğu; şemadaki purchase_orders.subtotal (94.200) ve vat_total (18.840) alanları ekranda hiç kullanılmıyor, yalnızca grand_total basılıyor ve o da 'Toplam' diye etiketleniyor (KDV dahil olduğu belirtilmiyor). Aynı çelişki mobil satır kartlarında da var (₺690,00 ↔ ₺66.240,00).",
-          "measure": "PO-2026-000003 (686dc9f5-…): ekranda satır 1 = 80 KG × ₺690,00 → ₺66.240,00. DB: line_subtotal 55200.0000, vat_rate 20, line_total 66240.0000; po.subtotal 94200.0000, po.vat_total 18840.0000, po.grand_total 113040.0000. Sayfada basılan para alanı sayısı: satır başına 2 (birim fiyat, KDV dahil tutar) + 1 genel toplam = KDV ve ara toplam 0 adet.",
-          "target": "Satır tablosunda tutar tabanı belirsiz kalmayacak: ya 'Tutar' sütunu `lineSubtotal` (KDV hariç, birim fiyat × miktar ile tutarlı) olacak ya da araya 'KDV %' sütunu girecek. Belge sonunda 3 satırlık sağ hizalı özet: Ara toplam ₺94.200,00 / KDV (%20) ₺18.840,00 / Genel toplam ₺113.040,00 (tabular-nums). Ekranda gösterilen her çarpım kendi içinde doğrulanabilir olacak.",
-          "file": "apps/web/src/modules/purchasing/components/order-lines-table.tsx:44 ve :63,:69 (lineTotal/unitPrice), apps/web/src/app/(app)/satin-alma/siparisler/[id]/page.tsx:42 (yalnızca grandTotal)",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "tedarik-po-detay-01",
@@ -194,6 +168,12 @@
           "id": "tedarik-po-detay-02",
           "closedRound": 2,
           "verifiedBy": "probe-tedarik-r2.poDetail{Mobile,Desktop}: totalLabelPresent=true, totalStyle={size:'20px',weight:'600',variant:'tabular-nums'} — 11px 'Toplam' etiketi + 20px/600 değer, PageHeader actions yuvasında meta akışından ayrık."
+        },
+        {
+          "id": "tedarik-po-detay-03",
+          "closedRound": 2,
+          "verifiedBy": "order-lines-table.tsx: 'Tutar' sutunu artik `line.lineSubtotal` (KDV haric, birim fiyat x miktar ile birebir tutarli) ve araya `line.vatRate` gosteren 'KDV' sutunu girdi. page.tsx: PageHeader'daki 'Toplam' etiketi 'Toplam (KDV dahil)' oldu, satir tablosunun altina Ara toplam/KDV/Genel toplam blogu (po.subtotal/po.vatTotal/po.grandTotal) eklendi. Canli dogrulama -- PO-2026-000003 (ae5389c3-6450-4ce7-ae10-46af1e8a9708, DB yeniden seed edildigi icin Tur 2'deki id'den farkli): satir 1 Suklaroz 80 KG x 690,00 TL = 55.200,00 TL (Tutar sutunuyla birebir eslesiyor, KDV %20 ayri sutunda); Ara toplam 94.200,00 TL / KDV 18.840,00 TL / Genel toplam 113.040,00 TL -- DB'deki po.subtotal/vat_total/grand_total ile birebir. Mobil kart kaliginda da ayni KDV haric taban + '%20' etiketi ve alt ozet blogu var.",
+          "measureAfter": "Sayfada para alani sayimi: Ara toplam (1) + KDV (1) + Genel toplam (1) >=1 hedefi karsilandi. artifacts/screens/satin-alma-siparisler-ae5389c3-6450-4ce7-ae10-46af1e8a9708/{desktop,mobile}.png ile gorsel dogrulandi -- 55.200(haric)+11.040 vb. toplamlar elle kontrol edildi, tutarli."
         }
       ]
     },
@@ -218,18 +198,7 @@
       "total": 52,
       "verdict": "KAZANAN: Linear (fark 5)",
       "scoreNotes": "K1 3→5: bölüm başlıkları 11px/600/uppercase, alan etiketleri 13px/500 — ayrı kademeler. K2 3→5: bölüm hairline'ı, alan ızgarası ve FormActions şeridi aynı sağ kenarda (1032px, fark 0). K6 3: float çarpımı ve elle ₺ giderildi (D().mul + MoneyCell) ama formda sipariş toplamı hâlâ yok ve satır tutarı KDV tabanı belirsiz (yeni bulgu tedarik-yeni-04).",
-      "open": [
-        {
-          "id": "tedarik-yeni-04",
-          "criterion": 6,
-          "severity": "P1",
-          "text": "Bir satın alma siparişi oluşturuluyor ama formun hiçbir yerinde siparişin toplamı yok: yapışkan aksiyon şeridi yalnızca '{n} satır' sayıyor. Kullanıcı 'Sipariş oluştur'a tutar görmeden basıyor. Ayrıca satır tutarı (D(qty).mul(unitPrice) = KDV hariç) etiketsiz, 13px muted olarak silme butonunun yanında duruyor ve aynı satır kaydedildikten sonra /[id] ekranında KDV dahil bir sayı olarak (55.200 → 66.240) görünüyor — iki ekran aynı sütun adı altında iki farklı taban gösteriyor.",
-          "measure": "order-form.tsx:170-174 FormActions çocuğu = `{fields.length} satır`; sayfada toplam para alanı 0 adet. Satır tutarı :136 `D(qty).mul(D(unitPrice))` (KDV hariç) ↔ /satin-alma/siparisler/[id] 'Tutar' = line_total (KDV dahil).",
-          "target": "Yapışkan aksiyon şeridinde canlı özet: Ara toplam / KDV / Genel toplam (tabular-nums, sağ hizalı) — en az 'Genel toplam'. Satır tutarının tabanı /[id] ile aynı olacak (ikisi de KDV hariç ya da ikisi de dahil) ve etiketlenecek.",
-          "file": "apps/web/src/modules/purchasing/components/order-form.tsx:145 (satır tutarı), :170-174 (FormActions)",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "tedarik-yeni-01",
@@ -245,6 +214,12 @@
           "id": "tedarik-yeni-03",
           "closedRound": 2,
           "verifiedBy": "probe-tedarik-r2.newOrderDesktop: gridRight=1032, 'Satırlar' bölüm hairline'ı right=1032, FormActions şeridi right=1032 — fark 0px (hedef ≤8px)."
+        },
+        {
+          "id": "tedarik-yeni-04",
+          "closedRound": 2,
+          "verifiedBy": "order-form.tsx: satir tutari artik /[id] ile AYNI tabanda (KDV haric, D(qty).mul(unitPrice), 11px 'KDV haric' etiketiyle). Aksiyon seridinin hemen ustune, ayni [id] sayfasindaki kalipta Ara toplam/KDV(%20)/Genel toplam ozet blogu eklendi; yapiskan FormActions seridine de kompakt 'N satir . Genel toplam' ozeti (mr-auto) eklendi. Playwright ile canli doğrulandi (Ürün ekle -> Alkalize Kakao, Miktar=10, Birim fiyat=100): Ara toplam 1.000,00 TL, KDV 200,00 TL, Genel toplam 1.200,00 TL, sticky serit '1 satir . 1.200,00 TL' -- hepsi dogru hesaplandi. YAN BULGU + DUZELTME: ilk uygulamada bu blok useMemo([watchedLines]) ile yazilmisti ve DAIMA 0 TL gosteriyordu -- react-hook-form watch() ayni dizi referansini render'lar arasi YERINDE guncelliyor, useMemo referans degismedigi icin hic yeniden hesaplamiyordu; satir onizlemesindeki (memosuz, dogrudan render-ici) hesaplama dogru calisiyordu. Duzeltme: useMemo kaldirildi, ayni degerler dogrudan render govdesinde (mevcut lineTotal kaliyla ayni yontemle) hesaplaniyor.",
+          "measureAfter": "Playwright ekran goruntusu (order-form-with-line.png, scratchpad) ve DOM metni: hasAraToplam=true, hasGenelToplam=true, moneySpans=['','1.000,00','','','','1.000,00','200,00','1.200,00','1.200,00'] -- ozet blogu (3) + sticky serit (1) = 4 dogru para alani, hepsi sifir degil."
         }
       ]
     },
@@ -269,18 +244,7 @@
       "total": 48,
       "verdict": "KAZANAN: Linear (fark 9)",
       "scoreNotes": "K1 3→4: etiket 11px/uppercase, değer 14px/600 mono — kademeler ayrık. K4 2→4: ham emerald/amber/red yerine success/warning/destructive token'ları (ölçülen renkler globals.css değerleriyle birebir). K5 3→4: 2x2 sola yaslı metrik ızgarası, hizalama sistemi kart geneliyle aynı. K6 3→4: 'gün' ve '/100' birimleri geldi. K8 3→4: kart tıklanabilir (role=link, tabindex=0, hover + focus halkası, cursor pointer). K11 3→4, K12 3→4. K3 3: kart yüksekliği hâlâ 265px, bilgi/piksel oranı düşük (yeni bulgu tedarik-tedarikciler-05).",
-      "open": [
-        {
-          "id": "tedarik-tedarikciler-05",
-          "criterion": 3,
-          "severity": "P1",
-          "text": "Tedarikçi listesi 6 kayıt için 265px yüksekliğinde kartlar kullanıyor: kart başına 8 veri alanı (ad, kod, tedarik süresi, kalite skoru, zamanında %, ürün sayısı, açık sipariş, açık sipariş tutarı) ve iki iç hairline + tam genişlikte bir switch satırı. Alan başına ~33px. Aynı veri modülün diğer ekranlarındaki DataTable kalıbıyla 36px'lik satırlara sığar — Linear referansı bu tür bir ana veri listesini tablo olarak basar. Yan etki: kart içinde üç ayrı hizalama bölgesi (2x2 ızgara, sağ hizalı tutar satırı, switch satırı) 'kutu içinde kutu' hissi veriyor.",
-          "measure": "1440×900: 6 kartın 6'sı da 265px yüksek (role=link probu). Toplam dikey alan 2 satır × 265px + gap = 542px; DataTable karşılığı 6 × 36 = 216px + başlık. Alan/px oranı 33px/alan (tablo kalıbında ~5px/alan).",
-          "target": "Masaüstünde DataTable satır kalıbı (satır yüksekliği ≤40px, beyaz liste switch'i satır aksiyonunda) VEYA kart yüksekliği ≤160px (metrik ızgarası tek satıra iner, tutar/açık sipariş meta satırıyla birleşir). Mobilde kart kalıbı korunabilir.",
-          "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:20-131",
-          "openedRound": 2
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "tedarik-tedarikciler-01",
@@ -301,6 +265,12 @@
           "id": "tedarik-tedarikciler-04",
           "closedRound": 2,
           "verifiedBy": "scripts/p3 probu: 6 tedarikçi kartının 6'sı role=link, tabindex='0', hover:bg-accent/50 + focus-visible:outline sınıfları var, cursor='pointer'. Switch tıklaması stopPropagation ile ayrık."
+        },
+        {
+          "id": "tedarik-tedarikciler-05",
+          "closedRound": 2,
+          "verifiedBy": "suppliers-table.tsx karti: 2x2 metrik izgarasi tek satirlik metrik seridine indirildi (etiket+deger ayni satirda, 'gun' tam kelime korunuyor -- tedarik-tedarikciler-02 rejeksiyonu), beyaz liste switch'i basliktaki ayri hairline/padding blogunu kaldirip AYNI satira tasindi (kart tiklanabilirligi ve stopPropagation korunuyor). 4 hizalama bolgesinden 3 kompakt satira indi; p-4->p-3.5, gap-2->gap-1.5.",
+          "measureAfter": "Playwright role=link bounding-box probu, 1440x900: 6 kartin 6'si da 156px yukseklikte (once 265px) -- hedef (<=160px) karsilandi. artifacts/screens/satin-alma-tedarikciler/{desktop,mobile}.png ile gorsel dogrulandi, mobilde kart kalibi korunuyor (Beyaz liste etiketi sm+ gorunur, switch her zaman gorunur)."
         }
       ]
     }
