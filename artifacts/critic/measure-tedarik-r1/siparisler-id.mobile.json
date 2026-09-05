@@ -1,0 +1,3 @@
+> tsx scripts/measure.ts /satin-alma/siparisler/04019b27-9b1c-4098-974a-e94d4d05929e --viewport 390x844
+
+{"route":"/satin-alma/siparisler/04019b27-9b1c-4098-974a-e94d4d05929e","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":2,"heights":[56,56,56.5]},"fontSizes":{"10":8,"11":14,"12":11,"13":23,"14":5,"16":1,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Detay\"","w":36.2,"h":19.5},{"selector":"a[data-slot=\"button\"][aria-label=\"Bildirimler\"]","w":36,"h":36},{"selector":"a \"GR-2026-000003\"","w":109.2,"h":19.5}],"distinctColors":18,"h1":{"size":20,"weight":600},"images":0}
