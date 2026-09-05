@@ -102,8 +102,29 @@ export function TraceGraph({
   className?: string;
 }) {
   const byId = new Map(nodes.map((n) => [n.id, n]));
+
+  // Kök neden (Tur 20 P0, /kalite/izlenebilirlik + /depo/lotlar/[id]): `traceForward`
+  // (packages/core/src/lots/trace.ts) kenarları KÖKTEN dışa doğru üretir (from: kök → to: torun),
+  // ama `traceBackward` bunun TERSİNİ üretir — her kenar bir atadan köke DOĞRU kurulur
+  // (from: kaynak/ata → to: kök/torun-a-daha-yakın-düğüm), çünkü fonksiyon "kökten yukarı" değil
+  // "yaprak → kök" sırasıyla `g.link(...)` çağırıyor (ör. `g.link(cNid, woNid)`,
+  // `g.link(woNid, lotNid /* kök */)`). Bu bileşen `e.from → e.to` ile SABİT bir children haritası
+  // kuruyordu; bu yalnızca forward grafiklerde (kök = kaynak) doğru sonuç veriyordu. Backward
+  // grafikte kök hiçbir zaman bir kenarın `from`'u olmuyor (yalnızca `to`) — bu, iki yönü ayırt
+  // etmek için güvenilir bir imza: kök en az bir kenarda görülüyor ama hiçbirinde kaynak değilse,
+  // graf ters yönde üretilmiş demektir ve children haritası `e.to → e.from` ile kurulmalı.
+  // (Forward grafikte kök tam tersi: en az bir kenarda HER ZAMAN kaynaktır çünkü ilk kenarlar hep
+  // kökten çıkar.) Boş graf (hiç kenar yok, ör. hareketsiz bir lot) her iki yönde de zararsız —
+  // kök tek başına, torunsuz render edilir.
+  const rootIsSource = edges.some((e) => e.from === rootId);
+  const rootIsTarget = edges.some((e) => e.to === rootId);
+  const reversed = !rootIsSource && rootIsTarget;
   const children = new Map<string, string[]>();
-  for (const e of edges) (children.get(e.from) ?? children.set(e.from, []).get(e.from)!).push(e.to);
+  for (const e of edges) {
+    const parent = reversed ? e.to : e.from;
+    const child = reversed ? e.from : e.to;
+    (children.get(parent) ?? children.set(parent, []).get(parent)!).push(child);
+  }
   const seen = new Set<string>();
 
   const render = (id: string, depth: number): React.ReactNode => {

@@ -61,7 +61,14 @@ export function DetailFieldGroups({ groups, className }: { groups: DetailFieldGr
         <button
           type="button"
           onClick={() => setShowEmpty((s) => !s)}
-          className="text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground"
+          // Kök neden (Tur 20 P1, /kalite/kontroller/[id]): Tur 10'daki shell-empty-fields-toggle-01
+          // düzeltmesi bu dosyaya DEĞİL, `detail-field-groups-grid.tsx` içindeki `DetailFieldGroupsGrid`
+          // varyantına uygulanmıştı — masaüstü ana-veri sayfaları (ürün/cari) o varyantı kullandığı için
+          // düzeltilmiş görünüyordu, ama `check-detail.tsx` (kalite modülü) hâlâ BU dosyadaki orijinal
+          // `DetailFieldGroups`'u kullanıyor ve düğme ~18px yükseklikte kalmıştı (44px dokunma hedefinin
+          // çok altında). Aynı yastık deseni (`min-h-11 py-3` mobilde, `-mx-3 px-3` görsel hizayı bozmadan
+          // dışa değil içe büyüsün diye) buraya da uygulandı — görsel yükseklik değişmedi.
+          className="-mx-3 flex min-h-11 items-center px-3 py-3 text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground md:mx-0 md:min-h-0 md:px-0 md:py-0"
         >
           {showEmpty ? 'Boş alanları gizle' : `Boş alanları göster (${hiddenCount})`}
         </button>

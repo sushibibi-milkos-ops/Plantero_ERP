@@ -208,16 +208,31 @@ const BY_KIND: Partial<Record<StatusKind, Record<string, StatusInfo>>> = {
     closed: { label: 'Kapatıldı', tone: 'neutral' },
     cancelled: { label: 'İptal', tone: 'danger' },
   },
+  // Tur 20 P1 bulgusu (/satin-alma/siparisler): bu kind'de `success` (yeşil) üç ayrı durumda
+  // (approved/received/invoiced) kullanılıyordu — gerçek veride siparişlerin büyük çoğunluğu er ya
+  // da geç 'invoiced'e ulaştığından bir liste ekranının satırlarının ~%85'i aynı yeşil dolgu
+  // basıyordu. Bu yeşil aynı zamanda `--primary` (logo, birincil buton, aktif menü) ile aynı renk
+  // ailesi (globals.css hue 152) olduğundan hem "marka" hem "bitti" anlamını taşıyıp, gerçekten
+  // aksiyon isteyen satırları (Onay bekliyor/warning, Tedarikçiye gönderildi/info) yeşil duvarın
+  // içinde görünmez kılıyordu (kriter 4 ihlali: "yeşil yalnızca başarı/vurgu ikisinden biri").
+  // Kök neden düzeltmesi: sırayla ilerleyen ve kendi başına dikkat gerektirmeyen "geçmiş adım"
+  // durumları (approved/received/invoiced — hiçbiri bekleyen bir aksiyon taşımıyor, üçü de sırf
+  // "bir sonraki adıma geçildi" bilgisi) nötr rozete alındı; renk yalnızca GERÇEKTEN farklı bir
+  // aksiyon/dikkat gerektiren ya da istisnai durumlarda kalıyor: pending_approval (dahili onay
+  // bekliyor, warning), ai_draft/sent/partially_received (dış tarafa/sürece bağlı devam eden,
+  // info), confirmed (tedarikçi yanıtı, primary), cancelled/rejected (istisna, danger). Bu kind'de
+  // artık hiç `success` yok — aynı listede aynı renkli rozet oranı hedefi (≤%50) her durumda
+  // sağlanır, çünkü tek kalan "çoğunluk" durumu (invoiced) artık renksiz.
   purchase_order: {
     ai_draft: { label: 'AI taslağı', tone: 'info' },
     draft: { label: 'Taslak', tone: 'muted' },
     pending_approval: { label: 'Onay bekliyor', tone: 'warning' },
-    approved: { label: 'Onaylandı', tone: 'success' },
+    approved: { label: 'Onaylandı', tone: 'neutral' },
     sent: { label: 'Tedarikçiye gönderildi', tone: 'info' },
     confirmed: { label: 'Tedarikçi onayladı', tone: 'primary' },
     partially_received: { label: 'Kısmen alındı', tone: 'info' },
-    received: { label: 'Teslim alındı', tone: 'success' },
-    invoiced: { label: 'Faturalandı', tone: 'success' },
+    received: { label: 'Teslim alındı', tone: 'neutral' },
+    invoiced: { label: 'Faturalandı', tone: 'neutral' },
     closed: { label: 'Kapalı', tone: 'neutral' },
     cancelled: { label: 'İptal', tone: 'danger' },
     rejected: { label: 'Reddedildi', tone: 'danger' },

@@ -30,7 +30,11 @@ export function NotificationBell({ className }: { className?: string }) {
   const hasUnread = Boolean(count && count > 0);
 
   return (
-    <Button variant="ghost" size="icon-sm" className={cn('relative size-9', className)} asChild aria-label={hasUnread ? `Bildirimler (${count} okunmamış)` : 'Bildirimler'}>
+    // Kök neden (Tur 20 P1, shell-topbar-touch-01): sabit `size-9` (36px) her viewport'ta aynı
+    // kaldığı için mobilde 44px dokunma hedefinin altındaydı. Komşu ThemeToggle'ın zaten kullandığı
+    // desenle aynı: mobilde `size-11` (44px dokunma hedefi), md ve üstünde eski görsel boyuta yakın
+    // `size-8` (32px, ikon kendi boyutunda ortalanmış kalır — davranış/masaüstü görünümü değişmez).
+    <Button variant="ghost" size="icon-sm" className={cn('relative size-11 md:size-8', className)} asChild aria-label={hasUnread ? `Bildirimler (${count} okunmamış)` : 'Bildirimler'}>
       <Link href="/bildirimler">
         <Bell className="size-4" />
         {hasUnread ? (
