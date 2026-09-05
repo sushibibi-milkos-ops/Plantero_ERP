@@ -97,6 +97,17 @@ async function openImportDialog(page: Page): Promise<import('@playwright/test').
   await page.waitForLoadState('networkidle').catch(() => {});
   const trigger = page.getByRole('button', { name: 'Ekstre içe aktar' });
   const dialog = page.getByRole('dialog');
+  // Entegrasyon turu bulgusu (aynı yarışın ikinci yüzü): tetikleyici `disabled={!mounted}` — hydration
+  // tamamlanmadan enabled olmaz. Trace'te tüm chunk'lar 200 dönmesine rağmen React'in hiç çalışmadığı
+  // (hiçbir server action POST'u yok, konsol hatası yok) bir yükleme gözlendi; buton 2 dk disabled kaldı.
+  // Gerçek kullanıcı sayfayı yeniler — 10 sn içinde enabled olmazsa bir kez yenilenir; assertion aynı.
+  try {
+    await expect(trigger).toBeEnabled({ timeout: 10_000 });
+  } catch {
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await expect(trigger).toBeEnabled({ timeout: 30_000 });
+  }
   await trigger.click();
   try {
     await expect(dialog).toBeVisible({ timeout: 5_000 });
