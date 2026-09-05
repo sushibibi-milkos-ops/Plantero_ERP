@@ -1,0 +1,540 @@
+{
+  "criticalDesktop": {
+    "rows": 36,
+    "rowHeights": [
+      36,
+      36,
+      36,
+      36,
+      36
+    ],
+    "onlyCriticalChecked": "false",
+    "countHint": "36 kayıt",
+    "rulesHint": "36 kural",
+    "emptyVisible": false,
+    "filterEmptyVisible": false,
+    "clearFilterBtn": 0,
+    "_e": 1
+  },
+  "criticalDesktopFiltered": {
+    "rows": 0,
+    "filterEmptyVisible": true,
+    "wrongEmptyVisible": false,
+    "clearFilterBtn": 2
+  },
+  "tableOverflowOrders": {
+    "scroller": {
+      "sw": 1168,
+      "cw": 1152,
+      "right": 1416,
+      "overflow": "auto"
+    },
+    "tableWidth": 1168,
+    "ths": [
+      {
+        "t": "Sipariş no",
+        "right": 397,
+        "w": 133,
+        "clipped": false
+      },
+      {
+        "t": "Tedarikçi",
+        "right": 752,
+        "w": 355,
+        "clipped": false
+      },
+      {
+        "t": "Durum",
+        "right": 922,
+        "w": 170,
+        "clipped": false
+      },
+      {
+        "t": "",
+        "right": 962,
+        "w": 40,
+        "clipped": false
+      },
+      {
+        "t": "Alınan",
+        "right": 1052,
+        "w": 90,
+        "clipped": false
+      },
+      {
+        "t": "Beklenen tarih",
+        "right": 1182,
+        "w": 130,
+        "clipped": false
+      },
+      {
+        "t": "Sipariş tarihi",
+        "right": 1302,
+        "w": 120,
+        "clipped": false
+      },
+      {
+        "t": "Tutar",
+        "right": 1432,
+        "w": 130,
+        "clipped": true
+      }
+    ],
+    "lastCells": [
+      {
+        "t": "₺4.620,00",
+        "right": 1432,
+        "clipped": true
+      },
+      {
+        "t": "₺9.450,00",
+        "right": 1432,
+        "clipped": true
+      },
+      {
+        "t": "₺5.508,00",
+        "right": 1432,
+        "clipped": true
+      }
+    ]
+  },
+  "tableOverflowCritical": {
+    "scroller": {
+      "sw": 1567,
+      "cw": 1152,
+      "right": 1416,
+      "overflow": "auto"
+    },
+    "tableWidth": 1567,
+    "ths": [
+      {
+        "t": "Ürün",
+        "right": 450,
+        "w": 186,
+        "clipped": false
+      },
+      {
+        "t": "SKU",
+        "right": 539,
+        "w": 89,
+        "clipped": false
+      },
+      {
+        "t": "Risk",
+        "right": 639,
+        "w": 100,
+        "clipped": false
+      },
+      {
+        "t": "Kullanılabilir",
+        "right": 749,
+        "w": 110,
+        "clipped": false
+      },
+      {
+        "t": "Min",
+        "right": 829,
+        "w": 80,
+        "clipped": false
+      },
+      {
+        "t": "Max",
+        "right": 909,
+        "w": 80,
+        "clipped": false
+      },
+      {
+        "t": "Kapsama (gün)",
+        "right": 1036,
+        "w": 127,
+        "clipped": false
+      },
+      {
+        "t": "Tedarik süresi",
+        "right": 1156,
+        "w": 120,
+        "clipped": false
+      },
+      {
+        "t": "Önerilen sipariş",
+        "right": 1286,
+        "w": 130,
+        "clipped": false
+      },
+      {
+        "t": "Tercihli tedarikçi",
+        "right": 1641,
+        "w": 355,
+        "clipped": true
+      },
+      {
+        "t": "Son değerlendirme",
+        "right": 1791,
+        "w": 150,
+        "clipped": true
+      },
+      {
+        "t": "Eylemler",
+        "right": 1831,
+        "w": 40,
+        "clipped": true
+      }
+    ],
+    "lastCells": [
+      {
+        "t": "",
+        "right": 1831,
+        "clipped": true
+      },
+      {
+        "t": "",
+        "right": 1831,
+        "clipped": true
+      },
+      {
+        "t": "",
+        "right": 1831,
+        "clipped": true
+      }
+    ]
+  },
+  "criticalMobile": {
+    "checkbox": {
+      "w": 44,
+      "h": 44
+    },
+    "label": {
+      "w": 176,
+      "h": 64
+    },
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "cards": 54
+  },
+  "approvalMobile": {
+    "btns": [
+      {
+        "t": "Reddet",
+        "x": 33,
+        "right": 137,
+        "w": 104,
+        "h": 44,
+        "overflowsViewport": false
+      },
+      {
+        "t": "Düzenle",
+        "x": 143,
+        "right": 247,
+        "w": 104,
+        "h": 44,
+        "overflowsViewport": false
+      },
+      {
+        "t": "Onayla",
+        "x": 253,
+        "right": 357,
+        "w": 104,
+        "h": 44,
+        "overflowsViewport": false
+      }
+    ],
+    "card": null,
+    "maxBtnRight": 357,
+    "minBtnH": 44,
+    "lineItemsInFirstCard": 0,
+    "docScroll": {
+      "sw": 390,
+      "cw": 390
+    }
+  },
+  "approvalDesktop": {
+    "cards": 1,
+    "perCard": [
+      {
+        "w": 376,
+        "h": 243,
+        "lineRows": 1,
+        "hasKalem": true,
+        "hasTL": true
+      }
+    ]
+  },
+  "ordersMobile": {
+    "cards": 34,
+    "withTL": 16,
+    "heights": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "firstCardText": "Kokpit",
+    "docScroll": {
+      "sw": 390,
+      "cw": 390
+    }
+  },
+  "poDetailMobile": {
+    "innerScrollers": [
+      {
+        "tag": "div",
+        "cls": "mx-auto w-full max-w-[1400px]",
+        "sw": 362,
+        "cw": 358
+      },
+      {
+        "tag": "div",
+        "cls": "mb-6",
+        "sw": 362,
+        "cw": 358
+      },
+      {
+        "tag": "div",
+        "cls": "relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto px-1 py-1 ",
+        "sw": 981,
+        "cw": 366
+      },
+      {
+        "tag": "div",
+        "cls": "flex items-center gap-2",
+        "sw": 977,
+        "cw": 358
+      }
+    ],
+    "tableVisible": false,
+    "lineCardCount": 22,
+    "lineCardsWithPrice": 3,
+    "firstLineCard": "Kokpit",
+    "totalLabelPresent": true,
+    "totalStyle": {
+      "size": "20px",
+      "weight": "600",
+      "variant": "tabular-nums"
+    },
+    "docScroll": {
+      "sw": 390,
+      "cw": 390
+    },
+    "hasTL": true
+  },
+  "poDetailDesktop": {
+    "totalLabelPresent": true,
+    "totalStyle": {
+      "size": "20px",
+      "weight": "600",
+      "variant": "tabular-nums",
+      "text": "₺113.040,00"
+    },
+    "rows": 2,
+    "rowH": [
+      57,
+      56
+    ],
+    "docScroll": {
+      "sw": 1440,
+      "cw": 1440
+    }
+  },
+  "newOrderDesktop": {
+    "h2s": [
+      {
+        "t": "Sipariş başlığı",
+        "size": "11px",
+        "weight": "600",
+        "transform": "uppercase",
+        "right": 1032
+      },
+      {
+        "t": "Satırlar",
+        "size": "11px",
+        "weight": "600",
+        "transform": "uppercase",
+        "right": 1032
+      },
+      {
+        "t": "Komut menüsü",
+        "size": "18px",
+        "weight": "600",
+        "transform": "none",
+        "right": 0
+      }
+    ],
+    "labels": [
+      {
+        "t": "Tedarikçi*",
+        "size": "13px",
+        "weight": "500"
+      },
+      {
+        "t": "Depo*",
+        "size": "13px",
+        "weight": "500"
+      },
+      {
+        "t": "Beklenen teslim tari",
+        "size": "13px",
+        "weight": "500"
+      },
+      {
+        "t": "Not",
+        "size": "13px",
+        "weight": "500"
+      },
+      {
+        "t": "Ürün ekle (arama ile",
+        "size": "13px",
+        "weight": "500"
+      }
+    ],
+    "sections": [
+      {
+        "cls": "flex items-center border-t border-sidebar-border/7",
+        "right": 239
+      },
+      {
+        "cls": "max-w-3xl border-t border-border/60 pt-5",
+        "right": 1032
+      },
+      {
+        "cls": "flex items-center justify-end gap-2 border-t borde",
+        "right": 1032
+      },
+      {
+        "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border",
+        "right": 0
+      }
+    ],
+    "gridRight": 1032,
+    "docScroll": {
+      "sw": 1440,
+      "cw": 1440
+    }
+  },
+  "suppliersDesktop": {
+    "cardCount": 7,
+    "cardHasHoverClass": false,
+    "cardTabIndex": null,
+    "pctColors": [
+      "oklch(0.6 0.16 152)",
+      "oklch(0.577 0.245 27.3)"
+    ],
+    "labels": [
+      {
+        "t": "Tedarik",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Kalite skoru",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Zamanında",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Ürün",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Tedarik",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Kalite skoru",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Zamanında",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Ürün",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Tedarik",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Kalite skoru",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Zamanında",
+        "size": "11px",
+        "h": 17
+      },
+      {
+        "t": "Ürün",
+        "size": "11px",
+        "h": 17
+      }
+    ],
+    "hasLeadTimeEnglish": false,
+    "hasGun": true,
+    "has100": true,
+    "switches": 6
+  },
+  "suppliersMobile": {
+    "labels": [
+      {
+        "t": "Tedarik",
+        "h": 17,
+        "lines": 1
+      },
+      {
+        "t": "Kalite skoru",
+        "h": 17,
+        "lines": 1
+      },
+      {
+        "t": "Zamanında",
+        "h": 17,
+        "lines": 1
+      },
+      {
+        "t": "Ürün",
+        "h": 17,
+        "lines": 1
+      },
+      {
+        "t": "Tedarik",
+        "h": 17,
+        "lines": 1
+      },
+      {
+        "t": "Kalite skoru",
+        "h": 17,
+        "lines": 1
+      },
+      {
+        "t": "Zamanında",
+        "h": 17,
+        "lines": 1
+      },
+      {
+        "t": "Ürün",
+        "h": 17,
+        "lines": 1
+      }
+    ],
+    "distinctLabelHeights": [
+      17
+    ],
+    "docScroll": {
+      "sw": 390,
+      "cw": 390
+    }
+  }
+}
