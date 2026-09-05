@@ -1,0 +1,315 @@
+{
+ "critical": {
+  "headers": [
+   "Ürün",
+   "SKU",
+   "Risk",
+   "Kullanılabilir",
+   "Min–Max",
+   "Kapsama (gün)",
+   "Tedarik süresi",
+   "Önerilen sipariş",
+   "Tercihli tedarikçi",
+   "Eylemler"
+  ],
+  "rowCount": 36,
+  "perCol": {
+   "Ürün": {
+    "dash": 0,
+    "unknown": 0,
+    "total": 36
+   },
+   "SKU": {
+    "dash": 0,
+    "unknown": 0,
+    "total": 36
+   },
+   "Risk": {
+    "dash": 0,
+    "unknown": 36,
+    "total": 36
+   },
+   "Kullanılabilir": {
+    "dash": 36,
+    "unknown": 0,
+    "total": 36
+   },
+   "Min–Max": {
+    "dash": 0,
+    "unknown": 0,
+    "total": 36
+   },
+   "Kapsama (gün)": {
+    "dash": 36,
+    "unknown": 0,
+    "total": 36
+   },
+   "Tedarik süresi": {
+    "dash": 0,
+    "unknown": 0,
+    "total": 36
+   },
+   "Önerilen sipariş": {
+    "dash": 36,
+    "unknown": 0,
+    "total": 36
+   },
+   "Tercihli tedarikçi": {
+    "dash": 0,
+    "unknown": 0,
+    "total": 36
+   },
+   "Eylemler": {
+    "dash": 0,
+    "unknown": 0,
+    "total": 36
+   }
+  },
+  "tabularNums": "normal",
+  "kpiTexts": [
+   "Kritik Stok",
+   "Kritik",
+   "Uyarı",
+   "Toplam kural"
+  ],
+  "rowHover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "rgba(0, 0, 0, 0)",
+   "changed": false
+  },
+  "firstFocus": {
+   "tag": "A",
+   "outlineWidth": "0px",
+   "outlineStyle": "none",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+  }
+ },
+ "orders": {
+  "headers": [
+   "Sipariş no",
+   "Tedarikçi",
+   "Durum",
+   "",
+   "Alınan",
+   "Beklenen tarih",
+   "Sipariş tarihi",
+   "Tutar"
+  ],
+  "emptyHeaders": [
+   {
+    "i": 3,
+    "h": ""
+   }
+  ],
+  "amountCells": [
+   "₺4.620,00",
+   "₺9.450,00",
+   "₺5.508,00",
+   "₺13.104,00",
+   "₺95.316,00",
+   "₺43.680,00",
+   "₺66.600,00",
+   "₺54.900,00",
+   "₺32.760,00",
+   "₺30.240,00",
+   "₺14.400,00",
+   "₺113.040,00",
+   "₺125.100,00",
+   "₺16.560,00",
+   "₺7.800,00",
+   "₺3.780,00"
+  ],
+  "amountAlign": "right",
+  "amountTabular": "normal",
+  "emptyColCells": [
+   {
+    "i": 3,
+    "vals": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     633,
+     0,
+     633,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  "rowHover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+   "changed": true
+  }
+ },
+ "poDetail": {
+  "headers": [
+   "Ürün",
+   "Sipariş",
+   "Alınan",
+   "Faturalanan",
+   "Birim fiyat",
+   "KDV",
+   "Tutar (KDV hariç)",
+   "Beklenen tarih"
+  ],
+  "rows": [
+   [
+    "Suklaroz302010000",
+    "80 KG",
+    "80",
+    "80",
+    "₺690,00",
+    "%20",
+    "₺55.200,00",
+    "—"
+   ],
+   [
+    "stevya302020000",
+    "60 KG",
+    "60",
+    "60",
+    "₺650,00",
+    "%20",
+    "₺39.000,00",
+    "—"
+   ]
+  ],
+  "perCol": {
+   "Ürün": {
+    "dash": 0,
+    "total": 2
+   },
+   "Sipariş": {
+    "dash": 0,
+    "total": 2
+   },
+   "Alınan": {
+    "dash": 0,
+    "total": 2
+   },
+   "Faturalanan": {
+    "dash": 0,
+    "total": 2
+   },
+   "Birim fiyat": {
+    "dash": 0,
+    "total": 2
+   },
+   "KDV": {
+    "dash": 0,
+    "total": 2
+   },
+   "Tutar (KDV hariç)": {
+    "dash": 0,
+    "total": 2
+   },
+   "Beklenen tarih": {
+    "dash": 2,
+    "total": 2
+   }
+  },
+  "rawVatMatches": 0,
+  "summary": [
+   "KDV",
+   "Ara toplam",
+   "KDV",
+   "Genel toplam"
+  ]
+ },
+ "suppliersMobile": {
+  "switches": [
+   {
+    "aria": "Beyaz liste",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "aria": "Beyaz liste",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "aria": "Beyaz liste",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "aria": "Beyaz liste",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "aria": "Beyaz liste",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "aria": "Beyaz liste",
+    "w": 44,
+    "h": 44
+   }
+  ],
+  "wrappedLineFirstTexts": [
+   [
+    "·4 ürün"
+   ],
+   [
+    "·10 ürün"
+   ],
+   [
+    "·7 ürün"
+   ],
+   [
+    "·1 ürün"
+   ],
+   [
+    "·11 ürün"
+   ],
+   [
+    "·3 ürün"
+   ]
+  ]
+ },
+ "approval": {
+  "mainW": 1200,
+  "cardW": 1118,
+  "cardBorder": "oklch(0.92 0.004 286.3)",
+  "cardBg": "rgba(0, 0, 0, 0)",
+  "poLink": {
+   "w": 118,
+   "h": 20
+  }
+ },
+ "approvalMobile": {
+  "poLink": {
+   "w": 118,
+   "h": 20
+  },
+  "btns": [
+   {
+    "t": "Reddet",
+    "w": 104,
+    "h": 44
+   },
+   {
+    "t": "Düzenle",
+    "w": 104,
+    "h": 44
+   },
+   {
+    "t": "Onayla",
+    "w": 104,
+    "h": 44
+   }
+  ]
+ }
+}
