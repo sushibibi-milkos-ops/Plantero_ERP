@@ -1,0 +1,76 @@
+{
+ "label": "tracelot-d",
+ "route": "/kalite/izlenebilirlik?lot=PL-260902-H1-01",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 158,
+   "clientWidth": 113,
+   "overflowX": "hidden",
+   "hidden": 45
+  },
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 118,
+   "clientWidth": 77,
+   "overflowX": "hidden",
+   "hidden": 41
+  },
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 160,
+   "clientWidth": 123,
+   "overflowX": "hidden",
+   "hidden": 37
+  },
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 140,
+   "clientWidth": 131,
+   "overflowX": "hidden",
+   "hidden": 9
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [
+  {
+   "text": "İrsaliye SEED-URT-TEDARIK",
+   "w": 113,
+   "full": 158
+  },
+  {
+   "text": "Tedarikçi · S-000001",
+   "w": 77,
+   "full": 118
+  },
+  {
+   "text": "Hurma Şurubu · 302030000",
+   "w": 123,
+   "full": 160
+  },
+  {
+   "text": "Deniz Tuzu · 307020000",
+   "w": 131,
+   "full": 140
+  }
+ ],
+ "clippedCount": 4,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 38,
+ "bottomNav": null
+}
