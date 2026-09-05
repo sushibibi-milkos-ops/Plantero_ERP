@@ -53,10 +53,15 @@ export function ReorderRuleDrawer({
 
   useEffect(() => {
     if (!rule) return;
+    // Tur 1 P1 bulgusu (kök neden): `autoOrderMaxAmount` her zaman `null`'a resetleniyordu —
+    // kullanıcı yalnızca lead time gibi ilgisiz bir alanı değiştirip kaydetse bile mevcut tutar
+    // sınırı SESSİZCE kaldırılıp kural "sınırsız otomatik onay"a düşüyordu (beyaz liste + tutar
+    // sınırı finansal güvenlik kontrolünü baltalıyordu). `rule.autoOrderMaxAmount` artık gerçekten
+    // yükleniyor (bkz. queries.ts `listCriticalStock` — alan CriticalStockRow'a eklendi).
     form.reset({
       minQty: rule.minQty, maxQty: rule.maxQty, leadTimeDays: String(rule.leadTimeDays), safetyDays: String(rule.safetyDays),
       preferredSupplierId: rule.preferredSupplierId, isAutoOrderWhitelisted: rule.isAutoOrderWhitelisted,
-      autoOrderMaxAmount: null, isActive: true,
+      autoOrderMaxAmount: rule.autoOrderMaxAmount, isActive: true,
     });
   }, [rule, form]);
 

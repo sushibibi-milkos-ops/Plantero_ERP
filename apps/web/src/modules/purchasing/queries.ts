@@ -120,9 +120,14 @@ export async function listOpenPurchaseOrders(supplierId?: string) {
 /* /satin-alma/onay-kuyrugu                                             */
 /* ==================================================================== */
 
+export type ApprovalQueueLinePreview = { productName: string; qty: string; uomCode: string; lineTotal: string };
+
 export type ApprovalQueueRow = {
   approvalId: string; orderId: string; docNo: string; partnerName: string; grandTotal: string;
   aiRationale: string | null; aiConfidence: string | null; createdAt: Date; lineCount: number;
+  /** İlk 3 kalem (ürün · miktar · tutar) — onaylayan kişi neyi onayladığını kartın içinde görmeli
+   *  (docs/modules/tedarik.md §2, Tur 1 P1 tedarik-onay-03). */
+  linePreview: ApprovalQueueLinePreview[];
 };
 
 export async function listApprovalQueue(): Promise<ApprovalQueueRow[]> {
@@ -135,9 +140,26 @@ export async function listApprovalQueue(): Promise<ApprovalQueueRow[]> {
     .orderBy(desc(approvals.createdAt));
   const lineAgg = await db.select({ orderId: purchaseOrderLines.orderId, cnt: sql<string>`count(*)` }).from(purchaseOrderLines).groupBy(purchaseOrderLines.orderId);
   const byOrder = new Map(lineAgg.map((r) => [r.orderId, Number(r.cnt)]));
+  const orderIds = rows.map((r) => r.o.id);
+  const linesByOrder = new Map<string, ApprovalQueueLinePreview[]>();
+  if (orderIds.length) {
+    const lineRows = await db
+      .select({ orderId: purchaseOrderLines.orderId, qty: purchaseOrderLines.qty, lineTotal: purchaseOrderLines.lineTotal, sequence: purchaseOrderLines.sequence, productName: products.name, uomCode: uoms.code })
+      .from(purchaseOrderLines)
+      .innerJoin(products, eq(products.id, purchaseOrderLines.productId))
+      .innerJoin(uoms, eq(uoms.id, purchaseOrderLines.uomId))
+      .where(inArray(purchaseOrderLines.orderId, orderIds))
+      .orderBy(asc(purchaseOrderLines.sequence));
+    for (const l of lineRows) {
+      const list = linesByOrder.get(l.orderId) ?? [];
+      if (list.length < 3) list.push({ productName: l.productName, qty: l.qty, uomCode: l.uomCode, lineTotal: l.lineTotal });
+      linesByOrder.set(l.orderId, list);
+    }
+  }
   return rows.map((r) => ({
     approvalId: r.a.id, orderId: r.o.id, docNo: r.o.docNo, partnerName: r.partnerName, grandTotal: r.o.grandTotal,
     aiRationale: r.o.aiRationale, aiConfidence: r.o.aiConfidence, createdAt: r.a.createdAt, lineCount: byOrder.get(r.o.id) ?? 0,
+    linePreview: linesByOrder.get(r.o.id) ?? [],
   }));
 }
 
@@ -152,6 +174,9 @@ export type CriticalStockRow = {
   leadTimeDays: number; safetyDays: number; suggestedQty: string;
   preferredSupplierId: string | null; preferredSupplierName: string | null;
   isAutoOrderWhitelisted: boolean; supplierWhitelisted: boolean;
+  /** Otomatik onay tutar sınırı (`null` = sınırsız) — `ReorderRuleDrawer`'ın form.reset'i bunu
+   *  DOLU tutmalı, aksi halde kaydedilmiş tutar sınırı sessizce kaldırılır (Tur 1 P1 bulgusu). */
+  autoOrderMaxAmount: string | null;
   lastEvaluatedAt: Date | null; risk: 'none' | 'warning' | 'critical';
 };
 
@@ -197,6 +222,7 @@ export async function listCriticalStock(): Promise<CriticalStockRow[]> {
       leadTimeDays, safetyDays, suggestedQty: r.rule.lastSuggestedQty ?? '0',
       preferredSupplierId: r.rule.preferredSupplierId, preferredSupplierName: r.supplierName,
       isAutoOrderWhitelisted: r.rule.isAutoOrderWhitelisted, supplierWhitelisted: r.supplierWhitelisted ?? false,
+      autoOrderMaxAmount: r.rule.autoOrderMaxAmount,
       lastEvaluatedAt: r.rule.lastEvaluatedAt, risk,
     };
   });

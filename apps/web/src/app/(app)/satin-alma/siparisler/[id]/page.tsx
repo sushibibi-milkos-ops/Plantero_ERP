@@ -28,7 +28,22 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
         eyebrow="Satın alma siparişi"
         title={<span className="font-mono">{po.docNo}</span>}
         description={`${partner?.name ?? 'Cari yok'} · ${warehouse?.name ?? ''}`}
-        actions={<OrderActions orderId={po.id} status={po.status} canApprove={userCan(user, 'purchasing.approve')} canSend={userCan(user, 'purchasing.send')} />}
+        actions={
+          // Tur 1 P1 tedarik-po-detay-02 kök neden: toplam eskiden aşağıdaki meta şeridinin İÇİNDE
+          // `ml-auto` ile duruyordu — şerit sarınca (390px) tutar bir gönderim zaman damgasının
+          // hemen yanına yapışıyor, belgenin en önemli sayısı etiketsiz + 16px basılıyordu. Kendi
+          // bloğuna (PageHeader'ın `actions` yuvası — meta akışından tamamen ayrık, her genişlikte
+          // sabit konumda) alındı: 11px muted etiket + 20px/600 tabular-nums değer. TEK bir sarmalayıcı
+          // (PageHeader'ın `[&>*]:flex-1` kuralı doğrudan ÇOCUKLARA uygulanıyor — iki ayrı çocuk
+          // vermek mobilde toplamı ve eylem düğmelerini yan yana yarı yarıya sıkıştırırdı).
+          <div className="flex w-full flex-col items-end gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <div className="text-right">
+              <div className="text-[11px] font-medium text-muted-foreground">Toplam</div>
+              <MoneyCell value={po.grandTotal} className="text-xl font-semibold tabular-nums" />
+            </div>
+            <OrderActions orderId={po.id} status={po.status} canApprove={userCan(user, 'purchasing.approve')} canSend={userCan(user, 'purchasing.send')} />
+          </div>
+        }
       >
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <StatusBadge status={po.status} kind="purchase_order" size="md" />
@@ -40,7 +55,6 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
           <span className="text-muted-foreground">Sipariş: {formatDate(po.orderDate)}</span>
           {po.expectedDate ? <span className="text-muted-foreground">Beklenen: {formatDate(po.expectedDate)}</span> : null}
           {po.sentAt ? <span className="text-muted-foreground">Gönderildi: {formatDateTime(po.sentAt)} ({po.sentVia})</span> : null}
-          <MoneyCell value={po.grandTotal} className="ml-auto text-base font-semibold" />
         </div>
         {po.aiRationale ? <p className="mt-2 max-w-2xl text-[13px] text-muted-foreground">{po.aiRationale}</p> : null}
       </PageHeader>

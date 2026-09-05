@@ -8,7 +8,7 @@ import { Sparkles, CheckCircle2, XCircle, ArrowRight, Keyboard } from 'lucide-re
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
 import { MoneyCell } from '@/components/money-cell';
-import { formatDateTime } from '@/lib/format';
+import { formatDateTime, formatQty } from '@/lib/format';
 import { approvePurchaseOrderAction, rejectPurchaseOrderAction } from '../actions';
 import type { ApprovalQueueRow } from '../queries';
 
@@ -92,23 +92,49 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
                   <Sparkles className="size-3.5 shrink-0 text-primary" />
                   <Link href={`/satin-alma/siparisler/${item.orderId}`} className="truncate font-mono text-sm font-medium hover:underline">{item.docNo}</Link>
                 </div>
-                <div className="mt-0.5 truncate text-sm text-muted-foreground">{item.partnerName} · {item.lineCount} kalem</div>
+                <div className="mt-0.5 flex items-baseline gap-1.5 text-sm text-muted-foreground">
+                  {/* min-w-0 + truncate: cari adı küçülür, kalem sayısı (shrink-0) her genişlikte
+                   * TAM görünür kalır — Tur 1 P1 tedarik-onay-03 kök neden: önceden tek bir truncate
+                   * akışında birleşiyordu, 520px kart genişliğinde '· 1 kalem' tamamen kesiliyordu. */}
+                  <span className="min-w-0 truncate">{item.partnerName}</span>
+                  <span className="shrink-0">· {item.lineCount} kalem</span>
+                </div>
               </div>
               <MoneyCell value={item.grandTotal} className="shrink-0 text-base font-semibold" />
             </div>
 
+            {item.linePreview.length ? (
+              <ul className="space-y-1 border-t border-border/60 pt-2.5 text-[13px]">
+                {item.linePreview.map((l, i) => (
+                  <li key={i} className="flex items-center justify-between gap-2">
+                    <span className="min-w-0 flex-1 truncate text-foreground">{l.productName}</span>
+                    <span className="shrink-0 font-mono tabular-nums text-muted-foreground">{formatQty(l.qty, l.uomCode)}</span>
+                    <MoneyCell value={l.lineTotal} className="w-20 shrink-0" />
+                  </li>
+                ))}
+                {item.lineCount > item.linePreview.length ? (
+                  <li className="text-xs text-muted-foreground">+{item.lineCount - item.linePreview.length} kalem daha</li>
+                ) : null}
+              </ul>
+            ) : null}
+
             {item.aiRationale ? <p className="line-clamp-3 text-[13px] text-muted-foreground">{item.aiRationale}</p> : null}
 
-            <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3">
+            {/* Tur 1 P0 tedarik-onay-01 kök neden: `justify-between` + `shrink-0` buton grubu 390px'te
+             * kartın sağ kenarını 32px aşıyordu (buton grubu asla küçülmüyordu). Mobilde satır tek
+             * kolona düşer, buton grubu tam genişlik alır (`w-full`, `grid-cols-3` — üç eylem eşit
+             * pay); masaüstünde (`sm:`) eski yatay şerit geri gelir. Buton yüksekliği de aynı kök
+             * nedenle mobilde 44px'e çıkar (Tur 1 P1 tedarik-onay-02): `h-11 sm:h-8`. */}
+            <div className="flex flex-col gap-2 border-t border-border/60 pt-3 sm:flex-row sm:items-center sm:justify-between">
               <span className="text-xs text-muted-foreground">{formatDateTime(item.createdAt)}{item.aiConfidence ? ` · %${Math.round(Number(item.aiConfidence) * 100)} güven` : ''}</span>
-              <div className="flex items-center gap-1.5">
-                <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-destructive" disabled={busyId === item.orderId} onClick={() => reject(item.orderId)}>
+              <div className="grid grid-cols-3 gap-1.5 sm:flex sm:items-center">
+                <Button size="sm" variant="ghost" className="h-11 text-muted-foreground hover:text-destructive sm:h-8" disabled={busyId === item.orderId} onClick={() => reject(item.orderId)}>
                   <XCircle className="size-3.5" /> Reddet
                 </Button>
-                <Button size="sm" variant="outline" asChild>
+                <Button size="sm" variant="outline" className="h-11 sm:h-8" asChild>
                   <Link href={`/satin-alma/siparisler/${item.orderId}`}>Düzenle <ArrowRight className="size-3.5" /></Link>
                 </Button>
-                <Button size="sm" disabled={busyId === item.orderId} onClick={() => approve(item.orderId)}>
+                <Button size="sm" className="h-11 sm:h-8" disabled={busyId === item.orderId} onClick={() => approve(item.orderId)}>
                   <CheckCircle2 className="size-3.5" /> Onayla
                 </Button>
               </div>

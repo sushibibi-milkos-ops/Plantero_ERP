@@ -20,9 +20,15 @@ export function OrdersTable({ orders }: { orders: PurchaseOrderRow[] }) {
         cell: ({ row }) => (row.original.isAiGenerated ? <Sparkles className="size-3.5 text-primary" aria-label="AI taslağı" /> : null),
       },
       { accessorKey: 'receivedPct', header: 'Alınan', meta: { align: 'right', width: 90 }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">%{Math.round(row.original.receivedPct)}</span> },
-      { accessorKey: 'grandTotal', header: 'Tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => <MoneyCell value={row.original.grandTotal} /> },
       { accessorKey: 'expectedDate', header: 'Beklenen tarih', meta: { width: 130, mobile: 'hidden' }, cell: ({ row }) => (row.original.expectedDate ? formatDate(row.original.expectedDate) : <span className="text-muted-foreground">—</span>) },
-      { accessorKey: 'orderDate', header: 'Sipariş tarihi', meta: { width: 120 }, cell: ({ row }) => formatDate(row.original.orderDate) },
+      // Tur 1 P1 tedarik-siparisler-01/02 kök neden: mobil kartın tek metriği "rest" hücrelerinin
+      // SONUNCUSU (DataTableMobileCards) — `orderDate` tutardan SONRA tanımlıydı ve mobil rolü yoktu,
+      // metrik yuvasına tutar yerine sipariş tarihi düşüyordu. `mobile:'meta'` ile tarih artık 2.
+      // satırda cari adının yanında bir ipucu olarak görünür (muhasebe/invoices-table.tsx'teki
+      // `dueDate` ile aynı kalıp — kriter 11), `grandTotal` tabloda SONA alınarak "rest" grubunun
+      // son (ve tek gösterilen) elemanı, dolayısıyla mobil metrik, oldu.
+      { accessorKey: 'orderDate', header: 'Sipariş tarihi', meta: { width: 120, mobile: 'meta' }, cell: ({ row }) => formatDate(row.original.orderDate) },
+      { accessorKey: 'grandTotal', header: 'Tutar', meta: { align: 'right', width: 130 }, cell: ({ row }) => <MoneyCell value={row.original.grandTotal} /> },
     ],
     [],
   );

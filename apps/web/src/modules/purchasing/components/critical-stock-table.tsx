@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { formatQty, formatDateTime } from '@/lib/format';
 // Alt-yol içe aktarımı ('@plantero/core/money', barrel değil): kök giriş noktası node:crypto kullanan
@@ -19,11 +20,23 @@ const RISK_CLASS: Record<CriticalStockRow['risk'], string> = {
 };
 
 export function CriticalStockTable({
-  rows, onlyCritical, canManageRule, onEditRule,
+  rows, onlyCritical, canManageRule, onEditRule, onClearFilter,
 }: {
   rows: CriticalStockRow[]; onlyCritical: boolean; canManageRule?: boolean; onEditRule?: (row: CriticalStockRow) => void;
+  /** "Sadece kritik/uyarı" filtresini kapatır — filtre kaynaklı boş durumun eylemi (Tur 1 P0 tedarik-kritik-stok-02). */
+  onClearFilter?: () => void;
 }) {
   const filtered = useMemo(() => (onlyCritical ? rows.filter((r) => r.risk !== 'none') : rows), [rows, onlyCritical]);
+  // Tur 1 P0 tedarik-kritik-stok-02 kök neden: `onlyCritical` panelde tutulan, DataTable'ın
+  // KENDİ arama/sütun-filtre state'inin dışında bir ön-filtre — DataTable'ın "filtreli boş" dalı
+  // (SearchX ikonu, "Eşleşen kayıt yok") bunu hiç bilmediği için tetiklenmiyor, `rows.length===0`
+  // gerçek-boş dalı devreye girip 36 kural varken yanlış "Kural tanımlı ürün bulunamadı" metnini
+  // basıyordu. DataTable ortak bileşen olduğu için (kural 2) buradan değiştirilemez — ama zaten
+  // TAM bunun için tasarlanmış `emptyTitle`/`emptyDescription`/`emptyAction` prop'ları var; bu
+  // filtrenin ürettiği boşluğu DataTable'a onun kendi "veri hiç yok" boş durumu ÜZERİNDEN,
+  // içeriği bu duruma göre hesaplayarak bildiriyoruz — arama kutusu/diğer filtreler bu sırada da
+  // çalışır durumda kalır (DataTable'ı tamamen atlayıp toolbar'ı kaybetmek yerine).
+  const filterEmptied = onlyCritical && filtered.length === 0 && rows.length > 0;
 
   const columns = useMemo<ColumnDef<CriticalStockRow, unknown>[]>(
     () => [
@@ -40,7 +53,7 @@ export function CriticalStockTable({
         accessorKey: 'daysOfCover', header: 'Kapsama (gün)', meta: { align: 'right', width: 110 },
         cell: ({ row }) => (row.original.daysOfCover === null ? <span className="text-muted-foreground">—</span> : <span className="font-mono text-[13px] tabular-nums">{D(row.original.daysOfCover).toFixed(1)}</span>),
       },
-      { accessorKey: 'leadTimeDays', header: 'Lead time', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays}g</span> },
+      { accessorKey: 'leadTimeDays', header: 'Tedarik süresi', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays} gün</span> },
       {
         id: 'suggestedQty', accessorFn: (r) => r.suggestedQty, header: 'Önerilen sipariş', meta: { align: 'right', width: 130 },
         cell: ({ row }) => (D(row.original.suggestedQty).gt(0) ? <span className="font-mono text-[13px] font-medium tabular-nums text-primary">{formatQty(row.original.suggestedQty)}</span> : <span className="text-muted-foreground">—</span>),
@@ -71,8 +84,9 @@ export function CriticalStockTable({
       searchPlaceholder="Ürün, SKU ara…"
       filters={filters}
       initialSorting={[{ id: 'suggestedQty', desc: true }]}
-      emptyTitle="Kritik stok kuralı yok"
-      emptyDescription="Kural tanımlı ürün bulunamadı."
+      emptyTitle={filterEmptied ? 'Filtreye uyan kural yok' : 'Kritik stok kuralı yok'}
+      emptyDescription={filterEmptied ? `${rows.length} kuralın hiçbiri kritik/uyarı değil.` : 'Kural tanımlı ürün bulunamadı.'}
+      emptyAction={filterEmptied && onClearFilter ? <Button variant="outline" size="sm" onClick={onClearFilter}>Filtreyi temizle</Button> : undefined}
       rowActions={canManageRule && onEditRule ? (row) => [{ label: 'Kuralı düzenle', icon: SlidersHorizontal, onSelect: () => onEditRule(row) }] : undefined}
     />
   );

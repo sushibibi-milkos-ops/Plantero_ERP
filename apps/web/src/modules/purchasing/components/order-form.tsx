@@ -9,11 +9,16 @@ import { toast } from 'sonner';
 import { Trash2, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
+import { MoneyCell } from '@/components/money-cell';
 import { Form, FormText, FieldLabel } from '@/components/form/fields';
 import { FormMoney, FormQty } from '@/components/form/money-qty';
 import { FormDate } from '@/components/form/date-field';
 import { Combobox } from '@/components/form/combobox';
 import { FormActions } from '@/components/form/form-actions';
+// Alt-yol içe aktarımı ('@plantero/core/money', barrel değil): kök giriş noktası node:crypto kullanan
+// sunucu-yalnızca auth/session.ts'i de dışa aktarıyor — 'use client' bileşeninde barrel'dan import
+// tarayıcı paketini kırar (bkz. critical-stock-table.tsx aynı düzeltme).
+import { D } from '@plantero/core/money';
 import { createPurchaseOrderAction } from '../actions';
 import type { PurchaseProductPickerRow } from '../queries';
 
@@ -89,7 +94,11 @@ export function PurchaseOrderForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
         <div className="max-w-3xl">
-          <h2 className="mb-3 text-[13px] font-semibold text-foreground">Sipariş başlığı</h2>
+          {/* Tur 1 P1 tedarik-yeni-02 kök neden: bölüm başlığı ve alan etiketi (FieldLabel,
+           * fields.tsx) aynı 13px kademedeydi, aralarındaki tek fark font-weight'ti — tarama
+           * sırasında bölüm sınırı görünmüyordu. Uygulamanın yerleşik micro-label kalıbına
+           * geçildi (bkz. product-wizard.tsx, create-work-order-form.tsx aynı 11px/uppercase). */}
+          <h2 className="mb-3 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Sipariş başlığı</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <FieldLabel required>Tedarikçi</FieldLabel>
@@ -104,8 +113,12 @@ export function PurchaseOrderForm({
           </div>
         </div>
 
-        <div className="border-t border-border/60 pt-5">
-          <h2 className="mb-3 text-[13px] font-semibold text-foreground">Satırlar</h2>
+        {/* Tur 1 P1 tedarik-yeni-03 kök neden: bu bölümün hairline'ı ve altındaki FormActions
+         * şeridi max-w vermeden formun (sınırsız genişlikte) tüm konteynerini kat ediyordu; alan
+         * ızgarası ise (yukarıdaki blok) max-w-3xl'e sabitti — sayfa iki farklı ölçü sistemine
+         * yaslanıyordu. Aynı max-w-3xl burada da uygulanıyor. */}
+        <div className="max-w-3xl border-t border-border/60 pt-5">
+          <h2 className="mb-3 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Satırlar</h2>
           <div className="max-w-lg space-y-1.5">
             <FieldLabel>Ürün ekle (arama ile)</FieldLabel>
             <Combobox value={null} onChange={(id) => { const p = id ? productById.get(id) : undefined; if (p) addLine(p); }} options={productOptions} placeholder="Ürün ara ve ekle…" clearable={false} />
@@ -116,8 +129,11 @@ export function PurchaseOrderForm({
           <div className="mt-4 space-y-3">
             {fields.map((field, index) => {
               const product = productById.get(watchedLines[index]?.productId ?? '');
-              const qty = Number(watchedLines[index]?.qty || 0);
-              const unitPrice = Number(watchedLines[index]?.unitPrice || 0);
+              // Tur 1 P1 tedarik-yeni-01 kök neden: `Number(qty) * Number(unitPrice)` float çarpımı +
+              // elle yazılmış '₺' öneki — ortak MoneyCell/decimal.js (D) devre dışıydı (CLAUDE.md
+              // kural 4). Satır tutarı artık sunucunun `postJournalEntry`/sipariş toplamıyla AYNI
+              // decimal.js yolundan (D().mul()) geçiyor ve MoneyCell ile basılıyor.
+              const lineTotal = D(watchedLines[index]?.qty || 0).mul(D(watchedLines[index]?.unitPrice || 0));
               return (
                 <div key={field.id} className="rounded-lg border border-border/60 p-3">
                   <div className="mb-2 flex items-center justify-between gap-2">
@@ -126,7 +142,7 @@ export function PurchaseOrderForm({
                       <div className="font-mono text-xs text-muted-foreground">{product?.sku}</div>
                     </div>
                     <div className="flex shrink-0 items-center gap-3">
-                      <span className="font-mono text-[13px] tabular-nums text-muted-foreground">₺{(qty * unitPrice).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <MoneyCell value={lineTotal.toString()} className="text-[13px] text-muted-foreground" />
                       <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} aria-label="Satırı sil" className="size-8 shrink-0 text-muted-foreground hover:text-destructive">
                         <Trash2 className="size-4" />
                       </Button>
@@ -146,11 +162,17 @@ export function PurchaseOrderForm({
           </div>
         </div>
 
-        <FormActions submitLabel="Sipariş oluştur" onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={fields.length === 0}>
-          <span className="hidden items-center gap-1 text-xs text-muted-foreground sm:flex">
-            <ShoppingBag className="size-3.5" /> {fields.length} satır
-          </span>
-        </FormActions>
+        {/* max-w-3xl: aynı tedarik-yeni-03 düzeltmesi — masaüstünde aksiyon şeridinin üst hairline'ı
+         * alan ızgarasıyla aynı sağ kenarda bitsin. Mobilde (<768px) sınırsız kalır; FormActions'ın
+         * kendi `-mx-4` yapışkan-şerit taşması bu sarmalayıcının GENİŞLİĞİNE göre değil dış sayfa
+         * kenar boşluğuna göre çalışmaya devam eder (bu div'in kendi yatay padding'i yok). */}
+        <div className="max-w-3xl">
+          <FormActions submitLabel="Sipariş oluştur" onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={fields.length === 0}>
+            <span className="hidden items-center gap-1 text-xs text-muted-foreground sm:flex">
+              <ShoppingBag className="size-3.5" /> {fields.length} satır
+            </span>
+          </FormActions>
+        </div>
       </form>
     </Form>
   );
