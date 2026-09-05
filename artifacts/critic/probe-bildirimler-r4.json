@@ -1,0 +1,155 @@
+{
+ "onaylar-1440": {
+  "rowCount": 14,
+  "rowHeights": [
+   182,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   41,
+   40
+  ],
+  "rowCursor": "default",
+  "selectedRowStyle": {
+   "outline": "0px none",
+   "boxShadow": "none",
+   "bg": "oklab(0.955 0.000564683 -0.00191863 / 0.4)"
+  },
+  "titleFontSize": "13px/500",
+  "titleWidth": 869,
+  "truncatedTitleCount": 0,
+  "amountWidth": 112,
+  "amountText": "-₺450,75",
+  "kbdHintVisible": true,
+  "distinctRowIcons": 2,
+  "mostCommonIconCount": 12,
+  "tablist": {
+   "scrollWidth": 410,
+   "clientWidth": 410,
+   "clipped": false
+  },
+  "rawMoney": [],
+  "rawCode": [],
+  "rowsWithoutAmount": 0,
+  "rowsWithoutConfidence": 0,
+  "focusStyle": {
+   "outlineWidth": "0px",
+   "outlineStyle": "none",
+   "boxShadow": "none",
+   "focusVisible": false
+  },
+  "hover": {
+   "before": "oklab(0.955 0.000564683 -0.00191863 / 0.4)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.4)",
+   "changes": false
+  }
+ },
+ "onaylar-390": {
+  "rowCount": 14,
+  "rowHeights": [
+   213,
+   45,
+   45,
+   45,
+   45,
+   45,
+   45,
+   45,
+   45,
+   45,
+   45,
+   45,
+   45,
+   44
+  ],
+  "rowCursor": "default",
+  "selectedRowStyle": {
+   "outline": "0px none",
+   "boxShadow": "none",
+   "bg": "oklab(0.955 0.000564683 -0.00191863 / 0.4)"
+  },
+  "titleFontSize": "13px/500",
+  "titleWidth": 133,
+  "truncatedTitleCount": 11,
+  "amountWidth": 112,
+  "amountText": "-₺450,75",
+  "kbdHintVisible": true,
+  "distinctRowIcons": 2,
+  "mostCommonIconCount": 12,
+  "tablist": {
+   "scrollWidth": 410,
+   "clientWidth": 358,
+   "clipped": true
+  },
+  "rawMoney": [],
+  "rawCode": [],
+  "rowsWithoutAmount": 0,
+  "rowsWithoutConfidence": 0,
+  "focusStyle": {
+   "outlineWidth": "0px",
+   "outlineStyle": "none",
+   "boxShadow": "none",
+   "focusVisible": false
+  }
+ },
+ "bildirimler-1440": {
+  "rowCount": 3,
+  "rowHeights": [
+   88,
+   88,
+   87
+  ],
+  "titleFont": "14px/500",
+  "bodyFont": "13px",
+  "bodyWidth": 533,
+  "listWidth": 768,
+  "distinctIcons": 1,
+  "mostCommonIconCount": 3,
+  "clampedBodies": 2,
+  "focusStyle": {
+   "outlineWidth": "0px",
+   "outlineStyle": "none",
+   "boxShadow": "none",
+   "focusVisible": false
+  },
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.4)",
+   "changes": true
+  }
+ },
+ "bildirimler-390": {
+  "rowCount": 3,
+  "rowHeights": [
+   88,
+   88,
+   87
+  ],
+  "titleFont": "14px/500",
+  "bodyFont": "13px",
+  "bodyWidth": 278,
+  "listWidth": 358,
+  "distinctIcons": 1,
+  "mostCommonIconCount": 3,
+  "clampedBodies": 3,
+  "focusStyle": {
+   "outlineWidth": "0px",
+   "outlineStyle": "none",
+   "boxShadow": "none",
+   "focusVisible": false
+  }
+ },
+ "bildirimler-empty-admin": {
+  "hasList": false,
+  "text": "Bildirimler Size gönderilen uygulama içi bildirimler Henüz bildiriminiz yok Yeni bir bildirim geldiğinde burada görünür. Onay Merkezi'ne git",
+  "boxWidth": 768
+ }
+}
