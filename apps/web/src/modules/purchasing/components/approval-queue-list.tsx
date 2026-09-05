@@ -112,11 +112,13 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
             onClick={() => setSelected(i)}
             // Tur 4 P1 tedarik-onay-06 kök neden: seçim durumu `border-primary ring-primary`
             // kullanıyordu — birincil renk (--primary) aynı ekranda "Onayla" butonuyla da
-            // taşınıyordu, seçili kart zaten onaylanmış gibi okunuyordu. Seçim artık NÖTR
-            // (`bg-accent/40` + `ring-ring/40`) — DataTable'ın kendi tıklanabilir-satır seçim
-            // kalıbıyla (data-table.tsx:256) aynı token'lar, kriter 11 tutarlılık. `--primary`
-            // ekranda yalnızca "Onayla" butonunda kalır.
-            className={`flex flex-col gap-3 rounded-xl border p-4 ${i === selected ? 'border-border bg-accent/40 ring-1 ring-ring/40' : 'border-border/60'}`}
+            // taşınıyordu, seçili kart zaten onaylanmış gibi okunuyordu. `ring-ring`/`outline-ring`
+            // (DataTable'ın satır odağı gibi) DENENMEDİ — bu tema `--ring`'i `--primary` ile AYNI
+            // yeşile eşitliyor (globals.css:98/136), token adı farklı olsa da piksel rengi birebir
+            // aynı kalır, sorun ÇÖZÜLMEZ (yalnızca sınıf adı değişir). Seçim artık gerçekten
+            // RENKSİZ/nötr: `--accent` (kroma ~0, gri) arka plan + `--foreground` tabanlı ince
+            // kenarlık — ekranda yeşil YALNIZCA "Onayla" butonunda kalır.
+            className={`flex flex-col gap-3 rounded-xl border p-4 ${i === selected ? 'border-foreground/15 bg-accent/60' : 'border-border/60'}`}
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
