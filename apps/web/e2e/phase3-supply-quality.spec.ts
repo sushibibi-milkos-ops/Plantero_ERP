@@ -235,6 +235,16 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     await page.goto('/satin-alma/siparisler');
     await expect(visibleText(page, kajuPoDocNo!)).toBeVisible();
     await expect(visibleText(page, etiketPoDocNo!)).toBeVisible();
+
+    // Orkestratör akışı (Adım 1) beyaz liste dışı taslağın "/satin-alma/onay-kuyrugu VE /onaylar'da"
+    // beklediğini açıkça belirtiyor — tek kuyruk `/onaylar` (`approvals` tablosu, kind='purchase_draft',
+    // title=`Satın alma taslağı ${docNo}` — bkz. `apps/web/src/modules/purchasing/actions.ts:288`) aynı
+    // kaydı kart olarak listeler; burada ikinci ekran ayrıca doğrulanır (yalnızca DB'deki `approvals`
+    // satırına güvenmek yerine). Doc no kartın `title`'ına GÖMÜLÜ tek bir metin düğümü olarak render
+    // edilir ("Satın alma taslağı PO-2026-000018") — `visibleText`'in varsayılan `exact:true`'su bu
+    // yüzden burada eşleşmez; alt-dize eşleşmesi (`exact:false`) kullanılır.
+    await page.goto('/onaylar');
+    await expect(visibleText(page, kajuPoDocNo!, false)).toBeVisible();
   });
 
   test('Adım 2 — /satin-alma/onay-kuyrugu: Kaju taslağını Onayla → sipariş detayında "Tedarikçiye gönder"', async () => {
