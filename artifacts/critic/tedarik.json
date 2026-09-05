@@ -24,18 +24,7 @@
    "total": 53,
    "verdict": "KAZANAN: Linear (fark 4)",
    "scoreNotes": "K5 3->5: Tur 2'de acilan tasma kapandi -- ic scroller sw=1152/cw=1152, 'Tercihli tedarikci' ve 'Eylemler' sutunlari kaydirmasiz erisilebilir (probe-tedarik-r3.critical.scroller). K6 4->3: tablonun ana sayisal sutunu 'Kullanilabilir' 36/36 satirda '0' basiyor, oysa gercek deger bilinmiyor (reorder_rules.last_on_hand 36/36 NULL) ve stok gercekte var (stock_quants: Alkalize Kakao 82, Badem 300, Suklaroz 155,5) -- uydurma sifir, kriter 6'nin en agir ihlali (yeni bulgu tedarik-kritik-stok-06). K7 5->4: 'motor calistirilmadi' seridi dogru ama yalnizca 'Kapsama'/'Onerilen siparis' sutunlarina uygulanmis ('—'); ayni bilinmezlik 'Kullanilabilir' ve 'Risk' sutunlarinda '0' ve 'Normal' olarak sessizce doldurulmus -- hesaplanmamis durum tutarsiz iletiliyor.",
-   "open": [
-    {
-     "id": "tedarik-kritik-stok-06",
-     "criterion": 6,
-     "severity": "P0",
-     "text": "Motor hic calismamisken 'Kullanilabilir' sutunu 36/36 satirda '0', 'Risk' rozeti 36/36 satirda 'Normal' basiyor; ustteki KPI seridi de 'Kritik 0 / Uyari 0' diyor. Ucu de uydurma: kaynak alan reorder_rules.last_on_hand 36 kuralin 36'sinda NULL ve queries.ts 'available: r.rule.lastOnHand ?? \\'0\\'' ile NULL'i 0'a ceviriyor; risk de lastDaysOfCover NULL oldugu icin 'none'a dusuyor. Satin almaci ekranda 'stok 0' + 'risk normal' gibi kendi icinde celisen ve ikisi de yanlis iki ifade goruyor. Ayni sayfadaki 'Kapsama (gun)' ve 'Onerilen siparis' sutunlari ayni bilinmezligi dogru sekilde '—' ile gosteriyor.",
-     "measure": "probe-tedarik-r3.critical: rowCount=36, availZero=36, riskNormal=36. DB: select count(*),count(last_on_hand) from reorder_rules -> 36|0; stock_quants'ta 209 pozitif kayit (Alkalize Kakao 82,0000 / Badem 300,0000 / Suklaroz 155,5000 / Vanilya Aromasi 102,0000).",
-     "target": "lastEvaluatedAt === null iken 'Kullanilabilir' hucresi '0' degil '—' basmali (Kapsama/Onerilen ile ayni dil) ve Risk rozeti 'Normal' yerine notr 'Degerlendirilmedi' / '—' olmali; KPI seridinde 'Kritik'/'Uyari' kartlari KpiCard value={null} ile '—' basmali. Kabul olcumu: availZero=0 ve riskNormal=0 (motor calismadan), motor calistiktan sonra gercek degerler.",
-     "file": "apps/web/src/modules/purchasing/queries.ts:220 (available/onHand ?? '0'), :206-215 (risk), apps/web/src/modules/purchasing/components/critical-stock-table.tsx:58, apps/web/src/app/(app)/satin-alma/kritik-stok/page.tsx (KPI seridi)",
-     "openedRound": 3
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-kritik-stok-01",
@@ -56,6 +45,19 @@
      "id": "tedarik-kritik-stok-04",
      "closedRound": 2,
      "verifiedBy": "Tur 3 yeniden olcum: probe-tedarik-r3.critical.scroller = {sw:1152, cw:1152} -- tasma 0; measure sayfa duzeyi scrollWidth=clientWidth=1440, overflowX=false."
+    },
+    {
+     "id": "tedarik-kritik-stok-06",
+     "criterion": 6,
+     "severity": "P0",
+     "text": "Motor hic calismamisken 'Kullanilabilir' sutunu 36/36 satirda '0', 'Risk' rozeti 36/36 satirda 'Normal' basiyor; ustteki KPI seridi de 'Kritik 0 / Uyari 0' diyor. Ucu de uydurma: kaynak alan reorder_rules.last_on_hand 36 kuralin 36'sinda NULL ve queries.ts 'available: r.rule.lastOnHand ?? \\'0\\'' ile NULL'i 0'a ceviriyor; risk de lastDaysOfCover NULL oldugu icin 'none'a dusuyor. Satin almaci ekranda 'stok 0' + 'risk normal' gibi kendi icinde celisen ve ikisi de yanlis iki ifade goruyor. Ayni sayfadaki 'Kapsama (gun)' ve 'Onerilen siparis' sutunlari ayni bilinmezligi dogru sekilde '—' ile gosteriyor.",
+     "measure": "probe-tedarik-r3.critical: rowCount=36, availZero=36, riskNormal=36. DB: select count(*),count(last_on_hand) from reorder_rules -> 36|0; stock_quants'ta 209 pozitif kayit (Alkalize Kakao 82,0000 / Badem 300,0000 / Suklaroz 155,5000 / Vanilya Aromasi 102,0000).",
+     "target": "lastEvaluatedAt === null iken 'Kullanilabilir' hucresi '0' degil '—' basmali (Kapsama/Onerilen ile ayni dil) ve Risk rozeti 'Normal' yerine notr 'Degerlendirilmedi' / '—' olmali; KPI seridinde 'Kritik'/'Uyari' kartlari KpiCard value={null} ile '—' basmali. Kabul olcumu: availZero=0 ve riskNormal=0 (motor calismadan), motor calistiktan sonra gercek degerler.",
+     "file": "apps/web/src/modules/purchasing/queries.ts:220 (available/onHand ?? '0'), :206-215 (risk), apps/web/src/modules/purchasing/components/critical-stock-table.tsx:58, apps/web/src/app/(app)/satin-alma/kritik-stok/page.tsx (KPI seridi)",
+     "openedRound": 3,
+     "closedRound": 3,
+     "verifiedBy": "queries.ts: onHand/available artık lastOnHand NULL iken '0' değil null döner (?? '0' kaldırıldı); risk motoru hiç çalışmamışken 'none' değil yeni 'unknown' durumuna düşer. critical-stock-table.tsx: 'Kullanılabilir' hücresi available===null iken '—' basar (Kapsama/Önerilen ile aynı dil); RISK_LABEL['unknown']='Değerlendirilmedi' ayrı nötr rozet. page.tsx: neverEvaluated iken KpiCard value={null} → '—'.",
+     "measureAfter": "db:reset sonrası canlı ölçüm (Playwright, admin): 36/36 satırda Kullanılabilir='—', Risk rozeti='Değerlendirilmedi' (availZero=0, riskNormal=0 — kabul kriteri karşılandı); KPI şeridi 'Kritik —' / 'Uyarı —' / 'Toplam kural 36'. Motoru çalıştır sonrası aynı oturumda yeniden ölçüldü: Kaju/Bromelain Risk='Kritik' Kullanılabilir=38/50 (gerçek sayı), KPI 'Kritik 2 / Uyarı 0' — motor çalışınca gerçek değerlere döndüğü doğrulandı, sonra db:reset ile temiz duruma alındı. Ekran: artifacts/screens/satin-alma-kritik-stok/{desktop,mobile}.png."
     }
    ]
   },
@@ -80,18 +82,7 @@
    "total": 48,
    "verdict": "KAZANAN: Linear (fark 9)",
    "scoreNotes": "K7 3->4: bos dal artik EmptyState'e action gecıyor (approval-queue-list.tsx:74-82, Button asChild + Link /satin-alma/kritik-stok) -- kodla dogrulandi, canli bos dal zorlanamadi (kuyrukta 1 bekleyen taslak var), bu yuzden 5 degil 4. K3 4->3: masaustunde kart 376x243px, icerik sutunu 1200px -- yatay olarak %31'i kullaniliyor, 824px bos; dikeyde icerik y=424'te bitiyor, 900px viewport'un %53'u bos (yeni bulgu tedarik-onay-05). Diger kriterlerde olculebilir degisiklik yok.",
-   "open": [
-    {
-     "id": "tedarik-onay-05",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "Masaustu duzen tek sutunlu dar kart yiginı: onay karti 376px genislikte, icerik sutunu 1200px -- saginda 824px (%69) kullanilmayan alan var. Linear'in triyaj kutusu ya tam genislikte satirlar (liste) ya da liste+detay ikili duzeni kullanir; burada kart ne tam genislikte ne de bir izgaraya yerlesmis (sm:grid-cols-2 gibi bir kirilim yok), bu yuzden kuyruk buyudukce de ekranin ucte ikisi bos kalir.",
-     "measure": "Playwright bounding box, 1440x900: kart {w:376, h:243, left:264, right:640}, main {w:1200}, oran 0.31; icerik alt kenari y=424 / viewport 900 (docH=900).",
-     "target": "Kart ya icerik sutununun tam genisligini kullanmali (w >= 1100, oran >= 0.92) ya da >=2 kolonlu izgaraya girmeli (xl:grid-cols-2, kart >= 560px); kabul olcumu: kart genisligi / main genisligi >= 0.45.",
-     "file": "apps/web/src/modules/purchasing/components/approval-queue-list.tsx (kart sarmalayici / izgara), apps/web/src/app/(app)/satin-alma/onay-kuyrugu/page.tsx",
-     "openedRound": 3
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-onay-01",
@@ -112,6 +103,19 @@
      "id": "tedarik-onay-04",
      "closedRound": 2,
      "verifiedBy": "approval-queue-list.tsx:74-82 EmptyState action={<Button asChild><Link href='/satin-alma/kritik-stok'>} -- kod incelemesiyle Tur 3'te yeniden dogrulandi."
+    },
+    {
+     "id": "tedarik-onay-05",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Masaustu duzen tek sutunlu dar kart yiginı: onay karti 376px genislikte, icerik sutunu 1200px -- saginda 824px (%69) kullanilmayan alan var. Linear'in triyaj kutusu ya tam genislikte satirlar (liste) ya da liste+detay ikili duzeni kullanir; burada kart ne tam genislikte ne de bir izgaraya yerlesmis (sm:grid-cols-2 gibi bir kirilim yok), bu yuzden kuyruk buyudukce de ekranin ucte ikisi bos kalir.",
+     "measure": "Playwright bounding box, 1440x900: kart {w:376, h:243, left:264, right:640}, main {w:1200}, oran 0.31; icerik alt kenari y=424 / viewport 900 (docH=900).",
+     "target": "Kart ya icerik sutununun tam genisligini kullanmali (w >= 1100, oran >= 0.92) ya da >=2 kolonlu izgaraya girmeli (xl:grid-cols-2, kart >= 560px); kabul olcumu: kart genisligi / main genisligi >= 0.45.",
+     "file": "apps/web/src/modules/purchasing/components/approval-queue-list.tsx (kart sarmalayici / izgara), apps/web/src/app/(app)/satin-alma/onay-kuyrugu/page.tsx",
+     "openedRound": 3,
+     "closedRound": 3,
+     "verifiedBy": "approval-queue-list.tsx: kart ızgarası (`sm:grid-cols-2 xl:grid-cols-3`) tam genişlik tek sütunlu istiflenmiş satırlara (`flex flex-col gap-3`) çevrildi — kart sayısı azken (günün büyük kısmı) sütunlara bölünüp boşluk üretmiyor.",
+     "measureAfter": "Playwright bounding box, 1440x900 (satin_alma hesabı, 1 bekleyen taslak): main {w:1200, left:240, right:1440}, kart {w:1152, left:264, right:1416} → oran 1152/1200=0,96 (hedef >=0,45, >=0,92 tam genişlik eşiğini de geçiyor). Ekran: artifacts/screens/satin-alma-onay-kuyrugu/{desktop,mobile}.png."
     }
    ]
   },
@@ -176,18 +180,7 @@
    "total": 49,
    "verdict": "KAZANAN: Stripe (fark 7)",
    "scoreNotes": "K5 4->5: satir tablosu + belge sonu ozet blogu (Ara toplam / KDV / Genel toplam) tablonun sag kenariyla birebir hizali, hairline yalnizca 'Genel toplam' ustunde, header 11px uppercase muted -- Stripe fatura anatomisi. K6 3 (sabit, sebep degisti): Tur 2'nin sebebi (birim fiyat x miktar != tutar, KDV yok) KAPANDI -- 80 x 690,00 = 55.200,00 birebir tutuyor; yeni sebep: KDV orani ham numeric(18,4) degeriyle '%20.0000' basiliyor (yeni bulgu tedarik-po-detay-04), ayni oran /satin-alma/siparisler/yeni ekraninda dogru sekilde '%20' gosteriliyor -- ayni belgenin iki ekraninda iki farkli hassasiyet. Diger kriterlerde delta yok.",
-   "open": [
-    {
-     "id": "tedarik-po-detay-04",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "KDV orani hem masaustu tablosunda ('KDV' sutunu) hem mobil satir kartinda ('KDV haric · %20.0000') veritabani hassasiyetiyle 4 ondalik basiliyor. Oran bir para tutari degil; 4 ondalik ne bilgi tasiyor ne de hizalamaya hizmet ediyor, sadece ham DB degerinin ekrana sizmasi. Ayni deger /satin-alma/siparisler/yeni ozet blogunda 'KDV (%20)' olarak dogru basiliyor -- ekranlar arasi tutarsizlik.",
-     "measure": "probe-tedarik-r3.poDetail.vatStrings = ['%20.0000','%20.0000'] (PO-2026-000003, 2 satirin 2'si); order-lines-table.tsx:52 ve :74 '%{r.line.vatRate}'.",
-     "target": "Oran gereksiz sondaki sifirlar kirpilarak basilmali: '%20' (ondalikli oranlarda en fazla 2 hane, or. '%1' / '%8,5'). Kabul olcumu: sayfada /%\\d+[.,]\\d{3,}/ eslesmesi 0.",
-     "file": "apps/web/src/modules/purchasing/components/order-lines-table.tsx:52 (masaustu td), :74 (mobil kart)",
-     "openedRound": 3
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-po-detay-01",
@@ -203,6 +196,19 @@
      "id": "tedarik-po-detay-03",
      "closedRound": 2,
      "verifiedBy": "desktop.png (PO-2026-000003): Suklaroz 80 KG x 690,00 = 55.200,00 (KDV haric, birebir); Ara toplam 94.200,00 / KDV 18.840,00 / Genel toplam 113.040,00 -- DB degerleriyle ayni."
+    },
+    {
+     "id": "tedarik-po-detay-04",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "KDV orani hem masaustu tablosunda ('KDV' sutunu) hem mobil satir kartinda ('KDV haric · %20.0000') veritabani hassasiyetiyle 4 ondalik basiliyor. Oran bir para tutari degil; 4 ondalik ne bilgi tasiyor ne de hizalamaya hizmet ediyor, sadece ham DB degerinin ekrana sizmasi. Ayni deger /satin-alma/siparisler/yeni ozet blogunda 'KDV (%20)' olarak dogru basiliyor -- ekranlar arasi tutarsizlik.",
+     "measure": "probe-tedarik-r3.poDetail.vatStrings = ['%20.0000','%20.0000'] (PO-2026-000003, 2 satirin 2'si); order-lines-table.tsx:52 ve :74 '%{r.line.vatRate}'.",
+     "target": "Oran gereksiz sondaki sifirlar kirpilarak basilmali: '%20' (ondalikli oranlarda en fazla 2 hane, or. '%1' / '%8,5'). Kabul olcumu: sayfada /%\\d+[.,]\\d{3,}/ eslesmesi 0.",
+     "file": "apps/web/src/modules/purchasing/components/order-lines-table.tsx:52 (masaustu td), :74 (mobil kart)",
+     "openedRound": 3,
+     "closedRound": 3,
+     "verifiedBy": "order-lines-table.tsx: masaüstü 'KDV' sütunu ve mobil satır kartı artık `%{r.line.vatRate}` (ham numeric(18,4)) yerine `formatPct(r.line.vatRate, 2)` (`/lib/format.ts`) kullanıyor — gereksiz sondaki sıfırlar kırpılır.",
+     "measureAfter": "PO-2026-000003 (Suklaroz %20, Stevya %20) canlı ölçüm: masaüstü 'KDV' sütunu ve mobil 'KDV hariç · %20' — /%\\d+[.,]\\d{3,}/ eşleşmesi 0 (önceden 2/2 satırda '%20.0000'). Ekran: artifacts/screens/satin-alma-siparisler-4967c061-354e-4fe8-b043-a1614d742115/{desktop,mobile}.png."
     }
    ]
   },
@@ -227,18 +233,7 @@
    "total": 55,
    "verdict": "KAZANAN: Linear (fark 2)",
    "scoreNotes": "K6 3->5: Tur 2'de acilan eksik kapandi ve canli olculdu -- Badem 12 KG x 1.375,00 icin 'Ara toplam 16.500,00 TL / KDV (%20) 3.300,00 TL / Genel toplam 19.800,00 TL' dogru, deger 15px/600 tabular-nums, para alanlari sag hizali tabular-nums (input textAlign=right, fontVariantNumeric=tabular-nums), satir tutarinin altinda '11px KDV haric' etiketi, yapiskan seritte '1 satir · 19.800,00 TL'. K5 4->5: satir karti anatomisi (urun+SKU solda, tutar+KDV haric sagda, 3 alanli izgara, silme ikonu) tablo cerçevesi olmadan kuruluyor. K11 4->5: KDV etiketi ve para kalibi /[id] ekraniyla ayni. K2 5->4: 'Urun ekle (arama ile)' komboboxu max-w-lg (512px) ile formun hicbir hizalama kenarina oturmuyor -- sag kenari 776px, ustundeki alan sutunu 642px'te, izgara ve altindaki satir karti 1032px'te bitiyor (yeni bulgu tedarik-yeni-05).",
-   "open": [
-    {
-     "id": "tedarik-yeni-05",
-     "criterion": 2,
-     "severity": "P1",
-     "text": "'Urun ekle (arama ile)' komboboxu Tailwind'in max-w-lg (32rem = 512px) varsayilaniyla sinirlanmis; sag kenari 776px'te bitiyor. Formdaki diger tum hizalama kenarlari 642px (alan sutunu) ya da 1032px (izgara, bolum hairline'i, satir karti, ozet blogu, FormActions seridi). Sonuc: bolumun en ustundeki kontrol hicbir seyle hizalanmayan ucuncu bir sag kenar uretiyor -- 8pt ritmi ve dikey hizalama sistemi kiriliyor.",
-     "measure": "probe-tedarik-r3.newOrderDesktop: productSelect {left:264, right:776, w:512}, supplierSelect {right:642, w:378}, gridRight:1032. Uc farkli sag kenar: 642 / 776 / 1032.",
-     "target": "Kombobox ya alan sutunu genisligine (378px, sag kenar 642) ya da bolum genisligine (768px, sag kenar 1032) oturmali; kabul olcumu: productSelect.right degeri 642 veya 1032 (+/-2px).",
-     "file": "apps/web/src/modules/purchasing/components/order-form.tsx:146 (`<div className=\"max-w-lg space-y-1.5\">`)",
-     "openedRound": 3
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-yeni-01",
@@ -259,6 +254,19 @@
      "id": "tedarik-yeni-04",
      "closedRound": 2,
      "verifiedBy": "Tur 3 canli olcum (Badem, 12 KG, 1.375,00): hasAra=true, hasGenel=true, 'Ara toplam 16.500,00 TL / KDV (%20) 3.300,00 TL / Genel toplam 19.800,00 TL', yapiskan serit '1 satir · 19.800,00 TL' -- hepsi dogru, sifir degil."
+    },
+    {
+     "id": "tedarik-yeni-05",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "'Urun ekle (arama ile)' komboboxu Tailwind'in max-w-lg (32rem = 512px) varsayilaniyla sinirlanmis; sag kenari 776px'te bitiyor. Formdaki diger tum hizalama kenarlari 642px (alan sutunu) ya da 1032px (izgara, bolum hairline'i, satir karti, ozet blogu, FormActions seridi). Sonuc: bolumun en ustundeki kontrol hicbir seyle hizalanmayan ucuncu bir sag kenar uretiyor -- 8pt ritmi ve dikey hizalama sistemi kiriliyor.",
+     "measure": "probe-tedarik-r3.newOrderDesktop: productSelect {left:264, right:776, w:512}, supplierSelect {right:642, w:378}, gridRight:1032. Uc farkli sag kenar: 642 / 776 / 1032.",
+     "target": "Kombobox ya alan sutunu genisligine (378px, sag kenar 642) ya da bolum genisligine (768px, sag kenar 1032) oturmali; kabul olcumu: productSelect.right degeri 642 veya 1032 (+/-2px).",
+     "file": "apps/web/src/modules/purchasing/components/order-form.tsx:146 (`<div className=\"max-w-lg space-y-1.5\">`)",
+     "openedRound": 3,
+     "closedRound": 3,
+     "verifiedBy": "order-form.tsx: 'Ürün ekle (arama ile)' komboboxunu saran `max-w-lg` (512px) kaldırıldı — kombobox artık `max-w-3xl` bölüm konteynerinin (768px) tamamını devralıyor, altındaki satır kartlarıyla aynı sağ kenarda duruyor.",
+     "measureAfter": "Playwright, 1440x900 (satin_alma hesabı): supplierSelect {left:264, right:642, w:378}, warehouseSelect {left:654, right:1032, w:378}, productSelect {left:264, right:1032, w:768} — productSelect.right=1032, gridRight (1032) ile birebir (hedef 642 veya 1032 ±2px). Ekran: artifacts/screens/satin-alma-siparisler-yeni/{desktop,mobile}.png."
     }
    ]
   },
@@ -283,28 +291,7 @@
    "total": 48,
    "verdict": "KAZANAN: Linear (fark 9)",
    "scoreNotes": "K3 3->4: Tur 2'de acilan yogunluk bulgusu kapandi -- kart 265px'ten ~153px'e indi (2x2 metrik izgarasi tek satirlik metrik seridine, beyaz liste switch'i baslik satirina); 6 kart iki satirda. K9 4->3: 390px'te beyaz liste switch'inin gorunur etiketi de erisilebilir adi da yok -- 6/6 switch aria-label=null, sarmalayici <label>'in tek metni 'Beyaz liste' `hidden sm:inline` ile gizli, geriye yalnizca dokunmatikte calismayan title attribute'u kaliyor (yeni bulgu tedarik-tedarikciler-06). Metrik seridi ayraci 6 kartin 2'sinde satir basina dusuyor (P2, tedarik-tedarikciler-07).",
-   "open": [
-    {
-     "id": "tedarik-tedarikciler-06",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te tedarikci kartindaki tek yazma eylemi olan 'Beyaz liste' anahtari tamamen etiketsiz: gorunur metin `hidden sm:inline` ile gizleniyor, Switch'te aria-label/aria-labelledby yok, sarmalayici <label>'in innerText'i bos kaliyor. Mobil kullanici satin alma beyaz listesini acip kapatan yesil bir anahtar goruyor ama neyi degistirdigini ekranda okuyamiyor; ekran okuyucu da adsiz bir switch anons ediyor. Dokunma hedefi (44x44) dogru, sorun yalnizca adlandirma.",
-     "measure": "Playwright 390x844: 6 kartin 6'sinda [role=switch] -> ariaLabel=null, ariaLabelledby=null, sarmalayici label innerText='' (yalnizca title='Satin alma beyaz listesi'); w=h=44.",
-     "target": "Switch'e kalici bir ad verilmeli: ya etiket 390px'te de gorunur olmali (`hidden sm:inline` kaldirilir, gerekirse 10-11px kisaltilmis metin) ya da Switch aria-label='Beyaz liste' almali. Kabul olcumu: 390px'te 6/6 switch icin (ariaLabel != null) veya (gorunur etiket metni != '').",
-     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:83 (`<span className=\"hidden sm:inline\">Beyaz liste</span>`), :84 (Switch)",
-     "openedRound": 3
-    },
-    {
-     "id": "tedarik-tedarikciler-07",
-     "criterion": 1,
-     "severity": "P2",
-     "text": "Metrik seridindeki '·' ayraclari flex-wrap icinde bagimsiz kardes span'lar oldugu icin satir kirilimi ayracin ustunde olabiliyor; 390px'te 6 kartin 2'sinde ikinci satir '·' ile basliyor ('· 10 urun', '· 7 urun').",
-     "measure": "Playwright 390x844 bounding box: kart 2 ve 3'te ayrac span'i kendi satirinin en soldaki ogesi (orphanSeparatorAtLineStart=true, 2/6).",
-     "target": "Ayrac bir sonraki metrikle tek bir kirilmaz grupta olmali (ayrac + metrik ayni inline-flex span icinde ya da ::before ile) -- kabul olcumu: 6/6 kartta orphanSeparatorAtLineStart=false.",
-     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:94-113 (metrik seridi span'lari)",
-     "openedRound": 3
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-tedarikciler-01",
@@ -330,6 +317,32 @@
      "id": "tedarik-tedarikciler-05",
      "closedRound": 2,
      "verifiedBy": "Tur 3 ekran goruntusu olcumu: kart yuksekligi ~153px (Tur 1'de 265px), 3 kompakt satir."
+    },
+    {
+     "id": "tedarik-tedarikciler-06",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te tedarikci kartindaki tek yazma eylemi olan 'Beyaz liste' anahtari tamamen etiketsiz: gorunur metin `hidden sm:inline` ile gizleniyor, Switch'te aria-label/aria-labelledby yok, sarmalayici <label>'in innerText'i bos kaliyor. Mobil kullanici satin alma beyaz listesini acip kapatan yesil bir anahtar goruyor ama neyi degistirdigini ekranda okuyamiyor; ekran okuyucu da adsiz bir switch anons ediyor. Dokunma hedefi (44x44) dogru, sorun yalnizca adlandirma.",
+     "measure": "Playwright 390x844: 6 kartin 6'sinda [role=switch] -> ariaLabel=null, ariaLabelledby=null, sarmalayici label innerText='' (yalnizca title='Satin alma beyaz listesi'); w=h=44.",
+     "target": "Switch'e kalici bir ad verilmeli: ya etiket 390px'te de gorunur olmali (`hidden sm:inline` kaldirilir, gerekirse 10-11px kisaltilmis metin) ya da Switch aria-label='Beyaz liste' almali. Kabul olcumu: 390px'te 6/6 switch icin (ariaLabel != null) veya (gorunur etiket metni != '').",
+     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:83 (`<span className=\"hidden sm:inline\">Beyaz liste</span>`), :84 (Switch)",
+     "openedRound": 3,
+     "closedRound": 3,
+     "verifiedBy": "suppliers-table.tsx: `Switch`e kalıcı `aria-label=\"Beyaz liste\"` eklendi — görünürlükten (`hidden sm:inline`) bağımsız erişilebilir ad; görünür etiket 390px'te hâlâ gizli kalabilir.",
+     "measureAfter": "Playwright, 390x844 (satin_alma hesabı, 6 tedarikçi): [role=switch] 6/6 → ariaLabel='Beyaz liste', w=h=44 (hedef: 6/6 için ariaLabel!=null KARŞILANDI). Ekran: artifacts/screens/satin-alma-tedarikciler/mobile.png."
+    },
+    {
+     "id": "tedarik-tedarikciler-07",
+     "criterion": 1,
+     "severity": "P2",
+     "text": "Metrik seridindeki '·' ayraclari flex-wrap icinde bagimsiz kardes span'lar oldugu icin satir kirilimi ayracin ustunde olabiliyor; 390px'te 6 kartin 2'sinde ikinci satir '·' ile basliyor ('· 10 urun', '· 7 urun').",
+     "measure": "Playwright 390x844 bounding box: kart 2 ve 3'te ayrac span'i kendi satirinin en soldaki ogesi (orphanSeparatorAtLineStart=true, 2/6).",
+     "target": "Ayrac bir sonraki metrikle tek bir kirilmaz grupta olmali (ayrac + metrik ayni inline-flex span icinde ya da ::before ile) -- kabul olcumu: 6/6 kartta orphanSeparatorAtLineStart=false.",
+     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:94-113 (metrik seridi span'lari)",
+     "openedRound": 3,
+     "closedRound": 3,
+     "verifiedBy": "suppliers-table.tsx: her ayraç (`·`) artık kendinden sonraki metrikle AYNI `inline-flex` flex item'ında (`gap-1.5` grup) — flex-wrap kırılması yalnızca gruplar ARASINDA olabilir, ayraç bir satırın ilk/son karakteri olarak yalnız kalamaz.",
+     "measureAfter": "artifacts/screens/satin-alma-tedarikciler/mobile.png (390px, db:reset sonrası 6 kart): ikinci satıra taşan metrikler ('· 4 ürün' vb.) ayraçla birlikte tek grup olarak taşıyor, orphan ayraç yok (önceki 2/6 → 0/6)."
     }
    ]
   }
