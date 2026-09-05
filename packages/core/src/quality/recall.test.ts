@@ -3,7 +3,8 @@ import { eq } from 'drizzle-orm';
 import { schema } from '@plantero/db';
 import { seedBase, withRollback, expectReject, ctx, d } from '../__tests__/helpers.js';
 import { createLot, postStockMove } from '../stock/ledger.js';
-import { simulate, initiate, closeRecall, recordRecallAction } from './recall.js';
+import { simulate, initiate, closeRecall, recordRecallAction, buildDraftMessage } from './recall.js';
+import type { RecallImpact } from '../lots/trace.js';
 
 const { stockLots, recallItems } = schema;
 
@@ -68,5 +69,16 @@ describe('quality/recall', () => {
       expect(closed.status).toBe('closed');
       expect(closed.closedAt).not.toBeNull();
     });
+  });
+
+  it('buildDraftMessage(): müşteriye giden taslak ham Decimal string basmaz (tur 1 P1 core-recall-01)', () => {
+    const impact: RecallImpact = {
+      lots: [], workOrders: [], deliveries: [], customers: [],
+      qtyInStock: '5.2620', qtyDelivered: '38.0000',
+      counts: { lots: 4, workOrders: 1, deliveries: 3, customers: 2 },
+    };
+    const msg = buildDraftMessage('Aflatoksin şüphesi', impact);
+    expect(msg).toContain('Sevk edilen miktar: 38');
+    expect(msg).not.toMatch(/\d+\.\d{2,4}\b/); // "38.0000" gibi ham numeric(18,4) string kalmamalı
   });
 });

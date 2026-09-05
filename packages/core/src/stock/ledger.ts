@@ -1,7 +1,7 @@
 import { and, eq, isNull, or, like, sql, asc, gt, inArray, notInArray } from 'drizzle-orm';
 import Decimal from 'decimal.js';
 import { products, locations, stockLots, stockQuants, stockMoves, type DbOrTx } from '@plantero/db';
-import { D, toDb, round4, ZERO, sum } from '../money.js';
+import { D, toDb, round4, ZERO, sum, formatQtyTr } from '../money.js';
 import { businessDate, addDays } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
@@ -81,17 +81,6 @@ const STOCK_MOVE_KIND_LABELS: Record<StockMoveKind, string> = {
   opening: 'açılış',
   recall_return: 'geri çağırma iadesi',
 };
-
-/**
- * Fiş açıklamasındaki miktar — TR ondalık (virgül) + gereksiz sıfırlar atılmış, binlik nokta ayraçlı.
- * Kök neden (tur 2 P1 muhasebe-yevmiye-03): `toDb(qty)` numeric(18,4)'ün ham 4 ondalığını basıyordu
- * ("10.0000") — apps/web/src/lib/format.ts'teki aynı Decimal→Intl kalıbı burada tekrarlanır.
- */
-function formatQtyTr(qty: Decimal): string {
-  const fixed = qty.toFixed(4);
-  const trimmed = fixed.includes('.') ? fixed.replace(/0+$/, '').replace(/\.$/, '') : fixed;
-  return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 4 }).format(trimmed as unknown as number);
-}
 
 /** Lot maliyetini belirleyen (orijin) hareket türleri */
 const LOT_ORIGIN_KINDS: readonly StockMoveKind[] = ['receipt', 'production', 'byproduct', 'opening'];

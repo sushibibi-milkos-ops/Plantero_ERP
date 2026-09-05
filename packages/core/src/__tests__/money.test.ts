@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { D, toDb, round2, round4, sum, pct, ZERO, isZero4, netFromGross } from '../money.js';
+import { D, toDb, round2, round4, sum, pct, ZERO, isZero4, netFromGross, formatQtyTr } from '../money.js';
 
 describe('money', () => {
   it('D: null/undefined → 0, string → Decimal', () => {
@@ -29,5 +29,12 @@ describe('money', () => {
   });
   it('KDV dahilden net', () => {
     expect(round2(netFromGross(D('120'), 20)).toString()).toBe('100');
+  });
+  it('formatQtyTr: ham numeric(18,4) string yerine TR biçimli, gereksiz sıfırsız (tur 1 P1 core-trace/recall)', () => {
+    expect(formatQtyTr('19.0000')).toBe('19');
+    expect(formatQtyTr('38.0000')).toBe('38');
+    expect(formatQtyTr(D('1250.5000'))).toBe('1.250,5');
+    expect(formatQtyTr('0.0000')).toBe('0');
+    expect(formatQtyTr('12.3400')).toBe('12,34');
   });
 });

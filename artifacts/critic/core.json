@@ -1,7 +1,7 @@
 {
   "module": "core",
-  "round": 18,
-  "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I36, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz.",
+  "round": 19,
+  "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I41, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz. Tur 19 (dış kritik notasyonunda 'Tur 1'): kritik, core'un ürettiği metinleri (izleme düğümü alt metni, geri çağırma bildirim taslağı) gerçek tarayıcı DOM ölçümüyle (probe-kalite-r1) yakaladı — bu iki bulgu için ölçüm dış kritiğin `decimals=[...]` DOM taramasıdır; builder tarafında eşdeğer kanıt aynı seed verisiyle çalıştırılan bir tsx probe scripti (traceForward/traceBackward + buildDraftMessage çıktısı, geçici, komut sonunda silindi) + yeni vitest regresyon testleridir (packages/core/src/__tests__/money.test.ts, trace.test.ts, packages/core/src/quality/recall.test.ts).",
   "findings": [
     {
       "id": "core-bankrecon-audit-01",
@@ -78,6 +78,36 @@
       "fix": "wait-for-schema.ts elle seçilmiş 4 sentinelden, Drizzle şemasında (`schema/index.ts`'in re-export ettiği TÜM 14 dosya) tanımlı HER `pgTable`'ı programatik toplayan bir yaklaşıma geçirildi: `collectExpectedTableNames()` (`is(value, PgTable)` + `getTableName`, drizzle-orm) şu an 113 tabloyu (work_orders dahil) topluyor ve `unnest(...)` sorgusu artık bunların TAMAMININ push sonrası taze bir bağlantıdan görünür olduğunu doğruluyor — yeni bir tablo şemaya eklendiğinde bu dosya elle güncellenmeden otomatik kapsanır. Import hatasına karşı MIN_EXPECTED_TABLES=50 alt sınır güvencesi eklendi (Object.values(schema) sessizce boş dönerse açıkça patlar). `collectExpectedTableNames`/`MIN_EXPECTED_TABLES` export edildi ve main() çağrısı yalnızca dosya doğrudan script olarak çalıştırılınca (`import.meta.url === file://process.argv[1]`) tetiklenecek şekilde korundu — böylece birim testi gerçek bir DB bağlantısı açmadan/`process.exit` çağırmadan toplama mantığını doğrulayabiliyor. Kök neden yalnızca bu dosyada; şema/seed dosyalarına dokunulmadı.",
       "measureAfter": "pnpm --filter @plantero/db typecheck ve pnpm --filter @plantero/db lint temiz. Yeni regresyon testi packages/db/src/wait-for-schema.test.ts (2 test: >=50 tablo + work_orders/work_order_consumptions/work_order_outputs/stock_lots/stock_moves/journal_entries/export_shipments dahil) → pnpm --filter @plantero/db exec vitest run → 3 dosya / 49 test GEÇTİ. Tek kesintisiz zincir: `pnpm db:reset && pnpm db:check` → tüm seed adımları (core→...→production→sales→...→finance-projections) HATASIZ tamamlandı, `[db:wait-for-schema] şema hazır (1. deneme, 27ms) — Drizzle şemasındaki 113 tablonun tamamı görünür.` loglandı, ardından db:check → 39/39 kural GEÇTİ, 0 ihlal. pnpm --filter @plantero/core exec vitest run → 41 dosya / 210 test GEÇTİ. pnpm typecheck ve pnpm lint (tüm workspace) temiz.",
       "verifiedBy": "pnpm db:reset (uçtan uca, tek kesintisiz zincirde production dahil tüm seed adımları başarılı), pnpm db:check (39/39 kural GEÇTİ), packages/db/src/wait-for-schema.test.ts (birim testi)"
+    },
+    {
+      "id": "core-trace-sub-raw-decimal-01",
+      "module": "core",
+      "severity": "P1",
+      "rule": "N/A (metin biçimlendirme — docs/DESIGN-SCORECARD.md kriter 6 'Rakam sunumu' ile eşdeğer, ama core metin üretici olduğu için ölçüm route ekranında)",
+      "file": "packages/core/src/lots/trace.ts:105,168,179",
+      "route": "/kalite/izlenebilirlik?lot=<uuid>",
+      "status": "closed",
+      "closedRound": 19,
+      "description": "traceBackward/traceForward'ın ürettiği TraceNode.sub alt metinleri `toDb(qty)` ile ham numeric(18,4) string basıyordu ('Üretilen 19.0000', 'Eldeki 19.0000', 'Tüketilen …', ayrıca aynı kök nedenden 208. satırdaki 'Sevk …'). Aynı satırın sağındaki qty rozeti (apps/web/src/components/trace-graph.tsx) aynı sayıyı zaten formatQty ile '19' basıyordu — tek satırda aynı sayı iki farklı biçimde görünüyordu. Dış kritik ölçümü: probe-kalite-r1 1440x900, decimals=['19.0000'].",
+      "measureBefore": "Kod incelemesi: trace.ts:105/168/179/208 `sub:` alanları `${toDb(...)}` ile ham 4 ondalıklı string üretiyordu (dış kritiğin DOM taramasıyla örtüşen kanıt: 'Üretilen 19.0000' / 'Eldeki 19.0000'). Bu turdan önce packages/core'da hiçbir test `sub` alanının içeriğini doğrulamıyordu (yalnızca `.toContain('Tedarikçi'/'Müşteri')` vardı) — regresyon boşluğu.",
+      "fix": "Kök neden: TR ondalık biçimlendirme (`stock/ledger.ts` içindeki özel `formatQtyTr`) yalnızca fiş açıklamasında kullanılıyordu, `lots/trace.ts` ve `quality/recall.ts` kendi ham `toDb(...)` çıktısını basıyordu. `formatQtyTr` `stock/ledger.ts`'den `money.ts`'e (paylaşılan yardımcı) taşındı ve dışa aktarıldı; `ledger.ts` artık aynı fonksiyonu `money.js`'den import ediyor (davranış birebir aynı, tek kopyadan). `lots/trace.ts`'deki 4 `sub:` alanı ('Üretilen', 'Eldeki'/'rezerve', 'Tüketilen', 'Sevk') `toDb(...)` yerine `formatQtyTr(...)` kullanacak şekilde güncellendi — sağdaki qty rozetinin `formatQty` çıktısıyla (ör. '19') artık eşleşiyor. `qty:` alanı (rozet için ayrı, DB'ye/edge'lere taşınan ham numeric(18,4) değeri) kasıtlı olarak değiştirilmedi — yalnızca kullanıcıya gösterilen `sub` metni düzeltildi.",
+      "measureAfter": "pnpm --filter @plantero/core exec vitest run src/__tests__/trace.test.ts → GEÇTİ; yeni regresyon iddiaları eklendi: work_order/quant/delivery `sub` metinleri tam olarak 'Üretilen 20' / 'Tüketilen 40' / 'Eldeki 60' / 'Eldeki 8' / 'Sevk 12' (seed miktarlarıyla), ve `for (const n of nodes) expect(n.sub).not.toMatch(/\\d+\\.\\d{2,4}\\b/)` — tüm düğümlerde 2-4 ondalıklı ham sayı kalmadığını doğruluyor. Gerçek seed verisiyle kanıt: geçici bir tsx probe scripti (`pnpm db:reset` sonrası) 30 lot üzerinde traceForward+traceBackward çalıştırıp tüm `sub` metinlerini regex ile taradı → 'rawFound in sub texts: 0 of 30 lots checked'. pnpm db:reset && pnpm db:check → 41/41 kural GEÇTİ, 0 ihlal (veri/muhasebe davranışı değişmedi — yalnızca gösterim metni). pnpm --filter @plantero/core exec vitest run (tüm paket) → 45 dosya / 250 test GEÇTİ (3 yeni test: trace.test.ts genişletildi + money.test.ts formatQtyTr testi). pnpm typecheck, pnpm lint (tüm workspace) temiz.",
+      "verifiedBy": "pnpm --filter @plantero/core exec vitest run (birim testi — trace.test.ts genişletilmiş iddialar), gerçek seed verisiyle tsx probe (0/30 ham ondalık), pnpm db:check (41/41 kural GEÇTİ)"
+    },
+    {
+      "id": "core-recall-draft-raw-decimal-01",
+      "module": "core",
+      "severity": "P1",
+      "rule": "N/A (metin biçimlendirme — müşteriye giden bildirim taslağı; docs/DESIGN-SCORECARD.md kriter 6 ile eşdeğer)",
+      "file": "packages/core/src/quality/recall.ts:34",
+      "route": "/kalite/geri-cagirma/[id]",
+      "status": "closed",
+      "closedRound": 19,
+      "description": "`buildDraftMessage`'ın ürettiği müşteri bildirim taslağı 'Sevk edilen miktar: ${impact.qtyDelivered}' ile ham numeric(18,4) string ('38.0000') basıyordu; hemen üstündeki KPI kartı aynı sayıyı '38' gösteriyordu. Bu metin ekranla sınırlı değil — gerçekten müşteriye gidecek içerik. Dış kritik ölçümü: probe decimals=['5.262','38.0000'], hem 1440x900 hem 390x844.",
+      "measureBefore": "Kod incelemesi: recall.ts:34 `Sevk edilen miktar: ${impact.qtyDelivered}` — `impact.qtyDelivered` `lots/trace.ts::simulateRecall`'da `toDb(qtyDelivered)` ile üretilen ham numeric(18,4) string ('38.0000'). Seed'deki gerçek geri çağırma (RC-2026-000001) ile doğrulandı: düzeltmeden önce taslak metni 'Sevk edilen miktar: 38.0000' üretiyordu.",
+      "fix": "`buildDraftMessage` artık `impact.qtyDelivered`'ı doğrudan basmak yerine yeni paylaşılan `money.ts::formatQtyTr` ile biçimlendiriyor (aynı kök neden düzeltmesi — bkz. core-trace-sub-raw-decimal-01). `RecallImpact.qtyDelivered`'ın kendisi (DB'ye/`recall_items` satırlarına yazılan ham numeric(18,4) değeri) değiştirilmedi; yalnızca metne basılan görünüm düzeltildi.",
+      "measureAfter": "Yeni birim testi packages/core/src/quality/recall.test.ts::'buildDraftMessage(): müşteriye giden taslak ham Decimal string basmaz' — sabit bir RecallImpact ('38.0000') ile `buildDraftMessage` çağrılıp çıktının 'Sevk edilen miktar: 38' içerdiğini ve `/\\d+\\.\\d{2,4}\\b/` ile eşleşmediğini doğruluyor. Gerçek seed verisiyle kanıt: geçici tsx probe RC-2026-000001'i (`recalls` tablosundaki gerçek kayıt) okuyup `simulateRecall` + `buildDraftMessage`'ı gerçek DB verisiyle çalıştırdı → çıktı 'Etkilenen lot sayısı: 4 · Sevk edilen miktar: 38' (önceki '38.0000' yerine), `raw decimal in draft? false`. pnpm --filter @plantero/core exec vitest run src/quality/recall.test.ts → 4/4 GEÇTİ. pnpm db:reset && pnpm db:check → 41/41 kural GEÇTİ (recalls/recall_items verisi değişmedi). pnpm typecheck, pnpm lint temiz.",
+      "verifiedBy": "pnpm --filter @plantero/core exec vitest run (birim testi — recall.test.ts yeni test), gerçek seed verisiyle (RC-2026-000001) tsx probe, pnpm db:check (41/41 kural GEÇTİ)"
     }
   ],
   "open": [],
@@ -86,6 +116,8 @@
     { "id": "core-export-shipment-gap-01", "closedRound": 16, "verifiedBy": "pnpm db:check — I36 0 ihlal" },
     { "id": "core-db-concurrency-note-01", "closedRound": 16, "verifiedBy": "pnpm db:check — tek kesintisiz zincirde 36/36 GEÇTİ" },
     { "id": "core-checks-test-rule-count-01", "closedRound": 17, "verifiedBy": "pnpm --filter @plantero/db exec vitest run — 45/45 test GEÇTİ; pnpm db:check — 37/37 kural GEÇTİ" },
-    { "id": "core-wait-for-schema-sentinel-gap-01", "closedRound": 18, "verifiedBy": "pnpm db:reset uçtan uca (production dahil) başarılı; pnpm db:check — 39/39 kural GEÇTİ" }
+    { "id": "core-wait-for-schema-sentinel-gap-01", "closedRound": 18, "verifiedBy": "pnpm db:reset uçtan uca (production dahil) başarılı; pnpm db:check — 39/39 kural GEÇTİ" },
+    { "id": "core-trace-sub-raw-decimal-01", "closedRound": 19, "verifiedBy": "vitest (trace.test.ts genişletilmiş) + gerçek seed verisiyle probe (0/30 ham ondalık) + pnpm db:check 41/41 GEÇTİ" },
+    { "id": "core-recall-draft-raw-decimal-01", "closedRound": 19, "verifiedBy": "vitest (recall.test.ts yeni test) + gerçek seed verisiyle (RC-2026-000001) probe + pnpm db:check 41/41 GEÇTİ" }
   ]
 }

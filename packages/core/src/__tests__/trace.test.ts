@@ -48,6 +48,9 @@ describe('lot trace', () => {
       expect(back.nodes.find((n) => n.id === `lot:${rawLot.id}`)?.depth).toBe(2);
       expect(back.nodes.find((n) => n.id === `receipt:${rc!.id}`)).toBeTruthy();
       expect(back.nodes.find((n) => n.id === `partner:${b.supplier.id}`)?.sub).toContain('Tedarikçi');
+      // Tur 1 P1 core-trace-01: alt metin ham Decimal string'i basmamalı (ör. "19.0000"), TR biçimli olmalı.
+      expect(back.nodes.find((n) => n.id === `work_order:${wo!.id}`)?.sub).toBe('Üretilen 20');
+      for (const n of back.nodes) if (n.sub) expect(n.sub).not.toMatch(/\d+\.\d{2,4}\b/);
       expect(back.edges).toEqual(expect.arrayContaining([
         expect.objectContaining({ from: `work_order:${wo!.id}`, to: `lot:${outLot.id}` }),
         expect.objectContaining({ from: `lot:${rawLot.id}`, to: `work_order:${wo!.id}`, qty: '40.0000' }),
@@ -64,6 +67,11 @@ describe('lot trace', () => {
       const quants = fwd.nodes.filter((n) => n.kind === 'quant');
       // Hammadde kalan 60 + mamul kalan 8
       expect(quants.map((q) => q.qty).sort()).toEqual(['60.0000', '8.0000']);
+      // Tur 1 P1 core-trace-01: quant/iş emri/sevkiyat alt metinleri TR biçimli, ham "40.0000"/"12.0000" değil.
+      expect(fwd.nodes.find((n) => n.id === `work_order:${wo!.id}`)?.sub).toBe('Tüketilen 40');
+      expect(quants.map((q) => q.sub).sort()).toEqual(['Eldeki 60', 'Eldeki 8']);
+      expect(fwd.nodes.find((n) => n.id === `delivery:${dn!.id}`)?.sub).toBe('Sevk 12');
+      for (const n of fwd.nodes) if (n.sub) expect(n.sub).not.toMatch(/\d+\.\d{2,4}\b/);
       expect(fwd.edges).toEqual(expect.arrayContaining([
         expect.objectContaining({ from: `lot:${rawLot.id}`, to: `work_order:${wo!.id}` }),
         expect.objectContaining({ from: `work_order:${wo!.id}`, to: `lot:${outLot.id}` }),

@@ -45,4 +45,16 @@ export const min = (a: Decimal, b: Decimal): Decimal => (a.lt(b) ? a : b);
 /** 4 hanede sıfır mı (fiş denge kontrolü için) */
 export const isZero4 = (d: Decimal): boolean => round4(d).isZero();
 
+/**
+ * Kullanıcıya gösterilecek miktar — TR ondalık (virgül) + gereksiz sıfırlar atılmış, binlik nokta ayraçlı.
+ * Kök neden (tur 2 P1 muhasebe-yevmiye-03, tur 1 P1 core-trace/recall): ham `toDb(qty)` numeric(18,4)
+ * string'i ("19.0000") arayüze/metne sızıyordu. Tek yerden üretilir; `stock/ledger.ts` (fiş açıklaması),
+ * `lots/trace.ts` (izleme düğümü alt metni) ve `quality/recall.ts` (geri çağırma bildirim taslağı) burayı kullanır.
+ */
+export const formatQtyTr = (qty: Decimal | string | number): string => {
+  const fixed = D(qty).toFixed(4);
+  const trimmed = fixed.includes('.') ? fixed.replace(/0+$/, '').replace(/\.$/, '') : fixed;
+  return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 4 }).format(trimmed as unknown as number);
+};
+
 export { Decimal };

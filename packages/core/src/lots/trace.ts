@@ -3,7 +3,7 @@ import {
   stockLots, stockQuants, locations, products, partners, receipts, deliveries, deliveryLines,
   workOrders, workOrderConsumptions, workOrderOutputs, type DbOrTx,
 } from '@plantero/db';
-import { D, toDb, sum, ZERO } from '../money.js';
+import { D, toDb, sum, ZERO, formatQtyTr } from '../money.js';
 import { NotFoundError } from '../auth/errors.js';
 
 export type TraceNodeKind = 'lot' | 'work_order' | 'receipt' | 'delivery' | 'partner' | 'quant';
@@ -102,7 +102,7 @@ export async function traceBackward(db: DbOrTx, lotId: string): Promise<TraceRes
     if (lot.lot.originWorkOrderId) {
       const [wo] = await db.select().from(workOrders).where(eq(workOrders.id, lot.lot.originWorkOrderId)).limit(1);
       if (wo) {
-        const woNid = g.add({ id: wo.id, kind: 'work_order', label: wo.docNo, sub: `Üretilen ${toDb(wo.producedQty)}`, status: wo.status, qty: toDb(wo.producedQty), href: hrefs.work_order(wo.id), depth: depth + 1 });
+        const woNid = g.add({ id: wo.id, kind: 'work_order', label: wo.docNo, sub: `Üretilen ${formatQtyTr(wo.producedQty)}`, status: wo.status, qty: toDb(wo.producedQty), href: hrefs.work_order(wo.id), depth: depth + 1 });
         g.link(woNid, lotNid, 'üretim');
         const cons = await db.select().from(workOrderConsumptions).where(eq(workOrderConsumptions.workOrderId, wo.id));
         for (const c of cons) {
@@ -165,7 +165,7 @@ export async function traceForward(db: DbOrTx, lotId: string): Promise<TraceResu
       .innerJoin(locations, eq(locations.id, stockQuants.locationId))
       .where(and(eq(stockQuants.lotId, lot.lot.id), gt(stockQuants.qty, '0')));
     for (const q of quants) {
-      const qNid = g.add({ id: q.id, kind: 'quant', label: q.locCode, sub: `Eldeki ${toDb(q.qty)}${D(q.reserved).gt(0) ? ` (rezerve ${toDb(q.reserved)})` : ''}`, status: q.usage, qty: toDb(q.qty), href: hrefs.quant(lot.lot.id), depth: depth + 1 });
+      const qNid = g.add({ id: q.id, kind: 'quant', label: q.locCode, sub: `Eldeki ${formatQtyTr(q.qty)}${D(q.reserved).gt(0) ? ` (rezerve ${formatQtyTr(q.reserved)})` : ''}`, status: q.usage, qty: toDb(q.qty), href: hrefs.quant(lot.lot.id), depth: depth + 1 });
       g.link(lotNid, qNid, 'stok', toDb(q.qty));
     }
 
@@ -176,7 +176,7 @@ export async function traceForward(db: DbOrTx, lotId: string): Promise<TraceResu
       const wos = await db.select().from(workOrders).where(inArray(workOrders.id, woIds));
       for (const wo of wos) {
         const qty = sum(cons.filter((c) => c.workOrderId === wo.id).map((c) => c.qty));
-        const woNid = g.add({ id: wo.id, kind: 'work_order', label: wo.docNo, sub: `Tüketilen ${toDb(qty)}`, status: wo.status, qty: toDb(qty), href: hrefs.work_order(wo.id), depth: depth + 1 });
+        const woNid = g.add({ id: wo.id, kind: 'work_order', label: wo.docNo, sub: `Tüketilen ${formatQtyTr(qty)}`, status: wo.status, qty: toDb(qty), href: hrefs.work_order(wo.id), depth: depth + 1 });
         g.link(lotNid, woNid, 'tüketim', toDb(qty));
         const outs = await db.select().from(workOrderOutputs).where(eq(workOrderOutputs.workOrderId, wo.id));
         const outLotIds = new Set(outs.map((o) => o.lotId));
@@ -205,7 +205,7 @@ export async function traceForward(db: DbOrTx, lotId: string): Promise<TraceResu
       if (cur) cur.qty = cur.qty.plus(q); else byDelivery.set(r.delivery.id, { delivery: r.delivery, qty: q });
     }
     for (const { delivery, qty } of byDelivery.values()) {
-      const dNid = g.add({ id: delivery.id, kind: 'delivery', label: delivery.docNo, sub: `Sevk ${toDb(qty)}`, status: delivery.status, qty: toDb(qty), href: hrefs.delivery(delivery.id), depth: depth + 1 });
+      const dNid = g.add({ id: delivery.id, kind: 'delivery', label: delivery.docNo, sub: `Sevk ${formatQtyTr(qty)}`, status: delivery.status, qty: toDb(qty), href: hrefs.delivery(delivery.id), depth: depth + 1 });
       g.link(lotNid, dNid, 'sevkiyat', toDb(qty));
       const [p] = await db.select({ id: partners.id, name: partners.name, code: partners.code }).from(partners).where(eq(partners.id, delivery.partnerId)).limit(1);
       if (p) {

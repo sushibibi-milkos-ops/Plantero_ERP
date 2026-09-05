@@ -1,6 +1,6 @@
 import { and, eq, gt, inArray } from 'drizzle-orm';
 import { recalls, recallItems, stockLots, stockQuants, products, partners, partnerContacts, locations, type DbOrTx } from '@plantero/db';
-import { D, toDb, sum } from '../money.js';
+import { D, toDb, sum, formatQtyTr } from '../money.js';
 import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
@@ -31,7 +31,7 @@ export function buildDraftMessage(reason: string, impact: RecallImpact): string 
     ``,
     `Plantero (Bigetaş Biyoteknoloji A.Ş.) olarak, aşağıda belirtilen ürün lotu/lotlarıyla ilgili bir geri çağırma sürecini başlatmış bulunuyoruz.`,
     `Gerekçe: ${reason}`,
-    `Etkilenen lot sayısı: ${impact.counts.lots} · Sevk edilen miktar: ${impact.qtyDelivered}`,
+    `Etkilenen lot sayısı: ${impact.counts.lots} · Sevk edilen miktar: ${formatQtyTr(impact.qtyDelivered)}`,
     ``,
     `Elinizdeki ilgili ürünü kullanmayı/satmayı durdurmanızı ve tarafımızla iletişime geçmenizi rica ederiz. İade/değişim süreci ekibimiz tarafından yönetilecektir.`,
     ``,
