@@ -1,73 +1,443 @@
 {
   "module": "bildirimler",
-  "round": 1,
-  "note": "Tur 1 düzeltmeleri (builder) — tüm 'open' P0/P1 bulgular kök nedenden kapatıldı, `pnpm measure` + özel Playwright problarıyla (scripts geçici olarak scratchpad'te çalıştırıldı, kalıcı script eklenmedi) kanıtlandı. Kapanan bulguların `measureAfter` alanı bu turdaki gerçek ölçümdür. Kök neden dağılımı: onaylar-01/02/03/04/07/08 → apps/web/src/modules/notifications/components/approval-queue.tsx (satır bazlı listbox + tek genişleyen detay paneli olarak yeniden yazıldı — grid kart yerine); onaylar-05/06/08 (tutar + başlık + özet) → packages/core/src/notifications/approvals/dispatch.ts; bildirimler-01/02/03 → apps/web/src/modules/notifications/components/notifications-list.tsx; bildirimler-04 → packages/core/src/notifications/systemAlerts.ts. Ayrıca P2 (worker CLI giriş noktası) → apps/worker/src/jobs/expiryAlerts.ts. `pnpm typecheck && pnpm lint` (core/web/worker) ve `pnpm --filter @plantero/core exec vitest run` (250/250) temiz; `pnpm db:reset && pnpm db:check` (41/41 kural) yeşil. Yeni tasarım keşfi yapılmadı — yalnızca puan kartındaki hedeflere odaklanıldı.",
+  "round": 2,
+  "note": "Tur 2 kritik geçişi. Tur 1'de kapatılan 12 bulgunun tamamı yeniden ölçüldü ve KAPALI doğrulandı (pnpm measure 1440x900 + 390x844, scratchpad Playwright probu): /onaylar satır yüksekliği 40px (masaüstü) / 44px (mobil), 13/13 satır ilk ekranda, overflowX=false, tutarlar sağa hizalı tabular-nums, güven rozetinde 3 farklı stil, ekranda 1 dolgulu birincil buton, enum sızıntısı yok; /bildirimler gövde 533px ~82ch, tür ikonu + tablist mevcut, miktar ondalığı virgül, 'Tümünü okundu işaretle' 44px. Bu turda 7 YENİ ölçülebilir bulgu açıldı (2 rota, P0x1 + P1x6) — hepsi kritere bağlı ve measure/target alanlı. Kod düzeyi tarama TEMİZ: transition-all/ease-in/scale-0/>=300ms yok; hover globals.css'te @media (hover:hover) and (pointer:fine) ile kapılı.",
   "routes": {
     "/onaylar": {
-      "round": 1,
+      "round": 2,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [3, 4, 3, 2, 3, 3, 4, 2, 2, 3, 3, 3],
-      "total": 35,
+      "scores": [
+        4,
+        4,
+        4,
+        5,
+        5,
+        5,
+        3,
+        3,
+        3,
+        4,
+        4,
+        5
+      ],
+      "total": 49,
       "winner": "linear",
       "measurements": {
-        "cards": 16,
-        "cardHeightsDesktop": [163, 163, 183],
-        "cardHeightsMobile": [163, 163, 183],
-        "fullyVisibleFirstScreen": 12,
-        "truncatedTitlesDesktop": "12/16",
-        "truncatedTitlesMobile": "14/16",
-        "filledPrimaryButtons": 16,
-        "mobileActionButtons": 48,
-        "mobileActionButtonsBelow44": 48,
-        "actionButtonHeight": 32,
-        "distinctConfidenceBadgeStyles": 1,
-        "contentFontSteps": [10, 11, 12, 13, 14],
-        "h1": { "size": 24, "weight": 600 },
-        "overflowX": false,
-        "distinctColors": 13,
-        "pageScrollHeightMobile": 3120
+        "desktop1440x900": {
+          "rowHeights": "13x40px",
+          "overflowX": false,
+          "h1": {
+            "size": 24,
+            "weight": 600
+          },
+          "fontSizes": {
+            "10": 6,
+            "11": 30,
+            "12": 1,
+            "13": 51,
+            "14": 5,
+            "15": 1,
+            "18": 1,
+            "24": 1
+          },
+          "distinctColors": 20,
+          "distinctRowIcons": 2,
+          "mostCommonIconCount": 12,
+          "rowCursor": "default",
+          "filledPrimaryButtons": 1
+        },
+        "mobile390x844": {
+          "overflowX": false,
+          "rowHeight": 44,
+          "h1": {
+            "size": 20,
+            "weight": 600
+          },
+          "touchTargetsBelow44": [
+            "role=tab \"Tümü (13)\" 85.5x32",
+            "role=tab \"Mutabakat önerisi (12)\" 162.1x32",
+            "role=tab \"Satın alma taslağı (1)\" 150.8x32"
+          ],
+          "tablistHeight": 72,
+          "tabRows": 2,
+          "unselectedRowFields": [
+            "başlık"
+          ],
+          "keyboardHintVisible": true,
+          "keyboardHintBox": "204x16"
+        },
+        "modalKeyboardLeak": {
+          "dialogOpen": true,
+          "before": "SEDAŞ Elektrik Faturası",
+          "after": "Hesap İşletim Ücreti",
+          "selectionChangedWhileModalOpen": true
+        }
       },
       "note": "Bu turda seed verisi değişti (13 kalem: 12 mutabakat önerisi + 1 satın alma taslağı; sayım farkı/tahsilat hatırlatma bu çalıştırmada 'pending' durumda üretilmedi) — measureAfter sayıları bu yeni veri setine göredir; kök neden düzeltmeleri veri setinden bağımsızdır.",
-      "open": [],
+      "open": [
+        {
+          "id": "onaylar-09",
+          "criterion": 8,
+          "severity": "P0",
+          "openedRound": 2,
+          "text": "Global klavye kısayolları (j/k/a/r) ConfirmDialog (Reddet) açıkken de çalışıyor; dialog arkasındaki seçim değişiyor ve \"A\" tuşu kullanıcının reddetmek üzere olduğu kayıt yerine BAŞKA bir kaydı geri alınamaz biçimde onaylayabiliyor (onay = postJournalEntry/postStockMove tetikler).",
+          "measure": "Playwright: Reddet dialogu açıkken (role=alertdialog görünür) \"j\" basıldı → aria-selected satır \"SEDAŞ Elektrik Faturası\" → \"Hesap İşletim Ücreti\" (selectionChangedWhileModalOpen=true).",
+          "target": "Dialog/menü/komut paleti açıkken hiçbir kısayol tetiklenmez: seçim değişmez, onay/ret çalışmaz (rejectTarget!==null veya document.querySelector('[role=\"dialog\"],[role=\"alertdialog\"]') varken handler erken döner; ayrıca [contenteditable] ve target.closest('[role=\"dialog\"]') muafiyeti).",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx (useEffect onKey, ~satır 100-112)"
+        },
+        {
+          "id": "onaylar-10",
+          "criterion": 9,
+          "severity": "P1",
+          "openedRound": 2,
+          "text": "Sekme şeridi elle yazılmış (h-8) — 390px'te 32px yükseklikte, üstelik 2 satıra sarıyor. Ortak ui/tabs.tsx bu sorunu (h-11 md:h-9 + kendi overflow-x-auto'su) zaten çözüyor, bu bileşen onu atlıyor.",
+          "measure": "pnpm measure /onaylar --viewport 390x844 → touchTargetsBelow44: role=tab 85.5x32, 162.1x32, 150.8x32; tablistHeight=72, tabRows=2.",
+          "target": "390px'te her role=tab ≥44px yüksek; şerit tek satır (tablistHeight ≤48) ve taşarsa yatay kaydırılır.",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx (tablist, className \"h-8 rounded-md px-2.5\")"
+        },
+        {
+          "id": "onaylar-11",
+          "criterion": 3,
+          "severity": "P1",
+          "openedRound": 2,
+          "text": "Mobilde satır yalnızca başlığı gösteriyor: tutar ve güven rozeti sm (640px) altında gizli, saat md altında gizli. 12 kaydı tarayan kullanıcı hiçbir tutarı göremiyor, her satırı tek tek açmak zorunda.",
+          "measure": "390x844, seçili olmayan satırın görünür metin alanları = [\"Hesap İşletim Ücreti\"] (1/4 alan). Kaynak: \"hidden ... sm:inline-block\" tutar/rozet sınıfları.",
+          "target": "390px'te satırda başlık + sağa hizalı tabular-nums tutar birlikte görünür (DataTable mobil kart deseni: sol başlık, sağ tek metrik); satır yüksekliği ≤56px.",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx (satır içi span'ler, ~satır 165-175)"
+        },
+        {
+          "id": "onaylar-12",
+          "criterion": 7,
+          "severity": "P1",
+          "openedRound": 2,
+          "text": "Yükleniyor ve bekleme durumları eksik: rotanın kendi loading.tsx'i yok, (app)/loading.tsx 4 KPI bloğu + 8 tablo satırı çiziyor — bu ekranda hiç KPI yok, her girişte yanlış iskelet titriyor. Onayla/Reddet sırasında buton yalnızca disabled oluyor (spinner/metin değişimi yok), sunucu eylemi sürerken geri bildirim yok. Boş durumda eylem düğmesi yok.",
+          "measure": "find apps/web/src/app/(app)/onaylar -name loading.tsx → 0 sonuç (projede 37 rota kendi loading.tsx'ine sahip); (app)/loading.tsx: 4x Skeleton h-24 rounded-xl + 8x h-9; ApprovalQueue busyId yalnızca `disabled` prop'una bağlanıyor.",
+          "target": "/onaylar/loading.tsx: başlık + sekme şeridi + 13x40px satır iskeleti (KPI bloğu yok); busy durumda buton metni \"Onaylanıyor…\" + spinner; EmptyState'e bir eylem (ör. \"Mutabakat panosuna git\").",
+          "file": "apps/web/src/app/(app)/onaylar/loading.tsx (yok) + apps/web/src/modules/notifications/components/approval-queue.tsx"
+        }
+      ],
       "closed": [
-        { "id": "onaylar-01", "criterion": 8, "severity": "P0", "closedRound": 1, "verifiedBy": "ölçüm (özel Playwright probu — j×12)", "text": "J/K klavye gezinmesi seçimi görünür alanın dışına taşıyor ve seçili kart odaklanabilir değil; A tuşu görünmeyen kaydı onaylayabiliyor.", "fix": "Satır bazlı liste role=\"listbox\"/role=\"option\"; seçim değişince useEffect ile scrollIntoView({block:'nearest'}) + el.focus(); seçili satır tabIndex=0 (diğerleri -1), aria-selected, focus-visible:ring-2.", "measureAfter": "12× 'j' sonrası seçili satır: top=693 bottom=854 (viewport 900) → inViewport=true; tabIndex=0, role=\"option\", aria-selected=\"true\", document.activeElement===el → true.", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx" },
-        { "id": "onaylar-02", "criterion": 4, "severity": "P0", "closedRound": 1, "verifiedBy": "ölçüm (getComputedStyle bg/color kombinasyonu)", "text": "Güven rozeti değere bakmaksızın marka yeşili; %0 ile %90 birebir aynı renk.", "fix": "confidenceBadgeClass(c): <%50 → bg-muted/text-muted-foreground, %50-79 → bg-warning/15 + amber metin, ≥%80 → bg-success/12/text-success (StatusBadge ile aynı token'lar, yeni token yok).", "measureAfter": "13 rozet, 3 farklı stil: oklch(0.5 0.14 70) (amber, %50-79), oklch(0.6 0.16 152) (yeşil, ≥%80), oklch(0.552 0.016 285.9) muted (<%50) — hedef ≥3 karşılandı.", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx" },
-        { "id": "onaylar-03", "criterion": 9, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (390x844)", "text": "390px'te kart aksiyonları 32px yüksekliğinde, dokunma hedefinin altında.", "fix": "Reddet/Detay/Onayla artık paylaşılan Button bileşeninin varsayılan boyutunu kullanıyor (size prop'u kaldırıldı) — bu boyut zaten h-11 (44px) mobil / md:h-9 masaüstü olacak şekilde tanımlı (bkz. button.tsx yorum satırı, Tur 5 düzeltmesi); önceki kod size=\"sm\" (h-8/32px) ile bunu eziyordu.", "measureAfter": "390x844: Reddet 95x44, Detay 87x44, Onayla 92x44 — touchTargetsBelow44 = [] (boş).", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx" },
-        { "id": "onaylar-04", "criterion": 4, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (button[data-variant=\"default\"] sayımı)", "text": "Tek ekranda 16 adet dolgulu yeşil birincil buton.", "fix": "Kart grid'i yerine tek genişleyen satır listesi: Onayla (dolgulu) yalnızca seçili/genişletilmiş satırda render ediliyor; diğer satırlarda hiç aksiyon butonu yok (Reddet/Detay de yalnızca seçili satırda, outline).", "measureAfter": "1440x900: button[data-variant=\"default\"] (görünür) = 1.", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx" },
-        { "id": "onaylar-05", "criterion": 5, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (scrollWidth>clientWidth)", "text": "Kart başlığı tür rozetini kelimesi kelimesine tekrar ediyor; kırpılıyor.", "fix": "dispatch.ts: mutabakat başlığı artık yalnızca `bt.description` (tür ön eki kaldırıldı — tür zaten satır ikonu + genişletilmiş panelin ikinci satırında gösteriliyor).", "measureAfter": "1440x900: 13 başlıktan 0'ı truncate (scrollWidth<=clientWidth); önceki 12/16.", "file": "packages/core/src/notifications/approvals/dispatch.ts" },
-        { "id": "onaylar-06", "criterion": 11, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (metin taraması)", "text": "Ham İngilizce enum sızıntısı ('unknown', 'expense', 'fee', 'invoice'); özet güveni ikinci kez tekrarlıyor.", "fix": "dispatch.ts: MATCH_KIND_LABEL (recon_match_kind enum → Türkçe: Fatura/Cari avans/Kredi taksiti/Gider/Transfer/Pazaryeri ödemesi/Vergi/Ücret/Bilinmiyor) eklendi; özet artık `${kindLabel} — ${rationale}` (güven yüzdesi metinden çıkarıldı, yalnızca rozette).", "measureAfter": "/onaylar ana içerik metninde taranan 9 enum tokenından (unknown/expense/fee/invoice/partner_on_account/loan_installment/marketplace_payout/transfer/tax) 0'ı bulundu.", "file": "packages/core/src/notifications/approvals/dispatch.ts" },
-        { "id": "onaylar-07", "criterion": 3, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm ([role=tablist] + fully-visible satır sayımı)", "text": "Tek kuyruk sekmesiz ve filtresiz; düşük yoğunluk, pahalı tarama.", "fix": "ApprovalQueue içine tür başına adet gösteren role=\"tablist\"/role=\"tab\" sekme şeridi eklendi (Tümü + her tür); satırlar 44px (mobil) / 40px (masaüstü, sm:h-10) yoğun tek satıra indirildi, tam içerik yalnızca seçili satırda genişliyor.", "measureAfter": "[role=tablist] = 1; 1440x900'de 13/13 satırın tamamı ilk ekranda tam görünür (hedef ≥15 idi, bu turda toplam kayıt sayısı 13'e düştü — mevcut tüm kayıtlar zaten sığıyor); mobil sayfa yüksekliği 3120px → 1155px, satır yüksekliği medyanı 44px (hedef 56-72px altında, daha yoğun).", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx" },
-        { "id": "onaylar-08", "criterion": 6, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (textAlign + fontVariantNumeric)", "text": "Tutarlar cümle içinde düz metin; hizasız, tabular-nums yok.", "fix": "dispatch.ts artık yapısal `amount` alanı dönüyor (approvals-kaynaklı türlerde null — şema talebi, bkz. rapor); approval-queue.tsx bunu formatMoney ile ayrı, sağa hizalı, tabular-nums bir alanda gösteriyor (satırda + genişletilmiş panelde mobil kopyası).", "measureAfter": "Örnek hücreler: '-₺450,75', '-₺10.000,00' — textAlign=right, fontVariantNumeric=tabular-nums (13/13 tutarlı hücrede).", "file": "apps/web/src/modules/notifications/components/approval-queue.tsx + packages/core/src/notifications/approvals/dispatch.ts" }
+        {
+          "id": "onaylar-01",
+          "criterion": 8,
+          "severity": "P0",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (özel Playwright probu — j×12)",
+          "text": "J/K klavye gezinmesi seçimi görünür alanın dışına taşıyor ve seçili kart odaklanabilir değil; A tuşu görünmeyen kaydı onaylayabiliyor.",
+          "fix": "Satır bazlı liste role=\"listbox\"/role=\"option\"; seçim değişince useEffect ile scrollIntoView({block:'nearest'}) + el.focus(); seçili satır tabIndex=0 (diğerleri -1), aria-selected, focus-visible:ring-2.",
+          "measureAfter": "12× 'j' sonrası seçili satır: top=693 bottom=854 (viewport 900) → inViewport=true; tabIndex=0, role=\"option\", aria-selected=\"true\", document.activeElement===el → true.",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx"
+        },
+        {
+          "id": "onaylar-02",
+          "criterion": 4,
+          "severity": "P0",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (getComputedStyle bg/color kombinasyonu)",
+          "text": "Güven rozeti değere bakmaksızın marka yeşili; %0 ile %90 birebir aynı renk.",
+          "fix": "confidenceBadgeClass(c): <%50 → bg-muted/text-muted-foreground, %50-79 → bg-warning/15 + amber metin, ≥%80 → bg-success/12/text-success (StatusBadge ile aynı token'lar, yeni token yok).",
+          "measureAfter": "13 rozet, 3 farklı stil: oklch(0.5 0.14 70) (amber, %50-79), oklch(0.6 0.16 152) (yeşil, ≥%80), oklch(0.552 0.016 285.9) muted (<%50) — hedef ≥3 karşılandı.",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx"
+        },
+        {
+          "id": "onaylar-03",
+          "criterion": 9,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (390x844)",
+          "text": "390px'te kart aksiyonları 32px yüksekliğinde, dokunma hedefinin altında.",
+          "fix": "Reddet/Detay/Onayla artık paylaşılan Button bileşeninin varsayılan boyutunu kullanıyor (size prop'u kaldırıldı) — bu boyut zaten h-11 (44px) mobil / md:h-9 masaüstü olacak şekilde tanımlı (bkz. button.tsx yorum satırı, Tur 5 düzeltmesi); önceki kod size=\"sm\" (h-8/32px) ile bunu eziyordu.",
+          "measureAfter": "390x844: Reddet 95x44, Detay 87x44, Onayla 92x44 — touchTargetsBelow44 = [] (boş).",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx"
+        },
+        {
+          "id": "onaylar-04",
+          "criterion": 4,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (button[data-variant=\"default\"] sayımı)",
+          "text": "Tek ekranda 16 adet dolgulu yeşil birincil buton.",
+          "fix": "Kart grid'i yerine tek genişleyen satır listesi: Onayla (dolgulu) yalnızca seçili/genişletilmiş satırda render ediliyor; diğer satırlarda hiç aksiyon butonu yok (Reddet/Detay de yalnızca seçili satırda, outline).",
+          "measureAfter": "1440x900: button[data-variant=\"default\"] (görünür) = 1.",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx"
+        },
+        {
+          "id": "onaylar-05",
+          "criterion": 5,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (scrollWidth>clientWidth)",
+          "text": "Kart başlığı tür rozetini kelimesi kelimesine tekrar ediyor; kırpılıyor.",
+          "fix": "dispatch.ts: mutabakat başlığı artık yalnızca `bt.description` (tür ön eki kaldırıldı — tür zaten satır ikonu + genişletilmiş panelin ikinci satırında gösteriliyor).",
+          "measureAfter": "1440x900: 13 başlıktan 0'ı truncate (scrollWidth<=clientWidth); önceki 12/16.",
+          "file": "packages/core/src/notifications/approvals/dispatch.ts"
+        },
+        {
+          "id": "onaylar-06",
+          "criterion": 11,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (metin taraması)",
+          "text": "Ham İngilizce enum sızıntısı ('unknown', 'expense', 'fee', 'invoice'); özet güveni ikinci kez tekrarlıyor.",
+          "fix": "dispatch.ts: MATCH_KIND_LABEL (recon_match_kind enum → Türkçe: Fatura/Cari avans/Kredi taksiti/Gider/Transfer/Pazaryeri ödemesi/Vergi/Ücret/Bilinmiyor) eklendi; özet artık `${kindLabel} — ${rationale}` (güven yüzdesi metinden çıkarıldı, yalnızca rozette).",
+          "measureAfter": "/onaylar ana içerik metninde taranan 9 enum tokenından (unknown/expense/fee/invoice/partner_on_account/loan_installment/marketplace_payout/transfer/tax) 0'ı bulundu.",
+          "file": "packages/core/src/notifications/approvals/dispatch.ts"
+        },
+        {
+          "id": "onaylar-07",
+          "criterion": 3,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm ([role=tablist] + fully-visible satır sayımı)",
+          "text": "Tek kuyruk sekmesiz ve filtresiz; düşük yoğunluk, pahalı tarama.",
+          "fix": "ApprovalQueue içine tür başına adet gösteren role=\"tablist\"/role=\"tab\" sekme şeridi eklendi (Tümü + her tür); satırlar 44px (mobil) / 40px (masaüstü, sm:h-10) yoğun tek satıra indirildi, tam içerik yalnızca seçili satırda genişliyor.",
+          "measureAfter": "[role=tablist] = 1; 1440x900'de 13/13 satırın tamamı ilk ekranda tam görünür (hedef ≥15 idi, bu turda toplam kayıt sayısı 13'e düştü — mevcut tüm kayıtlar zaten sığıyor); mobil sayfa yüksekliği 3120px → 1155px, satır yüksekliği medyanı 44px (hedef 56-72px altında, daha yoğun).",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx"
+        },
+        {
+          "id": "onaylar-08",
+          "criterion": 6,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (textAlign + fontVariantNumeric)",
+          "text": "Tutarlar cümle içinde düz metin; hizasız, tabular-nums yok.",
+          "fix": "dispatch.ts artık yapısal `amount` alanı dönüyor (approvals-kaynaklı türlerde null — şema talebi, bkz. rapor); approval-queue.tsx bunu formatMoney ile ayrı, sağa hizalı, tabular-nums bir alanda gösteriyor (satırda + genişletilmiş panelde mobil kopyası).",
+          "measureAfter": "Örnek hücreler: '-₺450,75', '-₺10.000,00' — textAlign=right, fontVariantNumeric=tabular-nums (13/13 tutarlı hücrede).",
+          "file": "apps/web/src/modules/notifications/components/approval-queue.tsx + packages/core/src/notifications/approvals/dispatch.ts"
+        }
+      ],
+      "previousTotal": 35,
+      "scoreDeltas": {
+        "1": "3→4: h1 24/600 + gövde 13px tek kademeye indi; 10px kbd ipucu ve 14px açıklama nedeniyle 5 içerik kademesi kaldığı için 5 değil",
+        "2": "4→4: değişmedi (gap-2.5=10px 8pt dışı)",
+        "3": "3→4: satır 163px kart → 40px satır, 13/13 ilk ekranda; mobilde satır tek alan gösterdiği için 5 değil",
+        "4": "2→5: güven rozeti 3 anlamlı tona ayrıldı, dolgulu yeşil buton 16→1",
+        "5": "3→5: hairline satır listesi, taşma yok, sağa hizalı sayı sütunu, hover/seçim",
+        "6": "3→5: tutarlar ayrı sütunda, textAlign=right, tabular-nums",
+        "7": "4→3: iskelet bu rotanın düzenine uymuyor (4 KPI bloğu), onay/ret sırasında bekleme geri bildirimi yok, boş durumda eylem yok",
+        "8": "2→3: focus-visible ring + scrollIntoView geldi, ancak modal açıkken global kısayol sızıyor (P0) ve satır imleci default",
+        "9": "2→3: dokunma hedefleri 44px oldu, ancak sekmeler 32px ve mobil satır tutarı gizliyor",
+        "10": "3→4: 16px tutarlı set; 13 satırın 12si aynı ikon",
+        "11": "3→4: ortak Button/EmptyState/PageHeader kullanılıyor; sekme şeridi ortak ui/tabs.tsx yerine elle yazılmış",
+        "12": "3→5: kart ızgarası yerine yoğun liste, çerçeve çorbası yok"
+      },
+      "p2": [
+        {
+          "id": "onaylar-p2-kbd-hint",
+          "criterion": 12,
+          "text": "\"J/K gezin · A onayla · R reddet\" ipucu 390px'te de basılıyor (204x16) — dokunmatik cihazda anlamsız satır.",
+          "measure": "390x844'te görünür (h=16).",
+          "target": "hidden md:block",
+          "file": "approval-queue.tsx"
+        },
+        {
+          "id": "onaylar-p2-cursor",
+          "criterion": 8,
+          "text": "Tıklanabilir satırda cursor: default — tıklama uygunluğu görünmüyor.",
+          "measure": "getComputedStyle(row).cursor = \"default\" (1440 ve 390).",
+          "target": "cursor-pointer (ya da satırı gerçek button/option olarak işaretle)",
+          "file": "approval-queue.tsx"
+        },
+        {
+          "id": "onaylar-p2-icon-repeat",
+          "criterion": 10,
+          "text": "13 satırın 12'sinde aynı Landmark ikonu; genişleyen panelde aynı ikon üçüncü kez tekrar ediyor.",
+          "measure": "distinctRowIcons=2, mostCommonIconCount=12.",
+          "target": "Tür ikonu yalnızca ayırt ettiği yerde (ör. \"Tümü\" sekmesinde) ya da hiç; panelde tekrar yok.",
+          "file": "approval-queue.tsx"
+        }
       ]
     },
     "/bildirimler": {
-      "round": 1,
+      "round": 2,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [4, 3, 3, 4, 3, 3, 4, 3, 3, 4, 4, 4],
-      "total": 42,
+      "scores": [
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        3,
+        4,
+        3,
+        4,
+        4,
+        5
+      ],
+      "total": 46,
       "winner": "linear",
       "measurements": {
-        "adminState": "empty (EmptyState — 'Henüz bildiriminiz yok')",
-        "depoState": "3 in_app bildirim (SKT geçmiş / 30 gün / 60 gün)",
-        "itemHeights": [87, 105.5, 106.5],
-        "bodyWidthPx": 1100,
-        "bodyFontSize": 13,
-        "approxCharsPerLine": 169,
-        "typeIconsInRows": 0,
-        "filterTabs": 0,
-        "overflowX": false,
-        "h1": { "size": 24, "weight": 600 },
-        "distinctColors": 16,
-        "touchTargetsBelow44Mobile": ["button 'Tümünü okundu işaretle' 201.1x32"]
+        "desktop1440x900": {
+          "rowHeights": [
+            107,
+            107,
+            106
+          ],
+          "listWidth": 768,
+          "bodyWidth": 533,
+          "approxCh": 82,
+          "overflowX": false,
+          "h1": {
+            "size": 24,
+            "weight": 600
+          },
+          "distinctColors": 17,
+          "distinctTypeStyles": 1,
+          "emptyStateWidth": 1152,
+          "emptyStateActions": 0,
+          "titleVsTypeLabel": [
+            [
+              "SKT GEÇMİŞ: 1 lot",
+              "SKT uyarısı"
+            ],
+            [
+              "SKT KRİTİK (30 gün): 50 lot",
+              "SKT uyarısı"
+            ],
+            [
+              "SKT UYARI (60 gün): 30 lot",
+              "SKT uyarısı"
+            ]
+          ]
+        },
+        "mobile390x844": {
+          "rowHeights": [
+            105.5,
+            106.5,
+            106.5
+          ],
+          "overflowX": false,
+          "h1": {
+            "size": 20,
+            "weight": 600
+          },
+          "touchTargetsBelow44": [
+            "role=tab \"Tümü (3)\" 81.1x32",
+            "role=tab \"Okunmamış (3)\" 119.7x32"
+          ]
+        },
+        "focusRing": {
+          "outlineStyle": "auto",
+          "outlineWidth": "1px",
+          "boxShadow": "none"
+        }
       },
-      "open": [],
+      "open": [
+        {
+          "id": "bildirimler-05",
+          "criterion": 9,
+          "severity": "P1",
+          "openedRound": 2,
+          "text": "Tümü/Okunmamış sekmeleri elle yazılmış h-8 şeritte — 390px'te 32px yükseklikte.",
+          "measure": "pnpm measure /bildirimler --as depo --viewport 390x844 → touchTargetsBelow44: role=tab 81.1x32, 119.7x32.",
+          "target": "390px'te her role=tab ≥44px (ortak ui/tabs.tsx deseni: h-11 md:h-8).",
+          "file": "apps/web/src/modules/notifications/components/notifications-list.tsx (tablist butonları, ~satır 60-80)"
+        },
+        {
+          "id": "bildirimler-06",
+          "criterion": 3,
+          "severity": "P1",
+          "openedRound": 2,
+          "text": "Her satır üç metin katmanı taşıyor (başlık / büyük harfli tür etiketi / gövde) ve tür etiketi başlığın söylediğini tekrar ediyor: \"SKT GEÇMİŞ: 1 lot\" + \"SKT UYARISI\" + aynı anlamı taşıyan saat ikonu = tek bilginin 3 kez gösterimi. Satır 106-107px.",
+          "measure": "rowHeights [107,107,106] @1440 ve [105.5,106.5,106.5] @390; 3/3 satırda tür etiketi başlığın ön ekini tekrar ediyor; distinctTypeStyles=1.",
+          "target": "Tür etiketi ayrı satırdan çıkarılıp zaman damgasının yanına (ya da ikon başlığına) taşınır; satır yüksekliği ≤88px, metin katmanı ≤2.",
+          "file": "apps/web/src/modules/notifications/components/notifications-list.tsx (~satır 100-107)"
+        },
+        {
+          "id": "bildirimler-07",
+          "criterion": 7,
+          "severity": "P1",
+          "openedRound": 2,
+          "text": "Boş durum listeyle aynı ekrana ait görünmüyor: EmptyState kabın tamamına (1152px) yayılıyor, dolu liste 768px (max-w-3xl). Ayrıca EmptyState eylemsiz ve rotanın kendi loading.tsx'i yok — (app)/loading.tsx bu ekranda hiç bulunmayan 4 KPI bloğunu çiziyor.",
+          "measure": "admin (boş): EmptyState genişliği 1152px, eylem sayısı 0. depo (dolu): liste genişliği 768px. find (app)/bildirimler -name loading.tsx → 0 sonuç.",
+          "target": "Boş durum da max-w-3xl kabın içinde (genişlik 768px) + 1 eylem; /bildirimler/loading.tsx: başlık + sekme + 3x~88px satır iskeleti (KPI bloğu yok).",
+          "file": "apps/web/src/modules/notifications/components/notifications-list.tsx (EmptyState erken dönüşü, ~satır 55) + apps/web/src/app/(app)/bildirimler/loading.tsx (yok)"
+        }
+      ],
       "closed": [
-        { "id": "bildirimler-01", "criterion": 2, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (özel Playwright probu, depo kullanıcısı)", "text": "Bildirim gövdesi kabın tüm genişliğine yayılıyor; ~169 ch/satır.", "fix": "Liste kabına `max-w-3xl` (768px) + gövde paragrafına `max-w-[65ch]` eklendi.", "measureAfter": "1440x900, depo: gövde genişliği 533px @13px ≈ 82 ch/satır (hedef ≤90).", "file": "apps/web/src/modules/notifications/components/notifications-list.tsx" },
-        { "id": "bildirimler-02", "criterion": 9, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (390x844)", "text": "'Tümünü okundu işaretle' butonu 32px yükseklikte, dokunma hedefinin altında.", "fix": "Buton `size=\"sm\"` yerine paylaşılan Button'ın varsayılan boyutunu kullanıyor (h-11 mobil / md:h-9 masaüstü).", "measureAfter": "390x844: buton 207x44 (hedef ≥44 karşılandı).", "file": "apps/web/src/modules/notifications/components/notifications-list.tsx" },
-        { "id": "bildirimler-03", "criterion": 5, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (svg sayımı + [role=tablist])", "text": "Satırlarda tür göstergesi yok; okunmamış/tümü filtresi yok; zaman damgası gövdenin altında.", "fix": "TYPE_META (refTable → Türkçe etiket + 16px ikon: expiry_digest/recalls/replenishment_runs, bilinmeyen refTable için genel 'Bildirim' + Bell ikonu) eklendi; role=\"tablist\" ile 'Tümü/Okunmamış' filtresi eklendi; zaman damgası artık satırın sağ üstünde (başlıkla aynı satırda, sağa hizalı).", "measureAfter": "main ul > li içinde svg = 3 (3 satır × 1 tür ikonu); [role=tablist] = 1.", "file": "apps/web/src/modules/notifications/components/notifications-list.tsx" },
-        { "id": "bildirimler-04", "criterion": 6, "severity": "P1", "closedRound": 1, "verifiedBy": "ölçüm (metin taraması, regex \\d+\\.\\d{2}\\s*KG)", "text": "Aynı cümlede iki farklı ondalık ayracı: para virgül, miktar nokta ('245.00 KG').", "fix": "systemAlerts.ts'e `fmtMoney` ile aynı kalıpta (nokta→virgül, binlik nokta) sabit-2-ondalıklı `fmtQty` eklendi; miktar artık bu fonksiyondan geçiyor.", "measureAfter": "/bildirimler gövde metninde nokta-ondalıklı miktar deseni (\\d+\\.\\d{2}\\s*KG) taraması: 0 eşleşme; ekran görüntüsünde '245,00 KG', '33,00 KG' (virgül).", "file": "packages/core/src/notifications/systemAlerts.ts" }
+        {
+          "id": "bildirimler-01",
+          "criterion": 2,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (özel Playwright probu, depo kullanıcısı)",
+          "text": "Bildirim gövdesi kabın tüm genişliğine yayılıyor; ~169 ch/satır.",
+          "fix": "Liste kabına `max-w-3xl` (768px) + gövde paragrafına `max-w-[65ch]` eklendi.",
+          "measureAfter": "1440x900, depo: gövde genişliği 533px @13px ≈ 82 ch/satır (hedef ≤90).",
+          "file": "apps/web/src/modules/notifications/components/notifications-list.tsx"
+        },
+        {
+          "id": "bildirimler-02",
+          "criterion": 9,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (390x844)",
+          "text": "'Tümünü okundu işaretle' butonu 32px yükseklikte, dokunma hedefinin altında.",
+          "fix": "Buton `size=\"sm\"` yerine paylaşılan Button'ın varsayılan boyutunu kullanıyor (h-11 mobil / md:h-9 masaüstü).",
+          "measureAfter": "390x844: buton 207x44 (hedef ≥44 karşılandı).",
+          "file": "apps/web/src/modules/notifications/components/notifications-list.tsx"
+        },
+        {
+          "id": "bildirimler-03",
+          "criterion": 5,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (svg sayımı + [role=tablist])",
+          "text": "Satırlarda tür göstergesi yok; okunmamış/tümü filtresi yok; zaman damgası gövdenin altında.",
+          "fix": "TYPE_META (refTable → Türkçe etiket + 16px ikon: expiry_digest/recalls/replenishment_runs, bilinmeyen refTable için genel 'Bildirim' + Bell ikonu) eklendi; role=\"tablist\" ile 'Tümü/Okunmamış' filtresi eklendi; zaman damgası artık satırın sağ üstünde (başlıkla aynı satırda, sağa hizalı).",
+          "measureAfter": "main ul > li içinde svg = 3 (3 satır × 1 tür ikonu); [role=tablist] = 1.",
+          "file": "apps/web/src/modules/notifications/components/notifications-list.tsx"
+        },
+        {
+          "id": "bildirimler-04",
+          "criterion": 6,
+          "severity": "P1",
+          "closedRound": 1,
+          "verifiedBy": "ölçüm (metin taraması, regex \\d+\\.\\d{2}\\s*KG)",
+          "text": "Aynı cümlede iki farklı ondalık ayracı: para virgül, miktar nokta ('245.00 KG').",
+          "fix": "systemAlerts.ts'e `fmtMoney` ile aynı kalıpta (nokta→virgül, binlik nokta) sabit-2-ondalıklı `fmtQty` eklendi; miktar artık bu fonksiyondan geçiyor.",
+          "measureAfter": "/bildirimler gövde metninde nokta-ondalıklı miktar deseni (\\d+\\.\\d{2}\\s*KG) taraması: 0 eşleşme; ekran görüntüsünde '245,00 KG', '33,00 KG' (virgül).",
+          "file": "packages/core/src/notifications/systemAlerts.ts"
+        }
+      ],
+      "previousTotal": 42,
+      "scoreDeltas": {
+        "3": "3→3: satır yüksekliği 105.5→106.5px değişmedi; başlığı tekrar eden büyük harfli tür satırı üçüncü katmanı koruyor",
+        "5": "3→4: tür ikonu + sağ üstte zaman damgası geldi, hairline ayraç düzgün",
+        "6": "3→4: miktar ondalığı virgüle döndü, zaman damgası tabular-nums",
+        "8": "3→4: hover + iyimser okundu işaretleme çalışıyor; focus halkası tarayıcı varsayılanı (1px auto), projenin 2px ring kuralı uygulanmıyor",
+        "9": "3→3: dokunma hedefi düzeldi ama sekmeler 32px kaldı",
+        "11": "4→4: boş durum 1152px, liste 768px — aynı ekranın iki genişliği",
+        "12": "4→5: tür ikonu/filtre sonrası ERP kokusu yok"
+      },
+      "p2": [
+        {
+          "id": "bildirimler-p2-focus",
+          "criterion": 8,
+          "text": "Satır bağlantısında focus-visible halkası tanımlı değil; tarayıcı varsayılanı 1px auto geliyor, projenin 2px ring kuralı uygulanmıyor.",
+          "measure": "getComputedStyle: outlineStyle=auto, outlineWidth=1px, boxShadow=none.",
+          "target": "focus-visible:ring-2 ring-inset (ApprovalQueue satırlarındaki desenle aynı).",
+          "file": "notifications-list.tsx"
+        },
+        {
+          "id": "bildirimler-p2-severity",
+          "criterion": 4,
+          "text": "SKT GEÇMİŞ (gerçekleşmiş kayıp) ile SKT UYARI (60 gün) görsel olarak birebir aynı; ekrandaki tek renkli öğe okunmamış noktasının markanın yeşili.",
+          "measure": "distinctTypeStyles=1 (3 satır, tek ikon rengi/biçimi).",
+          "target": "Geçmiş SKT için destructive, 30 gün için warning tonlu ikon/rozet (StatusBadge token'ları).",
+          "file": "notifications-list.tsx + packages/core/src/notifications/systemAlerts.ts"
+        },
+        {
+          "id": "bildirimler-p2-reltime",
+          "criterion": 1,
+          "text": "\"27 dakika önce\" mobilde satır genişliğinin ~%40'ını yiyor.",
+          "measure": "390px satırda zaman damgası ~80px, başlıkla arası 12px.",
+          "target": "Mobilde kısa biçim (\"27 dk\"), tam değer title/aria ile.",
+          "file": "notifications-list.tsx + apps/web/src/lib/format.ts (relativeTime)"
+        }
       ]
     }
   },
