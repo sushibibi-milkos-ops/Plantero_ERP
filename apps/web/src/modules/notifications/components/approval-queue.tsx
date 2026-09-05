@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { CheckCircle2, XCircle, ArrowRight, Sparkles, ShoppingBag, ClipboardList, Landmark, Receipt, FlaskConical, Tag } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, Loader2, Sparkles, ShoppingBag, ClipboardList, Landmark, Receipt, FlaskConical, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -98,6 +98,15 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
       if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
+      if (target?.isContentEditable || target?.closest('[contenteditable="true"]')) return;
+      // Tur 2 P0 onaylar-09: Reddet ConfirmDialog'u açıkken bu dinleyici hâlâ çalışıyordu — dialog
+      // arkasındaki seçim "j" ile kayıyor, "a" ise kullanıcı reddetmek üzereyken BAŞKA bir kaydı geri
+      // alınamaz biçimde onaylayabiliyordu (onay postJournalEntry/postStockMove tetikler). `rejectTarget`
+      // kontrolü bu bileşenin kendi dialogunu, genel `[role=dialog]` sorgusu ileride açılabilecek başka
+      // bir modali (ör. komut paleti) da kapsar.
+      if (rejectTarget !== null) return;
+      if (target?.closest('[role="dialog"],[role="alertdialog"]')) return;
+      if (document.querySelector('[role="dialog"],[role="alertdialog"]')) return;
       if (!filtered.length) return;
       const idx = current ? filtered.findIndex((i) => rowKey(i) === selectedKey) : -1;
       if (e.key === 'j' || e.key === 'J') { e.preventDefault(); setSelectedKey(rowKey(filtered[Math.min(filtered.length - 1, idx + 1)]!)); }
@@ -107,16 +116,32 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [filtered, current, selectedKey, approve]);
+  }, [filtered, current, selectedKey, approve, rejectTarget]);
 
   if (!items.length) {
-    return <EmptyState icon={Sparkles} title="Onay bekleyen kayıt yok" description="Yeni bir taslak, sayım farkı ya da mutabakat önerisi oluştuğunda burada görünür." />;
+    return (
+      <EmptyState
+        icon={Sparkles}
+        title="Onay bekleyen kayıt yok"
+        description="Yeni bir taslak, sayım farkı ya da mutabakat önerisi oluştuğunda burada görünür."
+        action={
+          <Button variant="outline" asChild>
+            <Link href="/muhasebe/mutabakat">
+              Mutabakat panosuna git <ArrowRight className="size-3.5" />
+            </Link>
+          </Button>
+        }
+      />
+    );
   }
 
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div role="tablist" aria-label="Onay türü" className="flex flex-wrap items-center gap-1 rounded-lg bg-muted p-0.5">
+        {/* Tur 2 P1 onaylar-10: sarmalayan (flex-wrap) şerit 390px'te 2 satıra taşıp sekmeleri
+            32px'e sıkıştırıyordu. Ortak ui/tabs.tsx desenindeki gibi tek satır + yatay kaydırma
+            (flex-nowrap overflow-x-auto) ve mobilde 44px dokunma hedefi (h-11 md:h-8). */}
+        <div role="tablist" aria-label="Onay türü" className="flex max-w-full flex-nowrap items-center gap-1 overflow-x-auto rounded-lg bg-muted p-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.map((t) => (
             <button
               key={t.key}
@@ -125,7 +150,7 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
               aria-selected={kindFilter === t.key}
               onClick={() => setKindFilter(t.key)}
               className={cn(
-                'h-8 rounded-md px-2.5 text-[13px] font-medium whitespace-nowrap transition-colors',
+                'h-11 shrink-0 rounded-md px-2.5 text-[13px] font-medium whitespace-nowrap transition-colors md:h-8',
                 kindFilter === t.key ? 'bg-background text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground',
               )}
             >
@@ -169,8 +194,10 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
                     %{Math.round(item.confidence * 100)}
                   </span>
                 ) : null}
+                {/* Tur 2 P1 onaylar-11: tutar 640px altında tamamen gizliydi — 12 kayıtlık kuyruğu
+                    taşıyan kullanıcı hiçbir tutarı göremiyordu. Artık her genişlikte görünür. */}
                 {item.amount !== null ? (
-                  <span className="hidden w-28 shrink-0 text-right text-[13px] font-medium tabular-nums sm:inline-block">{formatMoney(item.amount)}</span>
+                  <span className="w-28 shrink-0 text-right text-[13px] font-medium tabular-nums">{formatMoney(item.amount)}</span>
                 ) : null}
                 <span className="hidden w-12 shrink-0 text-right text-[11px] text-muted-foreground tabular-nums md:inline-block">{formatTime(item.createdAt)}</span>
               </div>
@@ -186,7 +213,8 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
                         %{Math.round(item.confidence * 100)}
                       </span>
                     ) : null}
-                    {item.amount !== null ? <span className="text-[13px] font-medium tabular-nums sm:hidden">{formatMoney(item.amount)}</span> : null}
+                    {/* Tutar artık ana satırda her genişlikte görünür (onaylar-11) — burada tekrar
+                        basmak mobilde aynı bilgiyi iki kez gösterirdi. */}
                     <span className="text-[11px] text-muted-foreground tabular-nums">{formatDateTime(item.createdAt)}</span>
                   </div>
                   {item.summary ? <p className="max-w-[70ch] text-[13px] text-muted-foreground">{item.summary}</p> : null}
@@ -197,9 +225,12 @@ export function ApprovalQueue({ items }: { items: ApprovalQueueItem[] }) {
                     <Button variant="outline" asChild>
                       <Link href={item.href}>Detay <ArrowRight className="size-3.5" /></Link>
                     </Button>
-                    {/* Ekranda en fazla 1 dolgulu birincil buton — yalnızca seçili kartta (Tur 1 P1 onaylar-04). */}
+                    {/* Ekranda en fazla 1 dolgulu birincil buton — yalnızca seçili kartta (Tur 1 P1 onaylar-04).
+                        Tur 2 P1 onaylar-12: sunucu eylemi sürerken yalnızca `disabled` görünüyordu, görünür
+                        bekleme geri bildirimi yoktu — artık metin + spinner değişiyor. */}
                     <Button disabled={busyId === item.id} onClick={(e) => { e.stopPropagation(); void approve(item); }}>
-                      <CheckCircle2 className="size-3.5" /> Onayla
+                      {busyId === item.id ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCircle2 className="size-3.5" />}
+                      {busyId === item.id ? 'Onaylanıyor…' : 'Onayla'}
                     </Button>
                   </div>
                 </div>

@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { Bell, BellOff, CheckCheck, Clock4, PackageSearch, Undo2 } from 'lucide-react';
+import { ArrowRight, Bell, BellOff, CheckCheck, Clock4, PackageSearch, Undo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
@@ -51,19 +51,39 @@ export function NotificationsList({ notifications }: { notifications: Notificati
   }
 
   if (!items.length) {
-    return <EmptyState icon={BellOff} title="Henüz bildiriminiz yok" description="Yeni bir bildirim geldiğinde burada görünür." />;
+    // Tur 2 P1 bildirimler-07: boş durum kabın tamamına (1152px) yayılıyordu, dolu liste 768px
+    // (max-w-3xl) — aynı ekranın iki farklı genişliği gibi görünüyordu. Aynı kaba sarıp bir eylem
+    // ekledik.
+    return (
+      <div className="max-w-3xl">
+        <EmptyState
+          icon={BellOff}
+          title="Henüz bildiriminiz yok"
+          description="Yeni bir bildirim geldiğinde burada görünür."
+          action={
+            <Button variant="outline" asChild>
+              <Link href="/onaylar">
+                Onay Merkezi'ne git <ArrowRight className="size-3.5" />
+              </Link>
+            </Button>
+          }
+        />
+      </div>
+    );
   }
 
   return (
     <div className="max-w-3xl space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
+        {/* Tur 2 P1 bildirimler-05: 390px'te 32px yükseklikteydi — ortak ui/tabs.tsx deseniyle
+            aynı (h-11 mobil / md:h-8 masaüstü) dokunma hedefine çıkarıldı. */}
         <div role="tablist" aria-label="Bildirim filtresi" className="flex items-center gap-1 rounded-lg bg-muted p-0.5">
           <button
             type="button"
             role="tab"
             aria-selected={filter === 'all'}
             onClick={() => setFilter('all')}
-            className={cn('h-8 rounded-md px-3 text-[13px] font-medium transition-colors', filter === 'all' ? 'bg-background text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground')}
+            className={cn('h-11 rounded-md px-3 text-[13px] font-medium transition-colors md:h-8', filter === 'all' ? 'bg-background text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground')}
           >
             Tümü <span className="tabular-nums text-muted-foreground">({items.length})</span>
           </button>
@@ -72,7 +92,7 @@ export function NotificationsList({ notifications }: { notifications: Notificati
             role="tab"
             aria-selected={filter === 'unread'}
             onClick={() => setFilter('unread')}
-            className={cn('h-8 rounded-md px-3 text-[13px] font-medium transition-colors', filter === 'unread' ? 'bg-background text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground')}
+            className={cn('h-11 rounded-md px-3 text-[13px] font-medium transition-colors md:h-8', filter === 'unread' ? 'bg-background text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground')}
           >
             Okunmamış <span className="tabular-nums text-muted-foreground">({unreadCount})</span>
           </button>
@@ -93,13 +113,16 @@ export function NotificationsList({ notifications }: { notifications: Notificati
             const content = (
               <div className={cn('flex items-start gap-3 px-4 py-3', unread && 'bg-primary/[0.03]')}>
                 <span aria-hidden className={cn('mt-2 size-1.5 shrink-0 rounded-full', unread ? 'bg-primary' : 'bg-transparent')} />
+                {/* Tur 2 P1 bildirimler-06: ayrı büyük-harfli tür etiketi satırı başlığın zaten
+                    içerdiği tür ön ekini (ör. "SKT GEÇMİŞ: …") tekrar ediyordu — tek bilgi 3 kez
+                    (ikon + etiket + başlık). Etiket artık yalnızca ikonun erişilebilir adında. */}
                 <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+                <span className="sr-only">{meta.label}</span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <div className={cn('text-sm', unread ? 'font-medium' : 'text-muted-foreground')}>{n.title}</div>
                     <span className="shrink-0 text-[11px] text-muted-foreground tabular-nums">{relativeTime(n.createdAt)}</span>
                   </div>
-                  <div className="mt-0.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">{meta.label}</div>
                   <p className="mt-1 line-clamp-2 max-w-[65ch] text-[13px] text-muted-foreground">{n.body}</p>
                 </div>
               </div>
