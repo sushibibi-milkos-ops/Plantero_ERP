@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { eq } from 'drizzle-orm';
-import { journals, invoices, invoiceLines, type Tx } from '@plantero/db';
+import { eq, and } from 'drizzle-orm';
+import { journals, invoices, invoiceLines, stockMoves, type Tx } from '@plantero/db';
 import { createExpensePurchaseInvoice, createCreditNote, cancelInvoice, getAging } from './invoices.js';
-import { postJournalEntry } from './journal.js';
+import { postJournalEntry, getPartnerBalance } from './journal.js';
+import { createAndReceive } from '../stock/receipts.js';
+import { getOnHand } from '../stock/ledger.js';
 import { nextDocNo } from '../sequences.js';
 import { D, toDb, round4 } from '../money.js';
 import { withRollback, seedBase, ctx, d, expectReject, balanceProbe, type Base } from '../__tests__/helpers.js';
@@ -14,6 +16,20 @@ async function ensureJournals(tx: Tx) {
   ]) {
     await tx.insert(journals).values(j).onConflictDoNothing({ target: journals.code });
   }
+}
+
+/** Mal kabulden (`receipt_lines`) otomatik faturaya kadar gerçek bir alış zinciri (`createAndReceive`
+ * artık aynı transaction içinde otomatik faturalar — I23/I25 düzeltmesi, bkz. purchasing/invoicing.test.ts). */
+async function receiveOne(tx: Tx, b: Base, opts: { qty?: string; unitCost?: string } = {}) {
+  return createAndReceive(tx, {
+    warehouseId: b.wh.id, partnerId: b.supplier.id, purchaseOrderId: null,
+    lines: [{ productId: b.raw.id, qty: d(opts.qty ?? 100), uomId: b.kg.id, unitCost: d(opts.unitCost ?? 12.5), disposition: 'released' }],
+  }, ctx);
+}
+async function getAutoInvoice(tx: Tx, receiptId: string) {
+  const [invoice] = await tx.select().from(invoices).where(eq(invoices.receiptId, receiptId));
+  if (!invoice) throw new Error('Otomatik fatura beklenirken bulunamadı');
+  return invoice;
 }
 
 /** Gerçek bir satış faturası (satır + 120/600/391 fişi) — createCreditNote/cancelInvoice testleri için */
@@ -107,6 +123,41 @@ describe('accounting/invoices — gider faturası, iade, iptal, yaşlandırma', 
 
       const err = await expectReject(tx, (sp) => createCreditNote(sp, { invoiceId: source.id, reason: 'tekrar' }, ctx));
       expect(String((err as Error).message)).toMatch(/zaten/);
+    });
+  });
+
+  it('P0 regresyon (Tur 7, I25): createCreditNote (alış, mal-kabul/320.999 tabanlı) gerçek bir return_out fiziksel iadesi üretir; 320.999 net SIFIRDA kalır, GRNI yeniden açılmaz', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await ensureJournals(tx);
+      const probe = await balanceProbe(tx);
+
+      const { receipt } = await receiveOne(tx, b, { qty: '100', unitCost: '12.5' });
+      const invoice = await getAutoInvoice(tx, receipt.id);
+      // Sağlama: mal kabul otomatik faturalandığı için 320.999 zaten kapalı.
+      expect((await probe.bal('320.999', 'VUK')).toFixed(4)).toBe('0.0000');
+      expect((await getOnHand(tx, { productId: b.raw.id, warehouseId: b.wh.id })).qty.toFixed(4)).toBe('100.0000');
+
+      const { invoice: note } = await createCreditNote(tx, { invoiceId: invoice.id, reason: 'Kalite sorunu — tedarikçiye iade' }, ctx);
+      expect(note.kind).toBe('purchase_return');
+      expect(note.status).toBe('posted');
+
+      // KRİTİK KANIT: eski davranış burada 320.999'u 1250 TL alacaklandırıp kalıcı bir GRNI bakiyesi
+      // açıyordu (I25 ihlali) — artık gerçek bir return_out hareketi onu tam netliyor, net sıfır.
+      expect((await probe.bal('320.999', 'VUK')).toFixed(4)).toBe('0.0000');
+      expect((await probe.bal('320.999', 'UFRS')).toFixed(4)).toBe('0.0000');
+
+      // Fiziksel iade GERÇEKTEN oldu: stok sıfırlandı, bir return_out hareketi üretildi (CLAUDE.md kural 3).
+      expect((await getOnHand(tx, { productId: b.raw.id, warehouseId: b.wh.id })).qty.toFixed(4)).toBe('0.0000');
+      const returnMoves = await tx.select().from(stockMoves).where(and(eq(stockMoves.productId, b.raw.id), eq(stockMoves.kind, 'return_out')));
+      expect(returnMoves).toHaveLength(1);
+      expect(D(returnMoves[0]!.qty).toFixed(4)).toBe('100.0000');
+      expect(D(returnMoves[0]!.value).toFixed(4)).toBe('1250.0000');
+
+      // Tedarikçi cari bakiyesi (fatura + iade birbirini tam götürür) ve 191 net sıfıra döner.
+      const { payable } = await getPartnerBalance(tx, b.supplier.id);
+      expect(payable.toFixed(4)).toBe('0.0000');
+      expect((await probe.bal('191', 'VUK')).toFixed(4)).toBe('0.0000');
     });
   });
 

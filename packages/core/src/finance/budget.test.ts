@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { and, eq } from 'drizzle-orm';
 import { journals, budgets, budgetLines, salesChannels, fixedExpenses as fixedExpensesTable, cashflowLines, accounts, type Tx } from '@plantero/db';
 import { withRollback, seedBase, ctx, suffix, type Base } from '../__tests__/helpers.js';
-import { postJournalEntry } from '../accounting/journal.js';
+import { postJournalEntry, reverseJournalEntry } from '../accounting/journal.js';
 import { D, round4 } from '../money.js';
 import { refreshActuals } from './budget.js';
 
@@ -132,6 +132,64 @@ describe('finance/budget — refreshActuals', () => {
       // 100 (kasa) hesabı postJournalEntry ile alacaklandırıldı (−5.000); önceki değere göre net nakit
       // akışı en az 5.000 TL azalmış olmalı — nightly job'u BEKLEMEDEN, aynı transaction içinde.
       if (netBefore) expect(D(cfAfter!.actualNetCashflow!).lte(netBefore.minus('4999'))).toBe(true);
+    });
+  });
+
+  it('P2 regresyon (Tur 7): reverseJournalEntry de (postJournalEntry ile AYNI yolu, refreshActualsForTouchedLines) tetikler — ters kayıttan sonra budget_lines.actual/cashflow_lines.actual_fixed_expenses geriye düşer', async () => {
+    await withRollback(async (tx) => {
+      const b: Base = await seedBase(tx);
+      await ensureSalesJournal(tx);
+      const s = suffix();
+
+      const now = new Date();
+      const period = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}`;
+      const entryDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 22));
+
+      // Bu teste ÖZEL, önceden hiç hareket görmemiş bir gider hesabı — actual'ın tam sıfıra
+      // döndüğünü (yaklaşık değil, TAM eşitlikle) doğrulayabilmek için.
+      const feAccountCode = `770.${s.slice(0, 2)}`;
+      await tx.insert(accounts).values({ code: feAccountCode, name: `Test gider ${s}`, type: 'expense', parentCode: '770', level: 2 }).onConflictDoNothing({ target: accounts.code });
+
+      const [budget] = await tx.insert(budgets).values({ year: now.getUTCFullYear(), name: `Test Bütçe ${s}` }).returning();
+      const [expLine] = await tx
+        .insert(budgetLines)
+        .values({ budgetId: budget!.id, period, kind: 'fixed_expense', accountCode: feAccountCode, label: 'Gider', planned: '1000.0000' })
+        .returning();
+
+      const [cfBeforePost] = await tx.select().from(cashflowLines).where(and(eq(cashflowLines.period, period), eq(cashflowLines.scenario, 'base')));
+      const fixedBeforePost = cfBeforePost?.actualFixedExpenses ? D(cfBeforePost.actualFixedExpenses) : D('0');
+
+      // 5.000 TL'lik fiş (VUK+UFRS ikiz) — postJournalEntry TEK BAŞINA budget_lines/cashflow_lines'ı günceller.
+      const { vukId } = await postJournalEntry(tx, {
+        ledger: 'both', journalCode: 'GID', entryDate, description: 'Test gider (P2 regresyon — ters kayıt öncesi)', origin: 'manual',
+        partnerId: b.supplier.id,
+        lines: [
+          { accountCode: feAccountCode, debit: D('5000') },
+          { accountCode: '100', credit: D('5000') },
+        ],
+      }, ctx);
+      expect(vukId).toBeTruthy();
+
+      const [expAfterPost] = await tx.select().from(budgetLines).where(eq(budgetLines.id, expLine!.id));
+      expect(round4(D(expAfterPost!.actual)).toFixed(4)).toBe('5000.0000');
+      const [cfAfterPost] = await tx.select().from(cashflowLines).where(and(eq(cashflowLines.period, period), eq(cashflowLines.scenario, 'base')));
+      expect(D(cfAfterPost!.actualFixedExpenses!).gte(fixedBeforePost.plus('5000'))).toBe(true);
+
+      // Ters kayıt — reverseJournalEntry AYNI transaction içinde refreshActualsForTouchedLines'ı
+      // KENDİSİ tetiklemeli (kritik bulgu: journal.ts'in ikinci çağrı yolu, postJournalEntry'ninkinden
+      // ayrı — budget.test.ts o zamana kadar yalnızca postJournalEntry yolunu test ediyordu).
+      await reverseJournalEntry(tx, vukId!, ctx);
+
+      const [expAfterReversal] = await tx.select().from(budgetLines).where(eq(budgetLines.id, expLine!.id));
+      // Bu hesap testten önce HİÇ hareket görmedi; fiş + tersi net sıfırlar → actual TAM sıfıra döner.
+      expect(round4(D(expAfterReversal!.actual)).toFixed(4)).toBe('0.0000');
+      expect(round4(D(expAfterReversal!.variance)).toFixed(4)).toBe('-1000.0000'); // 0 gerçekleşen − 1.000 plan
+
+      const [cfAfterReversal] = await tx.select().from(cashflowLines).where(and(eq(cashflowLines.period, period), eq(cashflowLines.scenario, 'base')));
+      expect(cfAfterReversal).toBeTruthy();
+      // Ters kayıt sonrası kanıt: cashflow'un gider alanı en az 4.999 TL AZALMIŞ olmalı (elle
+      // refreshActuals çağrılmadan, reverseJournalEntry'nin kendi tetiklediği güncelleme sayesinde).
+      expect(D(cfAfterReversal!.actualFixedExpenses!).lte(D(cfAfterPost!.actualFixedExpenses!).minus('4999'))).toBe(true);
     });
   });
 });

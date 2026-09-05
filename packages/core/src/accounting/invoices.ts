@@ -1,7 +1,7 @@
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import {
-  invoices, invoiceLines, partners, purchaseOrderLines, salesOrderLines, documentLinks, receiptLines, stockMoves, type DbOrTx,
+  invoices, invoiceLines, partners, purchaseOrderLines, salesOrderLines, documentLinks, stockMoves, type DbOrTx,
 } from '@plantero/db';
 import { D, toDb, toDbRate, round4, sum, pct, ZERO, isZero4 } from '../money.js';
 import { businessDate, addDays } from '../dates.js';
@@ -142,10 +142,27 @@ export type CreateCreditNoteInput = {
 /**
  * Kaynak faturayı (satış ya da alış — iade değil) tam tutarıyla tersine çeviren yeni bir belge
  * (`kind: sales_return | purchase_return`) oluşturur, `document_links` ile kaynağına bağlar.
- * Satışta ARCHITECTURE §7 ("Satış iade: 610 + 391 borç / 120.cari alacak") birebir uygulanır; alışta
- * kaynağın kendi hesap satırları (320.999 ya da gider hesabı) tersine çevrilir. Fiziksel stok iadesi
- * (`postStockMove kind:'return_in'/'return_out'`) bu servisin kapsamı DIŞINDADIR — depo modülünün
- * kendi iade akışından ayrıca işlenir (bkz. rapor: bilinen sınır).
+ * Satışta ARCHITECTURE §7 ("Satış iade: 610 + 391 borç / 120.cari alacak") birebir uygulanır.
+ *
+ * Alışta (P0 kök neden düzeltmesi — Tur 7, docs/INVARIANTS.md I25): kaynak faturanın satırları
+ * mal-kabul-tabanlı (`accountCode==='320.999'`, GRNI ara hesabı — `purchasing/invoicing.ts
+ * createPurchaseInvoiceFromReceipt`'ten gelir) olduğunda, 320.999'u yalnızca MANUEL bir muhasebe
+ * satırıyla tekrar alacaklandırmak (eski davranış) hiçbir karşılığı olmayan kalıcı bir GRNI bakiyesi
+ * açıyordu — CLAUDE.md kural 3 ("her stok hareketi yalnızca postStockMove") de ihlal ediliyordu,
+ * çünkü hiçbir fiziksel stok değişikliği hiç üretilmiyordu. Artık her böyle satır için TEK stok
+ * yazma noktasından (`postStockMove(kind:'return_out')`) gerçek bir tedarikçiye-iade hareketi
+ * üretilir — bu hareketin KENDİ fişi 320.999'u ürünün GÜNCEL (lot/ortalama) maliyetiyle borçlandırıp
+ * envanteri alacaklandırır; buradaki manuel satır 320.999'u TAM olarak bu gerçek dönüş değeriyle
+ * netler (orijinal fatura tutarı değil) — iki kayıt birlikte 320.999'u her zaman net sıfırda tutar
+ * (I25). Aradaki fark (mal kabulden bu yana lot/ortalama maliyeti değiştiyse) 659/679'a atılır —
+ * `stock/ledger.ts`'teki yuvarlama düzeltme kalıbıyla aynı mantık. İade edilecek miktar o mal kabul
+ * satırının ürettiği TÜM `stock_moves` (tam/kısmi red ayrımı dahil) üzerinden, o hareketlerin KENDİ
+ * lot/lokasyon bilgisiyle geri sarılır — hâlâ elde yeterli fiziksel stok yoksa (bir kısmı zaten
+ * tüketilmiş/sevk edilmişse) `postStockMove` `INSUFFICIENT_STOCK` ile reddeder (bilinçli: kısmi
+ * iade bu servisin kapsamında değil, tam iade fiziksel karşılığı olmadan asla kabul edilmez).
+ * Gider faturası kaynaklı (7XX hesap) satırlarda stok/lot yok; eski davranış (hesabı aynen tersine
+ * çevir) değişmeden korunur. Satış tarafının fiziksel iadesi (`return_in`) bu servisin kapsamı
+ * DIŞINDADIR — bilinen sınır, rapora ayrıca not edilir.
  */
 export async function createCreditNote(tx: DbOrTx, input: CreateCreditNoteInput, ctx: ActorCtx): Promise<AccountingInvoiceResult> {
   const [source] = await tx.select().from(invoices).where(eq(invoices.id, input.invoiceId)).limit(1);
@@ -188,12 +205,18 @@ export async function createCreditNote(tx: DbOrTx, input: CreateCreditNoteInput,
     .returning();
 
   let seq = 10;
+  /** Kaynak satır id'si → bu iade faturasındaki karşılık gelen yeni satır id'si (stok hareketi refLineId'i için) */
+  const noteLineIdBySourceLineId = new Map<string, string>();
   for (const l of srcLines) {
-    await tx.insert(invoiceLines).values({
-      invoiceId: note!.id, productId: l.productId, description: l.description, qty: l.qty, uomId: l.uomId, unitPrice: l.unitPrice,
-      discountPct: l.discountPct, vatRate: l.vatRate, lineSubtotal: l.lineSubtotal, lineVat: l.lineVat, lineTotal: l.lineTotal,
-      accountCode: isSales ? '610' : l.accountCode, sequence: seq,
-    });
+    const [noteLine] = await tx
+      .insert(invoiceLines)
+      .values({
+        invoiceId: note!.id, productId: l.productId, description: l.description, qty: l.qty, uomId: l.uomId, unitPrice: l.unitPrice,
+        discountPct: l.discountPct, vatRate: l.vatRate, lineSubtotal: l.lineSubtotal, lineVat: l.lineVat, lineTotal: l.lineTotal,
+        accountCode: isSales ? '610' : l.accountCode, sequence: seq,
+      })
+      .returning();
+    noteLineIdBySourceLineId.set(l.id, noteLine!.id);
     seq += 10;
   }
 
@@ -206,10 +229,55 @@ export async function createCreditNote(tx: DbOrTx, input: CreateCreditNoteInput,
     lines.push({ accountCode: '120', credit: D(source.grandTotalTry), partnerId: partner.id, description: `İade faturası ${docNo}: ${partner.name}` });
   } else {
     lines.push({ accountCode: '320', debit: D(source.grandTotal), partnerId: partner.id, description: `İade faturası ${docNo}: ${partner.name}` });
+
+    // GRNI (320.999) satırları: gerçek fiziksel iade (return_out) üret, 320.999'u fatura tutarıyla
+    // DEĞİL, dönüşün GERÇEK stok değeriyle netle (bkz. yukarıdaki fonksiyon başı yorumu — P0/I25).
+    const grniLines = srcLines.filter((l) => (l.accountCode ?? '320.999') === '320.999');
+    const otherLines = srcLines.filter((l) => (l.accountCode ?? '320.999') !== '320.999');
+    let grniReturnedValue = ZERO;
+    const suppliersLoc = grniLines.length ? await getSuppliersLocation(tx) : null;
+
+    for (const l of grniLines) {
+      if (!l.productId || D(l.qty).lte(0)) continue;
+      if (!l.receiptLineId) throw new ValidationError(`${docNo}: kaynak satırın mal kabul bağlantısı yok; fiziksel iade işlenemedi`, { invoiceLineId: l.id });
+      // Kaynak mal kabul satırının ürettiği TÜM stok hareketleri (tam/kısmi red ayrımı dahil —
+      // `receipt_lines.to_location_id/lot_id` yalnızca kabul edilen kısmı denormalize eder, split
+      // durumunda yetersiz kalır) — her biri kendi lot/lokasyonundan geri sarılır.
+      const originMoves = await tx
+        .select()
+        .from(stockMoves)
+        .where(and(eq(stockMoves.refType, 'receipt'), eq(stockMoves.refLineId, l.receiptLineId), eq(stockMoves.kind, 'receipt')));
+      if (!originMoves.length) throw new ValidationError(`${docNo}: mal kabul stok hareketi bulunamadı; fiziksel iade işlenemedi`, { invoiceLineId: l.id });
+
+      for (const om of originMoves) {
+        const mv = await postStockMove(tx, {
+          kind: 'return_out', productId: l.productId, lotId: om.lotId, fromLocationId: om.toLocationId, toLocationId: suppliersLoc!.id,
+          qty: D(om.qty), uomId: om.uomId, refType: 'invoice', refId: note!.id, refLineId: noteLineIdBySourceLineId.get(l.id) ?? l.id, refNo: docNo, partnerId: partner.id,
+          movedAt: new Date(invoiceDate), origin: 'chain', note: `İade faturası ${docNo}: ${input.reason}`,
+        }, ctx);
+        grniReturnedValue = grniReturnedValue.plus(mv.value);
+      }
+    }
+    if (!grniReturnedValue.isZero()) lines.push({ accountCode: '320.999', credit: grniReturnedValue, description: `İade faturası ${docNo}: fiziksel iade (GRNI kapama)` });
+
     const byAccount = new Map<string, Decimal>();
-    for (const l of srcLines) byAccount.set(l.accountCode ?? '320.999', (byAccount.get(l.accountCode ?? '320.999') ?? ZERO).plus(D(l.lineSubtotal)));
+    for (const l of otherLines) byAccount.set(l.accountCode ?? '320.999', (byAccount.get(l.accountCode ?? '320.999') ?? ZERO).plus(D(l.lineSubtotal)));
     for (const [accountCode, amount] of byAccount) if (!amount.isZero()) lines.push({ accountCode, credit: amount, description: `İade faturası ${docNo}: ${input.reason}` });
     if (!D(source.vatTotal).isZero()) lines.push({ accountCode: '191', credit: D(source.vatTotal), description: `İade faturası ${docNo} KDV` });
+
+    // Maliyet farkı: GRNI satırlarının orijinal fatura tutarı ile dönüşün gerçek (güncel maliyetli)
+    // stok değeri arasındaki fark — lot/ortalama maliyeti mal kabulden bu yana değiştiyse oluşur.
+    // Fişi dengede tutar (Σborç=Σalacak) ve I25'i tam sıfıra kilitler.
+    const grniOriginalSubtotal = round4(sum(grniLines.map((l) => D(l.lineSubtotal))));
+    const variance = round4(grniOriginalSubtotal.minus(grniReturnedValue));
+    if (!variance.isZero()) {
+      lines.push({
+        accountCode: variance.gt(0) ? '679' : '659',
+        credit: variance.gt(0) ? variance : undefined,
+        debit: variance.lt(0) ? variance.abs() : undefined,
+        description: `İade faturası ${docNo}: iade edilen stoğun güncel maliyeti ile fatura tutarı farkı`,
+      });
+    }
   }
 
   const { vukId } = await postJournalEntry(tx, {
