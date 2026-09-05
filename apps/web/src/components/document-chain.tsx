@@ -174,7 +174,19 @@ export function DocumentChain({
       aria-label="Belge zinciri"
       ref={scrollerRef}
     >
-      <div className="flex items-center gap-2">
+      {/* items-start (items-center değil — Tur 7 P2 shell-documentchain-baseline-01'in ikinci
+          yarısı): kartlar arasında etiket satırı artık sabit yükseklikte olsa da (yukarıdaki
+          ChainCard düzeltmesi) kartların TOPLAM yüksekliği hâlâ farklı olabilir — bazı belge
+          tipleri `amount` ve/veya `partnerName` taşımaz (ör. kalite kontrol: yalnızca tarih satırı,
+          tutar/cari yok), bu da o kartı diğerlerinden 1-2 satır daha kısa yapar. Dış akış
+          `items-center` iken bu KISA kart, en UZUN kardeşinin yüksekliğine göre DİKEY ORTALANIYOR
+          — kartın kendisi (ve içindeki docNo) aşağı kayıyor (ölçüldü: 11px, bkz.
+          probe-tedarik-r7h.json). `items-start`e geçince tüm kartlar üst kenardan hizalanır, kart
+          içi yükseklik farkı yalnızca kartın ALT kenarında kalır — docNo hep aynı `top`ta. Ok
+          ikonu (`Arrow`) kendi `self-center`'ı ile bu değişiklikten etkilenmez: o, kendi iç
+          sarmalayıcısında (aşağıdaki `items-center` iç div'ler) hâlâ bitişik kartına göre
+          ortalanır. */}
+      <div className="flex items-start gap-2">
         {chronologicalUpstream.map((n) => (
           <div key={`${n.type}-${n.id}`} className="flex items-center gap-2">
             <ChainCard node={n} current={false} />
