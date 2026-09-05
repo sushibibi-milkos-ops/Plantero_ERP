@@ -63,7 +63,7 @@ function SupplierCard({ supplier, canManageWhitelist }: { supplier: SupplierCard
       // 4 metrik tek bir küçük-metin satırına indi (etiket+değer aynı satırda, "gün" TAM kelime
       // korunur — tedarik-tedarikciler-02 rejeksiyonu). Sonuç: 4 hizalama bölgesi yerine 3 kompakt
       // satır (~132px, hedef ≤160px).
-      className="flex cursor-pointer flex-col gap-2 rounded-xl border border-border/60 p-4 hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+      className="flex cursor-pointer flex-col gap-1.5 rounded-xl border border-border/60 p-3.5 hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
     >
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">

@@ -85,18 +85,19 @@ export function PurchaseOrderForm({
   // toplamı formun HİÇBİR yerinde yoktu. Satır tutarının tabanı (KDV hariç, D(qty).mul(unitPrice))
   // /satin-alma/siparisler/[id]'deki order-lines-table.tsx ile artık AYNI (ikisi de `lineSubtotal`) —
   // burada da aynı taban üstünden Ara toplam/KDV/Genel toplam hesaplanır.
-  const { subtotal, vatTotal, grandTotal } = useMemo(() => {
-    const perLine = watchedLines.map((l) => {
-      const lineSubtotal = round4(D(l?.qty || 0).mul(D(l?.unitPrice || 0)));
-      const lineVat = round4(pct(lineSubtotal, DEFAULT_VAT_RATE));
-      return { lineSubtotal, lineVat };
-    });
-    return {
-      subtotal: sum(perLine.map((l) => l.lineSubtotal)),
-      vatTotal: sum(perLine.map((l) => l.lineVat)),
-      grandTotal: sum(perLine.map((l) => l.lineSubtotal.plus(l.lineVat))),
-    };
-  }, [watchedLines]);
+  // `useMemo([watchedLines])` KULLANMA: react-hook-form `watch()` her render'da AYNI dizi referansını
+  // döndürüp içeriğini YERİNDE günceller (ölçüldü — Playwright ile satır eklenip miktar/fiyat
+  // girildiğinde satır önizlemesi ₺1.000,00 gösterirken bu blok ₺0,00'da donuyordu) — referans hiç
+  // DEĞİŞMEDİĞİ için `useMemo` asla yeniden hesaplamıyor, ilk (boş) sonuçta kalıyordu. Aşağıdaki
+  // satırdaki `lineTotal` hesaplaması gibi HER render'da DOĞRUDAN (memo'suz) hesaplanır.
+  const perLine = watchedLines.map((l) => {
+    const lineSubtotal = round4(D(l?.qty || 0).mul(D(l?.unitPrice || 0)));
+    const lineVat = round4(pct(lineSubtotal, DEFAULT_VAT_RATE));
+    return { lineSubtotal, lineVat };
+  });
+  const subtotal = sum(perLine.map((l) => l.lineSubtotal));
+  const vatTotal = sum(perLine.map((l) => l.lineVat));
+  const grandTotal = sum(perLine.map((l) => l.lineSubtotal.plus(l.lineVat)));
 
   function addLine(product: PurchaseProductPickerRow) {
     const priced = product.preferredSupplierId === watchedPartnerId ? product.lastPrice : null;
