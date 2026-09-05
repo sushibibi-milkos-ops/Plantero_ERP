@@ -557,7 +557,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 332
+     "width": 588
     },
     {
      "i": 1,
@@ -567,7 +567,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 115
+     "width": 84
     },
     {
      "i": 2,
@@ -577,7 +577,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 109
+     "width": 80
     },
     {
      "i": 3,
@@ -587,7 +587,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 174
+     "width": 104
     },
     {
      "i": 4,
@@ -597,7 +597,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 154
+     "width": 108
     },
     {
      "i": 5,
@@ -607,7 +607,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 85
+     "width": 64
     },
     {
      "i": 6,
@@ -617,7 +617,7 @@
      "empty": 0,
      "ellipsis": 0,
      "maxClipPx": 0,
-     "width": 180
+     "width": 122
     }
    ],
    "scroller": {

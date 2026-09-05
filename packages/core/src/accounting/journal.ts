@@ -374,6 +374,15 @@ export async function reverseJournalEntry(
     await tx.update(journalEntries).set({ twinEntryId: result.vukId }).where(eq(journalEntries.id, result.ufrsId));
   }
   for (const pid of touched) await updatePartnerBalance(tx, pid);
+
+  // P1 kök neden düzeltmesi (kritik bulgu, Tur 6, bkz. postJournalEntry): bir ters kayıt da
+  // budget_lines/cashflow_lines'ı bayatlatabilir — ters kayıt fişi ters kaydın kendi tarihindeki
+  // (reversalDate) periyodun gerçekleşenini değiştirir. Yalnızca ters kaydın VUK satırları hedeflenir.
+  if (result.vukId && touchedBudgetLines.length) {
+    const { refreshActualsForTouchedLines } = await import('../finance/budget.js');
+    await refreshActualsForTouchedLines(tx, ctx, toDateStr(reversalDate).slice(0, 7), touchedBudgetLines);
+  }
+
   return result;
 }
 
