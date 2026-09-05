@@ -70,7 +70,14 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
       </PageHeader>
 
       {chain.upstream.length || chain.downstream.length ? (
-        <div className="mb-6">
+        // Tur 6 P1 tedarik-po-detay-13 kök neden (düzeltilmiş teşhis): ölçülen 4px yatay taşma
+        // `order-lines-table.tsx`den DEĞİL — paylaşılan `DocumentChain`in kendi kaydırma
+        // kapsayıcısındaki kasıtlı kenar sızıntısından (`-mx-1`/`px-1`, dokunma kaydırma ipucu için)
+        // geliyor: bu belgede yalnızca 3 düğüm var, 1152px'e sığıyor, kaydırma hiç gerekmiyor ama
+        // sızıntı KOŞULSUZ uygulanıyor. Paylaşılan dosya değiştirilemez (kural 2) — `overflow-hidden`
+        // yalnızca bu sayfaya özel sarmalayıcıda (kendi dosyamız), kaydırma davranışını (`overflow-x-
+        // auto` İÇERİDE kalır) ETKİLEMEDEN sızıntının kap dışına taşmasını keser.
+        <div className="mb-6 overflow-hidden">
           <DocumentChain upstream={chain.upstream} current={{ type: 'purchase_order', id: po.id, docNo: po.docNo, status: po.status, date: new Date(po.orderDate), amount: po.grandTotal, partnerName: partner?.name ?? null }} downstream={chain.downstream} />
         </div>
       ) : null}

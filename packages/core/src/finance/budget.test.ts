@@ -87,4 +87,51 @@ describe('finance/budget — refreshActuals', () => {
       expect(result).toEqual({ budgetLinesUpdated: 0, cashflowLinesUpdated: 0, periods: [] });
     });
   });
+
+  it('P1 regresyon (Tur 6): postJournalEntry TEK BAŞINA (refreshActuals hiç elle çağrılmadan) budget_lines.actual/variance ve cashflow_lines.actual_fixed_expenses/actual_net_cashflow kolonlarını güncel tutar', async () => {
+    await withRollback(async (tx) => {
+      const b: Base = await seedBase(tx);
+      await ensureSalesJournal(tx);
+      const s = suffix();
+
+      const now = new Date();
+      const period = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}`;
+      const entryDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 20));
+
+      const feAccountCode = `770.${s.slice(0, 2)}`;
+      await tx.insert(accounts).values({ code: feAccountCode, name: `Test gider ${s}`, type: 'expense', parentCode: '770', level: 2 }).onConflictDoNothing({ target: accounts.code });
+
+      // Bütçe satırı ÖNCEDEN var (postJournalEntry'den ÖNCE) — canlı bulguyla birebir senaryo:
+      // fresh bütçe + 5.000 TL'lik yeni bir gider fişi.
+      const [budget] = await tx.insert(budgets).values({ year: now.getUTCFullYear(), name: `Test Bütçe ${s}` }).returning();
+      const [expLine] = await tx
+        .insert(budgetLines)
+        .values({ budgetId: budget!.id, period, kind: 'fixed_expense', accountCode: feAccountCode, label: 'Gider', planned: '1000.0000' })
+        .returning();
+
+      const [cfBefore] = await tx.select().from(cashflowLines).where(and(eq(cashflowLines.period, period), eq(cashflowLines.scenario, 'base')));
+      const netBefore = cfBefore?.actualNetCashflow ? D(cfBefore.actualNetCashflow) : null;
+
+      // Kritik bulgudaki gibi doğrudan postJournalEntry — refreshActuals'a HİÇ dokunulmuyor.
+      await postJournalEntry(tx, {
+        ledger: 'both', journalCode: 'GID', entryDate, description: 'Test gider (P1 regresyon)', origin: 'manual',
+        partnerId: b.supplier.id,
+        lines: [
+          { accountCode: feAccountCode, debit: D('5000') },
+          { accountCode: '100', credit: D('5000') },
+        ],
+      }, ctx);
+
+      const [expAfter] = await tx.select().from(budgetLines).where(eq(budgetLines.id, expLine!.id));
+      expect(round4(D(expAfter!.actual)).toFixed(4)).toBe('5000.0000');
+      expect(round4(D(expAfter!.variance)).toFixed(4)).toBe('4000.0000'); // 5.000 gerçekleşen − 1.000 plan
+
+      const [cfAfter] = await tx.select().from(cashflowLines).where(and(eq(cashflowLines.period, period), eq(cashflowLines.scenario, 'base')));
+      expect(cfAfter).toBeTruthy();
+      expect(D(cfAfter!.actualFixedExpenses!).gte('5000')).toBe(true);
+      // 100 (kasa) hesabı postJournalEntry ile alacaklandırıldı (−5.000); önceki değere göre net nakit
+      // akışı en az 5.000 TL azalmış olmalı — nightly job'u BEKLEMEDEN, aynı transaction içinde.
+      if (netBefore) expect(D(cfAfter!.actualNetCashflow!).lte(netBefore.minus('4999'))).toBe(true);
+    });
+  });
 });
