@@ -47,6 +47,10 @@ export function CheckDetail({ detail, releaseLocations, rejectLocations }: { det
   const hasResults = results.length > 0;
 
   const resultsByItem = new Map(results.map((r) => [r.templateItemId ?? r.id, r]));
+  // Tur 1 P1 kalite-kontroller-id-01: okuma listesindeki sayısal sonuç, şablon kaleminin birimiyle
+  // birlikte `formatQty` ile basılsın — ham `qc_check_results.value_numeric` (numeric(18,4)) DB
+  // string'i ("14.2000") değil.
+  const templateItemUnit = new Map((template?.items ?? []).map((ti) => [ti.id, ti.unit]));
   const defaultItems: ResultsForm['items'] = template
     ? template.items.map((ti) => {
         const existing = resultsByItem.get(ti.id);
@@ -180,14 +184,31 @@ export function CheckDetail({ detail, releaseLocations, rejectLocations }: { det
           </Form>
         ) : (
           <ul className="divide-y divide-border/60">
-            {results.map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 py-2 text-sm">
-                <span>{r.name}</span>
-                <span className={r.isPassed === false ? 'font-medium text-destructive' : r.isPassed === true ? 'text-success' : 'text-muted-foreground'}>
-                  {r.valueNumeric ?? (r.valueBool !== null ? (r.valueBool ? 'Uygun' : 'Uygun değil') : r.valueText) ?? '—'}
-                </span>
-              </li>
-            ))}
+            {results.map((r) => {
+              // Tur 1 P1 kalite-kontroller-id-02: `x ?? '—'` yalnızca null'ı yakalıyordu, boş string'i
+              // ('') geçiriyordu — sonuç hiç girilmemiş bir metin/belge kalemi sağ tarafı tamamen boş
+              // bırakıyordu. Boş string de "yok" sayılır; aynı sayfanın Genel/Karar kartlarıyla tutarlı
+              // dürüst "—" basılır.
+              const hasText = typeof r.valueText === 'string' && r.valueText.trim() !== '';
+              const display =
+                r.valueNumeric !== null && r.valueNumeric !== undefined ? (
+                  <span className="num">{formatQty(r.valueNumeric, r.templateItemId ? templateItemUnit.get(r.templateItemId) : undefined)}</span>
+                ) : r.valueBool !== null ? (
+                  r.valueBool ? 'Uygun' : 'Uygun değil'
+                ) : hasText ? (
+                  r.valueText
+                ) : (
+                  <span className="text-muted-foreground">—</span>
+                );
+              return (
+                <li key={r.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                  <span>{r.name}</span>
+                  <span className={r.isPassed === false ? 'font-medium text-destructive' : r.isPassed === true ? 'text-success' : 'text-muted-foreground'}>
+                    {display}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

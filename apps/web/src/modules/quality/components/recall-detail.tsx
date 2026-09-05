@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Megaphone, ShieldAlert, Mail, Phone, MessageCircle, Ban, CheckCircle2, PackageX, ArrowUpFromLine, PackageCheck } from 'lucide-react';
+import { Megaphone, ShieldAlert, Mail, Phone, MessageCircle, Ban, CheckCircle2, PackageX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { KpiCard } from '@/components/kpi-card';
+import { KpiStripRow } from '@/components/kpi-strip';
 import { StatusBadge } from '@/components/status-badge';
 import { LotBadge } from '@/components/lot-badge';
 import { DocumentChain } from '@/components/document-chain';
@@ -87,16 +88,18 @@ export function RecallDetail({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <KpiCard title="Etkilenen lot" value={impact.lots} format="int" icon={PackageX} />
-        <KpiCard title="İş emri" value={impact.workOrders} format="int" />
-        <KpiCard title="Sevkiyat" value={impact.deliveries} format="int" icon={ArrowUpFromLine} />
-        <KpiCard title="Müşteri" value={impact.customers} format="int" />
-      </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <KpiCard title="Stoktaki miktar" value={Number(impact.qtyInStock)} format="qty" icon={PackageCheck} />
-        <KpiCard title="Sevk edilen miktar" value={Number(impact.qtyDelivered)} format="qty" />
-      </div>
+      {/* Tur 1 P1 kalite-kpi-strip-01/kalite-geri-cagirma-id-01/-02: iki ayrı `grid-cols-4` bloğu 6
+          kartı 4+2'ye bölüp ikinci sırada 570px boş bırakıyordu, üstüne kartların yarısı ikonlu yarısı
+          ikonsuzdu. Tek KpiStripRow şeridi hem boşluğu hem ikon tutarsızlığını kökten kapatır (strip
+          varyantı zaten ikon almaz — kpi-card.tsx). */}
+      <KpiStripRow>
+        <KpiCard title="Etkilenen lot" value={impact.lots} format="int" variant="strip" />
+        <KpiCard title="İş emri" value={impact.workOrders} format="int" variant="strip" />
+        <KpiCard title="Sevkiyat" value={impact.deliveries} format="int" variant="strip" />
+        <KpiCard title="Müşteri" value={impact.customers} format="int" variant="strip" />
+        <KpiCard title="Stoktaki miktar" value={Number(impact.qtyInStock)} format="qty" variant="strip" />
+        <KpiCard title="Sevk edilen miktar" value={Number(impact.qtyDelivered)} format="qty" variant="strip" />
+      </KpiStripRow>
 
       {chain && (chain.upstream.length || chain.downstream.length) ? (
         <div className="rounded-xl border border-border/60 p-4">
@@ -115,9 +118,12 @@ export function RecallDetail({
             <ShieldAlert className="size-3.5" /> Etkilenen müşteriler
           </div>
           {customers.length ? (
-            <ul className="space-y-2">
+            // Tur 1 P1 kalite-geri-cagirma-id-03: her müşteri kendi çerçeveli kutusundaydı ve bu
+            // kutular zaten çerçeveli bir kartın içindeydi ("kutu içinde kutu" — anti-ERP kokusu).
+            // Tek kapta hairline ayraçlı satırlara indirildi (iç `border`/`rounded-lg` kaldırıldı).
+            <ul className="-my-1 divide-y divide-border/60">
               {customers.map((c) => (
-                <li key={c.id} className="rounded-lg border border-border/60 p-2.5 text-sm">
+                <li key={c.id} className="py-2.5 text-sm first:pt-1 last:pb-1">
                   <div className="font-medium">{c.name}</div>
                   <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     {c.email ? <span className="flex items-center gap-1"><Mail className="size-3" /> {c.email}</span> : null}

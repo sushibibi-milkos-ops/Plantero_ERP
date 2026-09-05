@@ -3,9 +3,10 @@ import { eq } from 'drizzle-orm';
 import { schema } from '@plantero/db';
 import { seedBase, withRollback, expectReject, ctx, d } from '../__tests__/helpers.js';
 import { createLot, postStockMove } from '../stock/ledger.js';
+import { createAndReceive } from '../stock/receipts.js';
 import { createIncomingCheck, recordResults, decide } from './checks.js';
 
-const { stockQuants } = schema;
+const { stockQuants, qcChecks, receipts } = schema;
 
 async function makeQuarantineLot(tx: Parameters<typeof createLot>[0], base: Awaited<ReturnType<typeof seedBase>>, qty = 50) {
   const lot = await createLot(tx, { productId: base.raw.id, lotNo: `L-${base.s}-${Math.random().toString(36).slice(2, 6)}`, origin: 'receipt', unitCost: d(100), status: 'quarantine' }, ctx);
@@ -87,6 +88,48 @@ describe('quality/checks decide()', () => {
         }, ctx),
       );
       expect(String((err as Error).message)).toMatch(/serbest|released/i);
+    });
+  });
+
+  it("P0 canlı doğrulama (Kaju/Anadolu Kuruyemiş S-000005): QC kararı verilince bağlı mal kabul 'qc_pending'den 'done'a geçer — computeSupplierScores yalnızca status='done' sayar", async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx); // base.raw: requiresIncomingQc=true
+      const { receipt } = await createAndReceive(tx, {
+        warehouseId: base.wh.id, partnerId: base.supplier.id,
+        lines: [{ productId: base.raw.id, qty: d(40), uomId: base.kg.id, unitCost: d(100) }],
+      }, ctx);
+      // receiveGoods() QC gerektiren ürünü otomatik karantinaya alıp bekleyen qc_checks açar.
+      expect(receipt.status).toBe('qc_pending');
+      const [check] = await tx.select().from(qcChecks).where(eq(qcChecks.receiptId, receipt.id));
+      expect(check).toBeTruthy();
+      await recordResults(tx, check!.id, [{ name: 'Nem %', kind: 'numeric', valueNumeric: d(8) }], ctx);
+      await decide(tx, check!.id, { decision: 'released', releaseToLocationId: base.loc.hamR01.id }, ctx);
+      const [updatedReceipt] = await tx.select().from(receipts).where(eq(receipts.id, receipt.id));
+      expect(updatedReceipt?.status).toBe('done');
+    });
+  });
+
+  it("kısmi kapanış: bir mal kabulde BİRDEN FAZLA bekleyen QC varsa, biri karara bağlanınca mal kabul 'qc_pending'de kalır", async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx);
+      const { receipt } = await createAndReceive(tx, {
+        warehouseId: base.wh.id, partnerId: base.supplier.id,
+        lines: [
+          { productId: base.raw.id, qty: d(20), uomId: base.kg.id, unitCost: d(100), supplierLotNo: 'L1' },
+          { productId: base.raw.id, qty: d(15), uomId: base.kg.id, unitCost: d(100), supplierLotNo: 'L2' },
+        ],
+      }, ctx);
+      expect(receipt.status).toBe('qc_pending');
+      const checkRows = await tx.select().from(qcChecks).where(eq(qcChecks.receiptId, receipt.id));
+      expect(checkRows.length).toBe(2);
+      await recordResults(tx, checkRows[0]!.id, [{ name: 'Nem %', kind: 'numeric', valueNumeric: d(8) }], ctx);
+      await decide(tx, checkRows[0]!.id, { decision: 'released', releaseToLocationId: base.loc.hamR01.id }, ctx);
+      const [midReceipt] = await tx.select().from(receipts).where(eq(receipts.id, receipt.id));
+      expect(midReceipt?.status).toBe('qc_pending'); // ikinci lot hâlâ bekliyor
+      await recordResults(tx, checkRows[1]!.id, [{ name: 'Nem %', kind: 'numeric', valueNumeric: d(8) }], ctx);
+      await decide(tx, checkRows[1]!.id, { decision: 'released', releaseToLocationId: base.loc.hamR01.id }, ctx);
+      const [doneReceipt] = await tx.select().from(receipts).where(eq(receipts.id, receipt.id));
+      expect(doneReceipt?.status).toBe('done');
     });
   });
 });

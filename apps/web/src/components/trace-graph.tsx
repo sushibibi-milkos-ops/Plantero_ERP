@@ -39,13 +39,19 @@ const QUANT_USAGE_LABELS: Record<string, string> = {
   view: 'Görünüm (gruplama)',
 };
 
+// Kök neden (Tur 1 P2 shell-trace-graph-green-01): düğüm TÜRÜ çipleri (bu sözlük) marka rengini
+// (primary) VE başarı rengini (success) anlamsal duruma bakmaksızın süsleme olarak kullanıyordu —
+// aynı ekranda "Serbest"/"Bitti" gibi gerçek durum rozetleri de yeşil olduğundan, yeşil hem "marka
+// vurgusu" hem "başarı" ikisini birden taşıyordu (puan kartı kriter 4: yeşil yalnızca ikisinden biri
+// olmalı). Düğüm türü tamamen nötr bir kimlik etiketidir (Lot/İş emri/Mal kabul/…) — anlamlı renk
+// yalnızca aşağıdaki `StatusBadge` (gerçek durum: serbest/bekliyor/red/tamamlandı) taşır.
 const KIND_META: Record<TraceNode['kind'], { icon: LucideIcon; label: string; cls: string }> = {
-  lot: { icon: Tag, label: 'Lot', cls: 'text-primary bg-primary/10' },
-  work_order: { icon: Factory, label: 'İş emri', cls: 'text-info bg-info/10' },
-  receipt: { icon: PackageCheck, label: 'Mal kabul', cls: 'text-success bg-success/12' },
-  delivery: { icon: Truck, label: 'Sevkiyat', cls: 'text-[oklch(0.55_0.15_300)] bg-[oklch(0.55_0.15_300)]/10' },
+  lot: { icon: Tag, label: 'Lot', cls: 'text-muted-foreground bg-muted' },
+  work_order: { icon: Factory, label: 'İş emri', cls: 'text-muted-foreground bg-muted' },
+  receipt: { icon: PackageCheck, label: 'Mal kabul', cls: 'text-muted-foreground bg-muted' },
+  delivery: { icon: Truck, label: 'Sevkiyat', cls: 'text-muted-foreground bg-muted' },
   partner: { icon: Building2, label: 'Cari', cls: 'text-muted-foreground bg-muted' },
-  quant: { icon: Boxes, label: 'Eldeki stok', cls: 'text-foreground/70 bg-muted' },
+  quant: { icon: Boxes, label: 'Eldeki stok', cls: 'text-muted-foreground bg-muted' },
 };
 
 function NodeRow({ node, depth }: { node: TraceNode; depth: number }) {

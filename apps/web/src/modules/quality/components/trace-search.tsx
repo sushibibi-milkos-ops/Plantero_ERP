@@ -2,11 +2,13 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, ArrowDownToLine, ArrowUpFromLine, Scale } from 'lucide-react';
+import { toast } from 'sonner';
+import { Search, ArrowDownToLine, ArrowUpFromLine, Scale, SearchX } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
 import { KpiCard } from '@/components/kpi-card';
+import { KpiStripRow } from '@/components/kpi-strip';
 import { StatusBadge } from '@/components/status-badge';
 import { LotBadge } from '@/components/lot-badge';
 import { TraceGraph } from '@/components/trace-graph';
@@ -20,11 +22,16 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
   const [results, setResults] = useState<TraceSearchResult[]>([]);
   const [partnerLots, setPartnerLots] = useState<TraceSearchResult[] | null>(null);
   const [view, setView] = useState<TraceView | null>(null);
+  // Tur 1 P1 kalite-izlenebilirlik-02: `?lot=` derin bağlantısı çözülemediğinde ekran sessizce
+  // "Aramaya başlayın" boş durumuna düşüyordu — arananın ne olduğu, hatta bir arama denendiği bile
+  // görünmüyordu. Artık aranan değer saklanır ve görünür bir "Lot bulunamadı" durumu + toast gösterilir.
+  const [notFound, setNotFound] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   function search(value: string) {
     setQ(value);
     setPartnerLots(null);
+    setNotFound(null);
     if (value.trim().length < 2) { setResults([]); return; }
     startTransition(async () => {
       const res = await searchTraceEntitiesAction({ q: value });
@@ -42,9 +49,23 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
 
   function loadLot(lotId: string) {
     setPartnerLots(null);
+    setNotFound(null);
     startTransition(async () => {
       const res = await getTraceForLotAction({ lotId });
-      if (res.ok) { setView(res.data); router.replace(`/kalite/izlenebilirlik?lot=${lotId}`, { scroll: false }); }
+      if (res.ok) {
+        setView(res.data);
+        // Kanonik URL her zaman gerçek lot UUID'sine geçer — kullanıcı lot NUMARASIYla geldiyse bile
+        // (bkz. aşağıdaki not) sonraki paylaşımlar/yenilemeler için kararlı bir bağlantı bırakılır.
+        router.replace(`/kalite/izlenebilirlik?lot=${res.data.lot.id}`, { scroll: false });
+      } else {
+        // Kök neden: parametre lot NUMARASI değil lot UUID'si bekliyordu — kullanıcının elinde tek
+        // görünür kimlik olan lot no ile paylaşılan/yapıştırılan her bağlantı burada düşüyordu.
+        // `getTraceForLotAction`/`getTraceForLot` artık lot no'yu da çözer (queries.ts); yine de
+        // çözülemezse (silinmiş/yanlış değer) sessizce boş durum yerine görünür hata verilir.
+        setView(null);
+        setNotFound(lotId);
+        toast.error(`Lot bulunamadı: ${lotId}`);
+      }
     });
   }
 
@@ -105,20 +126,22 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
             <LotBadge lotNo={view.lot.lotNo} status={view.lot.status} id={view.lot.id} />
             <StatusBadge status={view.lot.status} kind="lot" />
             <span className="text-sm text-muted-foreground">{view.lot.productName} · {view.lot.sku}</span>
-            <Button variant="ghost" size="sm" className="ml-auto" onClick={() => { setView(null); router.replace('/kalite/izlenebilirlik', { scroll: false }); }}>Yeni arama</Button>
+            <Button variant="ghost" size="sm" className="ml-auto" onClick={() => { setView(null); setNotFound(null); router.replace('/kalite/izlenebilirlik', { scroll: false }); }}>Yeni arama</Button>
           </div>
 
           <div>
             <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               <Scale className="size-3.5" /> Miktar dengesi
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-              <KpiCard title="Giriş" value={Number(view.balance.inQty)} format="qty" />
-              <KpiCard title="Tüketim" value={Number(view.balance.consumedQty)} format="qty" />
-              <KpiCard title="Sevkiyat" value={Number(view.balance.deliveredQty)} format="qty" />
-              <KpiCard title="Fire" value={Number(view.balance.scrapQty)} format="qty" />
-              <KpiCard title="Eldeki" value={Number(view.balance.onHandQty)} format="qty" />
-            </div>
+            {/* Tur 1 P1 kalite-kpi-strip-01: `variant="card"` (136px) yerine diğer 12 modülün kullandığı
+                Stripe tarzı şerit (80px, çerçevesiz, dikey hairline). */}
+            <KpiStripRow>
+              <KpiCard title="Giriş" value={Number(view.balance.inQty)} format="qty" variant="strip" />
+              <KpiCard title="Tüketim" value={Number(view.balance.consumedQty)} format="qty" variant="strip" />
+              <KpiCard title="Sevkiyat" value={Number(view.balance.deliveredQty)} format="qty" variant="strip" />
+              <KpiCard title="Fire" value={Number(view.balance.scrapQty)} format="qty" variant="strip" />
+              <KpiCard title="Eldeki" value={Number(view.balance.onHandQty)} format="qty" variant="strip" />
+            </KpiStripRow>
           </div>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -140,6 +163,12 @@ export function TraceSearch({ initialLotId }: { initialLotId?: string }) {
             </div>
           </div>
         </div>
+      ) : notFound ? (
+        <EmptyState
+          icon={SearchX}
+          title="Lot bulunamadı"
+          description={<>Bağlantıdaki <span className="font-mono">{notFound}</span> değeri bir lot numarasına veya kimliğine karşılık gelmiyor — lot silinmiş ya da bağlantı hatalı olabilir. Yukarıdan yeniden arayın.</>}
+        />
       ) : !partnerLots && q.trim().length < 2 ? (
         <EmptyState icon={Search} title="Aramaya başlayın" description="Lot no, ürün adı, müşteri veya tedarikçi girin — geri/ileri izlenebilirlik grafiği ve miktar dengesi burada görünür." />
       ) : null}

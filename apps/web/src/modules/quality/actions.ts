@@ -37,7 +37,12 @@ export const listPartnerLotsAction = withAudit('quality.listPartnerLots', async 
   return { data: await listLotsForPartner(input.partnerId, input.kind) };
 });
 
-const traceForLotSchema = z.object({ lotId: z.string().uuid() });
+// Tur 1 P1 kalite-izlenebilirlik-02: `?lot=` derin bağlantısı kullanıcının elindeki TEK görünür kimlik
+// olan lot NUMARASIyla gelir, UUID ile değil — `.uuid()` doğrulaması bunu zod aşamasında sessizce
+// reddediyordu (ZodError → jenerik "Form alanlarında hata var." — bileşen boş duruma düşüyordu, hiçbir
+// hata görünmüyordu). Artık serbest metin kabul edilir; çözüm (uuid mi lot no mu) `getTraceForLot`de
+// yapılır (queries.ts) — bulunamazsa oradan fırlatılan 'Lot bulunamadı' mesajı burada görünür kalır.
+const traceForLotSchema = z.object({ lotId: z.string().min(1) });
 
 export const getTraceForLotAction = withAudit('quality.getTraceForLot', async (raw: z.infer<typeof traceForLotSchema>) => {
   await requirePermission('quality.view');

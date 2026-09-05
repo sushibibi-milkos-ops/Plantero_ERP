@@ -1,11 +1,12 @@
 import { and, desc, eq, isNotNull } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
-import { locations, warehouses, uoms, partners, products, stockLots, deliveryLines, deliveries } from '../schema/index.js';
+import { locations, warehouses, uoms, partners, products, stockLots, deliveryLines, deliveries, qcChecks } from '../schema/index.js';
 import { D, SYSTEM_ACTOR, writeAudit, createAndReceive, type ReceiptLineInput } from '@plantero/core';
 import { createIncomingCheck, recordResults, decide } from '@plantero/core/quality/checks';
 import { createTemplate } from '@plantero/core/quality/templates';
 import { computeSupplierScores } from '@plantero/core/quality/supplierScore';
 import { simulate as simulateRecall } from '@plantero/core/quality/recall';
+import { updateProduct } from '@plantero/core/masterdata/products';
 import { log, type SeedSummary } from './_helpers.js';
 
 /**

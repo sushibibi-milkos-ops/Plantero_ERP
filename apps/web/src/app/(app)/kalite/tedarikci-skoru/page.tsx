@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { requirePermission } from '@/lib/auth';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
-import { Star, Users, TrendingDown } from 'lucide-react';
+import { KpiStripRow } from '@/components/kpi-strip';
 import { listSupplierScores, boardFromScores } from '@/modules/quality/queries';
 import { SupplierScoreTable } from '@/modules/quality/components/supplier-score-table';
 import { ComputeScoreButton } from '@/modules/quality/components/compute-score-button';
@@ -24,11 +24,13 @@ export default async function SupplierScorePage() {
         description="Kalite %50 · zamanında teslimat %30 · miktar doğruluğu %20"
         actions={<ComputeScoreButton />}
       />
-      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <KpiCard title="Ortalama skor" value={avg} format="int" icon={<Star />} />
-        <KpiCard title="Değerlendirilen tedarikçi" value={board.length} format="int" icon={<Users />} />
-        <KpiCard title="En düşük skor" value={lowest?.score ?? null} format="int" icon={<TrendingDown />} hint={lowest?.partnerName} />
-      </div>
+      {/* Tur 1 P1 kalite-kpi-strip-01/kalite-tedarikci-02: `variant="card"` (136px, süs ikonlu) yerine
+          diğer 12 modülün tamamının kullandığı Stripe tarzı şerit (80px, ikonsuz) — bkz. kpi-strip.tsx. */}
+      <KpiStripRow>
+        <KpiCard title="Ortalama skor" value={avg} format="int" variant="strip" />
+        <KpiCard title="Değerlendirilen tedarikçi" value={board.length} format="int" variant="strip" />
+        <KpiCard title="En düşük skor" value={lowest?.score ?? null} format="int" hint={lowest?.partnerName} variant="strip" />
+      </KpiStripRow>
       <SupplierScoreTable rows={board} />
     </>
   );

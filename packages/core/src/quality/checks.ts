@@ -1,7 +1,7 @@
 import { and, eq, gt } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import {
-  qcChecks, qcCheckResults, qcTemplateItems, stockLots, stockQuants, products, type DbOrTx,
+  qcChecks, qcCheckResults, qcTemplateItems, stockLots, stockQuants, products, receipts, type DbOrTx,
 } from '@plantero/db';
 import { D, toDb } from '../money.js';
 import { nextDocNo } from '../sequences.js';
@@ -272,6 +272,32 @@ export async function decide(tx: DbOrTx, checkId: string, input: DecideInput, ct
 
   const [updatedLot] = await tx.select().from(stockLots).where(eq(stockLots.id, lot.id)).limit(1);
   await indexAndLinkCheck(tx, updatedCheck!, ctx);
+
+  /**
+   * Mal kabul kapanışı (P0 düzeltmesi — canlı doğrulama: Kaju/Anadolu Kuruyemiş S-000005, reddedilen
+   * QC kararı `supplier_scores.qc_checks`e HİÇ yansımıyordu): `stock/receipts.ts` `receiveGoods()`
+   * QC gerektiren bir satır karantinaya girdiğinde `receipts.status`'u 'qc_pending' bırakır ve bunu
+   * BİR DAHA GÜNCELLEMEZ — `computeSupplierScore.ts` yalnızca `status='done'` mal kabullerini saydığı
+   * için, QC kararı verilse BİLE (serbest ya da red, fark etmez) o mal kabul tedarikçi kalite skoruna
+   * asla girmiyordu. Burası bu zincirin TEK kapanış noktasıdır: kararla (`decide`) bağlı olduğu mal
+   * kabulün BAŞKA bekleyen (`pending`) qc_checks kaydı kalmadıysa, mal kabul 'done'a taşınır — tıpkı
+   * PO'nun tüm satırları alındığında 'received' olması gibi, burada "tüm QC kalemleri karara bağlandı"
+   * mal kabulün tamamlandığı anlamına gelir. `qc_pending` DIŞINDA bir durumdaysa (ör. zaten `done`,
+   * ya da mal kabul iptal edilmiş) dokunulmaz — idempotent ve güvenli.
+   */
+  if (check.receiptId) {
+    const stillPending = await tx.select({ id: qcChecks.id }).from(qcChecks).where(and(eq(qcChecks.receiptId, check.receiptId), eq(qcChecks.result, 'pending')));
+    if (stillPending.length === 0) {
+      const [receipt] = await tx.select().from(receipts).where(eq(receipts.id, check.receiptId)).limit(1);
+      if (receipt && receipt.status === 'qc_pending') {
+        await tx.update(receipts).set({ status: 'done', updatedBy: ctx.userId ?? null }).where(eq(receipts.id, receipt.id));
+        await writeAudit(tx, {
+          action: 'update', tableName: 'receipts', recordId: receipt.id,
+          summary: `Mal kabul ${receipt.docNo}: bekleyen kalite kontrolü kalmadı — durum 'done'a geçti (${check.docNo} kararıyla)`,
+        }, ctx);
+      }
+    }
+  }
 
   await writeAudit(tx, {
     action: input.decision === 'released' ? 'approve' : 'reject', tableName: 'qc_checks', recordId: checkId,

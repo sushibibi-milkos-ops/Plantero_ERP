@@ -14,16 +14,8 @@ export default async function RecallsPage() {
 
   return (
     <>
-      <PageHeader title="Geri Çağırma" description={`${recalls.length} kayıt`} />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <RecallsTable recalls={recalls} />
-        </div>
-        <div className="rounded-xl border border-border/60 p-4">
-          <h2 className="mb-4 text-sm font-medium">Yeni Simülasyon</h2>
-          <RecallSimulateForm />
-        </div>
-      </div>
+      <PageHeader title="Geri Çağırma" description={`${recalls.length} kayıt`} actions={<RecallSimulateForm />} />
+      <RecallsTable recalls={recalls} />
     </>
   );
 }

@@ -245,9 +245,19 @@ export type TraceView = {
   balance: { inQty: string; consumedQty: string; deliveredQty: string; scrapQty: string; onHandQty: string };
 };
 
-export async function getTraceForLot(lotId: string): Promise<TraceView | null> {
-  const [row] = await db.select({ lot: stockLots, productName: products.name, sku: products.sku }).from(stockLots).innerJoin(products, eq(products.id, stockLots.productId)).where(eq(stockLots.id, lotId)).limit(1);
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * `idOrLotNo`: lot UUID'si YA DA lot numarası (`stock_lots.lot_no`) kabul eder — Tur 1 P1
+ * kalite-izlenebilirlik-02: `/kalite/izlenebilirlik?lot=` derin bağlantısı kullanıcının elindeki tek
+ * görünür kimlik olan lot NUMARASIyla paylaşılır/yapıştırılır, UUID ile değil; önceden yalnızca
+ * `stock_lots.id` ile arandığından her böyle bağlantı sessizce "bulunamadı" gibi davranıyordu.
+ */
+export async function getTraceForLot(idOrLotNo: string): Promise<TraceView | null> {
+  const cond = UUID_RE.test(idOrLotNo) ? eq(stockLots.id, idOrLotNo) : eq(stockLots.lotNo, idOrLotNo);
+  const [row] = await db.select({ lot: stockLots, productName: products.name, sku: products.sku }).from(stockLots).innerJoin(products, eq(products.id, stockLots.productId)).where(cond).limit(1);
   if (!row) return null;
+  const lotId = row.lot.id;
   const [forward, backward] = await Promise.all([traceForward(db, lotId), traceBackward(db, lotId)]);
 
   const { stockMoves } = schema;
