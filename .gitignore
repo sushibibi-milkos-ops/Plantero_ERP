@@ -12,3 +12,4 @@ playwright-report
 coverage
 .DS_Store
 dump.rdb
+.next-*
