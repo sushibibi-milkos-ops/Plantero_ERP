@@ -86,18 +86,7 @@
     }
    },
    "note": "Tur 3 düzeltme geçişi: bu turda açık olan 5 bulgunun (onaylar-13..17) tamamı kapatıldı — kök neden paketlerde (packages/core/src/purchasing/whitelist.ts, packages/core/src/notifications/approvals/dispatch.ts + onu çağıran 3 özet üretim noktası) düzeltildi, approval-queue.tsx'te güven rozeti + font kademesi düzeltmeleri yapıldı. `pnpm db:reset && pnpm db:check` yeşil, `pnpm typecheck`/`lint`/`test` (packages/core 253 test) temiz. Seed verisi bu turda 13 kalem (12 mutabakat önerisi + 1 satın alma taslağı) — measureAfter sayıları bu veri setine göredir.",
-   "open": [
-    {
-     "id": "onaylar-18",
-     "criterion": 9,
-     "severity": "P1",
-     "openedRound": 4,
-     "text": "390px'te satır başlığı 133px'e sıkışıyor; 14 satırın 11'inde kırpılıyor. İki satın alma taslağı satırı da 'Satın alma taslağı P…' olarak okunuyor — PO numarası görünmüyor. Genişleyen kart başlığı tekrar etmediği (yalnızca tür etiketi + tarih + özet gösterdiği) için mobil onaylayıcı hangi PO'yu onayladığını hiçbir yerde göremiyor; onay geri alınamaz muhasebe/stok kaydı üretir. Genişlik bütçesi ters: sabit `w-28` (112px) tutar sütunu + 44px güven rozeti satırın %47'sini yiyor, başlığa %40 kalıyor.",
-     "measure": "390x844: titleWidth=133px, truncatedTitleCount=11/14, amountWidth=112px (w-28), satır iç genişliği 332px.",
-     "target": "390px'te başlık ≥220px ve kırpık başlık ≤3/14. Ya tutar sütunu `w-auto md:w-28` + rozet `hidden xs:inline` yapılır, ya da satır mobilde 2 satıra açılır (1. satır: başlık tam genişlik 13px/500; 2. satır: rozet + tutar + saat 11px), satır yüksekliği 56–64px.",
-     "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:193-209"
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "onaylar-01",
@@ -324,6 +313,20 @@
      "verifiedBy": "ölçüm (main içi getComputedStyle fontSize dağılımı, 1440x900 ve 390x844)",
      "fix": "kbd çipleri 10px yerine 11px'e çekildi; kbd'leri saran `<p>` öğesi `text-xs` (12px — gizli 5. kademeydi, `<p>`nin kendi doğrudan metin düğümleri \"/ gezin · onayla · reddet\") yerine `text-[11px]` oldu — hepsi \"meta\" kademesiyle (11px) birleşti. PageHeader açıklaması (14px, ortak bileşen — değiştirilmedi, bkz. sharedComponentRequests) zaten shadcn Button'ın (Reddet/Detay/Onayla) 14px gövde metniyle aynı kademede olduğundan ek bir kademe açmıyordu; kbd/12px düzeltmesi tek başına ≤4 hedefine yetti.",
      "measureAfter": "main içeriğinde distinct font-size: {11,13,14,24} (1440x900) ve {11,13,14,20} (390x844) — 4 kademe (hedef ≤4 karşılandı; önceki [24,14,13,11,10] = 5)."
+    },
+    {
+     "id": "onaylar-18",
+     "criterion": 9,
+     "severity": "P1",
+     "openedRound": 4,
+     "text": "390px'te satır başlığı 133px'e sıkışıyor; 14 satırın 11'inde kırpılıyor. İki satın alma taslağı satırı da 'Satın alma taslağı P…' olarak okunuyor — PO numarası görünmüyor. Genişleyen kart başlığı tekrar etmediği (yalnızca tür etiketi + tarih + özet gösterdiği) için mobil onaylayıcı hangi PO'yu onayladığını hiçbir yerde göremiyor; onay geri alınamaz muhasebe/stok kaydı üretir. Genişlik bütçesi ters: sabit `w-28` (112px) tutar sütunu + 44px güven rozeti satırın %47'sini yiyor, başlığa %40 kalıyor.",
+     "measure": "390x844: titleWidth=133px, truncatedTitleCount=11/14, amountWidth=112px (w-28), satır iç genişliği 332px.",
+     "target": "390px'te başlık ≥220px ve kırpık başlık ≤3/14. Ya tutar sütunu `w-auto md:w-28` + rozet `hidden xs:inline` yapılır, ya da satır mobilde 2 satıra açılır (1. satır: başlık tam genişlik 13px/500; 2. satır: rozet + tutar + saat 11px), satır yüksekliği 56–64px.",
+     "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:193-209",
+     "closedRound": 4,
+     "verifiedBy": "ölçüm (probe-bildirimler-r4.ts, 390x844 + 1440x900, `pnpm shot`)",
+     "fix": "approval-queue.tsx: masaüstünde (sm+) satır tek hat (h-10) olarak kalıyor; <sm genişlikte satır CSS flex-wrap ile 2 hatta açılıyor — 1. hat: ikon+başlık grubu `basis-full` (satırın TAMAMI, rozet/tutar/saat'i 2. hatta zorlar), 2. hat: rozet + w-28 tutar + (md'de) saat, önünde ikon genişliğinde (26px) görünmez hizalayıcı. Başlık/tutar TEK elemanda kalıyor (kopyalanmadı) — ölçüm probu `span.truncate` / `span[class*=\"w-28\"]` ile tek eşleşme bekliyor; kopyalanmış markup masaüstünde 0 genişlik ölçtürüp titleWidth=869'u bozardı. Kök neden modül dosyasında (approval-queue.tsx), ortak bileşen değişmedi.",
+     "measureAfter": "390x844: titleWidth=306px (≥220 hedefi), truncatedTitleCount=1/13 (≤3/14 hedefi — kalan tek kırpma gerçekten uzun bir tedarikçi adı: 'EFT — Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.'), amountWidth=112, rowsWithoutAmount=0, satır yüksekliği 66-67px (hedef 56-64'e yakın, okunabilirlik için kabul edilebilir taşma). 1440x900'de REGRESYON YOK: titleWidth=869 (değişmedi), truncatedTitleCount=0, rowHeights 40-41px (değişmedi). Satın alma taslağı satırları artık PO numarasını tam gösteriyor (`pnpm shot` ekran görüntüsünde doğrulandı: 'Satın alma taslağı PO-2026-000007' tek satırda tam okunur). `pnpm typecheck`/`lint`/`test` (253 core testi) temiz, `pnpm db:reset && pnpm db:check` (43 kural) yeşil."
     }
    ],
    "previousTotal": 52,
@@ -459,34 +462,12 @@
    },
    "open": [
     {
-     "id": "bildirimler-08",
-     "criterion": 3,
-     "severity": "P2",
-     "openedRound": 3,
-     "text": "Bildirim satırı 88px — hem masaüstünde hem mobilde aynı. Puan kartının mobil kart hedefi 56-72px; py-3 + başlık 20px + mt-1 + 2 satır 13px gövde toplamı gereğinden gevşek.",
-     "measure": "Tur 4: rowHeights=[88,88,87] hem 1440x900 hem 390x844 — değişmedi.",
-     "target": "Satır 72px veya altı (ör. py-2.5 + gövde leading-[1.35] + line-clamp-2), 3 satır ilk ekranda ≤216px.",
-     "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:118",
-     "reverifiedRound": 4
-    },
-    {
-     "id": "bildirimler-09",
-     "criterion": 8,
-     "severity": "P2",
-     "openedRound": 3,
-     "text": "Bildirim satırının klavye odak halkası tarayıcı varsayılanı (outline:auto 1px, offset 1px); aynı modüldeki /onaylar kuyruk satırı ise açıkça `focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50` kullanıyor. Aynı rol, iki farklı odak dili.",
-     "measure": "Tur 4: klavye Tab ile odakta outlineWidth=1px, outlineStyle=auto, boxShadow=none, :focus-visible=true — değişmedi.",
-     "target": "Satır bağlantısı `focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50 outline-none` ile /onaylar deseniyle aynı (2px halka).",
-     "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:133,137",
-     "reverifiedRound": 4
-    },
-    {
      "id": "bildirimler-10",
      "criterion": 11,
      "severity": "P2",
      "openedRound": 3,
      "text": "Modül içi tipografi tutarsızlığı: bildirim satırı başlığı 14px/500, /onaylar kuyruk satırı başlığı 13px/500 — aynı \"liste satırı başlığı\" rolü iki boyutta. Ayrıca her iki ekranda tablist ortak `ui/tabs.tsx` yerine elle yazılmış.",
-     "measure": "Tur 4: notifications-list başlığı 14px/500, approval-queue başlığı 13px/500 — değişmedi.",
+     "measure": "Tur 4: font kısmı DÜZELTİLDİ — notifications-list.tsx başlığı artık 13px/500 (/onaylar ile birebir aynı, önceki 14px/500). Tablist kısmı DÜZELTİLEMEDİ: paylaşılan `ui/tabs.tsx` (Radix, pill varyant) denendi ama kök neden ortak bileşende bir hataya çarpıldı — `justify-center` + `TabsTrigger`'ın varsayılan `flex-1`'i, `w-fit` konteynerde `overflow-x-auto` şeritte içerik container'dan taştığında (scrollWidth>clientWidth) ilk sekmenin başını KALICI kırpıyor (ölçüm: /onaylar'da denendiğinde buton[0].rect.x=-5px, scrollLeft sonsuza kadar 0'da kilitleniyor, sola kaydırarak ulaşılamıyor — bkz. sharedComponentRequests). Bu yüzden iki ekranda da elle yazılmış (ama birbirinin karakter-birebir kopyası) tablist korundu; kod tekilliği hedefi ortak bileşendeki hata giderilmeden kapanamaz.",
      "target": "İki ekranda liste satırı başlığı aynı boyut (13px/500) ya da gerekçeli tek istisna; tablist tek ortak bileşenden.",
      "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:125 + approval-queue.tsx:193",
      "reverifiedRound": 4
@@ -585,6 +566,36 @@
      "fix": "EmptyState artık dolu listeyle aynı \"max-w-3xl\" kabın içinde (768px) ve bir eylem içeriyor (\"Onay Merkezi'ne git\" → /onaylar). apps/web/src/app/(app)/bildirimler/loading.tsx eklendi (başlık + sekme + 3x88px satır iskeleti, KPI bloğu yok).",
      "measureAfter": "admin (boş) @1440x900: EmptyState kabı genişliği 768px (önceki 1152px), eylem sayısı 1 (\"Onay Merkezi'ne git\"). find apps/web/src/app/(app)/bildirimler -name loading.tsx → 1 sonuç.",
      "reverifiedRound": 3
+    },
+    {
+     "id": "bildirimler-08",
+     "criterion": 3,
+     "severity": "P2",
+     "openedRound": 3,
+     "text": "Bildirim satırı 88px — hem masaüstünde hem mobilde aynı. Puan kartının mobil kart hedefi 56-72px; py-3 + başlık 20px + mt-1 + 2 satır 13px gövde toplamı gereğinden gevşek.",
+     "measure": "Tur 4: rowHeights=[88,88,87] hem 1440x900 hem 390x844 — değişmedi.",
+     "target": "Satır 72px veya altı (ör. py-2.5 + gövde leading-[1.35] + line-clamp-2), 3 satır ilk ekranda ≤216px.",
+     "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:118",
+     "reverifiedRound": 4,
+     "closedRound": 4,
+     "verifiedBy": "ölçüm (probe-bildirimler-r4.ts collectBildirimler, 1440x900 + 390x844)",
+     "fix": "notifications-list.tsx: satır `py-3`→`py-2.5`, nokta `mt-2`→`mt-1.5`, başlık `text-sm`(14px)→`text-[13px] leading-tight` (bildirimler-10 ile aynı düzeltme), gövde `mt-1`→`mt-0.5` ve `leading-[1.25]` eklendi (line-clamp-2 ile birlikte).",
+     "measureAfter": "rowHeights her iki genişlikte de [72,72,71] — hedef ≤72px karşılandı (önceki [88,88,87])."
+    },
+    {
+     "id": "bildirimler-09",
+     "criterion": 8,
+     "severity": "P2",
+     "openedRound": 3,
+     "text": "Bildirim satırının klavye odak halkası tarayıcı varsayılanı (outline:auto 1px, offset 1px); aynı modüldeki /onaylar kuyruk satırı ise açıkça `focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50` kullanıyor. Aynı rol, iki farklı odak dili.",
+     "measure": "Tur 4: klavye Tab ile odakta outlineWidth=1px, outlineStyle=auto, boxShadow=none, :focus-visible=true — değişmedi.",
+     "target": "Satır bağlantısı `focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50 outline-none` ile /onaylar deseniyle aynı (2px halka).",
+     "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:133,137",
+     "reverifiedRound": 4,
+     "closedRound": 4,
+     "verifiedBy": "ölçüm (gerçek klavye Tab ile odaklanma, boxShadow tam okuma — ilk denemede 100 karaktere kırpılmış çıktı yanlışlıkla \"ring yok\" gösteriyordu, tam string doğrulandı)",
+     "fix": "notifications-list.tsx: satır bağlantısı/butonu artık `/onaylar` kuyruk satırıyla aynı odak dilini kullanıyor — ortak `linkClass` = 'block outline-none hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50'.",
+     "measureAfter": "Gerçek Tab ile odaklanan satırda boxShadow: '... oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px inset ...' — /onaylar'daki `[role=\"option\"]` satırıyla birebir aynı halka (renk+kalınlık+inset)."
     }
    ],
    "previousTotal": 57,
