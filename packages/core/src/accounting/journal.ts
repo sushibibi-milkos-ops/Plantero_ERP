@@ -219,6 +219,20 @@ export async function postJournalEntry(tx: DbOrTx, input: JournalEntryInput, ctx
     }, ctx);
   }
 
+  // P1 kök neden düzeltmesi (kritik bulgu, Tur 6): budget_lines.actual/variance ve
+  // cashflow_lines.actual* yalnızca elle/nightly refreshActuals() çağrılırsa güncelleniyordu; bu
+  // TEK muhasebe yazma noktasının hiçbir çağrısı onu tetiklemiyordu (nightly cashflowRecompute de
+  // yalnızca OKUR). Budget/cashflow yalnızca VUK ledger verisinden beslenir (finance/budget.ts);
+  // bu fiş VUK'a postlandıysa AYNI transaction'da, yalnızca bu fişin dokunduğu (period,
+  // accountCode/channelId) kombinasyonunu hedefleyen nokta-atışı bir güncelleme tetiklenir —
+  // tüm bütçe/nakit tablosu taranmaz. Dinamik import: finance/budget.ts statik olarak bu
+  // dosyadan (getAccountBalance) beslendiği için döngüsel statik bağımlılığı önler.
+  if (ids.VUK) {
+    const { refreshActualsForTouchedLines } = await import('../finance/budget.js');
+    const touchedLines = lines.map((l) => ({ accountCode: l.accountCode, channelId: l.input.channelId ?? null }));
+    await refreshActualsForTouchedLines(tx, ctx, entryDate.slice(0, 7), touchedLines);
+  }
+
   return { vukId: ids.VUK, ufrsId: ids.UFRS };
 }
 
@@ -275,6 +289,7 @@ export async function reverseJournalEntry(
   const [journal] = await tx.select({ code: journals.code }).from(journals).where(eq(journals.id, entry.journalId)).limit(1);
   const result: { reversalIds: string[]; vukId?: string; ufrsId?: string } = { reversalIds: [] };
   const touched = new Set<string>();
+  const touchedBudgetLines: { accountCode: string; channelId: string | null }[] = [];
 
   for (const t of targets) {
     const lines = await tx.select().from(journalLines).where(eq(journalLines.entryId, t.id)).orderBy(journalLines.sequence);
@@ -329,6 +344,7 @@ export async function reverseJournalEntry(
     }
     await tx.update(journalEntries).set({ status: 'reversed', reversedById: revId }).where(eq(journalEntries.id, t.id));
     for (const l of lines) if (l.partnerId && isPartnerSubAccountCode(l.accountCode)) touched.add(l.partnerId);
+    if (t.ledger === 'VUK') for (const l of lines) touchedBudgetLines.push({ accountCode: l.accountCode, channelId: l.channelId ?? null });
     result.reversalIds.push(revId);
     if (t.ledger === 'VUK') result.vukId = revId; else result.ufrsId = revId;
 

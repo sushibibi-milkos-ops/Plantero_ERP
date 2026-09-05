@@ -31,7 +31,16 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
   return (
     <>
       <div className="hidden overflow-x-auto rounded-lg border border-border/60 md:block">
-        <table className="w-full text-[13px]">
+        {/* Tur 6 P1 tedarik-po-detay-13 kök neden: `table-layout: auto` (varsayılan) sütun
+            genişliklerini İÇERİĞE göre hesaplayıp `w-full`'ün hedeflediği %100'ü aşabiliyordu —
+            başlık metni kısaltma ve `px-3`→`px-2` denendi, ikisi de tarayıcının otomatik yeniden
+            dağıtımıyla (boşalan pay 'Ürün' sütununa taşıp tabloyu yeniden şişiriyordu) taşmayı kalıcı
+            gidermedi. Kesin çözüm modülün diğer üç tablosuyla (`DataTable`, sabit `meta.width`)
+            AYNI ilke: sayısal 6 sütuna SABİT piksel genişliği (`table-layout:fixed` altında bu artık
+            bir ipucu değil KESİN değer) — toplamları kabın çok altında kalır, kalan pay TEK esnek
+            sütuna ('Ürün', genişlik verilmemiş) gider; `table-layout:fixed` taşkın içeriği sütuna
+            SIĞDIRIR (asla tabloyu büyütmez), toplam genişlik her zaman `w-full` = kabın kendisi. */}
+        <table className="w-full [table-layout:fixed] text-[13px]">
           <thead>
             {/* Tur 5 P1 tedarik-po-detay-07 kök neden: bu başlık tek başına `uppercase` (+ örtük
                 letter-spacing:normal) taşıyordu — modülün diğer İKİ tablosu (`/satin-alma/siparisler`,
@@ -40,18 +49,15 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                 th ile birebir (`text-[12px] font-medium text-muted-foreground`). */}
             <tr className="border-b border-border/60 text-left text-[12px] font-medium text-muted-foreground">
               <th className="px-3 py-2">Ürün</th>
-              {/* Tur 6 P1 tedarik-po-detay-13 kök neden: sabit `px-3` (6 sayısal sütunda) + 'Tutar
-                  (KDV hariç)' başlığının uzun metni bu tabloyu kabının (1152px) 4px dışına taşırıyordu
-                  — modülün diğer üç tablosunda sw=cw=1152. Başlık kısaltıldı (`title` tam etiketi
-                  taşır, yandaki ayrı 'KDV' sütunu zaten oranı gösteriyor) VE sayısal sütunların yatay
-                  dolgusu `px-3`→`px-2` indirildi (6 sütun × 4px = 24px kazanç, taşmayı fazlasıyla giderir). */}
-              <th className="px-2 py-2 text-right">Sipariş</th>
-              <th className="px-2 py-2 text-right">Alınan</th>
-              <th className="px-2 py-2 text-right">Faturalanan</th>
-              <th className="px-2 py-2 text-right">Birim fiyat</th>
-              <th className="px-2 py-2 text-right">KDV</th>
-              <th className="px-2 py-2 text-right" title="Tutar (KDV hariç)">Tutar</th>
-              {hasExpectedDate ? <th className="px-3 py-2">Beklenen tarih</th> : null}
+              <th className="w-[84px] px-2 py-2 text-right">Sipariş</th>
+              <th className="w-[80px] px-2 py-2 text-right">Alınan</th>
+              <th className="w-[104px] px-2 py-2 text-right">Faturalanan</th>
+              <th className="w-[108px] px-2 py-2 text-right">Birim fiyat</th>
+              <th className="w-[64px] px-2 py-2 text-right">KDV</th>
+              {/* 'Tutar (KDV hariç)' → 'Tutar' + `title`: yandaki ayrı 'KDV' sütunu zaten oranı
+                  gösteriyor (belge altındaki Ara toplam/KDV/Genel toplam bloğu tutarı doğrular). */}
+              <th className="w-[122px] px-2 py-2 text-right" title="Tutar (KDV hariç)">Tutar</th>
+              {hasExpectedDate ? <th className="w-[130px] px-3 py-2">Beklenen tarih</th> : null}
             </tr>
           </thead>
           <tbody>
@@ -63,8 +69,10 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                       (`py-2.5` + iki `<div>`) taşıyordu — satır 56-57px'e çıkıyordu, hedef (kriter 3)
                       36-40px; kardeş tablolar (siparişler/tedarikçiler) zaten 36px'te. SKU artık ürün
                       adıyla AYNI satırda muted "· SKU" — bilgi kaybı yok (tam ad+SKU `title`'da), tek
-                      satır + `py-2` satırı 36-40px bandına indiriyor. */}
-                  <td className="px-3 py-2" title={`${r.productName} · ${r.sku}`}>
+                      satır + `py-2` satırı 36-40px bandına indiriyor. `truncate` (Tur 6 P1
+                      tedarik-po-detay-13): `table-layout:fixed` altında bu TEK esnek sütun uzun bir
+                      addan taşmasın diye tek satırda kırpar. */}
+                  <td className="truncate px-3 py-2" title={`${r.productName} · ${r.sku}`}>
                     <span className="font-medium">{r.productName}</span>
                     <span className="ml-1.5 font-mono text-xs text-muted-foreground">· {r.sku}</span>
                   </td>
