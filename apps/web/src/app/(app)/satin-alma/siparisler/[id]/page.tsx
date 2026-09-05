@@ -36,8 +36,13 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
           // sabit konumda) alındı: 11px muted etiket + 20px/600 tabular-nums değer. TEK bir sarmalayıcı
           // (PageHeader'ın `[&>*]:flex-1` kuralı doğrudan ÇOCUKLARA uygulanıyor — iki ayrı çocuk
           // vermek mobilde toplamı ve eylem düğmelerini yan yana yarı yarıya sıkıştırırdı).
-          <div className="flex w-full flex-col items-end gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
-            <div className="text-right">
+          // Tur 5 P1 tedarik-po-detay-11 kök neden: bu blok mobilde de `items-end` (sağa yaslı)
+          // kalıyordu — 390px'te belgenin en önemli sayısı ekranın sağ ucundaki dar bir şeritte,
+          // sayfanın geri kalanından (sola hizalı başlık/tedarikçi) kopuk asılı duruyordu. Mobilde
+          // (varsayılan, `sm:` öncesi) artık sayfa gövdesiyle AYNI sol kolonda; `sm:` (yan yana eylem
+          // şeridi) üstünde eskisi gibi sağa yaslı kalır.
+          <div className="flex w-full flex-col items-start gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <div className="text-left sm:text-right">
               {/* Tur 2 P1 tedarik-po-detay-03: 'Toplam' KDV dahil (grand_total) — etiket artık bunu
                   açıkça söylüyor, altındaki Ara toplam/KDV bloğu (page.tsx) tabanı doğrulanabilir kılar. */}
               <div className="text-[11px] font-medium text-muted-foreground">Toplam (KDV dahil)</div>
@@ -88,14 +93,14 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
           </div>
           <div className="flex items-center justify-between border-t border-border/60 pt-1.5">
             <dt className="text-[13px] font-medium">Genel toplam</dt>
-            {/* Tur 4 P1 tedarik-po-detay-05 kök neden: bu satır 15/600 taşıyordu — sayfa
-             * başlığındaki 20/600 (satır 44) ile AYNI sayıyı ('₺113.040,00') ÜÇÜNCÜ bir vurguda
-             * (20/600, 15/600, belge zincirinde 11/400) tekrar ediyordu; okuyucu hangi toplamın
-             * otorite olduğunu tipografiden çıkaramıyordu. Belgenin TEK büyütülmüş toplamı sayfa
-             * başlığında kalır (Stripe faturasındaki gibi); bu özet satırı gövde kademesine (13px)
-             * iner — kalın kalır (bu blokta hâlâ "son satır" vurgusu taşır) ama artık AYRI bir
-             * boyut kademesi AÇMAZ. */}
-            <dd><MoneyCell value={po.grandTotal} className="text-[13px] font-semibold" /></dd>
+            {/* Tur 4 P1 / Tur 5 P1 tedarik-po-detay-05 kök neden: bu satırın DEĞERİ (`font-semibold`,
+             * 13/600) sayfa başlığındaki 20/600 (satır 44) ile AYNI sayıyı ('₺113.040,00') üçüncü/
+             * dördüncü bir vurguda tekrar ediyordu — okuyucu hangi toplamın otorite olduğunu
+             * tipografiden çıkaramıyordu. Belgenin TEK büyütülmüş toplamı sayfa başlığında kalır
+             * (Stripe faturasındaki gibi); bu değer artık gövde kademesine (13/400, kalın DEĞİL) iner
+             * — "son satır" vurgusu yalnızca üstteki `border-t` ayracından ve <dt>'nin kendi
+             * `font-medium` etiketinden gelir, DEĞER kendi boyut/ağırlık kademesi AÇMAZ. */}
+            <dd><MoneyCell value={po.grandTotal} /></dd>
           </div>
         </dl>
       </div>
