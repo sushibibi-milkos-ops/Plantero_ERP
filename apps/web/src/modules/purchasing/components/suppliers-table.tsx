@@ -56,79 +56,67 @@ function SupplierCard({ supplier, canManageWhitelist }: { supplier: SupplierCard
       tabIndex={0}
       onClick={goToDetail}
       onKeyDown={(e) => { if (e.key === 'Enter') goToDetail(); }}
-      className="flex cursor-pointer flex-col gap-3 rounded-xl border border-border/60 p-4 hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+      // Tur 2 P1 tedarik-tedarikciler-05 kök neden: kart 6 kayıt için 265px yüksekliğe (alan
+      // başına ~33px) çıkıyordu — ad/kod başlığı, 2x2 metrik ızgarası (kendi hairline'ı) ve switch
+      // satırı (kendi hairline'ı) üç ayrı hizalama bölgesi oluşturuyordu ("kutu içinde kutu").
+      // Beyaz liste anahtarı artık başlıkla AYNI satırda (kendi hairline/padding bloğu yok);
+      // 4 metrik tek bir küçük-metin satırına indi (etiket+değer aynı satırda, "gün" TAM kelime
+      // korunur — tedarik-tedarikciler-02 rejeksiyonu). Sonuç: 4 hizalama bölgesi yerine 3 kompakt
+      // satır (~132px, hedef ≤160px).
+      className="flex cursor-pointer flex-col gap-2 rounded-xl border border-border/60 p-4 hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
     >
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
           <div className="truncate text-sm font-medium">{supplier.name}</div>
           <div className="font-mono text-xs text-muted-foreground">{supplier.code}</div>
         </div>
-      </div>
-
-      {/* Tur 1 P1 tedarik-tedarikciler-03 kök neden: 4 sütunlu ortalanmış (text-center) ızgarada
-       * "KALİTE SKORU" 390px'te 2 satıra sarıyor, diğer üç etiket tek satırda kalıyordu — sütunlar
-       * arası taban çizgisi bozuluyor, kart altındaki sola yaslı satırlarla (açık sipariş, beyaz
-       * liste) çelişen ikinci bir hizalama sistemi oluşuyordu. Sola yaslı 2x2 ızgara: her hücre iki
-       * katına çıkan genişlikte, tüm etiketler tek satırda kalır; kartın geri kalanıyla aynı (sola
-       * yaslı) hizalama sistemini kullanır. */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-border/60 pt-3">
-        <div>
-          {/* Tur 1 P1 tedarik-tedarikciler-02 kök neden: "Lead time" İNGİLİZCE etiketi CSS
-           * `uppercase` ile tr-TR yerel ayarında "LEAD TİME" olarak basılıyordu (tarayıcı 'i'yi
-           * Türkçe kurala göre noktalı büyük İ'ye çeviriyor — İngilizce bir kelimede bu bozuk
-           * görünüyor) ve değer birimsizdi ("10"). Alan adı reorder-rule-drawer.tsx'teki ("Tedarik
-           * süresi") ile aynı Türkçe etiketle, birimiyle birlikte gösteriliyor — gerçek bir Türkçe
-           * kelimede uppercase dönüşümü doğru sonuç verir. */}
-          <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Tedarik</div>
-          <div className="font-mono text-sm font-semibold tabular-nums">{supplier.leadTimeDays !== null ? `${supplier.leadTimeDays} gün` : '—'}</div>
-        </div>
-        <div>
-          <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Kalite skoru</div>
-          <div className="font-mono text-sm font-semibold tabular-nums">{supplier.qualityScore ? `${Math.round(Number(supplier.qualityScore))}/100` : '—'}</div>
-        </div>
-        <div>
-          <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Zamanında</div>
-          <div
-            className={cn(
-              'font-mono text-sm font-semibold tabular-nums',
-              // Tur 1 P1 tedarik-tedarikciler-01 kök neden: ham Tailwind paleti (emerald/amber/
-              // red-600) tema/dark-mode token zincirinin dışındaydı — modülün geri kalanı (bkz.
-              // critical-stock-table.tsx RISK_CLASS) `text-success`/`text-warning`/`text-destructive`
-              // token sınıflarını kullanıyor.
-              supplier.onTimeDeliveryPct === null ? '' : supplier.onTimeDeliveryPct >= 90 ? 'text-success' : supplier.onTimeDeliveryPct >= 70 ? 'text-warning' : 'text-destructive',
-            )}
-            title={supplier.deliveryCount > 0 ? `Son ${supplier.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
+        {canManageWhitelist ? (
+          <label
+            className="flex shrink-0 items-center gap-1.5 text-[11px] text-muted-foreground"
+            title="Satın alma beyaz listesi"
+            // Kart tıklanabilir (üstte) — switch'in kendi tıklaması kart navigasyonunu
+            // TETİKLEMEMELİ (stopPropagation), yoksa beyaz liste değiştirilirken her seferinde
+            // cari detayına yönlenirdi.
+            onClick={(e) => e.stopPropagation()}
           >
-            {supplier.onTimeDeliveryPct === null ? '—' : `%${supplier.onTimeDeliveryPct}`}
-          </div>
-        </div>
-        <div>
-          <div className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Ürün</div>
-          <div className="font-mono text-sm font-semibold tabular-nums">{supplier.productCount}</div>
-        </div>
+            <span className="hidden sm:inline">Beyaz liste</span>
+            <Switch checked={whitelisted} onCheckedChange={toggle} disabled={pending} />
+          </label>
+        ) : (
+          <span className={cn('shrink-0 text-[11px]', whitelisted ? 'text-success' : 'text-muted-foreground')}>
+            {whitelisted ? 'Beyaz listede' : 'Beyaz listede değil'}
+          </span>
+        )}
       </div>
 
-      <div className="flex items-center justify-between border-t border-border/60 pt-3 text-[13px]">
+      {/* Tek satır metrik özeti: etiket+değer aynı satırda, "gün" tam kelime (tedarik-tedarikciler-02
+       * rejeksiyonu — İngilizce "lead time" ya da "g" kısaltması yasak), sıra kart altındaki
+       * açık sipariş satırıyla aynı sola yaslı hizalama sistemini korur. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/60 pt-2 text-[12px] text-muted-foreground">
+        <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.leadTimeDays !== null ? supplier.leadTimeDays : '—'}</span> gün tedarik</span>
+        <span aria-hidden className="text-border">·</span>
+        <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.qualityScore ? Math.round(Number(supplier.qualityScore)) : '—'}/100</span> kalite</span>
+        <span aria-hidden className="text-border">·</span>
+        <span
+          title={supplier.deliveryCount > 0 ? `Son ${supplier.deliveryCount} mal kabul` : 'Henüz mal kabul yok'}
+          className={cn(
+            // Tur 1 P1 tedarik-tedarikciler-01 kök neden: ham Tailwind paleti (emerald/amber/
+            // red-600) tema/dark-mode token zincirinin dışındaydı — modülün geri kalanı (bkz.
+            // critical-stock-table.tsx RISK_CLASS) `text-success`/`text-warning`/`text-destructive`
+            // token sınıflarını kullanıyor.
+            supplier.onTimeDeliveryPct !== null && (supplier.onTimeDeliveryPct >= 90 ? 'text-success' : supplier.onTimeDeliveryPct >= 70 ? 'text-warning' : 'text-destructive'),
+          )}
+        >
+          <span className="font-mono font-semibold tabular-nums">{supplier.onTimeDeliveryPct === null ? '—' : `%${supplier.onTimeDeliveryPct}`}</span> zamanında
+        </span>
+        <span aria-hidden className="text-border">·</span>
+        <span><span className="font-mono font-semibold text-foreground tabular-nums">{supplier.productCount}</span> ürün</span>
+      </div>
+
+      <div className="flex items-center justify-between border-t border-border/60 pt-2 text-[13px]">
         <span className="text-muted-foreground">{supplier.openPoCount} açık sipariş</span>
         <MoneyCell value={supplier.openPoValue} />
       </div>
-
-      {canManageWhitelist ? (
-        <label
-          className="flex items-center justify-between gap-2 border-t border-border/60 pt-3 text-[13px]"
-          // Kart artık tıklanabilir (üstte) — switch'in kendi tıklaması ve etiket metnine tıklama
-          // kart navigasyonunu TETİKLEMEMELİ (stopPropagation), yoksa beyaz liste değiştirilirken
-          // her seferinde cari detayına yönlenirdi.
-          onClick={(e) => e.stopPropagation()}
-        >
-          <span>Satın alma beyaz listesi</span>
-          <Switch checked={whitelisted} onCheckedChange={toggle} disabled={pending} />
-        </label>
-      ) : (
-        <div className="border-t border-border/60 pt-3 text-[13px] text-muted-foreground">
-          {whitelisted ? 'Beyaz listede' : 'Beyaz listede değil'}
-        </div>
-      )}
     </div>
   );
 }

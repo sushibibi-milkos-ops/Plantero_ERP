@@ -12,8 +12,20 @@ import type { PurchaseOrderRow } from '../queries';
 export function OrdersTable({ orders }: { orders: PurchaseOrderRow[] }) {
   const columns = useMemo<ColumnDef<PurchaseOrderRow, unknown>[]>(
     () => [
-      { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Sipariş no', meta: { mobile: 'title', className: 'font-mono' } },
-      { accessorKey: 'partnerName', header: 'Tedarikçi', meta: { mobile: 'subtitle' } },
+      { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Sipariş no', meta: { width: 150, mobile: 'title', className: 'font-mono' } },
+      // width + iç inline-block (tur 2 P0 tedarik-siparisler-03 kök nedeni — DÜZELTME 2): yalnızca
+      // `meta.className:'truncate'` (td üzerinde) YETMEZ — `table-layout:auto`'da bir td'nin
+      // min-content genişliği İÇERİĞİNDEN (burada `white-space:nowrap` bir metin, "Kahve Dünyası
+      // Yeşil Kahve ve Egzotik Ürünler Ltd. Şti." ~355px) hesaplanır; td'ye verilen `width` yalnızca
+      // bir İPUCUDUR ve içerik onu aşınca göz ardı edilir (muhasebe/journal-entries-table.tsx'teki
+      // `description` sütununun DÜZELTME 2 notuyla birebir aynı kök neden — bkz. orada). Kesin çözüm:
+      // hücrenin TEK çocuğu olarak KENDİ AÇIK CSS genişliği olan bir kutu (`md:w-[280px]`) — blok
+      // kutular normal akışta belirtilen genişliği içeriğe göre küçültmez, bu yüzden td'nin
+      // min-content'ine katkısı tam olarak 280px'tir; taşan metin `truncate` ile bu sabit kutunun
+      // İÇİNDE kırpılır (tam ad `title` özniteliğinde). `inline-block` + `md:` (yalnızca masaüstü):
+      // mobil kartta bu hücre `subtitle` rolüyle bir flex satırına gömülür — sabit genişlik orada
+      // YOKTUR, `max-w-full truncate` üst bağlamın kendi genişliğine göre küçülür.
+      { accessorKey: 'partnerName', header: 'Tedarikçi', meta: { width: 280, mobile: 'subtitle' }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[280px]" title={row.original.partnerName}>{row.original.partnerName}</span> },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 160, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="purchase_order" /> },
       {
         id: 'ai', accessorFn: (r) => r.isAiGenerated, header: '', meta: { width: 36, mobile: 'hidden' },

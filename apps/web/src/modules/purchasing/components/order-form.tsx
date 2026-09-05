@@ -18,7 +18,7 @@ import { FormActions } from '@/components/form/form-actions';
 // Alt-yol içe aktarımı ('@plantero/core/money', barrel değil): kök giriş noktası node:crypto kullanan
 // sunucu-yalnızca auth/session.ts'i de dışa aktarıyor — 'use client' bileşeninde barrel'dan import
 // tarayıcı paketini kırar (bkz. critical-stock-table.tsx aynı düzeltme).
-import { D } from '@plantero/core/money';
+import { D, round4, sum, pct } from '@plantero/core/money';
 import { createPurchaseOrderAction } from '../actions';
 import type { PurchaseProductPickerRow } from '../queries';
 
@@ -39,6 +39,12 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+
+// Form satırda KDV oranı toplamıyor — sunucu (`packages/core/src/purchasing/orders.ts:80`)
+// `l.vatRate` verilmediğinde her satıra %20 varsayıyor; canlı özet (tur 2 P1 tedarik-yeni-04)
+// aynı varsayımla hesaplanır ki kaydedilen siparişin /[id] ekranındaki Ara toplam/KDV/Genel toplam
+// bloğuyla (aynı formül) birebir eşleşsin.
+const DEFAULT_VAT_RATE = 20;
 
 export function PurchaseOrderForm({
   warehouses,
@@ -74,6 +80,23 @@ export function PurchaseOrderForm({
     });
     return sorted.map((p) => ({ value: p.id, label: p.name, description: p.sku, keywords: [p.sku] }));
   }, [products, watchedPartnerId]);
+
+  // tedarik-yeni-04 kök neden: yapışkan aksiyon şeridi yalnızca "{n} satır" sayıyordu, sipariş
+  // toplamı formun HİÇBİR yerinde yoktu. Satır tutarının tabanı (KDV hariç, D(qty).mul(unitPrice))
+  // /satin-alma/siparisler/[id]'deki order-lines-table.tsx ile artık AYNI (ikisi de `lineSubtotal`) —
+  // burada da aynı taban üstünden Ara toplam/KDV/Genel toplam hesaplanır.
+  const { subtotal, vatTotal, grandTotal } = useMemo(() => {
+    const perLine = watchedLines.map((l) => {
+      const lineSubtotal = round4(D(l?.qty || 0).mul(D(l?.unitPrice || 0)));
+      const lineVat = round4(pct(lineSubtotal, DEFAULT_VAT_RATE));
+      return { lineSubtotal, lineVat };
+    });
+    return {
+      subtotal: sum(perLine.map((l) => l.lineSubtotal)),
+      vatTotal: sum(perLine.map((l) => l.lineVat)),
+      grandTotal: sum(perLine.map((l) => l.lineSubtotal.plus(l.lineVat))),
+    };
+  }, [watchedLines]);
 
   function addLine(product: PurchaseProductPickerRow) {
     const priced = product.preferredSupplierId === watchedPartnerId ? product.lastPrice : null;
@@ -142,7 +165,12 @@ export function PurchaseOrderForm({
                       <div className="font-mono text-xs text-muted-foreground">{product?.sku}</div>
                     </div>
                     <div className="flex shrink-0 items-center gap-3">
-                      <MoneyCell value={lineTotal.toString()} className="text-[13px] text-muted-foreground" />
+                      {/* tedarik-yeni-04: etiketsiz 13px muted tutar, kaydedildikten sonra /[id]'de
+                       * görünen değerin hangi tabanda olduğunu (KDV hariç) söylemiyordu. */}
+                      <div className="text-right">
+                        <MoneyCell value={lineTotal.toString()} className="text-[13px] text-muted-foreground" />
+                        <div className="text-[10px] leading-tight text-muted-foreground/70">KDV hariç</div>
+                      </div>
                       <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)} aria-label="Satırı sil" className="size-8 shrink-0 text-muted-foreground hover:text-destructive">
                         <Trash2 className="size-4" />
                       </Button>
@@ -167,9 +195,44 @@ export function PurchaseOrderForm({
          * kendi `-mx-4` yapışkan-şerit taşması bu sarmalayıcının GENİŞLİĞİNE göre değil dış sayfa
          * kenar boşluğuna göre çalışmaya devam eder (bu div'in kendi yatay padding'i yok). */}
         <div className="max-w-3xl">
+          {/* tedarik-yeni-04: formun hiçbir yerinde sipariş toplamı yoktu, kullanıcı "Sipariş
+           * oluştur"a tutar görmeden basıyordu. FormActions'ın sıkışık yapışkan şeridine (mobilde
+           * zaten iki düğmeyle dolu) sıkıştırmak yerine, /satin-alma/siparisler/[id] sayfasındaki
+           * Ara toplam/KDV/Genel toplam bloğuyla AYNI kalıpta, aksiyon şeridinin hemen üstünde,
+           * her genişlikte sabit görünür bir özet — satır ekleyince canlı güncellenir. */}
+          {fields.length > 0 ? (
+            <div className="mb-3 flex justify-end border-t border-border/60 pt-3">
+              <dl className="w-full max-w-[240px] space-y-1.5 text-[13px]">
+                <div className="flex items-center justify-between">
+                  <dt className="text-muted-foreground">Ara toplam</dt>
+                  <dd><MoneyCell value={subtotal.toString()} /></dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="text-muted-foreground">KDV (%{DEFAULT_VAT_RATE})</dt>
+                  <dd><MoneyCell value={vatTotal.toString()} /></dd>
+                </div>
+                <div className="flex items-center justify-between border-t border-border/60 pt-1.5">
+                  <dt className="font-medium">Genel toplam</dt>
+                  <dd><MoneyCell value={grandTotal.toString()} className="text-[15px] font-semibold tabular-nums" /></dd>
+                </div>
+              </dl>
+            </div>
+          ) : null}
           <FormActions submitLabel="Sipariş oluştur" onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={fields.length === 0}>
-            <span className="hidden items-center gap-1 text-xs text-muted-foreground sm:flex">
-              <ShoppingBag className="size-3.5" /> {fields.length} satır
+            {/* mr-auto: sticky şeritte (mobilde iki düğmeyle zaten dolu) düğmelerden ayrık, kompakt
+             * "Genel toplam" — "Sipariş oluştur"a basmadan ÖNCE, sarmalayıcının kendisi ekran dışına
+             * kaydırılmış olsa bile (sticky), kullanıcının göreceği tek satır (tedarik-yeni-04). */}
+            <span className="mr-auto flex min-w-0 items-center gap-1 text-[11px] whitespace-nowrap text-muted-foreground" aria-live="polite">
+              {fields.length === 0 ? (
+                <>
+                  <ShoppingBag className="size-3.5" /> Satır ekleyin
+                </>
+              ) : (
+                <>
+                  {fields.length} satır ·{' '}
+                  <MoneyCell value={grandTotal.toString()} className="text-[11px] font-medium text-foreground" digits={2} />
+                </>
+              )}
             </span>
           </FormActions>
         </div>

@@ -38,7 +38,9 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
           // vermek mobilde toplamı ve eylem düğmelerini yan yana yarı yarıya sıkıştırırdı).
           <div className="flex w-full flex-col items-end gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
             <div className="text-right">
-              <div className="text-[11px] font-medium text-muted-foreground">Toplam</div>
+              {/* Tur 2 P1 tedarik-po-detay-03: 'Toplam' KDV dahil (grand_total) — etiket artık bunu
+                  açıkça söylüyor, altındaki Ara toplam/KDV bloğu (page.tsx) tabanı doğrulanabilir kılar. */}
+              <div className="text-[11px] font-medium text-muted-foreground">Toplam (KDV dahil)</div>
               <MoneyCell value={po.grandTotal} className="text-xl font-semibold tabular-nums" />
             </div>
             <OrderActions orderId={po.id} status={po.status} canApprove={userCan(user, 'purchasing.approve')} canSend={userCan(user, 'purchasing.send')} />
@@ -66,6 +68,27 @@ export default async function PurchaseOrderDetailPage({ params }: { params: Prom
       ) : null}
 
       <OrderLinesTable lines={lines} />
+
+      {/* Tur 2 P1 tedarik-po-detay-03: satır tutarları artık KDV hariç (`lineSubtotal`) basılıyor;
+          belgenin toplamı (`grandTotal`, KDV dahil) ile bu satırlar arasındaki köprü — Ara toplam
+          (Σ lineSubtotal = po.subtotal) / KDV (po.vatTotal) / Genel toplam (po.grandTotal) — burada
+          gösterilmezse kullanıcı 55.200 → 66.240 sıçramasını hâlâ ekrandan doğrulayamaz. */}
+      <div className="mt-3 flex justify-end">
+        <dl className="w-full max-w-[240px] space-y-1.5 text-[13px]">
+          <div className="flex items-center justify-between">
+            <dt className="text-muted-foreground">Ara toplam</dt>
+            <dd><MoneyCell value={po.subtotal} /></dd>
+          </div>
+          <div className="flex items-center justify-between">
+            <dt className="text-muted-foreground">KDV</dt>
+            <dd><MoneyCell value={po.vatTotal} /></dd>
+          </div>
+          <div className="flex items-center justify-between border-t border-border/60 pt-1.5">
+            <dt className="text-[13px] font-medium">Genel toplam</dt>
+            <dd><MoneyCell value={po.grandTotal} className="text-[15px] font-semibold tabular-nums" /></dd>
+          </div>
+        </dl>
+      </div>
 
       {receipts.length || invoices.length ? (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">

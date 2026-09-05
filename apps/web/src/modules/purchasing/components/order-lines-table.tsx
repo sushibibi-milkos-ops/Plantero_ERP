@@ -11,7 +11,14 @@ type Lines = NonNullable<Awaited<ReturnType<typeof getPurchaseOrderDetail>>>['li
  * karşılığı yok) — 7 sütunun 3'ü (Birim fiyat, Tutar, Beklenen tarih) 390px'te yalnızca yatay
  * kaydırmayla erişilebiliyordu, hiçbir kullanıcı bir satın alma siparişinin birim fiyatını
  * kaydırmadan görmüyordu. `md:` altında ayrı bir kart kalıbı eklendi (ürün+SKU başlık, miktar/
- * alınan meta satırı, birim fiyat + tutar sağda) — masaüstü tablo aynen korunur. */
+ * alınan meta satırı, birim fiyat + tutar sağda) — masaüstü tablo aynen korunur.
+ *
+ * Tur 2 P1 tedarik-po-detay-03 kök neden: 'Tutar' sütunu `line.lineTotal` (KDV DAHİL) basıyordu
+ * ama yanındaki 'Birim fiyat' × 'Sipariş' KDV HARİÇ bir çarpım — kullanıcı ekrandan doğrulayamadığı
+ * bir sayı görüyordu (690 × 80 = 55.200 ≠ basılan 66.240). 'Tutar' artık `line.lineSubtotal`
+ * (birim fiyat × miktar ile birebir tutarlı, order-form.tsx'teki KDV hariç taban ile aynı) ve
+ * araya `line.vatRate` gösteren bir 'KDV' sütunu girdi — belge sonundaki Ara toplam/KDV/Genel
+ * toplam bloğu (page.tsx) satırların toplamını doğrulanabilir kılıyor. */
 export function OrderLinesTable({ lines }: { lines: Lines }) {
   return (
     <>
@@ -24,7 +31,8 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
               <th className="px-3 py-2 text-right font-medium">Alınan</th>
               <th className="px-3 py-2 text-right font-medium">Faturalanan</th>
               <th className="px-3 py-2 text-right font-medium">Birim fiyat</th>
-              <th className="px-3 py-2 text-right font-medium">Tutar</th>
+              <th className="px-3 py-2 text-right font-medium">KDV</th>
+              <th className="px-3 py-2 text-right font-medium">Tutar (KDV hariç)</th>
               <th className="px-3 py-2 font-medium">Beklenen tarih</th>
             </tr>
           </thead>
@@ -41,7 +49,8 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                   <td className={`px-3 py-2.5 text-right font-mono tabular-nums ${receivedFull ? 'text-success' : ''}`}>{formatQty(r.line.receivedQty)}</td>
                   <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">{formatQty(r.line.invoicedQty)}</td>
                   <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.unitPrice} /></td>
-                  <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.lineTotal} /></td>
+                  <td className="px-3 py-2.5 text-right font-mono text-[13px] tabular-nums text-muted-foreground">%{r.line.vatRate}</td>
+                  <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.lineSubtotal} /></td>
                   <td className="px-3 py-2.5 text-muted-foreground">{r.line.expectedDate ? formatDate(r.line.expectedDate) : '—'}</td>
                 </tr>
               );
@@ -60,7 +69,10 @@ export function OrderLinesTable({ lines }: { lines: Lines }) {
                   <div className="truncate text-[14px] leading-5 font-medium">{r.productName}</div>
                   <div className="font-mono text-xs text-muted-foreground">{r.sku}</div>
                 </div>
-                <MoneyCell value={r.line.lineTotal} className="shrink-0 text-[13px] font-semibold tabular-nums" />
+                <div className="shrink-0 text-right">
+                  <MoneyCell value={r.line.lineSubtotal} className="text-[13px] font-semibold tabular-nums" />
+                  <div className="text-[10px] text-muted-foreground">KDV hariç · %{r.line.vatRate}</div>
+                </div>
               </div>
               <div className="mt-1 flex items-baseline justify-between gap-2 text-xs text-muted-foreground">
                 <span className="min-w-0 truncate">

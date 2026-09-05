@@ -66,7 +66,22 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
   }, [items, selected, approve, reject, router]);
 
   if (!items.length) {
-    return <EmptyState icon={Sparkles} title="Onay bekleyen taslak yok" description="Kritik stok motoru yeni bir taslak önerdiğinde burada görünür." />;
+    // Tur 2 P1 tedarik-onay-04 kök neden: bu boş durum ekranın NORMAL kararlı hali (kuyrukta
+    // bekleyen taslak yokken her gün görülür) ama hiçbir eylem sunmuyordu — kullanıcı "taslak yok"
+    // bilgisini alıp çıkmaza giriyordu, oysa taslak üreten motor bir tık ötede. `action` yuvasına
+    // kritik stok motorunu çalıştıracağı ekrana giden birincil buton eklendi.
+    return (
+      <EmptyState
+        icon={Sparkles}
+        title="Onay bekleyen taslak yok"
+        description="Kritik stok motoru yeni bir taslak önerdiğinde burada görünür."
+        action={
+          <Button asChild variant="outline" size="sm">
+            <Link href="/satin-alma/kritik-stok">Kritik stok motorunu çalıştır</Link>
+          </Button>
+        }
+      />
+    );
   }
 
   return (

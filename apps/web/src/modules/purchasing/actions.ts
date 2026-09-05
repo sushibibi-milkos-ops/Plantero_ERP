@@ -251,8 +251,15 @@ export const runReplenishmentAction = withAudit('purchasing.runReplenishment', a
 
       const rulesForOrder = draft.lines.map((l) => ruleByProduct.get(l.productId)).filter((r): r is NonNullable<typeof r> => Boolean(r));
       const ruleWhitelisted = rulesForOrder.length > 0 && rulesForOrder.every((r) => r.isAutoOrderWhitelisted);
+      // Tur 2 P1 bulgu (kök neden — actions.ts:252-255): eskiden `amounts.length === rulesForOrder.length`
+      // koşulu (yani TÜM satırların kuralı sonlu bir sınır taşımalı) sağlanamayınca — aynı PO'daki
+      // TEK bir satır bile autoOrderMaxAmount=NULL ("sınırsız otomatik onay") taşısa — nihai sınır
+      // null'a düşüyor, diğer satırların sonlu sınırı (ör. 20.000 TL) sessizce tamamen iptal olup PO
+      // o sınırın kat kat üzerinde bir tutarla onaysız (isAutoApproved=true) tedarikçiye gidiyordu.
+      // Doğru davranış: sonlu bir sınır bulunduğu SÜRECE nihai sınır bunların minimumu olmalı;
+      // nihai sınır yalnızca TÜM satırlar gerçekten sınırsızsa (amounts boşsa) sınırsız kalmalı.
       const amounts = rulesForOrder.map((r) => r.autoOrderMaxAmount).filter((a): a is NonNullable<typeof a> => a !== null);
-      const autoOrderMaxAmount = amounts.length === rulesForOrder.length && amounts.length > 0 ? amounts.reduce((a, b) => (a.lt(b) ? a : b)) : null;
+      const autoOrderMaxAmount = amounts.length > 0 ? amounts.reduce((a, b) => (a.lt(b) ? a : b)) : null;
       const supplierWhitelisted = await isSupplierWhitelisted(tx, draft.partnerId);
       const eligibility = evaluateAutoOrderEligibility({ supplierWhitelisted, ruleWhitelisted, autoOrderMaxAmount, orderAmount: D(order.grandTotal) });
 
