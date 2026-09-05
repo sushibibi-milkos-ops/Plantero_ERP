@@ -132,9 +132,14 @@ export async function recordPayment(tx: DbOrTx, input: RecordPaymentInput, ctx: 
     if (allocAmount.gt(residual.plus('0.0001'))) {
       throw new ValidationError(`Fatura ${invoice.docNo} kalan tutarı (${toDb(residual)}) tahsis edilen tutardan (${toDb(allocAmount)}) küçük`, { invoiceId: invoice.id });
     }
-    const allocAmountTry = round4(allocAmount.mul(D(invoice.exchangeRate)));
-    built.push({ invoice, amount: allocAmount, amountTry: allocAmountTry });
-    allocatedNative = allocatedNative.plus(allocAmount);
+    // Tolerans içi (≤ 0,0001) fazla tahsis — ekranda 2 ondalıkla gösterilen "920,00", 4 ondalıklı kalan 919,9999
+    // için yazıldığında oluşur. Tahsis KALANLA sınırlanır: aksi halde paid_amount > grand_total olur, residual
+    // sıfıra kırpılırken residual ≠ grand_total − paid_amount kalır (I10). Fark tahsilatın tahsis edilmemiş
+    // (avans) kısmında kalır; 120/320 hesabına zaten tam tutar işlenir (I9 bunu modeller).
+    const effectiveAlloc = allocAmount.gt(residual) ? residual : allocAmount;
+    const allocAmountTry = round4(effectiveAlloc.mul(D(invoice.exchangeRate)));
+    built.push({ invoice, amount: effectiveAlloc, amountTry: allocAmountTry });
+    allocatedNative = allocatedNative.plus(effectiveAlloc);
     allocatedBookTry = allocatedBookTry.plus(allocAmountTry);
   }
   if (allocatedNative.gt(amount.plus('0.0001'))) {
