@@ -1,13 +1,15 @@
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import {
-  invoices, invoiceLines, partners, purchaseOrderLines, salesOrderLines, documentLinks, type DbOrTx,
+  invoices, invoiceLines, partners, purchaseOrderLines, salesOrderLines, documentLinks, receiptLines, stockMoves, type DbOrTx,
 } from '@plantero/db';
 import { D, toDb, toDbRate, round4, sum, pct, ZERO, isZero4 } from '../money.js';
 import { businessDate, addDays } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { postJournalEntry, reverseJournalEntry, type JournalLineInput } from '../accounting/journal.js';
+import { postStockMove } from '../stock/ledger.js';
+import { getSuppliersLocation } from '../stock/locations.js';
 import { writeAudit } from '../audit/index.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import type { ActorCtx } from '../types.js';

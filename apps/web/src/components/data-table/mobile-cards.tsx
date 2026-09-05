@@ -195,10 +195,21 @@ export function DataTableMobileCards<T>({
         // (cari adı/açıklama) satırın tamamını doldurduğunda arkasından gelen meta bit'leri
         // (tarih, yön) kırpmanın İÇİNDE kalıyor, ya harf ortasından kesiliyor ya da tamamen
         // kayboluyordu (bkz. /muhasebe/yevmiye — 50/50 kartta tarih hiç görünmüyordu). Artık
-        // öncelik açık: alt başlık `hasLeftContent` içinde AYRI, küçülebilir (`min-w-0 flex-1
-        // truncate`) bir kutu; meta bit'leri (tarih/yön gibi sabit genişlikli) `shrink-0` ikinci
-        // bir kutuda — asla küçülmez, asla kırpılmaz. Alt başlık gerekirse sıfıra kadar küçülür,
-        // meta her zaman tam görünür.
+        // öncelik açık: alt başlık `hasLeftContent` içinde AYRI, küçülebilir (Tur 7'ye kadar
+        // `min-w-0 flex-1 truncate`) bir kutu; meta bit'leri (tarih/yön gibi sabit genişlikli)
+        // `shrink-0` ikinci bir kutuda — asla küçülmez, asla kırpılmaz.
+        // Tur 7 P1 shell-mobile-card-meta-gap-01 kök neden: alt başlık kutusu `flex-1` (grow) idi —
+        // KISA alt başlıklarda (ör. /satin-alma/kritik-stok SKU '304030000', 9 karakter) bu, kutuyu
+        // kendi içeriğinden çok daha geniş, konteynerin TAMAMINI dolduracak kadar BÜYÜTÜYORDU (flex-1
+        // = grow:1 basis:0 — içerik ne kadar kısa olursa olsun kalan tüm boşluğu yutar), meta
+        // zincirini (MetaChain, `shrink-0`) sağ kenara itip aradaki boşluğu 181-196px'e çıkarıyordu;
+        // zincirin `leadingSeparator` " · "sı da bu boşluğun sonunda YETİM görünüyordu. `flex-1` yerine
+        // `shrink` (grow:0, varsayılan zaten — yalnızca netlik için yazılı): kutu artık SADECE kendi
+        // içeriği kadar yer kaplar, MetaChain hemen ardından BİTİŞİK başlar, ayraç gerçek bir ayraç
+        // olur. Alt başlık hâlâ gerekirse sıfıra kadar küçülür (`min-w-0` + `truncate`) — UZUN alt
+        // başlıklı kardeş rotalarda (/satin-alma/siparisler tedarikçi adı, /depo/skt, /muhasebe/banka)
+        // regresyon yok: içerik konteyner genişliğini aşınca flex-shrink zaten devreye girer, `flex-1`
+        // olmadan da aynı şekilde kırpılır — fark yalnızca KISA içerikte kutunun artık BÜYÜMEMESİ.
         const hasLeftContent = Boolean(subtitle) || metaCells.length > 0;
         return (
           <li
@@ -275,7 +286,7 @@ export function DataTableMobileCards<T>({
                     İki alt kutuya ayrılmış (Tur 16): alt başlık KÜÇÜLÜR, meta bit'leri KÜÇÜLMEZ. */}
                 <div className="mobile-card-subtitle-row flex min-w-0 flex-1 items-baseline text-xs text-muted-foreground">
                   {subtitle ? (
-                    <span className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                    <span className="min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap">
                       {flexRender(subtitle.column.columnDef.cell, subtitle.getContext())}
                     </span>
                   ) : null}

@@ -1,0 +1,499 @@
+{
+ "kritik-stok": [
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "304030000 · 82 · 28–80"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "301030000 · 257 · 21–60"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 87,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "306030000 · 100 · 35–100"
+  },
+  {
+   "h": 61,
+   "subTextRight": 94,
+   "chainLeft": 94,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "306050000 · 50 · 65–100"
+  },
+  {
+   "h": 61,
+   "subTextRight": 91,
+   "chainLeft": 91,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "307010000 · 65 · 21–60"
+  },
+  {
+   "h": 61,
+   "subTextRight": 94,
+   "chainLeft": 94,
+   "chainW": 119,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "307020000 · 704,52 · 245–700"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 126,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "402010000 · 1.650 · 525–1.500"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 142,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "401030000 · 7.450 · 1.750–5.000"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "301040000 · 209 · 23–65"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 95,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "303010000 · 58,75 · 19–55"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "306020000 · 75 · 26–75"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 87,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "308040000 · 160 · 56–160"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 103,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "302030000 · 136,6 · 44–125"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 87,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "306010000 · 107 · 35–100"
+  },
+  {
+   "h": 61,
+   "subTextRight": 90,
+   "chainLeft": 90,
+   "chainW": 95,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "301010000 · 261,6 · 31–90"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "308010000 · 198 · 25–70"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "301050000 · 38 · 72–110"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 142,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "401020000 · 4.300 · 1.050–3.000"
+  },
+  {
+   "h": 61,
+   "subTextRight": 90,
+   "chainLeft": 90,
+   "chainW": 126,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "401010000 · 3.300 · 700–2.000"
+  },
+  {
+   "h": 61,
+   "subTextRight": 93,
+   "chainLeft": 93,
+   "chainW": 111,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "401040000 · 1.100 · 280–800"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 126,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "402030000 · 2.550 · 875–2.500"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "308020000 · 75 · 65–100"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 95,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "301020000 · 350 · 115–330"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 142,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "402020000 · 8.220 · 2.800–8.000"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "306040000 · 35 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "306060000 · 50 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 95,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "302010000 · 155,5 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "304010000 · 62 · 65–100"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "308030000 · 50 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 95,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "303020000 · 58,85 · 19–55"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 95,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "301060000 · 399 · 131–375"
+  },
+  {
+   "h": 61,
+   "subTextRight": 92,
+   "chainLeft": 92,
+   "chainW": 87,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "305010000 · 52,9 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "304020000 · 52 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 94,
+   "chainLeft": 94,
+   "chainW": 80,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "302020000 · 112 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "304050000 · 53 · 18–50"
+  },
+  {
+   "h": 61,
+   "subTextRight": 95,
+   "chainLeft": 95,
+   "chainW": 72,
+   "gap": 0,
+   "sepCount": 2,
+   "txt": "304040000 · 50 · 18–50"
+  }
+ ],
+ "kritik-stok-summary": {
+  "count": 36,
+  "maxGap": 0,
+  "rowsWithGapOver8": 0
+ },
+ "tedarikciler": [
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  },
+  {
+   "no": "row"
+  }
+ ],
+ "siparisler": [
+  {
+   "h": 64,
+   "subTextRight": 283,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -68,
+   "sepCount": 1,
+   "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 07.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 283,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -68,
+   "sepCount": 1,
+   "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 07.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 332,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -117,
+   "sepCount": 1,
+   "txt": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 248,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -41,
+   "sepCount": 1,
+   "txt": "Proteinsan Gıda Hammaddeleri Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 283,
+   "chainLeft": 199,
+   "chainW": 76,
+   "gap": -84,
+   "sepCount": 1,
+   "txt": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 251,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -44,
+   "sepCount": 1,
+   "txt": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 225,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -18,
+   "sepCount": 1,
+   "txt": "Ege Ambalaj Sanayi ve Ticaret A.Ş. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 332,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -125,
+   "sepCount": 1,
+   "txt": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 251,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -44,
+   "sepCount": 1,
+   "txt": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 248,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -41,
+   "sepCount": 1,
+   "txt": "Proteinsan Gıda Hammaddeleri Ltd. Şti. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 225,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -18,
+   "sepCount": 1,
+   "txt": "Ege Ambalaj Sanayi ve Ticaret A.Ş. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 264,
+   "chainLeft": 199,
+   "chainW": 76,
+   "gap": -65,
+   "sepCount": 1,
+   "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. · 06.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 251,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -44,
+   "sepCount": 1,
+   "txt": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. · 05.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 264,
+   "chainLeft": 207,
+   "chainW": 76,
+   "gap": -57,
+   "sepCount": 1,
+   "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. · 04.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 264,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -49,
+   "sepCount": 1,
+   "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş. · 04.09.2026"
+  },
+  {
+   "h": 64,
+   "subTextRight": 248,
+   "chainLeft": 215,
+   "chainW": 76,
+   "gap": -33,
+   "sepCount": 1,
+   "txt": "Proteinsan Gıda Hammaddeleri Ltd. Şti. · 03.09.2026"
+  }
+ ]
+}

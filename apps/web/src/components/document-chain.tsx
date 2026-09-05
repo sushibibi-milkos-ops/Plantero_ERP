@@ -66,7 +66,19 @@ function ChainCard({ node, current }: { node: ChainNode; current: boolean }) {
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+        {/* Tur 7 P2 shell-documentchain-baseline-01 kök neden: bu etiket satırı sabit yükseklik
+            almıyordu — kısa etiketler ('MAL KABUL', 'FATURA') tek satırda kalırken uzun etiketler
+            ('SATIN ALMA SİPARİŞİ') aynı kart genişliğinde iki satıra sarıyordu, satırın yüksekliği
+            içeriğe göre değişiyordu. Sonuç: aynı zincirde yan yana duran kartlarda bu satırın hemen
+            altındaki belge no'su (docNo) farklı `top` konumlarında basılıyordu (ölçüldü: 8px fark),
+            okuma çizgisi kırılıyordu. Etiket artık `leading-4` (16px) ile 2 satırlık sabit yükseklik
+            rezerve eder (`min-h-8` = 2×16px): kısa etiketler kutunun İÇİNDE tek satır kalır ama kutu
+            boyu değişmez, uzun etiketler zaten mevcut genişlikte 2 satıra sığıyordu (`line-clamp-2`
+            yalnızca güvenlik payı — 2'den fazla satıra hiçbir zaman gerek olmamalı). Genişlik/kaydırma
+            mantığına dokunulmadı (flex + justify-between aynı kaldı) — yalnızca yükseklik sabitlendi,
+            bu yüzden zincirdeki TÜM kart tipleri (kısa/uzun etiket, rozetli/rozetsiz) artık aynı
+            `top`tan başlayan docNo satırına sahip. */}
+        <span className="line-clamp-2 min-h-8 text-[11px] leading-4 font-medium tracking-wide text-muted-foreground uppercase">
           {DOCUMENT_TYPE_LABELS[node.type] ?? node.type}
         </span>
         {/* Tur 6 P1 shell-documentchain-size-01 kök neden: 10px, karttaki 11px'ten yalnızca 1px küçük —
