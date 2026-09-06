@@ -11,8 +11,10 @@ import { writeAudit } from '../audit/index.js';
 import { createBomVersion, activateBom, resolveComponentUnitCost } from '../masterdata/boms.js';
 import type { ActorCtx } from '../types.js';
 import { computeTrialCost, type CostSource, type TrialCostComputation } from './costFormula.js';
+import { EDITABLE_STATUSES } from './status.js';
 
 export { computeTrialCost, type CostSource, type TrialCostComputation };
+export { EDITABLE_STATUSES };
 
 /**
  * Versiyonlu deneme reçetesi + canlı maliyet simülasyonu + onay + üretim BOM'una devir
@@ -227,13 +229,11 @@ export type UpdateVersionInput = {
   lines?: TrialLineInput[];
 };
 
-const EDITABLE_STATUSES = new Set(['draft', 'testing']);
-
-/** Taslak/test aşamasındaki versiyonu düzenler (satır ekle/çıkar/miktar dahil) ve maliyeti canlı yeniden hesaplar. */
+/** Yalnızca taslak versiyonu düzenler (satır ekle/çıkar/miktar dahil) ve maliyeti canlı yeniden hesaplar. */
 export async function updateVersionDraft(tx: DbOrTx, versionId: string, input: UpdateVersionInput, ctx: ActorCtx): Promise<VersionRollup> {
   const [version] = await tx.select().from(trialRecipeVersions).where(eq(trialRecipeVersions.id, versionId)).limit(1);
   if (!version) throw new NotFoundError('Deneme reçetesi versiyonu', versionId);
-  if (!EDITABLE_STATUSES.has(version.status)) throw new ValidationError('Bu versiyon düzenlenemez (onaylanmış/reddedilmiş/devrolmuş) — yeni versiyon oluşturun');
+  if (!EDITABLE_STATUSES.has(version.status)) throw new ValidationError('Bu versiyon düzenlenemez (onaya gönderilmiş/onaylanmış/reddedilmiş/devrolmuş) — onayı geri çekin ya da yeni versiyon oluşturun');
 
   const set: Partial<typeof trialRecipeVersions.$inferInsert> = { updatedBy: ctx.userId ?? null };
   if (input.batchQty !== undefined) set.batchQty = input.batchQty;
@@ -275,7 +275,7 @@ export async function getVersionRollup(tx: DbOrTx, versionId: string): Promise<V
 export async function submitForApproval(tx: DbOrTx, versionId: string, ctx: ActorCtx): Promise<{ version: VersionRow; approvalId: string }> {
   const [version] = await tx.select().from(trialRecipeVersions).where(eq(trialRecipeVersions.id, versionId)).limit(1);
   if (!version) throw new NotFoundError('Deneme reçetesi versiyonu', versionId);
-  if (!EDITABLE_STATUSES.has(version.status)) throw new ValidationError('Yalnızca taslak/test aşamasındaki versiyonlar onaya gönderilebilir');
+  if (!EDITABLE_STATUSES.has(version.status)) throw new ValidationError('Yalnızca taslak versiyonlar onaya gönderilebilir');
 
   const [existingPending] = await tx.select({ id: approvals.id }).from(approvals).where(and(eq(approvals.refTable, 'trial_recipe_versions'), eq(approvals.refId, versionId), eq(approvals.status, 'pending'))).limit(1);
   if (existingPending) throw new ValidationError('Bu versiyon için zaten bekleyen bir onay var');

@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -8,6 +8,10 @@ import { toast } from 'sonner';
 import { Trash2, Loader2, Save, Send, Rocket, FlaskConical, Wand2 } from 'lucide-react';
 import { D } from '@plantero/core/money';
 import { computeTrialCost } from '@plantero/core/rnd/costFormula';
+// `status.js`'ten (DB'siz/saf dosya) içe aktarılır, `trials.js`'ten DEĞİL: trials.ts sunucuya özgü
+// `@plantero/db` (postgres sürücüsü) içe aktarır — bu, 'use client' bileşenine sızarsa derleme
+// `net`/`tls` (Node-only) modülleri bulamaz diye patlar (bkz. status.ts dosya başı yorumu).
+import { EDITABLE_STATUSES } from '@plantero/core/rnd/status';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -26,7 +30,17 @@ import type { CostSource, ProductOption, VersionDetail } from '../queries';
 type LineForm = { productId: string; qty: string; uomId: string; costSource: CostSource; manualUnitCost: string; resolvedUnitCost: string; scrapPct: string };
 type FormValues = { batchQty: string; batchUomId: string; expectedYieldPct: string; overheadPerBatch: string; overheadPerUnit: string; changeNote: string; lines: LineForm[] };
 
-const EDITABLE_STATUSES = new Set(['draft', 'testing']);
+// Satır tablosunun (aşağıda) `md:` grid sütun genişlikleri — eski `<table>`'ın `w-36/w-32/w-24/w-28/
+// w-9` ipuçlarıyla BİREBİR aynı (9/9/8/6/7/2.25rem), CSS DEĞİŞKENİ olarak taşınır: Tailwind arbitrary
+// sınıfı (`md:[grid-template-columns:var(--line-cols)]`) SABİT/literal kalır (JIT taraması güvenli),
+// yalnızca değişkenin çalışma zamanı değeri satır bazında ayarlanır. Sütun sayısı hep 7 — `editable`
+// false iken son (aksiyon) sütun boş kalır, tabloyu her seferinde yeniden şablonlamaya gerek kalmaz.
+const LINE_COLS_STYLE = { '--line-cols': 'minmax(0,1fr) 9rem 9rem 8rem 6rem 7rem 2.25rem' } as React.CSSProperties;
+
+/** Mobil (< md) satır etiketleri: md+ üstünde başlık satırı zaten aynı bilgiyi taşıdığı için gizlenir. */
+function FieldLabel({ children, align }: { children: React.ReactNode; align?: 'right' }) {
+  return <span className={cn('mb-1 block text-[11px] text-muted-foreground md:hidden', align === 'right' && 'text-right')}>{children}</span>;
+}
 
 export function CostSimulator({
   detail, projectId, productOptions, uomOptions, canManage, canRelease,
@@ -39,8 +53,10 @@ export function CostSimulator({
   canRelease: boolean;
 }) {
   const router = useRouter();
-  // Onaya gönderilmiş (pending) bir versiyon onaylanana/reddedilene kadar KİLİTLİDİR — aksi halde
-  // onaylayan kişi X'i onaylarken arka planda Y'ye değiştirilebilir (bkz. "Onaya gönder" akışı).
+  // Yalnızca 'draft' düzenlenebilir — core'daki `EDITABLE_STATUSES` (packages/core/src/rnd/status.ts,
+  // I54) TEK doğruluk kaynağı: 'testing' (onaya gönderilmiş) kasıtlı olarak KÜMEDE DEĞİL, çünkü onay
+  // o andaki maliyeti dondurur (`approvals.payload.unitCost`) ve düzenleme onaylanan rakamla üretime
+  // giden rakamı sessizce ayrıştırabilirdi. `!detail.hasPendingApproval` ek bir savunma katmanı.
   const editable = canManage && EDITABLE_STATUSES.has(detail.version.status) && !detail.hasPendingApproval;
   const [pending, setPending] = useState(false);
 
@@ -239,14 +255,17 @@ export function CostSimulator({
         <div className="space-y-2 rounded-lg border border-border/60 p-4">
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-muted-foreground">Hedef maliyete göre</span>
-            <span className={cn('font-mono font-medium tabular-nums', overTarget ? 'text-destructive' : 'text-success')}>
+            {/* overTarget → text-warning/bg-warning (renk disiplini, Tur 3 P1): hedef aşımı bir UYARI,
+                gerçek hata/yıkıcı eylem tonu (destructive) değil — /arge/projeler kart listesindeki
+                aynı olgu (project-list.tsx) zaten warning basıyor, buradaki destructive'i eşitliyoruz. */}
+            <span className={cn('font-mono font-medium tabular-nums', overTarget ? 'text-warning' : 'text-success')}>
               <MoneyCell value={computation.unitCost.toFixed(4)} digits={2} /> / <MoneyCell value={targetCost.toFixed(4)} digits={2} muted />
             </span>
           </div>
           <div className="relative">
             <div className="h-1 overflow-hidden rounded-full bg-muted">
               <div
-                className={cn('h-full rounded-full transition-[width] duration-200 ease-out', overTarget ? 'bg-destructive/70' : 'bg-success/70')}
+                className={cn('h-full rounded-full transition-[width] duration-200 ease-out', overTarget ? 'bg-warning/70' : 'bg-success/70')}
                 style={{ width: `${barFillPct}%` }}
               />
             </div>
@@ -255,7 +274,7 @@ export function CostSimulator({
           </div>
           {targetRatio ? (
             <p className="text-[11px] text-muted-foreground">
-              <span className={cn('font-medium tabular-nums', overTarget ? 'text-destructive' : 'text-success')}>
+              <span className={cn('font-medium tabular-nums', overTarget ? 'text-warning' : 'text-success')}>
                 %{Math.abs(targetRatio.minus(100).toNumber()).toFixed(0)}
               </span>{' '}
               {overTarget ? 'hedef üstü' : targetRatio.lt(100) ? 'hedef altında' : 'tam hedefte'}
@@ -315,26 +334,30 @@ export function CostSimulator({
         </div>
       ) : null}
 
-      {/* min-w-[760px]: sütun genişlik ipuçlarının toplamı (~630px) + Ürün sütununa gerçekçi bir
-          taban — tablo bu genişliğin altına SIKIŞTIRILAMAZ, dar viewport'ta sarmalayıcı div kaydırır
-          (Tur 1 P0 arge-recete-01: eskiden `table-auto` konteynerin genişliğine göre sütunları
-          orantılı küçültüyordu, Miktar/Fire % input'ları görünür genişlikten daha uzun metin taşıyıp
-          kırpılıyordu — 390px'te '0.1500' → '0.1'). */}
-      <div className="scrollbar-thin scroll-fade-x overflow-x-auto rounded-lg border border-border/60">
-        <table className="w-full min-w-[800px] text-[13px]">
-          <thead>
-            <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-              <th className="px-2.5 py-2">Ürün</th>
-              <th className="w-36 px-2 py-2 text-right">Miktar</th>
-              <th className="w-36 px-2 py-2">Maliyet kaynağı</th>
-              <th className="w-32 px-2 py-2 text-right">Birim maliyet</th>
-              <th className="w-24 px-2 py-2 text-right">Fire %</th>
-              <th className="w-28 px-2 py-2 text-right">Satır maliyeti</th>
-              {editable ? <th className="w-9" /> : null}
-            </tr>
-          </thead>
-          <tbody>
-            {fields.map((f, i) => {
+      {/* Kök neden düzeltmesi (Tur 3 P1 criterion-5/9): eskiden gerçek bir `<table min-w-[800px]>`
+          idi — 390px'te 478px yatay taşma üretiyor, "Maliyet kaynağı/Birim maliyet/Fire %/Satır
+          maliyeti" sütunları görünür alanın dışında kalıyordu. Artık gerçek bir `<table>` DEĞİL,
+          `role="table"` taşıyan bir CSS Grid: `md:` altında (767px ve altı) her satır 2 sütuna
+          YIĞILIR, her alanın ETİKETİ görünür kalır (`labelClassName` yalnızca `md:hidden`); `md:` ve
+          üstünde AYNI grid, sütun sayısı `gridTemplateColumns` ile masaüstündeki eski sütun
+          genişlikleriyle (9/9/8/6/7rem) birebir eşleşen sabit bir şablona döner — TEK bir DOM ağacı,
+          form alanları hiçbir yerde ikiye katlanmaz (React Hook Form `Controller`'ları tek mount). */}
+      <div className="rounded-lg border border-border/60" role="table" aria-label="Reçete satırları">
+        <div
+          className="hidden border-b border-border/60 bg-muted/40 px-3 py-2 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase md:grid md:gap-2 md:[grid-template-columns:var(--line-cols)]"
+          style={LINE_COLS_STYLE}
+          role="row"
+        >
+          <span role="columnheader">Ürün</span>
+          <span role="columnheader" className="text-right">Miktar</span>
+          <span role="columnheader">Maliyet kaynağı</span>
+          <span role="columnheader" className="text-right">Birim maliyet</span>
+          <span role="columnheader" className="text-right">Fire %</span>
+          <span role="columnheader" className="text-right">Satır maliyeti</span>
+          {editable ? <span role="columnheader" aria-hidden /> : null}
+        </div>
+        <div role="rowgroup">
+          {fields.map((f, i) => {
               const product = productById.get(watched.lines[i]?.productId ?? '');
               const source = watched.lines[i]?.costSource ?? 'average';
               const uCost = unitCostFor(i);
@@ -342,10 +365,15 @@ export function CostSimulator({
               // kayıt sırasında genel bir toast vardı — Tur 1 P1 arge-recete-08).
               const qtyMissing = editable && !(watched.lines[i]?.qty ?? '').trim();
               return (
-                <Fragment key={f.id}>
-                  <tr className="border-b border-border/40 last:border-0 hover:bg-muted/20">
-                    <td className="px-2.5 py-[3px]">
-                      {editable ? (
+                <div
+                  key={f.id}
+                  role="row"
+                  className="grid grid-cols-2 gap-x-3 gap-y-2 border-b border-border/40 p-3 last:border-0 hover:bg-muted/20 md:items-center md:gap-2 md:p-0 md:py-[3px] md:[grid-template-columns:var(--line-cols)]"
+                  style={LINE_COLS_STYLE}
+                >
+                  <div className="col-span-2 md:col-span-1 md:px-2.5" role="cell">
+                    <FieldLabel>Ürün</FieldLabel>
+                    {editable ? (
                         // Dinlenmede kenarlıksız/saydam, yalnızca hover/focus'ta kenarlık — "çerçeve
                         // çorbası" kök neden düzeltmesi (Tur 1 P1 arge-recete-03). `[@media(hover:none)]`
                         // taban affordance'ı: proje genelindeki `hover:` custom variant `(hover:hover)
@@ -366,90 +394,91 @@ export function CostSimulator({
                           <span className="font-mono text-[11px] text-muted-foreground">{product?.sku}</span>
                         </div>
                       )}
-                    </td>
-                    <td className="px-2 py-[3px] text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => (
-                          <NumberInput
-                            value={field.value}
-                            onChange={(v) => field.onChange(v ?? '')}
-                            onBlur={field.onBlur}
-                            maxDigits={4}
-                            minDigits={4}
-                            disabled={!editable}
-                            aria-invalid={qtyMissing}
-                            className="min-w-0 flex-1"
-                            inputClassName="h-11 min-w-16 border-transparent bg-transparent text-right hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
-                          />
-                        )} />
-                        {/* Birim kodu (11px muted): "0,2 KG" / "1 ADET" — birimsiz miktar hücresi
-                            "Kavanoz 500ml → 1" ile "Yulaf → 0,2"yi ayırt edilemez kılıyordu
-                            (Tur 2 P1 arge-recete-12). minDigits=4=maxDigits: ondalık basamak sayısı
-                            satırdan satıra değişmiyor artık, ondalık ayırıcı aynı x'te hizalanır
-                            (Tur 2 P2 arge-recete-13). */}
-                        <span className="shrink-0 text-[11px] text-muted-foreground">{uomById.get(watched.lines[i]?.uomId ?? '')?.code ?? ''}</span>
-                      </div>
-                    </td>
-                    <td className="px-2 py-[3px]">
-                      {editable ? (
-                        <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
-                          <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input data-[size=sm]:h-11 md:data-[size=sm]:h-8 [@media(hover:none)]:border-input/50"><SelectValue /></SelectTrigger>
-                          <SelectContent>{COST_SOURCE_OPTIONS.map((o) => (<SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>))}</SelectContent>
-                        </Select>
-                      ) : (
-                        <span className="text-muted-foreground">{COST_SOURCE_LABELS[source]}</span>
-                      )}
-                    </td>
-                    <td className="px-2 py-[3px] text-right">
-                      {editable && source === 'manual' ? (
-                        <Controller control={form.control} name={`lines.${i}.manualUnitCost`} render={({ field }) => (
-                          <NumberInput
-                            value={field.value}
-                            onChange={(v) => field.onChange(v ?? '')}
-                            onBlur={field.onBlur}
-                            maxDigits={4}
-                            minDigits={2}
-                            prefix="₺"
-                            className="w-full"
-                            inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
-                          />
-                        )} />
-                      ) : (
-                        <MoneyCell value={uCost} digits={2} />
-                      )}
-                    </td>
-                    <td className="px-2 py-[3px]">
-                      <Controller control={form.control} name={`lines.${i}.scrapPct`} render={({ field }) => (
+                  </div>
+                  <div className="col-span-1 md:px-2 md:text-right" role="cell">
+                    <FieldLabel align="right">Miktar</FieldLabel>
+                    <div className="flex items-center gap-1 md:justify-end">
+                      <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => (
                         <NumberInput
                           value={field.value}
                           onChange={(v) => field.onChange(v ?? '')}
                           onBlur={field.onBlur}
                           maxDigits={4}
+                          minDigits={4}
                           disabled={!editable}
-                          className="w-full"
-                          inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
+                          aria-invalid={qtyMissing}
+                          className="min-w-0 flex-1"
+                          inputClassName="h-11 min-w-16 border-transparent bg-transparent text-right hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
                         />
                       )} />
-                    </td>
-                    <td className="px-2 py-[3px] text-right">
-                      <MoneyCell value={computation.lineCosts[i]?.toFixed(4) ?? '0'} digits={2} />
-                    </td>
+                      {/* Birim kodu (11px muted): "0,2 KG" / "1 ADET" — birimsiz miktar hücresi
+                          "Kavanoz 500ml → 1" ile "Yulaf → 0,2"yi ayırt edilemez kılıyordu
+                          (Tur 2 P1 arge-recete-12). minDigits=4=maxDigits: ondalık basamak sayısı
+                          satırdan satıra değişmiyor artık, ondalık ayırıcı aynı x'te hizalanır
+                          (Tur 2 P2 arge-recete-13). */}
+                      <span className="shrink-0 text-[11px] text-muted-foreground">{uomById.get(watched.lines[i]?.uomId ?? '')?.code ?? ''}</span>
+                    </div>
+                  </div>
+                  <div className="col-span-1 md:px-2" role="cell">
+                    <FieldLabel>Maliyet kaynağı</FieldLabel>
                     {editable ? (
-                      <td className="px-1 py-[3px]">
-                        <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="size-11 text-muted-foreground hover:text-destructive md:size-8" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
-                      </td>
-                    ) : null}
-                  </tr>
-                  {qtyMissing ? (
-                    <tr className="border-b border-border/40 last:border-0">
-                      <td colSpan={editable ? 7 : 6} className="px-2.5 pb-1.5 text-[11px] text-destructive">Miktar gerekli</td>
-                    </tr>
+                      <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
+                        <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input data-[size=sm]:h-11 md:data-[size=sm]:h-8 [@media(hover:none)]:border-input/50"><SelectValue /></SelectTrigger>
+                        <SelectContent>{COST_SOURCE_OPTIONS.map((o) => (<SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>))}</SelectContent>
+                      </Select>
+                    ) : (
+                      <span className="text-muted-foreground">{COST_SOURCE_LABELS[source]}</span>
+                    )}
+                  </div>
+                  <div className="col-span-1 md:px-2 md:text-right" role="cell">
+                    <FieldLabel align="right">Birim maliyet</FieldLabel>
+                    {editable && source === 'manual' ? (
+                      <Controller control={form.control} name={`lines.${i}.manualUnitCost`} render={({ field }) => (
+                        <NumberInput
+                          value={field.value}
+                          onChange={(v) => field.onChange(v ?? '')}
+                          onBlur={field.onBlur}
+                          maxDigits={4}
+                          minDigits={2}
+                          prefix="₺"
+                          className="w-full"
+                          inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50 md:text-right"
+                        />
+                      )} />
+                    ) : (
+                      <MoneyCell value={uCost} digits={2} />
+                    )}
+                  </div>
+                  <div className="col-span-1 md:px-2" role="cell">
+                    <FieldLabel align="right">Fire %</FieldLabel>
+                    <Controller control={form.control} name={`lines.${i}.scrapPct`} render={({ field }) => (
+                      <NumberInput
+                        value={field.value}
+                        onChange={(v) => field.onChange(v ?? '')}
+                        onBlur={field.onBlur}
+                        maxDigits={4}
+                        disabled={!editable}
+                        className="w-full"
+                        inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
+                      />
+                    )} />
+                  </div>
+                  <div className="col-span-2 flex items-baseline justify-between md:col-span-1 md:block md:px-2 md:text-right" role="cell">
+                    <FieldLabel align="right">Satır maliyeti</FieldLabel>
+                    <MoneyCell value={computation.lineCosts[i]?.toFixed(4) ?? '0'} digits={2} className="font-medium md:font-normal" />
+                  </div>
+                  {editable ? (
+                    <div className="col-span-2 flex justify-end md:col-span-1 md:justify-start md:px-1" role="cell">
+                      <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="size-11 text-muted-foreground hover:text-destructive md:size-8" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
+                    </div>
                   ) : null}
-                </Fragment>
+                  {qtyMissing ? (
+                    <p className="col-span-2 text-[11px] text-destructive md:col-span-full" role="cell">Miktar gerekli</p>
+                  ) : null}
+                </div>
               );
             })}
-          </tbody>
-        </table>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-1 border-t border-border/60 pt-3 text-[13px]">

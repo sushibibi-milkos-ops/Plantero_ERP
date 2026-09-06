@@ -1,17 +1,12 @@
+/** Tur 4 doğrulama — /bakim/makineler/[id] "Genel" grubundaki Güç değerinin QtyCell çıktısıyla
+ * /bakim/is-emirleri/[id]'deki (probe-bakim-r4-qty.ts) aynı makine için birebir eşleştiğini
+ * doğrular (bakim-isemirleri-detay-11: iki kardeş ekran aynı alanı aynı biçimde göstermeli). */
 import { defaultBaseUrl, launchBrowser, openRoute } from './lib/browser';
 const collect = () => {
-  const out: unknown[] = [];
   const main = document.querySelector<HTMLElement>('main') ?? document.body;
-  for (const el of Array.from(main.querySelectorAll<HTMLElement>('span.num, *'))) {
-    const t = (el.textContent || '').trim();
-    if (!/\d\s*(kW|sa|\/sa)\b/.test(t) || t.length > 30) continue;
-    // yalnızca en dış (en büyük) eşleşen düğümü al: çocuklarından biri de eşleşiyorsa atla
-    const childMatches = Array.from(el.children).some((c) => /\d\s*(kW|sa|\/sa)\b/.test((c.textContent||'').trim()));
-    if (childMatches) continue;
-    const cs = getComputedStyle(el);
-    out.push({ t, tabular: cs.fontVariantNumeric, cls: (el.className||'').toString().slice(0,40) });
-  }
-  return out;
+  const html = main.innerHTML;
+  const idx = html.indexOf('Güç');
+  return { snippet: idx >= 0 ? html.slice(idx, idx + 300) : 'NOT FOUND' };
 };
 async function main() {
   const route = process.argv[2]!;

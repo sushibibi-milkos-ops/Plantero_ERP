@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Copy, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/status-badge';
 import { EmptyState } from '@/components/empty-state';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { getVersionDetailAction, createNewVersionAction } from '../actions';
 import { NewRecipeDialog } from './new-recipe-dialog';
@@ -15,7 +16,7 @@ import { TRIAL_STATUS_LABELS } from '../labels';
 import type { ProductOption, RecipeSummaryRow, VersionDetail, VersionListItem } from '../queries';
 
 export function RecipeWorkspace({
-  projectId, recipesWithVersions, productOptions, uomOptions, canManage, canRelease,
+  projectId, recipesWithVersions, productOptions, uomOptions, canManage, canRelease, initialDetail,
 }: {
   projectId: string;
   recipesWithVersions: Array<{ recipe: RecipeSummaryRow; versions: VersionListItem[] }>;
@@ -23,17 +24,24 @@ export function RecipeWorkspace({
   uomOptions: Array<{ id: string; code: string; name: string }>;
   canManage: boolean;
   canRelease: boolean;
+  /** İlk seçili versiyonun sunucuda getirilmiş maliyet simülasyonu (bkz. receteler/page.tsx) —
+   *  ilk render'da çıplak spinner yerine dolu panel gösterilsin diye. */
+  initialDetail: VersionDetail | null;
 }) {
   const router = useRouter();
   const [selectedRecipeId, setSelectedRecipeId] = useState(recipesWithVersions[0]?.recipe.id ?? null);
   const selectedGroup = recipesWithVersions.find((r) => r.recipe.id === selectedRecipeId) ?? recipesWithVersions[0] ?? null;
   const [selectedVersionId, setSelectedVersionId] = useState(selectedGroup?.recipe.currentVersionId ?? selectedGroup?.versions[0]?.id ?? null);
-  const [detail, setDetail] = useState<VersionDetail | null>(null);
+  const [detail, setDetail] = useState<VersionDetail | null>(initialDetail);
   const [loading, setLoading] = useState(false);
   const [pending, setPending] = useState(false);
+  // Sunucudan gelen initialDetail zaten selectedVersionId'yle eşleşiyorsa ilk effect çalışmasında
+  // tekrar client fetch tetiklenmesin (kök neden düzeltmesi — bkz. yukarıdaki initialDetail notu).
+  const skipInitialFetch = useRef(Boolean(initialDetail) && initialDetail?.version.id === selectedVersionId);
 
   useEffect(() => {
     if (!selectedVersionId) { setDetail(null); return; }
+    if (skipInitialFetch.current) { skipInitialFetch.current = false; return; }
     setLoading(true);
     getVersionDetailAction({ versionId: selectedVersionId }).then((res) => {
       setLoading(false);
@@ -119,12 +127,61 @@ export function RecipeWorkspace({
 
       <div className="min-w-0 rounded-xl border border-border/60 bg-card p-4">
         {loading || !detail ? (
-          <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
-            <Loader2 className="mr-2 size-4 animate-spin" /> Yükleniyor…
-          </div>
+          <CostSimulatorSkeleton />
         ) : (
           <CostSimulator detail={detail} projectId={projectId} productOptions={productOptions} uomOptions={uomOptions} canManage={canManage} canRelease={canRelease} />
         )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Versiyon değiştirilirken (client fetch — ilk açılışta artık kullanılmıyor, bkz. initialDetail)
+ * gösterilen iskelet: CostSimulator ile AYNI ölçüde (hedef çubuğu + 4 form alanı + 6×39px tablo
+ * satırı) — çıplak spinner'ın 194px→982px panel sıçramasını önler (Tur 3 P1 criterion-7).
+ */
+function CostSimulatorSkeleton() {
+  return (
+    <div className="space-y-6" aria-busy aria-label="Versiyon yükleniyor">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-5 w-14" />
+          <Skeleton className="h-5 w-20 rounded-full" />
+        </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-20 rounded-md" />
+          <Skeleton className="h-8 w-28 rounded-md" />
+        </div>
+      </div>
+      <div className="space-y-2 rounded-lg border border-border/60 p-4">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-3 w-28" />
+          <Skeleton className="h-3 w-24" />
+        </div>
+        <Skeleton className="h-1 w-full rounded-full" />
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="space-y-1">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-8 w-full rounded-md" />
+          </div>
+        ))}
+      </div>
+      <div className="overflow-hidden rounded-lg border border-border/60">
+        <div className="flex h-9 items-center gap-4 border-b border-border/60 bg-muted/40 px-3">
+          {['Ürün', 'Miktar', 'Maliyet kaynağı', 'Birim maliyet', 'Fire %', 'Satır maliyeti'].map((h) => (
+            <span key={h} className="flex-1 max-w-28 truncate text-[11px] font-medium text-muted-foreground uppercase">{h}</span>
+          ))}
+        </div>
+        {Array.from({ length: 6 }).map((_, r) => (
+          <div key={r} className="flex h-9 items-center gap-4 border-b border-border/40 px-3 last:border-0">
+            {Array.from({ length: 6 }).map((_, c) => (
+              <Skeleton key={c} className="h-3 flex-1 max-w-28" />
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );

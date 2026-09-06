@@ -588,36 +588,6 @@
    },
    "open": [
     {
-     "id": "arge-recete-15",
-     "criterion": 7,
-     "severity": "P1",
-     "text": "Sayfanın birincil paneli (maliyet simülasyonu) sunucuda değil, hidrasyondan sonra client'ta bir server action ile çekiliyor; bu sürede 194px'lik kutuda çıplak 'Yükleniyor…' spinner'ı duruyor ve içerik gelince panel 982px'e sıçrıyor. Spinner ne `aria-busy` taşıyor ne de iskelet: depodaki `DataTableSkeleton` (gerçek satır yüksekliğiyle) ve route'un kendi `loading.tsx` iskeleti bu panelde kullanılmıyor. `pnpm shot` — ki openRoute'u aria-busy/skeleton kaybolana dek bekler — masaüstü görüntüsünü spinner fazında yakaladı (artifacts/screens/arge-projeler-3e6d916f-…-receteler/desktop.png).",
-     "measure": "390×844, navigasyon commit'inden itibaren örnekleme: busy=true 641ms→2339ms (1.70s), spinner panelH=194px, içerik panelH=982px (+788px sıçrama), document.scrollHeight 871→1659; hasSkeleton=false, aria-busy yok",
-     "target": "Yükleme durumu içerik ölçüsünde iskelet olsun ve `aria-busy` taşısın: panel yükseklik sıçraması ≤64px, `[aria-busy], [data-slot=\"skeleton\"], .animate-pulse` seçicisi yükleme fazında eşleşsin (böylece `pnpm shot`/`pnpm measure` spinner yakalayamasın). Tercihen ilk versiyon detayı sunucuda getirilip RecipeWorkspace'e prop olarak verilsin (client fetch yalnızca versiyon değişiminde).",
-     "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx:120-126 + apps/web/src/app/(app)/arge/projeler/[id]/receteler/page.tsx",
-     "openedRound": 3
-    },
-    {
-     "id": "arge-recete-16",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "390px'te malzeme tablosu `min-w-[800px]` ile 322px'lik kaba sıkıştırılıyor: 478px yatay taşma ve 6 sütunun 4'ü — 'Maliyet kaynağı', 'Birim maliyet', 'Fire %', 'Satır maliyeti' — ekran dışında. Yani maliyet simülasyonunun bütün PARA sütunları mobilde görünmüyor; ekranda yalnız 'Ürün' ve 'Miktar' var. Depodaki ortak DataTable aynı genişlikte mobil kart düzenine geçiyor (bkz. /arge/receteler 63.5px kartlar), bu tablo geçmiyor. scroll-fade-x ipucu var ama 2,5 kat taşmayı çözmüyor.",
-     "measure": "390×844: sarmalayıcı scrollWidth 800 / clientWidth 322 → 478px gizli; görünür başlıklar ['Ürün','Miktar'], gizli başlıklar ['Maliyet kaynağı','Birim maliyet','Fire %','Satır maliyeti']. 1440×900'de taşma yok (880/880).",
-     "target": "390px'te `wrap.scrollWidth ≤ wrap.clientWidth` ve gizli başlık sayısı 0: ≤640px'te `min-w-[800px]` bırakılıp satır başına yığılmış (etiket+değer) mobil düzene geçilsin (mobile-cards.tsx deseni) ya da en az 'Satır maliyeti' sabitlensin.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:324-325",
-     "openedRound": 3
-    },
-    {
-     "id": "arge-recete-17",
-     "criterion": 4,
-     "severity": "P1",
-     "text": "Aynı olgu — 'birim maliyet hedefin üstünde' — Ar-Ge'nin üç ekranında üç ayrı tonda basılıyor: /arge/projeler tablosunda `text-warning` (turuncu), bu sayfada hedef çubuğu + tutar `text-destructive` (kırmızı), /arge/receteler tablosunda hiç renk yok. Kırmızı bu üründe hata/tehlike tonu (satır silme, 'Miktar gerekli'); %3 hedef aşımı bir uyarı, hata değil. Renk anlam taşımalı, ekrana göre değişmemeli.",
-     "measure": "Aynı ₺103,41 değerinin hesaplanmış rengi: /arge/projeler 'oklch(0.72 0.17 70)' (warning), bu sayfa hedef çubuğu tutarı 'oklch(0.577 0.245 27.3)' (destructive), /arge/receteler 'oklch(0.21 0.006 285.9)' (foreground). Kod: project-list.tsx:87,171 `overTarget && 'text-warning'` ↔ cost-simulator.tsx:242,249,258 `overTarget ? 'text-destructive' : 'text-success'`.",
-     "target": "Tek ton: `overTarget` her yerde warning (metin `text-warning`, çubuk `bg-warning/70`); destructive yalnız gerçek hata/yıkıcı eylemde kalsın. Ölçüt: aynı reçetenin birim maliyeti /arge/projeler ve bu sayfada AYNI computed color.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:242,249,258",
-     "openedRound": 3
-    },
-    {
      "id": "arge-recete-18",
      "criterion": 9,
      "severity": "P2",
@@ -817,6 +787,45 @@
      "openedRound": 2,
      "measureAfter": "Satır yükseklikleri: salt-okunur (v2) [39,39,39,39,39,38.5], düzenlenebilir (v1) [39,39,39,39,39,38.5] — aynı, fark 0px (hedef ≤2px). Ürün adı+SKU tek satıra alındı (flex items-baseline gap-1.5).",
      "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-15",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "Sayfanın birincil paneli (maliyet simülasyonu) sunucuda değil, hidrasyondan sonra client'ta bir server action ile çekiliyor; bu sürede 194px'lik kutuda çıplak 'Yükleniyor…' spinner'ı duruyor ve içerik gelince panel 982px'e sıçrıyor. Spinner ne `aria-busy` taşıyor ne de iskelet: depodaki `DataTableSkeleton` (gerçek satır yüksekliğiyle) ve route'un kendi `loading.tsx` iskeleti bu panelde kullanılmıyor. `pnpm shot` — ki openRoute'u aria-busy/skeleton kaybolana dek bekler — masaüstü görüntüsünü spinner fazında yakaladı (artifacts/screens/arge-projeler-3e6d916f-…-receteler/desktop.png).",
+     "measure": "390×844, navigasyon commit'inden itibaren örnekleme: busy=true 641ms→2339ms (1.70s), spinner panelH=194px, içerik panelH=982px (+788px sıçrama), document.scrollHeight 871→1659; hasSkeleton=false, aria-busy yok",
+     "target": "Yükleme durumu içerik ölçüsünde iskelet olsun ve `aria-busy` taşısın: panel yükseklik sıçraması ≤64px, `[aria-busy], [data-slot=\"skeleton\"], .animate-pulse` seçicisi yükleme fazında eşleşsin (böylece `pnpm shot`/`pnpm measure` spinner yakalayamasın). Tercihen ilk versiyon detayı sunucuda getirilip RecipeWorkspace'e prop olarak verilsin (client fetch yalnızca versiyon değişiminde).",
+     "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx:120-126 + apps/web/src/app/(app)/arge/projeler/[id]/receteler/page.tsx",
+     "openedRound": 3,
+     "measureAfter": "SSR kök neden düzeltmesi doğrulandı: page.tsx artik ilk secili versiyonun getVersionDetail() sonucunu sunucuda getirip RecipeWorkspace'e initialDetail prop'u olarak veriyor; client fetch yalnizca kullanici BASKA bir versiyon sectiğinde çalışır. Canlı Playwright örneklemesi (390x844, goto→commit'ten itibaren 0/100/300/500/800/1200/2000/3000ms): body.innerText hiçbir örnekte 'Yükleniyor' metni taşımadı, t=1698ms'de 'Birim maliyet' (maliyet paneli) zaten DOM'da, t=1500..5000ms arası document.scrollHeight 2621→2617 (±4px, panel sıçraması YOK — eski 788px sıçramanın yerini aldı). Anlık aria-busy=true yalnızca t≈2008ms'de route'un KENDİ loading.tsx'i (Next.js RSC akışı) için görüldü, çıplak spinner değil. Versiyon DEĞİŞTİRME anındaki client fetch için de artık CostSimulatorSkeleton (aria-busy, gerçek 6 satır×39px iskelet, hedef çubuğu+4 form alanı iskeleti) eklendi — eski `<Loader2/> Yükleniyor…` kutusu kaldırıldı.",
+     "closedRound": 4,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-16",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "390px'te malzeme tablosu `min-w-[800px]` ile 322px'lik kaba sıkıştırılıyor: 478px yatay taşma ve 6 sütunun 4'ü — 'Maliyet kaynağı', 'Birim maliyet', 'Fire %', 'Satır maliyeti' — ekran dışında. Yani maliyet simülasyonunun bütün PARA sütunları mobilde görünmüyor; ekranda yalnız 'Ürün' ve 'Miktar' var. Depodaki ortak DataTable aynı genişlikte mobil kart düzenine geçiyor (bkz. /arge/receteler 63.5px kartlar), bu tablo geçmiyor. scroll-fade-x ipucu var ama 2,5 kat taşmayı çözmüyor.",
+     "measure": "390×844: sarmalayıcı scrollWidth 800 / clientWidth 322 → 478px gizli; görünür başlıklar ['Ürün','Miktar'], gizli başlıklar ['Maliyet kaynağı','Birim maliyet','Fire %','Satır maliyeti']. 1440×900'de taşma yok (880/880).",
+     "target": "390px'te `wrap.scrollWidth ≤ wrap.clientWidth` ve gizli başlık sayısı 0: ≤640px'te `min-w-[800px]` bırakılıp satır başına yığılmış (etiket+değer) mobil düzene geçilsin (mobile-cards.tsx deseni) ya da en az 'Satır maliyeti' sabitlensin.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:324-325",
+     "openedRound": 3,
+     "measureAfter": "Kök neden düzeltmesi: cost-simulator.tsx'teki gerçek `<table min-w-[800px]>` kaldırıldı, yerine `role=\"table\"` taşıyan tek DOM ağaçlı bir CSS Grid geldi — md: altında (767px ve altı) her satır etiket+değer olarak 2 sütuna yığılır (TÜM alanlar: Ürün, Miktar, Maliyet kaynağı, Birim maliyet, Fire %, Satır maliyeti görünür kalır), md: ve üstünde CSS değişkenli sabit grid şablonu (9/9/8/6/7/2.25rem) eski tablo genişlikleriyle birebir. `pnpm measure /arge/projeler/8df43c67-.../receteler --viewport 390x844`: scrollWidth=390=clientWidth (overflowX:false, eskiden 800/322, 478px taşma) — hedef karşılandı. 1440x900'de de scrollWidth=1440=clientWidth (regresyon yok). Ekran görüntüsüyle doğrulandı (artifacts/screens/arge-projeler-8df43c67-...-receteler/mobile.png): 6 alanın hepsi etiketiyle birlikte okunur kartlarda.",
+     "closedRound": 4,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-17",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "Aynı olgu — 'birim maliyet hedefin üstünde' — Ar-Ge'nin üç ekranında üç ayrı tonda basılıyor: /arge/projeler tablosunda `text-warning` (turuncu), bu sayfada hedef çubuğu + tutar `text-destructive` (kırmızı), /arge/receteler tablosunda hiç renk yok. Kırmızı bu üründe hata/tehlike tonu (satır silme, 'Miktar gerekli'); %3 hedef aşımı bir uyarı, hata değil. Renk anlam taşımalı, ekrana göre değişmemeli.",
+     "measure": "Aynı ₺103,41 değerinin hesaplanmış rengi: /arge/projeler 'oklch(0.72 0.17 70)' (warning), bu sayfa hedef çubuğu tutarı 'oklch(0.577 0.245 27.3)' (destructive), /arge/receteler 'oklch(0.21 0.006 285.9)' (foreground). Kod: project-list.tsx:87,171 `overTarget && 'text-warning'` ↔ cost-simulator.tsx:242,249,258 `overTarget ? 'text-destructive' : 'text-success'`.",
+     "target": "Tek ton: `overTarget` her yerde warning (metin `text-warning`, çubuk `bg-warning/70`); destructive yalnız gerçek hata/yıkıcı eylemde kalsın. Ölçüt: aynı reçetenin birim maliyeti /arge/projeler ve bu sayfada AYNI computed color.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:242,249,258",
+     "openedRound": 3,
+     "measureAfter": "cost-simulator.tsx:258,265,274'te (eski satır 242/249/258) `text-destructive`/`bg-destructive/70` → `text-warning`/`bg-warning/70` — hedef aşımı artık her yerde AYNI (turuncu/warning) tonda: /arge/projeler tablosu zaten text-warning kullanıyordu (project-list.tsx:87,171), bu sayfa artık eşleşiyor. Ekran görüntüsüyle doğrulandı: 'Fıstık Bazı' v1'de '%14 hedef üstü' rozeti ve çubuk turuncu/warning basılıyor (artifacts/screens/arge-projeler-8df43c67-...-receteler/desktop.png). `pnpm measure` 1440px distinctColors 21→19 (destructive/warning karışımının bir kısmı birleşti).",
+     "closedRound": 4,
      "verifiedBy": "ölçüm"
     }
    ]
