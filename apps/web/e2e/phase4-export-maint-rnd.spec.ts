@@ -87,22 +87,33 @@ function parseTrNumber(text: string): number {
 }
 
 /**
- * `KpiCard`'ın canlı sayacı (`@number-flow/react`) `.innerText()`/`.textContent` ile GÜVENİLİR
+ * `KpiCard`'ın canlı sayacı (`@number-flow/react`) `.innerText()`/`.textContent` İLE GÜVENİLİR
  * OKUNAMAZ — kök neden (canlıda yakalandı, 10 sn'lik `.poll()` bile hiç yakınsamadı): kütüphane
  * `<number-flow-react>` diye AÇIK bir shadow-DOM custom element'i (`node_modules/number-flow/dist/
  * lite.js`: `this.attachShadow({mode:'open'})`), her basamağı 0-9 arası ON AYRI `<span>` olarak
  * üst üste bindirip yalnızca birini CSS/`inert` ile "görünür" yapan bir kaydırma animasyonuyla
- * gösteriyor — düz metin çıkarımı bu yapıdan güvenilir tek bir rakam değil "0" (veya tutarsız bir
- * birleşim) okuyor. Kütüphanenin KENDİSİ gerçek biçimlendirilmiş metni erişilebilirlik ağacına
- * `ElementInternals` üzerinden yazıyor (aynı dosya: `this._internals.role='img'`;
- * `this._internals.ariaLabel = t.valueAsString`) — bu, animasyon/DOM iç yapısından bağımsız TEK
- * güvenilir kaynak. `el.ariaLabel` IDL özelliği bu internals değerini yansıtır.
+ * gösteriyor — canlı doğrulandı (bkz. probe): `shadowRoot.textContent` gerçekten
+ * "₺0123456789.0123…" gibi TÜM basamak varyantlarının birleşimini veriyor, tek bir okunabilir
+ * rakam değil.
+ *
+ * İlk denenen alternatif — `ElementInternals.ariaLabel` (kütüphane `this._internals.ariaLabel =
+ * t.valueAsString` atıyor, kod okuyunca "stabil" görünüyordu) — DE YANLIŞ çıktı: canlı problamada
+ * bu ortamda `el.ariaLabel` VE `el.getAttribute('aria-label')` ikisi de `null` döndü (ElementInternals
+ * ARIA yansıması bu Chromium/React 19 kombinasyonunda `HTMLElement.ariaLabel` IDL üzerinden geri
+ * okunmuyor) — bu da testin BİR ÖNCEKİ turda `parseTrNumber('')` → `Number('')` → sessizce `0`'a
+ * düşüp YİNE yanlış (ama bu sefer "geçerli görünen") bir sıfır üretmesine yol açtı.
+ *
+ * Doğrulanmış (probe ile canlı test edildi) güvenilir kaynak: elementin KENDİ `_data` özelliği —
+ * `set data(t)` (`lite.js`) ham değeri `this._data = t` olarak saklıyor, `t.value` (ondalık kayıp
+ * olmadan number) ve `t.valueAsString` (biçimlendirilmiş metin, ör. "₺8.209") burada duruyor. Özel
+ * (private #) değil, sıradan bir JS özelliği — `evaluate` ile doğrudan okunabiliyor.
  */
 async function readNumberFlowValue(container: Locator): Promise<number> {
   const el = container.locator('number-flow-react').first();
   await expect(el).toHaveCount(1, { timeout: 10_000 });
-  const label = await el.evaluate((node) => (node as unknown as { ariaLabel?: string }).ariaLabel || node.getAttribute('aria-label') || '');
-  return parseTrNumber(label);
+  const value = await el.evaluate((node) => (node as unknown as { _data?: { value?: number } })._data?.value);
+  if (value === undefined || value === null || Number.isNaN(value)) throw new Error('NumberFlow _data.value okunamadı — kütüphane henüz hidrasyonu tamamlamamış olabilir');
+  return value;
 }
 
 function overflowCheck(page: Page) {
@@ -448,24 +459,15 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     await expect(page.getByText(ctx.invoiceDocNo!).first()).toBeVisible();
   });
 
-  test('Adım 9 — ihracat@ sevkiyat detayında faturaya bağla', async () => {
-    await page.goto(`/ihracat/sevkiyatlar/${ctx.shipmentId}`);
-    await page.getByRole('button', { name: 'Faturaya bağla' }).click();
-    const dialog = page.locator('[data-slot="dialog-content"]');
-    await expect(dialog).toBeVisible();
-    await dialog.getByRole('combobox').click();
-    await page.getByRole('option', { name: new RegExp(ctx.invoiceDocNo!) }).click();
-    await dialog.getByRole('button', { name: 'Bağla' }).click();
-    await expect(page.getByText('Faturaya bağlandı')).toBeVisible({ timeout: 10_000 });
-
-    const shipment = psqlOne(`select invoice_id from export_shipments where id = '${ctx.shipmentId}'`);
-    expect(shipment).toBe(ctx.invoiceId);
-
-    const doc = psqlOne(`select status from export_documents where shipment_id = '${ctx.shipmentId}' and code = 'INVOICE'`);
-    expect(doc).toBe('sent');
-  });
-
-  test('Adım 10 — ihracat@ gümrüğe al (ETGB no) → belge "Gerekli" → "Alındı" → Yüklendi işaretle', async () => {
+  test('Adım 9 — ihracat@ gümrüğe al (ETGB no) → belge "Gerekli" → "Alındı" → Yüklendi işaretle', async () => {
+    // Kök neden (canlıda yakalandı — 150 sn zaman aşımına düşüp bağlamı zorla kapattırdı):
+    // `ShipmentActions` (shipment-actions.tsx) "Faturaya bağla" düğmesini yalnızca
+    // `!invoiceId && ['shipped','delivered'].includes(status)` iken render ediyor — orijinal test
+    // sırası bu adımı (gümrüğe alma/yükleme, statüyü 'shipped' yapan asıl adım) SONRAYA
+    // ERTELEMİŞTİ, "Faturaya bağla"yı statü hâlâ 'packing' iken (düğme HİÇ yok) denemişti. Bu bir
+    // uygulama bulgusu değil — durum makinesi belgelendiği gibi çalışıyor (bir sevkiyat
+    // sevk edilmeden faturaya "kapatma" bağı kurulamaz); sıra düzeltilir: önce gümrük+yükleme
+    // (statü → 'shipped'), SONRA faturaya bağlama.
     const before = psqlOne(`select status from export_documents where shipment_id = '${ctx.shipmentId}' and code = 'ETGB'`);
     expect(before).toBe('required');
     await expect(visibleText(page, 'Gerekli')).toBeVisible();
@@ -499,6 +501,25 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     const finalStatus = psqlOne(`select status from export_shipments where id = '${ctx.shipmentId}'`);
     expect(finalStatus).toBe('shipped');
     await expect(page.getByText('Yüklendi', { exact: false }).first()).toBeVisible();
+  });
+
+  test('Adım 10 — ihracat@ sevkiyat detayında faturaya bağla', async () => {
+    // Statü artık 'shipped' (bkz. Adım 9) — `ShipmentActions`in "Faturaya bağla" koşulu
+    // (`!invoiceId && ['shipped','delivered'].includes(status)`) burada sağlanıyor.
+    await page.goto(`/ihracat/sevkiyatlar/${ctx.shipmentId}`);
+    await page.getByRole('button', { name: 'Faturaya bağla' }).click();
+    const dialog = page.locator('[data-slot="dialog-content"]');
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole('combobox').click();
+    await page.getByRole('option', { name: new RegExp(ctx.invoiceDocNo!) }).click();
+    await dialog.getByRole('button', { name: 'Bağla' }).click();
+    await expect(page.getByText('Faturaya bağlandı')).toBeVisible({ timeout: 10_000 });
+
+    const shipment = psqlOne(`select invoice_id from export_shipments where id = '${ctx.shipmentId}'`);
+    expect(shipment).toBe(ctx.invoiceId);
+
+    const doc = psqlOne(`select status from export_documents where shipment_id = '${ctx.shipmentId}' and code = 'INVOICE'`);
+    expect(doc).toBe('sent');
   });
 
   test('Adım 11 — muhasebe@ /muhasebe/tahsilatlar/yeni: EUR tahsilat farklı günün kuruyla → 646/656 kur farkı fişi', async () => {
@@ -881,13 +902,26 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
     await newRecipeDialog.getByLabel('Miktar').fill('2');
     await newRecipeDialog.getByRole('button', { name: 'Oluştur' }).click();
     await expect(newRecipeDialog).toBeHidden();
+
+    ctx.recipeId = psqlOne(`select id from trial_recipes where project_id = '${ctx.projectId}' and name = '${recipeName}'`)!;
+    expect(ctx.recipeId).toBeTruthy();
+
+    // KÖK NEDEN (canlıda yakalandı, sonraki "v2 satırı bulunamadı" kırığının asıl nedeni): seed
+    // 'Fıstık Bazı' PROJESİ için ZATEN kendi adıyla bir deneme reçetesi taşıyor
+    // (packages/db/src/seed/rnd.ts: `name: 'Fıstık Bazı'`, tek versiyon — v1). Bizim burada
+    // oluşturduğumuz YENİ reçete de v1'den başlıyor — `RecipeWorkspace`'in seçili reçete durumu
+    // yeni oluşturulana OTOMATİK GEÇMİYOR (aynı kısıt, dosyanın sonundaki "Negatifler" testinde
+    // 'Şekersiz Protein' için de belgeli). Önceki sürüm burada yalnızca `getByRole('heading',
+    // {name:'v1'})` görünürlüğünü kontrol ediyordu — bu YANILTICIYDI: seed reçetesi de o an v1'de
+    // olduğundan, gerçekte SEED reçetesi seçili kalmışken bile bu doğrulama YEŞİL geçiyordu.
+    // Sonraki "Yeni versiyon" tıklaması o zaman SEED reçetesine v2 ekliyordu (toast yine "v2
+    // oluşturuldu" diyordu — ama BAŞKA bir reçete için); `ctx.recipeId` (bizim reçetemiz) hiçbir
+    // zaman v2'ye ulaşmıyordu. Reçete artık ADINA göre AÇIKÇA seçilir — belirsizlik ortadan kalkar.
+    await page.getByRole('button', { name: recipeName }).click();
     // `getByText('v1')` iki eleman buluyordu: sol listedeki versiyon seçici düğmesi ("v1 Taslak")
     // VE sağdaki çalışma alanı başlığı (`<h2>v1</h2>`) — strict-mode ihlali (canlıda yakalandı).
     // Başlık `getByRole('heading', ...)` ile tekil hedeflenir.
     await expect(page.getByRole('heading', { name: 'v1' })).toBeVisible({ timeout: 10_000 });
-
-    ctx.recipeId = psqlOne(`select id from trial_recipes where project_id = '${ctx.projectId}' and name = '${recipeName}'`)!;
-    expect(ctx.recipeId).toBeTruthy();
 
     await page.getByRole('button', { name: 'Yeni versiyon' }).click();
     await expect(page.getByText('v2 oluşturuldu')).toBeVisible({ timeout: 10_000 });
