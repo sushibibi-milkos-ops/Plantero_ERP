@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { D, toDb, round2, round4, sum, pct, ZERO, isZero4, netFromGross, formatQtyTr } from '../money.js';
+import { D, toDb, toDbRate, round2, round4, round6, sum, pct, ZERO, isZero4, netFromGross, formatQtyTr } from '../money.js';
 
 describe('money', () => {
   it('D: null/undefined → 0, string → Decimal', () => {
@@ -12,9 +12,15 @@ describe('money', () => {
     expect(toDb(D('0.1').plus('0.2'))).toBe('0.3000');
     expect(toDb(D('2.00005'))).toBe('2.0001');
   });
-  it('round2 / round4 yarım yukarı', () => {
+  it('round2 / round4 / round6 yarım yukarı', () => {
     expect(round2(D('1.005')).toString()).toBe('1.01');
     expect(round4(D('1.00005')).toString()).toBe('1.0001');
+    expect(round6(D('36.8052235')).toString()).toBe('36.805224');
+  });
+  it('round6 / toDbRate: numeric(12,6) kur kolonu hassasiyeti (tur 5 P0 kök neden — kur 2 ondalığa yuvarlanmaz)', () => {
+    expect(round6(D('36.805224')).toString()).toBe('36.805224');
+    expect(toDbRate(D('36.805224'))).toBe('36.805224');
+    expect(toDbRate('1')).toBe('1.000000');
   });
   it('sum ve pct', () => {
     expect(sum([D('1.1'), '2.2', 3]).toFixed(4)).toBe('6.3000');
