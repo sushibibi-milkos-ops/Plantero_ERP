@@ -161,6 +161,16 @@ export type UpdateCostsInput = { laborMinutes?: number; laborCost?: string; part
 
 export async function updateDiagnosis(tx: DbOrTx, orderId: string, input: UpdateCostsInput, ctx: ActorCtx): Promise<MaintenanceOrderRow> {
   const order = await loadOrder(tx, orderId);
+  // P0 düzeltmesi (Tur 2 regresyonu): `completeOrder`/`cancelOrder` gibi kardeşleri MO_ALREADY_CLOSED
+  // koruması taşırken bu fonksiyon taşımıyordu — 'done' bir iş emrinde partsCost/laborCost sessizce
+  // güncellenebiliyordu, ama tamamlanma anında 730/100 hesabına atılan yevmiye fişi (bkz. completeOrder)
+  // ASLA yeniden atılmıyor/düzeltilmiyor: muhasebe kalıcı olarak maintenance_orders.parts_cost+labor_cost'tan
+  // sapıyordu (checks/53_maintenance_journal_amount.sql). Kapalı bir iş emrinde maliyet/tanı değişikliği
+  // gerekiyorsa (ör. geç gelen tedarikçi faturası) ayrı bir düzeltme fişi atan bir servis gerekir — burada
+  // sessiz üzerine yazma değil, sibling'lerle aynı sert durum koruması.
+  if (order.status === 'done' || order.status === 'cancelled') {
+    throw new DomainError('MO_ALREADY_CLOSED', `İş emri ${order.docNo} zaten kapalı (durum: ${order.status})`, { status: order.status });
+  }
   const [updated] = await tx
     .update(maintenanceOrders)
     .set({

@@ -29,10 +29,15 @@ export default async function ExportRatesPage() {
         actions={userCan(user, 'export.manage') ? <FetchRatesButton /> : undefined}
       />
 
+      {/* Tur 2 P1 ihracat-kurlar-06 kök neden düzeltmesi: bu şerit CURRENCY_ORDER'ı koşulsuz map
+          ediyordu — grafik (rate-chart.tsx) Tur 1'de "yalnızca veri taşıyan seri" kuralına geçirilmişti
+          (GBP seed'de kasıtlı olarak yok, bkz. seed/export.ts) ama KPI şeridi bu kurala hiç bağlanmamıştı:
+          GBP bloğu daima değersiz '—' basıyordu ("ölü mürekkep"). Artık grafikle AYNI kural: yalnızca en
+          az bir kuru olan para birimi için blok render edilir. */}
       <KpiStripRow>
-        {CURRENCY_ORDER.map((c) => {
-          const r = latestByCurrency.get(c);
-          return <KpiCard key={c} variant="strip" title={`${c} satış`} value={r?.selling ?? null} format="money" currency="TRY" fractionDigits={4} hint={r ? `Alış ${formatRate(r.buying)}` : undefined} />;
+        {CURRENCY_ORDER.filter((c) => latestByCurrency.has(c)).map((c) => {
+          const r = latestByCurrency.get(c)!;
+          return <KpiCard key={c} variant="strip" title={`${c} satış`} value={r.selling} format="money" currency="TRY" fractionDigits={4} hint={`Alış ${formatRate(r.buying)}`} />;
         })}
       </KpiStripRow>
 

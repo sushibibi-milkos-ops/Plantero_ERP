@@ -93,7 +93,10 @@ export function ShipmentCreateForm({ orders, initialOrderId }: { orders: Eligibl
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-[calc(72px+env(safe-area-inset-bottom))] md:pb-0">
-        <div className="max-w-2xl space-y-1.5">
+        {/* Tur 2 P2 ihracat-yeni-03 kök neden düzeltmesi: bu blok `max-w-2xl` (672px), altındaki
+            lojistik ızgarası `max-w-3xl` (768px) idi — sağ kenarlar 96px kayıyordu (ne ızgaranın sağ
+            kenarına ne sol sütununa oturuyordu). Tek içerik genişliği: iki blok da artık `max-w-3xl`. */}
+        <div className="max-w-3xl space-y-1.5">
           <FieldLabel required>İhracat siparişi</FieldLabel>
           <Controller control={form.control} name="salesOrderId" render={({ field }) => <Combobox value={field.value} onChange={(v) => field.onChange(v ?? '')} options={orderOptions} placeholder="Sipariş seçin" clearable={false} />} />
           {form.formState.errors.salesOrderId ? <p className="text-xs text-destructive">{form.formState.errors.salesOrderId.message}</p> : null}

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { Pencil } from 'lucide-react';
-import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
+import { DataTable, DataTableRowActions, type ColumnDef, type DataTableFilter } from '@/components/data-table';
 import { StatusBadge } from '@/components/status-badge';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { Label } from '@/components/ui/label';
@@ -48,13 +48,14 @@ export function DocumentsTable({
       base.push({ id: 'shipmentDocNo', accessorFn: (r) => r.shipmentDocNo, header: 'Sevkiyat', meta: { className: 'font-mono', mobile: 'subtitle' } });
       base.push({ id: 'partnerName', accessorFn: (r) => r.partnerName, header: 'Müşteri', meta: { mobile: 'hidden' } });
     }
-    // `defaultHidden`: yalnızca tüm sevkiyatların ortak belge panosunda (/ihracat/belgeler) — burada
-    // Belge no/Vade/Sorumlu satırların %80'inden fazlasında boş (Tur 1 P1, ihracat-belgeler-01: 30
-    // satırın 30'u Vade'de, 30'u Sorumlu'da, 26'sı Belge no'da '—'), üç sütun birlikte tablo
-    // genişliğinin %35'ini hiç bilgi taşımadan tüketiyordu. Sütun görünürlüğü menüsünden açılabilir;
-    // varsayılan kapatma yalnızca İLK ekranı yoğunlaştırır. Tek bir sevkiyatın kendi belge sekmesinde
-    // (showShipmentColumn=false) doluluk çok daha yüksek olduğundan bu davranış uygulanmaz.
-    const sparseDefault = showShipmentColumn ? ({ defaultHidden: true } as const) : {};
+    // `defaultHidden` (Tur 2 P1 ihracat-detay-06 kök neden düzeltmesi): önceden yalnızca ortak belge
+    // panosunda (/ihracat/belgeler, showShipmentColumn=true) uygulanıyordu — "doluluk tek sevkiyatın
+    // kendi sekmesinde daha yüksektir" varsayımı YANLIŞTI: ölçüm tam tersini gösterdi (panoda Belge no
+    // 26/30 boş, burada 7/8; Vade ve Sorumlu HER İKİ bağlamda da %100 boş). Belge no/Vade/Sorumlu
+    // satırların %80'inden fazlasında boş olduğundan (Tur 1 P1 ihracat-belgeler-01 ile birebir aynı
+    // kusur) varsayılan gizleme artık KOŞULSUZ — sütun görünürlüğü menüsünden her iki bağlamda da
+    // açılabilir kalır.
+    const sparseDefault = { defaultHidden: true } as const;
     base.push(
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="export_doc" /> },
       { accessorKey: 'docNo', header: 'Belge no', meta: { width: 140, mobile: 'hidden', ...sparseDefault }, cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span> },
@@ -71,6 +72,7 @@ export function DocumentsTable({
   }, [showShipmentColumn]);
 
   const filters: DataTableFilter[] = [{ columnId: 'status', title: 'Durum', options: statusOptions('export_doc') }];
+  const rowActions = (r: ExportDocRow) => [{ label: 'Düzenle', icon: Pencil, onSelect: () => openEdit(r) }];
 
   return (
     <>
@@ -80,9 +82,29 @@ export function DocumentsTable({
         getRowId={(r) => r.id}
         searchPlaceholder="Belge, sevkiyat, müşteri ara…"
         filters={filters}
-        rowActions={(r) => [{ label: 'Düzenle', icon: Pencil, onSelect: () => openEdit(r) }]}
+        rowActions={rowActions}
         emptyTitle="Belge yok"
         emptyDescription="Sevkiyat oluşturulunca rejime göre belge takip listesi otomatik kurulur."
+        // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false) özel kart — Tur 2 P1
+        // ihracat-detay-08 kök neden düzeltmesi: yukarıdaki `sparseDefault` Belge no/Vade/Sorumlu'yu
+        // varsayılan gizleyince bu bağlamda ikinci satıra düşecek HİÇBİR alan kalmıyordu (docNo zaten
+        // `mobile:'hidden'`, dueDate `mobile:'meta'` ama boş) — kart 42px'e düşüp KENDİ 44px'lik
+        // satır-eylem düğmesinden bile kısa kalıyordu. Paylaşılan `mobile-cards.tsx` değiştirilmeden
+        // (kural 2) ikinci satıra HER ZAMAN dolu olan `code` (belge tipi anahtarı) + varsa Belge no/Vade
+        // konur; kabın `min-h-14` (56px) ile bant garanti altına alınır.
+        renderMobileCard={!showShipmentColumn ? (r) => (
+          <div className="min-h-14 rounded-lg border border-border/70 bg-card p-2.5">
+            <div className="flex items-center gap-1.5">
+              <div className="min-w-0 flex-1 truncate text-[14px] leading-5 font-medium">{r.name}</div>
+              <StatusBadge status={r.status} kind="export_doc" />
+              <DataTableRowActions row={r} actions={rowActions(r)} />
+            </div>
+            <div className="mt-0.5 truncate text-xs text-muted-foreground">
+              <span className="font-mono">{r.code}</span>
+              {r.docNo ? ` · Belge no ${r.docNo}` : r.dueDate ? ` · Vade ${formatDate(r.dueDate)}` : r.responsibleName ? ` · Sorumlu ${r.responsibleName}` : ''}
+            </div>
+          </div>
+        ) : undefined}
       />
 
       <ConfirmDialog

@@ -6,6 +6,7 @@ import { DataTable, type ColumnDef } from '@/components/data-table';
 import { LotBadge } from '@/components/lot-badge';
 import { EmptyState } from '@/components/empty-state';
 import { formatQty } from '@/lib/format';
+import { D } from '@plantero/core';
 import type { getShipmentDetail } from '../queries';
 
 type Packages = NonNullable<Awaited<ReturnType<typeof getShipmentDetail>>>['packages'];
@@ -31,8 +32,12 @@ export function PackingListTable({ packages }: { packages: Packages }) {
       },
       { id: 'qty', accessorFn: (r) => r.qty, header: 'Miktar', meta: { align: 'right', width: 100 }, cell: ({ row }) => <span className="font-mono tabular-nums">{formatQty(row.original.qty)}</span> },
       { id: 'hsCode', accessorFn: (r) => r.hsCode ?? '', header: 'GTİP', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono text-muted-foreground">{getValue<string>() || '—'}</span> },
-      { id: 'netWeightKg', accessorFn: (r) => r.netWeightKg ?? '', header: 'Net kg', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono tabular-nums text-muted-foreground">{getValue<string>() ? formatQty(getValue<string>()) : '—'}</span> },
-      { id: 'grossWeightKg', accessorFn: (r) => r.grossWeightKg ?? '', header: 'Brüt kg', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono tabular-nums text-muted-foreground">{getValue<string>() ? formatQty(getValue<string>()) : '—'}</span> },
+      // Tur 2 P2 ihracat-detay-09 kök neden düzeltmesi: bu hücreler sıfır ağırlığı (numeric(18,4)
+      // string'i "0.0000" — her zaman truthy) `formatQty` ile "0" basıyordu, aynı sayfadaki
+      // "Proforma & gümrük" panelindeki `weightCell` helper'ı ise `D(v).isZero()` ile aynı sıfırı '—'
+      // gösteriyordu — tek ekranda sıfır ağırlık için iki farklı glif. Artık tek kural: boş/sıfır → '—'.
+      { id: 'netWeightKg', accessorFn: (r) => r.netWeightKg ?? '', header: 'Net kg', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ getValue }) => { const v = getValue<string>(); return <span className="font-mono tabular-nums text-muted-foreground">{v && !D(v).isZero() ? formatQty(v) : '—'}</span>; } },
+      { id: 'grossWeightKg', accessorFn: (r) => r.grossWeightKg ?? '', header: 'Brüt kg', meta: { align: 'right', width: 90, mobile: 'hidden' }, cell: ({ getValue }) => { const v = getValue<string>(); return <span className="font-mono tabular-nums text-muted-foreground">{v && !D(v).isZero() ? formatQty(v) : '—'}</span>; } },
     ],
     [],
   );

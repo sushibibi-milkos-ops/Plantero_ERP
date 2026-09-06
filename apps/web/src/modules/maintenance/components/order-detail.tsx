@@ -13,23 +13,18 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { MoneyCell } from '@/components/money-cell';
 import { ConfirmDialog } from '@/components/confirm-dialog';
-import { formatDateTime } from '@/lib/format';
+import { StatusBadge } from '@/components/status-badge';
+import { DetailFieldGroupsGrid } from '@/components/detail-field-groups-grid';
+import type { DetailFieldGroup } from '@/components/detail-fields';
+import { formatDate, formatDateTime } from '@/lib/format';
 import { startOrderAction, markWaitingPartsAction, updateChecklistAction, completeOrderAction, cancelOrderAction } from '../actions';
 import type { MaintenanceOrderDetail } from '../queries';
-import { DOWNTIME_REASON_LABELS } from '../labels';
-
-function StatCell({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="rounded-lg bg-muted/50 p-3">
-      <div className="text-[11px] text-muted-foreground">{label}</div>
-      <div className="mt-0.5 text-[15px] font-medium tabular-nums">{value}</div>
-    </div>
-  );
-}
+import { DOWNTIME_REASON_LABELS, MACHINE_CATEGORY_LABELS } from '../labels';
+import { OrderTimeline } from './order-timeline';
 
 export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrderDetail; canExecute: boolean }) {
   const router = useRouter();
-  const { order, machine, plan, assigneeName, reportedByName, photos, downtime, workOrderDocNo } = detail;
+  const { order, machine, lineCode, lineName, plan, assigneeName, reportedByName, photos, downtime, workOrderDocNo, events } = detail;
   const [pending, setPending] = useState(false);
   const [checklist, setChecklist] = useState(order.checklistResults ?? []);
   const [completeOpen, setCompleteOpen] = useState(false);
@@ -40,6 +35,7 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
   const [partsCost, setPartsCost] = useState(order.partsCost ?? '0');
 
   const isOpen = !['done', 'cancelled'].includes(order.status);
+  const totalCost = String(Number(order.laborCost) + Number(order.partsCost));
 
   async function run<T>(action: () => Promise<{ ok: true; data: T } | { ok: false; error: string }>, successMsg: string) {
     setPending(true);
@@ -64,27 +60,68 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
     }
   }
 
+  // Duruş: tek bir açıklayıcı metin — eskiden aynı bilgi hem üstteki StatCell'de (yalnızca dakika)
+  // HEM sayfa altında ayrı 1152px'lik çerçeveli bir kutuda (sebep + saat) tekrar ediliyordu (Kriter 5,
+  // Tur 2 P1 bakim-isemirleri-detay-03). Artık TEK yerde, alan ızgarasının bir satırı olarak.
+  const downtimeNode = downtime ? (
+    <span>
+      {DOWNTIME_REASON_LABELS[downtime.reason] ?? downtime.reason} — {formatDateTime(downtime.startedAt)}
+      {downtime.endedAt ? ` → ${formatDateTime(downtime.endedAt)} (${downtime.minutes} dk)` : <span className="text-warning"> devam ediyor</span>}
+    </span>
+  ) : null;
+
+  // Kriter 12 (Tur 2 P1 bakim-isemirleri-detay-08) kök neden düzeltmesi: eskiden 8 gri dolgulu
+  // StatCell + tek satırlık bilgiler için 2 AYRI çerçeveli kutu (plan/üretim iş emri) — 11 kap
+  // toplamı "kutu içinde kutu" görüntüsü veriyordu. Ortak `DetailFieldGroupsGrid` (ürün/cari
+  // detaylarında zaten kanıtlanmış hairline tanım listesi deseni) hiçbir gri dolgu/çerçeve
+  // taşımaz; boş alanlar varsayılan gizli ("Boş alanları göster" ile açılır). Bu, ayrıca sparse
+  // (yeni bildirilmiş) bir iş emrinde ekranın yarısının boş kalması sorununu da (Kriter 3,
+  // bakim-isemirleri-detay-04) makine bağlamını (kategori/hat/durum/kapasite) göstererek azaltır.
+  const groups: DetailFieldGroup[] = [
+    {
+      title: 'İş emri',
+      fields: [
+        { label: 'Makine', value: machine.id, node: <Link href={`/bakim/makineler/${machine.id}`} className="text-primary hover:underline">{machine.code} — {machine.name}</Link> },
+        { label: 'Tür', value: order.kind, node: <StatusBadge status={order.kind} kind="maintenance_kind" /> },
+        { label: 'Bildiren', value: reportedByName, node: reportedByName },
+        { label: 'Sorumlu', value: assigneeName, node: assigneeName },
+        { label: 'Bildirilme', value: order.reportedAt, node: formatDateTime(order.reportedAt) },
+        { label: 'Planlanan', value: order.scheduledFor, node: order.scheduledFor ? formatDate(order.scheduledFor) : null },
+        { label: 'Başlangıç', value: order.startedAt, node: order.startedAt ? formatDateTime(order.startedAt) : null },
+        { label: 'Bitiş', value: order.finishedAt, node: order.finishedAt ? formatDateTime(order.finishedAt) : null },
+        { label: 'Duruş', value: downtime, node: downtimeNode },
+        { label: 'Periyodik plan', value: plan, node: plan ? <Link href="/bakim/planlar" className="text-primary hover:underline">{plan.name}</Link> : null },
+        { label: 'Üretim iş emri', value: workOrderDocNo, node: <span className="font-mono">{workOrderDocNo}</span> },
+        { label: 'Not', value: order.note, node: order.note },
+      ],
+    },
+    {
+      title: 'Makine bilgisi',
+      fields: [
+        { label: 'Kategori', value: machine.category, node: MACHINE_CATEGORY_LABELS[machine.category] ?? machine.category },
+        { label: 'Hat', value: lineCode, node: lineCode ? `${lineCode} — ${lineName}` : null },
+        { label: 'Durum', value: machine.status, node: <StatusBadge status={machine.status} kind="machine" /> },
+        { label: 'Kapasite', value: machine.capacityPerHour, node: machine.capacityPerHour ? `${machine.capacityPerHour} ${machine.capacityUnit ?? ''}` : null },
+        { label: 'Güç', value: machine.powerKw, node: machine.powerKw ? `${machine.powerKw} kW` : null },
+        { label: 'Çalışma saati', value: machine.runtimeHours, node: `${machine.runtimeHours} sa` },
+      ],
+    },
+    {
+      title: 'Tanı ve maliyet',
+      fields: [
+        { label: 'İşçilik (dk)', value: order.laborMinutes || null, node: order.laborMinutes },
+        { label: 'İşçilik tutarı', value: Number(order.laborCost) > 0 ? order.laborCost : null, node: <MoneyCell value={order.laborCost} /> },
+        { label: 'Parça tutarı', value: Number(order.partsCost) > 0 ? order.partsCost : null, node: <MoneyCell value={order.partsCost} /> },
+        { label: 'Toplam', value: Number(totalCost) > 0 ? totalCost : null, node: <MoneyCell value={totalCost} className="font-semibold" /> },
+        { label: 'Kök neden', value: order.rootCause, node: order.rootCause },
+        { label: 'Çözüm', value: order.resolution, node: order.resolution },
+      ],
+    },
+  ];
+
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-        <StatCell label="Makine" value={<Link href={`/bakim/makineler/${machine.id}`} className="text-primary hover:underline">{machine.code}</Link>} />
-        <StatCell label="Bildiren" value={reportedByName ?? '—'} />
-        <StatCell label="Sorumlu" value={assigneeName ?? '—'} />
-        <StatCell label="Duruş" value={downtime ? `${downtime.minutes || (downtime.endedAt ? 0 : '—')} dk` : '—'} />
-      </div>
-
-      {plan ? (
-        <div className="rounded-lg border border-border/60 bg-card p-3 text-[13px]">
-          <span className="text-muted-foreground">Periyodik plan: </span>
-          <Link href={`/bakim/planlar`} className="text-primary hover:underline">{plan.name}</Link>
-        </div>
-      ) : null}
-      {workOrderDocNo ? (
-        <div className="rounded-lg border border-border/60 bg-card p-3 text-[13px]">
-          <span className="text-muted-foreground">Üretim iş emri: </span>
-          <span className="font-mono">{workOrderDocNo}</span>
-        </div>
-      ) : null}
+      <DetailFieldGroupsGrid groups={groups} />
 
       {order.description ? (
         <div className="rounded-xl border border-border/70 bg-card p-4">
@@ -107,20 +144,6 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
         </div>
       ) : null}
 
-      {(order.rootCause || order.resolution || Number(order.laborCost) > 0 || Number(order.partsCost) > 0) ? (
-        <div className="rounded-xl border border-border/70 bg-card p-4">
-          <h2 className="mb-3 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Tanı ve maliyet</h2>
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-            <StatCell label="İşçilik (dk)" value={order.laborMinutes || '—'} />
-            <StatCell label="İşçilik tutarı" value={<MoneyCell value={order.laborCost} />} />
-            <StatCell label="Parça tutarı" value={<MoneyCell value={order.partsCost} />} />
-            <StatCell label="Toplam" value={<MoneyCell value={String(Number(order.laborCost) + Number(order.partsCost))} className="font-semibold" />} />
-          </div>
-          {order.rootCause ? <p className="mt-3 text-[13px]"><span className="text-muted-foreground">Kök neden: </span>{order.rootCause}</p> : null}
-          {order.resolution ? <p className="mt-1 text-[13px]"><span className="text-muted-foreground">Çözüm: </span>{order.resolution}</p> : null}
-        </div>
-      ) : null}
-
       {photos.length > 0 ? (
         <div className="rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-3 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Fotoğraflar ({photos.length})</h2>
@@ -137,13 +160,7 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
         </div>
       ) : null}
 
-      {downtime ? (
-        <div className="rounded-lg border border-border/60 bg-card p-3 text-[13px]">
-          <span className="text-muted-foreground">Duruş: </span>
-          {DOWNTIME_REASON_LABELS[downtime.reason] ?? downtime.reason} — {formatDateTime(downtime.startedAt)}
-          {downtime.endedAt ? ` → ${formatDateTime(downtime.endedAt)} (${downtime.minutes} dk)` : <span className="text-warning"> devam ediyor</span>}
-        </div>
-      ) : null}
+      <OrderTimeline events={events} />
 
       {canExecute && isOpen ? (
         <div className="sticky bottom-16 -mx-4 z-20 flex flex-wrap items-center gap-2 border-t border-border bg-background px-4 py-3 shadow-[0_-1px_2px_rgb(0_0_0/0.04)] md:static md:mx-0 md:z-auto md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none">

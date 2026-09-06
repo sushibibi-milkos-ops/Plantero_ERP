@@ -62,7 +62,10 @@ export function RateChart({ rows }: { rows: RateRow[] }) {
       <LineChart data={points} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
         <CartesianGrid stroke="var(--border)" vertical={false} />
         <XAxis dataKey="date" tickFormatter={(v: string) => formatDate(v).slice(0, 5)} tick={xTick} axisLine={false} tickLine={false} minTickGap={32} />
-        <YAxis tick={xTick} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => `₺${v.toFixed(1)}`} domain={['auto', 'auto']} />
+        {/* Tur 2 P1 ihracat-kurlar-07 kök neden düzeltmesi: `v.toFixed(1)` NOKTA ondalık ayracı
+            üretiyordu ('₺42.0') — aynı grafiğin kendi tooltip'i (RateTooltip, yukarıda) ve sayfadaki
+            KPI/tablo tr-TR virgül kullanıyordu; tek bileşen içinde iki farklı sayı biçimi. */}
+        <YAxis tick={xTick} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => `₺${v.toLocaleString('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`} domain={['auto', 'auto']} />
         <Tooltip content={<RateTooltip />} isAnimationActive={false} wrapperStyle={{ outline: 'none' }} />
         <Legend wrapperStyle={{ fontSize: 12 }} iconType="plainline" />
         {seriesWithData.map((c) => (

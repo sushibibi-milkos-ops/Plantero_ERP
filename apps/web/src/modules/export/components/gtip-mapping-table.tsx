@@ -41,8 +41,15 @@ function HsCodeCell({ row, hsCodeOptions, editable }: { row: GtipProductRow; hsC
           `data-[size=default]:h-11 md:...:h-9` (ihracat-gtip-02): taban sınıf `data-[size=default]:h-9`
           bir ATTRIBUTE selector taşıdığı için düz `h-9`/`md:h-9` override'ından daha yüksek özgüllüğe
           sahip — 390px'te bu ekranın TEK birincil eylemi 36px'te (44px dokunma hedefinin altında)
-          kalıyordu (fields.tsx'teki aynı kök nedenin ikinci örneği). */}
-      <SelectTrigger className="w-full min-w-[9rem] border-transparent bg-transparent px-2 font-mono text-[13px] shadow-none data-[size=default]:h-11 hover:border-input focus-visible:border-ring data-[state=open]:border-input md:data-[size=default]:h-9 dark:bg-transparent dark:hover:bg-input/30 dark:data-[state=open]:bg-input/30">
+          kalıyordu (fields.tsx'teki aynı kök nedenin ikinci örneği).
+          `-my-3.5 md:my-0` (Tur 2 P2 ihracat-gtip-06 kök neden): bu hücre mobil kartın "badge" satırında
+          (row-actions.tsx'teki `DataTableRowActions` ile AYNI kalıp — bkz. o dosyadaki yorum) başlıkla
+          aynı `items-center` flex satırında oturuyor; 44px'lik gerçek dokunma kutusu satırın çapraz-eksen
+          yüksekliğini 44px'e zorlayıp kartı 84px'e (56-72 bandının üstüne) taşıyordu. Negatif dikey
+          margin dokunma kutusunu (`getBoundingClientRect`, marj'dan etkilenmez) 44x44 aynen KORURKEN
+          satıra katkısını rozet satırının kendi ölçeğine (11px/leading-4=16px) indirir; masaüstünde
+          (`md:my-0`) etkisizdir. */}
+      <SelectTrigger className="w-full min-w-[9rem] border-transparent bg-transparent px-2 font-mono text-[13px] shadow-none data-[size=default]:h-11 -my-3.5 md:my-0 hover:border-input focus-visible:border-ring data-[state=open]:border-input md:data-[size=default]:h-9 dark:bg-transparent dark:hover:bg-input/30 dark:data-[state=open]:bg-input/30">
         <SelectValue placeholder="GTİP seçin" />
       </SelectTrigger>
       <SelectContent>

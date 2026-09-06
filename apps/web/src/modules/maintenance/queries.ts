@@ -7,7 +7,7 @@ import { computeMtbfMttr } from '@plantero/core/maintenance/machines';
 
 const {
   machines, maintenancePlans, maintenanceOrders, downtimes, oeeRecords, attachments,
-  productionLines, users, roles, userRoles, workOrders, products,
+  productionLines, users, roles, userRoles, workOrders, products, auditLog,
 } = schema;
 
 /* ==================================================================== */
@@ -209,16 +209,24 @@ export async function listMaintenanceOrders(): Promise<MaintenanceOrderRow[]> {
 export type MaintenanceOrderDetail = {
   order: typeof maintenanceOrders.$inferSelect;
   machine: typeof machines.$inferSelect;
+  lineCode: string | null; lineName: string | null;
   plan: typeof maintenancePlans.$inferSelect | null;
   assigneeName: string | null; reportedByName: string | null;
   photos: Array<typeof attachments.$inferSelect>;
   downtime: typeof downtimes.$inferSelect | null;
   workOrderDocNo: string | null;
+  events: MaintenanceOrderEvent[];
 };
 
 export async function getMaintenanceOrderDetail(id: string): Promise<MaintenanceOrderDetail | null> {
   const assignee = { id: users.id, fullName: users.fullName };
-  const [row] = await db.select({ o: maintenanceOrders, machine: machines }).from(maintenanceOrders).innerJoin(machines, eq(machines.id, maintenanceOrders.machineId)).where(eq(maintenanceOrders.id, id)).limit(1);
+  const [row] = await db
+    .select({ o: maintenanceOrders, machine: machines, lineCode: productionLines.code, lineName: productionLines.name })
+    .from(maintenanceOrders)
+    .innerJoin(machines, eq(machines.id, maintenanceOrders.machineId))
+    .leftJoin(productionLines, eq(productionLines.id, machines.lineId))
+    .where(eq(maintenanceOrders.id, id))
+    .limit(1);
   if (!row) return null;
 
   const [plan] = row.o.planId ? await db.select().from(maintenancePlans).where(eq(maintenancePlans.id, row.o.planId)).limit(1) : [];
@@ -227,12 +235,43 @@ export async function getMaintenanceOrderDetail(id: string): Promise<Maintenance
   const photos = await db.select().from(attachments).where(and(eq(attachments.tableName, 'maintenance_orders'), eq(attachments.recordId, id))).orderBy(asc(attachments.createdAt));
   const [downtime] = await db.select().from(downtimes).where(eq(downtimes.maintenanceOrderId, id)).orderBy(desc(downtimes.startedAt)).limit(1);
   const [wo] = row.o.workOrderId ? await db.select({ docNo: workOrders.docNo }).from(workOrders).where(eq(workOrders.id, row.o.workOrderId)).limit(1) : [];
+  const events = await getMaintenanceOrderEvents(id);
 
   return {
-    order: row.o, machine: row.machine, plan: plan ?? null,
+    order: row.o, machine: row.machine, lineCode: row.lineCode, lineName: row.lineName, plan: plan ?? null,
     assigneeName: assigneeRow?.fullName ?? null, reportedByName: reporterRow?.fullName ?? null,
-    photos, downtime: downtime ?? null, workOrderDocNo: wo?.docNo ?? null,
+    photos, downtime: downtime ?? null, workOrderDocNo: wo?.docNo ?? null, events,
   };
+}
+
+export type MaintenanceOrderEvent = { id: string; at: Date; action: string; summary: string | null; status: string | null; userName: string | null };
+
+/**
+ * Kriter 3 (Tur 2 P1 bakim-isemirleri-detay-04) kök neden düzeltmesi: iş emri detayında durum
+ * yalnızca TEK bir rozetle temsil ediliyordu — "bildirildi → işleme alındı → parça bekliyor →
+ * tamamlandı" geçişleri (kim, ne zaman) hiçbir yerde görünmüyordu. `maintenance_orders` şemasında
+ * (dondurulmuş) ayrı bir olay/geçmiş tablosu yok; her durum geçişi zaten `audit_log`'a yazılıyor
+ * (orders.ts: reportBreakdown→create, start/markWaitingParts→update, completeOrder→post,
+ * cancelOrder→cancel) — kaynak veri burada, yeni tablo gerekmiyor. Kontrol listesi/maliyet
+ * güncellemeleri de 'update' yazıyor ama `before`/`after` alanlarını HİÇ doldurmuyor (yalnızca
+ * `summary`); durum geçişleri ise her zaman `after` içinde bir `status` alanı taşıyor — bu filtre
+ * checklist tıklamalarının zaman çizelgesini spamlamasını engeller.
+ */
+export async function getMaintenanceOrderEvents(orderId: string): Promise<MaintenanceOrderEvent[]> {
+  const rows = await db
+    .select({ id: auditLog.id, at: auditLog.at, action: auditLog.action, summary: auditLog.summary, after: auditLog.after, userName: users.fullName, userEmail: auditLog.userEmail })
+    .from(auditLog)
+    .leftJoin(users, eq(users.id, auditLog.userId))
+    .where(and(eq(auditLog.tableName, 'maintenance_orders'), eq(auditLog.recordId, orderId)))
+    .orderBy(asc(auditLog.at));
+
+  return rows
+    .filter((r) => r.after && typeof r.after === 'object' && 'status' in (r.after as Record<string, unknown>))
+    .map((r) => ({
+      id: r.id, at: r.at, action: r.action, summary: r.summary,
+      status: String((r.after as Record<string, unknown>).status),
+      userName: r.userName ?? r.userEmail ?? null,
+    }));
 }
 
 /* ==================================================================== */

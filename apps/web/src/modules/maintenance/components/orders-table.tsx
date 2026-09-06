@@ -10,6 +10,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import { statusOptions } from '@/lib/status';
 import { formatDateTime } from '@/lib/format';
 import { startOrderAction, cancelOrderAction } from '../actions';
+import { PRIORITY_TONE } from '../labels';
 import type { MaintenanceOrderRow } from '../queries';
 
 export function OrdersTable({
@@ -43,13 +44,32 @@ export function OrdersTable({
   const columns = useMemo<ColumnDef<MaintenanceOrderRow, unknown>[]>(
     () => [
       { accessorKey: 'docNo', header: 'No', meta: { mobile: 'title', className: 'font-mono', width: 130 } },
-      { accessorKey: 'title', header: 'Başlık', meta: { mobile: 'subtitle', flex: true } },
       {
-        id: 'machine', accessorFn: (r) => `${r.machineCode} ${r.machineName}`, header: 'Makine', meta: { width: 200, mobile: 'hidden' },
-        cell: ({ row }) => (<span><span className="font-mono text-xs text-muted-foreground">{row.original.machineCode}</span> {row.original.machineName}</span>),
+        // Kriter 5 (Tur 2 P1 bakim-isemirleri-09) kök neden düzeltmesi: aynen plans-table.tsx'teki
+        // 'machine' düzeltmesi — `flex:true` tek başına kırpma sağlamıyor, td hâlâ ata `whitespace-
+        // nowrap`'ını miras alıyordu; uzun arıza başlıklarında min-content 502px'e şişip 4 sütunu
+        // (Öncelik/Durum/foto/Eylemler) ekran dışına itiyordu. `whitespace-normal` + `line-clamp-1`
+        // ile hücre tek satıra kırpılır, sütun artık kalan flex alanına gerçekten sığar.
+        accessorKey: 'title', header: 'Başlık', meta: { mobile: 'subtitle', flex: true, className: 'whitespace-normal' },
+        cell: ({ row }) => (
+          <span className="line-clamp-1 leading-[18px] break-words whitespace-normal" title={row.original.title}>
+            {row.original.title}
+          </span>
+        ),
+      },
+      {
+        // Kriter 5 (Tur 2 P1 bakim-isemirleri-09) kök neden düzeltmesi: plans-table.tsx'teki 'machine'
+        // sütunuyla birebir aynı kök neden/çözüm (bkz. oradaki uzun yorum) — `meta.width:200` hücre
+        // içeriği kırpılmadan min-content'i asla 200px'e indiremez.
+        id: 'machine', accessorFn: (r) => `${r.machineCode} ${r.machineName}`, header: 'Makine', meta: { width: 200, mobile: 'hidden', className: 'whitespace-normal' },
+        cell: ({ row }) => (
+          <span className="line-clamp-1 leading-[18px] break-words whitespace-normal" title={`${row.original.machineCode} ${row.original.machineName}`}>
+            <span className="font-mono text-xs text-muted-foreground">{row.original.machineCode}</span> {row.original.machineName}
+          </span>
+        ),
       },
       { id: 'kind', accessorFn: (r) => r.kind, header: 'Tür', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance_kind" /> },
-      { id: 'priority', accessorFn: (r) => r.priority, header: 'Öncelik', meta: { width: 110, mobile: 'hidden' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance_priority" /> },
+      { id: 'priority', accessorFn: (r) => r.priority, header: 'Öncelik', meta: { width: 110, mobile: 'hidden' }, cell: ({ getValue }) => { const v = getValue<string>(); return <StatusBadge status={v} kind="maintenance_priority" tone={PRIORITY_TONE[v]} />; } },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance" /> },
       {
         id: 'photoCount', accessorFn: (r) => r.photoCount, header: '', meta: { width: 40 },

@@ -69,6 +69,33 @@ async function seedHsCodes(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   summary.add('hs_codes', count);
 }
 
+/**
+ * Ürün → GTİP eşlemesi (Tur 2 P1 ihracat-gtip-05 kök neden düzeltmesi): kanonik seed hiçbir satılabilir
+ * ürüne `products.hs_code` atamıyordu (39/39 boş) — `/ihracat/gtip`'in var oluş sebebi olan sütun tek
+ * değer ("Eşlenmedi") taşıyordu ve aşağı akışta gümrükte olan bir sevkiyatın (EXP-2026-000002, GB
+ * numaralı) çeki listesinde GTİP hücresi '—' kalıyordu. Bu modülün SEVK ETTİĞİ ürünler (bu dosyadaki
+ * `seedCustomsShipment`/`seedDraftShipment`/`seedPendingExportOrder` satırlarının SKU'ları + geriye
+ * dönük kapatılan SO-2026-000023'ün SKU'su) yukarıdaki `HS_CODES` referans listesindeki iki koda
+ * eşlenir (badem içeceği → 2202.99, kavrulmuş kahve → 0901.21) — `distinct ≥ 2` ve gerçek bir GTİP
+ * kodu çeki listesinde görünür olur. `products.hs_code` şema kolonu zaten var (masterdata.ts); bu
+ * yalnızca bir UPDATE'tir, şema değişikliği değildir.
+ */
+const HS_CODE_PRODUCT_MAP: Array<{ sku: string; hsCode: string }> = [
+  { sku: '190010001', hsCode: '2202.99' }, // Badem İçeceği 1L UHT (tekli) — seedDraftShipment
+  { sku: '190010099', hsCode: '2202.99' }, // Badem İçeceği 1L UHT (palet) — seedCustomsShipment
+  { sku: '190010003', hsCode: '2202.99' }, // Badem İçeceği 1L UHT (3'lü) — seedPendingExportOrder
+  { sku: '160020001', hsCode: '0901.21' }, // Plantero Costa Rica Kahve — SO-2026-000023 (backfillClosedShipment)
+];
+
+async function seedProductHsCodes(tx: DbOrTx, summary: SeedSummary): Promise<void> {
+  let count = 0;
+  for (const { sku, hsCode } of HS_CODE_PRODUCT_MAP) {
+    const res = await tx.update(products).set({ hsCode }).where(eq(products.sku, sku)).returning({ id: products.id });
+    if (res.length) count += 1;
+  }
+  summary.add('products.hs_code (eşlenen ürün)', count);
+}
+
 /* ==================================================================== */
 /* 0b) TCMB kur geçmişi (son 90 gün) — docs/modules/ihracat.md "/ihracat/kurlar" */
 /* ==================================================================== */
@@ -291,6 +318,9 @@ export async function seedExport(tx: DbOrTx, summary: SeedSummary): Promise<void
 
   log('export', 'GTİP kodları...');
   await seedHsCodes(tx, summary);
+
+  log('export', 'ürün → GTİP eşlemesi (sevk edilen ürünler)...');
+  await seedProductHsCodes(tx, summary);
 
   log('export', 'TCMB kur geçmişi (son 90 gün, USD/EUR/GBP)...');
   await seedExchangeRateHistory(tx, summary);

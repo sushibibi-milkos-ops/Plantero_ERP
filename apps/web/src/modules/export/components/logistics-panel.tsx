@@ -46,8 +46,12 @@ export function LogisticsPanel({
     <div className="rounded-lg border border-border/60 p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-[13px] font-semibold">Lojistik</h3>
+        {/* Tur 2 P1 ihracat-detay-07 kök neden: bu düğme 390px'te 28px'te sabitti — sayfada lojistik
+            bilgilerini değiştirmenin TEK yolu, diğer tüm eylemler (Yüklendi işaretle, İptal et,
+            sekmeler, satır eylemleri) ≥44px iken bu ikisi <44px'ti. Mobilde 44px (`h-11`),
+            masaüstünde yoğunluk için 28px (`md:h-7`) korunur. */}
         {editable ? (
-          <Button variant="ghost" size="sm" onClick={openEdit} className="h-7 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" size="sm" onClick={openEdit} className="h-11 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground md:h-7">
             <Pencil className="size-3.5" /> Düzenle
           </Button>
         ) : null}
