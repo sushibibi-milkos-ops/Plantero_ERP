@@ -31,9 +31,15 @@ ROOT=$(pwd)
 
 echo "== db:reset"; pnpm db:reset > "$L/reset.log" 2>&1; echo reset_exit:$?
 echo "== db:check"; pnpm db:check > "$L/check.log" 2>&1; echo check_exit:$?; tail -2 "$L/check.log"
+# GATE_SKIP_STATIC=1: typecheck/lint/test adımlarını atla (yalnızca aynı HEAD için bu adımlar zaten
+# yeşil doğrulanmışken, süre bütçesi dar QA koşularında build+e2e'ye odaklanmak için). Öntanımlı: çalıştır.
+if [ "${GATE_SKIP_STATIC:-0}" = "1" ]; then
+  echo "typecheck_exit:skipped"; echo "lint_exit:skipped"; echo "test_exit:skipped"
+else
 pnpm typecheck --concurrency=1 > "$L/typecheck.log" 2>&1; echo typecheck_exit:$?
 pnpm lint --concurrency=1 > "$L/lint.log" 2>&1; echo lint_exit:$?
 pnpm test --concurrency=1 > "$L/test.log" 2>&1; echo test_exit:$?; grep -E "Tests " "$L/test.log" | tail -6
+fi
 
 # /proc/net/tcp(6)'te verilen TCP portunu LISTEN durumunda tutan PID'leri döndürür.
 # lsof/ss gerektirmez (bazı ortamlarda ikisi de eksik/izinsiz olabiliyor) — yalnızca procfs.
