@@ -77,8 +77,26 @@ const FILES = await checkFiles();
 // yeşile zorlamak yanlış olurdu. Düzeltme önerisi checks/51_maintenance_cost_not_posted.sql üst
 // yorumunda. I52 (aynı tur, YENİ, P2, saf regresyon güvenlik ağı — fresh seed'de 0 ihlal): ihracat
 // packing list (export_packages) satırlarının lot/miktar zinciri bağlı delivery_lines'la birebir
-// örtüşmesini doğrular (bkz. checks/52_export_package_lot_integrity.sql üst yorumu).
-const RULE_COUNT = 53;
+// örtüşmesini doğrular (bkz. checks/52_export_package_lot_integrity.sql üst yorumu). I53 (aynı
+// dönem, bakım modülü düzeltmesi doğrulaması): bakım iş emri maliyetinin postJournalEntry tutarıyla
+// birebir eşleştiğini doğrular (bkz. checks/53_maintenance_journal_amount.sql üst yorumu).
+// I54 (veri-critic, veri bütünlüğü turu 3 — YENİ, P0, KIRMIZI potansiyeli, CANLI DOĞRULANDI): Ar-Ge
+// modülünün `trials.ts::EDITABLE_STATUSES` sabiti {'draft','testing'} — bir deneme reçetesi versiyonu
+// onaya gönderildikten (`status='testing'`, `approvals.status='pending'`, maliyet `payload.unitCost`'a
+// DONDURULDÜKTEN) SONRA hâlâ tam yetkiyle düzenlenebiliyor; `updateVersionDraft` bekleyen onaydan
+// tamamen bağımsız çalışıp `unit_cost`/`material_cost`'u sessizce yeniden yazıyor, `approvals.payload`
+// hiç güncellenmiyor. Canlı egzersizle kanıtlandı (rollback'li transaction, fresh seed): seed'deki
+// pending onay (payload.unitCost='166.1701') dururken bir satırın miktarı değiştirildi →
+// version.unit_cost 166,1701 → 750,7062'ye (4,5×) sıçradı, onay hâlâ 'pending' + payload hâlâ eski
+// rakamda donuk kaldı — onaylayan kişi eski rakamı görüp onaylarsa `releaseToBom` GÜNCEL (drift'li)
+// satırları production BOM'una kopyalar. Fresh seed'de 0 ihlal (drift yalnızca canlı bir düzenleme
+// eylemiyle üretilir) — bu saf bir regresyon güvenlik ağı; ayrıca aynı dosyada iki savunma katmanı
+// daha var: onaylanmış/devrolmuş versiyon ↔ hedef BOM satır sayısı eşitliği ve kayıtlı unit_cost'un
+// `computeTrialCost` formülüyle yeniden hesaplandığında aynı çıkması (bkz.
+// checks/54_recipe_approval_drift.sql üst yorumu). Düzeltme önerisi: EDITABLE_STATUSES'tan 'testing'i
+// çıkar (versiyon onaya gönderildikten sonra kilitlensin) veya updateVersionDraft bekleyen onayı
+// otomatik reddedip versiyonu 'draft'a düşürsün.
+const RULE_COUNT = 54;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
