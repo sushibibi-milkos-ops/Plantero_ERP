@@ -136,6 +136,30 @@
    "scrollWidth": 146,
    "clientWidth": 132,
    "text": "BioGrün Handels GmbH"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 712,
+   "clientWidth": 452,
+   "text": "Ar-Ge Sorumlusu · Ar-Ge reçetesi üretim BOM'una devredildi: "
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 459,
+   "clientWidth": 452,
+   "text": "Ar-Ge Sorumlusu · Reçete devri onaylandı — üretim BOM'una de"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 782,
+   "clientWidth": 452,
+   "text": "system@plantero.local · Arıza bildirildi MO-2026-000006: Sil"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 463,
+   "clientWidth": 452,
+   "text": "system@plantero.local · İş emri MO-2026-000005 tamamlandı (0"
   }
  ],
  "clipped": [],
@@ -148,7 +172,7 @@
   },
   {
    "section": "Son aktiviteler",
-   "gap": 106,
+   "gap": 146,
    "trailing": 16,
    "rowW": 566
   },
@@ -275,58 +299,53 @@
    "gap": 0
   },
   {
-   "a": "· admin@plantero.local gir",
-   "b": "· 3 kez",
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Ar-Ge reçetesi üretim BO",
    "gap": 0
   },
   {
-   "a": "Muhasebe Sorumlusu",
-   "b": "· muhasebe@plantero.local ",
+   "a": "· Ar-Ge reçetesi üretim BO",
+   "b": "1 dakika önce",
+   "gap": -249
+  },
+  {
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Reçete devri onaylandı —",
    "gap": 0
   },
   {
-   "a": "Sistem Yöneticisi",
-   "b": "· admin@plantero.local gir",
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Reçete versiyonu onaya g",
    "gap": 0
   },
   {
-   "a": "Üretim Şefi",
-   "b": "· uretim@plantero.local gi",
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Reçete versiyonu onaya g",
    "gap": 0
   },
   {
-   "a": "· uretim@plantero.local gi",
-   "b": "· 2 kez",
+   "a": "system@plantero.local",
+   "b": "· Arıza bildirildi MO-2026",
    "gap": 0
   },
   {
-   "a": "Satış Sorumlusu",
-   "b": "· satis@plantero.local gir",
+   "a": "· Arıza bildirildi MO-2026",
+   "b": "1 dakika önce",
+   "gap": -318
+  },
+  {
+   "a": "system@plantero.local",
+   "b": "· İş emri MO-2026-000005 t",
    "gap": 0
   },
   {
-   "a": "· satis@plantero.local gir",
-   "b": "· 2 kez",
-   "gap": 0
+   "a": "· İş emri MO-2026-000005 t",
+   "b": "1 dakika önce",
+   "gap": 1
   },
   {
-   "a": "Muhasebe Sorumlusu",
-   "b": "· muhasebe@plantero.local ",
-   "gap": 0
-  },
-  {
-   "a": "· muhasebe@plantero.local ",
-   "b": "· 2 kez",
-   "gap": 0
-  },
-  {
-   "a": "Depo Sorumlusu",
-   "b": "· depo@plantero.local giri",
-   "gap": 0
-  },
-  {
-   "a": "· depo@plantero.local giri",
-   "b": "· 2 kez",
+   "a": "system@plantero.local",
+   "b": "· İş emri MO-2026-000005 i",
    "gap": 0
   }
  ],

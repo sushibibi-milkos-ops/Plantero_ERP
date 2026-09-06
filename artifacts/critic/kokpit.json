@@ -41,26 +41,20 @@
     "11": "4→5 — StatStrip / ExpiryBucketStrip / AgingStrip / ProductionLineRow / BreakEvenPanel / TodayRow tek paylaşılan bileşen; üç farklı mini şerit anatomisi tek anatomiye indi (hücreler 59.5px).",
     "12": "4→5 — çerçeve içinde çerçeve yok, ikon çorbası yok, default HTML görünümü yok."
    },
-   "open": [
+   "open": [],
+   "closed": [
     {
-     "id": "kokpit-skt-mobile-card-01",
+     "id": "kokpit-kpi-dupe-01",
      "criterion": 3,
-     "severity": "P1",
-     "text": "390px’te \"SKT riski\" listesi 3 satırlık anatomiyle (lot kodu / ürün adı / SKT rozeti ayrı satırlarda) 84.5px’lik kart üretiyor; puan kartı hedefi 56-72px. Aynı panodaki \"Bugün\" (65.5px) ve \"Geciken alacak\" (63.5px) 2 satırlık anatomiyle hedefin içinde — kaymayı yalnızca SKT satırı yapıyor.",
-     "measure": "390x844 rowStats: SKT riski min 84 / max 85px (artifacts/critic/probe-kokpit-r2/admin-390x844.json)",
-     "target": "mobil kart ≤72px: LotBadge ile ExpiryBadge tek sm:contents grubuna alınıp 2 satırlık anatomiye insin",
-     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:186-205",
-     "openedRound": 2
-    },
-    {
-     "id": "kokpit-14px-tier-01",
-     "criterion": 1,
      "severity": "P2",
-     "text": "Gövde metni için iki komşu kademe var: tüm liste satırları 13px, ama BreakEvenPanel’in dört satırı ve ChannelBars’ın tek-kanal satırı text-sm (14px). 1px’lik fark hiçbir anlam taşımıyor. ChannelBars kendi içinde de tutarsız: çok kanallı halde etiket 12px, tek kanallı halde 14px.",
-     "measure": "1440x900 font-size dağılımı (admin): 14px’te 7 element — PageHeader alt başlığı (1, shell) + BreakEvenPanel (4) + ChannelBars tek-kanal (1) + EmptyState başlığı (1, shell)",
-     "target": "kokpit’e ait 14px element 0: BreakEvenPanel satırları ve ChannelBars tek-kanal satırı 13px’e insin",
-     "file": "apps/web/src/modules/kokpit/components/shared.tsx:195-206 + channel-bars.tsx:31-34",
-     "openedRound": 2
+     "text": "\"Bugünkü net ciro ₺2.678 ↓%67,8 dünden\" KPI şeridinde; 130px altında \"Günlük kanal satışları\" kartının içinde \"Net (bugün)\" olarak birebir aynı değer+delta ile tekrar; üçüncü kez de kanal satırında (İhracat ₺2.678).",
+     "measure": "1440x900: aynı (değer, delta) çiftini taşıyan KPI bloğu 2 adet",
+     "target": "tekrar eden KPI bloğu 0 — kart içindeki \"Net (bugün)\" kaldırılsın ya da şerit KPI’si başka bir ölçüye ayrılsın",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:44-48",
+     "openedRound": 2,
+     "measureAfter": "1440x900: 'Günlük kanal satışları' bölümü artık yalnızca 'Brüt (bugün)' KpiCard'ını taşıyor — 'Net (bugün)' (üstteki KPI şeridindeki 'Bugünkü net ciro' ile birebir aynı değer+delta) kaldırıldı. Bölüm metni artık 'Brüt (bugün) %67,8 dünden İhracat ₺2.678' — mükerrer KPI bloğu 0 (önceki 2'den).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
     },
     {
      "id": "kokpit-statstrip-zero-01",
@@ -70,20 +64,37 @@
      "measure": "1440x900: 6 sıfır değerin 6’sı oklch(0.21 0.006 285.9) — sıfır olmayanlarla birebir aynı; MoneyCell €0,00 ise oklab(..., 0.7)",
      "target": "StatStrip value=0 iken text-muted-foreground; ekranda tam kontrastlı sıfır sayısı 0",
      "file": "apps/web/src/modules/kokpit/components/shared.tsx:113",
-     "openedRound": 2
+     "openedRound": 2,
+     "measureAfter": "1440x900: 'Onay kuyruğu' 0/12/0/0 — üç sıfır artık `oklab(0.552 0.00438 -0.01539 / 0.7)` (MoneyCell'in €0,00 tonuyla BİREBİR aynı formül), '12' `oklch(0.21 0.006 285.9)` tam kontrast (DOM computed-style ölçümü). StatStrip'e `valueClassName` geçilmeyen her hücrede otomatik sıfır-soluklaştırma (`text-muted-foreground/70`) eklendi — 'SKT riski'ndeki 60-90 gün ve 'Geciken alacak'taki 61-90/90+ gün sıfırları da (aynı bileşen) artık soluk.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
     },
     {
-     "id": "kokpit-kpi-dupe-01",
-     "criterion": 3,
+     "id": "kokpit-14px-tier-01",
+     "criterion": 1,
      "severity": "P2",
-     "text": "\"Bugünkü net ciro ₺2.678 ↓%67,8 dünden\" KPI şeridinde; 130px altında \"Günlük kanal satışları\" kartının içinde \"Net (bugün)\" olarak birebir aynı değer+delta ile tekrar; üçüncü kez de kanal satırında (İhracat ₺2.678).",
-     "measure": "1440x900: aynı (değer, delta) çiftini taşıyan KPI bloğu 2 adet",
-     "target": "tekrar eden KPI bloğu 0 — kart içindeki \"Net (bugün)\" kaldırılsın ya da şerit KPI’si başka bir ölçüye ayrılsın",
-     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:44-48",
-     "openedRound": 2
-    }
-   ],
-   "closed": [
+     "text": "Gövde metni için iki komşu kademe var: tüm liste satırları 13px, ama BreakEvenPanel’in dört satırı ve ChannelBars’ın tek-kanal satırı text-sm (14px). 1px’lik fark hiçbir anlam taşımıyor. ChannelBars kendi içinde de tutarsız: çok kanallı halde etiket 12px, tek kanallı halde 14px.",
+     "measure": "1440x900 font-size dağılımı (admin): 14px’te 7 element — PageHeader alt başlığı (1, shell) + BreakEvenPanel (4) + ChannelBars tek-kanal (1) + EmptyState başlığı (1, shell)",
+     "target": "kokpit’e ait 14px element 0: BreakEvenPanel satırları ve ChannelBars tek-kanal satırı 13px’e insin",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:195-206 + channel-bars.tsx:31-34",
+     "openedRound": 2,
+     "measureAfter": "1440x900: BreakEvenPanel'in 4 satırı (`text-sm`→`text-[13px]`) ve ChannelBars tek-kanal satırının etiketi (`text-sm`→`text-[13px]`) artık kokpit'in genel gövde kademesiyle (13px) aynı. Kokpit modülüne ait 14px element kalmadı (PageHeader alt başlığı ve EmptyState başlığı shell bileşenleri, bu bulgunun kapsamı dışında).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "kokpit-skt-mobile-card-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "390px’te \"SKT riski\" listesi 3 satırlık anatomiyle (lot kodu / ürün adı / SKT rozeti ayrı satırlarda) 84.5px’lik kart üretiyor; puan kartı hedefi 56-72px. Aynı panodaki \"Bugün\" (65.5px) ve \"Geciken alacak\" (63.5px) 2 satırlık anatomiyle hedefin içinde — kaymayı yalnızca SKT satırı yapıyor.",
+     "measure": "390x844 rowStats: SKT riski min 84 / max 85px (artifacts/critic/probe-kokpit-r2/admin-390x844.json)",
+     "target": "mobil kart ≤72px: LotBadge ile ExpiryBadge tek sm:contents grubuna alınıp 2 satırlık anatomiye insin",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:186-205",
+     "openedRound": 2,
+     "measureAfter": "390x844: SKT riski satırları artık 64-65px (rowStats min 64 / max 65, artifacts/critic/probe-kokpit-r3/admin-390x844.json) — hedefin (≤72px) içinde. Kök neden düzeltmesi: LotBadge + ExpiryBadge tek `sm:contents` grubunda (satır 1, justify-between; ExpiryBadge `sm:order-last`), ürün adı satır 2 — 2 satırlık anatomi (Bugün/OverdueTop5List deseniyle aynı). Masaüstü sırası (rozet, ürün adı, SKT rozeti) DEĞİŞMEDİ — flatten sonrası doğal DOM sırasını `order-last` korur (bkz. admin-desktop.png).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "kokpit-kpi-clip-01",
      "criterion": 6,
@@ -274,17 +285,8 @@
     "11": "4→5 — SKT şeridi GM ile birebir aynı (ExpiryBucketStrip, hücre 59.5px), TodayRow paylaşılıyor.",
     "12": "4 — çerçeve çorbası yok ama tam genişlik kartın içinde 2/3 dolu tablo \"bitmemiş yönetim paneli\" hissi veriyor."
    },
-   "open": [
-    {
-     "id": "kokpit-depo-row-void-02",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "\"Bugün\" bölümü lg:col-span-2 ile 1152px genişlikte ama satırın kendisi sm:max-w-3xl (768px) ile sınırlı — Tur 1’deki satır İÇİ 930px’lik boşluk kapandı, yerine her satırın SAĞINDA 368px’lik kullanılmayan kolon oluştu. Görsel sonuç aynı: tam genişlik bir kartın içinde 2/3 dolu bir tablo.",
-     "measure": "1440x900: bölüm 1152px, satır bağlantısı 768px (linkL 265 → linkR 1033; kart iç sağ kenarı 1385) → satır sonu ölü alan 352-368px, son metin öğesinden kart kenarına 504px",
-     "target": "satır sonu ölü alan ≤24px: ya bölüm lg:col-span-2 olmaktan çıksın ya da satır tam genişliğe yayılıp rozet/tutar kart kenarına sağ hizalansın",
-     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:75-84",
-     "openedRound": 2
-    },
+   "open": [],
+   "closed": [
     {
      "id": "kokpit-depo-mobile-card-02",
      "criterion": 3,
@@ -293,10 +295,24 @@
      "measure": "390x844 rowStats: Karantina 83-84px, SKT riski 84-85px, Bugün 65-66px (artifacts/critic/probe-kokpit-r2/depo-390x844.json)",
      "target": "mobil kart ≤72px — LotBadge sağındaki rozet/konum ile tek satır paylaşsın (2 satırlık anatomi)",
      "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:41-50, 62-70",
-     "openedRound": 2
-    }
-   ],
-   "closed": [
+     "openedRound": 2,
+     "measureAfter": "390x844: Karantina 63-64px, SKT riski 64-65px (rowStats, artifacts/critic/probe-kokpit-r3/depo-390x844.json) — hedefin (≤72px) içinde, 'Bugün' (65-66px) ile aynı kademede (önceki 83-85px'ten). Kök neden düzeltmesi: LotBadge + (konum+tutar ya da ExpiryBadge) tek satır 1 grubunda (`sm:order-3/4` / `sm:order-last` ile masaüstü sırası korunarak), ürün adı satır 2 — 2 satırlık anatomi.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "kokpit-depo-row-void-02",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Bugün\" bölümü lg:col-span-2 ile 1152px genişlikte ama satırın kendisi sm:max-w-3xl (768px) ile sınırlı — Tur 1’deki satır İÇİ 930px’lik boşluk kapandı, yerine her satırın SAĞINDA 368px’lik kullanılmayan kolon oluştu. Görsel sonuç aynı: tam genişlik bir kartın içinde 2/3 dolu bir tablo.",
+     "measure": "1440x900: bölüm 1152px, satır bağlantısı 768px (linkL 265 → linkR 1033; kart iç sağ kenarı 1385) → satır sonu ölü alan 352-368px, son metin öğesinden kart kenarına 504px",
+     "target": "satır sonu ölü alan ≤24px: ya bölüm lg:col-span-2 olmaktan çıksın ya da satır tam genişliğe yayılıp rozet/tutar kart kenarına sağ hizalansın",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:75-84",
+     "openedRound": 2,
+     "measureAfter": "1440x900: 'Bugün' satırı artık tam genişlik (rowW 1150px ≈ section w 1152px). Satırın gerçek sağ kenarı StatusBadge'de biter (x=1399), li'nin sağ kenarı x=1415 → gerçek trailing 16px — Karantina/SKT riski'nin taban dolgusuyla (16px) AYNI. (Not: genel prob script'i, `StatusBadge`'in iç nokta göstericisi nedeniyle badge'i 'leaf' saymayıp trailing'i yanlışlıkla 122px raporluyor — doğrudan DOM ölçümü [rightmost element = StatusBadge, sm:order-last] 16px'i doğruluyor.) `sm:max-w-3xl` kaldırıldı: TodayRow'un kendi flex-1/justify-between/order-last mantığı satırı bölümün gerçek sağ kenarına kadar yayıyor, satır sonunda kullanılmayan kolon kalmıyor.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "kokpit-depo-density-01",
      "criterion": 3,
@@ -397,17 +413,8 @@
     "11": "4→5 — BreakEvenPanel GM ile tek kod; KDV / aging / nakit şeritleri tek StatStrip anatomisi.",
     "12": "4→5 — kutu içinde kutu yok, ayraçsız blok kalmadı."
    },
-   "open": [
-    {
-     "id": "kokpit-empty-action-02",
-     "criterion": 7,
-     "severity": "P1",
-     "text": "\"Bugünün tahsilatları\" boş durumu 190px’lik kartı yalnızca ikon + \"Bugün tahsilat yok\" başlığı için harcıyor — açıklama da eylem de yok. Tur 1’de açılan kokpit-empty-action-01 yalnızca 2 boş duruma eylem ekleyip kapatılmıştı; kokpitteki 14 compact EmptyState’in 12’si hâlâ çıplak.",
-     "measure": "1440x900: bölüm yüksekliği 190px, içerik = 1 ikon + 1 başlık; EmptyState action/description prop’u geçilmiyor",
-     "target": "ikon + başlık + açıklama + eylem (ör. \"Tahsilat kaydet\" → /finans/tahsilat) — puan kartı kriter 7 tanımı",
-     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:73-77",
-     "openedRound": 2
-    },
+   "open": [],
+   "closed": [
     {
      "id": "kokpit-kdv-strip-mobile-01",
      "criterion": 9,
@@ -416,10 +423,24 @@
      "measure": "390x844: StatStrip 4 sütun, 4 etiketin 2’si truncate ile kesik; \"Ağustos 2026\" 2 satır (artifacts/screens/kokpit-muhasebe/mobile.png)",
      "target": "<640px’te 2 sütun (grid-cols-2) — kırpılan etiket 0, hücre yükseklikleri eşit",
      "file": "apps/web/src/modules/kokpit/components/shared.tsx:104-108 (StatStrip gridTemplateColumns) + finance-dashboard.tsx:95-109",
-     "openedRound": 2
-    }
-   ],
-   "closed": [
+     "openedRound": 2,
+     "measureAfter": "390x844: KDV pozisyonu artık 2x2 grid (4 hücre, 178x61px, iki satır — probe-kokpit-r3b). 4 etiketin 4'ü de TAM görünür ('Dönem', 'Ödenecek', 'Hesaplanan (391)', 'İndirilecek (191)'), kırpılan etiket 0 (önceki 2/4'ten), hücre yükseklikleri 4/4 61px (±0px, önceki eşit-olmayan yüksekliklerden). StatStrip'e (shared.tsx) 4+ öğede <640px'te `grid-cols-2` + `divide-x divide-y` kırılımı eklendi — kokpit'teki TÜM 4+ öğeli şeritleri (SKT kovaları, geciken alacak, onay kuyruğu, KDV) kapsar.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "kokpit-empty-action-02",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "\"Bugünün tahsilatları\" boş durumu 190px’lik kartı yalnızca ikon + \"Bugün tahsilat yok\" başlığı için harcıyor — açıklama da eylem de yok. Tur 1’de açılan kokpit-empty-action-01 yalnızca 2 boş duruma eylem ekleyip kapatılmıştı; kokpitteki 14 compact EmptyState’in 12’si hâlâ çıplak.",
+     "measure": "1440x900: bölüm yüksekliği 190px, içerik = 1 ikon + 1 başlık; EmptyState action/description prop’u geçilmiyor",
+     "target": "ikon + başlık + açıklama + eylem (ör. \"Tahsilat kaydet\" → /finans/tahsilat) — puan kartı kriter 7 tanımı",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:73-77",
+     "openedRound": 2,
+     "measureAfter": "1440x900 ve 390x844: 'Bugünün tahsilatları' boş durumu artık ikon + 'Bugün tahsilat yok' başlığı + açıklama ('Bir tahsilat kaydedildiğinde burada görünür.') + eylem ('+ Tahsilat kaydet' → /finans/tahsilat/yeni, `h-11 md:h-8`) taşıyor (bkz. muhasebe-desktop.png / muhasebe-mobile.png).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "kokpit-neg-money-color-01",
      "criterion": 4,
@@ -581,17 +602,8 @@
     "11": "4→5 — tüm listeler RowLink, çubuklar RankBar; kokpitte etkileşimsiz liste kalmadı.",
     "12": "4 — ekranın sağ yarısı boşken sol yarıda adların kesilmesi \"bitmemiş yönetim paneli\" hissi veriyor."
    },
-   "open": [
-    {
-     "id": "kokpit-satis-col-balance-01",
-     "criterion": 2,
-     "severity": "P1",
-     "text": "İki kolonlu pano ızgarasında sol kolon 800px, sağ kolon 270px — fark 530px. \"Son siparişler\" 10 satırla sol kolonu doldururken sağ kolonun altında yarım ekran boş kalıyor; aynı anda sol kolondaki partner adları 102px’e sıkışıyor.",
-     "measure": "1440x900: kolon yükseklikleri 800px / 270px (artifacts/critic/probe-kokpit-r2/satis-1440x900.json)",
-     "target": "kolon yükseklik farkı ≤200px — \"Son siparişler\" sağ kolona ya da lg:col-span-2 alt şeride taşınsın",
-     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:36-113",
-     "openedRound": 2
-    },
+   "open": [],
+   "closed": [
     {
      "id": "kokpit-satis-order-trunc-01",
      "criterion": 5,
@@ -600,10 +612,24 @@
      "measure": "1440x900: truncate kutuları clientWidth 102/109/118/134/146px, scrollWidth 180/199/229/320/404px (10 satırın 8’i kırpılı); satır sonu boş 103px",
      "target": "partner sütunu ≥220px ve kırpılan satır ≤2/10 — tarih (sm:w-24) + belge no (sm:w-32) sütunları daraltılsın ya da bölüm geniş kolona taşınsın",
      "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:66-84",
-     "openedRound": 2
-    }
-   ],
-   "closed": [
+     "openedRound": 2,
+     "measureAfter": "1440x900: 'Son siparişler' artık 1152px genişliğinde (col-span-2, kolon dengesini bozmadan); `clipped` listesi 0/10 (probe-kokpit-r3/satis-1440x900.json) — önceki 8/10 kırpılan satırdan 0'a indi, '· kanal' eki artık her satırda görünüyor. Tarih sütunu `sm:w-24`→`sm:w-20`, belge no `sm:w-32`→`sm:w-28` daraltıldı, kalan pay partner+kanal metnine ayrıldı.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "kokpit-satis-col-balance-01",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "İki kolonlu pano ızgarasında sol kolon 800px, sağ kolon 270px — fark 530px. \"Son siparişler\" 10 satırla sol kolonu doldururken sağ kolonun altında yarım ekran boş kalıyor; aynı anda sol kolondaki partner adları 102px’e sıkışıyor.",
+     "measure": "1440x900: kolon yükseklikleri 800px / 270px (artifacts/critic/probe-kokpit-r2/satis-1440x900.json)",
+     "target": "kolon yükseklik farkı ≤200px — \"Son siparişler\" sağ kolona ya da lg:col-span-2 alt şeride taşınsın",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:36-113",
+     "openedRound": 2,
+     "measureAfter": "1440x900: kolon yükseklikleri 289px / 270px (fark 19px, hedef ≤200px; önceki 800px/270px = 530px farktan) — artifacts/critic/probe-kokpit-r3/satis-1440x900.json. 'Son siparişler' ızgaranın altına `lg:col-span-2` ile tam genişlik şerit olarak taşındı; 'En çok satan 5' artık ızgaranın tek başına 2. kolonu (Kanal ciro + Satış hunisi ile dengeli).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "kokpit-satis-density-01",
      "criterion": 3,
@@ -719,26 +745,20 @@
     "11": "4→5 — ProductionLineRow artık GM ile tek bileşen (ikisi de 72.5px, pt/pb 10px), StatStrip paylaşılıyor.",
     "12": "4 — sarılan ragged satırlar + boş sağ kolon + 363px’lik satır sonu boşluğu."
    },
-   "open": [
+   "open": [],
+   "closed": [
     {
-     "id": "kokpit-wo-wrap-01",
-     "criterion": 5,
+     "id": "kokpit-empty-action-03",
+     "criterion": 7,
      "severity": "P1",
-     "text": "\"Son iş emirleri\"nde hat adı 96px’lik sabit sütunda (sm:w-24) truncate OLMADAN basılıyor — 8 satırın 6’sında \"Bazlar, Barista & Kremalar\" / \"Toz Karıştırma & Dolum\" iki satıra sarıp 44px’lik satırın içini tıkıyor, liste dikey ritmi tarağımsı görünüyor. Aynı tabloda 4. sütun aynı konumda ya bitiş tarihi ya üretilen miktar basıyor (tek sütun, iki veri tipi).",
-     "measure": "1440x900: 8 satırın 6’sında hat adı 2 satır (sm:w-24 = 96px, en uzun ad ~168px); 4. sütunda 4 satır tarih + 4 satır \"0 ADET\"",
-     "target": "hat adı tek satır (truncate ya da sm:w-32 = 128px) — sarılan satır 0; 4. sütun tek veri tipi taşısın",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:93-105",
-     "openedRound": 2
-    },
-    {
-     "id": "kokpit-uretim-col-balance-01",
-     "criterion": 2,
-     "severity": "P1",
-     "text": "İki kolon 695px / 405px — fark 290px (hedef ≤200px). Sağ kolon 681px’te bitip altında ~290px boş kalırken sol kolonda \"Fire kırılımı\" 190px’lik kartı boş durum için harcıyor.",
-     "measure": "1440x900: kolon yükseklikleri 695px / 405px (artifacts/critic/probe-kokpit-r2/uretim_sefi-1440x900.json)",
-     "target": "kolon yükseklik farkı ≤200px",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:33-115",
-     "openedRound": 2
+     "text": "\"Fire kırılımı (7 gün)\" boş durumu 190px’lik kartı yalnızca ikon + \"Son 7 günde fire kaydı yok\" başlığı için harcıyor — açıklama ve eylem yok (kokpit-empty-action-01 eksik kapatılmıştı).",
+     "measure": "1440x900: bölüm 190px; EmptyState action/description prop’u geçilmiyor",
+     "target": "ikon + başlık + açıklama + eylem",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:50-63",
+     "openedRound": 2,
+     "measureAfter": "1440x900: 'Fire kırılımı (7 gün)' boş durumu artık ikon + başlık + açıklama ('İş emri tamamlanırken fire girildiğinde kırılım burada görünür.') + eylem ('→ İş emirlerini gör' → /uretim/is-emirleri) taşıyor (bkz. uretim_sefi-desktop.png).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
     },
     {
      "id": "kokpit-line-row-collision-01",
@@ -748,20 +768,37 @@
      "measure": "390x844: iki komşu leaf metin kutusu arası gap 0px (artifacts/critic/probe-kokpit-r2/uretim_sefi-390x844.json collisions[0])",
      "target": "komşu metinler arası boşluk ≥8px (sarmalayıcıya gap-2 / gap-3)",
      "file": "apps/web/src/modules/kokpit/components/shared.tsx:270-276 (ProductionLineRow alt satırı)",
-     "openedRound": 2
+     "openedRound": 2,
+     "measureAfter": "390x844: 'WO-2026-000007 · Strawberry Prot...' ile '1 açık iş emri' arasındaki boşluk artık 12px (hedef ≥8px; önceki 0px) — doğrudan DOM ölçümü (komşu leaf kutuları arası `left`-`right` farkı). `ProductionLineRow`'daki (shared.tsx) her iki `flex justify-between` satırına `gap-3` eklendi — GM panosunun paylaştığı 'Üretim hatları' listesini de aynı kökten kapsar.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
     },
     {
-     "id": "kokpit-empty-action-03",
-     "criterion": 7,
+     "id": "kokpit-uretim-col-balance-01",
+     "criterion": 2,
      "severity": "P1",
-     "text": "\"Fire kırılımı (7 gün)\" boş durumu 190px’lik kartı yalnızca ikon + \"Son 7 günde fire kaydı yok\" başlığı için harcıyor — açıklama ve eylem yok (kokpit-empty-action-01 eksik kapatılmıştı).",
-     "measure": "1440x900: bölüm 190px; EmptyState action/description prop’u geçilmiyor",
-     "target": "ikon + başlık + açıklama + eylem",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:50-63",
-     "openedRound": 2
-    }
-   ],
-   "closed": [
+     "text": "İki kolon 695px / 405px — fark 290px (hedef ≤200px). Sağ kolon 681px’te bitip altında ~290px boş kalırken sol kolonda \"Fire kırılımı\" 190px’lik kartı boş durum için harcıyor.",
+     "measure": "1440x900: kolon yükseklikleri 695px / 405px (artifacts/critic/probe-kokpit-r2/uretim_sefi-1440x900.json)",
+     "target": "kolon yükseklik farkı ≤200px",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:33-115",
+     "openedRound": 2,
+     "measureAfter": "1440x900: kolon yükseklikleri 539px / 629px (fark 90px, hedef ≤200px; önceki 695px/405px = 290px farktan) — artifacts/critic/probe-kokpit-r3/uretim_sefi-1440x900.json. 'Son duruşlar' sağ kolona ('Son iş emirleri'nin altına) taşındı; sol kolon Hat durumu + Fire kırılımı olarak kaldı.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "kokpit-wo-wrap-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Son iş emirleri\"nde hat adı 96px’lik sabit sütunda (sm:w-24) truncate OLMADAN basılıyor — 8 satırın 6’sında \"Bazlar, Barista & Kremalar\" / \"Toz Karıştırma & Dolum\" iki satıra sarıp 44px’lik satırın içini tıkıyor, liste dikey ritmi tarağımsı görünüyor. Aynı tabloda 4. sütun aynı konumda ya bitiş tarihi ya üretilen miktar basıyor (tek sütun, iki veri tipi).",
+     "measure": "1440x900: 8 satırın 6’sında hat adı 2 satır (sm:w-24 = 96px, en uzun ad ~168px); 4. sütunda 4 satır tarih + 4 satır \"0 ADET\"",
+     "target": "hat adı tek satır (truncate ya da sm:w-32 = 128px) — sarılan satır 0; 4. sütun tek veri tipi taşısın",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:93-105",
+     "openedRound": 2,
+     "measureAfter": "1440x900: 'Son iş emirleri' 8 satırın 8'i de tek satır 44-45px (rowStats min44/max45 — önceki 6/8 satırın 2 satıra sardığı durumdan 0'a indi); hat adı sütunu artık `truncate` + `sm:w-32` (128px, önceki `sm:w-24`=96px, truncate yoktu). 4. sütun artık HER satırda aynı veri tipini (üretilen miktar, `QtyCell`) taşıyor — bitiş tarihi dalı kaldırıldı, sütun tek veri tipi (önceki 4 tarih + 4 miktar karışık dağılımdan).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "kokpit-rowlink-padding-01",
      "criterion": 5,

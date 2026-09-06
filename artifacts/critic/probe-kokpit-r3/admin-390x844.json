@@ -134,26 +134,26 @@
   {
    "cls": "min-w-0 flex-1 truncate",
    "scrollWidth": 311,
-   "clientWidth": 271,
+   "clientWidth": 233,
    "text": "Sistem Yöneticisi · admin@plantero.local giriş yaptı"
   },
   {
    "cls": "min-w-0 flex-1 truncate",
-   "scrollWidth": 321,
-   "clientWidth": 271,
-   "text": "Üretim Şefi · uretim@plantero.local giriş yaptı · 2 kez"
-  },
-  {
-   "cls": "min-w-0 flex-1 truncate",
-   "scrollWidth": 347,
+   "scrollWidth": 712,
    "clientWidth": 242,
-   "text": "Depo Sorumlusu · depo@plantero.local giriş yaptı · 2 kez"
+   "text": "Ar-Ge Sorumlusu · Ar-Ge reçetesi üretim BOM'una devredildi: "
   },
   {
    "cls": "min-w-0 flex-1 truncate",
-   "scrollWidth": 322,
-   "clientWidth": 239,
-   "text": "Üretim Şefi · uretim@plantero.local giriş yaptı · 4 kez"
+   "scrollWidth": 459,
+   "clientWidth": 242,
+   "text": "Ar-Ge Sorumlusu · Reçete devri onaylandı — üretim BOM'una de"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 351,
+   "clientWidth": 242,
+   "text": "Ar-Ge Sorumlusu · Reçete versiyonu onaya gönderildi: v2"
   }
  ],
  "clipped": [
@@ -182,16 +182,34 @@
    "visible": 0
   },
   {
-   "text": "· muhasebe@plantero.local giriş yaptı",
-   "sw": 234,
-   "cw": 223,
-   "visible": 223
+   "text": "· Ar-Ge reçetesi üretim BOM'una devredil",
+   "sw": 607,
+   "cw": 251,
+   "visible": 251
   },
   {
-   "text": "· 5 kez",
-   "sw": 44,
-   "cw": 0,
-   "visible": 0
+   "text": "· Reçete devri onaylandı — üretim BOM'un",
+   "sw": 353,
+   "cw": 251,
+   "visible": 251
+  },
+  {
+   "text": "· Arıza bildirildi MO-2026-000006: Silin",
+   "sw": 642,
+   "cw": 217,
+   "visible": 217
+  },
+  {
+   "text": "· İş emri MO-2026-000005 tamamlandı (0 d",
+   "sw": 323,
+   "cw": 217,
+   "visible": 217
+  },
+  {
+   "text": "· İş emri MO-2026-000005 işleme alındı",
+   "sw": 249,
+   "cw": 217,
+   "visible": 217
   }
  ],
  "gaps": [
@@ -331,58 +349,58 @@
   },
   {
    "a": "· admin@plantero.local gir",
-   "b": "az önce",
-   "gap": -29
+   "b": "55 saniye önce",
+   "gap": -66
   },
   {
-   "a": "Üretim Şefi",
-   "b": "· uretim@plantero.local gi",
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Ar-Ge reçetesi üretim BO",
    "gap": 0
   },
   {
-   "a": "· uretim@plantero.local gi",
-   "b": "· 2 kez",
-   "gap": 0
-  },
-  {
-   "a": "· 2 kez",
-   "b": "az önce",
-   "gap": -38
-  },
-  {
-   "a": "Depo Sorumlusu",
-   "b": "· depo@plantero.local giri",
-   "gap": 0
-  },
-  {
-   "a": "· depo@plantero.local giri",
+   "a": "· Ar-Ge reçetesi üretim BO",
    "b": "1 dakika önce",
-   "gap": -49
+   "gap": -459
   },
   {
-   "a": "1 dakika önce",
-   "b": "· 2 kez",
-   "gap": -21
-  },
-  {
-   "a": "Üretim Şefi",
-   "b": "· uretim@plantero.local gi",
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Reçete devri onaylandı —",
    "gap": 0
   },
   {
-   "a": "· uretim@plantero.local gi",
-   "b": "3 dakika önce",
-   "gap": -26
+   "a": "· Reçete devri onaylandı —",
+   "b": "1 dakika önce",
+   "gap": -205
   },
   {
-   "a": "3 dakika önce",
-   "b": "· 4 kez",
-   "gap": -47
-  },
-  {
-   "a": "Satış Sorumlusu",
-   "b": "· satis@plantero.local gir",
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Reçete versiyonu onaya g",
    "gap": 0
+  },
+  {
+   "a": "· Reçete versiyonu onaya g",
+   "b": "1 dakika önce",
+   "gap": -97
+  },
+  {
+   "a": "Ar-Ge Sorumlusu",
+   "b": "· Reçete versiyonu onaya g",
+   "gap": 0
+  },
+  {
+   "a": "· Reçete versiyonu onaya g",
+   "b": "1 dakika önce",
+   "gap": -95
+  },
+  {
+   "a": "system@plantero.local",
+   "b": "· Arıza bildirildi MO-2026",
+   "gap": 0
+  },
+  {
+   "a": "· Arıza bildirildi MO-2026",
+   "b": "1 dakika önce",
+   "gap": -528
   }
  ],
  "contentBottom": 3495
