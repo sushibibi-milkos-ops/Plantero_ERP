@@ -1,0 +1,159 @@
+{
+ "as": "depo",
+ "viewport": "390x844",
+ "columns": [],
+ "sections": [
+  {
+   "title": "Karantina",
+   "top": 256,
+   "h": 345,
+   "w": 358,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "SKT riski",
+   "top": 617,
+   "h": 490,
+   "w": 358,
+   "rows": 5,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Bugün",
+   "top": 1123,
+   "h": 700,
+   "w": 358,
+   "rows": 10,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+   "scrollWidth": 632,
+   "clientWidth": 358,
+   "text": "Mal kabul bekleyenSevk bekleyenAçık sayımKarantinada"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 277,
+   "clientWidth": 248,
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 277,
+   "clientWidth": 248,
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 331,
+   "clientWidth": 248,
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 257,
+   "clientWidth": 248,
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 257,
+   "clientWidth": 240,
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş."
+  }
+ ],
+ "clipped": [
+  {
+   "text": "Açık sayım",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "Karantinada",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  }
+ ],
+ "gaps": [
+  {
+   "section": "Karantina",
+   "gap": 12,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "SKT riski",
+   "gap": 0,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Bugün",
+   "gap": 97,
+   "trailing": 16,
+   "rowW": 356
+  }
+ ],
+ "strips": [
+  {
+   "section": "SKT riski",
+   "cells": 4,
+   "cellH": 61,
+   "order": [
+    {
+     "t": "1",
+     "fs": "15px",
+     "top": 672
+    },
+    {
+     "t": "Süresi geçti",
+     "fs": "10px",
+     "top": 697
+    }
+   ]
+  }
+ ],
+ "rowStats": [
+  {
+   "title": "Karantina",
+   "n": 4,
+   "min": 63,
+   "max": 64
+  },
+  {
+   "title": "SKT riski",
+   "n": 5,
+   "min": 64,
+   "max": 65
+  },
+  {
+   "title": "Bugün",
+   "n": 10,
+   "min": 65,
+   "max": 66
+  }
+ ],
+ "collisions": [],
+ "contentBottom": 1823
+}

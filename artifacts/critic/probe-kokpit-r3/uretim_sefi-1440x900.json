@@ -1,0 +1,188 @@
+{
+ "as": "uretim_sefi",
+ "viewport": "1440x900",
+ "columns": [
+  {
+   "cls": "mt-4 grid gap-4 lg:grid-cols-2 lg:items-start",
+   "children": [
+    {
+     "h": 539,
+     "top": 276,
+     "bottom": 815,
+     "label": "Hat durumu"
+    },
+    {
+     "h": 629,
+     "top": 276,
+     "bottom": 905,
+     "label": "Son iş emirleri"
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "title": "Hat durumu",
+   "top": 276,
+   "h": 266,
+   "w": 568,
+   "rows": 3,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Fire kırılımı (7 gün)",
+   "top": 558,
+   "h": 258,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son iş emirleri",
+   "top": 276,
+   "h": 405,
+   "w": 568,
+   "rows": 8,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son duruşlar",
+   "top": 697,
+   "h": 208,
+   "w": 568,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32",
+   "scrollWidth": 146,
+   "clientWidth": 128,
+   "text": "Bazlar, Barista & Kremalar"
+  },
+  {
+   "cls": "min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32",
+   "scrollWidth": 132,
+   "clientWidth": 128,
+   "text": "Toz Karıştırma & Dolum"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 144,
+   "clientWidth": 111,
+   "text": "Strawberry Protein Mixi"
+  },
+  {
+   "cls": "min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32",
+   "scrollWidth": 132,
+   "clientWidth": 128,
+   "text": "Toz Karıştırma & Dolum"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 263,
+   "clientWidth": 130,
+   "text": "Plantero Guatemala Huehuetenango Kahve"
+  },
+  {
+   "cls": "min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32",
+   "scrollWidth": 146,
+   "clientWidth": 128,
+   "text": "Bazlar, Barista & Kremalar"
+  },
+  {
+   "cls": "min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32",
+   "scrollWidth": 132,
+   "clientWidth": 128,
+   "text": "Toz Karıştırma & Dolum"
+  },
+  {
+   "cls": "min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32",
+   "scrollWidth": 146,
+   "clientWidth": 128,
+   "text": "Bazlar, Barista & Kremalar"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 126,
+   "clientWidth": 105,
+   "text": "%100 Oat Spredable"
+  },
+  {
+   "cls": "min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32",
+   "scrollWidth": 146,
+   "clientWidth": 128,
+   "text": "Bazlar, Barista & Kremalar"
+  }
+ ],
+ "clipped": [],
+ "gaps": [
+  {
+   "section": "Hat durumu",
+   "gap": 0,
+   "trailing": 16,
+   "rowW": 566
+  },
+  {
+   "section": "Son iş emirleri",
+   "gap": 24,
+   "trailing": 106,
+   "rowW": 566
+  },
+  {
+   "section": "Son duruşlar",
+   "gap": 0,
+   "trailing": 363,
+   "rowW": 566
+  }
+ ],
+ "strips": [],
+ "rowStats": [
+  {
+   "title": "Hat durumu",
+   "n": 3,
+   "min": 73,
+   "max": 74
+  },
+  {
+   "title": "Son iş emirleri",
+   "n": 8,
+   "min": 44,
+   "max": 45
+  },
+  {
+   "title": "Son duruşlar",
+   "n": 4,
+   "min": 40,
+   "max": 41
+  }
+ ],
+ "collisions": [
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Bazlar, Barista & Kremalar",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Mola",
+   "gap": 0
+  }
+ ],
+ "contentBottom": 905
+}

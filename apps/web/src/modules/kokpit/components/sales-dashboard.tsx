@@ -51,36 +51,13 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
             )}
           </Section>
 
-          {/* Kök neden (Tur 1 P1 kokpit-satis-density-01): önceden bu kolonda yalnızca kanal çubuğu +
-              huni vardı, ilk ekranın üçte biri boş kalıyordu ve satış rolünün gerçek işi (son siparişler)
-              hiç görünmüyordu. */}
-          <Section title="Son siparişler" href="/satis/siparisler">
-            {data.recentOrders.length === 0 ? (
-              <EmptyState compact title="Son 14 günde sipariş yok" />
-            ) : (
-              <ul className="divide-y divide-border/50">
-                {data.recentOrders.map((o) => (
-                  <li key={o.id}>
-                    <RowLink href={`/satis/siparisler/${o.id}`}>
-                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-                        <span className="flex min-w-0 items-center gap-2 sm:contents">
-                          <span className="shrink-0 text-xs text-muted-foreground sm:w-24">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
-                          <span className="truncate font-mono text-xs sm:w-32 sm:shrink-0">{o.docNo}</span>
-                        </span>
-                        <span className="shrink-0 sm:order-last"><StatusBadge status={o.status} kind="sales_order" /></span>
-                      </div>
-                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-                        <span className="min-w-0 flex-1 truncate">{o.partnerName} <span className="text-muted-foreground">· {o.channelName}</span></span>
-                        <MoneyCell value={o.netRevenue} className="shrink-0" />
-                      </div>
-                    </RowLink>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
         </div>
 
+        {/* Kök neden (Tur 2 P1 kokpit-satis-col-balance-01): "Son siparişler" sol kolonda üçüncü bölüm
+            olunca sol kolon (800px) sağ kolonun (270px) neredeyse 3 katına çıkıyordu. "En çok satan 5"
+            artık tek başına ızgaranın 2. kolonu (fark ~20px); "Son siparişler" ise ızgaranın ALTINDA
+            `lg:col-span-2` ile tam genişlik bir şerit — bu, bölümü hem dengeden bağımsız kılar hem de
+            kokpit-satis-order-trunc-01'in ihtiyaç duyduğu genişliği (1152px) verir. */}
         <Section title="En çok satan 5 (son 30 gün)" href="/satis/net-ciro" className="lg:self-start">
           {data.top5Products.length === 0 ? (
             <EmptyState compact title="Son 30 günde satış yok" />
@@ -102,6 +79,37 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
                       <QtyCell value={p.qty} uom={p.uomCode} />
                       <MoneyCell value={p.revenue} />
                     </span>
+                  </RowLink>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Section>
+
+        {/* Kök neden (Tur 2 P1 kokpit-satis-order-trunc-01): 568px'lik dar kolonda sabit tarih/belge-no
+            sütunları partner kutusuna yalnızca ~100-146px bırakıyordu, 10 satırın 8'inde "· kanal" eki
+            hiç görünmüyordu. `lg:col-span-2` bölümü tam genişliğe (1152px) yayar — aynı sabit sütunlar
+            partner kutusuna ~700px bırakır. Tarih/belge-no sütunları da biraz daraltıldı
+            (sm:w-24→20, sm:w-32→28) — kalan pay partnere. */}
+        <Section title="Son siparişler" href="/satis/siparisler" className="lg:col-span-2">
+          {data.recentOrders.length === 0 ? (
+            <EmptyState compact title="Son 14 günde sipariş yok" />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {data.recentOrders.map((o) => (
+                <li key={o.id}>
+                  <RowLink href={`/satis/siparisler/${o.id}`}>
+                    <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                      <span className="flex min-w-0 items-center gap-2 sm:contents">
+                        <span className="shrink-0 text-xs text-muted-foreground sm:w-20">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
+                        <span className="truncate font-mono text-xs sm:w-28 sm:shrink-0">{o.docNo}</span>
+                      </span>
+                      <span className="shrink-0 sm:order-last"><StatusBadge status={o.status} kind="sales_order" /></span>
+                    </div>
+                    <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                      <span className="min-w-0 flex-1 truncate">{o.partnerName} <span className="text-muted-foreground">· {o.channelName}</span></span>
+                      <MoneyCell value={o.netRevenue} className="shrink-0" />
+                    </div>
                   </RowLink>
                 </li>
               ))}

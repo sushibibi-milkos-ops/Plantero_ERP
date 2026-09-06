@@ -1,0 +1,190 @@
+{
+ "as": "muhasebe",
+ "viewport": "1440x900",
+ "columns": [
+  {
+   "cls": "mt-4 grid gap-4 lg:grid-cols-2 lg:items-start",
+   "children": [
+    {
+     "h": 910,
+     "top": 276,
+     "bottom": 1186,
+     "label": "Banka"
+    },
+    {
+     "h": 725,
+     "top": 276,
+     "bottom": 1001,
+     "label": "Geciken alacak"
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "title": "Banka",
+   "top": 276,
+   "h": 222,
+   "w": 568,
+   "rows": 3,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Mutabakat kuyruğu",
+   "top": 514,
+   "h": 398,
+   "w": 568,
+   "rows": 8,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Bugünün tahsilatları",
+   "top": 928,
+   "h": 258,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 276,
+   "h": 286,
+   "w": 568,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "KDV pozisyonu",
+   "top": 578,
+   "h": 106,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Nakit projeksiyonu (3 ay)",
+   "top": 699,
+   "h": 123,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 838,
+   "h": 164,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [],
+ "clipped": [],
+ "gaps": [
+  {
+   "section": "Banka",
+   "gap": 301,
+   "trailing": 16,
+   "rowW": 566
+  },
+  {
+   "section": "Mutabakat kuyruğu",
+   "gap": 12,
+   "trailing": 16,
+   "rowW": 566
+  },
+  {
+   "section": "Geciken alacak",
+   "gap": 12,
+   "trailing": 16,
+   "rowW": 566
+  }
+ ],
+ "strips": [
+  {
+   "section": "Geciken alacak",
+   "cells": 4,
+   "cellH": 60,
+   "order": [
+    {
+     "t": "₺7.109",
+     "fs": "15px",
+     "top": 331
+    },
+    {
+     "t": "0-30 gün",
+     "fs": "10px",
+     "top": 356
+    }
+   ]
+  },
+  {
+   "section": "KDV pozisyonu",
+   "cells": 4,
+   "cellH": 60,
+   "order": [
+    {
+     "t": "Ağustos 2026",
+     "fs": "13px",
+     "top": 633
+    },
+    {
+     "t": "Dönem",
+     "fs": "10px",
+     "top": 654
+    }
+   ]
+  },
+  {
+   "section": "Nakit projeksiyonu (3 ay)",
+   "cells": 3,
+   "cellH": 77,
+   "order": [
+    {
+     "t": "Eylül 2026",
+     "fs": "10px",
+     "top": 754
+    },
+    {
+     "t": "₺33.278",
+     "fs": "15px",
+     "top": 771
+    },
+    {
+     "t": "kapanış ₺33.278",
+     "fs": "10px",
+     "top": 796
+    }
+   ]
+  }
+ ],
+ "rowStats": [
+  {
+   "title": "Banka",
+   "n": 3,
+   "min": 44,
+   "max": 44
+  },
+  {
+   "title": "Mutabakat kuyruğu",
+   "n": 8,
+   "min": 44,
+   "max": 44
+  },
+  {
+   "title": "Geciken alacak",
+   "n": 4,
+   "min": 44,
+   "max": 45
+  }
+ ],
+ "collisions": [],
+ "contentBottom": 1186
+}

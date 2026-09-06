@@ -1,0 +1,112 @@
+{
+ "as": "satis",
+ "viewport": "1440x900",
+ "columns": [
+  {
+   "cls": "mt-4 grid gap-4 lg:grid-cols-2 lg:items-start",
+   "children": [
+    {
+     "h": 289,
+     "top": 276,
+     "bottom": 565,
+     "label": "Kanal ciro (bugün)"
+    },
+    {
+     "h": 270,
+     "top": 276,
+     "bottom": 546,
+     "label": "En çok satan 5 (son 30 gün)"
+    },
+    {
+     "h": 495,
+     "top": 581,
+     "bottom": 1076,
+     "label": "Son siparişler"
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "title": "Kanal ciro (bugün)",
+   "top": 276,
+   "h": 101,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Satış hunisi",
+   "top": 393,
+   "h": 172,
+   "w": 568,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "top": 276,
+   "h": 270,
+   "w": 568,
+   "rows": 5,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son siparişler",
+   "top": 581,
+   "h": 495,
+   "w": 1152,
+   "rows": 10,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [],
+ "clipped": [],
+ "gaps": [
+  {
+   "section": "Satış hunisi",
+   "gap": 414,
+   "trailing": 0,
+   "rowW": 534
+  },
+  {
+   "section": "En çok satan 5 (son 30 gün)",
+   "gap": 33,
+   "trailing": 16,
+   "rowW": 566
+  },
+  {
+   "section": "Son siparişler",
+   "gap": 546,
+   "trailing": 128,
+   "rowW": 1150
+  }
+ ],
+ "strips": [],
+ "rowStats": [
+  {
+   "title": "Satış hunisi",
+   "n": 4,
+   "min": 16,
+   "max": 16
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "n": 5,
+   "min": 44,
+   "max": 45
+  },
+  {
+   "title": "Son siparişler",
+   "n": 10,
+   "min": 44,
+   "max": 45
+  }
+ ],
+ "collisions": [],
+ "contentBottom": 1076
+}

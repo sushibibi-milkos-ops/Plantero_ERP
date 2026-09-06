@@ -1,0 +1,389 @@
+{
+ "as": "admin",
+ "viewport": "390x844",
+ "columns": [],
+ "sections": [
+  {
+   "title": "Günlük kanal satışları",
+   "top": 256,
+   "h": 194,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 466,
+   "h": 164,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Bugün",
+   "top": 645,
+   "h": 569,
+   "w": 358,
+   "rows": 8,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Onay kuyruğu",
+   "top": 1230,
+   "h": 167,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son aktiviteler",
+   "top": 1413,
+   "h": 337,
+   "w": 358,
+   "rows": 8,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Banka",
+   "top": 1766,
+   "h": 222,
+   "w": 358,
+   "rows": 3,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Üretim hatları",
+   "top": 2004,
+   "h": 242,
+   "w": 358,
+   "rows": 3,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Kritik stok",
+   "top": 2262,
+   "h": 289,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "SKT riski",
+   "top": 2567,
+   "h": 490,
+   "w": 358,
+   "rows": 5,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 3072,
+   "h": 423,
+   "w": 358,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+   "scrollWidth": 632,
+   "clientWidth": 358,
+   "text": "Bugünkü net ciro%67,8dündenKritik stok kalemiVadesi geçen al"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 277,
+   "clientWidth": 248,
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 277,
+   "clientWidth": 248,
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 331,
+   "clientWidth": 248,
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 257,
+   "clientWidth": 248,
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 257,
+   "clientWidth": 240,
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş."
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 311,
+   "clientWidth": 271,
+   "text": "Sistem Yöneticisi · admin@plantero.local giriş yaptı"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 321,
+   "clientWidth": 271,
+   "text": "Üretim Şefi · uretim@plantero.local giriş yaptı · 2 kez"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 347,
+   "clientWidth": 242,
+   "text": "Depo Sorumlusu · depo@plantero.local giriş yaptı · 2 kez"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 322,
+   "clientWidth": 239,
+   "text": "Üretim Şefi · uretim@plantero.local giriş yaptı · 4 kez"
+  }
+ ],
+ "clipped": [
+  {
+   "text": "Vadesi geçen alacak",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "Break-even ilerleme",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "· muhasebe@plantero.local giriş yaptı",
+   "sw": 234,
+   "cw": 223,
+   "visible": 223
+  },
+  {
+   "text": "· 5 kez",
+   "sw": 44,
+   "cw": 0,
+   "visible": 0
+  }
+ ],
+ "gaps": [
+  {
+   "section": "Bugün",
+   "gap": 97,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Son aktiviteler",
+   "gap": 0,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Banka",
+   "gap": 91,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Üretim hatları",
+   "gap": 0,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "SKT riski",
+   "gap": 0,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Geciken alacak",
+   "gap": 223,
+   "trailing": 16,
+   "rowW": 356
+  }
+ ],
+ "strips": [
+  {
+   "section": "Onay kuyruğu",
+   "cells": 4,
+   "cellH": 61,
+   "order": [
+    {
+     "t": "0",
+     "fs": "15px",
+     "top": 1285
+    },
+    {
+     "t": "AI satın alma",
+     "fs": "10px",
+     "top": 1310
+    }
+   ]
+  },
+  {
+   "section": "SKT riski",
+   "cells": 4,
+   "cellH": 61,
+   "order": [
+    {
+     "t": "1",
+     "fs": "15px",
+     "top": 2622
+    },
+    {
+     "t": "Süresi geçti",
+     "fs": "10px",
+     "top": 2646
+    }
+   ]
+  },
+  {
+   "section": "Geciken alacak",
+   "cells": 4,
+   "cellH": 61,
+   "order": [
+    {
+     "t": "₺7.109",
+     "fs": "15px",
+     "top": 3127
+    },
+    {
+     "t": "0-30 gün",
+     "fs": "10px",
+     "top": 3152
+    }
+   ]
+  }
+ ],
+ "rowStats": [
+  {
+   "title": "Bugün",
+   "n": 8,
+   "min": 65,
+   "max": 66
+  },
+  {
+   "title": "Son aktiviteler",
+   "n": 8,
+   "min": 36,
+   "max": 37
+  },
+  {
+   "title": "Banka",
+   "n": 3,
+   "min": 44,
+   "max": 44
+  },
+  {
+   "title": "Üretim hatları",
+   "n": 3,
+   "min": 65,
+   "max": 66
+  },
+  {
+   "title": "SKT riski",
+   "n": 5,
+   "min": 64,
+   "max": 65
+  },
+  {
+   "title": "Geciken alacak",
+   "n": 4,
+   "min": 63,
+   "max": 64
+  }
+ ],
+ "collisions": [
+  {
+   "a": "Sistem Yöneticisi",
+   "b": "· admin@plantero.local gir",
+   "gap": 0
+  },
+  {
+   "a": "· admin@plantero.local gir",
+   "b": "az önce",
+   "gap": -29
+  },
+  {
+   "a": "Üretim Şefi",
+   "b": "· uretim@plantero.local gi",
+   "gap": 0
+  },
+  {
+   "a": "· uretim@plantero.local gi",
+   "b": "· 2 kez",
+   "gap": 0
+  },
+  {
+   "a": "· 2 kez",
+   "b": "az önce",
+   "gap": -38
+  },
+  {
+   "a": "Depo Sorumlusu",
+   "b": "· depo@plantero.local giri",
+   "gap": 0
+  },
+  {
+   "a": "· depo@plantero.local giri",
+   "b": "1 dakika önce",
+   "gap": -49
+  },
+  {
+   "a": "1 dakika önce",
+   "b": "· 2 kez",
+   "gap": -21
+  },
+  {
+   "a": "Üretim Şefi",
+   "b": "· uretim@plantero.local gi",
+   "gap": 0
+  },
+  {
+   "a": "· uretim@plantero.local gi",
+   "b": "3 dakika önce",
+   "gap": -26
+  },
+  {
+   "a": "3 dakika önce",
+   "b": "· 4 kez",
+   "gap": -47
+  },
+  {
+   "a": "Satış Sorumlusu",
+   "b": "· satis@plantero.local gir",
+   "gap": 0
+  }
+ ],
+ "contentBottom": 3495
+}

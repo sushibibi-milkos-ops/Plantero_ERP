@@ -1,0 +1,147 @@
+{
+ "as": "uretim_sefi",
+ "viewport": "390x844",
+ "columns": [],
+ "sections": [
+  {
+   "title": "Hat durumu",
+   "top": 256,
+   "h": 242,
+   "w": 358,
+   "rows": 3,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Fire kırılımı (7 gün)",
+   "top": 514,
+   "h": 289,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son iş emirleri",
+   "top": 819,
+   "h": 569,
+   "w": 358,
+   "rows": 8,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son duruşlar",
+   "top": 1404,
+   "h": 208,
+   "w": 358,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+   "scrollWidth": 632,
+   "clientWidth": 358,
+   "text": "Açık iş emriGeciken iş emriBugünkü OEEFire oranı (7g)"
+  },
+  {
+   "cls": "min-w-0 truncate font-mono",
+   "scrollWidth": 264,
+   "clientWidth": 246,
+   "text": "WO-2026-000007 · Strawberry Protein Mixi"
+  }
+ ],
+ "clipped": [
+  {
+   "text": "Bugünkü OEE",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "Fire oranı (7g)",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  }
+ ],
+ "gaps": [
+  {
+   "section": "Hat durumu",
+   "gap": 0,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Son iş emirleri",
+   "gap": 61,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Son duruşlar",
+   "gap": 0,
+   "trailing": 153,
+   "rowW": 356
+  }
+ ],
+ "strips": [],
+ "rowStats": [
+  {
+   "title": "Hat durumu",
+   "n": 3,
+   "min": 65,
+   "max": 66
+  },
+  {
+   "title": "Son iş emirleri",
+   "n": 8,
+   "min": 65,
+   "max": 66
+  },
+  {
+   "title": "Son duruşlar",
+   "n": 4,
+   "min": 40,
+   "max": 41
+  }
+ ],
+ "collisions": [
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Bazlar, Barista & Kremalar",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Mola",
+   "gap": 0
+  }
+ ],
+ "contentBottom": 1611
+}

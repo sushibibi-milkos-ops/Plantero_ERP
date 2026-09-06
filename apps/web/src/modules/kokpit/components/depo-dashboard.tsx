@@ -89,13 +89,14 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
             <ul className="divide-y divide-border/50">
               {today.map((t) => (
                 <li key={`${t.k}-${t.no}`}>
-                  {/* Kök neden (Tur 1 P1 kokpit-depo-row-void-01): satır Section ile birlikte
-                      lg:col-span-2 (1152px) genişliğe yayılıyordu ama `flex-1` alan partner metni yine
-                      kısa kalıp sağdaki tutarla arasında ~930px "ölü alan" bırakıyordu. `sm:max-w-3xl`
-                      satırın toplam genişliğini 768px'te sınırlar — en büyük boşluk hedefin (≤240px)
-                      altına iner; geniş bölümün geri kalanı satırın SAĞINDA (satır içinde değil) boş kalır,
-                      bu normal bir liste sonrası boşluktur, satır İÇİ bir kopukluk değildir. */}
-                  <RowLink href={t.href} className="sm:max-w-3xl">
+                  {/* Kök neden (Tur 2 P1 kokpit-depo-row-void-02): Tur 1'in `sm:max-w-3xl` düzeltmesi
+                      satır İÇİ boşluğu kapatırken (kokpit-depo-row-void-01) satırı 768px'te sınırlayıp
+                      1152px'lik bölümün SAĞINDA 352-368px'lik yeni bir ölü alan açmıştı — aynı boşluk,
+                      yalnızca satırın dışına taşınmıştı. `sm:max-w-3xl` kaldırıldı: satır artık `TodayRow`
+                      deseninin kendi mantığıyla (partner `flex-1`) tam genişliğe yayılıyor, tutar/rozet
+                      `justify-between`+`sm:order-last` ile satırın (=bölümün) GERÇEK sağ kenarına
+                      hizalanıyor — satır sonunda kullanılmayan kolon kalmıyor. */}
+                  <RowLink href={t.href}>
                     <TodayRow item={t} />
                   </RowLink>
                 </li>

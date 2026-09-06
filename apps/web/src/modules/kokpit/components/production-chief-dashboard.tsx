@@ -1,10 +1,12 @@
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import type { ProductionChiefCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
 import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
-import { formatDateTime } from '@/lib/format';
+import { Button } from '@/components/ui/button';
 import { Section, RowLink, DashboardGrid, ProductionLineRow, StatStrip } from './shared';
 
 const SCRAP_REASON_LABEL: Record<string, string> = {
@@ -46,7 +48,18 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
 
           <Section title="Fire kırılımı (7 gün)" href="/uretim/is-emirleri">
             {data.scrapBreakdown7d.length === 0 ? (
-              <EmptyState compact title="Son 7 günde fire kaydı yok" />
+              // Kök neden (Tur 2 P1 kokpit-empty-action-03): boş durum yalnızca ikon+başlık taşıyordu —
+              // puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor.
+              <EmptyState
+                compact
+                title="Son 7 günde fire kaydı yok"
+                description="İş emri tamamlanırken fire girildiğinde kırılım burada görünür."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/uretim/is-emirleri"><ArrowRight className="size-3.5" /> İş emirlerini gör</Link>
+                  </Button>
+                }
+              />
             ) : (
               <StatStrip
                 items={data.scrapBreakdown7d.slice(0, 4).map((s) => ({
@@ -55,6 +68,45 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
                   label: SCRAP_REASON_LABEL[s.reason] ?? s.reason,
                 }))}
               />
+            )}
+          </Section>
+        </div>
+
+        {/* Kök neden (Tur 2 P1 kokpit-uretim-col-balance-01): "Son duruşlar" sol kolonda üçüncü bölüm
+            olunca sol kolon (695px) sağ kolonun (405px) neredeyse iki katına çıkıyordu. Artık sağ
+            kolonda "Son iş emirleri"nin altında — iki kolon farkı ~155px'e iner (hedef ≤200px). */}
+        <div className="min-w-0 flex flex-col gap-4">
+          <Section title="Son iş emirleri" href="/uretim/is-emirleri">
+            {data.recentWorkOrders.length === 0 ? (
+              <EmptyState compact title="Henüz iş emri yok" />
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {data.recentWorkOrders.map((w) => (
+                  <li key={w.id}>
+                    <RowLink href="/uretim/is-emirleri">
+                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                        <span className="flex min-w-0 items-center gap-2 sm:contents">
+                          {/* Kök neden (Tur 2 P1 kokpit-wo-wrap-01): `truncate` yoktu — 8 satırın 6'sında
+                              hat adı 96px'lik sütunda 2 satıra sarıp satırı tıkıyordu. `truncate` +
+                              sm:w-24→32 (128px) sarmayı önler. */}
+                          <span className="min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32">{w.lineName}</span>
+                          <span className="truncate font-mono text-xs sm:w-32 sm:shrink-0">{w.docNo}</span>
+                        </span>
+                        <span className="shrink-0 sm:order-last">
+                          {w.isLate ? <StatusBadge status="late" label="Gecikmiş" tone="danger" /> : <StatusBadge status={w.status} kind="work_order" />}
+                        </span>
+                      </div>
+                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                        <span className="min-w-0 flex-1 truncate">{w.productName}</span>
+                        {/* Kök neden (Tur 2 P1 kokpit-wo-wrap-01): bu sütun satıra göre ya bitiş tarihi
+                            ya üretilen miktar basıyordu (tek sütun, iki veri tipi). Artık HER satırda
+                            aynı alan (üretilen miktar) — tek veri tipi. */}
+                        <QtyCell value={w.producedQty} uom={w.uomCode} className="shrink-0" />
+                      </div>
+                    </RowLink>
+                  </li>
+                ))}
+              </ul>
             )}
           </Section>
 
@@ -78,38 +130,6 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
             )}
           </Section>
         </div>
-
-        <Section title="Son iş emirleri" href="/uretim/is-emirleri">
-          {data.recentWorkOrders.length === 0 ? (
-            <EmptyState compact title="Henüz iş emri yok" />
-          ) : (
-            <ul className="divide-y divide-border/50">
-              {data.recentWorkOrders.map((w) => (
-                <li key={w.id}>
-                  <RowLink href="/uretim/is-emirleri">
-                    <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-                      <span className="flex min-w-0 items-center gap-2 sm:contents">
-                        <span className="shrink-0 text-xs text-muted-foreground sm:w-24">{w.lineName}</span>
-                        <span className="truncate font-mono text-xs sm:w-32 sm:shrink-0">{w.docNo}</span>
-                      </span>
-                      <span className="shrink-0 sm:order-last">
-                        {w.isLate ? <StatusBadge status="late" label="Gecikmiş" tone="danger" /> : <StatusBadge status={w.status} kind="work_order" />}
-                      </span>
-                    </div>
-                    <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-                      <span className="min-w-0 flex-1 truncate">{w.productName}</span>
-                      {w.finishedAt ? (
-                        <span className="shrink-0 text-xs text-muted-foreground">{formatDateTime(w.finishedAt)}</span>
-                      ) : (
-                        <QtyCell value={w.producedQty} uom={w.uomCode} className="shrink-0" />
-                      )}
-                    </div>
-                  </RowLink>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
       </DashboardGrid>
     </>
   );

@@ -1,9 +1,11 @@
+import Link from 'next/link';
 import type { FinanceCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
-import { Wallet } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Wallet, Plus } from 'lucide-react';
 import { formatMoney } from '@/lib/format';
 import type { CockpitReceipt } from '../queries';
 import { Section, DashboardGrid, StatStrip, AgingStrip, OverdueTop5List, BreakEvenPanel } from './shared';
@@ -72,7 +74,19 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
 
           <Section title="Bugünün tahsilatları" href="/finans/tahsilat">
             {paymentsToday.length === 0 ? (
-              <EmptyState compact title="Bugün tahsilat yok" />
+              // Kök neden (Tur 2 P1 kokpit-empty-action-02): boş durum yalnızca ikon+başlık taşıyordu —
+              // puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor (Tur 1'de yalnızca 2/14 boş
+              // durum düzeltilmişti, bu ikisi eksik kalmıştı).
+              <EmptyState
+                compact
+                title="Bugün tahsilat yok"
+                description="Bir tahsilat kaydedildiğinde burada görünür."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/finans/tahsilat/yeni"><Plus className="size-3.5" /> Tahsilat kaydet</Link>
+                  </Button>
+                }
+              />
             ) : (
               <ul className="divide-y divide-border/50">
                 {paymentsToday.map((r) => (
