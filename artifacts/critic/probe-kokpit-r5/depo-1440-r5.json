@@ -1,0 +1,119 @@
+{
+ "as": "depo",
+ "vp": "1440x900",
+ "interactive": 26,
+ "withActive": 26,
+ "globalActiveRule": false,
+ "zeroTones": [
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "text-[15px] font-semibold tabular-nums text-muted-foreground"
+  }
+ ],
+ "nonZeroColors": [
+  "oklch(0.21 0.006 285.9)"
+ ],
+ "qty": [
+  {
+   "text": "₺55.355,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺36.400,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺7.875,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺5.760,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺5.320,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺3.850,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺7.875,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺4.590,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺10.920,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺6.500,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺13.800,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "1kalem",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "1kalem",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "1kalem",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "1kalem",
+   "color": "oklch(0.21 0.006 285.9)"
+  }
+ ],
+ "strips": [
+  {
+   "section": "SKT riski",
+   "h": 61,
+   "anatomy": [
+    "15px:1 | 10px:Süresi geçti",
+    "15px:50 | 10px:< 30 gün",
+    "15px:30 | 10px:30-60 gün",
+    "15px:0 | 10px:60-90 gün"
+   ]
+  }
+ ],
+ "empties": [],
+ "rowHeights": {
+  "Karantina": [
+   40,
+   40,
+   40,
+   40
+  ],
+  "SKT riski": [
+   40,
+   40,
+   40,
+   40,
+   40
+  ],
+  "Bugün": [
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40,
+   40
+  ]
+ }
+}

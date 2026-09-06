@@ -1,0 +1,261 @@
+{
+ "as": "muhasebe",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Banka",
+   "top": 256,
+   "bottom": 537,
+   "h": 281,
+   "w": 358,
+   "left": 16,
+   "rowCount": 3,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "-₺254.348,50@357",
+    "₺1.250,00@357",
+    "€0,00@357",
+    "-₺255.598,50@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357
+   ],
+   "zeros": [
+    {
+     "text": "€0,00",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "KDV pozisyonu",
+   "top": 553,
+   "bottom": 720,
+   "h": 167,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [
+    "₺0 [0dec]@364",
+    "₺443 [0dec]@186",
+    "₺35.080 [0dec]@365"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [
+    {
+     "text": "₺0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Mutabakat kuyruğu",
+   "top": 736,
+   "bottom": 1293,
+   "h": 557,
+   "w": 358,
+   "left": 16,
+   "rowCount": 8,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺3.800,00@357",
+    "₺3.800,00@357",
+    "₺3.800,00@357",
+    "-₺54.900,00@357",
+    "₺5.000,00@357",
+    "₺5.000,00@357",
+    "₺5.000,00@357",
+    "-₺450,75@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 1309,
+   "bottom": 1732,
+   "h": 423,
+   "w": 358,
+   "left": 16,
+   "rowCount": 4,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "mixedDecimals": true,
+   "monies": [
+    "₺7.109 [0dec]@186",
+    "₺1.100 [0dec]@364",
+    "₺0 [0dec]@186",
+    "₺0 [0dec]@365",
+    "₺3.800,00@357",
+    "₺3.282,50@357",
+    "₺1.100,00@357",
+    "₺27,00@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [
+    {
+     "text": "₺0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    },
+    {
+     "text": "₺0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Bugünün tahsilatları",
+   "top": 1748,
+   "bottom": 2018,
+   "h": 270,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Nakit projeksiyonu (3 ay)",
+   "top": 2034,
+   "bottom": 2156,
+   "h": 123,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [
+    "₺33.278 [0dec]@126.7",
+    "₺32.340 [0dec]@245.3",
+    "₺31.227 [0dec]@365"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 2172,
+   "bottom": 2336,
+   "h": 164,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [
+    "₺1.560.717,48@357",
+    "₺3.881,19@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 16,
+   "bottom": 2336,
+   "last": "Break-even'a uzaklık"
+  }
+ ],
+ "colSpread": 0,
+ "kpi": [
+  {
+   "label": "BankaTümü Toplam (TRY hesapl",
+   "w": 358,
+   "left": 16
+  },
+  {
+   "label": "Geciken alacakTümü ₺7.1090-3",
+   "w": 358,
+   "left": 16
+  }
+ ],
+ "truncated": [
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü",
+   "clientW": 324,
+   "scrollW": 331,
+   "section": "Mutabakat kuyruğu"
+  }
+ ],
+ "foldRows": 3,
+ "allZeros": [
+  {
+   "text": "€0,00",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Banka"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "KDV pozisyonu"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Geciken alacak"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Geciken alacak"
+  }
+ ],
+ "pageH": 2464,
+ "vpH": 844
+}

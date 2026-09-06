@@ -1,0 +1,172 @@
+{
+ "as": "depo",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Karantina",
+   "top": 256,
+   "bottom": 601,
+   "h": 345,
+   "w": 358,
+   "left": 16,
+   "rowCount": 4,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺55.355,00@357",
+    "₺36.400,00@357",
+    "₺7.875,00@357",
+    "₺5.760,00@357",
+    "₺5.320,00@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "SKT riski",
+   "top": 617,
+   "bottom": 1107,
+   "h": 490,
+   "w": 358,
+   "left": 16,
+   "rowCount": 5,
+   "rowH": [
+    63.5,
+    64.5,
+    64.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Bugün",
+   "top": 1123,
+   "bottom": 1803,
+   "h": 680,
+   "w": 358,
+   "left": 16,
+   "rowCount": 10,
+   "rowH": [
+    62.5,
+    63.5,
+    63.5
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺3.850,00@357",
+    "₺7.875,00@357",
+    "₺4.590,00@357",
+    "₺10.920,00@357",
+    "₺6.500,00@357",
+    "₺13.800,00@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 16,
+   "bottom": 1803,
+   "last": "Bugün"
+  }
+ ],
+ "colSpread": 0,
+ "kpi": [
+  {
+   "label": "KarantinaTümü 4 lot bekliyor",
+   "w": 358,
+   "left": 16
+  },
+  {
+   "label": "SKT riskiTümü 1Süresi geçti5",
+   "w": 358,
+   "left": 16
+  },
+  {
+   "label": "BugünTümü Mal kabulGR-2026-0",
+   "w": 358,
+   "left": 16
+  }
+ ],
+ "truncated": [
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd.",
+   "clientW": 248,
+   "scrollW": 277,
+   "section": "Bugün"
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd.",
+   "clientW": 248,
+   "scrollW": 277,
+   "section": "Bugün"
+  },
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü",
+   "clientW": 248,
+   "scrollW": 331,
+   "section": "Bugün"
+  },
+  {
+   "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+   "clientW": 240,
+   "scrollW": 242,
+   "section": "Bugün"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+   "clientW": 248,
+   "scrollW": 257,
+   "section": "Bugün"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+   "clientW": 240,
+   "scrollW": 257,
+   "section": "Bugün"
+  }
+ ],
+ "foldRows": 4,
+ "allZeros": [
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "SKT riski"
+  }
+ ],
+ "pageH": 1931,
+ "vpH": 844
+}

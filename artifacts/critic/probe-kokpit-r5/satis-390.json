@@ -1,0 +1,145 @@
+{
+ "as": "satis",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Satış hunisi",
+   "top": 256,
+   "bottom": 428,
+   "h": 172,
+   "w": 358,
+   "left": 16,
+   "rowCount": 4,
+   "rowH": [
+    16,
+    16,
+    16
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "top": 444,
+   "bottom": 809,
+   "h": 365,
+   "w": 358,
+   "left": 16,
+   "rowCount": 5,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺17.100,00@357",
+    "₺16.932,50@357",
+    "₺16.800,00@357",
+    "₺13.587,00@357",
+    "₺12.181,50@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Son siparişler",
+   "top": 825,
+   "bottom": 1505,
+   "h": 680,
+   "w": 358,
+   "left": 16,
+   "rowCount": 10,
+   "rowH": [
+    62.5,
+    63.5,
+    63.5
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺72,00@357",
+    "₺216,00@357",
+    "₺16.800,00@357",
+    "₺2.277,23@357",
+    "₺1.714,90@357",
+    "₺3.021,14@357",
+    "₺2.593,61@357",
+    "₺4.178,76@357",
+    "₺1.659,95@357",
+    "₺14.250,00@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 16,
+   "bottom": 1505,
+   "last": "Son siparişler"
+  }
+ ],
+ "colSpread": 0,
+ "kpi": [
+  {
+   "label": "Satış hunisiTümü Aday3Niteli",
+   "w": 358,
+   "left": 16
+  },
+  {
+   "label": "En çok satan 5 (son 30 gün)T",
+   "w": 358,
+   "left": 16
+  },
+  {
+   "label": "Son siparişlerTümü 06.09.202",
+   "w": 358,
+   "left": 16
+  }
+ ],
+ "truncated": [
+  {
+   "text": "Bugünkü ciro (brüt = net)",
+   "clientW": 126,
+   "scrollW": 144,
+   "section": ""
+  }
+ ],
+ "foldRows": 9,
+ "allZeros": [],
+ "pageH": 1633,
+ "vpH": 844
+}

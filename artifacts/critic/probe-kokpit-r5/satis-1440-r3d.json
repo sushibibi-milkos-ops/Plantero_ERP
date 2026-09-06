@@ -1,0 +1,202 @@
+{
+ "as": "satis",
+ "vp": "1440x900",
+ "sections": [
+  {
+   "title": "Satış hunisi",
+   "top": 276,
+   "h": 172,
+   "w": 568,
+   "rowCount": 4,
+   "rowH": [
+    16,
+    16,
+    16
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "top": 276,
+   "h": 250,
+   "w": 568,
+   "rowCount": 5,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son siparişler",
+   "top": 542,
+   "h": 455,
+   "w": 1152,
+   "rowCount": 10,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [
+  {
+   "cols": "568px 568px",
+   "tops": [
+    {
+     "left": 264,
+     "bottom": 997
+    },
+    {
+     "left": 848,
+     "bottom": 526
+    }
+   ],
+   "kids": [
+    {
+     "h": 172,
+     "left": 264,
+     "bottom": 448,
+     "label": "Satış hunisi"
+    },
+    {
+     "h": 250,
+     "left": 848,
+     "bottom": 526,
+     "label": "En çok satan 5 (son 30 gün)"
+    },
+    {
+     "h": 455,
+     "left": 264,
+     "bottom": 997,
+     "label": "Son siparişler"
+    }
+   ]
+  }
+ ],
+ "truncated": [],
+ "badges": [],
+ "money": [
+  {
+   "text": "₺17.100,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺16.932,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺16.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺13.587,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺12.181,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺72,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺216,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺16.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺2.277,23",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.714,90",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.021,14",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺2.593,61",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺4.178,76",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.659,95",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺14.250,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  }
+ ],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · S",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 17,
+ "pageH": 1037,
+ "vpH": 900
+}

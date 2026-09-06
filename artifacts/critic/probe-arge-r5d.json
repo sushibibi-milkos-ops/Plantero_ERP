@@ -1,0 +1,618 @@
+{
+ "d1440": {
+  "moneys": [
+   {
+    "t": "₺31,92",
+    "ff": "JetBrains Mono",
+    "fs": "11px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 1324,
+    "top": 313
+   },
+   {
+    "t": "₺28,00",
+    "ff": "JetBrains Mono",
+    "fs": "11px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 1383,
+    "top": 313
+   },
+   {
+    "t": "₺5,81",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1346,
+    "top": 615
+   },
+   {
+    "t": "₺120,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1122,
+    "top": 654
+   },
+   {
+    "t": "₺2,40",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1346,
+    "top": 654
+   },
+   {
+    "t": "₺15,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1122,
+    "top": 693
+   },
+   {
+    "t": "₺0,03",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1346,
+    "top": 693
+   },
+   {
+    "t": "₺22,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1122,
+    "top": 732
+   },
+   {
+    "t": "₺22,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1346,
+    "top": 732
+   },
+   {
+    "t": "₺30,24",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 1125,
+    "top": 801
+   },
+   {
+    "t": "₺31,92",
+    "ff": "Inter",
+    "fs": "15px",
+    "fw": "600",
+    "fvn": "tabular-nums",
+    "right": 1399,
+    "top": 799
+   }
+  ],
+  "borderedCount": 26,
+  "borders": [
+   {
+    "tag": "span",
+    "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full borde",
+    "w": 64,
+    "h": 20
+   },
+   {
+    "tag": "button",
+    "cls": "inline-flex shrink-0 items-center justify-center text-sm fon",
+    "w": 91,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 212,
+    "h": 32
+   },
+   {
+    "tag": "button",
+    "cls": "flex items-center justify-between gap-2 rounded-md border bo",
+    "w": 212,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 212,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 212,
+    "h": 32
+   },
+   {
+    "tag": "button",
+    "cls": "flex h-11 w-full items-center justify-between gap-2 rounded-",
+    "w": 882,
+    "h": 36
+   },
+   {
+    "tag": "div",
+    "cls": "rounded-lg border border-border/60 text-[13px]",
+    "w": 882,
+    "h": 192
+   },
+   {
+    "tag": "button",
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md bo",
+    "w": 152,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 109,
+    "h": 32
+   },
+   {
+    "tag": "button",
+    "cls": "flex items-center justify-between gap-2 rounded-md border px",
+    "w": 128,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 112,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 80,
+    "h": 32
+   },
+   {
+    "tag": "button",
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md bo",
+    "w": 152,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 109,
+    "h": 32
+   },
+   {
+    "tag": "button",
+    "cls": "flex items-center justify-between gap-2 rounded-md border px",
+    "w": 128,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 80,
+    "h": 32
+   },
+   {
+    "tag": "button",
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md bo",
+    "w": 152,
+    "h": 32
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 109,
+    "h": 32
+   },
+   {
+    "tag": "button",
+    "cls": "flex items-center justify-between gap-2 rounded-md border px",
+    "w": 128,
+    "h": 32
+   }
+  ],
+  "nativeSel": [
+   {
+    "label": "Versiyon",
+    "w": 0,
+    "h": 0,
+    "appearance": "auto",
+    "ff": "Inter",
+    "fs": "13px"
+   }
+  ],
+  "shadSel": [
+   {
+    "t": "KG",
+    "w": 212,
+    "h": 32,
+    "icons": 1
+   },
+   {
+    "t": "Ürün ara ve ekle",
+    "w": 882,
+    "h": 36,
+    "icons": 1
+   },
+   {
+    "t": "Badem",
+    "w": 152,
+    "h": 32,
+    "icons": 1
+   },
+   {
+    "t": "Manuel",
+    "w": 128,
+    "h": 32,
+    "icons": 1
+   },
+   {
+    "t": "Hurma Şurubu",
+    "w": 152,
+    "h": 32,
+    "icons": 1
+   },
+   {
+    "t": "Ortalama",
+    "w": 128,
+    "h": 32,
+    "icons": 1
+   },
+   {
+    "t": "Deniz Tuzu",
+    "w": 152,
+    "h": 32,
+    "icons": 1
+   },
+   {
+    "t": "Ortalama",
+    "w": 128,
+    "h": 32,
+    "icons": 1
+   }
+  ],
+  "heads": {
+   "Miktar": {
+    "right": 0,
+    "top": 0,
+    "fs": "11px"
+   },
+   "Birim maliyet": {
+    "right": 0,
+    "top": 0,
+    "fs": "11px"
+   },
+   "Fire %": {
+    "right": 0,
+    "top": 0,
+    "fs": "11px"
+   },
+   "Satır maliyeti": {
+    "right": 0,
+    "top": 0,
+    "fs": "11px"
+   }
+  }
+ },
+ "d390": {
+  "moneys": [
+   {
+    "t": "₺31,92",
+    "ff": "JetBrains Mono",
+    "fs": "11px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 290,
+    "top": 329
+   },
+   {
+    "t": "₺28,00",
+    "ff": "JetBrains Mono",
+    "fs": "11px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 349,
+    "top": 329
+   },
+   {
+    "t": "₺5,81",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 352,
+    "top": 813
+   },
+   {
+    "t": "₺120,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 163,
+    "top": 970
+   },
+   {
+    "t": "₺2,40",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 352,
+    "top": 1008
+   },
+   {
+    "t": "₺15,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 155,
+    "top": 1164
+   },
+   {
+    "t": "₺0,03",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 352,
+    "top": 1202
+   },
+   {
+    "t": "₺22,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 155,
+    "top": 1359
+   },
+   {
+    "t": "₺22,00",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "500",
+    "fvn": "tabular-nums",
+    "right": 352,
+    "top": 1397
+   },
+   {
+    "t": "₺30,24",
+    "ff": "Inter",
+    "fs": "13px",
+    "fw": "400",
+    "fvn": "tabular-nums",
+    "right": 250,
+    "top": 1454
+   },
+   {
+    "t": "₺31,92",
+    "ff": "Inter",
+    "fs": "15px",
+    "fw": "600",
+    "fvn": "tabular-nums",
+    "right": 365,
+    "top": 1478
+   }
+  ],
+  "borderedCount": 27,
+  "borders": [
+   {
+    "tag": "select",
+    "cls": "h-11 w-28 shrink-0 rounded-md border border-input bg-transpa",
+    "w": 112,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "inline-flex items-center justify-center gap-2 rounded-md tex",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "inline-flex shrink-0 items-center justify-center text-sm fon",
+    "w": 44,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 164,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "flex items-center justify-between gap-2 rounded-md border bo",
+    "w": 164,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 164,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 164,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "flex h-11 w-full items-center justify-between gap-2 rounded-",
+    "w": 340,
+    "h": 44
+   },
+   {
+    "tag": "div",
+    "cls": "rounded-lg border border-border/60 text-[13px]",
+    "w": 340,
+    "h": 779
+   },
+   {
+    "tag": "button",
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md bo",
+    "w": 262,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 93,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "flex items-center justify-between gap-2 rounded-md border px",
+    "w": 107,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 78,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 112,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md bo",
+    "w": 262,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 93,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "flex items-center justify-between gap-2 rounded-md border px",
+    "w": 107,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 112,
+    "h": 44
+   },
+   {
+    "tag": "button",
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md bo",
+    "w": 262,
+    "h": 44
+   },
+   {
+    "tag": "input",
+    "cls": "w-full rounded-md border px-3 py-1 shadow-xs transition-[col",
+    "w": 93,
+    "h": 44
+   }
+  ],
+  "nativeSel": [
+   {
+    "label": "Versiyon",
+    "w": 112,
+    "h": 44,
+    "appearance": "auto",
+    "ff": "Inter",
+    "fs": "13px"
+   }
+  ],
+  "shadSel": [
+   {
+    "t": "KG",
+    "w": 164,
+    "h": 44,
+    "icons": 1
+   },
+   {
+    "t": "Ürün ara ve ekle",
+    "w": 340,
+    "h": 44,
+    "icons": 1
+   },
+   {
+    "t": "Badem",
+    "w": 262,
+    "h": 44,
+    "icons": 1
+   },
+   {
+    "t": "Manuel",
+    "w": 107,
+    "h": 44,
+    "icons": 1
+   },
+   {
+    "t": "Hurma Şurubu",
+    "w": 262,
+    "h": 44,
+    "icons": 1
+   },
+   {
+    "t": "Ortalama",
+    "w": 107,
+    "h": 44,
+    "icons": 1
+   },
+   {
+    "t": "Deniz Tuzu",
+    "w": 262,
+    "h": 44,
+    "icons": 1
+   },
+   {
+    "t": "Ortalama",
+    "w": 107,
+    "h": 44,
+    "icons": 1
+   }
+  ],
+  "heads": {
+   "Miktar": {
+    "right": 0,
+    "top": 0,
+    "fs": "12px"
+   },
+   "Birim maliyet": {
+    "right": 0,
+    "top": 0,
+    "fs": "12px"
+   },
+   "Fire %": {
+    "right": 0,
+    "top": 0,
+    "fs": "12px"
+   },
+   "Satır maliyeti": {
+    "right": 0,
+    "top": 0,
+    "fs": "12px"
+   }
+  }
+ }
+}

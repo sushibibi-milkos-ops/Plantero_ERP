@@ -1,0 +1,336 @@
+{
+ "as": "admin",
+ "vp": "1440x900",
+ "sections": [
+  {
+   "title": "Günlük kanal satışları",
+   "top": 276,
+   "h": 145,
+   "w": 568,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 437,
+   "h": 164,
+   "w": 568,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Bugün",
+   "top": 616,
+   "h": 521,
+   "w": 568,
+   "rowCount": 8,
+   "rowH": [
+    58.5,
+    59.5,
+    59.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Onay kuyruğu",
+   "top": 1153,
+   "h": 106,
+   "w": 568,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son aktiviteler",
+   "top": 1275,
+   "h": 337,
+   "w": 568,
+   "rowCount": 8,
+   "rowH": [
+    35.5,
+    36.5,
+    36.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Banka",
+   "top": 276,
+   "h": 212,
+   "w": 568,
+   "rowCount": 3,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Üretim hatları",
+   "top": 504,
+   "h": 206,
+   "w": 568,
+   "rowCount": 3,
+   "rowH": [
+    52.5,
+    53.5,
+    53.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Kritik stok",
+   "top": 726,
+   "h": 277,
+   "w": 568,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "SKT riski",
+   "top": 1019,
+   "h": 311,
+   "w": 568,
+   "rowCount": 5,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 1345,
+   "h": 270,
+   "w": 568,
+   "rowCount": 4,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [
+  {
+   "cols": "568px 568px",
+   "tops": [
+    {
+     "left": 264,
+     "bottom": 1612
+    },
+    {
+     "left": 848,
+     "bottom": 1615
+    }
+   ],
+   "kids": [
+    {
+     "h": 1336,
+     "left": 264,
+     "bottom": 1612,
+     "label": "Günlük kanal satışları"
+    },
+    {
+     "h": 1339,
+     "left": 848,
+     "bottom": 1615,
+     "label": "Banka"
+    }
+   ]
+  }
+ ],
+ "truncated": [],
+ "badges": [],
+ "money": [
+  {
+   "text": "₺2.678,40",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺2.678,40",
+   "dec": true,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "start"
+  },
+  {
+   "text": "₺1.560.717,48",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.881,19",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.850,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.875,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺4.590,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺10.920,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺6.500,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺13.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "-₺254.348,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.250,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "€0,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "-₺255.598,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.109",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺1.100",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺0",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺0",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺3.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.282,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.100,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺27,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  }
+ ],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · G",
+  "Kritik stok yok",
+  "Satın alma siparişi oluştur",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 11,
+ "pageH": 1655,
+ "vpH": 900
+}

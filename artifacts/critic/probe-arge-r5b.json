@@ -1,0 +1,382 @@
+{
+ "projeler_1440": {
+  "mainTop": 48,
+  "firstRowViewportTop": 238,
+  "firstRowMainOffset": 190,
+  "mainScrollTop": 0
+ },
+ "receteler_1440": {
+  "mainTop": 48,
+  "firstRowViewportTop": 232,
+  "firstRowMainOffset": 184,
+  "mainScrollTop": 0
+ },
+ "precete_1440": {
+  "mainTop": 48,
+  "panelTopViewport": 313,
+  "panelTopMainOffset": 265,
+  "hero": [
+   {
+    "size": "11px",
+    "weight": "500",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "top": 265,
+    "ctx": "₺31,92 / ₺28,00"
+   },
+   {
+    "size": "15px",
+    "weight": "600",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "top": 751,
+    "ctx": "Birim maliyet ₺31,92"
+   }
+  ],
+  "target": [
+   {
+    "size": "11px",
+    "weight": "500",
+    "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+    "fvn": "tabular-nums"
+   }
+  ],
+  "frameMaxDepth": 2,
+  "deepFrames": [],
+  "inputs": [
+   {
+    "w": 211.5,
+    "h": 32,
+    "val": "1",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 211.5,
+    "h": 32,
+    "val": "96",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 211.5,
+    "h": 32,
+    "val": "0,35",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 108.8,
+    "h": 32,
+    "val": "0,1500",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 112,
+    "h": 32,
+    "val": "38,00",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 80,
+    "h": 32,
+    "val": "2",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 108.8,
+    "h": 32,
+    "val": "0,0200",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 80,
+    "h": 32,
+    "val": "0",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 108.8,
+    "h": 32,
+    "val": "0,0020",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 80,
+    "h": 32,
+    "val": "0",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 94.8,
+    "h": 32,
+    "val": "1,0000",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 80,
+    "h": 32,
+    "val": "0",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   }
+  ],
+  "currencyPrefix": [
+   {
+    "tlRight": 1205,
+    "inputRight": 1399,
+    "gapToDigitsApprox": 194
+   },
+   {
+    "tlRight": 1028,
+    "inputRight": 1122,
+    "gapToDigitsApprox": 94
+   }
+  ],
+  "ingredientRowHeights": []
+ },
+ "precete_390": {
+  "mainTop": 48,
+  "panelTopViewport": 329,
+  "panelTopMainOffset": 281,
+  "hero": [
+   {
+    "size": "11px",
+    "weight": "500",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "top": 281,
+    "ctx": "₺31,92 / ₺28,00"
+   },
+   {
+    "size": "15px",
+    "weight": "600",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "top": 1430,
+    "ctx": "Birim maliyet ₺31,92"
+   }
+  ],
+  "target": [
+   {
+    "size": "11px",
+    "weight": "500",
+    "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+    "fvn": "tabular-nums"
+   }
+  ],
+  "frameMaxDepth": 4,
+  "deepFrames": [
+   {
+    "depth": 4,
+    "w": 262,
+    "h": 44,
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md border px-3 text-left text-[13px",
+    "border": "1px/1px",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "depth": 3,
+    "w": 338,
+    "h": 195,
+    "cls": "grid grid-cols-2 gap-x-3 gap-y-1.5 border-b border-border/40 p-3 last:border-0 hover:bg-mu",
+    "border": "0px/1px",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "depth": 4,
+    "w": 262,
+    "h": 44,
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md border px-3 text-left text-[13px",
+    "border": "1px/1px",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "depth": 3,
+    "w": 338,
+    "h": 195,
+    "cls": "grid grid-cols-2 gap-x-3 gap-y-1.5 border-b border-border/40 p-3 last:border-0 hover:bg-mu",
+    "border": "0px/1px",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "depth": 4,
+    "w": 262,
+    "h": 44,
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md border px-3 text-left text-[13px",
+    "border": "1px/1px",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "depth": 3,
+    "w": 338,
+    "h": 195,
+    "cls": "grid grid-cols-2 gap-x-3 gap-y-1.5 border-b border-border/40 p-3 last:border-0 hover:bg-mu",
+    "border": "0px/1px",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   {
+    "depth": 3,
+    "w": 262,
+    "h": 44,
+    "cls": "flex w-full items-center justify-between gap-2 rounded-md border px-3 text-left text-[13px",
+    "border": "1px/1px",
+    "bg": "rgba(0, 0, 0, 0)"
+   }
+  ],
+  "inputs": [
+   {
+    "w": 164,
+    "h": 44,
+    "val": "1",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 164,
+    "h": 44,
+    "val": "96",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 164,
+    "h": 44,
+    "val": "0,35",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 93.2,
+    "h": 44,
+    "val": "0,1500",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 78.4,
+    "h": 44,
+    "val": "38,00",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 111.6,
+    "h": 44,
+    "val": "2",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 93.2,
+    "h": 44,
+    "val": "0,0200",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 111.6,
+    "h": 44,
+    "val": "0",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 93.2,
+    "h": 44,
+    "val": "0,0020",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 111.6,
+    "h": 44,
+    "val": "0",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 79.1,
+    "h": 44,
+    "val": "1,0000",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   },
+   {
+    "w": 111.6,
+    "h": 44,
+    "val": "0",
+    "ta": "right",
+    "fvn": "tabular-nums",
+    "fs": "13px"
+   }
+  ],
+  "currencyPrefix": [
+   {
+    "tlRight": 219,
+    "inputRight": 365,
+    "gapToDigitsApprox": 146
+   },
+   {
+    "tlRight": 128,
+    "inputRight": 189,
+    "gapToDigitsApprox": 61
+   }
+  ],
+  "ingredientRowHeights": []
+ },
+ "tabs_390": [
+  {
+   "t": "Deneme Reçeteleri",
+   "w": 0,
+   "h": 0,
+   "px": "8px/8px",
+   "minW": "0px"
+  },
+  {
+   "t": "Pano",
+   "w": 31.3,
+   "h": 44,
+   "px": "0px/0px",
+   "minW": "auto"
+  },
+  {
+   "t": "Deneme Reçeteleri",
+   "w": 117.4,
+   "h": 44,
+   "px": "0px/0px",
+   "minW": "auto"
+  }
+ ]
+}

@@ -1,0 +1,204 @@
+{
+ "as": "admin",
+ "vp": "1440x900",
+ "interactive": 41,
+ "withActive": 41,
+ "globalActiveRule": false,
+ "zeroTones": [
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "text-[15px] font-semibold tabular-nums text-muted-foreground"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "text-[15px] font-semibold tabular-nums text-muted-foreground"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "text-[15px] font-semibold tabular-nums text-muted-foreground"
+  },
+  {
+   "text": "€0,00",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "num inline-block text-right whitespace-nowrap text-muted-for"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "text-[15px] font-semibold tabular-nums text-muted-foreground"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "text-[15px] font-semibold tabular-nums text-muted-foreground"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "cls": "text-[15px] font-semibold tabular-nums text-muted-foreground"
+  }
+ ],
+ "nonZeroColors": [
+  "oklch(0.21 0.006 285.9)",
+  "oklch(0.577 0.245 27.3)"
+ ],
+ "qty": [
+  {
+   "text": "₺2.678,40",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺2.678,40",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺1.560.717,48",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺3.881,19",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺3.850,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺7.875,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺4.590,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺10.920,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺6.500,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺13.800,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "1kalem",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "1kalem",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "-₺254.348,50",
+   "color": "oklch(0.577 0.245 27.3)"
+  },
+  {
+   "text": "₺1.250,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "€0,00",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+  },
+  {
+   "text": "-₺255.598,50",
+   "color": "oklch(0.577 0.245 27.3)"
+  },
+  {
+   "text": "₺3.800,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺3.282,50",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺1.100,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "₺27,00",
+   "color": "oklch(0.21 0.006 285.9)"
+  }
+ ],
+ "strips": [
+  {
+   "section": "Onay kuyruğu",
+   "h": 60,
+   "anatomy": [
+    "15px:0 | 10px:AI satın alma",
+    "15px:12 | 10px:Mutabakat",
+    "15px:0 | 10px:Sayım farkı",
+    "15px:0 | 10px:Hatırlatma"
+   ]
+  },
+  {
+   "section": "SKT riski",
+   "h": 61,
+   "anatomy": [
+    "15px:1 | 10px:Süresi geçti",
+    "15px:50 | 10px:< 30 gün",
+    "15px:30 | 10px:30-60 gün",
+    "15px:0 | 10px:60-90 gün"
+   ]
+  },
+  {
+   "section": "Geciken alacak",
+   "h": 61,
+   "anatomy": [
+    "15px:₺7.109 | 10px:0-30 gün",
+    "15px:₺1.100 | 10px:31-60 gün",
+    "15px:₺0 | 10px:61-90 gün",
+    "15px:₺0 | 10px:90+ gün"
+   ]
+  }
+ ],
+ "empties": [
+  {
+   "section": "Kritik stok",
+   "h": 231,
+   "sectionH": 277
+  }
+ ],
+ "rowHeights": {
+  "Bugün": [
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5
+  ],
+  "Banka": [
+   40,
+   40,
+   40
+  ],
+  "Üretim hatları": [
+   52.5,
+   52.5,
+   52.5
+  ],
+  "SKT riski": [
+   40,
+   40,
+   40,
+   40,
+   40
+  ],
+  "Geciken alacak": [
+   40,
+   40,
+   40,
+   40
+  ]
+ }
+}
