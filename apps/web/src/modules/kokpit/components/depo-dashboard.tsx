@@ -1,13 +1,18 @@
 import type { WarehouseCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
+import { StatusBadge } from '@/components/status-badge';
+import { QtyCell } from '@/components/qty-cell';
+import { MoneyCell } from '@/components/money-cell';
+import { EmptyState } from '@/components/empty-state';
 import { formatMoney } from '@/lib/format';
-import { Section } from './shared';
+import type { CockpitTodayItem } from '../queries';
+import { Section, RowLink } from './shared';
 
 const EXPIRY_BUCKET_LABEL: Record<string, string> = { expired: 'Süresi geçti', critical: '< 30 gün', warning: '30-60 gün', notice: '60-90 gün' };
 
 /** Depo rolü panosu — büyük dokunma hedefleri (KpiCard strip zaten 72/80px), tek amaca odaklı sayaçlar. */
-export function DepoDashboardView({ data }: { data: WarehouseCards }) {
+export function DepoDashboardView({ data, today }: { data: WarehouseCards; today: CockpitTodayItem[] }) {
   return (
     <>
       <KpiStripRow>
@@ -34,6 +39,28 @@ export function DepoDashboardView({ data }: { data: WarehouseCards }) {
               </div>
             ))}
           </div>
+        </Section>
+
+        <Section title="Bugün" href="/depo/mal-kabul" className="lg:col-span-2">
+          {today.length === 0 ? (
+            <EmptyState compact title="Bugün henüz mal kabul/sevkiyat yok" />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {today.map((t) => (
+                <li key={`${t.k}-${t.no}`}>
+                  <RowLink href={t.href}>
+                    <span className="flex min-w-0 items-center gap-2 sm:contents">
+                      <span className="shrink-0 text-xs text-muted-foreground sm:w-24">{t.kind}</span>
+                      <span className="truncate font-mono text-xs sm:w-36 sm:shrink-0">{t.no}</span>
+                    </span>
+                    <span className="shrink-0 sm:order-last"><StatusBadge status={t.status} kind={t.k} /></span>
+                    <span className="min-w-0 flex-1 truncate">{t.partner}</span>
+                    <span className="shrink-0">{t.amount !== undefined ? <MoneyCell value={t.amount} /> : t.qty !== undefined ? <QtyCell value={t.qty} uom={t.uom} /> : null}</span>
+                  </RowLink>
+                </li>
+              ))}
+            </ul>
+          )}
         </Section>
       </div>
     </>
