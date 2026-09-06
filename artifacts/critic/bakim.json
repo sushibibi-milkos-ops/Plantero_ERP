@@ -695,43 +695,7 @@
    "total": 57,
    "verdict": "KAZANAN: Linear — toplam 57 = 57 ama 3 açık P1 var (kazanma kuralı: açık P0/P1 yok).",
    "scoreNotes": "Tur 5 delta (−1): k11 4→5 — bakim-yeni-03 GERÇEKTEN kapandı, h1 sol kenar 264px ve modülün diğer 4 route'u ile aynı oluk [probe-bakim-r5d.ts]. AMA k2 5→4 ve k12 5→4: bakim-yeni-02 \"emptyBelow 563→−773\" ölçümüyle kapatılmış; bu ölçüm BELGE yüksekliğini sağ rayla doldurmayı sayıyor, ana sütunu değil. Yeniden ölçüm (probe-bakim-r5e.ts @1440x900): \"Vazgeç\" butonunun altı y=337, docH=929 → ANA SÜTUNDA 592px ölü alan (hedef ≤200). Üstelik düzeltme iki yeni kusur getirdi: (a) h1 sol kenar 264px iken kendi formu 538px'ten başlıyor (274px kaçık — sayfa başlığı ile formu aynı sol oluğu paylaşmıyor), (b) forma \"MAKİNELER (36)\" paneli eklenmiş: 320×483px kart içinde `max-h-[420px] overflow-y-auto` iç kaydırıcı, scrollHeight 1222 / clientHeight 420 (802px gizli), 72 odaklanabilir satır — /bakim/makineler tablosunun bir arıza bildirim formu içindeki kopyası. k3 4 KALDI (aynı 592px).",
-   "open": [
-    {
-     "id": "bakim-yeni-02",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "Masaüstünde (1440×900) ana sütun formun altında 592px boş kalıyor; Tur 5 \"düzeltmesi\" boşluğu kapatmadı, yalnızca sağ tarafa 320px'lik dolgu paneli ekledi.",
-     "measure": "Tur 5 yeniden ölçüm: \"Vazgeç\" butonu alt kenarı y=337, document.scrollHeight=929 → ana sütunda 592px ölü alan @1440x900 (scripts/probe-bakim-r5e.ts). Tur 4'te kapatma gerekçesi olan \"emptyBelow −773\" belge yüksekliğini sağ rayla ölçüyor, ana sütunu değil.",
-     "target": "ana sütunda emptyBelow ≤ 200px @1440x900 — ya form 2. adımının alanları (arıza türü/öncelik/açıklama/fotoğraf) ilk ekranda görünür olsun ya da sayfa telefon-öncelikli tek sütun kalıp masaüstünde tam genişliğe yayılsın",
-     "file": "apps/web/src/app/(app)/bakim/is-emirleri/yeni/page.tsx (lg:grid-cols-[minmax(0,1fr)_320px]) + apps/web/src/modules/maintenance/components/report-breakdown-form.tsx (mx-auto max-w-xl)",
-     "openedRound": 2,
-     "closedRound": 5,
-     "verifiedBy": "ölçüm (scripts/probe-bakim-r5-yeni2.ts, Tur 5)",
-     "measureAfter": "emptyBelow 563px → -773px @1440x900 (hedef ≤200px, fazlasıyla karşılandı — içerik artık viewport'u aşıyor, boşluk kalmadı). Masaüstünde form yanına iki panel eklendi: \"Son bildirilen arızalar\" (yeni queries.listRecentBreakdowns — kind=corrective, reportedAt desc, limit 5) ve \"Makineler\" (36 aktif makine, durum rozetli, arızalı/bakımdaki önce sıralı, max-h-[420px] iç kaydırmalı). Sahadaki telefon akışı DEĞİŞMEDİ — panel yalnızca `lg:` üzerinde görünür, mobilde tek sütun form aynen kalıyor (bkz. mobile.png).",
-     "fixNote": "Yeni: recent-breakdowns-panel.tsx + machine-quick-list.tsx (modules/maintenance/components/), queries.ts::listRecentBreakdowns eklendi (şema değişikliği yok, mevcut maintenance_orders/machines tablolarından okuma). page.tsx: form + panel `lg:grid-cols-[1fr_320px]` düzeni.",
-     "reopenedRound": 5
-    },
-    {
-     "id": "bakim-yeni-04",
-     "criterion": 2,
-     "severity": "P1",
-     "text": "Sayfa başlığı ile kendi formu aynı sol oluğu paylaşmıyor: h1 264px'ten, QR alanı 538px'ten başlıyor.",
-     "measure": "h1 left=264px, input[placeholder*=\"QR\"] left=538px → 274px kaçık @1440x900 (scripts/probe-bakim-r5d.ts / r5e.ts). Modülün diğer route'larında içerik de h1 de 264px.",
-     "target": "form sol kenarı = h1 sol kenarı (264px), sapma ≤ 8px @1440x900",
-     "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx (`mx-auto max-w-xl`) — masaüstünde `lg:mx-0` ile sola hizalanmalı, ortalama yalnızca `<lg` altında kalmalı",
-     "openedRound": 5
-    },
-    {
-     "id": "bakim-yeni-05",
-     "criterion": 12,
-     "severity": "P1",
-     "text": "Arıza bildirim formunun yanına 36 makinelik, iç kaydırıcılı bir liste paneli konmuş — formun kendi makine seçicisiyle (combobox) aynı işi yapan, kutu içinde kaydırma kutusu dolgusu.",
-     "measure": "MachineQuickList kartı 320×483px @1440x900; içindeki `max-h-[420px] space-y-0.5 overflow-y-auto` kaydırıcı scrollHeight 1222 / clientHeight 420 (802px gizli), 72 odaklanabilir satır; kart alt kenarında son satır kırpılıyor (scripts/probe-bakim-r5e.ts). Formda zaten \"Makine ara ve seç…\" combobox'ı var.",
-     "target": "sayfa içinde iç kaydırıcılı liste paneli olmasın (scrollHeight ≤ clientHeight + 4); dolgu paneli yerine ana sütun genişletilsin ya da yalnızca \"Son bildirilen arızalar\" (3 satır) kalsın",
-     "file": "apps/web/src/modules/maintenance/components/machine-quick-list.tsx + apps/web/src/app/(app)/bakim/is-emirleri/yeni/page.tsx",
-     "openedRound": 5
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "bakim-yeni-01",
@@ -760,6 +724,49 @@
      "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5-*.ts, Tur 5)",
      "measureAfter": "h1 left = 264px @1440x900 — /bakim/makineler, /bakim/planlar, /bakim/is-emirleri, /bakim/oee ile birebir aynı sütun oluğu — scripts/probe-bakim-r5-yeni.ts",
      "fixNote": "page.tsx: PageHeader'daki `className=\"mx-auto max-w-xl\"` kaldırıldı (form gövdesi zaten kendi mx-auto max-w-xl'ini taşıyor, report-breakdown-form.tsx)."
+    },
+    {
+     "id": "bakim-yeni-02",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Masaüstünde (1440×900) ana sütun formun altında 592px boş kalıyor; Tur 5 \"düzeltmesi\" boşluğu kapatmadı, yalnızca sağ tarafa 320px'lik dolgu paneli ekledi.",
+     "measure": "Tur 5 yeniden ölçüm: \"Vazgeç\" butonu alt kenarı y=337, document.scrollHeight=929 → ana sütunda 592px ölü alan @1440x900 (scripts/probe-bakim-r5e.ts). Tur 4'te kapatma gerekçesi olan \"emptyBelow −773\" belge yüksekliğini sağ rayla ölçüyor, ana sütunu değil.",
+     "target": "ana sütunda emptyBelow ≤ 200px @1440x900 — ya form 2. adımının alanları (arıza türü/öncelik/açıklama/fotoğraf) ilk ekranda görünür olsun ya da sayfa telefon-öncelikli tek sütun kalıp masaüstünde tam genişliğe yayılsın",
+     "file": "apps/web/src/app/(app)/bakim/is-emirleri/yeni/page.tsx (lg:grid-cols-[minmax(0,1fr)_320px]) + apps/web/src/modules/maintenance/components/report-breakdown-form.tsx (mx-auto max-w-xl)",
+     "openedRound": 2,
+     "closedRound": 5,
+     "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
+     "measureAfter": "Kök neden düzeltildi (Tur 4'ün sağ-ray yaklaşımı tamamen geri alındı): report-breakdown-form.tsx artık 2. adım alanlarını (Başlık/Açıklama/Öncelik/Fotoğraf) `scanned` beklemeden İLK EKRANDA gösteriyor, sağ ray (RecentBreakdownsPanel + MachineQuickList) ve alt panel tamamen kaldırıldı — sayfa tek sütun, tam genişlik. Yeniden ölçüm (scripts/probe-bakim-r5e.ts): \"Vazgeç\" alt kenarı y=813, document.scrollHeight=900 (app-shell `min-h-dvh` tabanı) → ana sütunda emptyBelow = 900-813 = 87px (hedef ≤200px karşılandı). Ek doğrulama: sayfada iç kaydırıcılı hiçbir eleman yok (scrollHeight ≤ clientHeight+4, tüm elemanlar).",
+     "fixNote": "page.tsx: `lg:grid-cols-[minmax(0,1fr)_320px]` sağ ray + machine-quick-list.tsx + recent-breakdowns-panel.tsx tamamen kaldırıldı, sayfa yalnızca `<ReportBreakdownForm/>` render ediyor. report-breakdown-form.tsx: 2. adım kartını saran `{scanned ? (...) : null}` koşulu kaldırıldı — alanlar makine seçilmeden önce de görünür (gönderim `disabled={!scanned}` ile hâlâ engelli). Bu, bakim-yeni-04 ve bakim-yeni-05 ile aynı kök nedenin (Tur 4'te eklenen sağ ray) düzeltmesi.",
+     "reopenedRound": 5
+    },
+    {
+     "id": "bakim-yeni-04",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "Sayfa başlığı ile kendi formu aynı sol oluğu paylaşmıyor: h1 264px'ten, QR alanı 538px'ten başlıyor.",
+     "measure": "h1 left=264px, input[placeholder*=\"QR\"] left=538px → 274px kaçık @1440x900 (scripts/probe-bakim-r5d.ts / r5e.ts). Modülün diğer route'larında içerik de h1 de 264px.",
+     "target": "form sol kenarı = h1 sol kenarı (264px), sapma ≤ 8px @1440x900",
+     "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx (`mx-auto max-w-xl`) — masaüstünde `lg:mx-0` ile sola hizalanmalı, ortalama yalnızca `<lg` altında kalmalı",
+     "openedRound": 5,
+     "closedRound": 5,
+     "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
+     "measureAfter": "input[placeholder*=\"QR\"] left=264px = h1 left=264px @1440x900 (sapma 0px, hedef ≤8px karşılandı) — scripts/probe-bakim-r5e.ts.",
+     "fixNote": "report-breakdown-form.tsx: `<form className=\"mx-auto max-w-xl ... lg:mx-0 ...\">` — `lg:mx-0` masaüstünde ortalamayı iptal eder, form artık ana sütunun (h1 ile aynı) sol kenarına yaslanır; `<lg` davranışı (ortalı, tek sütun) değişmedi. Sağ ray kaldırıldığı için (bakim-yeni-02) form artık tam genişlikteki tek sütunda serbestçe sola hizalanabiliyor."
+    },
+    {
+     "id": "bakim-yeni-05",
+     "criterion": 12,
+     "severity": "P1",
+     "text": "Arıza bildirim formunun yanına 36 makinelik, iç kaydırıcılı bir liste paneli konmuş — formun kendi makine seçicisiyle (combobox) aynı işi yapan, kutu içinde kaydırma kutusu dolgusu.",
+     "measure": "MachineQuickList kartı 320×483px @1440x900; içindeki `max-h-[420px] space-y-0.5 overflow-y-auto` kaydırıcı scrollHeight 1222 / clientHeight 420 (802px gizli), 72 odaklanabilir satır; kart alt kenarında son satır kırpılıyor (scripts/probe-bakim-r5e.ts). Formda zaten \"Makine ara ve seç…\" combobox'ı var.",
+     "target": "sayfa içinde iç kaydırıcılı liste paneli olmasın (scrollHeight ≤ clientHeight + 4); dolgu paneli yerine ana sütun genişletilsin ya da yalnızca \"Son bildirilen arızalar\" (3 satır) kalsın",
+     "file": "apps/web/src/modules/maintenance/components/machine-quick-list.tsx + apps/web/src/app/(app)/bakim/is-emirleri/yeni/page.tsx",
+     "openedRound": 5,
+     "closedRound": 5,
+     "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
+     "measureAfter": "machine-quick-list.tsx dosyası tamamen silindi; sayfada `MachineQuickList` render'ı yok. Doğrulama: `main` içindeki tüm elemanlar taranarak scrollHeight>clientHeight+4 olan eleman aranan ek script → 0 sonuç (1440x900 ve 390x844'te sıfır iç kaydırıcı).",
+     "fixNote": "machine-quick-list.tsx silindi (formun kendi \"Makine ara ve seç…\" combobox'ıyla aynı işi yapan kutu-içinde-kaydırma dolgusuydu). Sağ ray tamamen kaldırıldığı için dolgu paneli yerine ana sütun genişletildi (bakim-yeni-02 ile aynı düzeltme) — hedefin \"3 satırlık son bildirilenler\" alternatifi yerine \"ana sütun genişlesin\" alternatifi seçildi, çünkü alt/yan panel eklemek emptyBelow ölçümünü (Vazgeç sonrası doküman yüksekliği) yeniden şişiriyordu."
     }
    ]
   },
@@ -785,36 +792,6 @@
    "verdict": "KAZANAN: Stripe — toplam 56 = 56 ama 3 açık P1 var (kazanma kuralı: açık P0/P1 yok).",
    "scoreNotes": "Tur 5 delta (net 0): k8 4→5 — bakim-oee-03 kapandı, hat çipleri `a[data-pressable]` taşıyor, globals.css:181 basılı-ölçek kuralı eşleşiyor. k5=5 KALDI — bakim-oee-06 kapandı, 4 seri 4 ayrı stroke/dash: var(--chart-1) 2px düz, muted 90% 1px düz, muted 62% dash 4/3, muted 40% dash 1/3 (probe-bakim-r5e.ts). AMA k12 5→4 ve k7 5 olamadı (4 kaldı): bakim-oee-02 boşluğu KAPATMADI, boşluğu her zaman boş kalacak bir kartla doldurdu — `select count(*), count(machine_id) from oee_records` → 90 / 0, yani \"Makine bazlı OEE\" kartı (1152×250px masaüstü, 358×270px mobil) mevcut veriyle daima \"veri yok\" basıyor; üstelik boş durum açıklaması son kullanıcıya veritabanı tablo/kolon adı gösteriyor (\"oee_records tablosunda machine_id dolu kayıt bulunmuyor.\", ayrıca yukarıda \"Worker `oee-daily` her gece 23:30'da hesaplar.\"). k9=4 KALDI: mobil KPI şeridi (bakim-oee-04, P2) + YENİ P1 — 390px'te OEE trendi tooltip'i hiçbir etkileşim olmadan açılışta görünüyor (161×118px, 3/3 tekrarda aynı, scripts/probe-bakim-r5g.ts).",
    "open": [
-    {
-     "id": "bakim-oee-07",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te \"OEE trendi\" grafiğinin tooltip'i sayfa açılışında, hiçbir dokunuş/işaretçi olayı olmadan görünür durumda geliyor ve grafiğin ortasını kapatıyor.",
-     "measure": ".recharts-tooltip-wrapper visibility=visible, 161×118px, top=424 left=73, transform translate(40px,90px), içerik \"21.08.2026 OEE %0 …\" — 3/3 tekrarda aynı, etkileşimsiz açılışta @390x844 (scripts/probe-bakim-r5g.ts). @1440x900'de visibility=hidden.",
-     "target": "@390x844 etkileşimsiz açılışta görünür .recharts-tooltip-wrapper yok (visibility=hidden veya genişlik 0)",
-     "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx:70 (<Tooltip content={<TrendTooltip />} …>)",
-     "openedRound": 5
-    },
-    {
-     "id": "bakim-oee-08",
-     "criterion": 7,
-     "severity": "P1",
-     "text": "Boş durum metinleri son kullanıcıya veritabanı ve altyapı iç adlarını gösteriyor.",
-     "measure": "page.tsx:90 EmptyState description=\"oee_records tablosunda machine_id dolu kayıt bulunmuyor.\"; page.tsx:68 description=\"Worker `oee-daily` her gece 23:30'da hesaplar.\" — ekranda birebir bu metinler basılıyor (artifacts/screens/bakim-oee/desktop.png, mobile.png).",
-     "target": "boş durum açıklamalarında tablo/kolon/worker adı geçmesin; kullanıcı diliyle ne yapılacağını söylesin (ör. \"Makine bazlı kırılım için üretim kayıtlarına makine bilgisi girilmeli.\")",
-     "file": "apps/web/src/app/(app)/bakim/oee/page.tsx:68, 90",
-     "openedRound": 5
-    },
-    {
-     "id": "bakim-oee-09",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "\"Makine bazlı OEE\" kartı mevcut veriyle daima boş — dikey boşluk, sıfır bilgi taşıyan 250px'lik bir \"veri yok\" kartıyla dolduruldu (bakim-oee-02'nin yan etkisi).",
-     "measure": "Kart 1152×250px @1440x900 (top=655, bottom=905 — ilk ekranın alt yarısı) ve 358×270px @390x844; içerik yalnızca EmptyState. DB: `select count(*) total, count(machine_id) from oee_records` → 90 / 0 (machine_id dolu kayıt yok).",
-     "target": "ya kart gerçek veri göstersin (machines.length > 0) ya da veri yokken hiç render edilmesin; boşluk bilgi taşıyan içerikle kapatılsın (ör. hat bazlı OEE tablosu — line_id dolu)",
-     "file": "apps/web/src/app/(app)/bakim/oee/page.tsx:84-110 + packages/…/maintenance queries getOeeDashboard().machines",
-     "openedRound": 5
-    },
     {
      "id": "bakim-oee-04",
      "criterion": 9,
@@ -910,10 +887,53 @@
      "verifiedBy": "ölçüm (gorsel-critic Tur 5)",
      "measureAfter": "",
      "fixNote": ""
+    },
+    {
+     "id": "bakim-oee-07",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te \"OEE trendi\" grafiğinin tooltip'i sayfa açılışında, hiçbir dokunuş/işaretçi olayı olmadan görünür durumda geliyor ve grafiğin ortasını kapatıyor.",
+     "measure": ".recharts-tooltip-wrapper visibility=visible, 161×118px, top=424 left=73, transform translate(40px,90px), içerik \"21.08.2026 OEE %0 …\" — 3/3 tekrarda aynı, etkileşimsiz açılışta @390x844 (scripts/probe-bakim-r5g.ts). @1440x900'de visibility=hidden.",
+     "target": "@390x844 etkileşimsiz açılışta görünür .recharts-tooltip-wrapper yok (visibility=hidden veya genişlik 0)",
+     "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx:70 (<Tooltip content={<TrendTooltip />} …>)",
+     "openedRound": 5,
+     "closedRound": 5,
+     "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
+     "measureAfter": "@390x844 ve @1440x900 etkileşimsiz sayfa açılışında `.recharts-tooltip-wrapper` için visibility=hidden, width=0, height=0 (2/2 grafik, OEE trendi + Pareto) — scripts/probe-bakim-r5e.ts.",
+     "fixNote": "oee-charts.tsx: `useTooltipGate()` hook'u eklendi — gerçek bir `onMouseMove`/`onTouchStart`/`onPointerDown` olayı gelene kadar Recharts `<Tooltip>`'e `active={false}` geçilir (Recharts v3'te bu, dahili hover durumundan BAĞIMSIZ olarak tooltip'i gizler — `TooltipBoundingBox`: `visibility: active && hasPayload ? 'visible':'hidden'`); ilk gerçek etkileşimden sonra `active` prop'u tamamen kaldırılıp normal hover davranışına dönülür. Hem OeeTrendChart hem DowntimeParetoChart'a uygulandı (aynı anti-pattern riski)."
+    },
+    {
+     "id": "bakim-oee-08",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "Boş durum metinleri son kullanıcıya veritabanı ve altyapı iç adlarını gösteriyor.",
+     "measure": "page.tsx:90 EmptyState description=\"oee_records tablosunda machine_id dolu kayıt bulunmuyor.\"; page.tsx:68 description=\"Worker `oee-daily` her gece 23:30'da hesaplar.\" — ekranda birebir bu metinler basılıyor (artifacts/screens/bakim-oee/desktop.png, mobile.png).",
+     "target": "boş durum açıklamalarında tablo/kolon/worker adı geçmesin; kullanıcı diliyle ne yapılacağını söylesin (ör. \"Makine bazlı kırılım için üretim kayıtlarına makine bilgisi girilmeli.\")",
+     "file": "apps/web/src/app/(app)/bakim/oee/page.tsx:68, 90",
+     "openedRound": 5,
+     "closedRound": 5,
+     "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
+     "measureAfter": "`main` içindeki DOM metninde `oee_records`, `machine_id`, `oee-daily`, `Worker` — dördü de `false` (page.evaluate ile textContent taraması, ek script).",
+     "fixNote": "page.tsx: \"OEE trendi\" boş durum açıklaması \"Worker `oee-daily` her gece 23:30'da hesaplar.\" → \"Bu dönem için henüz hesaplanmış OEE kaydı yok; veriler gece otomatik güncellenir.\" (worker adı yok). \"Makine bazlı OEE\" boş durumu bakim-oee-09 ile birlikte tamamen kaldırıldı (kart artık veri yokken hiç render edilmiyor, dolayısıyla o açıklama metni de yok)."
+    },
+    {
+     "id": "bakim-oee-09",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "\"Makine bazlı OEE\" kartı mevcut veriyle daima boş — dikey boşluk, sıfır bilgi taşıyan 250px'lik bir \"veri yok\" kartıyla dolduruldu (bakim-oee-02'nin yan etkisi).",
+     "measure": "Kart 1152×250px @1440x900 (top=655, bottom=905 — ilk ekranın alt yarısı) ve 358×270px @390x844; içerik yalnızca EmptyState. DB: `select count(*) total, count(machine_id) from oee_records` → 90 / 0 (machine_id dolu kayıt yok).",
+     "target": "ya kart gerçek veri göstersin (machines.length > 0) ya da veri yokken hiç render edilmesin; boşluk bilgi taşıyan içerikle kapatılsın (ör. hat bazlı OEE tablosu — line_id dolu)",
+     "file": "apps/web/src/app/(app)/bakim/oee/page.tsx:84-110 + packages/…/maintenance queries getOeeDashboard().machines",
+     "openedRound": 5,
+     "closedRound": 5,
+     "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
+     "measureAfter": "Ekran görüntüsü + probe: \"makine bazlı oee\" etiketli kart artık DOM'da yok (`card: null`, hem 1440 hem 390); yerine \"Hat bazlı OEE\" tablosu gerçek veriyle render ediliyor (HAT1/HAT2/HAT3, OEE/Kullanılabilirlik/Performans/Kalite/Duruş sütunları) — bkz. artifacts/screens/bakim-oee/desktop.png. DB: oee_records 90 kayıt, 3 farklı line_id — hat bazlı tablo her zaman dolu.",
+     "fixNote": "queries.ts::getOeeDashboard() içine `lineBreakdown: LineOeeRow[]` eklendi (`records`'ı `lineId`'ye göre gruplar — inner join ile lineId garantili, asla boş değil). page.tsx: \"Makine bazlı OEE\" kartı `machines.length > 0` koşuluyla sarıldı (bugün hep 0 olduğundan hiç render edilmiyor, sıfır-bilgi kart yok); yerine koşulsuz (lineBreakdown.length > 0 iken) \"Hat bazlı OEE\" kartı eklendi."
     }
    ]
   }
  },
  "builderRound2Note": "Tur 2 (modul-builder) — bu turda YALNIZCA görev promptunda listelenen P1 bulgular kapatıldı: bakim-planlar-01/02, bakim-isemirleri-01/02/03, bakim-isemirleri-detay-01, bakim-makine-detay-01, bakim-yeni-01, bakim-oee-01 (hepsi 'closed', measureAfter ile). Kalan P2'ler bilinçli olarak AÇIK bırakıldı (kapsam dışı, bir sonraki tura). Ayrıca puan kartında hiç yer almayan 2 kritik veri/muhasebe bulgusu (I51 — bakım iş emri maliyeti (parts_cost+labor_cost) hiçbir muhasebe fişine yansımıyordu) kapatıldı: packages/core/src/maintenance/orders.ts completeOrder() artık aynı transaction'da postJournalEntry(ledger:'both', refType:'maintenance_order', 730 borç / 100 alacak) çağırıyor; packages/core/src/accounting/mapping.ts ACCOUNT_CATALOG'a '730 Genel Üretim Giderleri' eklendi (yalnızca test/seed kurulumunun garanti ürettiği hesap kümesine, tam seed zaten üretiyordu). Kanıt: fresh `pnpm db:reset && pnpm db:check` → I51 GEÇTİ (0 ihlal, önceden 2); MO-2026-000001 (630,00 TL) + MO-2026-000002 (200,00 TL) için VUK+UFRS fişleri (JE-2026-000653..656) 730/100 hesaplarına doğru işlendi (psql ile doğrulandı). packages/core/src/maintenance/orders.test.ts 'a 2 yeni birim testi eklendi. Skor/verdict alanları kritik'in yetkisinde — bu turda değiştirilmedi; kritik bir sonraki turda yeniden ölçüp günceller.",
- "builderRound3Note": "Tur 3 (modul-builder) — gorev promptunda listelenen 8 P1 UI bulgusu (bakim-isemirleri-09/10, bakim-isemirleri-detay-02/03/04/08, bakim-makine-detay-03/05) + puan kartinda YER ALMAYAN 1 kritik P0 (dormant ama trivially-exploitable): packages/core/src/maintenance/orders.ts::updateDiagnosis MO_ALREADY_CLOSED korumasindan yoksundu - completeOrder/cancelOrder ile ayni sert durum korumasi eklendi (kapali bir is emrinde parts_cost/labor_cost artik sessizce uzerine yazilamaz; muhasebe fisiyle (730/100) kalici sapma riski kapatildi). Kanit: packages/core/src/maintenance/orders.test.ts - 2 yeni birim testi (done + cancelled durumunda updateDiagnosis reddi), fresh pnpm db:reset && pnpm db:check -> 0 ihlal (53/53 kural GECTI, I53 dahil). Kalan P2'ler bilincli olarak ACIK birakildi (kapsam disi - bakim-isemirleri-05/07/08, bakim-isemirleri-detay-05/06/09, bakim-makine-detay-02/04/06, bakim-makineler-*, bakim-planlar-03, bakim-yeni-02, bakim-oee-02/03/04). Bilinen sinirlama: bakim-makine-detay-03 duzeltmesi (Son is emirleri/duruslar/planlar ozeti + OEE sparkline paneli) hat atamasi OLMAYAN (ortak/depo) makinelerde OEE panelini hic gostermiyor - bu tur makinelerde emptyBelow hala ~375px (MK-020 ile olculdu); MK-001 (hat atanmis, kriterin olculdugu ornek) hedefi geciyor (111px). Sema/ortak bilesen talebi yok - yalnizca zaten var olan DetailFieldGroupsGrid ve ui/tabs.tsx variant=line yeniden kullanildi."
+ "builderRound3Note": "Tur 3 (modul-builder) — gorev promptunda listelenen 8 P1 UI bulgusu (bakim-isemirleri-09/10, bakim-isemirleri-detay-02/03/04/08, bakim-makine-detay-03/05) + puan kartinda YER ALMAYAN 1 kritik P0 (dormant ama trivially-exploitable): packages/core/src/maintenance/orders.ts::updateDiagnosis MO_ALREADY_CLOSED korumasindan yoksundu - completeOrder/cancelOrder ile ayni sert durum korumasi eklendi (kapali bir is emrinde parts_cost/labor_cost artik sessizce uzerine yazilamaz; muhasebe fisiyle (730/100) kalici sapma riski kapatildi). Kanit: packages/core/src/maintenance/orders.test.ts - 2 yeni birim testi (done + cancelled durumunda updateDiagnosis reddi), fresh pnpm db:reset && pnpm db:check -> 0 ihlal (53/53 kural GECTI, I53 dahil). Kalan P2'ler bilincli olarak ACIK birakildi (kapsam disi - bakim-isemirleri-05/07/08, bakim-isemirleri-detay-05/06/09, bakim-makine-detay-02/04/06, bakim-makineler-*, bakim-planlar-03, bakim-yeni-02, bakim-oee-02/03/04). Bilinen sinirlama: bakim-makine-detay-03 duzeltmesi (Son is emirleri/duruslar/planlar ozeti + OEE sparkline paneli) hat atamasi OLMAYAN (ortak/depo) makinelerde OEE panelini hic gostermiyor - bu tur makinelerde emptyBelow hala ~375px (MK-020 ile olculdu); MK-001 (hat atanmis, kriterin olculdugu ornek) hedefi geciyor (111px). Sema/ortak bilesen talebi yok - yalnizca zaten var olan DetailFieldGroupsGrid ve ui/tabs.tsx variant=line yeniden kullanildi.",
+ "builderRound5Note": "Tur 5 düzeltmeleri uygulandı, tüm P1'ler kök nedenden kapatıldı (measureAfter kartlarda): /bakim/is-emirleri/yeni — bakim-yeni-02/04/05 aynı kök nedenden (Tur 4'ün sağ ray denemesi) kaynaklanıyordu; sağ ray (RecentBreakdownsPanel + MachineQuickList) tamamen kaldırıldı, 2. adım form alanları makine seçilmeden önce de görünür yapıldı — sayfa artık tek sütun, tam genişlik, h1 ile aynı sol oluk (264px), emptyBelow 87px (@1440x900, hedef ≤200px), sıfır iç kaydırıcı. /bakim/oee — bakim-oee-07 (Recharts v3 Tooltip'e gerçek etkileşime kadar `active={false}` geçen `useTooltipGate` hook'u, hem trend hem pareto grafiğine), bakim-oee-08 (worker/tablo adı sızıntısı temizlendi), bakim-oee-09 (daima-boş 'Makine bazlı OEE' kartı `machines.length>0` koşuluyla sarıldı — bugün hiç render edilmiyor — yerine `lineId` her zaman dolu olduğundan asla boş kalmayan 'Hat bazlı OEE' tablosu eklendi). bakim-oee-04 (P2, kpi-strip.tsx ortak bileşen kökenli) BU TURDA DOKUNULMADI — shell sahibinin düzeltmesi gerekiyor. Ayrıca modül dışı ama bakim'e bağlı bir P1 kapatıldı: packages/core/src/production/yield.ts::computeLineOeeForDay Europe/Istanbul iş günü sınırını naif UTC yerine `+03:00` ofsetiyle hesaplıyor artık (UTC 21:00-23:59 kaymasını gideriyor); packages/core/src/maintenance/oee.test.ts 'kabul kriteri' testi de gerçek duvar saatinden bağımsız hâle getirildi (startedAt/asOf artık `day` içinde sabit saatlere bağlı, `Date.now()` kullanmıyor) — pnpm --filter @plantero/core test: 330/330 yeşil."
 }
