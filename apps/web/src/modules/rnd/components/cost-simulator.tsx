@@ -267,7 +267,7 @@ export function CostSimulator({
         </div>
       ) : null}
 
-      <div className="overflow-x-auto rounded-lg border border-border/60">
+      <div className="scrollbar-thin scroll-fade-x overflow-x-auto rounded-lg border border-border/60">
         <table className="w-full text-[13px]">
           <thead>
             <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
