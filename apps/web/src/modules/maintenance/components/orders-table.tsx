@@ -68,7 +68,7 @@ export function OrdersTable({
           </span>
         ),
       },
-      { id: 'kind', accessorFn: (r) => r.kind, header: 'Tür', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance_kind" /> },
+      { id: 'kind', accessorFn: (r) => r.kind, header: 'Tür', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance_kind" tone="neutral" /> },
       { id: 'priority', accessorFn: (r) => r.priority, header: 'Öncelik', meta: { width: 110, mobile: 'hidden' }, cell: ({ getValue }) => { const v = getValue<string>(); return <StatusBadge status={v} kind="maintenance_priority" tone={PRIORITY_TONE[v]} />; } },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance" /> },
       {

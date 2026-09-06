@@ -9,10 +9,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
 import { Combobox } from '@/components/form/combobox';
+import { cn } from '@/lib/utils';
 import { createTrialRecipeAction } from '../actions';
 import type { ProductOption } from '../queries';
 
-export function NewRecipeDialog({ projectId, productOptions }: { projectId: string; productOptions: ProductOption[] }) {
+export function NewRecipeDialog({
+  projectId, productOptions, triggerClassName, compact,
+}: {
+  projectId: string;
+  productOptions: ProductOption[];
+  /** Varsayılan tetikleyici (`h-11 w-full md:h-8 md:w-auto`) üzerine ek/geçersiz kılan sınıflar —
+   *  mobil kompakt araç çubuğunda (recipe-workspace.tsx) içerik genişliğinde, tam genişlik DEĞİL. */
+  triggerClassName?: string;
+  /** Yalnızca ikon (metin `sr-only`) — mobil tek satırlık araç çubuğunda yer kazanır (Tur 4 P1
+   *  arge-recete-18): 44×44 dokunma hedefi korunur, görünür metin yok. */
+  compact?: boolean;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
@@ -48,7 +60,9 @@ export function NewRecipeDialog({ projectId, productOptions }: { projectId: stri
       <DialogTrigger asChild>
         {/* h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi (kriter 9) — sidebar'daki diğer
             butonlarla (recipe-workspace.tsx "Yeni versiyon") aynı desen. */}
-        <Button size="sm" className="h-11 w-full md:h-8 md:w-auto"><Plus className="size-4" /> Yeni deneme reçetesi</Button>
+        <Button size={compact ? 'icon' : 'sm'} aria-label={compact ? 'Yeni deneme reçetesi' : undefined} className={cn('h-11 w-full md:h-8 md:w-auto', compact && 'size-11 w-11', triggerClassName)}>
+          <Plus className="size-4" /> <span className={cn(compact && 'sr-only')}>Yeni deneme reçetesi</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader><DialogTitle>Yeni deneme reçetesi</DialogTitle></DialogHeader>

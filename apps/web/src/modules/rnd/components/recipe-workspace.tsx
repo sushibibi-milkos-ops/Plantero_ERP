@@ -76,8 +76,57 @@ export function RecipeWorkspace({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_1fr]">
-      <div className="space-y-3">
+    // gap-3 (mobil) / lg:gap-4: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — hedef maliyet
+    // paneline kadarki dikey bütçeyi sıkmak için küçük ama gerçek bir kazanım (8pt ölçeğinde kalır).
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[220px_1fr] lg:gap-4">
+      {/* Mobil/tablet (< lg) TEK SATIRLIK araç çubuğu — kök neden düzeltmesi (Tur 4 P1 arge-recete-18,
+          üç turdur açıktı): dikey reçete/versiyon listesi + iki tam-genişlik buton (sonra iki yatay
+          satır) ilk ekranın çoğunu yiyordu. Doğal `<select>` en yoğun (44px'te tek satır) seçim
+          birincili — özel pill listesi/segment YERİNE; "Yeni deneme reçetesi"/"Yeni versiyon" yalnız
+          ikon (44×44) olarak AYNI satırda. Masaüstünde (lg+, aşağıdaki dikey sidebar) zaten bol dikey
+          alan olduğu için burada değişiklik yok. */}
+      <div className="flex items-center gap-2 lg:hidden">
+        {recipesWithVersions.length > 1 ? (
+          <select
+            aria-label="Reçete"
+            value={selectedRecipeId ?? ''}
+            onChange={(e) => {
+              const g = recipesWithVersions.find((x) => x.recipe.id === e.target.value);
+              setSelectedRecipeId(e.target.value);
+              setSelectedVersionId(g?.recipe.currentVersionId ?? g?.versions[0]?.id ?? null);
+            }}
+            className="h-11 min-w-0 flex-1 rounded-md border border-input bg-transparent px-2.5 text-[13px]"
+          >
+            {recipesWithVersions.map((g) => (<option key={g.recipe.id} value={g.recipe.id}>{g.recipe.name}</option>))}
+          </select>
+        ) : null}
+        {versions.length > 0 ? (
+          <select
+            aria-label="Versiyon"
+            value={selectedVersionId ?? ''}
+            onChange={(e) => setSelectedVersionId(e.target.value)}
+            className="h-11 min-w-0 flex-1 rounded-md border border-input bg-transparent px-2.5 text-[13px]"
+          >
+            {versions.map((v) => {
+              const status = TRIAL_STATUS_LABELS[v.status] ?? { label: v.status, tone: 'muted' as const };
+              return <option key={v.id} value={v.id}>{`v${v.version} · ${status.label}`}</option>;
+            })}
+          </select>
+        ) : null}
+        {canManage ? (
+          <>
+            <NewRecipeDialog projectId={projectId} productOptions={productOptions} compact triggerClassName="shrink-0" />
+            {selectedGroup ? (
+              <Button variant="outline" size="icon" className="size-11 shrink-0" onClick={newVersion} disabled={pending} aria-label="Yeni versiyon">
+                {pending ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />}
+              </Button>
+            ) : null}
+          </>
+        ) : null}
+      </div>
+
+      {/* Masaüstü (lg+) dikey sidebar — orijinal düzen, değişmedi. */}
+      <div className="hidden space-y-3 lg:block">
         {recipesWithVersions.length > 1 ? (
           <div className="space-y-1">
             {recipesWithVersions.map((g) => (
@@ -85,8 +134,7 @@ export function RecipeWorkspace({
                 key={g.recipe.id}
                 type="button"
                 onClick={() => { setSelectedRecipeId(g.recipe.id); setSelectedVersionId(g.recipe.currentVersionId ?? g.versions[0]?.id ?? null); }}
-                // min-h-11 md:min-h-0: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-recete-09).
-                className={cn('flex min-h-11 w-full items-center rounded-md px-2.5 py-1.5 text-left text-[13px] md:min-h-0', g.recipe.id === selectedRecipeId ? 'bg-primary/10 font-medium text-primary' : 'text-muted-foreground hover:bg-muted')}
+                className={cn('flex min-h-0 w-full items-center rounded-md px-2.5 py-1.5 text-left text-[13px]', g.recipe.id === selectedRecipeId ? 'bg-primary/10 font-medium text-primary' : 'text-muted-foreground hover:bg-muted')}
               >
                 {g.recipe.name}
               </button>
@@ -107,8 +155,7 @@ export function RecipeWorkspace({
                 key={v.id}
                 type="button"
                 onClick={() => setSelectedVersionId(v.id)}
-                // min-h-11 md:min-h-0: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-recete-09).
-                className={cn('flex min-h-11 w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px] md:min-h-0', v.id === selectedVersionId ? 'bg-muted font-medium' : 'text-muted-foreground hover:bg-muted/60')}
+                className={cn('flex min-h-0 w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px]', v.id === selectedVersionId ? 'bg-muted font-medium' : 'text-muted-foreground hover:bg-muted/60')}
               >
                 <span>v{v.version}</span>
                 <StatusBadge status={v.status} label={status.label} tone={status.tone} size="sm" />
@@ -118,14 +165,13 @@ export function RecipeWorkspace({
         </div>
 
         {canManage && selectedGroup ? (
-          // h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-recete-09).
-          <Button variant="outline" size="sm" className="h-11 w-full md:h-8" onClick={newVersion} disabled={pending}>
+          <Button variant="outline" size="sm" className="h-8 w-full" onClick={newVersion} disabled={pending}>
             {pending ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />} Yeni versiyon
           </Button>
         ) : null}
       </div>
 
-      <div className="min-w-0 rounded-xl border border-border/60 bg-card p-4">
+      <div className="min-w-0 rounded-xl border border-border/60 bg-card p-3 md:p-4">
         {loading || !detail ? (
           <CostSimulatorSkeleton />
         ) : (
@@ -170,9 +216,11 @@ function CostSimulatorSkeleton() {
         ))}
       </div>
       <div className="overflow-hidden rounded-lg border border-border/60">
-        <div className="flex h-9 items-center gap-4 border-b border-border/60 bg-muted/40 px-3">
+        {/* Gerçek başlık şeridiyle eşit: 12px, normal-case, zemin yok — yalnız alt hairline (Tur 4
+            P1 arge-recete-23, cost-simulator.tsx'teki aynı düzeltme). */}
+        <div className="flex h-9 items-center gap-4 border-b border-border/60 px-3">
           {['Ürün', 'Miktar', 'Maliyet kaynağı', 'Birim maliyet', 'Fire %', 'Satır maliyeti'].map((h) => (
-            <span key={h} className="flex-1 max-w-28 truncate text-[11px] font-medium text-muted-foreground uppercase">{h}</span>
+            <span key={h} className="flex-1 max-w-28 truncate text-[12px] font-medium text-muted-foreground">{h}</span>
           ))}
         </div>
         {Array.from({ length: 6 }).map((_, r) => (

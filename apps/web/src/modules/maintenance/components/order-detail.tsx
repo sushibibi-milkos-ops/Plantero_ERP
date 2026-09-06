@@ -96,7 +96,7 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
             </Link>
           ),
         },
-        { label: 'Tür', value: order.kind, node: <StatusBadge status={order.kind} kind="maintenance_kind" /> },
+        { label: 'Tür', value: order.kind, node: <StatusBadge status={order.kind} kind="maintenance_kind" tone="neutral" /> },
         { label: 'Bildiren', value: reportedByName, node: reportedByName },
         { label: 'Sorumlu', value: assigneeName, node: assigneeName },
         { label: 'Bildirilme', value: order.reportedAt, node: formatDateTime(order.reportedAt) },

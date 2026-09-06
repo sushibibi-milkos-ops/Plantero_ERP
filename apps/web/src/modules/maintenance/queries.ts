@@ -18,6 +18,27 @@ export async function listActiveMachinesForForm() {
   return db.select({ id: machines.id, code: machines.code, name: machines.name, category: machines.category, lineId: machines.lineId, status: machines.status }).from(machines).where(eq(machines.isActive, true)).orderBy(asc(machines.code));
 }
 
+export type RecentBreakdownRow = {
+  id: string; docNo: string; title: string; status: string; priority: string; machineCode: string; machineName: string; reportedAt: Date;
+};
+
+/** Kök neden (Tur 4 P2 bakim-yeni-02): "Arıza Bildir" formu masaüstünde ekranın %85'ini boş
+ *  bırakıyordu (tek sütun, telefon akışı). Masaüstünde form yanına bu listeyi (son 5 arıza)
+ *  koyarak boşluğu dolduruyoruz — sahada telefon akışı DEĞİŞMEDİ, yalnızca geniş ekranda ek bağlam. */
+export async function listRecentBreakdowns(limit = 5): Promise<RecentBreakdownRow[]> {
+  const rows = await db
+    .select({ o: maintenanceOrders, machineCode: machines.code, machineName: machines.name })
+    .from(maintenanceOrders)
+    .innerJoin(machines, eq(machines.id, maintenanceOrders.machineId))
+    .where(eq(maintenanceOrders.kind, 'corrective'))
+    .orderBy(desc(maintenanceOrders.reportedAt))
+    .limit(limit);
+  return rows.map((r) => ({
+    id: r.o.id, docNo: r.o.docNo, title: r.o.title, status: r.o.status, priority: r.o.priority,
+    machineCode: r.machineCode, machineName: r.machineName, reportedAt: r.o.reportedAt,
+  }));
+}
+
 export type AssigneeOption = { id: string; fullName: string };
 
 /** Bakım/üretim şefi rolündeki kullanıcılar — plan/iş emri sorumlusu seçimi. */
@@ -308,11 +329,17 @@ export type OeeKpis = {
   totalDowntimeMinutes: number;
 };
 
+export type MachineOeeRow = {
+  machineId: string; machineCode: string; machineName: string; lineCode: string;
+  oeePct: string; availabilityPct: string; downtimeMinutes: number;
+};
+
 export type OeeDashboardData = {
   lines: Array<{ id: string; code: string; name: string }>;
   trend: OeeTrendPoint[];
   pareto: DowntimeParetoRow[];
   kpis: OeeKpis;
+  machines: MachineOeeRow[];
 };
 
 /** Son `days` günün OEE trendi + duruş pareto'su. `lineId` verilmezse tüm hatların ağırlıklı ortalaması. */
@@ -361,5 +388,33 @@ export async function getOeeDashboard(opts: { lineId?: string; days?: number } =
   const pareto = Array.from(byReason.entries()).map(([reason, minutes]) => ({ reason, minutes })).sort((a, b) => b.minutes - a.minutes);
   const totalDowntimeMinutes = pareto.reduce((a, r) => a + r.minutes, 0);
 
-  return { lines, trend, pareto, kpis: { avgOeePct, avgOeePctDelta, avgAvailabilityPct, avgPerformancePct, avgQualityPct, totalDowntimeMinutes } };
+  // Kök neden (Tur 4 P2 bakim-oee-02): sayfa 1440×900'de 262px boş bırakıyordu (tek satır KPI +
+  // iki grafikten ibaretti). Aynı `records` sorgusu zaten makine bazında satır taşıyor (oee_records
+  // hem lineId hem nullable machineId tutuyor — bkz. schema) — makineye ayrıştırılmış kayıtlar
+  // (`r.r.machineId` dolu olanlar) makine koduna göre gruplanıp ortalama OEE/kullanılabilirlik +
+  // toplam duruş dakikasıyla, grafiklerin altına ikinci bir tablo olarak eklendi.
+  const machineRecords = records.filter((r) => r.r.machineId);
+  const machineIds = Array.from(new Set(machineRecords.map((r) => r.r.machineId as string)));
+  const machineMeta = machineIds.length
+    ? await db.select({ id: machines.id, code: machines.code, name: machines.name }).from(machines).where(inArray(machines.id, machineIds))
+    : [];
+  const machineMetaById = new Map(machineMeta.map((m) => [m.id, m]));
+  const byMachine = new Map<string, typeof machineRecords>();
+  for (const r of machineRecords) {
+    const key = r.r.machineId as string;
+    const arr = byMachine.get(key) ?? [];
+    arr.push(r);
+    byMachine.set(key, arr);
+  }
+  const machineOeeRows: MachineOeeRow[] = Array.from(byMachine.entries())
+    .map(([machineId, rows]) => {
+      const meta = machineMetaById.get(machineId);
+      const avgOee = round2(sum(rows.map((x) => D(x.r.oeePct))).div(rows.length)).toFixed(2);
+      const avgAvail = round2(sum(rows.map((x) => D(x.r.availabilityPct))).div(rows.length)).toFixed(2);
+      const downtimeMinutes = rows.reduce((a, x) => a + x.r.downtimeMinutes, 0);
+      return { machineId, machineCode: meta?.code ?? '—', machineName: meta?.name ?? '—', lineCode: rows[0]!.lineCode, oeePct: avgOee, availabilityPct: avgAvail, downtimeMinutes };
+    })
+    .sort((a, b) => D(a.oeePct).minus(b.oeePct).toNumber());
+
+  return { lines, trend, pareto, kpis: { avgOeePct, avgOeePctDelta, avgAvailabilityPct, avgPerformancePct, avgQualityPct, totalDowntimeMinutes }, machines: machineOeeRows };
 }

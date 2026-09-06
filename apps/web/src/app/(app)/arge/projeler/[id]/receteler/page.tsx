@@ -36,7 +36,11 @@ export default async function RndRecipesPage({ params }: { params: Promise<{ id:
       <PageHeader
         eyebrow={project.code}
         title={project.name}
-        description={project.goal ?? undefined}
+        // 1 satıra clamp: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — proje hedefi (goal) 3
+        // satıra kadar sarabiliyordu, 390px'te "Hedef maliyete göre" panelinin üst kenarını aşağı
+        // itiyordu. PageHeader (ortak bileşen) değiştirilmedi — clamp yalnızca burada, ReactNode
+        // olarak geçirilen açıklamada uygulanıyor.
+        description={project.goal ? <span className="line-clamp-1">{project.goal}</span> : undefined}
         actions={<StatusBadge status={project.status} label={status.label} tone={status.tone} />}
       >
         <ProjectNavTabs projectId={id} />

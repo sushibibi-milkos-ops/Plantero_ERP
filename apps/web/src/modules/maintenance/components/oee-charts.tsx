@@ -19,7 +19,16 @@ import { DOWNTIME_REASON_LABELS } from '../labels';
 // Performans/Kalite) TEK nötr tonda (`--muted-foreground`) — birbirlerinden çizgi deseniyle (düz/
 // kesik/noktalı) ayrılır, renk sayısı artık kartta 2 (vurgu + nötr).
 const OEE_COLOR = 'var(--chart-1)';
-const COMPONENT_COLOR = 'var(--muted-foreground)';
+// Kök neden (Tur 4 P2 bakim-oee-06): üç bileşen serisi tek `COMPONENT_COLOR` sabitini paylaşıyor,
+// ayrım yalnızca ayrı bir SVG `strokeOpacity` ATTRIBUTE'ıyla yapılıyordu — Recharts tooltip/gösterge
+// (Legend) rengi seriyi tanımlayan `stroke` PROP'unun DEĞERİNDEN türetir, `strokeOpacity`'den değil;
+// sonuç üçü de tooltip noktasında ve gösterge çizgisinde birebir aynı gri. Artık opaklık `stroke`
+// değerinin İÇİNE gömülü (color-mix) — üç FARKLI literal renk dizesi, aynı nötr aile (kırmızıyla
+// çakışmaz) ama tooltip/gösterge artık gerçekten ayrışıyor; çizgi deseni (düz/kesik/noktalı) sahada
+// ek bir ayrım katmanı olarak kalıyor.
+const COMPONENT_COLOR_AVAILABILITY = 'color-mix(in oklch, var(--muted-foreground) 90%, transparent)';
+const COMPONENT_COLOR_PERFORMANCE = 'color-mix(in oklch, var(--muted-foreground) 62%, transparent)';
+const COMPONENT_COLOR_QUALITY = 'color-mix(in oklch, var(--muted-foreground) 40%, transparent)';
 const PARETO_COLOR = 'var(--chart-1)';
 
 const xTick = { fontSize: 11, fill: 'var(--muted-foreground)' };
@@ -65,9 +74,9 @@ export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
           formatter={(value: string) => <span style={{ color: 'var(--muted-foreground)' }}>{value}</span>}
         />
         <Area type="monotone" dataKey="oee" name="OEE" stroke={OEE_COLOR} strokeWidth={2} fill="url(#fill-oee)" isAnimationActive={false} />
-        <Area type="monotone" dataKey="availability" name="Kullanılabilirlik" stroke={COMPONENT_COLOR} strokeOpacity={0.85} strokeWidth={1} fill="none" isAnimationActive={false} />
-        <Area type="monotone" dataKey="performance" name="Performans" stroke={COMPONENT_COLOR} strokeOpacity={0.85} strokeWidth={1} strokeDasharray="4 3" fill="none" isAnimationActive={false} />
-        <Area type="monotone" dataKey="quality" name="Kalite" stroke={COMPONENT_COLOR} strokeOpacity={0.85} strokeWidth={1} strokeDasharray="1 3" fill="none" isAnimationActive={false} />
+        <Area type="monotone" dataKey="availability" name="Kullanılabilirlik" stroke={COMPONENT_COLOR_AVAILABILITY} strokeWidth={1} fill="none" isAnimationActive={false} />
+        <Area type="monotone" dataKey="performance" name="Performans" stroke={COMPONENT_COLOR_PERFORMANCE} strokeWidth={1} strokeDasharray="4 3" fill="none" isAnimationActive={false} />
+        <Area type="monotone" dataKey="quality" name="Kalite" stroke={COMPONENT_COLOR_QUALITY} strokeWidth={1} strokeDasharray="1 3" fill="none" isAnimationActive={false} />
       </AreaChart>
     </ResponsiveContainer>
   );

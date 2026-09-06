@@ -1,8 +1,15 @@
 import { Skeleton } from '@/components/ui/skeleton';
+import { DataTableSkeleton } from '@/components/data-table/skeleton';
 
+/**
+ * Kök neden (Tur 4 P2 bakim-planlar-03): iskelet 6 satır + araç çubuğu için hiç yer tutucu
+ * basıyordu, gerçek sayfa 12 satır + arama/filtre çubuğu ile geliyordu → içerik gelince
+ * araç çubuğu kadar sıçrama. /satis/teklifler ile birebir aynı desen (arama + filtre + sütun
+ * seçici yer tutucusu, gerçek sütun başlıkları, 12 satır).
+ */
 export default function PlansLoading() {
   return (
-    <div className="space-y-6" aria-busy>
+    <div className="space-y-3" aria-busy>
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-2">
           <Skeleton className="h-6 w-40" />
@@ -10,11 +17,12 @@ export default function PlansLoading() {
         </div>
         <Skeleton className="h-9 w-32 rounded-md" />
       </div>
-      <div className="space-y-px overflow-hidden rounded-lg border">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-9 rounded-none" />
-        ))}
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-8 w-64 rounded-md" />
+        <Skeleton className="h-8 w-24 rounded-md" />
+        <Skeleton className="h-8 w-8 rounded-md" />
       </div>
+      <DataTableSkeleton headers={['Plan', 'Makine', 'Aralık', 'Son yapılan', 'Sonraki', 'Sorumlu', 'Durum']} rows={12} />
     </div>
   );
 }

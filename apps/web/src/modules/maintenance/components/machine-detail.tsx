@@ -77,7 +77,7 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
     () => [
       { accessorKey: 'docNo', header: 'No', meta: { mobile: 'title', className: 'font-mono', width: 130 } },
       { accessorKey: 'title', header: 'Başlık', meta: { mobile: 'subtitle', flex: true, className: 'whitespace-normal' }, cell: ({ row }) => <span className="line-clamp-1 leading-[18px] break-words whitespace-normal" title={row.original.title}>{row.original.title}</span> },
-      { id: 'kind', accessorFn: (r) => r.kind, header: 'Tür', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance_kind" /> },
+      { id: 'kind', accessorFn: (r) => r.kind, header: 'Tür', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance_kind" tone="neutral" /> },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, align: 'right', mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance" /> },
       { id: 'reportedAt', accessorFn: (r) => r.reportedAt, header: 'Bildirim', meta: { width: 150, mobile: 'hidden' }, cell: ({ row }) => formatDateTime(row.original.reportedAt) },
       { id: 'downtimeMinutes', accessorFn: (r) => r.downtimeMinutes, header: 'Duruş (dk)', meta: { width: 100, align: 'right', mobile: 'meta' }, cell: ({ row }) => (row.original.downtimeMinutes ? <QtyCell value={row.original.downtimeMinutes} uom="dk" maxDigits={0} /> : <span className="text-muted-foreground">—</span>) },

@@ -37,9 +37,11 @@ type FormValues = { batchQty: string; batchUomId: string; expectedYieldPct: stri
 // false iken son (aksiyon) sütun boş kalır, tabloyu her seferinde yeniden şablonlamaya gerek kalmaz.
 const LINE_COLS_STYLE = { '--line-cols': 'minmax(0,1fr) 9rem 9rem 8rem 6rem 7rem 2.25rem' } as React.CSSProperties;
 
-/** Mobil (< md) satır etiketleri: md+ üstünde başlık satırı zaten aynı bilgiyi taşıdığı için gizlenir. */
+/** Mobil (< md) satır etiketleri: md+ üstünde başlık satırı zaten aynı bilgiyi taşıdığı için gizlenir.
+ *  Etiket-değer çifti TEK SATIRDA (etiket solda, değer sağda) — üst üste yığılmış label+control ikilisi
+ *  satır yüksekliğini ikiye katlıyordu (kök neden düzeltmesi, Tur 4 P1 arge-recete-21). */
 function FieldLabel({ children, align }: { children: React.ReactNode; align?: 'right' }) {
-  return <span className={cn('mb-1 block text-[11px] text-muted-foreground md:hidden', align === 'right' && 'text-right')}>{children}</span>;
+  return <span className={cn('shrink-0 text-[11px] text-muted-foreground md:hidden', align === 'right' && 'text-right')}>{children}</span>;
 }
 
 export function CostSimulator({
@@ -212,12 +214,14 @@ export function CostSimulator({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {editable ? (
-            <Button size="sm" variant="outline" onClick={save} disabled={pending}>
+            // h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi — sayfadaki diğer TÜM kontrollerle
+            // aynı desen (Tur 4 P1 arge-recete-20; önceden yalnız bu iki başlık şeridi butonu atlanmıştı).
+            <Button size="sm" variant="outline" onClick={save} disabled={pending} className="h-11 md:h-8">
               {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />} Kaydet
             </Button>
           ) : null}
           {editable && !detail.hasPendingApproval ? (
-            <Button size="sm" onClick={submitApproval} disabled={pending}>
+            <Button size="sm" onClick={submitApproval} disabled={pending} className="h-11 md:h-8">
               <Send className="size-4" /> Onaya gönder
             </Button>
           ) : null}
@@ -251,8 +255,11 @@ export function CostSimulator({
           tam-doygun kırmızı çubuk ekranın en baskın öğesiydi ve tek taşıdığı bilgi (üstünde/altında)
           zaten metinle de anlatılabiliyordu. Artık 4px, yarı saydam dolgu, hedef noktasında işaretçi
           + "%N hedef üstü/altında" rozetiyle sapma sayısallaştırılıyor. */}
+      {/* Kenarlıksız blok (kök neden düzeltmesi, Tur 4 P1 arge-recete-24): tam kenarlıklı kutu-içinde-
+          kutu üç kattaydı (kart + bu panel + satır tablosu); ana kartla arasındaki ayrım artık ince bir
+          zemin tonuyla ("nefes alan" — anti-erp), ayrı bir çerçeve DEĞİL. */}
       {targetCost ? (
-        <div className="space-y-2 rounded-lg border border-border/60 p-4">
+        <div className="space-y-2 rounded-lg bg-muted/30 p-4">
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-muted-foreground">Hedef maliyete göre</span>
             {/* overTarget → text-warning/bg-warning (renk disiplini, Tur 3 P1): hedef aşımı bir UYARI,
@@ -342,9 +349,14 @@ export function CostSimulator({
           üstünde AYNI grid, sütun sayısı `gridTemplateColumns` ile masaüstündeki eski sütun
           genişlikleriyle (9/9/8/6/7rem) birebir eşleşen sabit bir şablona döner — TEK bir DOM ağacı,
           form alanları hiçbir yerde ikiye katlanmaz (React Hook Form `Controller`'ları tek mount). */}
-      <div className="rounded-lg border border-border/60" role="table" aria-label="Reçete satırları">
+      {/* text-[13px] tabana: MoneyCell/etiket dışı hiçbir hücrede kendi font-size'ı yoktu, kapsayıcı
+          `role="table"` gövdenin (body) 16px tabanını miras bırakıyordu — kök neden düzeltmesi (Tur 4
+          P1 arge-recete-19). Başlık şeridi DataTable'ın kendi diliyle eşitlendi: 12px, normal-case,
+          letter-spacing yok, zemin yok — yalnız alt hairline (Tur 4 P1 arge-recete-23; iskeletteki
+          başlık şeridi de aynı düzeltmeyi görür, bkz. recipe-workspace.tsx CostSimulatorSkeleton). */}
+      <div className="rounded-lg border border-border/60 text-[13px]" role="table" aria-label="Reçete satırları">
         <div
-          className="hidden border-b border-border/60 bg-muted/40 px-3 py-2 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase md:grid md:gap-2 md:[grid-template-columns:var(--line-cols)]"
+          className="hidden border-b border-border/60 px-3 py-2 text-left text-[12px] font-medium text-muted-foreground md:grid md:gap-2 md:[grid-template-columns:var(--line-cols)]"
           style={LINE_COLS_STYLE}
           role="row"
         >
@@ -364,40 +376,55 @@ export function CostSimulator({
               // Satır bazlı doğrulama: miktar boş/0 ise satır altına hata metni (eskiden yalnızca
               // kayıt sırasında genel bir toast vardı — Tur 1 P1 arge-recete-08).
               const qtyMissing = editable && !(watched.lines[i]?.qty ?? '').trim();
+              // Soluk-sıfır kuralı (Tur 4 P1 arge-recete-22): Fire % 0 iken tam foreground yerine
+              // muted — accounting modülündeki `MoneyCell muted`/`isZero()` deseniyle aynı ilke,
+              // burada düzenlenebilir bir NumberInput olduğu için sınıf düzeyinde uygulanır.
+              const scrapZero = !D(watched.lines[i]?.scrapPct || '0').gt(0);
               return (
                 <div
                   key={f.id}
                   role="row"
-                  className="grid grid-cols-2 gap-x-3 gap-y-2 border-b border-border/40 p-3 last:border-0 hover:bg-muted/20 md:items-center md:gap-2 md:p-0 md:py-[3px] md:[grid-template-columns:var(--line-cols)]"
+                  // gap-y-1.5 (6px, önceden 2=8px): kök neden düzeltmesi (Tur 4 P1 arge-recete-21) —
+                  // her alan artık kendi TEK satırında (etiket solda, değer sağda), etiket+kontrol
+                  // üst üste yığılmıyor; Miktar/Maliyet kaynağı ve Birim maliyet/Fire % çiftleri aynı
+                  // grid satırında (grid-cols-2) yan yana kalır. Sil ikonu Ürün satırının sağ ucuna
+                  // taşındı — kendi başına tam satır tüketen ayrı bir aksiyon satırı kalmadı.
+                  className="grid grid-cols-2 gap-x-3 gap-y-1.5 border-b border-border/40 p-3 last:border-0 hover:bg-muted/20 md:items-center md:gap-2 md:p-0 md:py-[3px] md:[grid-template-columns:var(--line-cols)]"
                   style={LINE_COLS_STYLE}
                 >
-                  <div className="col-span-2 md:col-span-1 md:px-2.5" role="cell">
-                    <FieldLabel>Ürün</FieldLabel>
+                  <div className="col-span-2 flex items-center gap-2 md:col-span-1 md:block md:px-2.5" role="cell">
+                    <div className="min-w-0 flex-1">
+                      {editable ? (
+                          // Dinlenmede kenarlıksız/saydam, yalnızca hover/focus'ta kenarlık — "çerçeve
+                          // çorbası" kök neden düzeltmesi (Tur 1 P1 arge-recete-03). `[@media(hover:none)]`
+                          // taban affordance'ı: proje genelindeki `hover:` custom variant `(hover:hover)
+                          // and (pointer:fine)` ile sınırlı — dokunmatikte hover ASLA tetiklenmiyor, bu
+                          // satırın düzenlenebilir olduğu hiç görünmüyordu (Tur 2 P1 arge-recete-10);
+                          // row-actions.tsx'teki aynı `[@media(hover:none)]:` deseni.
+                          <Combobox
+                            value={watched.lines[i]?.productId ?? null}
+                            onChange={(v) => v && onProductChange(i, v)}
+                            options={productPickerOptions}
+                            placeholder="Ürün seçin"
+                            clearable={false}
+                            className="h-11 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
+                          />
+                        ) : (
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="font-medium">{product?.name}</span>
+                            <span className="font-mono text-[11px] text-muted-foreground">{product?.sku}</span>
+                          </div>
+                        )}
+                    </div>
+                    {/* Sil ikonu — mobilde Ürün satırının sağ ucunda (kök neden düzeltmesi, Tur 4 P1
+                        arge-recete-21); masaüstünde aşağıdaki ayrı aksiyon hücresi kullanılır. */}
                     {editable ? (
-                        // Dinlenmede kenarlıksız/saydam, yalnızca hover/focus'ta kenarlık — "çerçeve
-                        // çorbası" kök neden düzeltmesi (Tur 1 P1 arge-recete-03). `[@media(hover:none)]`
-                        // taban affordance'ı: proje genelindeki `hover:` custom variant `(hover:hover)
-                        // and (pointer:fine)` ile sınırlı — dokunmatikte hover ASLA tetiklenmiyor, bu
-                        // satırın düzenlenebilir olduğu hiç görünmüyordu (Tur 2 P1 arge-recete-10);
-                        // row-actions.tsx'teki aynı `[@media(hover:none)]:` deseni.
-                        <Combobox
-                          value={watched.lines[i]?.productId ?? null}
-                          onChange={(v) => v && onProductChange(i, v)}
-                          options={productPickerOptions}
-                          placeholder="Ürün seçin"
-                          clearable={false}
-                          className="h-11 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
-                        />
-                      ) : (
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="font-medium">{product?.name}</span>
-                          <span className="font-mono text-[11px] text-muted-foreground">{product?.sku}</span>
-                        </div>
-                      )}
+                      <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="size-11 shrink-0 text-muted-foreground hover:text-destructive md:hidden" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
+                    ) : null}
                   </div>
-                  <div className="col-span-1 md:px-2 md:text-right" role="cell">
+                  <div className="col-span-1 flex items-center justify-between gap-1.5 md:block md:px-2 md:text-right" role="cell">
                     <FieldLabel align="right">Miktar</FieldLabel>
-                    <div className="flex items-center gap-1 md:justify-end">
+                    <div className="flex min-w-0 flex-1 items-center justify-end gap-1">
                       <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => (
                         <NumberInput
                           value={field.value}
@@ -419,57 +446,72 @@ export function CostSimulator({
                       <span className="shrink-0 text-[11px] text-muted-foreground">{uomById.get(watched.lines[i]?.uomId ?? '')?.code ?? ''}</span>
                     </div>
                   </div>
-                  <div className="col-span-1 md:px-2" role="cell">
-                    <FieldLabel>Maliyet kaynağı</FieldLabel>
-                    {editable ? (
-                      <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
-                        <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input data-[size=sm]:h-11 md:data-[size=sm]:h-8 [@media(hover:none)]:border-input/50"><SelectValue /></SelectTrigger>
-                        <SelectContent>{COST_SOURCE_OPTIONS.map((o) => (<SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>))}</SelectContent>
-                      </Select>
-                    ) : (
-                      <span className="text-muted-foreground">{COST_SOURCE_LABELS[source]}</span>
-                    )}
+                  <div className="col-span-1 flex items-center justify-between gap-1.5 md:block md:px-2" role="cell">
+                    {/* Mobilde kısaltılmış etiket ("Kaynak") — masaüstü başlığı ("Maliyet kaynağı")
+                        değişmedi; dar yarım sütunda Select'e (Ortalama/Son alış/Manuel) daha çok yer
+                        bırakır (Tur 4 P1 arge-recete-21 dar sütun düzeltmesiyle birlikte). */}
+                    <FieldLabel>Kaynak</FieldLabel>
+                    <div className="min-w-0 flex-1 md:w-full">
+                      {editable ? (
+                        <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
+                          <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input data-[size=sm]:h-11 md:data-[size=sm]:h-8 [@media(hover:none)]:border-input/50"><SelectValue /></SelectTrigger>
+                          <SelectContent>{COST_SOURCE_OPTIONS.map((o) => (<SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>))}</SelectContent>
+                        </Select>
+                      ) : (
+                        <span className="text-muted-foreground">{COST_SOURCE_LABELS[source]}</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="col-span-1 md:px-2 md:text-right" role="cell">
+                  <div className="col-span-1 flex items-center justify-between gap-1.5 md:block md:px-2 md:text-right" role="cell">
                     <FieldLabel align="right">Birim maliyet</FieldLabel>
-                    {editable && source === 'manual' ? (
-                      <Controller control={form.control} name={`lines.${i}.manualUnitCost`} render={({ field }) => (
+                    <div className="min-w-0 flex-1 md:w-full">
+                      {editable && source === 'manual' ? (
+                        <Controller control={form.control} name={`lines.${i}.manualUnitCost`} render={({ field }) => (
+                          <NumberInput
+                            value={field.value}
+                            onChange={(v) => field.onChange(v ?? '')}
+                            onBlur={field.onBlur}
+                            maxDigits={4}
+                            minDigits={2}
+                            prefix="₺"
+                            className="w-full"
+                            // md:pr-0: kök neden düzeltmesi (Tur 4 P1 arge-recete-22) — Input'un yerleşik
+                            // px-3 sağ dolgusu, aynı sütundaki MoneyCell'in dolgusuz sağ kenarına göre
+                            // ondalık ayırıcıyı 12px kaydırıyordu; masaüstünde sağ dolgu sıfırlanır (sol
+                            // dolgu değerin ortalanmasını bozmaz, metin zaten sağa hizalı).
+                            inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 md:pr-0 [@media(hover:none)]:border-input/50 md:text-right"
+                          />
+                        )} />
+                      ) : (
+                        <MoneyCell value={uCost} digits={2} />
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-span-1 flex items-center justify-between gap-1.5 md:block md:px-2" role="cell">
+                    <FieldLabel align="right">Fire %</FieldLabel>
+                    <div className="min-w-0 flex-1 md:w-full">
+                      <Controller control={form.control} name={`lines.${i}.scrapPct`} render={({ field }) => (
                         <NumberInput
                           value={field.value}
                           onChange={(v) => field.onChange(v ?? '')}
                           onBlur={field.onBlur}
                           maxDigits={4}
-                          minDigits={2}
-                          prefix="₺"
+                          disabled={!editable}
                           className="w-full"
-                          inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50 md:text-right"
+                          inputClassName={cn('h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50', scrapZero && 'text-muted-foreground')}
                         />
                       )} />
-                    ) : (
-                      <MoneyCell value={uCost} digits={2} />
-                    )}
-                  </div>
-                  <div className="col-span-1 md:px-2" role="cell">
-                    <FieldLabel align="right">Fire %</FieldLabel>
-                    <Controller control={form.control} name={`lines.${i}.scrapPct`} render={({ field }) => (
-                      <NumberInput
-                        value={field.value}
-                        onChange={(v) => field.onChange(v ?? '')}
-                        onBlur={field.onBlur}
-                        maxDigits={4}
-                        disabled={!editable}
-                        className="w-full"
-                        inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
-                      />
-                    )} />
+                    </div>
                   </div>
                   <div className="col-span-2 flex items-baseline justify-between md:col-span-1 md:block md:px-2 md:text-right" role="cell">
                     <FieldLabel align="right">Satır maliyeti</FieldLabel>
                     <MoneyCell value={computation.lineCosts[i]?.toFixed(4) ?? '0'} digits={2} className="font-medium md:font-normal" />
                   </div>
+                  {/* Masaüstü aksiyon hücresi — mobilde sil ürün satırına taşındığı için gizli
+                      (kök neden düzeltmesi, Tur 4 P1 arge-recete-21); grid sütun sayısı (7) korunur. */}
                   {editable ? (
-                    <div className="col-span-2 flex justify-end md:col-span-1 md:justify-start md:px-1" role="cell">
-                      <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="size-11 text-muted-foreground hover:text-destructive md:size-8" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
+                    <div className="hidden md:col-span-1 md:flex md:justify-start md:px-1" role="cell">
+                      <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="text-muted-foreground hover:text-destructive md:size-8" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
                     </div>
                   ) : null}
                   {qtyMissing ? (
@@ -490,7 +532,13 @@ export function CostSimulator({
       </div>
 
       {editable ? (
-        <Controller control={form.control} name="changeNote" render={({ field }) => <Textarea {...field} placeholder="Değişiklik notu…" rows={2} className="text-[13px]" />} />
+        // Kenarlıksız/saydam dinlenmede, yalnız odakta kenarlık — kutu-içinde-kutu düzeltmesi (Tur 4
+        // P1 arge-recete-24), form alanlarındaki aynı desen (Combobox/NumberInput hover:border-input).
+        // resize-none: field-sizing-content zaten içerik boyunca otomatik büyüyor, tarayıcının yerel
+        // sürükleme tutamacı işlevsizdi (yalnızca süs, kaldırıldı).
+        <Controller control={form.control} name="changeNote" render={({ field }) => (
+          <Textarea {...field} placeholder="Değişiklik notu…" rows={2} className="resize-none border-transparent bg-transparent text-[13px] hover:border-input focus-visible:border-ring" />
+        )} />
       ) : detail.version.changeNote ? (
         <p className="text-[11px] text-muted-foreground">Not: {detail.version.changeNote}</p>
       ) : null}

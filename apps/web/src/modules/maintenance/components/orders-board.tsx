@@ -48,7 +48,11 @@ function Card({ order, onOpen, onStart, onCancel }: { order: MaintenanceOrderRow
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="font-mono text-[11px] text-muted-foreground">{order.docNo}</div>
-          <div className="truncate text-[13px] font-medium">{order.title}</div>
+          {/* Kök neden (Tur 4 P2 bakim-isemirleri-08): tek satır `truncate`, kart genişliğine (244px)
+              sığmayan başlıkları (483/365/319px genişliğinde metin) harf ortasından kesiyordu.
+              İki satıra sarma (`line-clamp-2`) başlığı okunur bırakır; kart yüksekliği zaten sabit
+              değil (space-y-2 dikey akış), ikinci satır kartı büyütür ama kesmez. */}
+          <div className="line-clamp-2 text-[13px] font-medium">{order.title}</div>
         </div>
         {open ? (
           <DropdownMenu>
@@ -73,7 +77,7 @@ function Card({ order, onOpen, onStart, onCancel }: { order: MaintenanceOrderRow
         {order.photoCount > 0 ? <span className="inline-flex items-center gap-0.5"><Camera className="size-3" />{order.photoCount}</span> : null}
       </div>
       <div className="flex items-center justify-between">
-        <StatusBadge status={order.kind} kind="maintenance_kind" size="sm" />
+        <StatusBadge status={order.kind} kind="maintenance_kind" tone="neutral" size="sm" />
         <span className="text-[11px] text-muted-foreground">{relativeTime(order.reportedAt)}</span>
       </div>
     </div>
@@ -115,11 +119,21 @@ export function OrdersBoard({ orders }: { orders: MaintenanceOrderRow[] }) {
                 </span>
                 <span className="rounded-full bg-muted px-1.5 py-px text-[11px] text-muted-foreground">{cards.length}</span>
               </div>
-              <div className="min-h-0 space-y-2 overflow-y-auto px-2 pb-2" style={{ maxHeight: 'min(560px, calc(100dvh - 20rem))' }}>
-                {cards.map((o) => (
-                  <Card key={o.id} order={o} onOpen={() => router.push(`/bakim/is-emirleri/${o.id}`)} onStart={() => start(o)} onCancel={() => setCancelTarget(o)} />
-                ))}
-              </div>
+              {/* Kök neden (Tur 4 P2 bakim-isemirleri-07): boş sütun hiçbir yer tutucu basmıyordu —
+                  yalnızca 50px'lik başlık şeridinden ibaret kalıyordu (5 sütunun 4'ü genelde boş).
+                  rnd/board-column.tsx'teki kesik çerçeveli sessiz yer tutucu deseni (min-h-24) burada
+                  da uygulanır — sürükle-bırak burada yok, metin buna göre nötr. */}
+              {cards.length === 0 ? (
+                <div className="mx-2 mb-2 flex min-h-24 items-center justify-center rounded-lg border border-dashed border-border/60 px-2 text-center text-[11px] text-muted-foreground">
+                  Bu durumda iş emri yok
+                </div>
+              ) : (
+                <div className="min-h-0 space-y-2 overflow-y-auto px-2 pb-2" style={{ maxHeight: 'min(560px, calc(100dvh - 20rem))' }}>
+                  {cards.map((o) => (
+                    <Card key={o.id} order={o} onOpen={() => router.push(`/bakim/is-emirleri/${o.id}`)} onStart={() => start(o)} onCancel={() => setCancelTarget(o)} />
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}
