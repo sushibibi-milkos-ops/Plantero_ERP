@@ -41,9 +41,13 @@ export default async function RndRecipesPage({ params }: { params: Promise<{ id:
         // itiyordu. PageHeader (ortak bileşen) değiştirilmedi — clamp yalnızca burada, ReactNode
         // olarak geçirilen açıklamada uygulanıyor.
         description={project.goal ? <span className="line-clamp-1">{project.goal}</span> : undefined}
-        actions={<StatusBadge status={project.status} label={status.label} tone={status.tone} />}
+        // `actions` KASITLI OLARAK verilmiyor — kök neden düzeltmesi (Tur 5 P1 arge-recete-18, dört
+        // turdur açıktı): PageHeader'ın actions sarmalayıcısı mobilde (flex-col) kendi satırını
+        // (gap-3 + rozet yüksekliği ≈32px) tüketiyordu, bu da "Hedef maliyete göre" panelinin üst
+        // kenarını 313px'e itiyordu. Rozet artık aşağıdaki ProjectNavTabs'ın `trailing` yuvasına
+        // taşındı — sekme şeridiyle AYNI 44px satırda, ekstra satır/gap yok. PageHeader değişmedi.
       >
-        <ProjectNavTabs projectId={id} />
+        <ProjectNavTabs projectId={id} trailing={<StatusBadge status={project.status} label={status.label} tone={status.tone} />} />
       </PageHeader>
       <RecipeWorkspace
         projectId={id}

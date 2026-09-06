@@ -38,6 +38,26 @@ type FormValues = { batchQty: string; batchUomId: string; expectedYieldPct: stri
 // false iken son (aksiyon) sütun boş kalır, tabloyu her seferinde yeniden şablonlamaya gerek kalmaz.
 const LINE_COLS_STYLE = { '--line-cols': 'minmax(0,1fr) 9rem 9rem 8rem 6rem 7rem 2.25rem' } as React.CSSProperties;
 
+/** Mobil (< md) malzeme kartının kontrol şeridi sütun genişlikleri — kök neden düzeltmesi (Tur 5 P1
+ *  arge-recete-27): eskiden 4 ayrı satır (ürün+sil / miktar+kaynak / birim maliyet+fire / satır
+ *  maliyeti) 194,5px'e ulaşıyordu. Artık 2 satır: (1) ürün + satır maliyeti + sil, (2) Miktar/
+ *  Kaynak/Birim maliyet/Fire % TEK 44px şeritte, etiketler ÜSTTE (dar sütunlarda inline etiket+değer
+ *  sığmaz — Tur 4 P1 arge-recete-21'in "aynı satırda" ilkesi burada SÜTUN başına bir kez uygulanır,
+ *  alan başına değil). Kaynak'a en geniş pay (Select metni en uzun: "Ortalama"/"Son alış").
+ */
+const MOBILE_LINE_COLS_STYLE = { '--mobile-line-cols': '1.15fr 1.05fr 1fr 0.85fr' } as React.CSSProperties;
+
+/** Hücre kontrolleri (Combobox/NumberInput/Select) için ORTAK dinlenme/etkileşim sınıfı — kök neden
+ *  düzeltmesi (Tur 5 P1 arge-recete-29): önceki `border-transparent` yaklaşımı REST'te GÖRÜNMEZ ama
+ *  hâlâ `border-width:1px` taşıyordu (Input/SelectTrigger'ın kendi frozen taban sınıfı) — "dört tarafı
+ *  kenarlıklı dikdörtgen" sayısı buna göre ölçüldüğünde (1440'ta 26, 390'da 27) HİÇ değişmiyordu; sıfır
+ *  genişlikte gerçek "kenarlıksız" olmak için `border-0` gerekir. Görsel geri bildirim artık `border`
+ *  DEĞİL bir iç `ring` (box-shadow) — bu, layout'u etkilemediği için önceki `border-transparent`
+ *  seçiminin asıl amacını (hover'da 1px'lik içerik kayması olmaması) da korur, üstelik kenarlık genişliği
+ *  hiç sayılmaz. Dokunmatik cihazlarda (`hover` hiç tetiklenmez) taban ipucu olarak hep-açık soluk ring. */
+const CELL_CONTROL_CLS =
+  'border-0 hover:ring-1 hover:ring-inset hover:ring-input [@media(hover:none)]:ring-1 [@media(hover:none)]:ring-inset [@media(hover:none)]:ring-input/50';
+
 /** Mobil (< md) satır etiketleri: md+ üstünde başlık satırı zaten aynı bilgiyi taşıdığı için gizlenir.
  *  Etiket-değer çifti TEK SATIRDA (etiket solda, değer sağda) — üst üste yığılmış label+control ikilisi
  *  satır yüksekliğini ikiye katlıyordu (kök neden düzeltmesi, Tur 4 P1 arge-recete-21). */
@@ -216,9 +236,9 @@ export function CostSimulator({
   const dirty = editable && form.formState.isDirty;
 
   return (
-    // space-y-3 (mobil) / md:space-y-6: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
-    // hedef maliyete kadarki bütçeyi sıkmak için küçük bir kazanım (8pt ölçeğinde kalır).
-    <div className="space-y-3 md:space-y-6">
+    // space-y-2 (mobil) / md:space-y-6: kök neden düzeltmesi (Tur 4+5 P1 arge-recete-18) — 390px'te
+    // hedef maliyete kadarki bütçeyi sıkmak için küçük ama gerçek bir kazanım (8pt ölçeğinde kalır).
+    <div className="space-y-2 md:space-y-6">
       {/* flex-nowrap + overflow-x-auto: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
           önceki `flex-wrap` v1/Taslak rozetini Kaydet/Onaya gönder'den AYRI bir SATIRA düşürüyordu
           (dar genişlikte sığmadığı için), hedef maliyet panelinin üstündeki bütçeyi ~35px fazladan
@@ -227,7 +247,10 @@ export function CostSimulator({
       <div className="flex flex-nowrap items-center gap-2 overflow-x-auto md:justify-between md:gap-3">
         {/* Masaüstü (md+): v1 + durum rozetleri — değişmedi. */}
         <div className="hidden shrink-0 items-center gap-2 md:flex">
-          <h2 className="text-[15px] font-semibold">v{detail.version.version}</h2>
+          {/* text-[13px] (eskiden 15px): kök neden düzeltmesi (Tur 5 P1 arge-recete-26) — tek kullanımlık
+              bir kademe eleniyor, tablonun tabanıyla (13px) eşitleniyor; ekrandaki tek "büyük" rakam
+              artık yukarıdaki hedef bandı hero metriği (24px). */}
+          <h2 className="text-[13px] font-semibold">v{detail.version.version}</h2>
           <StatusBadge status={detail.version.status} label={status.label} tone={status.tone} />
           {detail.hasPendingApproval ? <StatusBadge status="pending" label="Onay bekliyor" tone="warning" /> : null}
           {/* Kaydedilmemiş değişiklik göstergesi — eskiden yalnızca kaydettikten sonra toast vardı,
@@ -243,27 +266,28 @@ export function CostSimulator({
             genişliğe (ör. 18px) sıkıştırmasın — satırın kendi `overflow-x-auto`'su zaten güvenlik ağı. */}
         <div className="flex shrink-0 items-center gap-1.5 md:hidden">
           {recipeGroups.length > 1 ? (
-            <select
-              aria-label="Reçete"
-              value={selectedRecipeId ?? ''}
-              onChange={(e) => onSelectRecipe(e.target.value)}
-              className="h-11 w-24 shrink-0 rounded-md border border-input bg-transparent px-2 text-[13px]"
-            >
-              {recipeGroups.map((g) => (<option key={g.id} value={g.id}>{g.name}</option>))}
-            </select>
+            // Native `<select>` → paylaşılan Select bileşeni: kök neden düzeltmesi (Tur 5 P1
+            // arge-recete-28) — tarayıcının kendi `appearance:auto` oku, kendi metin metrikleri ve
+            // odak halkası hemen altındaki "Birim" alanıyla (shadcn Select) görsel olarak çelişiyordu.
+            <Select value={selectedRecipeId ?? undefined} onValueChange={onSelectRecipe}>
+              <SelectTrigger size="sm" aria-label="Reçete" className="w-24 shrink-0 text-[13px] data-[size=sm]:h-11 md:data-[size=sm]:h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>{recipeGroups.map((g) => (<SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>))}</SelectContent>
+            </Select>
           ) : null}
           {versions.length > 0 ? (
-            <select
-              aria-label="Versiyon"
-              value={selectedVersionId ?? ''}
-              onChange={(e) => onSelectVersion(e.target.value)}
-              className="h-11 w-28 shrink-0 rounded-md border border-input bg-transparent px-2 text-[13px]"
-            >
-              {versions.map((v) => {
-                const s = TRIAL_STATUS_LABELS[v.status] ?? { label: v.status, tone: 'muted' as const };
-                return <option key={v.id} value={v.id}>{`v${v.version} · ${s.label}`}</option>;
-              })}
-            </select>
+            <Select value={selectedVersionId ?? undefined} onValueChange={onSelectVersion}>
+              <SelectTrigger size="sm" aria-label="Versiyon" className="w-28 shrink-0 text-[13px] data-[size=sm]:h-11 md:data-[size=sm]:h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {versions.map((v) => {
+                  const s = TRIAL_STATUS_LABELS[v.status] ?? { label: v.status, tone: 'muted' as const };
+                  return <SelectItem key={v.id} value={v.id}>{`v${v.version} · ${s.label}`}</SelectItem>;
+                })}
+              </SelectContent>
+            </Select>
           ) : null}
           {canManage ? (
             <>
@@ -326,14 +350,30 @@ export function CostSimulator({
           zemin tonuyla ("nefes alan" — anti-erp), ayrı bir çerçeve DEĞİL. */}
       {targetCost ? (
         <div className="space-y-2 rounded-lg bg-muted/30 p-4">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-muted-foreground">Hedef maliyete göre</span>
+          {/* Ana metrik ≥24px/600 tabular-nums (kök neden düzeltmesi, Tur 5 P1 arge-recete-26):
+              eskiden bu bant TEK tipografik kademe taşıyordu — birim maliyet, kendi etiketiyle
+              ("Hedef maliyete göre") AYNI 11px'te basılıyordu, ekranın birincil çıktısı hiçbir
+              yerde bir "hero" rakam olmuyordu (Stripe referansında ana metrik her zaman büyük ve
+              tabular). Hedef değeri artık 12px muted ikincil etiket — karşılaştırma hâlâ mümkün
+              ama görsel ağırlık ana metrikte. `font-mono` KALDIRILDI (Tur 5 P1 arge-recete-25):
+              MoneyCell'in tek tipografisi (Inter tabular-nums) tablodaki/özetteki para
+              değerleriyle birebir eşleşir — aynı tutar ekranda iki farklı yazı tipiyle basılmaz. */}
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[11px] text-muted-foreground">Hedef maliyete göre</p>
+              <MoneyCell
+                value={computation.unitCost.toFixed(4)}
+                digits={2}
+                className={cn('text-2xl leading-tight font-semibold tabular-nums', overTarget ? 'text-warning' : 'text-success')}
+              />
+            </div>
             {/* overTarget → text-warning/bg-warning (renk disiplini, Tur 3 P1): hedef aşımı bir UYARI,
                 gerçek hata/yıkıcı eylem tonu (destructive) değil — /arge/projeler kart listesindeki
                 aynı olgu (project-list.tsx) zaten warning basıyor, buradaki destructive'i eşitliyoruz. */}
-            <span className={cn('font-mono font-medium tabular-nums', overTarget ? 'text-warning' : 'text-success')}>
-              <MoneyCell value={computation.unitCost.toFixed(4)} digits={2} /> / <MoneyCell value={targetCost.toFixed(4)} digits={2} muted />
-            </span>
+            <div className="shrink-0 text-right">
+              <p className="text-[11px] text-muted-foreground">Hedef</p>
+              <MoneyCell value={targetCost.toFixed(4)} digits={2} className="text-[12px] font-medium" muted />
+            </div>
           </div>
           <div className="relative">
             <div className="h-1 overflow-hidden rounded-full bg-muted">
@@ -376,8 +416,12 @@ export function CostSimulator({
           toolbar.tsx vb.). */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Field label="Parti miktarı">
+          {/* minDigits=4 (kök neden düzeltmesi, Tur 5 P1 arge-recete-25): satır tablosundaki "Miktar"
+              kolonu da minDigits=4 kullanıyor (Tur 2 P2 arge-recete-13 — ondalık ayırıcı hizası için);
+              aynı boyuttaki (miktar) alan burada 0 ondalıkla ("1") FARKLI bir politika sergiliyordu.
+              Tek politika: TÜM miktar alanları minDigits=maxDigits=4. */}
           <Controller control={form.control} name="batchQty" render={({ field }) => (
-            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} disabled={!editable} className="w-full" inputClassName="h-11 md:h-8" />
+            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} minDigits={4} disabled={!editable} className="w-full" inputClassName="h-11 md:h-8" />
           )} />
         </Field>
         <Field label="Birim">
@@ -421,18 +465,23 @@ export function CostSimulator({
           letter-spacing yok, zemin yok — yalnız alt hairline (Tur 4 P1 arge-recete-23; iskeletteki
           başlık şeridi de aynı düzeltmeyi görür, bkz. recipe-workspace.tsx CostSimulatorSkeleton). */}
       <div className="rounded-lg border border-border/60 text-[13px]" role="table" aria-label="Reçete satırları">
+        {/* py-2 (yatay dolgu YOK): kök neden düzeltmesi (Tur 5 P2 arge-recete-30) — başlık şeridi
+            eskiden TEK bir dış `px-3` ile döşeliydi, aşağıdaki veri hücreleri ise HER SÜTUN kendi
+            `md:px-2`/`md:px-2.5` dolgusunu taşıyordu (12px vs 8/10px) — sağa hizalı sayı sütunlarında
+            başlık ile değer 4px kaymalı duruyordu. Artık başlık HER sütunda veri hücresiyle BİREBİR
+            aynı dolguyu kullanır (aynı grid şablonu zaten paylaşılıyordu) — optik eksen tam örtüşür. */}
         <div
-          className="hidden border-b border-border/60 px-3 py-2 text-left text-[12px] font-medium text-muted-foreground md:grid md:gap-2 md:[grid-template-columns:var(--line-cols)]"
+          className="hidden border-b border-border/60 py-2 text-left text-[12px] font-medium text-muted-foreground md:grid md:gap-2 md:[grid-template-columns:var(--line-cols)]"
           style={LINE_COLS_STYLE}
           role="row"
         >
-          <span role="columnheader">Ürün</span>
-          <span role="columnheader" className="text-right">Miktar</span>
-          <span role="columnheader">Maliyet kaynağı</span>
-          <span role="columnheader" className="text-right">Birim maliyet</span>
-          <span role="columnheader" className="text-right">Fire %</span>
-          <span role="columnheader" className="text-right">Satır maliyeti</span>
-          {editable ? <span role="columnheader" aria-hidden /> : null}
+          <span role="columnheader" className="px-2.5">Ürün</span>
+          <span role="columnheader" className="px-2 text-right">Miktar</span>
+          <span role="columnheader" className="px-2">Maliyet kaynağı</span>
+          <span role="columnheader" className="px-2 text-right">Birim maliyet</span>
+          <span role="columnheader" className="px-2 text-right">Fire %</span>
+          <span role="columnheader" className="px-2 text-right">Satır maliyeti</span>
+          {editable ? <span role="columnheader" className="px-1" aria-hidden /> : null}
         </div>
         <div role="rowgroup">
           {fields.map((f, i) => {
@@ -594,7 +643,10 @@ export function CostSimulator({
         {/* formatQty: tr-TR virgül ondalık — eskiden .toFixed(2) nokta ondalık basıyordu, hemen
             yanındaki ₺ tutarı virgüllüydü (Tur 1 P1 arge-recete-02). */}
         <span className="text-muted-foreground">Etkin çıktı <span className="tabular-nums">{formatQty(computation.effectiveOutputQty.toFixed(4), undefined, { maxDigits: 2 })}</span></span>
-        <span className="font-medium">Birim maliyet <MoneyCell value={computation.unitCost.toFixed(4)} digits={2} className="text-[15px] font-semibold" /></span>
+        {/* text-[15px]→13px (kök neden düzeltmesi, Tur 5 P1 arge-recete-25/26): aynı değer yukarıdaki
+            hedef bandında ZATEN hero metrik (24px) olarak gösteriliyor — burada ikinci kez, farklı
+            boyut/ağırlıkta tekrarlanmıyor; özet satırının kendi 13px tabanıyla eşit, yalnız kalın. */}
+        <span className="font-medium">Birim maliyet <MoneyCell value={computation.unitCost.toFixed(4)} digits={2} className="font-semibold" /></span>
       </div>
 
       {editable ? (
