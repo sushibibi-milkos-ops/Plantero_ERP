@@ -1,0 +1,76 @@
+{
+ "as": "satis",
+ "vp": "390x844",
+ "bySection": {
+  "Satış hunisi": {
+   "h": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "lines": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "En çok satan 5 (son 30 gün)": {
+   "h": [
+    63,
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  "Son siparişler": {
+   "h": [
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "empties": [],
+ "clipped": [
+  {
+   "text": "Bugünkü ciro (brüt = net)",
+   "clientW": 126,
+   "scrollW": 144,
+   "cls": "truncate text-xs font-medium text-muted-foreground"
+  }
+ ],
+ "liAbove": 9,
+ "cellAbove": 0,
+ "kpiAbove": 0,
+ "emptyAboveH": 0,
+ "vh": 844
+}

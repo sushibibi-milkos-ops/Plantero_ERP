@@ -1,0 +1,55 @@
+{
+ "as": "depo",
+ "vp": "1440x900",
+ "bySection": {
+  "Karantina": {
+   "h": [
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "SKT riski": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  }
+ },
+ "empties": [
+  {
+   "section": "Bugün",
+   "h": 144,
+   "sectionH": 190,
+   "icon": true,
+   "textLines": 1,
+   "texts": [
+    "Bugün henüz mal kabul/sevkiyat yok"
+   ],
+   "action": false
+  }
+ ],
+ "clipped": [],
+ "liAbove": 9,
+ "cellAbove": 4,
+ "kpiAbove": 0,
+ "emptyAboveH": 144,
+ "vh": 900
+}

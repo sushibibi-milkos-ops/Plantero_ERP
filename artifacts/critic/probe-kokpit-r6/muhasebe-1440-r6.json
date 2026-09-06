@@ -1,0 +1,74 @@
+{
+ "as": "muhasebe",
+ "vp": "1440x900",
+ "bySection": {
+  "Banka": {
+   "h": [
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1
+   ]
+  },
+  "Mutabakat kuyruğu": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "Geciken alacak": {
+   "h": [
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2
+   ]
+  }
+ },
+ "empties": [
+  {
+   "section": "Bugünün tahsilatları",
+   "h": 212,
+   "sectionH": 258,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Bugün tahsilat yok",
+    "Bir tahsilat kaydedildiğinde burada görü"
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [],
+ "liAbove": 13,
+ "cellAbove": 11,
+ "kpiAbove": 0,
+ "emptyAboveH": 212,
+ "vh": 900
+}

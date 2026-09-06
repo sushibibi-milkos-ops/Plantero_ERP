@@ -1,0 +1,123 @@
+{
+ "as": "admin",
+ "vp": "390x844",
+ "bySection": {
+  "Bugün": {
+   "h": [
+    62.5
+   ],
+   "lines": [
+    3
+   ]
+  },
+  "Son aktiviteler": {
+   "h": [
+    60,
+    60,
+    60,
+    60,
+    60,
+    60,
+    60,
+    60
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "Banka": {
+   "h": [
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "Üretim hatları": {
+   "h": [
+    64.5,
+    64.5,
+    64.5
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "SKT riski": {
+   "h": [
+    63.5,
+    63.5,
+    63.5,
+    63.5,
+    63.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  "Geciken alacak": {
+   "h": [
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "empties": [
+  {
+   "section": "Kritik stok",
+   "h": 243,
+   "sectionH": 289,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Kritik stok yok",
+    "Kapsama süresi tedarik süresinin altına "
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [
+  {
+   "text": "Toz Karıştırma & Dolum · Strawberry Protein ",
+   "clientW": 271,
+   "scrollW": 298,
+   "cls": "min-w-0 flex-1 truncate"
+  },
+  {
+   "text": "WO-2026-000007 · Strawberry Protein Mixi",
+   "clientW": 246,
+   "scrollW": 264,
+   "cls": "min-w-0 truncate font-mono"
+  }
+ ],
+ "liAbove": 1,
+ "cellAbove": 4,
+ "kpiAbove": 0,
+ "emptyAboveH": 0,
+ "vh": 844
+}
