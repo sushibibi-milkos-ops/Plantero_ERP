@@ -196,8 +196,8 @@ export function RolePermissionMatrix({ role, matrix }: { role: RoleOverview; mat
                     const checked = selected.has(cell.code);
                     return (
                       <td key={a} className="h-10 p-0 text-center align-middle">
-                        {/* <label>, checkbox'ı sarmalayarak dokunma hedefini tüm hücreye (≥44px yükseklik
-                            mobilde) genişletir — görsel yoğunluk (20px kutu) değişmeden. */}
+                        {/* <label>, checkbox'ı sarmalayarak dokunma hedefini tüm hücreye (~92×40px)
+                            genişletir — görsel yoğunluk (20px kutu) değişmeden. */}
                         <label className={cn('grid h-10 w-full place-items-center', editable && 'cursor-pointer')}>
                           <Checkbox
                             checked={checked}
