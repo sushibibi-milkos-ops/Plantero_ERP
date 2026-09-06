@@ -1,0 +1,505 @@
+{
+ "module": "kokpit",
+ "round": 1,
+ "note": "Tur 1: kokpit.json bu turda ilk kez oluşturuldu — önceki tur yok, bu yüzden 'closed' listesi boş ve puan deltası yok. Beş rol kesiti (admin/GM, depo, muhasebe/finans, satis, uretim_sefi) AYNI rotanın (/kokpit) farklı görünümleridir; her biri ayrı puan kartı satırı olarak tutulur çünkü her rol farklı bir bileşen ağacı render eder (gm-dashboard / depo-dashboard / finance-dashboard / sales-dashboard / production-chief-dashboard). Ölçümler: pnpm measure (artifacts/critic/measure-kokpit-r1/) + scripts/probe-kokpit-r1{,b,c}.ts (Playwright bounding-box + shadowRoot/NumberFlow taşma ölçümü). Kod düzeyi hareket taraması (transition-all, ease-in, scale(0), >300ms süre, hover gating) TEMİZ — bulgu açılmadı. `span[data-slot=\"breadcrumb-page\"]` 39x19.5px olarak measure.ts'in touchTargetsBelow44 listesine düşüyor ama href/tabindex'i yok (yalnızca role=\"link\"), gerçek bir dokunma hedefi DEĞİL — ölçüm aracının yanlış pozitifi, bulgu açılmadı.",
+ "routes": {
+  "/kokpit?rol=admin": {
+   "round": 1,
+   "reference": "stripe",
+   "referenceTotal": 56,
+   "scores": [
+    4,
+    4,
+    5,
+    4,
+    4,
+    3,
+    4,
+    5,
+    4,
+    5,
+    4,
+    4
+   ],
+   "total": 50,
+   "verdict": "KAZANAN: Stripe",
+   "shots": [
+    "artifacts/screens/kokpit-admin/desktop.png",
+    "artifacts/screens/kokpit-admin/mobile.png"
+   ],
+   "scoreNotes": {
+    "1": "4 — h1 24/600, göz kaşı 11px uppercase, gövde 13px sağlam; ama 'büyük sayı' için tek ekranda 5 farklı kademe kullanılıyor (KPI şeridi 19px, KPI kartı 22px, Onay kuyruğu 17px, SKT kovaları 15px, Geciken alacak kovaları 13px) — sayısal ölçek tek bir merdivene oturmuyor.",
+    "2": "4 — 24px sayfa kenarı, gap-4 ritmi doğru; ama iki kolon 898.5px / 1819px (fark 920.5px) — sol kolonun altında bir ekran boyu ölü alan.",
+    "3": "5 — ilk ekranda 33 satır, contentBottom 2095px; Stripe yoğunluğunda.",
+    "4": "4 — 19 ayrı renk; yeşil hem marka/vurgu (kanal çubuğu bg-primary) hem başarı (StatusBadge) taşıyor, ikinci çubuk mavi (--chart-2, hue 250) — tek ölçülü sıralama grafiğinde iki hue.",
+    "5": "4 — hairline ayraçlar, sağ hizalı sayılar, satır hover, yatay taşma yok; ama 'Günlük kanal satışları' bölümünde çerçeveli Section içinde iki çerçeveli KpiCard (kutu içinde kutu).",
+    "6": "3 — P0: 'Brüt (bugün)' para değeri kırpılıyor, ekranda ₺689.442.2 yazıyor (gerçek: ₺689.442.211).",
+    "7": "4 — EmptyState'ler özenli (ikon+başlık+açıklama) ama eylem düğmesi yok; /kokpit'in kendi loading.tsx'i yok, 52 rotanın aksine jenerik (app)/loading.tsx iskeleti düşüyor ve nihai düzenle uyuşmuyor.",
+    "8": "5 — hover/focus-visible ring-inset/active scale(0.97) hepsi var, hover `(hover:hover)` ile korunmuş, 140ms.",
+    "9": "4 — 390px'te yatay taşma yok, kart 65.5px; ama boştaki üretim hattı satırları 40px (<44px) dokunma hedefi.",
+    "10": "5 — 16px lucide, süs ikonu yok.",
+    "11": "4 — üç ayrı 'mini istatistik şeridi' anatomisi (SKT 15px+10px divide-x, Geciken alacak 13px+11px divide-x, Onay kuyruğu 17px+11px gap-px bg-border) ve iki ayrı çubuk anatomisi aynı ekranda.",
+    "12": "4 — kutu içinde kutu + 'Son aktiviteler'de 8 satırın 8'i birebir aynı metin (giriş yaptı)."
+   },
+   "open": [
+    {
+     "id": "kokpit-kpi-clip-01",
+     "criterion": 6,
+     "severity": "P0",
+     "text": "'Brüt (bugün)' KPI kartında para değeri sessizce kırpılıyor: ekranda ₺689.442.2 görünüyor, gerçek değer ₺689.442.211 (mobilde tam basılıyor). Kök neden: KpiCard'a `sparkline` geçildiğinde 96px sabit sparkline + gap-3, 262px'lik kart içinde değer kutusuna yalnızca 119px bırakıyor; NumberFlow shadow DOM içinde render ettiği için `truncate` ellipsis bile basmıyor — yanlış tutar sessizce ekrana geliyor.",
+     "measure": "1440x900, değer kutusu clientWidth 119px / scrollWidth 168px (49px taşma, ~3 rakam kırpık); 'Net (bugün)' 147/158px",
+     "target": "scrollWidth ≤ clientWidth (kırpma yok) 1440x900'de; dar kartta sparkline gizlensin ya da değer 19px'e insin",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:41 (+ apps/web/src/components/kpi-card.tsx:165)",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-col-balance-01",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "İki kolonlu pano ızgarasında sol kolonda 3, sağ kolonda 7 bölüm var; sol kolon sağın yarısı kadar ve altında bir ekran boyu boş alan kalıyor. Bölümler kolonlara yüksekliğe göre dağıtılmalı (ör. 'Bugün' + 'Son aktiviteler' yer değiştirmeli) ya da masonry/3-kolon ızgara kullanılmalı.",
+     "measure": "1440x900: sol kolon 898.5px, sağ kolon 1819px (fark 920.5px, oran 2.02x)",
+     "target": "kolon yükseklik farkı ≤ 200px",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:30-262",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-loading-skeleton-01",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "/kokpit'in kendi loading.tsx'i yok (52 rotanın 51'inde var). Jenerik (app)/loading.tsx 'başlık + 4 adet h-24 rounded-xl kart ızgarası + 8 adet h-9 tablo satırı' basıyor; kokpit ise 80px çerçevesiz KpiStripRow + lg:grid-cols-2 bölüm kartları render ediyor — force-dynamic 3 sorgu beklerken uygulamanın en çok açılan sayfasında görünür düzen sıçraması oluyor.",
+     "measure": "apps/web/src/app/(app)/kokpit/ altında loading.tsx YOK; fallback iskelet 4x h-24 grid + 8x h-9 bordered list, gerçek düzen 4x80px hairline şerit + 2 kolon kart",
+     "target": "apps/web/src/app/(app)/kokpit/loading.tsx — KpiStripRow (4x80px) + lg:grid-cols-2 bölüm iskeleti",
+     "file": "apps/web/src/app/(app)/kokpit/loading.tsx (yok)",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-line-touch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te 'Üretim hatları' listesinde boştaki hat satırları 40px yüksekliğinde tıklanabilir bağlantı — 44px dokunma hedefi eşiğinin altında. Açık iş emri olan satır alt satır taşıdığı için 60px+, boş olan 40px: aynı listede iki farklı dokunma yüksekliği.",
+     "measure": "390x844: a 'Bazlar, Barista & Kremalar' 356x40px, a 'Saşe / Stick Toz Dolum' 356x40px",
+     "target": "her hat satırı ≥44px (RowLink'e `max-sm:min-h-11`)",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:129",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-nested-card-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "'Günlük kanal satışları' bölümünde çerçeveli+yuvarlatılmış Section'ın içine iki çerçeveli+yuvarlatılmış+gölgeli KpiCard konmuş — kutu içinde kutu (anti-ERP kuralının birebir ihlali). Stripe bu iki rakamı çerçevesiz, aralarında dikey hairline ile basar (projede zaten var: KpiStripRow).",
+     "measure": "1440x900: section 568x297px `rounded-xl border`, içinde 2x KpiCard 262x136px `rounded-xl border shadow`",
+     "target": "iç kartlar çerçevesiz — `variant=\"strip\"` + dikey hairline; iç içe `border`+`rounded` sayısı 0",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:38-42",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-ministrip-consistency-01",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "Tek ekranda üç farklı 'mini istatistik şeridi' anatomisi: SKT riski (15px değer / 10px etiket / px-2 py-2.5 / divide-x), Geciken alacak (13px / 11px / px-2 py-2.5 / divide-x), Onay kuyruğu (17px / 11px / py-3 / gap-px bg-border/60). Aynı bilgi tipi üç farklı tipografi ve üç farklı ayraç tekniğiyle çiziliyor.",
+     "measure": "1440x900 satır yükseklikleri 59.5 / 58 / 70px; değer font boyutları 15 / 13 / 17px; ayraç: divide-x, divide-x, gap-px bg-border",
+     "target": "tek bir `StatStrip` anatomisi — değer 15px/600, etiket 10px muted, px-2 py-2.5, divide-x divide-border/60; üç blokta da aynı yükseklik (±2px)",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:186-196, 214-222, 250-262",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-channelbar-hue-01",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "ChannelBars tek ölçülü (net ciro) sıralama grafiği ama ilk çubuk `bg-primary` (yeşil, hue 152), diğerleri `bg-[var(--chart-2)] opacity-55` (mavi, hue 250) — tek seride iki hue. Bileşenin kendi doküman yorumu 'aynı ailenin soluk tonu' diyor ama kod farklı bir hue kullanıyor. Ayrıca 20px yüksek, tam doygun yeşil dolgu ekranın en dikkat çeken öğesi oluyor.",
+     "measure": "--primary oklch(0.55 0.16 152) vs --chart-2 oklch(0.6 0.15 250) → 98° hue farkı; çubuk yüksekliği h-5 (20px)",
+     "target": "tüm çubuklar hue 152; ilk `bg-primary`, diğerleri `bg-primary/45` — hue farkı 0°; çubuk yüksekliği h-2.5 (10px, Satış hunisi ile aynı)",
+     "file": "apps/web/src/modules/kokpit/components/channel-bars.tsx:26-29",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-numeric-scale-01",
+     "criterion": 1,
+     "severity": "P1",
+     "text": "'Büyük sayı' için tek ekranda 5 kademe kullanılıyor: KPI şeridi 19px, KPI kartı 22px, Onay kuyruğu 17px, SKT kovaları 15px, Geciken alacak kovaları 13px. Sayısal ölçek tek bir merdivene oturmuyor; hangi sayının daha önemli olduğu boyuttan okunamıyor.",
+     "measure": "1440x900 fontSizes: {10:6, 11:40, 12:49, 13:89, 14:7, 15:5, 17:4, 18:1, 24:1} — 9 ayrı boyut, bunların 5'i sayısal vurgu için",
+     "target": "sayısal vurgu için en fazla 2 kademe (KPI 19px, blok içi 15px); toplam ayrı font boyutu ≤6",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:189, 217, 257 + apps/web/src/components/kpi-card.tsx:157,177",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-activity-dupe-01",
+     "criterion": 12,
+     "severity": "P2",
+     "text": "'Son aktiviteler' listesinde 8 satırın 8'i birebir aynı metni taşıyor ('… · … giriş yaptı'), yalnızca göreli zaman farklı. Sekiz özdeş satır 337px yer kaplıyor ve hiçbir bilgi eklemiyor; ardışık aynı (kullanıcı, eylem) kayıtları tek satırda toplanmalı ('… · 8 giriş · son 10 dakika önce').",
+     "measure": "1440x900: 8 satır, 8'inin metni aynı; bölüm yüksekliği 337px",
+     "target": "ardışık özdeş (kullanıcı+summary) kayıtlar tek satıra katlanır; ekranda tekrar eden metin ≤2",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:265-278 + apps/web/src/modules/kokpit/queries.ts",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-empty-action-01",
+     "criterion": 7,
+     "severity": "P2",
+     "text": "Pano EmptyState'lerinde (compact) eylem düğmesi yok — 'Kritik stok yok', 'Bugün henüz belge yok' yalnızca ikon+metin. Puan kartı kriteri 7 açıkça 'ikon+metin+eylem' istiyor.",
+     "measure": "admin panosunda 1 görünür EmptyState, eylem düğmesi 0",
+     "target": "her compact EmptyState'e ilgili listeye giden ikincil bir eylem bağlantısı",
+     "file": "apps/web/src/components/empty-state.tsx + gm-dashboard.tsx:73,161",
+     "openedRound": 1
+    }
+   ],
+   "closed": []
+  },
+  "/kokpit?rol=depo": {
+   "round": 1,
+   "reference": "linear",
+   "referenceTotal": 57,
+   "scores": [
+    5,
+    5,
+    3,
+    5,
+    4,
+    5,
+    4,
+    5,
+    4,
+    5,
+    4,
+    4
+   ],
+   "total": 53,
+   "verdict": "KAZANAN: Linear",
+   "shots": [
+    "artifacts/screens/kokpit-depo/desktop.png",
+    "artifacts/screens/kokpit-depo/mobile.png"
+   ],
+   "scoreNotes": {
+    "3": "3 — 1440x900'de ilk ekranda yalnızca 6 satır (Linear eşiği ≥15); contentBottom 719.5px, viewport'un 180px'i boş; 'Karantina değeri' 110px'lik koca bir kartı tek bir sayı için harcıyor.",
+    "5": "4 — satırlar 44px, hairline ayraç, hover var; ama 'Bugün' 1152px tam genişlikte tek kolonda ve satırın ortasında ~900px'lik ölü boşluk oluşuyor (partner x=755, tutar x=1700).",
+    "7": "4 — kokpit'in loading.tsx'i yok (shell/kokpit ortak bulgu).",
+    "9": "4 — 390px'te taşma yok, dokunma hedefi ihlali yok; ama mobil kart yüksekliği 108-109px (hedef 56-72px).",
+    "11": "4 — 'SKT riski' kartı GM panosundakiyle aynı isim/aynı veri ama farklı anatomi (burada 17px/py-3, GM'de 15px/py-2.5 + alt liste).",
+    "12": "4 — tek sayı için ayrı kart + sayfanın alt yarısının boş kalması kurumsal-pano kokusu."
+   },
+   "open": [
+    {
+     "id": "kokpit-depo-density-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Depo kokpiti 1440x900'de ilk ekranın %20'sini boş bırakıyor ve toplam 6 satır gösteriyor. 'Karantina değeri' bölümü 110px'lik bir kartı tek bir '5 lot bekliyor / ₺56.855' satırı için harcıyor; 'SKT riski' kartı GM panosunun aksine alt listesiz (yalnızca 4 sayı). Depo rolünün gerçek işi (bekleyen mal kabul/sevkiyat kalemleri, karantinadaki lotlar) hiç listelenmiyor.",
+     "measure": "1440x900: contentBottom 719.5px / viewport 900px (180px boş); tbody+li satır sayısı 6; 'Karantina değeri' section 568x110px, içinde 1 satır",
+     "target": "ilk ekranda ≥15 satır; 'Karantina değeri' kartı karantinadaki lot listesiyle (en az 5 satır) birleşsin ya da KPI şeridine insin",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:29-46",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-depo-mobile-card-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te 'Bugün' kartları 108-109px — puan kartı hedefi 56-72px'in 1.5 katı. Durum rozeti kendi satırını, belge no + tür ikinci satırı, partner üçüncü, tutar dördüncü satırı alıyor; rozet belge no'nun yanına alınırsa kart 2 satıra (≈72px) iner.",
+     "measure": "390x844: li yükseklikleri [108, 109, 109] (min/medyan/maks)",
+     "target": "mobil kart yüksekliği ≤72px",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:52-64 + components/shared.tsx:27",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-depo-row-void-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "'Bugün' bölümü lg:col-span-2 ile 1152px genişliğe yayılıyor ama satır içeriği aynı kalıyor: partner adı x=755'te bitiyor, tutar x=1700'de başlıyor — her satırın ortasında ~900px ölü alan. Linear geniş satırlarda ya sütun ekler ya da içeriği max-width ile sınırlar.",
+     "measure": "1440x900: section 1152px geniş; partner span sağ kenarı ≈x760, MoneyCell sol kenarı ≈x1690 → ~930px boşluk",
+     "target": "satır içi en büyük boşluk ≤240px (ek sütun: depo/kalem sayısı/saat) ya da içerik max-w-4xl",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:48-70",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-skt-strip-drift-01",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "Aynı isimli 'SKT riski' kartı iki panoda iki farklı anatomiyle çiziliyor: depo'da 17px değer / py-3 / alt liste yok (kart 112.5px), GM'de 15px değer / py-2.5 / altında top5 lot listesi (kart 330.5px). Aynı bileşen aynı görünmeli.",
+     "measure": "depo: değer 17px, hücre py 12px, kart yüksekliği 112.5px; gm: değer 15px, hücre py 10px, kart 330.5px",
+     "target": "tek `ExpiryBucketStrip` bileşeni; iki panoda da değer 15px/600, etiket 10px, py-2.5, aynı yükseklik",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:38-44 vs gm-dashboard.tsx:186-196",
+     "openedRound": 1
+    }
+   ],
+   "closed": []
+  },
+  "/kokpit?rol=muhasebe": {
+   "round": 1,
+   "reference": "stripe",
+   "referenceTotal": 56,
+   "scores": [
+    5,
+    4,
+    4,
+    3,
+    4,
+    4,
+    4,
+    5,
+    4,
+    5,
+    4,
+    4
+   ],
+   "total": 50,
+   "verdict": "KAZANAN: Stripe",
+   "shots": [
+    "artifacts/screens/kokpit-muhasebe/desktop.png",
+    "artifacts/screens/kokpit-muhasebe/mobile.png"
+   ],
+   "scoreNotes": {
+    "2": "4 — kolonlar 542px / 788px (fark 246px).",
+    "3": "4 — 10 satır, contentBottom 1064px; 'Mutabakat kuyruğu' 110px'lik kartı tek sayı için harcıyor.",
+    "4": "3 — AYNI tutar (−₺254.348) KPI şeridinde siyah, 30px altındaki Banka satırında kırmızı; 'Nakit projeksiyonu'nda 3/3 değer yeşil (ayırt edici bilgi taşımıyor).",
+    "5": "4 — 'KDV pozisyonu' 2x2 ızgarası ekrandaki tek ayraçsız blok; diğer tüm bloklar divide-x kullanıyor.",
+    "6": "4 — 'Nakit projeksiyonu' aynı 79px'lik hücrede iki farklı gösterim: ₺33.278 (tam) ve 'kapanış ₺33,3 B' (kısaltılmış).",
+    "7": "4 — kokpit loading.tsx yok.",
+    "9": "4 — 390px'te taşma yok; 'Geciken alacak' kartlarında tutar tek başına üçüncü satıra düşüyor (84px).",
+    "11": "4 — 'Break-even'a uzaklık' etiketleri GM panosundakinden farklı ('Bu ay gereken' vs 'Bu ay gereken (KDV hariç)', 'Gerçekleşen' vs 'Gerçekleşen net ciro'), aynı bileşen iki metin setiyle."
+   },
+   "open": [
+    {
+     "id": "kokpit-neg-money-color-01",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "Aynı tutar tek ekranda iki farklı renkte: KPI şeridinde 'Banka toplamı −₺254.348' varsayılan siyah, 30px altındaki 'Toplam (TRY hesaplar) −₺254.348,50' MoneyCell aracılığıyla kırmızı. Negatif bakiye ya her yerde kırmızıdır ya hiçbir yerde; KpiCard negatif işaretini hiç taşımıyor.",
+     "measure": "1440x900: KPI değeri color = foreground (nötr), MoneyCell aynı değerde text-destructive; iki öğe arası dikey mesafe 30px",
+     "target": "KpiCard format='money' negatif değerde MoneyCell ile aynı `text-destructive` tonunu kullanır — aynı tutar, tek renk",
+     "file": "apps/web/src/components/kpi-card.tsx:95-104 (kullanım: modules/kokpit/components/finance-dashboard.tsx:23)",
+     "openedRound": 1,
+     "module": "shell"
+    },
+    {
+     "id": "kokpit-cash-mixed-format-01",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "'Nakit projeksiyonu (3 ay)' aynı 79.5px'lik hücrede iki farklı sayı gösterimi kullanıyor: net akış tam basamaklı (₺33.278), hemen altındaki kapanış kısaltılmış (kapanış ₺33,3 B). Stripe bir bloğun içinde asla notasyon değiştirmez; okuyucu 33.278 ile 33,3 B'nin aynı büyüklük olduğunu ayrı ayrı çözmek zorunda kalıyor.",
+     "measure": "finance-dashboard.tsx:124 formatMoney(digits:0) vs :126 formatMoney(digits:0, compact:true) — aynı hücrede",
+     "target": "hücre içinde tek notasyon (ikisi de tam basamaklı ya da ikisi de compact)",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:121-127",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-cash-green-01",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "'Nakit projeksiyonu'nda üç ayın üçü de pozitif olduğu için üç değerin üçü de `text-success` yeşil basılıyor — renk hiçbir ayrım yapmıyor, yalnızca süs. Puan kartı kriteri 4: renk yalnızca anlam taşır; Stripe pozitif tutarları yeşile boyamaz, yalnızca negatifi/deltayı işaretler.",
+     "measure": "1440x900: 3/3 hücre text-success (oklch 0.6 0.16 152); ayırt edici bilgi 0",
+     "target": "değerler nötr foreground; yalnızca negatif akış text-destructive",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:123",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-kdv-divider-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "'KDV pozisyonu' ekrandaki tek ayraçsız blok: `grid grid-cols-2 gap-3 p-4` — dört alan boşlukla ayrılmış, hizası sola dayalı. Aynı sayfadaki 'Geciken alacak', 'Nakit projeksiyonu', 'SKT riski' bloklarının hepsi `divide-x divide-border/60` + ortalanmış hücre kullanıyor.",
+     "measure": "1440x900: KDV bloğu 4 hücre, ayraç 0, hücre yüksekliği 38px; diğer bloklar divide-x, hücre 58-79.5px",
+     "target": "aynı `divide-x divide-border/60` hücre anatomisi, hücre yüksekliği ±4px içinde eşleşsin",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:107-112",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-fin-col-balance-01",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "İki kolon 542px / 788px — sol kolonun altında 246px ölü alan; 'Mutabakat kuyruğu' ise 110px'lik bir kartı tek bir sayı ('15') için harcıyor. Mutabakat kuyruğu KPI şeridine taşınırsa hem kolonlar dengelenir hem bir kart kazanılır.",
+     "measure": "1440x900: sol kolon 542px, sağ kolon 788px (fark 246px); 'Mutabakat kuyruğu' section 568x110px, içerik 1 satır",
+     "target": "kolon yükseklik farkı ≤120px; tek satırlık bölüm kalmasın",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:29-76",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-breakeven-label-drift-01",
+     "criterion": 11,
+     "severity": "P2",
+     "text": "'Break-even'a uzaklık' bölümü iki panoda farklı etiketlerle basılıyor: finans panosunda 'Bu ay gereken' / 'Gerçekleşen' / '24 gün · günlük ₺64.830', GM panosunda 'Bu ay gereken (KDV hariç)' / 'Gerçekleşen net ciro' / '24 gün kaldı · günlük ₺64.747 gerekiyor'. Aynı bölüm, iki metin seti, iki kod kopyası.",
+     "measure": "gm-dashboard.tsx:56-70 ile finance-dashboard.tsx:133-148 birbirinin kopyası, 5 etiket metni farklı",
+     "target": "tek paylaşılan `BreakEvenPanel` bölümü; metinler birebir aynı",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:56-70 vs finance-dashboard.tsx:133-148",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-fin-mobile-row-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te 'Geciken alacak' satırları üç satıra kırılıyor: partner adı, altında '15 gün', altında sağa dayalı tutar — tutar tek başına bir satır işgal ediyor ve gün bilgisiyle hizası kopuyor. Kart 84px; 'gün' ve tutar aynı satırda sağa hizalanırsa 60px'e iner.",
+     "measure": "390x844: li yükseklikleri [44, 44, 84] (min/medyan/maks); 'Geciken alacak' kartları 84px, içerik 3 satır",
+     "target": "mobil kart ≤72px, gün + tutar aynı satırda (sol: gün muted, sağ: tutar)",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:92-96 (+ components/shared.tsx:27 RowLink)",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-fin-density-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Finans kokpitinde iki bölüm tek satırlık: 'Mutabakat kuyruğu' 110px'lik kartı yalnızca '15' için, 'Bugünün tahsilatları' 178px'lik kartı 2 satır için harcıyor. Mutabakat sayısı zaten bir sayaç — KPI şeridine ait; kart yerine listeye (bekleyen eşleştirmeler) dönüşmeli.",
+     "measure": "1440x900: 'Mutabakat kuyruğu' section 568x110px / 1 satır; toplam satır sayısı 10; contentBottom 1064px",
+     "target": "tek satırlık bölüm 0; ilk ekranda ≥15 satır",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:53-58",
+     "openedRound": 1
+    }
+   ],
+   "closed": []
+  },
+  "/kokpit?rol=satis": {
+   "round": 1,
+   "reference": "stripe",
+   "referenceTotal": 56,
+   "scores": [
+    5,
+    5,
+    3,
+    3,
+    4,
+    5,
+    4,
+    5,
+    4,
+    5,
+    4,
+    4
+   ],
+   "total": 51,
+   "verdict": "KAZANAN: Stripe",
+   "shots": [
+    "artifacts/screens/kokpit-satis/desktop.png",
+    "artifacts/screens/kokpit-satis/mobile.png"
+   ],
+   "scoreNotes": {
+    "3": "3 — contentBottom 592px / viewport 900px: ilk ekranın %34'ü boş; 'Kanal ciro' kartında tek bir çubuk var (tek kategorili çubuk grafiği daima %100 dolu — hiçbir şey anlatmıyor).",
+    "4": "3 — ChannelBars iki hue (yeşil hue 152 + mavi hue 250), 20px yüksek tam doygun yeşil dolgu, huni çubukları ayrı bir yeşil tonu (bg-primary/70): tek ekranda üç yeşil + bir mavi.",
+    "5": "4 — iki farklı çubuk anatomisi: kanal çubuğu h-5 rounded-md, huni çubuğu h-2 rounded-full.",
+    "7": "4 — kokpit loading.tsx yok.",
+    "9": "4 — 390px'te 'En çok satan 5' ürün adı 145.9px kutuya sığmıyor (gerekli 180px), ad 'BARISTA BASE - FIN…' diye kesiliyor; aynı ekrandaki diğer listeler mobilde iki satıra kırılıyor.",
+    "11": "4 — 'En çok satan 5' sabit h-11 satır + truncate kullanırken diğer tüm kokpit listeleri RowLink ile mobilde iki satıra kırılıyor."
+   },
+   "open": [
+    {
+     "id": "kokpit-satis-density-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Satış kokpiti 1440x900'de ilk ekranın üçte birini boş bırakıyor: 4 KPI + 1 kanal çubuğu + 4 huni çubuğu + 5 ürün satırı. Ayrıca 'Kanal ciro (bugün)' kartı tek kategori olduğunda daima %100 dolu tek bir çubuk basıyor — grafik hiçbir karşılaştırma taşımıyor. Satış rolünün açık siparişleri / bugünün teklifleri gibi liste yok.",
+     "measure": "1440x900: contentBottom 592px / 900px (308px boş, %34); 'Kanal ciro' section 568x128px içinde 1 çubuk (%100 dolu)",
+     "target": "ilk ekranda ≥15 satır ve contentBottom ≥ 860px; tek kanallı durumda çubuk yerine tek satırlık tutar+delta gösterimi",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:28-52",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-bar-anatomy-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "Aynı ekranda iki farklı çubuk anatomisi: 'Kanal ciro' çubuğu h-5 (20px) rounded-md, dolu doygun yeşil; 'Satış hunisi' çubuğu h-2 (8px) rounded-full, bg-primary/70. İkisi de tek ölçülü yatay çubuk — aynı görünmeli. Ayrıca ProgressBar (shared.tsx) üçüncü bir anatomi (h-1.5 rounded-full) getiriyor.",
+     "measure": "1440x900: kanal çubuğu 20px/rounded-md/bg-primary; huni çubuğu 8px/rounded-full/bg-primary-70; ProgressBar 6px/rounded-full",
+     "target": "tek yatay çubuk primitifi — 8px yükseklik, rounded-full, bg-primary; ekranda çubuk yüksekliği çeşidi 1",
+     "file": "apps/web/src/modules/kokpit/components/channel-bars.tsx:27 vs sales-dashboard.tsx:57-60 vs components/shared.tsx:40-46",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-top5-mobile-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te 'En çok satan 5' satırı sabit h-11 içinde sıra no + ürün adı + miktar + tutar'ı tek satıra sıkıştırıyor; ürün adına yalnızca 145.9px kalıyor ve ad kesiliyor ('BARISTA BASE - FIN…'). Aynı ekrandaki 'Bugün'/'Geciken alacak' listeleri mobilde iki satıra kırılarak adı tam gösteriyor — iki farklı mobil strateji.",
+     "measure": "390x844: ad kutusu clientWidth 145.9px / scrollWidth 180px (34px kırpık); ikinci satır 81.1/91px",
+     "target": "390px'te ürün adı kırpılmaz (scrollWidth ≤ clientWidth) — mobilde miktar+tutar ikinci satıra insin, RowLink deseniyle aynı",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:70-81",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-satis-green-count-01",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "Satış panosunda tek ekranda dört ayrı yeşil yüzey: marka yeşili kanal çubuğu (bg-primary, 440x20px doygun blok), huni çubukları (bg-primary/70, 4 adet), StatusBadge başarı yeşili ve marka logosu. Kanal çubuğu ekranın en doygun/en büyük renkli yüzeyi ve taşıdığı bilgi zaten sağdaki rakamda yazılı.",
+     "measure": "1440x900: bg-primary dolu yüzey 442x20px = 8840px²; yeşil ton çeşidi 3 (primary, primary/70, success); ekranda ayrı renk sayısı 19",
+     "target": "veri çubuklarında tek yeşil ton (bg-primary/45), en doygun yeşil yalnızca durum rozetlerinde; ayrı renk sayısı ≤14",
+     "file": "apps/web/src/modules/kokpit/components/channel-bars.tsx:26-29 + sales-dashboard.tsx:58",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-top5-consistency-01",
+     "criterion": 11,
+     "severity": "P2",
+     "text": "'En çok satan 5' listesi RowLink kullanmıyor: tıklanamaz `li` (hover yok, focus yok, hedef yok) — kokpitteki diğer tüm listeler tıklanabilir RowLink. Aynı modülde iki farklı satır etkileşim dili.",
+     "measure": "1440x900: 5 satırın 0'ı bağlantı; diğer bölümlerde satırların %100'ü RowLink",
+     "target": "satırlar RowLink ile ürün detayına bağlansın (hover/focus/dokunma dili aynı)",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:70-81",
+     "openedRound": 1
+    }
+   ],
+   "closed": []
+  },
+  "/kokpit?rol=uretim": {
+   "round": 1,
+   "reference": "linear",
+   "referenceTotal": 57,
+   "scores": [
+    5,
+    3,
+    2,
+    5,
+    3,
+    5,
+    4,
+    5,
+    5,
+    5,
+    4,
+    4
+   ],
+   "total": 50,
+   "verdict": "KAZANAN: Linear",
+   "shots": [
+    "artifacts/screens/kokpit-uretim_sefi/desktop.png",
+    "artifacts/screens/kokpit-uretim_sefi/mobile.png"
+   ],
+   "scoreNotes": {
+    "2": "3 — 'Hat durumu' satırlarında masaüstünde dikey padding 0px (RowLink taban sınıfındaki `sm:py-0` alt bileşenin `py-3`'ünü medya sorgusu özgüllüğüyle eziyor): metin hairline'lara yapışık.",
+    "3": "2 — ilk ekranın %46.5'i boş, toplam 3 satır. Üretim şefinin panosunda iş emri listesi, vardiya/duruş bilgisi, günün üretim miktarı hiç yok.",
+    "5": "3 — satır anatomisi bozuk: py 0px, üst satır ile alt satır arası 4px, satır ile ayraç arası ~1px; ayraçlar satırın alt kenarında değil metnin dibinde okunuyor.",
+    "7": "4 — kokpit loading.tsx yok.",
+    "11": "4 — GM panosundaki aynı 'Üretim hatları' listesi `sm:py-2.5` + ProgressBar taşırken üretim şefi panosundaki kopyası padding'siz ve %0'da çubuksuz."
+   },
+   "open": [
+    {
+     "id": "kokpit-rowlink-padding-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "'Hat durumu' satırlarında masaüstünde dikey padding 0px. Kök neden: `RowLink` taban sınıfı `... px-4 py-2.5 ... sm:h-11 sm:flex-row sm:py-0` içeriyor; üretim şefi panosu `className=\"flex-col items-stretch py-3 sm:h-auto sm:flex-col sm:items-stretch\"` geçiyor ama `sm:py-*` vermiyor — medya sorgulu `sm:py-0` üretilen CSS'te sonra geldiği için ≥640px'te kazanıyor ve `py-3` hiç uygulanmıyor. GM panosundaki aynı liste (gm-dashboard.tsx:129) `sm:py-2.5` geçtiği için doğru görünüyor: aynı bileşen, iki farklı sonuç.",
+     "measure": "1440x900: li>a computed paddingTop 0px / paddingBottom 0px, satır yüksekliği 52.5px; metin ile hairline arası ~1px",
+     "target": "computed padding-top = padding-bottom = 10px (`sm:py-2.5`), satır yüksekliği ≈72px, metin-hairline mesafesi ≥10px",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:32 (+ components/shared.tsx:27 taban sınıfı)",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-uretim-density-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Üretim şefi kokpiti 1440x900'de ilk ekranın neredeyse yarısını boş bırakıyor: 4 KPI + tek bir 'Hat durumu' kartı + 3 satır, sonrası bomboş. Açık/geciken iş emirleri (KPI'da sayısı var ama listesi yok), bugünkü üretim miktarı, duruş/fire kırılımı ekranda yok — üretim şefi buradan hiçbir karar veremiyor.",
+     "measure": "1440x900: contentBottom 481.5px / viewport 900px (418.5px boş, %46.5); toplam satır 3; bölüm sayısı 1",
+     "target": "ilk ekranda ≥15 satır, contentBottom ≥860px; en az 3 bölüm (hat durumu + açık iş emirleri + duruş/fire)",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:11-56",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-line-list-drift-01",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "'Üretim hatları' / 'Hat durumu' listesi iki panoda iki kopya: GM'de `sm:py-2.5` + pct>0'da ProgressBar + belge no yalnızca `docNo`; üretim şefinde padding yok + `docNo · productName`. Aynı veri, aynı amaç, iki farklı satır. Tek bileşene çıkarılmalı.",
+     "measure": "gm-dashboard.tsx:120-155 ile production-chief-dashboard.tsx:27-52 birbirinin kopyası; satır yüksekliği 40-60px (gm) vs 52.5px (şef), padding 10px vs 0px",
+     "target": "tek `ProductionLineRow` bileşeni; iki panoda da aynı padding, aynı yükseklik (±2px), aynı alt satır içeriği",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:120-155 vs production-chief-dashboard.tsx:27-52",
+     "openedRound": 1
+    },
+    {
+     "id": "kokpit-uretim-loading-01",
+     "criterion": 7,
+     "severity": "P2",
+     "text": "kokpit-loading-skeleton-01 ile aynı kök neden (rota düzeyi loading.tsx yok); üretim şefi kesitinde jenerik iskelet 4 kart + 8 tablo satırı vaat edip 1 kart + 3 satır teslim ediyor — sıçrama en belirgin burada.",
+     "measure": "iskelet: 4x h-24 kart + 8x h-9 satır; gerçek: 4x80px şerit + 1 bölüm + 3 satır",
+     "target": "kokpit/loading.tsx role bakmaksızın şerit + tek bölüm iskeleti",
+     "file": "apps/web/src/app/(app)/kokpit/loading.tsx (yok)",
+     "openedRound": 1
+    }
+   ],
+   "closed": []
+  }
+ }
+}
