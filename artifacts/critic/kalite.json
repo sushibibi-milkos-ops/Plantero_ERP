@@ -1,16 +1,16 @@
 {
  "module": "kalite",
- "round": 9,
- "note": "Tur 9: kalite modülü bağımsız yeniden ölçüldü (referans sabit: Linear 57 veri / Stripe 56 finans-KPI — docs/DESIGN-SCORECARD.md). Araçlar: pnpm shot 1440x900 + 390x844 (artifacts/screens/kalite-*), scripts/probe-kalite-r9.ts + probe-kalite-r9-lot.ts (artifacts/critic/probe-kalite-r9/). Dinamik id'ler psql ile yeniden alındı (DB yeniden seed edilmiş): qc_check 93418af1-fc0a-422b-adc7-9b25c6d95825 (QC-2026-000008, failed, 4 sonuç) + 8ed72e87-7a3e-497a-8f65-7318d1c648d1 (QC-2026-000001, pending, şablonsuz), recall 77048690-65f8-4518-97eb-04bbfd4a8c79 (RC-2026-000001), mamul lot PL-260903-H1-01 (FINDIK BAZI). Tur 8 kartından SONRA gelen a7302e1 commit'i kalite tablolarını değiştirdi: checks-table.tsx 'Mal kabul'/'Açılış' defaultHidden, supplier-score-table.tsx 'Trend' sütunu yalnızca çok dönemli veri varken ekleniyor. İkisi de ölçümle DOĞRULANDI ve iki P2 kapatıldı; /kalite/kontroller ve /kalite/tedarikci-skoru puanları yükseldi. AMA iki YENİ P1 açıldı: (a) /kalite/geri-cagirma tablosu 1440px'te 1192/1152 taşıyor ve 'Oluşturulma' değeri '06.09.2026 03:51' viewport dışına (right 1456 > 1440) taşıp ELİPSSİZ kesiliyor — ekran görüntüsünde '…03:5' okunuyor; (b) /kalite/geri-cagirma/[id] mobilde h1 388/358 truncate ile geri çağrılan LOT NUMARASINI kesiyor ('Plain Protein Mixi — Lot PL-260823-…') ve lot no sayfanın hiçbir yerinde tam görünmüyor. Sonuç: 6/8 route KAZANAN: Plantero, 2/8 KAYIP (geri-cagirma listesi + geri-cagirma detayı). Kod düzeyi tarama (transition-all / çıplak ease-in / scale(0) / >=300ms / hover gating / transform-origin): kalite modülünde İHLAL YOK (tek animasyon compute-score-button.tsx:62 animate-spin; hover globals.css:10-11 @media (hover:hover) and (pointer:fine) ile korunuyor). /kalite altında /operator rotası yok; 1024x768 çekimi uygulanmadı. EK (Tur 9 düzeltme turu): İki P1 bulgusu (kalite-geri-cagirma-09, kalite-geri-cagirma-id-09) kapatıldı. (a) recalls-table.tsx 'Gerekçe' sütunundan meta.flex kaldırılıp width:320+truncate (title tooltip) verildi, 'Ürün / Lot' tek flex sütun kaldı — tablo kabı scrollWidth=clientWidth=1152, outsideViewport []. (b) geri-cagirma/[id]/page.tsx PageHeader title=ürün adı, lot no ayrı satırda description={<>Lot <LotBadge .../></>} oldu (QC detayıyla aynı desen) — mobil h1 scrollWidth=clientWidth=358, lot no artık tam görünüyor. /kalite/geri-cagirma 58→59, /kalite/geri-cagirma/[id] 57→58. pnpm typecheck + pnpm lint temiz; pnpm db:check: I40 (post_recall_movement) GEÇTİ — bu iki düzeltme yalnızca sunum katmanı, veri/servis mantığına dokunmadı. pnpm test genelinde @plantero/db#test I48 (48_reorder_whitelist_gate.sql) 1 ihlal ile başarısız — bu, eşzamanlı başka bir agent'ın packages/db/src/seed/purchasing.ts üzerindeki TAMAMLANMAMIŞ (commit'lenmemiş WIP) değişikliğinden kaynaklanıyor; kalite modülünün kapsamı ve yazma izni dışında (purchasing), bu turda dokunulmadı.",
+ "round": 10,
+ "note": "Tur 10: kalite modülü bağımsız yeniden ölçüldü (referans sabit: Linear 57 veri / Stripe 56 finans-KPI). Araçlar: pnpm shot 1440x900 + 390x844, pnpm measure (artifacts/critic/measure-kalite-r10/), scripts/probe-kalite-r9.ts + -r9-lot.ts (artifacts/critic/probe-kalite-r10/), ek sütun-slack/mobil-kart/konsol probları. DİKKAT: tur boyunca eşzamanlı bir ajan DB'yi iki kez yeniden seed etti; dinamik id'ler tazelenip ekranlar yeniden çekildi (qc_check 2b306b7a failed / 7a609a2b pending, recall 6f82eaf8, mamul lot PL-260903-H1-01; kontrol sayısı 8'den 10'a çıktı). Tur 9 düzeltmeleri (13465e1) ÖLÇÜMLE DOĞRULANDI: /kalite/geri-cagirma tablo kabı 1152/1152 + outsideViewport [] (kalite-geri-cagirma-02 KAPANDI), /kalite/geri-cagirma/[id] mobil h1 kırpması yok, lot no ayrı satırda tam görünüyor. supplier-score-table 'Trend' ölü sütunu da kalkmış (kalite-tedarikci-03 KAPANDI). YENİ P2'ler (hepsi ölçülebilir, kazanmayı engellemez): (a) /kalite/kontroller mobil kartı 88px (bant 56-72; kardeş ekranlar 63,5px) — LotBadge metric yuvasında h-11 ile basılıyor, (b) 'Tür' sütunu 10/10 satırda 'Girdi' (ölü sütun), (c) sablonlar 'Ad' 491px, geri-cagirma 'Ürün / Lot' 314px, tedarikci-skoru 'Tedarikçi' 259px sütun slack'i (shell normu ≤120px), (d) geri-cagirma/[id] mobil KPI şeridinde 6 KPI'dan 4'ü viewport dışında (989/358). Kod düzeyi tarama (transition-all / çıplak ease-in / scale(0) / >=300ms / hover gating / transform-origin): kalite modülünde İHLAL YOK (tek animasyon compute-score-button.tsx:62 animate-spin; hover globals.css:10-16 @custom-variant ile (hover:hover) and (pointer:fine) altında). Konsol: 8 route'ta hata yok (kontroller'de tek seferlik geçici dev chunk 404'ü tekrar üretilemedi). /kalite altında /operator rotası yok. Sonuç: 8/8 route KAZANAN: Plantero — açık P0/P1 yok, hiçbir kriter <4, her route toplamı referansın üstünde.",
  "measuredAt": "2026-09-06",
  "routes": {
   "/kalite/kontroller": {
-   "round": 9,
+   "round": 10,
    "reference": "linear",
    "scores": [
     5,
     5,
-    5,
+    4,
     5,
     5,
     5,
@@ -21,10 +21,10 @@
     5,
     5
    ],
-   "total": 60,
-   "previousTotal": 59,
+   "total": 59,
+   "previousTotal": 60,
    "verdict": "Plantero",
-   "delta": "59 → 60. k5: 4→5 — tablo taşması tamamen giderildi (tur 8: kap 1412/1152, 'Mal kabul' left 1398 ve 'Açılış' left 1538 viewport dışında; tur 9: tablo kabında yatay kaydırıcı yok, outsideViewport [], clippedTexts 0). Diğer 11 kriter değişmedi: tbody tr 36px (8 satır), ayraç 1px oklab(0.92 …/0.5), main içinde 13px baskın (32/48 düğüm) + 12px etiket, h1 24px/600, mobilde scrollWidth 390 = clientWidth 390, main içinde <44px dokunma hedefi 0, alt gezinme örtmesi yok, tabular olmayan sayı 0.",
+   "delta": "60 → 59. k3: 5→4 (DELTA, ölçüm gerekçeli) — iki ölü/şişkin nokta: (a) 390x844'te DataTable mobil kartı 88px, puan kartı bandı 56-72px ve aynı modülün kardeş ekranları 63,5px (sablonlar, geri-cagirma) / 60px (tedarikci-skoru); kök neden LotBadge'in metric yuvasında h-11 ile basılması, (b) \"Tür\" sütunu 10/10 satırda \"Girdi\" (psql: kind=incoming, tek değer) — 90px genişliğinde sıfır bilgi. Diğer 11 kriter değişmedi: tbody tr 36px (10 satır), ayraç 1px oklab(0.92 …/0.5), main içinde 13px baskın (32 düğüm) + 12px etiket (15), h1 24px/600, tablo kabı taşması yok (en geniş sütun slack 98px), nonTabularNumbers [], 390px'te 390/390, main'de <44px dokunma hedefi 0, alt gezinme örtmesi yok.",
    "open": [],
    "closed": [
     {
@@ -49,20 +49,52 @@
      "verifiedBy": "Aynı kök nedenin parçası (8 sütun 1152px'e sığmıyordu); 6 varsayılan sütunla taşma 0."
     }
    ],
-   "p2": [],
+   "p2": [
+    {
+     "id": "kalite-kontroller-10",
+     "criterion": 3,
+     "severity": "P2",
+     "module": "kalite",
+     "text": "390px'te DataTable mobil kartı 88px — puan kartı bandının (56-72px) %22 üstünde ve aynı modülün kardeş ekranlarından 24,5px yüksek. Kök neden: kartın 2. satırında lot no `metric` yuvasına düşüyor ve LotBadge'in kendi 44px dokunma yastığı (h-11) orada devrede kalıyor; oysa kartın `<li>`si zaten tamamen tıklanabilir. mobile-cards.tsx'in `.mobile-card-subtitle-row` işaretçisi h-11'i yalnızca ALT BAŞLIK yuvasında nötrler, metric yuvasında değil.",
+     "measure": "Tur 10, 390x844: main ul>li yüksekliği 88px (10/10 kart); satır-2 kabı (div.mt-0.5.flex.items-baseline) 44px, içindeki LotBadge span h-11 (44px), inSubtitleRow=false. Karşılaştırma: /kalite/sablonlar ve /kalite/geri-cagirma kartı 63,5px, /kalite/tedarikci-skoru 60px, /depo/lotlar ve /depo/skt 63,5px.",
+     "target": "checks-table.tsx lot sütununa `meta: { width: 160, mobile: 'meta' }` verilip lot no alt başlık satırına (`.mobile-card-subtitle-row`) taşınsın — orada h-11 zaten h-auto'ya dönüyor. Kabul: /kalite/kontroller 390x844 kart yüksekliği ≤72px. (Alternatif kök neden: mobile-cards.tsx:312 metric yuvasına da aynı işaretçi sınıfı.)",
+     "file": "apps/web/src/modules/quality/components/checks-table.tsx:18",
+     "openedRound": 10
+    },
+    {
+     "id": "kalite-kontroller-11",
+     "criterion": 3,
+     "severity": "P2",
+     "module": "kalite",
+     "text": "\"Tür\" sütunu ilk ekranda 10/10 satırda aynı değeri (\"Girdi\") basıyor — 90px genişliğinde sıfır bilgi taşıyan ölü sütun. Modül aynı sorunu tedarikçi skorundaki \"Trend\" sütununda (kalite-tedarikci-03) koşullu ekleyerek çözmüştü; bu sütunda o desen uygulanmamış.",
+     "measure": "psql: select kind,count(*) from qc_checks group by kind → incoming|10 (tek değer). Sütun genişliği 90px, en uzun içerik 29px (slack 61px), 10/10 hücre \"Girdi\".",
+     "target": "supplier-score-table.tsx'teki desen: sütun yalnızca görünen satırlarda >1 farklı `kind` varken eklensin, aksi halde `meta.defaultHidden: true` (sütun seçicisinden açılabilir). Kabul: ilk ekranda %100 tek-değerli sütun 0.",
+     "file": "apps/web/src/modules/quality/components/checks-table.tsx:20",
+     "openedRound": 10
+    }
+   ],
    "scoreNotes": [
-    "kriter 5: 4→5 — probe-kalite-r9/kontroller-d horizontalScrollers'ta tablo kabı YOK (yalnızca sr-only 219/1 artefaktı); 6 varsayılan sütun 1152px'e sığıyor, gizlenen 2 sütun sütun seçicide.",
-    "kriter 1/2/3: 5 (değişmedi) — h1 24px/600, gövde 13px, satır 36px, 8 satır ilk ekranda.",
+    "kriter 3: 5→4 (DELTA) — mobil kart 88px (bant 56-72, kardeşler 63,5px) + 10/10 tek değerli \"Tür\" sütunu; iki ölçülebilir P2 açıldı.",
+    "kriter 5: 5 (değişmedi) — probe-kalite-r10/kontroller-d horizontalScrollers'ta tablo kabı yok, outsideViewport [], clippedTexts 0, en geniş sütun slack'i 98px (Lot) — shell normu ≤120px içinde.",
+    "kriter 1/2: 5 (değişmedi) — h1 24px/600, gövde 13px (32 düğüm), etiket 12px (15 düğüm), satır 36px.",
     "kriter 6: 5 (değişmedi) — nonTabularNumbers [].",
-    "kriter 9: 5 (değişmedi) — 390px'te taşma yok, smallTargetsInMain []."
+    "kriter 9: 5 (değişmedi) — 390px'te 390/390, main'de <44px hedef 0, alt gezinme örtmesi yok (navTop 787, örtülen metin yok)."
    ],
    "measure": {
     "desktop": {
      "scrollWidth": 1440,
      "clientWidth": 1440,
      "rowHeight": 36,
-     "rows": 8,
+     "rows": 10,
      "tableScroller": null,
+     "columnSlack": {
+      "Kontrol no": 24,
+      "Ürün": 53,
+      "Lot": 98,
+      "Sonuç": 55,
+      "Tür": 61,
+      "Tedarikçi": 24
+     },
      "fontSizesMain": {
       "12": 15,
       "13": 32,
@@ -75,13 +107,14 @@
     "mobile": {
      "scrollWidth": 390,
      "clientWidth": 390,
+     "cardHeight": 88,
      "touchBelow44": 0,
      "navOverlap": null
     }
    }
   },
   "/kalite/kontroller/[id]": {
-   "round": 9,
+   "round": 10,
    "reference": "linear",
    "scores": [
     5,
@@ -100,7 +133,7 @@
    "total": 58,
    "previousTotal": 58,
    "verdict": "Plantero",
-   "delta": "58 → 58, değişiklik yok. İki durum yeniden ölçüldü: QC-2026-000008 (karar verilmiş, 4 sonuç kalemi) ve QC-2026-000001 (bekliyor, şablonsuz). 'Eldeki miktar' 14 KG · TIRE/KARANTINA (birimli), 'Nem %' 14,2 (virgül ondalık, tabular), boş 'Sertifika' kalemi soluk '—'. 390x844: sayfa taşması yok, main'de <44px dokunma hedefi 0 (masaüstünde 'Boş alanları göster (2)' 124x18 — yalnızca pointer:fine).",
+   "delta": "58 → 58, değişiklik yok. Yeniden seed sonrası iki durum yeniden ölçüldü: QC-2026-000008 (2b306b7a, karar verilmiş, 4 sonuç kalemi) ve QC-2026-000001 (7a609a2b, bekliyor, şablonsuz). \"Eldeki miktar\" 14 KG · TIRE/KARANTINA ve 40 KG · TIRE/KARANTINA (birimli), \"Nem %\" 14,2 (virgül ondalık, tabular), boş \"Sertifika\" kalemi soluk \"—\", \"Numune miktarı\" girdisi 280px + KG son eki. 1440x900: taşan kap yok, yalnızca belge zinciri kartlarında kasıtlı truncate (154/235, ellipsis). 390x844: 390/390, main'de <44px dokunma hedefi 0, alt gezinme örtmesi yok.",
    "open": [],
    "closed": [
     {
@@ -201,48 +234,36 @@
     }
    ],
    "scoreNotes": [
-    "kriter 3: 4 (değişmedi) — 'bekliyor' durumunda (QC-2026-000001) 1440x900 ilk ekranı 6 alan + tek 200px girdi taşıyor; 'Sonuç girişi' kartının sağ ~900px'i boş.",
-    "kriter 12: 4 (değişmedi) — check-detail.tsx:172 her sonuç/şablon kalemi `rounded-lg border border-border/60 p-3` ile, zaten `rounded-xl border` olan kartın (satır 150) içinde ikinci çerçeveye alınıyor: kutu içinde kutu (QC-2026-000001'de 'Genel değerlendirme' kutusu bunun kanıtı).",
-    "kriter 6: 5 (değişmedi) — probe nonTabularNumbers yalnızca belge zinciri tarihleri (06.09.2026), metrik değil; miktarlar birimli ve tabular.",
-    "kriter 9: 5 (değişmedi) — 390px'te scrollWidth 390 = clientWidth 390, <44px hedef 0; belge zinciri şeridi güncel belgeye otomatik kaydırılıyor (outsideViewport girdileri negatif left)."
+    "kriter 3: 4 (değişmedi) — \"bekliyor\" durumunda (QC-2026-000001) 1440x900 ilk ekranı 6 alan + tek 280px girdi taşıyor; \"Sonuç girişi\" kartının sağ ~900px'i boş.",
+    "kriter 12: 4 (değişmedi) — check-detail.tsx:172 \"Genel değerlendirme\" kalemi `rounded-lg border border-border/60 p-3` ile, zaten `rounded-xl border` olan kartın (satır 150) içinde ikinci çerçeveye alınıyor (kutu içinde kutu, P2 kalite-kontroller-id-06 — tur 10 ekranında doğrulandı).",
+    "kriter 6: 5 (değişmedi) — nonTabularNumbers yalnızca belge zinciri tarihleri (06.09.2026), metrik değil.",
+    "kriter 9: 5 (değişmedi) — 390px'te 390/390, <44px hedef 0; belge zinciri şeridi güncel belgeye otomatik kaydırılıyor (outsideViewport girdileri negatif left)."
    ],
    "measure": {
     "desktop": {
      "scrollWidth": 1440,
      "clientWidth": 1440,
-     "pageScrollers": 0,
      "clippedTexts": 3,
-     "fontSizesMain": {
-      "11": 16,
-      "12": 12,
-      "13": 12,
-      "14": 11,
-      "24": 1
-     }
+     "clippedKind": "belge zinciri kartı, kasıtlı truncate+ellipsis",
+     "nonTabularNumbers": "yalnızca tarihler"
     },
     "mobile": {
      "scrollWidth": 390,
      "clientWidth": 390,
      "touchBelow44": 0,
-     "navOverlap": null,
-     "chain": {
-      "scrollLeft": 676,
-      "currentCardLeft": 29,
-      "currentCardRight": 334,
-      "clientWidth": 332
-     }
+     "navOverlap": null
     }
    }
   },
   "/kalite/sablonlar": {
-   "round": 9,
+   "round": 10,
    "reference": "linear",
    "scores": [
     5,
     5,
     5,
     5,
-    5,
+    4,
     4,
     5,
     5,
@@ -251,10 +272,10 @@
     5,
     5
    ],
-   "total": 59,
+   "total": 58,
    "previousTotal": 59,
    "verdict": "Plantero",
-   "delta": "59 → 59, değişiklik yok. Satır 36px (2 kayıt — seed sınırı), hairline ayraç, 'Kalem' sütunu sağ hizalı tabular, 390px'te taşma yok, smallTargetsInMain [].",
+   "delta": "59 → 58. k5: 5→4 (DELTA, ölçüm gerekçeli) — sütun slack ölçümü ilk kez yapıldı: \"Ad\" sütunu 688px genişlikte, en uzun içeriği 197px → 491px ölü alan (tablonun %43'ü); shell normu ≤120px. Taşma/kırpma yok, satır 36px (2 kayıt — seed sınırı), \"Kalem\" sağ hizalı tabular, 390px'te 390/390 ve kart 63,5px, <44px hedef 0. k6 hâlâ 4: mobil kartta kalem sayısı etiketsiz.",
    "open": [],
    "closed": [],
    "p2": [
@@ -281,40 +302,56 @@
      "file": "apps/web/src/modules/quality/components/templates-table.tsx",
      "openedRound": 3,
      "reverifiedRound": 6
+    },
+    {
+     "id": "kalite-sablonlar-04",
+     "criterion": 5,
+     "severity": "P2",
+     "module": "kalite",
+     "text": "\"Ad\" sütunu 1152px'lik tablonun 688px'ini alıyor ama en uzun içeriği 197px — tek sütunda 491px (tablonun %43'ü) ölü alan; ad ile \"Kapsam\" arasında yarım ekranlık boşluk kalıyor. Kalan sütunlar da sağa sabitlenmediği için sağ küme dağınık (Kapsam slack 109, Durum 72).",
+     "measure": "Tur 10 sütun-slack probu (1440x900, tablo 1152px, Range ile metin genişliği): Ad width 688 / maxContent 197 → slack 491. Diğerleri: Kod 24, Kapsam 109, Kalem 44, Durum 72.",
+     "target": "shell normu (shell-datatable-slack-01): en geniş sütunun slack'i ≤120px. templates-table.tsx \"Ad\" sütununa `meta: { width: 320 }` + truncate ya da \"Kapsam\" sütununa `meta.flex: true` verilip kalan genişlik oraya akıtılsın.",
+     "file": "apps/web/src/modules/quality/components/templates-table.tsx",
+     "openedRound": 10
     }
    ],
    "scoreNotes": [
-    "kriter 6: 4 (değişmedi) — masaüstünde 'Kalem' sütun başlığı bağlam veriyor, mobil kartta sayı (4 / 5) etiketsiz (P2 kalite-sablonlar-01/-03).",
-    "kriter 3: 5 (değişmedi) — 2 kayıtla sınırlı veri; tbody tr 36px, gövde 13px (30 düğüm), boş alan veri kaynaklı.",
-    "kriter 5: 5 (değişmedi) — probe horizontalScrollers'ta tablo kabı yok, taşma 0; 'Kalem' sayısı sağa hizalı."
+    "kriter 5: 5→4 (DELTA) — \"Ad\" sütununda 491px slack (shell normu ≤120px); yeni P2 kalite-sablonlar-04.",
+    "kriter 6: 4 (değişmedi) — masaüstünde \"Kalem\" başlığı bağlam veriyor, mobil kartta sayı (4 / 5) etiketsiz (P2 kalite-sablonlar-01/-03).",
+    "kriter 3: 5 (değişmedi) — 2 kayıtla sınırlı veri; tbody tr 36px, gövde 13px, boş alan veri kaynaklı.",
+    "kriter 9: 5 (değişmedi) — 390px'te 390/390, mobil kart 63,5px, <44px hedef 0, alt gezinme örtmesi yok."
    ],
    "measure": {
     "desktop": {
-     "scrollWidth": 1440,
-     "clientWidth": 1440,
      "rowHeight": 36,
      "rows": 2,
-     "pageScrollers": 0,
-     "clippedTexts": 0
+     "columnSlack": {
+      "Kod": 24,
+      "Ad": 491,
+      "Kapsam": 109,
+      "Kalem": 44,
+      "Durum": 72
+     },
+     "clippedTexts": 0,
+     "nonTabularNumbers": 0
     },
     "mobile": {
      "scrollWidth": 390,
      "clientWidth": 390,
      "cardHeight": 63.5,
-     "touchBelow44": 0,
-     "navOverlap": null
+     "touchBelow44": 0
     }
    }
   },
   "/kalite/tedarikci-skoru": {
-   "round": 9,
+   "round": 10,
    "reference": "stripe",
    "scores": [
     5,
     5,
     5,
     5,
-    5,
+    4,
     5,
     4,
     5,
@@ -323,10 +360,10 @@
     5,
     5
    ],
-   "total": 58,
-   "previousTotal": 57,
+   "total": 57,
+   "previousTotal": 58,
    "verdict": "Plantero",
-   "delta": "57 → 58 (referans Stripe 56). k3: 4→5 — hiçbir satırda içerik üretmeyen 110px'lik 'Trend' sütunu kaldırıldı, 6 sütunun 6'sı da veri taşıyor (tur 8: 6/6 satırda '—'). Diğerleri değişmedi: satır 36px (6 satır), h1 24px/600, KPI şeridi masaüstünde dikey ince ayraçlı, mobilde <44px dokunma hedefi 0. k7=4 (yalnızca 'kayıt yok' hali var, hesaplama sırasında iskelet yok), k9=4 (KPI şeridi 472/358 kayıyor, kart başlıkları 390px'te ellipsis).",
+   "delta": "58 → 57 (referans Stripe 56). k5: 5→4 (DELTA) — \"Tedarikçi\" sütununda 259px slack (shell normu ≤120px, yeni P2 kalite-tedarikci-04). Tur 9'un \"Trend\" ölü sütunu kapanışı doğrulandı (sütunlar: Tedarikçi/Dönem/Skor/Zamanında/QC geçme/Miktar doğruluğu). Diğerleri değişmedi: satır 36px (6 satır), KPI şeridi masaüstünde dikey hairline ayraçlı ve değerler 19px tabular, skor barı kırmızı/turuncu/yeşil yalnızca eşik anlamı taşıyor, 390px'te 390/390 ve <44px hedef 0. k7=4 (boş durumda tıklanabilir eylem yok), k9=4 (mobil KPI şeridi 472/358 = 114px kayıyor, \"En düşük skor\" kartı kenarda kırpılıyor; snap-x + scroll-fade afordansı var).",
    "open": [],
    "closed": [
     {
@@ -413,9 +450,7 @@
      "severity": "P2",
      "closedRound": 9,
      "verifiedBy": "ölçüm: probe-kalite-r9/tedarikci-d — başlık düğmeleri artık ['Tedarikçi','Dönem','Skor','Zamanında','QC geçme','Miktar doğruluğu']; 'Trend' sütunu yok, tabloda yatay kaydırıcı yok. Kök neden a7302e1 ile kapatıldı: supplier-score-table.tsx `hasTrend = rows.some(r => r.trend.length > 1)` — çok dönemli veri gelince sütun otomatik geri döner."
-    }
-   ],
-   "p2": [
+    },
     {
      "id": "kalite-tedarikci-03",
      "criterion": 3,
@@ -426,39 +461,57 @@
      "target": "Tüm satırlarda veri yoksa sütun gizlensin (kolon görünürlüğü koşullu) ya da başlığa 'en az 2 dönem gerekir' ipucu.",
      "file": "apps/web/src/modules/quality/components/supplier-score-table.tsx",
      "openedRound": 1,
-     "reverifiedRound": 6
+     "reverifiedRound": 6,
+     "closedRound": 10,
+     "verifiedBy": "Tur 10 ölçümü: /kalite/tedarikci-skoru 1440x900 sütunları Tedarikçi/Dönem/Skor/Zamanında/QC geçme/Miktar doğruluğu — \"Trend\" sütunu artık yalnızca çok dönemli veri varken ekleniyor, ölü sütun ekranda yok."
+    }
+   ],
+   "p2": [
+    {
+     "id": "kalite-tedarikci-04",
+     "criterion": 5,
+     "severity": "P2",
+     "module": "kalite",
+     "text": "\"Tedarikçi\" sütunu 590px, en uzun unvan 331px → 259px ölü alan; unvan ile \"Dönem\" sütunu arasında geniş boşluk.",
+     "measure": "Tur 10 sütun-slack probu (1440x900): Tedarikçi width 590 / maxContent 331 → slack 259. Diğerleri: Dönem 36, Skor 74, Zamanında 40, QC geçme 40, Miktar doğruluğu 40.",
+     "target": "shell normu ≤120px: supplier-score-table.tsx \"Tedarikçi\" sütununa `meta: { width: 460 }` + truncate (title tooltip) — kalan genişlik metrik sütunlarına dağılır.",
+     "file": "apps/web/src/modules/quality/components/supplier-score-table.tsx",
+     "openedRound": 10
     }
    ],
    "scoreNotes": [
-    "kriter 3: 4 (değişmedi) — %100 boş 'Trend' sütunu (açık P2 kalite-tedarikci-07; tur 7'de 6/6 satır hâlâ '—').",
-    "kriter 7: 4 (değişmedi) — DataTable emptyTitle/emptyDescription özel metin veriyor ama boş durumda tıklanabilir eylem (Skoru Hesapla) yok.",
-    "kriter 9: 4 (değişmedi) — KPI şeridi 390px'te 472/358 = 114px kayıyor, 'En düşük skor' kartı kırpılıyor; snap-x + scroll-fade-x afordansı var.",
-    "kriter 6: 5 (değişmedi) — probe nonTabularNumbers yalnızca yıl seçici metni ('2026'); skor/oran hücreleri .num sınıfıyla tabular."
+    "kriter 5: 5→4 (DELTA) — \"Tedarikçi\" sütununda 259px slack; yeni P2 kalite-tedarikci-04.",
+    "kriter 3: 5 (değişmedi) — 6 sütunun 6'sı da veri taşıyor (\"Trend\" ölü sütunu kalktı), satır 36px, 6 satır ilk ekranda.",
+    "kriter 7: 4 (değişmedi) — DataTable boş durumu özel metin veriyor ama tıklanabilir eylem (Skoru Hesapla) yok.",
+    "kriter 9: 4 (değişmedi) — KPI şeridi 390px'te 472/358 = 114px kayıyor, \"En düşük skor\" kartı kırpılıyor.",
+    "kriter 6: 5 (değişmedi) — nonTabularNumbers yalnızca yıl seçici metni (\"2026\"); skor/oran hücreleri tabular."
    ],
    "measure": {
     "desktop": {
-     "scrollWidth": 1440,
-     "clientWidth": 1440,
      "rowHeight": 36,
      "rows": 6,
-     "trendEmptyCells": "6/6",
-     "pageScrollers": 0
+     "columnSlack": {
+      "Tedarikçi": 259,
+      "Dönem": 36,
+      "Skor": 74,
+      "Zamanında": 40,
+      "QC geçme": 40,
+      "Miktar doğruluğu": 40
+     },
+     "kpiValueFontSize": 19,
+     "clippedTexts": 0
     },
     "mobile": {
      "scrollWidth": 390,
      "clientWidth": 390,
-     "kpiStrip": {
-      "scrollWidth": 472,
-      "clientWidth": 358
-     },
-     "touchBelow44": 0,
-     "navOverlap": null,
-     "clippedTexts": 7
+     "kpiStrip": "472/358",
+     "cardHeight": 60,
+     "touchBelow44": 0
     }
    }
   },
   "/kalite/izlenebilirlik": {
-   "round": 9,
+   "round": 10,
    "reference": "linear",
    "scores": [
     5,
@@ -477,7 +530,7 @@
    "total": 58,
    "previousTotal": 58,
    "verdict": "Plantero",
-   "delta": "58 → 58, değişiklik yok. Boş durum: ikon + başlık + iki satır açıklama, dashed kap; masaüstü ve 390px'te taşma yok, mobilde <44px dokunma hedefi 0. k3=4 (arama-öncesi ekran, düşük yoğunluk), k7=4 (boş durumda eylem/öneri çipi yok).",
+   "delta": "58 → 58, değişiklik yok. Boş durum: ikon + başlık + iki satır açıklama, kesikli kap; masaüstü ve 390px'te taşma yok (1440/1440, 390/390), main'de <44px dokunma hedefi 0, konsol hatası yok. k3=4 (arama öncesi düşük yoğunluk), k7=4 (boş durumda eylem/öneri çipi yok).",
    "open": [],
    "closed": [
     {
@@ -508,17 +561,16 @@
     }
    ],
    "scoreNotes": [
-    "kriter 3: 4 (değişmedi) — arama öncesi 1440x900 ekranında yalnızca başlık, arama alanı ve ~350px kesikli boş durum kutusu var; alt ~600px tamamen boş.",
-    "kriter 7: 4 (değişmedi) — boş durum özenli (ikon + başlık + açıklama) ama tek tıklanabilir sonraki adım yok (P2 kalite-izlenebilirlik-05).",
-    "kriter 8: 5 (değişmedi) — arama öneri satırlarında hover:bg-accent/40 ve görünür klavye odağı.",
-    "kriter 9: 5 (değişmedi) — 390px'te taşma yok (390/390), <44px hedef 0, alt gezinme örtmesi yok."
+    "kriter 3: 4 (değişmedi) — arama öncesi 1440x900 ekranında yalnızca başlık, arama alanı ve ~350px kesikli boş durum kutusu var; alt ~600px boş.",
+    "kriter 7: 4 (değişmedi) — boş durum özenli (ikon + başlık + açıklama) ama tıklanabilir sonraki adım yok (P2 kalite-izlenebilirlik-05).",
+    "kriter 8: 5 (değişmedi) — arama öneri satırlarında hover:bg-accent/40 (globals.css @custom-variant ile (hover:hover) altında) ve görünür klavye odağı.",
+    "kriter 9: 5 (değişmedi) — 390px'te 390/390, <44px hedef 0, alt gezinme örtmesi yok."
    ],
    "measure": {
     "desktop": {
      "scrollWidth": 1440,
      "clientWidth": 1440,
-     "pageScrollers": 0,
-     "emptyState": "ikon + başlık + açıklama, eylemsiz"
+     "clippedTexts": 0
     },
     "mobile": {
      "scrollWidth": 390,
@@ -529,10 +581,12 @@
    }
   },
   "/kalite/geri-cagirma": {
-   "round": 9,
+   "round": 10,
    "reference": "linear",
    "scores": [
     5,
+    5,
+    4,
     5,
     4,
     5,
@@ -541,14 +595,12 @@
     5,
     5,
     5,
-    5,
-    5,
     5
    ],
-   "total": 59,
-   "previousTotal": 58,
+   "total": 58,
+   "previousTotal": 59,
    "verdict": "Plantero",
-   "delta": "58 → 59. k5: 4→5 — tablo kabı taşması giderildi (tur 9 sonu: kap 1192/1152 + outsideViewport ['06.09.2026 03:51']; düzeltme sonrası: kap 1152/1152, outsideViewport []). Kök neden: 'Gerekçe' sütunundan meta.flex kaldırılıp sabit width:320 + truncate (title tooltip'li) verildi, tek flex sütun 'Ürün / Lot' kaldı. Diğer kriterler değişmedi.",
+   "delta": "59 → 58. k5: 5→4 (DELTA) — tur 9'un taşma düzeltmesi ölçümle DOĞRULANDI (kap 1152/1152, outsideViewport [], \"Oluşturulma\" tam görünüyor) ve kalite-geri-cagirma-02 KAPANDI; ancak slack yer değiştirdi: sabit genişlikli \"Gerekçe\" sütunundan sonra kalan tüm genişlik tek flex sütuna yığılıyor (\"Ürün / Lot\" 419px genişlik / 105px içerik = 314px ölü alan, shell normu ≤120px — yeni P2 kalite-geri-cagirma-10). Diğerleri değişmedi: satır 36px (1 kayıt), 390px'te 390/390 ve kart 63,5px, <44px hedef 0.",
    "open": [],
    "closed": [
     {
@@ -575,9 +627,7 @@
      "openedRound": 9,
      "closedRound": 9,
      "measureAfter": "recalls-table.tsx: 'Gerekçe' sütunundan meta.flex kaldırıldı, meta:{width:320} + hücre `inline-block max-w-full truncate align-bottom md:w-[296px]` (title tooltip ile) verildi — tabloda tek flex sütun 'Ürün / Lot' kaldı. Ölçüm (scripts/probe-kalite-r9.ts /kalite/geri-cagirma 1440x900, tur 9 sonrası — DB 2 kayda yeniden seed edilmiş): horizontalScrollers listesinde tablo kabı (div.scrollbar-thin.scroll-fade-x) artık YOK; doğrudan ölçüm scrollWidth=1152/clientWidth=1152 (gizli 0, önceden 1192/1152). outsideViewport [] (önceden 'Oluşturulma' hücresi '06.09.2026 03:51' right 1456 > vw 1440). 'Gerekçe' metni artık title tooltip'li kontrollü şekilde kırpılıyor (clippedTexts 2 — kasıtlı, sütun genişliğine göre; taşma değil). pnpm shot /kalite/geri-cagirma ile doğrulandı (artifacts/screens/kalite-geri-cagirma/desktop.png), pnpm typecheck + pnpm lint temiz."
-    }
-   ],
-   "p2": [
+    },
     {
      "id": "kalite-geri-cagirma-02",
      "criterion": 5,
@@ -588,37 +638,54 @@
      "target": "Gerekçe sütununa `truncate` + max genişlik → scrollWidth ≤ 1152.",
      "file": "apps/web/src/modules/quality/components/recalls-table.tsx",
      "openedRound": 2,
-     "reverifiedRound": 6
+     "reverifiedRound": 6,
+     "closedRound": 10,
+     "verifiedBy": "Tur 10 ölçümü: probe-kalite-r10/geri-d — tablo kabında yatay kaydırıcı yok, tr genişliği 1152 = kap 1152, outsideViewport []. Tek kırpma \"Gerekçe\" sütununun kasıtlı truncate'i (296/514, title tooltip). Tur 9 düzeltmesi (meta.flex kaldırıldı, width:320) kalıcı."
+    }
+   ],
+   "p2": [
+    {
+     "id": "kalite-geri-cagirma-10",
+     "criterion": 5,
+     "severity": "P2",
+     "module": "kalite",
+     "text": "Tur 9'da \"Gerekçe\" sütunu 320px'e sabitlenince kalan genişliğin tamamı tek flex sütuna (\"Ürün / Lot\") yığıldı: 419px genişlik, 105px içerik → 314px ölü alan. Taşma çözüldü ama slack yer değiştirdi.",
+     "measure": "Tur 10 sütun-slack probu (1440x900, tablo 1152px): Ürün / Lot width 419 / maxContent 105 → slack 314. Diğerleri: Geri çağırma no 24, Durum 69, Gerekçe -194 (kasıtlı truncate), Oluşturulma 40.",
+     "target": "shell normu ≤120px: recalls-table.tsx \"Ürün / Lot\" `meta: { width: 260 }`, kalan genişlik \"Gerekçe\" sütununa (`meta.flex: true`) akıtılsın — hem slack düşer hem gerekçe metninin daha fazlası okunur.",
+     "file": "apps/web/src/modules/quality/components/recalls-table.tsx",
+     "openedRound": 10
     }
    ],
    "scoreNotes": [
-    "kriter 5: 4 (değişmedi) — 'Gerekçe' sütunu tam cümleyi kırpmadan basıyor; tablo kabı 1166/1152 = 14px taşıyor (P2 kalite-geri-cagirma-02).",
+    "kriter 5: 5→4 (DELTA) — taşma kapandı (1152/1152) ama \"Ürün / Lot\" sütununda 314px slack; yeni P2 kalite-geri-cagirma-10.",
     "kriter 3: 4 (değişmedi) — tek kayıt; ilk ekranın ~%80'i boş (veri kaynaklı).",
     "kriter 7: 5 (değişmedi) — liste boşken DataTable boş durumu, sayfa geçişinde (app)/loading.tsx iskeleti devrede.",
-    "kriter 9: 5 (değişmedi) — 390px'te 390/390, mobil kart 63,5px, <44px hedef 0.",
-    "kriter 5: 4→5 (tur 9 düzeltmesi) — scripts/probe-kalite-r9.ts /kalite/geri-cagirma 1440x900: tablo kabı scrollWidth=clientWidth=1152 (gizli 0), outsideViewport []. recalls-table.tsx 'Gerekçe' sütunu artık meta:{width:320} + truncate (title tooltip), 'Ürün / Lot' tek flex sütun."
+    "kriter 9: 5 (değişmedi) — 390px'te 390/390, mobil kart 63,5px, <44px hedef 0."
    ],
    "measure": {
     "desktop": {
-     "scrollWidth": 1440,
-     "clientWidth": 1440,
      "rowHeight": 36,
-     "rows": 2,
-     "tableScroller": {
-      "scrollWidth": 1152,
-      "clientWidth": 1152
+     "rows": 1,
+     "tableContainer": "1152/1152",
+     "outsideViewport": [],
+     "columnSlack": {
+      "Geri çağırma no": 24,
+      "Ürün / Lot": 314,
+      "Durum": 69,
+      "Gerekçe": -194,
+      "Oluşturulma": 40
      }
     },
     "mobile": {
      "scrollWidth": 390,
      "clientWidth": 390,
-     "touchBelow44": 0,
-     "navOverlap": null
+     "cardHeight": 63.5,
+     "touchBelow44": 0
     }
    }
   },
   "/kalite/geri-cagirma/[id]": {
-   "round": 9,
+   "round": 10,
    "reference": "stripe",
    "scores": [
     5,
@@ -629,15 +696,15 @@
     5,
     5,
     5,
-    5,
+    4,
     5,
     5,
     4
    ],
-   "total": 58,
-   "previousTotal": 57,
-   "verdict": "Stripe",
-   "delta": "57 → 58. k9: 4→5 — mobil h1 kırpması giderildi (tur 9 sonu: h1 388/358, lot no '...Lot PL-260823-...' kesiliyordu, sayfanın başka hiçbir yerinde tam geçmiyordu; düzeltme sonrası: h1 358/358, lot no ayrı satırda LotBadge ile tam görünüyor). Diğer kriterler değişmedi.",
+   "total": 57,
+   "previousTotal": 58,
+   "verdict": "Plantero",
+   "delta": "58 → 57 (referans Stripe 56). k9: 5→4 (DELTA, tutarlılık + ölçüm gerekçeli) — tur 9'un mobil h1 düzeltmesi DOĞRULANDI (h1 yalnızca ürün adı, lot no ayrı satırda LotBadge ile tam görünüyor, kırpma yok), ama mobil KPI şeridi 989/358 = 631px gizli ve 6 KPI'dan 4'ü ilk boyada viewport dışında; aynı desen /kalite/tedarikci-skoru'nda 114px kayma ile k9=4 aldığı için burada 5 tutmak tutarsızdı (yeni P2 kalite-geri-cagirma-id-08). Diğerleri değişmedi: KPI değerleri 19px tabular, değer–ayraç boşluğu 16px, \"38 ADET · 78,6 KG\" birim bazında ayrık, masaüstünde taşma/kırpma 0, \"Aksiyon takibi\" boş durumu ikon+başlık+açıklama.",
    "open": [],
    "closed": [
     {
@@ -767,51 +834,47 @@
      "file": "apps/web/src/modules/quality/components/recall-detail.tsx",
      "openedRound": 2,
      "reverifiedRound": 6
+    },
+    {
+     "id": "kalite-geri-cagirma-id-08",
+     "criterion": 9,
+     "severity": "P2",
+     "module": "kalite",
+     "text": "390px'te 6 KPI'lık şeridin 631px'i gizli: ilk boyada yalnızca 2,5 kart görünüyor, \"Sevkiyat / Müşteri / Stoktaki miktar / Sevk edilen miktar\" (yani geri çağırmanın ASIL büyüklükleri) viewport dışında. Aynı şerit deseni /kalite/tedarikci-skoru'nda 114px kayma ile k9=4 puanlandı; burada kayma 5,5 katı.",
+     "measure": "Tur 10, 390x844 (probe-kalite-r10/gerid-m): div.scrollbar-thin.scroll-fade-x scrollWidth 989 / clientWidth 358 (631px gizli); outsideViewport: Sevkiyat (349-475), Müşteri (509-635), Stoktaki miktar + \"38 ADET · 78,6 KG\" (669-832), Sevk edilen miktar (866-992).",
+     "target": "Mobilde şerit yerine 2 kolonlu ızgara (grid-cols-2) ya da en fazla 2 KPI gizli kalacak biçimde 4 KPI'a indirgeme. Kabul: 390px'te viewport dışındaki KPI kartı ≤2.",
+     "file": "apps/web/src/modules/quality/components/recall-detail.tsx (KpiStripRow kullanımı)",
+     "openedRound": 10
     }
    ],
    "scoreNotes": [
-    "kriter 9: 5 -> 4 (DELTA) — mobil KPI şeridi 1001/358 = 643px gizli; 6 KPI'dan yalnızca 2,5'i ilk boyada görünüyor (probe-kalite-r7/geriD-m; outsideViewport: Sevkiyat/Müşteri/Stoktaki miktar/Sevk edilen miktar). Aynı kusur sınıfı /kalite/tedarikci-skoru'nda 114px için 4 puanlanmıştı; 5,6 kat büyük taşmayı 5 tutmak tutarsızdı. snap-x + fade afordansı olduğu için 3'e düşürülmedi. Toplam 58 -> 57 (referans Stripe 56, hâlâ üstünde).",
-    "kriter 2: 4 (değişmedi) — iki kolonlu ızgarada 'Etkilenen müşteriler' kartı ~250px, 'Bildirim taslağı' ~560px; sol sütunda ~310px ölü alan.",
-    "kriter 12: 4 (değişmedi) — 'Bildirim taslağı' kart içinde ayrı çerçeveli mono blokta (kutu içinde kutu).",
-    "kriter 6: 5 (değişmedi) — '75 ADET · 22,12 KG' birim bazında ayrılmış, 19px tabular; KPI değeri–ayraç boşluğu 16px (probe kpiValues gapToDivider 16).",
-    "kriter 9: 4→5 (tur 9 düzeltmesi) — h1 artık yalnızca ürün adı taşıyor (title=productName), lot no PageHeader description'ında ayrı satırda LotBadge ile tam basılıyor. tmp-h1check.ts 390x844: h1 scrollWidth=clientWidth=358."
+    "kriter 9: 5→4 (DELTA) — mobil KPI şeridinde 631/989px gizli, 4/6 KPI viewport dışında; /kalite/tedarikci-skoru'ndaki aynı desenle (k9=4) tutarlı puanlama.",
+    "kriter 2: 4 (değişmedi) — iki kolonlu ızgarada \"Etkilenen müşteriler\" kartı sağ kolondaki \"Bildirim taslağı\" kartından ~220px kısa; sol sütunda ölü alan.",
+    "kriter 12: 4 (değişmedi) — \"Bildirim taslağı\" kart içinde ayrı çerçeveli mono blokta (kutu içinde kutu).",
+    "kriter 6: 5 (değişmedi) — \"38 ADET · 78,6 KG\" birim bazında ayrılmış, 19px tabular; KPI değeri–ayraç boşluğu 16px.",
+    "kriter 1: 5 (değişmedi) — şeritteki tüm KPI değerleri tek boyutta (kpi-card.tsx:144 `text-[19px]`), h1 24px/600, belge no 12px muted."
    ],
    "measure": {
     "desktop": {
      "scrollWidth": 1440,
      "clientWidth": 1440,
-     "pageScrollers": 0,
-     "kpiValue": {
-      "text": "75 ADET · 22,12 KG",
-      "fontSize": 19,
-      "gapToDivider": 16
-     }
+     "clippedTexts": 0,
+     "outsideViewport": [],
+     "kpiValueFontSize": 19,
+     "kpiGapToDivider": 16
     },
     "mobile": {
      "scrollWidth": 390,
      "clientWidth": 390,
-     "kpiStrip": {
-      "scrollWidth": 1001,
-      "clientWidth": 358
-     },
+     "kpiStrip": "989/358",
+     "kpiOutsideViewport": 4,
      "touchBelow44": 0,
-     "navOverlap": null,
-     "chain": {
-      "scrollLeft": 340,
-      "currentCardLeft": 29,
-      "currentCardRight": 333,
-      "clientWidth": 332
-     },
-     "h1": {
-      "scrollWidth": 358,
-      "clientWidth": 358,
-      "text": "Plain Protein Mixi"
-     }
+     "h1Clip": "yok"
     }
    }
   },
   "/kalite/izlenebilirlik?lot=<lot no|uuid>": {
-   "round": 9,
+   "round": 10,
    "reference": "linear",
    "scores": [
     5,
@@ -830,19 +893,19 @@
    "total": 58,
    "previousTotal": 58,
    "verdict": "Plantero",
-   "delta": "58 → 58, değişiklik yok. Miktar dengesi şeridi tabular + birimli (Giriş 76 ADET / Tüketim 0 / Sevkiyat 0 / Fire 0 / Eldeki 76 ADET; sıfırlar soluk), geri/ileri izleme ağacı okunur, masaüstünde taşma yok. k5=4 sabit (390px'te overflow-x-clip kabı 393/390 = 3px, en derin cari adı 3px dışarıda — P2 kalite-trace-lot-09), k9=4 sabit (mobilde KPI şeridi 792/358 kayıyor).",
+   "delta": "58 → 58, değişiklik yok. Miktar dengesi şeridi tabular + birimli (Giriş 76 ADET / Tüketim 0 / Sevkiyat 0 / Fire 0 / Eldeki 76 ADET; sıfırlar soluk), geri/ileri izleme ağacı okunur, masaüstünde taşma yok (yalnızca ağaç yapraklarında kasıtlı truncate+ellipsis). k5=4 sabit (390px'te overflow-x-clip kabı 393/390 = 3px, en derin cari adı 3px dışarıda, ellipsissiz — P2 kalite-trace-lot-09, tur 5'ten beri açık), k9=4 sabit (mobilde Miktar dengesi şeridi 792/358 = 434px kayıyor, 5 metrikten 3'ü ilk boyada görünmüyor).",
    "open": [
     {
      "id": "kalite-trace-lot-09",
      "criterion": 5,
      "severity": "P2",
      "text": "İzleme ağacının derin düğümlerinde cari adı 390px viewport'un 3px dışına taşıyor ve kap overflow-x-clip olduğu için son karakter (\".\") ellipsissiz kesiliyor — kullanıcı kaydırarak da göremiyor.",
-     "measure": "Tur 9 (probe-kalite-r9/lot-m, 390x844, lot PL-260903-H1-01): div.overflow-x-clip scrollWidth 393 / clientWidth 390 (3px); outsideViewport [{text:'Proteinsan Gıda Hammaddeleri Ltd. Şti.', left:153, right:393, vw:390}]. Tur 8 ile AYNI — açık kalıyor (P2, kazanmayı engellemez).",
+     "measure": "Tur 10 (probe-kalite-r10/lot-m, 390x844, lot PL-260903-H1-01): div.overflow-x-clip scrollWidth 393 / clientWidth 390 (3px); outsideViewport [{text:'Proteinsan Gıda Hammaddeleri Ltd. Şti.', left:153, right:393, vw:390}]. Tur 8/9 ile AYNI — açık kalıyor (P2, kazanmayı engellemez).",
      "target": "Derin düğüm satırında sağ dolgu + truncate: metin kutusu right ≤ 390 ve taşan metin ellipsis ile bitsin → outsideViewport = []",
      "file": "apps/web/src/components/trace-graph.tsx",
      "openedRound": 5,
      "module": "kalite",
-     "reverifiedRound": 9
+     "reverifiedRound": 10
     }
    ],
    "closed": [
@@ -915,30 +978,24 @@
    "previousKey": "/kalite/izlenebilirlik?lot=<uuid>",
    "scoreNotes": [
     "kriter 5: 4 (değişmedi) — ağaç yaprağında 3px viewport taşması, ellipsis yok (P2 kalite-trace-lot-09; kök neden ortak bileşen: shell-trace-graph-clip-02).",
-    "kriter 9: 4 (değişmedi) — 'Miktar dengesi' şeridi 390px'te 792/358 = 434px kayıyor; 5 metrikten 3'ü (Sevkiyat, Fire, Eldeki) ilk boyada görünmüyor (snap-x + fade var).",
-    "kriter 7: 5 (değişmedi) — derin bağlantı çözülürken iskelet basılıyor, 'Aramaya başlayın' boş durumu görünmüyor.",
-    "kriter 6: 5 (değişmedi) — probe nonTabularNumbers = []; tüm miktarlar birimli + tabular."
+    "kriter 9: 4 (değişmedi) — \"Miktar dengesi\" şeridi 390px'te 792/358 = 434px kayıyor; 5 metrikten 3'ü (Sevkiyat, Fire, Eldeki) ilk boyada görünmüyor (snap-x + fade var).",
+    "kriter 7: 5 (değişmedi) — derin bağlantı çözülürken iskelet basılıyor, \"Aramaya başlayın\" boş durumu görünmüyor.",
+    "kriter 6: 5 (değişmedi) — nonTabularNumbers []; tüm miktarlar birimli + tabular."
    ],
    "measure": {
     "desktop": {
      "scrollWidth": 1440,
      "clientWidth": 1440,
      "clippedTexts": 4,
-     "pageScrollers": 0
+     "clippedKind": "ağaç yaprağı, kasıtlı truncate+ellipsis",
+     "outsideViewport": []
     },
     "mobile": {
      "scrollWidth": 390,
      "clientWidth": 390,
-     "traceClip": {
-      "scrollWidth": 393,
-      "clientWidth": 390
-     },
-     "kpiStrip": {
-      "scrollWidth": 792,
-      "clientWidth": 358
-     },
-     "touchBelow44": 0,
-     "navOverlap": null
+     "clipContainer": "393/390",
+     "kpiStrip": "792/358",
+     "touchBelow44": 0
     }
    }
   }
