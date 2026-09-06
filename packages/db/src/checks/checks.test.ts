@@ -60,7 +60,13 @@ const FILES = await checkFiles();
 // üretiliyor; bu yüzden aşağıdaki "0 ihlal" testi BİLİNÇLİ OLARAK KIRMIZI bırakıldı — kod düzeltilmeden
 // (seed gerçek bir reorder_rule id'si vermeden) testi yeşile zorlamak yanlış olurdu. Düzeltme önerisi
 // checks/48_reorder_whitelist_gate.sql üst yorumunda.
-const RULE_COUNT = 48;
+// I49 (veri-critic Tur 10, YENİ, P1, KIRMIZI — canlı egzersizle kanıtlandı, bkz. checks/49_approval_queue_integrity.sql
+// üst yorumu): `approvals` (onay kuyruğu) kararının altındaki belgeye gerçekten yansıdığını doğrulayan ilk kural.
+// `notifications/approvals/dispatch.ts::rejectQueueItem`'in 'count_variance' dalı yalnızca `approvals.status='rejected'`
+// yazıyor, `stock_counts.status`'e hiç dokunmuyor — reddedilen bir sayım farkı sonsuza dek 'review'de kilitli kalıyor
+// (approve dalı `approveCount()` çağırıp count'u ilerletiyor, reject dalının simetriği yok; `cancelCount` diye bir
+// fonksiyon da yok). Fresh seed'de 0 ihlal (seed hiç count_variance onayı üretmiyor — eşik altı tek sayım fark).
+const RULE_COUNT = 49;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
