@@ -6,6 +6,7 @@ import { db, exchangeRates } from '@plantero/db';
 import {
   createFromOrder, updateLogistics, generateProforma, linkDelivery, buildPackingList, advanceToCustoms,
   markShipped, markShipmentDelivered, linkInvoice, closeShipment, cancelShipment, updateExportDocument,
+  updateProduct,
 } from '@plantero/core';
 import { tcmb } from '@plantero/integrations/rates/tcmb';
 import { requirePermission } from '@/lib/auth';
@@ -205,4 +206,32 @@ export const fetchTodayRatesAction = withAudit('export.fetchTodayRates', async (
   }
   revalidatePath('/ihracat/kurlar');
   return { data: { count: rates.length, mode: tcmb.mode }, audit: { action: 'sync', tableName: 'exchange_rates', summary: `TCMB kurları çekildi (${dateIso}, ${rates.length} para birimi, ${tcmb.mode === 'live' ? 'canlı' : 'sandbox'})` } };
+});
+
+/* ==================================================================== */
+/* GTİP — ürün eşlemesi (products.hsCode, /ihracat/gtip)                */
+/* ==================================================================== */
+
+const assignHsCodeSchema = z.object({
+  productId: z.string().uuid(),
+  hsCode: z.string().trim().max(20).optional().nullable(),
+});
+
+/**
+ * `products.hsCode` yalnızca bu tek alanı değiştirir — ürün adı/barkod gibi kilitli alanlara
+ * dokunmaz, bu yüzden `updateProduct`'ın kimlik-değişikliği onayı (`allowIdentityChange`) gerekmez.
+ * Şema `products` ana veri modülüne ait olsa da GTİP ataması fiilen bir ihracat işlevidir
+ * (docs/modules/ihracat.md "/ihracat/gtip") — bu yüzden izin `export.manage`'dir, `masterdata.manage`
+ * değil; ürünün diğer tüm alanları için asıl düzenleme ekranı yine `/ana-veri/urunler/[id]`'dir.
+ */
+export const assignHsCodeAction = withAudit('export.assignHsCode', async (raw: z.infer<typeof assignHsCodeSchema>) => {
+  await requirePermission('export.manage');
+  const input = assignHsCodeSchema.parse(raw);
+  const product = await db.transaction((tx) => updateProduct(tx, input.productId, { hsCode: input.hsCode || null }));
+  revalidatePath('/ihracat/gtip');
+  revalidatePath(`/ana-veri/urunler/${input.productId}`);
+  return {
+    data: { id: product.id, hsCode: product.hsCode },
+    audit: { action: 'update', tableName: 'products', recordId: product.id, summary: `${product.sku} GTİP: ${product.hsCode ?? '—'}` },
+  };
 });

@@ -171,3 +171,29 @@ export async function getLatestRates(): Promise<RateRow[]> {
 export async function listHsCodes() {
   return db.select().from(hsCodes).orderBy(asc(hsCodes.code));
 }
+
+/* ==================================================================== */
+/* /ihracat/gtip — GTİP ↔ ürün eşlemesi                                 */
+/* ==================================================================== */
+
+export type GtipProductRow = {
+  id: string; sku: string; name: string; category1: string | null; type: string; status: string; hsCode: string | null;
+};
+
+/**
+ * Satılabilir (isSellable) ürünler — ihracatta fiilen sevk edilen mamul/ticari mal setidir; hammadde/
+ * ambalaj gibi satılmayan ürünler GTİP eşlemesine dahil edilmez (docs/modules/ihracat.md "GTİP kodları
+ * ve ürün eşlemesi (products.hsCode)"). Eşlenmemiş (hsCode NULL) önce, sonra SKU'ya göre sıralanır.
+ */
+export async function listGtipProducts(): Promise<GtipProductRow[]> {
+  const rows = await db
+    .select({ id: products.id, sku: products.sku, name: products.name, category1: products.category1, type: products.type, status: products.status, hsCode: products.hsCode })
+    .from(products)
+    .where(and(eq(products.isSellable, true), ne(products.status, 'cancelled')))
+    .orderBy(asc(products.sku));
+  return rows.sort((a, b) => {
+    if (!a.hsCode && b.hsCode) return -1;
+    if (a.hsCode && !b.hsCode) return 1;
+    return a.sku.localeCompare(b.sku);
+  });
+}

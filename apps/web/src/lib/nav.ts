@@ -244,6 +244,7 @@ export const NAV: NavGroup[] = [
       { label: 'Sevkiyatlar', href: '/ihracat/sevkiyatlar', icon: Ship, permission: 'export.view', keywords: ['exp'] },
       { label: 'Belgeler', href: '/ihracat/belgeler', icon: Files, permission: 'export.view', keywords: ['proforma', 'packing list'] },
       { label: 'Kurlar', href: '/ihracat/kurlar', icon: DollarSign, permission: 'export.view', keywords: ['tcmb', 'döviz'] },
+      { label: 'GTİP', href: '/ihracat/gtip', icon: Hash, permission: 'export.view', keywords: ['gümrük tarife', 'hs code', 'ürün eşleme'] },
     ],
   },
   {

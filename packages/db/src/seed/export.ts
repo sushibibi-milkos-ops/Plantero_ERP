@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
-import { salesChannels, salesOrders, partners, products, warehouses, deliveries, deliveryLines, invoices, exportShipments, hsCodes } from '../schema/index.js';
+import { salesChannels, salesOrders, partners, products, warehouses, deliveries, deliveryLines, invoices, exportShipments, exchangeRates, hsCodes } from '../schema/index.js';
 import {
-  D, SYSTEM_ACTOR, writeAudit,
+  D, toDbRate, SYSTEM_ACTOR, writeAudit,
   createSalesDoc, confirmOrder,
   reserveFefo, confirmPick, shipDelivery,
   createFromOrder, updateLogistics, generateProforma, linkDelivery, buildPackingList, advanceToCustoms, markShipped, linkInvoice, closeShipment,
@@ -67,6 +67,72 @@ async function seedHsCodes(tx: DbOrTx, summary: SeedSummary): Promise<void> {
     count += 1;
   }
   summary.add('hs_codes', count);
+}
+
+/* ==================================================================== */
+/* 0b) TCMB kur geçmişi (son 90 gün) — docs/modules/ihracat.md "/ihracat/kurlar" */
+/* ==================================================================== */
+
+/**
+ * FNV-1a benzeri deterministik 0..1 hash — `packages/integrations/src/rates/tcmb.ts`'nin sandbox
+ * `seededRandom`'ıyla AYNI amaç (para birimi+tarih başına tekrarlanabilir sapma) ama `packages/db`
+ * `@plantero/integrations`'a bağımlı OLMADIĞINDAN (paket sınırı — bu dosyanın yazma yetkisi yalnızca
+ * `packages/db/src/seed/export.ts`, `package.json`'a yeni bağımlılık ekleyemem) burada bağımsız olarak
+ * yeniden uygulanır. Gerçek TCMB entegrasyonuyla birebir aynı sayıları ÜRETMEZ — yalnızca /ihracat/kurlar
+ * grafiğinin 90 günlük, gerçekçi görünen bir seri göstermesi için kullanılır.
+ */
+function hash01(seed: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i += 1) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h >>> 0) % 100000) / 100000;
+}
+
+const RATE_HISTORY_DAYS = 90;
+// KASITLI OLARAK GBP YOK: `packages/core/src/sales/pricing.test.ts::getExchangeRate` testi ("TRY her
+// zaman 1 döner; döviz için en yakın geçmiş kur seçilir") GBP'nin paylaşılan geliştirme veritabanında
+// HİÇ kayıtlı olmadığını (dolayısıyla test kendi izole GBP satırını ekleyip kullanabildiğini) açıkça
+// varsayıyor ve belgeliyor ("GBP: gerçek seed hiçbir yerde kullanmıyor"). Bu modülün seed'i başka bir
+// modülün (sales) testini bozamayacağından (rule: yalnızca kendi modülüne yaz + kendi modülün dışına
+// yan etki üretme) burada GBP kasıtlı olarak dışarıda bırakılır — `/ihracat/kurlar` GBP KPI'sı gerçek
+// veri gelene kadar dürüstçe "—" gösterir, "Bugünü çek" (packages/integrations tcmb sandbox) her üç
+// para birimini de anında doldurur.
+const RATE_BASE: Record<string, { buying: number; selling: number }> = {
+  USD: { buying: 34.1, selling: 34.25 },
+  EUR: { buying: 37.2, selling: 37.4 },
+};
+
+/**
+ * Son 90 günün USD/EUR alış-satışını doldurur — hafif bir düşüş trendi (geçmişe gidildikçe TL
+ * daha güçlü) + ±%1,5 günlük sapma. `onConflictDoNothing`: `finance-payments` seed adımı bu adımdan
+ * ÖNCE çalışıp bazı günler için gerçek/kritik kurları (ör. I13 kur farkı senaryosu için özel EUR
+ * satırı) zaten yazmış olabilir — bu geçmiş dolgusu onları asla ezmez, yalnızca boşlukları doldurur.
+ */
+async function seedExchangeRateHistory(tx: DbOrTx, summary: SeedSummary): Promise<void> {
+  const today = new Date();
+  let inserted = 0;
+  for (let i = 0; i < RATE_HISTORY_DAYS; i += 1) {
+    const d = new Date(today);
+    d.setUTCDate(d.getUTCDate() - i);
+    const iso = d.toISOString().slice(0, 10);
+    for (const [currency, base] of Object.entries(RATE_BASE)) {
+      const noise = hash01(`${currency}-${iso}`);
+      const trend = 1 - i * 0.0007; // geçmişe gidildikçe TL bir miktar daha değerli
+      const variance = 1 + (noise - 0.5) * 0.03; // ±%1,5 günlük sapma
+      const buying = D(base.buying).mul(trend).mul(variance);
+      const spreadRatio = D(base.selling).div(base.buying);
+      const selling = buying.mul(spreadRatio);
+      const res = await tx
+        .insert(exchangeRates)
+        .values({ currency, rateDate: iso, buying: toDbRate(buying), selling: toDbRate(selling), source: 'TCMB-SEED' })
+        .onConflictDoNothing({ target: [exchangeRates.currency, exchangeRates.rateDate] })
+        .returning({ id: exchangeRates.id });
+      if (res.length) inserted += 1;
+    }
+  }
+  summary.add('exchange_rates (90 gün geçmiş dolgu)', inserted);
 }
 
 /* ==================================================================== */
@@ -189,6 +255,9 @@ export async function seedExport(tx: DbOrTx, summary: SeedSummary): Promise<void
 
   log('export', 'GTİP kodları...');
   await seedHsCodes(tx, summary);
+
+  log('export', 'TCMB kur geçmişi (son 90 gün, USD/EUR/GBP)...');
+  await seedExchangeRateHistory(tx, summary);
 
   log('export', 'SO-2026-000023 → kapanmış sevkiyat (ETGB, Almanya) geriye dönük kuruluyor...');
   await backfillClosedShipment(tx, summary);
