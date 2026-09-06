@@ -243,6 +243,39 @@ async function seedDraftShipment(tx: DbOrTx, summary: SeedSummary): Promise<void
 }
 
 /* ==================================================================== */
+/* 4) Yeni ihracat siparişi — HENÜZ sevkiyata bağlanmamış (Tur 1 P0)     */
+/* ==================================================================== */
+
+/**
+ * `/ihracat/sevkiyatlar/yeni` formunun (ShipmentCreateForm) render olabilmesi için
+ * `listEligibleExportOrders` en az 1 satır dönmeli — gerçek akış önce satış ekibinin ihracat
+ * kanalından siparişi açıp ONAYLAMASI, SONRA ihracat ekibinin bu sipariş üzerinden sevkiyatı
+ * KURMASIdır (docs/modules/ihracat.md). Yukarıdaki 3 senaryonun (kapanmış/gümrükte/taslak) ÜÇÜ DE
+ * kendi sevkiyatını `createFromOrder` ile anında kurduğundan `sales_orders.export_shipment_id`
+ * her zaman dolu kalıyor, form daima boş duruma düşüyordu (Tur 1 P0, ihracat-yeni-01 — ölçüm:
+ * `SELECT count(*) FROM sales_orders WHERE doc_type='order' AND is_export AND
+ * export_shipment_id IS NULL` → 0). Bu adım o boşluğu, akışın "sevkiyat henüz açılmadı" ilk
+ * durumunu temsil eden onaylı (confirmed) bir ihracat siparişiyle kapatır — `createFromOrder`
+ * BİLEREK çağrılmaz.
+ */
+async function seedPendingExportOrder(tx: DbOrTx, summary: SeedSummary): Promise<void> {
+  const channel = await channelByCode(tx, 'IHRACAT');
+  const customer = await partnerByCode(tx, 'C-000007');
+  const warehouse = await warehouseByCode(tx, 'TIRE');
+  const product = await productBySku(tx, '190010003'); // Badem İçeceği 1L UHT (3'lü) — stock seed'te mevcut stoklu
+
+  const { order } = await createSalesDoc(tx, {
+    docType: 'order', partnerId: customer.id, channelId: channel.id, warehouseId: warehouse.id,
+    orderDate: new Date(Date.now() - 1 * 86_400_000), currency: 'EUR', incoterm: 'FOB', customerRef: 'SEED-EXPORT-PENDING',
+    origin: 'manual', note: 'Onaylandı, sevkiyat henüz açılmadı (seed demo verisi) — /ihracat/sevkiyatlar/yeni formunu besler',
+    lines: [{ productId: product.id, qty: D(20), unitPrice: D('10.80') }],
+  }, SYSTEM_ACTOR);
+  await auditCreate(tx, 'sales_orders', order.id, `${order.docNo} ihracat siparişi oluşturuldu (${customer.name} — seed demo verisi, sevkiyat henüz açılmadı)`);
+  await confirmOrder(tx, order.id, SYSTEM_ACTOR);
+  summary.add('sales_orders (ihracat, sevkiyata bağlanmamış)', 1);
+}
+
+/* ==================================================================== */
 /* main                                                                  */
 /* ==================================================================== */
 
@@ -267,4 +300,7 @@ export async function seedExport(tx: DbOrTx, summary: SeedSummary): Promise<void
 
   log('export', 'yeni ihracat siparişi → taslak sevkiyat...');
   await seedDraftShipment(tx, summary);
+
+  log('export', 'yeni ihracat siparişi → sevkiyat henüz açılmadı (onaylı, sevkiyata bağlanmamış)...');
+  await seedPendingExportOrder(tx, summary);
 }

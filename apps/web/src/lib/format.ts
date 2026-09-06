@@ -56,6 +56,14 @@ export function formatQty(v: NumberLike, uom?: string | null, opts: { maxDigits?
   return uom ? `${s} ${uom}` : s;
 }
 
+/** ₺37,2000 — döviz kuru: her zaman 4 ondalık, tr-TR ayracı, tabular-nums (₺'siz tutmak için `symbol: false`) */
+export function formatRate(v: NumberLike, opts: { symbol?: boolean } = {}): string {
+  const plain = toPlain(v, 4);
+  const nf = new Intl.NumberFormat(LOCALE, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  const s = nf.format(plain as unknown as number);
+  return opts.symbol === false ? s : `₺${s}`;
+}
+
 /** Tam sayı: 1.234 */
 export function formatInt(v: NumberLike): string {
   return formatQty(v, undefined, { maxDigits: 0 });

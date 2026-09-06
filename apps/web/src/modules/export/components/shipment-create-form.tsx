@@ -7,12 +7,14 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Ship } from 'lucide-react';
+import Link from 'next/link';
 import { Form, FormText, FieldLabel, FormSelect } from '@/components/form/fields';
 import { Combobox } from '@/components/form/combobox';
 import { FormActions } from '@/components/form/form-actions';
 import { EmptyState } from '@/components/empty-state';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
+import { Button } from '@/components/ui/button';
 import { createShipmentAction } from '../actions';
 import type { listEligibleExportOrders } from '../queries';
 
@@ -74,6 +76,11 @@ export function ShipmentCreateForm({ orders }: { orders: EligibleOrder[] }) {
         icon={Ship}
         title="Sevkiyata bağlanabilecek ihracat siparişi yok"
         description="Yeni bir sevkiyat açmak için önce satış siparişini ihracat kanalından (isExport) oluşturun; sevkiyata henüz bağlanmamış her sipariş burada listelenir."
+        action={
+          <Button asChild variant="outline">
+            <Link href="/satis/siparisler/yeni">İhracat siparişi oluştur</Link>
+          </Button>
+        }
       />
     );
   }
