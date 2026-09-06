@@ -1,0 +1,4 @@
+1440 total 1 borderOnly 0 shadowOnly 0 both 1
+[{"tag":"a","v":"Kokpite dön","w":130,"h":36,"border":true,"shadow":true}]
+390 total 1 borderOnly 0 shadowOnly 0 both 1
+[{"tag":"a","v":"Kokpite dön","w":130,"h":44,"border":true,"shadow":true}]

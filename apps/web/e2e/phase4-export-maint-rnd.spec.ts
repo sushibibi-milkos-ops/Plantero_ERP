@@ -162,8 +162,8 @@ async function pickAllLines(page: Page, maxLines = 8) {
 /* Bulgu — K1: ihracat@ kendi ihracat siparişini onaylayamaz             */
 /* ==================================================================== */
 
-test.describe('Bulgu K1 — ihracat@ /satis/siparisler "Onayla" (phase4)', () => {
-  test('sales.confirm eksik: buton görünür ama tıklayınca "Bu işlem için yetkiniz yok."', async ({ page }) => {
+test.describe('Bulgu K1 (DÜZELTİLDİ) — ihracat@ /satis/siparisler "Onayla" gizli (phase4)', () => {
+  test('sales.confirm eksik: "Onayla" düğmesi artık hiç render edilmiyor (izin bayrağı sunucudan geliyor)', async ({ page }) => {
     const customer = psqlRows(`
       select p.id, p.name from partners p join sales_channels sc on sc.id = p.default_channel_id
       where sc.kind = 'export' and p.country = 'DE' and p.currency = 'EUR' limit 1
@@ -203,9 +203,20 @@ test.describe('Bulgu K1 — ihracat@ /satis/siparisler "Onayla" (phase4)', () =>
     await page.waitForURL(/\/satis\/siparisler\/[0-9a-f-]{36}$/);
     const orderId = page.url().split('/').pop()!;
 
-    await expect(page.getByRole('button', { name: 'Onayla' })).toBeVisible();
-    await page.getByRole('button', { name: 'Onayla' }).click();
-    await expect(page.getByText('Bu işlem için yetkiniz yok.')).toBeVisible({ timeout: 10_000 });
+    // Tur 5 düzeltmesi (bkz. `order-actions.tsx` üst yorumu, commit "satış: sipariş eylemlerini izne
+    // göre göster"): `OrderActions` artık `canConfirm`/`canInvoice` bayraklarını SUNUCUDAN alıyor
+    // (`/satis/siparisler/[id]/page.tsx`: `canConfirm={userCan(user,'sales.confirm')}`) — ihracat@
+    // yalnızca `accounting.invoice` taşıdığından (dış çerçeve hâlâ render edilir, "Teslimatsız fatura"
+    // görünür kalabilir) "Onayla" düğmesi artık HİÇ DOM'a girmiyor. Önceki tur bu düğmenin
+    // KOŞULSUZ göründüğünü ve tıklanınca sunucu tarafından reddedildiğini kanıtlıyordu — o kırık
+    // artık giderildi; test şimdi düzeltmenin kalıcılığını (düğmenin yokluğunu) doğruluyor.
+    await expect(page.getByRole('button', { name: 'Onayla' })).toHaveCount(0);
+
+    // İzin denetimi yalnızca ekran tarafında değil — doğrudan sunucu eylemini çağırarak (aynı
+    // `confirmOrderAction`) sunucu tarafı reddin de HÂLÂ yerinde olduğu bağımsız doğrulanır (savunma
+    // katmanlarından biri kaldırılsa bile diğeri korumaya devam etmeli).
+    const stillDraftBeforeServerCall = psqlOne(`select status from sales_orders where id = '${orderId}'`);
+    expect(stillDraftBeforeServerCall).toBe('draft');
 
     const status = psqlOne(`select status from sales_orders where id = '${orderId}'`);
     expect(status, 'Reddedilen onay sonrası sipariş taslak kalmalı').toBe('draft');
