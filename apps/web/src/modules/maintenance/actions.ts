@@ -7,8 +7,11 @@ import {
   reportBreakdown, startOrder, markWaitingParts, updateChecklist, updateDiagnosis, completeOrder, cancelOrder, addPhotos,
 } from '@plantero/core/maintenance/orders';
 import { createPlan as createPlanCore, updatePlan, generateOrderNow } from '@plantero/core/maintenance/plans';
+import { findMachineByScan } from '@plantero/core/maintenance/machines';
+import { NotFoundError } from '@plantero/core/auth/errors';
 import { requirePermission } from '@/lib/auth';
 import { withAudit } from '@/lib/actions';
+import { listOpenWorkOrdersForLine } from './queries';
 
 function revalidateMaintenance(machineId?: string, orderId?: string) {
   revalidatePath('/bakim/makineler');
@@ -18,6 +21,33 @@ function revalidateMaintenance(machineId?: string, orderId?: string) {
   if (orderId) revalidatePath(`/bakim/is-emirleri/${orderId}`);
   revalidatePath('/bakim/oee');
 }
+
+/* ==================================================================== */
+/* Makine tarama (QR MCH:<code>) + hat bazlı üretim iş emri listesi      */
+/* ==================================================================== */
+
+const scanSchema = z.object({ code: z.string().trim().min(1) });
+
+export const findMachineByScanAction = withAudit('maintenance.findMachineByScan', async (raw: z.infer<typeof scanSchema>) => {
+  await requirePermission('maintenance.report');
+  const input = scanSchema.parse(raw);
+  try {
+    const machine = await findMachineByScan(db, input.code);
+    return { data: { id: machine.id, code: machine.code, name: machine.name, status: machine.status, lineId: machine.lineId } };
+  } catch (err) {
+    if (err instanceof NotFoundError) throw new Error(`"${input.code}" için makine bulunamadı`);
+    throw err;
+  }
+});
+
+const lineWorkOrdersSchema = z.object({ lineId: z.string().uuid().nullable() });
+
+export const listWorkOrderOptionsAction = withAudit('maintenance.listWorkOrderOptions', async (raw: z.infer<typeof lineWorkOrdersSchema>) => {
+  await requirePermission('maintenance.report');
+  const input = lineWorkOrdersSchema.parse(raw);
+  const rows = await listOpenWorkOrdersForLine(input.lineId);
+  return { data: rows };
+});
 
 /* ==================================================================== */
 /* Arıza bildirimi (fotoğraflı)                                         */
