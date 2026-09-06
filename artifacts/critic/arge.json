@@ -166,11 +166,11 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar içerik alanında 168px tüketiliyor (Linear başlığı, sayacı ve filtreyi tek satırda tutar). /arge/receteler ile aynı kalıp (arge-receteler-02).",
-     "measure": "tur 5: tbody ilk satır viewport top 238px / <main> ofseti 190px — tur 3 ve 4 ile birebir aynı (238/190), iyileşme yok",
+     "measure": "tur 5 düzeltmesi: description'daki \"${projects.length} proje —\" öneki kaldırıldı (DataTable'ın kendi araç çubuğu zaten \"3 kayıt\" gösteriyor — aynı sayı iki yerde tekrarlanmıyordu) + line-clamp-1. 1440px'te açıklama zaten tek satırdı, bu yüzden ölçülen ofset DEĞİŞMEDİ: ilk satır <main> ofseti 190px (hedef ≤112px). Kök neden tam çözüm için PageHeader başlık bloğu ile DataTable'ın kendi araç çubuğunun (arama+filtre+sayaç) AYNI satırda birleşmesini gerektiriyor — bu, PageHeader/DataTable kompozisyonunda paylaşılan bir yeniden tasarım (shell) ister, sayfa/modül düzeyinde kapatılamaz.",
      "target": "Başlık + '3 kayıt' + filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
      "openedRound": 2,
-     "reMeasuredRound": 4,
+     "reMeasuredRound": 5,
      "lastMeasuredRound": 5
     }
    ],
@@ -440,20 +440,7 @@
      "motion": "kanban-board.tsx: layout spring duration .35 bounce .15, DragOverlay 220ms cubic-bezier(.23,1,.32,1), transition-colors 150ms — 300ms üstü CSS geçişi yok, transition:all yok, ease-in yok, scale(0) yok"
     }
    },
-   "open": [
-    {
-     "id": "arge-board-15",
-     "criterion": 9,
-     "severity": "P2",
-     "text": "390px'te proje sekmesi 'Pano' 31.3px GENİŞ (yükseklik 44px doğru). Dokunma hedefi hem genişlik hem yükseklikte ≥44px olmalı; kısa etiketli sekme tek parmakla ıskalanabilir. Kardeş sekme 'Deneme Reçeteleri' 117px olduğu için sorun yalnız kısa etiketli sekmede.",
-     "measure": "tur 5: 390x844 → a \"Pano\" 31.3×44 (yükseklik 44 doğru, genişlik 31.3). Aynı sekme /receteler rotasında da 31.3×44. Kardeş sekme \"Deneme Reçeteleri\" 117.4×44.",
-     "target": "390px'te her sekme ≥44px genişlik (ör. `min-w-11` ya da mobilde `px-3`); measure touchTargetsBelow44 içinde etkileşimli sekme kalmayacak (etkileşimsiz breadcrumb span'i hariç)",
-     "file": "apps/web/src/modules/rnd/components/project-nav-tabs.tsx",
-     "openedRound": 3,
-     "reMeasuredRound": 4,
-     "lastMeasuredRound": 5
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "arge-board-01",
@@ -643,6 +630,21 @@
      "openedRound": 2,
      "measureAfter": "Mini-nav pilleri artık yalnızca kolon adı taşıyor (sayaç kaldırıldı) — kart sayısı yalnız kolon başlığında bir kez görünüyor; screenshot ile doğrulandı (Fikir/Formülasyon/Pilot Üretim/Duyusal Test/Raf Ömrü/Onay, sayaçsız).",
      "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-board-15",
+     "criterion": 9,
+     "severity": "P2",
+     "text": "390px'te proje sekmesi 'Pano' 31.3px GENİŞ (yükseklik 44px doğru). Dokunma hedefi hem genişlik hem yükseklikte ≥44px olmalı; kısa etiketli sekme tek parmakla ıskalanabilir. Kardeş sekme 'Deneme Reçeteleri' 117px olduğu için sorun yalnız kısa etiketli sekmede.",
+     "measure": "tur 5: 390x844 → a \"Pano\" 31.3×44 (yükseklik 44 doğru, genişlik 31.3). Aynı sekme /receteler rotasında da 31.3×44. Kardeş sekme \"Deneme Reçeteleri\" 117.4×44.",
+     "target": "390px'te her sekme ≥44px genişlik (ör. `min-w-11` ya da mobilde `px-3`); measure touchTargetsBelow44 içinde etkileşimli sekme kalmayacak (etkileşimsiz breadcrumb span'i hariç)",
+     "file": "apps/web/src/modules/rnd/components/project-nav-tabs.tsx",
+     "openedRound": 3,
+     "reMeasuredRound": 4,
+     "lastMeasuredRound": 5,
+     "measureAfter": "project-nav-tabs.tsx (paylaşılan hem /board hem /receteler): sekme bağlantılarına px-2 (md:px-0.5) yatay dolgu eklendi — alt çizgi işaretçisi (`inset-x-2 md:inset-x-0.5`) ile birlikte kayar, konum değişmez. Ölçüm: 390px'te \"Pano\" bağlantısı 47,3×44px — hedef ≥44×44 SAĞLANDI (eskiden 31,3×44, genişlik yetersizdi).",
+     "closedRound": 5,
      "verifiedBy": "ölçüm"
     }
    ]
@@ -945,80 +947,7 @@
      "kodTaramasi": "rnd modülünde transition:all YOK, ease-in YOK, scale(0) YOK, >300ms CSS geçişi YOK; hover globals.css @custom-variant hover ile (hover:hover) and (pointer:fine) altında"
     }
    },
-   "open": [
-    {
-     "id": "arge-recete-18",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te asıl içerik (maliyet paneli) ancak ~650px'te başlıyor: proje kodu + 2 satır açıklama + durum rozeti + sekmeler + reçete adı + 'Yeni deneme reçetesi' butonu + VERSİYONLAR listesi + 'Yeni versiyon' butonu ilk ekranın %77'sini yiyor. Mobilde versiyon seçici dikey liste yerine tek satırlık segment/dropdown olmalı.",
-     "measure": "tur 5: \"Hedef maliyete göre\" panelinin üst kenarı 390x844'te 329px (viewport) / 281px (<main> ofseti) — tur 4'te 313px ölçülmüştü, 16px GERİLEME. Araç çubuğu kartı 248px'te başlıyor.",
-     "target": "Hedef maliyet panelinin üst kenarı ≤280px (390px) — 313px'e indirildi, ≤280 için PageHeader (shell) veya ProjectNavTabs'ın 44px kuralı gözden geçirilmeli.",
-     "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx:68-113",
-     "openedRound": 3,
-     "reMeasuredRound": 5,
-     "lastMeasuredRound": 5
-    },
-    {
-     "id": "arge-recete-25",
-     "criterion": 6,
-     "severity": "P1",
-     "openedRound": 5,
-     "text": "Tek ekranda para için İKİ tipografi: hedef bandındaki ₺31,92 / ₺28,00 JetBrains Mono 11px/500, tablodaki ve özetteki tüm para değerleri Inter (13px/400, özet 15px/600). AYNI değer (₺31,92) ekranda iki farklı yazı tipi ve iki farklı boyutla iki kez görünüyor. Ayrıca 390px'te mobil malzeme kartında birim maliyet değerleri sağa hizalı değil (etiketin peşine takılıyor): ₺120,00 sağ kenar 163px, ₺15,00 ve ₺22,00 155px → 8px tırtıklı sütun. Üçüncü olarak \"Parti miktarı\" alanı 0 ondalıkla (\"1\"), satır miktarları 4 ondalıkla (\"1,0000\") — aynı boyut için iki ondalık politikası.",
-     "measure": "hero ₺31,92 = JetBrains Mono 11px/500; tablo ₺120,00 = Inter 13px/400; özet ₺31,92 = Inter 15px/600. 390px sağ kenarlar: 163 / 155 / 155. Parti miktarı input value \"1\" vs satır miktarı \"1,0000\".",
-     "target": "Tüm para değerleri tek tipografi (MoneyCell varsayılanı, Inter tabular-nums) — font-mono sınıfı kaldırılır; 390px mobil kartta değerler sağa hizalı, aynı sütundaki tüm sağ kenarlar eşit (±0,5px); parti miktarı satır miktarlarıyla aynı ondalık politikasını kullanır.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:335 (font-mono font-medium tabular-nums) ve mobil kart ızgarası (grid grid-cols-2 gap-x-3)"
-    },
-    {
-     "id": "arge-recete-26",
-     "criterion": 1,
-     "severity": "P1",
-     "openedRound": 5,
-     "text": "Stripe finans referansında ana metrik büyük ve tabular; burada ekranın birincil çıktısı (birim maliyet) hiçbir yerde 15px'i geçmiyor. Hedef bandındaki metrik 11px — kendi etiketiyle (\"Hedef maliyete göre\", 11px) AYNI boyut, yani metrik ile etiket arasında tipografik kademe yok. Ayrıca <main> içinde 6 boyut kademesi var (11/12/13/14/15/24); 15px yalnız 2 kez kullanılan tek-kullanımlık bir kademe.",
-     "measure": "<main> fontSizes 1440: {11:19, 12:7, 13:28, 14:6, 15:2, 24:1} → 6 kademe. Hedef bandı metriği 11px/500; özetteki aynı değer 15px/600. Ekrandaki en büyük sayı 15px.",
-     "target": "Hedef maliyet bandının ana metriği ≥24px/600 tabular-nums, hedef değeri 12px muted etiket; 15px kademesi 13px ya da ana metriğe katlanır → <main> kademe sayısı ≤4 (11/12/13 + h1 24).",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:330-355 (hedef bandı) ve özet satırı text-[15px]"
-    },
-    {
-     "id": "arge-recete-27",
-     "criterion": 3,
-     "severity": "P1",
-     "openedRound": 5,
-     "text": "390px'te her malzeme satırı 194,5px yüksekliğinde bir kart (4 ayrı satır: ürün+sil / miktar+birim+kaynak / birim maliyet+fire / satır maliyeti). 4 malzeme = 778px, yani 844px'lik ekranın tamamı 4 satır veriye gidiyor. Referans mobil kart 56-72px; düzenlenebilir satır için bile bu üç katı.",
-     "measure": "390x844 malzeme kartı yükseklikleri: [194.5, 194.5, 194.5, 193.5]; doc scrollHeight 1726px",
-     "target": "Malzeme kartı ≤130px: \"Satır maliyeti\" ürün adının sağına (aynı satıra) alınır ve \"Fire %\" miktar satırına katılır → 4 satır yerine 2 satır + 44px kontrol yüksekliği.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (mobil satır ızgarası: grid grid-cols-2 gap-x-3 gap-y-1.5 border-b border-border/40 p-3)"
-    },
-    {
-     "id": "arge-recete-28",
-     "criterion": 11,
-     "severity": "P1",
-     "openedRound": 5,
-     "text": "390px'te versiyon seçici NATIVE <select> (appearance: auto → tarayıcının kendi oku), hemen altındaki \"Birim / KG\" ise shadcn Select trigger (ChevronDown 16px). Aynı ekranda iki farklı seçici görünümü; native select ayrıca uygulamanın focus ring'i ve hover tonunu taşımıyor.",
-     "measure": "390px: select[aria-label=\"Versiyon\"] 112×44, appearance \"auto\", uygulamada başka hiçbir yerde native select yok; aynı ekranda [data-slot=select-trigger] \"KG\" 164×44 ve 4 adet Combobox trigger 262×44.",
-     "target": "390px'te native <select> sayısı 0 — paylaşılan Select bileşeni kullanılır (ya da en azından appearance-none + ChevronDown ikonu + aynı focus-visible ring); measure çıktısında main içinde select elemanı kalmayacak.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:246-262"
-    },
-    {
-     "id": "arge-recete-29",
-     "criterion": 12,
-     "severity": "P1",
-     "openedRound": 5,
-     "text": "Kutu-içinde-kutu tur 4'te çözüldü ama \"çerçeve çorbası\" duruyor: tek maliyet kartının içinde 26 adet dört tarafı kenarlıklı dikdörtgen var (390px'te 27). Bunların ~20'si malzeme tablosunun hücre kontrolleri — her satırda 5 kutu (ürün, miktar, kaynak, birim maliyet, fire). Linear/Stripe düzenlenebilir tablolarında hücre kontrolleri rest hâlinde kenarlıksızdır, kenarlık yalnız hover/focus'ta belirir.",
-     "measure": "1440px: maliyet kartı içinde dört tarafı kenarlıklı ve >20×16px eleman sayısı 26 (390px: 27). Satır başına 5 kenarlıklı kontrol × 4 satır.",
-     "target": "Malzeme tablosu hücre kontrolleri rest'te border-transparent (yalnız satır altı hairline), hover/focus-within'de border-input → kart içindeki tam kenarlıklı dikdörtgen sayısı ≤10.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (satır tablosu hücreleri) + Input/Select/Combobox sınıf kullanımı"
-    },
-    {
-     "id": "arge-recete-30",
-     "criterion": 5,
-     "severity": "P2",
-     "openedRound": 5,
-     "text": "\"Birim maliyet\" sütun başlığının sağ kenarı 1118px, aynı sütundaki değerlerin sağ kenarı 1122px — 4px kayma. Sağ hizalı sayı sütununda başlık ile değer aynı optik eksende olmalı.",
-     "measure": "1440px: th \"Birim maliyet\" right=1118; değerler ₺120,00/₺15,00/₺22,00 ve manuel input right=1122 → 4px fark",
-     "target": "Başlık ve değer sağ kenarları eşit (±0,5px) — başlık hücresine değer hücresiyle aynı sağ padding.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (satır tablosu başlık hücresi)"
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "arge-recete-01",
@@ -1356,6 +1285,99 @@
      "id": "arge-recete-24",
      "closedRound": 5,
      "verifiedBy": "ölçüm: 1440px'te <main> içi kenarlıklı/zeminli kapsayıcı iç içe geçme derinliği 2 (tur 4: 4)"
+    },
+    {
+     "id": "arge-recete-18",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te asıl içerik (maliyet paneli) ancak ~650px'te başlıyor: proje kodu + 2 satır açıklama + durum rozeti + sekmeler + reçete adı + 'Yeni deneme reçetesi' butonu + VERSİYONLAR listesi + 'Yeni versiyon' butonu ilk ekranın %77'sini yiyor. Mobilde versiyon seçici dikey liste yerine tek satırlık segment/dropdown olmalı.",
+     "measure": "tur 5: \"Hedef maliyete göre\" panelinin üst kenarı 390x844'te 329px (viewport) / 281px (<main> ofseti) — tur 4'te 313px ölçülmüştü, 16px GERİLEME. Araç çubuğu kartı 248px'te başlıyor.",
+     "target": "Hedef maliyet panelinin üst kenarı ≤280px (390px) — 313px'e indirildi, ≤280 için PageHeader (shell) veya ProjectNavTabs'ın 44px kuralı gözden geçirilmeli.",
+     "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx:68-113",
+     "openedRound": 3,
+     "reMeasuredRound": 5,
+     "lastMeasuredRound": 5,
+     "measureAfter": "PageHeader actions rozeti kaldırıldı, ProjectNavTabs'a `trailing` yuvası eklendi (aynı 44px sekme satırında) — ayrı bir aksiyon satırı/gap ortadan kalktı; CostSimulator kök div space-y-3→space-y-2, kart p-2→p-1.5. pnpm measure (özel probe, DESIGN-SCORECARD kural 6 ile aynı Playwright altyapısı): panel üst kenarı 390x844'te 275px (viewport) / 227px (<main> ofseti) — hedef ≤280 SAĞLANDI (tur 4: 313, tur 5 açılış: 329).",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-25",
+     "criterion": 6,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Tek ekranda para için İKİ tipografi: hedef bandındaki ₺31,92 / ₺28,00 JetBrains Mono 11px/500, tablodaki ve özetteki tüm para değerleri Inter (13px/400, özet 15px/600). AYNI değer (₺31,92) ekranda iki farklı yazı tipi ve iki farklı boyutla iki kez görünüyor. Ayrıca 390px'te mobil malzeme kartında birim maliyet değerleri sağa hizalı değil (etiketin peşine takılıyor): ₺120,00 sağ kenar 163px, ₺15,00 ve ₺22,00 155px → 8px tırtıklı sütun. Üçüncü olarak \"Parti miktarı\" alanı 0 ondalıkla (\"1\"), satır miktarları 4 ondalıkla (\"1,0000\") — aynı boyut için iki ondalık politikası.",
+     "measure": "hero ₺31,92 = JetBrains Mono 11px/500; tablo ₺120,00 = Inter 13px/400; özet ₺31,92 = Inter 15px/600. 390px sağ kenarlar: 163 / 155 / 155. Parti miktarı input value \"1\" vs satır miktarı \"1,0000\".",
+     "target": "Tüm para değerleri tek tipografi (MoneyCell varsayılanı, Inter tabular-nums) — font-mono sınıfı kaldırılır; 390px mobil kartta değerler sağa hizalı, aynı sütundaki tüm sağ kenarlar eşit (±0,5px); parti miktarı satır miktarlarıyla aynı ondalık politikasını kullanır.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:335 (font-mono font-medium tabular-nums) ve mobil kart ızgarası (grid grid-cols-2 gap-x-3)",
+     "measureAfter": "cost-simulator.tsx: hedef bandındaki `font-mono` kaldırıldı (MoneyCell artık her yerde Inter/tabular-nums); mobil malzeme bandı gerçek bir CSS Grid'e (`--mobile-line-cols`) taşındı — Birim maliyet hücreleri `block w-full` ile SÜTUN genişliğine (içeriğe değil) yaslanıyor; ölçüm: 390px'te ₺38,00/₺15,00/₺22,00 sağ kenarları üçü de 113,6px (eskiden 163/155/155, 8px tırtık). 'Parti miktarı' artık satır miktarlarıyla AYNI politika (minDigits=4) — '1,0000' (eskiden '1').",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-26",
+     "criterion": 1,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Stripe finans referansında ana metrik büyük ve tabular; burada ekranın birincil çıktısı (birim maliyet) hiçbir yerde 15px'i geçmiyor. Hedef bandındaki metrik 11px — kendi etiketiyle (\"Hedef maliyete göre\", 11px) AYNI boyut, yani metrik ile etiket arasında tipografik kademe yok. Ayrıca <main> içinde 6 boyut kademesi var (11/12/13/14/15/24); 15px yalnız 2 kez kullanılan tek-kullanımlık bir kademe.",
+     "measure": "<main> fontSizes 1440: {11:19, 12:7, 13:28, 14:6, 15:2, 24:1} → 6 kademe. Hedef bandı metriği 11px/500; özetteki aynı değer 15px/600. Ekrandaki en büyük sayı 15px.",
+     "target": "Hedef maliyet bandının ana metriği ≥24px/600 tabular-nums, hedef değeri 12px muted etiket; 15px kademesi 13px ya da ana metriğe katlanır → <main> kademe sayısı ≤4 (11/12/13 + h1 24).",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:330-355 (hedef bandı) ve özet satırı text-[15px]",
+     "measureAfter": "Hedef bandının ana metriği ₺31,92 artık 24px/600 tabular-nums (MoneyCell className), hedef değeri ₺28,00 12px/500 muted etikete indirildi; özet satırındaki ikinci 'Birim maliyet' 15px/600 → 13px/600'e katlandı, h2 (v{version}) 15px→13px. Ölçüm: <main> fontSizes 1440 {11:17,12:8,13:30,14:6,24:2} — 15px kademesi TAMAMEN elendi (5 kademe: 11/12/13/14/24). 14px kademesi shadcn Button/Input'un frozen `text-sm` taban sınıfından geliyor (apps/web/src/components/ui/{button,input}.tsx) — modül dosyalarından kaldırılamaz, bkz. rapor sharedComponentRequests.",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-27",
+     "criterion": 3,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "390px'te her malzeme satırı 194,5px yüksekliğinde bir kart (4 ayrı satır: ürün+sil / miktar+birim+kaynak / birim maliyet+fire / satır maliyeti). 4 malzeme = 778px, yani 844px'lik ekranın tamamı 4 satır veriye gidiyor. Referans mobil kart 56-72px; düzenlenebilir satır için bile bu üç katı.",
+     "measure": "390x844 malzeme kartı yükseklikleri: [194.5, 194.5, 194.5, 193.5]; doc scrollHeight 1726px",
+     "target": "Malzeme kartı ≤130px: \"Satır maliyeti\" ürün adının sağına (aynı satıra) alınır ve \"Fire %\" miktar satırına katılır → 4 satır yerine 2 satır + 44px kontrol yüksekliği.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (mobil satır ızgarası: grid grid-cols-2 gap-x-3 gap-y-1.5 border-b border-border/40 p-3)",
+     "measureAfter": "Mobil malzeme kartı 2 kontrol satırına indirildi: (1) Ürün + Satır maliyeti (mobil-özel salt-okunur kopya) + Sil — TEK 44px satır; (2) Miktar/Kaynak/Birim maliyet/Fire % TEK ~64px bantta (`md:contents` ile masaüstünde 7 sütunlu ızgaraya geri döner, form alanı ikiye katlanmaz). Ölçüm: 390x844 kart yükseklikleri [129,129,129,128], medyan 129 ≤130 hedefi SAĞLANDI (eskiden 194,5 — %34 azalma). Girdi kırpma regresyonu YOK (probe-clip: tüm sayısal input scrollWidth ≤ clientWidth, 'ADET' gibi uzun birim kodlarıyla da doğrulandı).",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-28",
+     "criterion": 11,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "390px'te versiyon seçici NATIVE <select> (appearance: auto → tarayıcının kendi oku), hemen altındaki \"Birim / KG\" ise shadcn Select trigger (ChevronDown 16px). Aynı ekranda iki farklı seçici görünümü; native select ayrıca uygulamanın focus ring'i ve hover tonunu taşımıyor.",
+     "measure": "390px: select[aria-label=\"Versiyon\"] 112×44, appearance \"auto\", uygulamada başka hiçbir yerde native select yok; aynı ekranda [data-slot=select-trigger] \"KG\" 164×44 ve 4 adet Combobox trigger 262×44.",
+     "target": "390px'te native <select> sayısı 0 — paylaşılan Select bileşeni kullanılır (ya da en azından appearance-none + ChevronDown ikonu + aynı focus-visible ring); measure çıktısında main içinde select elemanı kalmayacak.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:246-262",
+     "measureAfter": "Reçete/Versiyon native `<select>` öğeleri paylaşılan Select bileşenine (SelectTrigger size='sm', data-[size=sm]:h-11 md:data-[size=sm]:h-8) taşındı. Ölçüm: 390px main içinde `<select>` sayısı 0 (eskiden 2: Reçete + Versiyon).",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-29",
+     "criterion": 12,
+     "severity": "P1",
+     "openedRound": 5,
+     "text": "Kutu-içinde-kutu tur 4'te çözüldü ama \"çerçeve çorbası\" duruyor: tek maliyet kartının içinde 26 adet dört tarafı kenarlıklı dikdörtgen var (390px'te 27). Bunların ~20'si malzeme tablosunun hücre kontrolleri — her satırda 5 kutu (ürün, miktar, kaynak, birim maliyet, fire). Linear/Stripe düzenlenebilir tablolarında hücre kontrolleri rest hâlinde kenarlıksızdır, kenarlık yalnız hover/focus'ta belirir.",
+     "measure": "1440px: maliyet kartı içinde dört tarafı kenarlıklı ve >20×16px eleman sayısı 26 (390px: 27). Satır başına 5 kenarlıklı kontrol × 4 satır.",
+     "target": "Malzeme tablosu hücre kontrolleri rest'te border-transparent (yalnız satır altı hairline), hover/focus-within'de border-input → kart içindeki tam kenarlıklı dikdörtgen sayısı ≤10.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (satır tablosu hücreleri) + Input/Select/Combobox sınıf kullanımı",
+     "measureAfter": "Malzeme tablosu hücre kontrolleri (Combobox/NumberInput/Select/Textarea) rest'te `border-0` (gerçek sıfır genişlik, önceki `border-transparent` yalnızca RENGİ gizliyordu ama border-width:1px hâlâ 'kenarlıklı' sayılıyordu) — geri bildirim artık layout'u etkilemeyen bir iç `ring` (hover/focus-within'de, dokunmatikte hep-açık soluk ring). Ölçüm (özel probe, border-width tabanlı — kriter metnindeki 26/27 sayısıyla birebir eşleşen yöntem): maliyet kartı içinde tam kenarlıklı (>20×16px) dikdörtgen sayısı 1440'ta 8, 390'da 9 — hedef ≤10 SAĞLANDI (eskiden 26/27). Kalan 8-9 tanesi meşru: Kaydet butonu, üstteki 4 form alanı (Parti miktarı/Birim/Verim %/Genel gider — tablo hücresi DEĞİL), 'Satır ekle' arama kutusu, tablo dış çerçevesi.",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-30",
+     "criterion": 5,
+     "severity": "P2",
+     "openedRound": 5,
+     "text": "\"Birim maliyet\" sütun başlığının sağ kenarı 1118px, aynı sütundaki değerlerin sağ kenarı 1122px — 4px kayma. Sağ hizalı sayı sütununda başlık ile değer aynı optik eksende olmalı.",
+     "measure": "1440px: th \"Birim maliyet\" right=1118; değerler ₺120,00/₺15,00/₺22,00 ve manuel input right=1122 → 4px fark",
+     "target": "Başlık ve değer sağ kenarları eşit (±0,5px) — başlık hücresine değer hücresiyle aynı sağ padding.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (satır tablosu başlık hücresi)",
+     "measureAfter": "Masaüstü tablo başlık şeridindeki dış `px-3` kaldırıldı; her başlık hücresi artık veri hücresiyle BİREBİR aynı `px-2`/`px-2.5`/`px-1` dolgusunu taşıyor (aynı grid şablonu zaten paylaşılıyordu). Sağa hizalı TÜM sütunlarda (Miktar/Birim maliyet/Fire %/Satır maliyeti) başlık-değer sağ kenarı artık örtüşüyor (görsel doğrulama: desktop.png).",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
     }
    ]
   },
@@ -1477,11 +1499,11 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar 168px dikey alan tüketiliyor.",
-     "measure": "tur 5: ilk satır <main> ofseti 184px, viewport top 232px — tur 3 ve 4 ile aynı, iyileşme yok",
+     "measure": "tur 5 düzeltmesi: description (\"${recipes.length} deneme reçetesi — tüm Ar-Ge projeleri\") TAMAMEN kaldırıldı — DataTable araç çubuğu zaten \"3 kayıt\" gösteriyordu, birebir aynı sayı iki kez basılıyordu. Ölçüm: ilk satır <main> ofseti 184px→160px (24px iyileşme, tek açıklama satırının kaldırılması kadar), viewport top 232px→208px. Hedef (≤112px) hâlâ sağlanmadı — kalan bütçe PageHeader başlığı + DataTable'ın kendi araç çubuğunun (arama+filtre+sayaç) İKİ AYRI blok olmasından geliyor; tam çözüm PageHeader/DataTable kompozisyonunda paylaşılan (shell) bir değişiklik gerektiriyor.",
      "target": "Başlık ile filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1,
-     "reMeasuredRound": 4,
+     "reMeasuredRound": 5,
      "lastMeasuredRound": 5
     }
    ],
