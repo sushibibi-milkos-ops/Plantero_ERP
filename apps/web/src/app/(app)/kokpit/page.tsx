@@ -59,7 +59,7 @@ export default async function CockpitPage() {
       <PageHeader eyebrow={eyebrow} title="Kokpit" description={`${formatDateLong(new Date())} · Tire tesisi · ${ROLE_DESCRIPTION[dashboard.role]}`} />
 
       {dashboard.role === 'gm' ? <GmDashboardView data={dashboard.data} today={today.slice(0, 8)} /> : null}
-      {dashboard.role === 'depo' ? <DepoDashboardView data={dashboard.data} today={today.filter((t) => t.k === 'receipt' || t.k === 'delivery').slice(0, 6)} /> : null}
+      {dashboard.role === 'depo' ? <DepoDashboardView data={dashboard.data} today={today.filter((t) => t.k === 'receipt' || t.k === 'delivery').slice(0, 10)} /> : null}
       {dashboard.role === 'uretim_sefi' ? <ProductionChiefDashboardView data={dashboard.data} /> : null}
       {dashboard.role === 'finans' ? <FinanceDashboardView data={dashboard.data} paymentsToday={paymentsToday} /> : null}
       {dashboard.role === 'satis' ? <SalesDashboardView data={dashboard.data} /> : null}

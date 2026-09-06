@@ -2,10 +2,18 @@ import type { ProductionChiefCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
 import { StatusBadge } from '@/components/status-badge';
+import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
-import { Section, RowLink, ProgressBar } from './shared';
+import { formatDateTime } from '@/lib/format';
+import { Section, RowLink, DashboardGrid, ProductionLineRow, StatStrip } from './shared';
 
-/** Üretim şefi panosu — hat durumu, açık/geciken iş emri, bugünkü OEE, son 7 gün fire oranı. */
+const SCRAP_REASON_LABEL: Record<string, string> = {
+  spill: 'Döküm/sızma', burnt: 'Yanma', contamination: 'Kontaminasyon', packaging: 'Ambalaj', startup: 'Başlangıç fire', other: 'Diğer',
+};
+
+/** Üretim şefi panosu — hat durumu, açık/geciken iş emri, bugünkü OEE, son 7 gün fire oranı + kırılımı, son iş emirleri.
+ *  Kök neden (Tur 1 P1 kokpit-uretim-density-01): önceden tek bölüm (Hat durumu, 3 satır) vardı — ilk
+ *  ekranın yarısı boş kalıyordu, KPI'daki "Açık iş emri 1" gibi sayıların arkasında hiçbir liste yoktu. */
 export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCards }) {
   return (
     <>
@@ -16,45 +24,69 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
         <KpiCard title="Fire oranı (7g)" value={data.scrapRatePct7d} format="pct" href="/uretim/is-emirleri" invertDelta variant="strip" />
       </KpiStripRow>
 
-      <div className="mt-4">
-        <Section title="Hat durumu" href="/uretim/hatlar">
-          {data.lines.length === 0 ? (
-            <EmptyState compact title="Aktif hat yok" />
+      <DashboardGrid>
+        <div className="min-w-0 flex flex-col gap-4">
+          <Section title="Hat durumu" href="/uretim/hatlar">
+            {data.lines.length === 0 ? (
+              <EmptyState compact title="Aktif hat yok" />
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {data.lines.map((l) => (
+                  <li key={l.lineId}>
+                    <ProductionLineRow line={l} href="/uretim/hatlar" />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
+
+          <Section title="Fire kırılımı (7 gün)" href="/uretim/is-emirleri">
+            {data.scrapBreakdown7d.length === 0 ? (
+              <EmptyState compact title="Son 7 günde fire kaydı yok" />
+            ) : (
+              <StatStrip
+                items={data.scrapBreakdown7d.slice(0, 4).map((s) => ({
+                  key: s.reason,
+                  value: s.entryCount,
+                  label: SCRAP_REASON_LABEL[s.reason] ?? s.reason,
+                }))}
+              />
+            )}
+          </Section>
+        </div>
+
+        <Section title="Son iş emirleri" href="/uretim/is-emirleri">
+          {data.recentWorkOrders.length === 0 ? (
+            <EmptyState compact title="Henüz iş emri yok" />
           ) : (
             <ul className="divide-y divide-border/50">
-              {data.lines.map((l) => {
-                const planned = Number(l.current?.plannedQty ?? 0);
-                const produced = Number(l.current?.producedQty ?? 0);
-                const pct = l.current && planned > 0 ? Math.min(100, Math.round((produced / planned) * 100)) : 0;
-                return (
-                  <li key={l.lineId}>
-                    <RowLink href="/uretim/hatlar" className="flex-col items-stretch py-3 sm:h-auto sm:flex-col sm:items-stretch">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium">{l.name}</span>
-                        <span className="flex items-center gap-2">
-                          {l.lateCount > 0 ? <StatusBadge status="late" label={`${l.lateCount} gecikmiş`} tone="danger" /> : null}
-                          {l.current ? <StatusBadge status={l.current.status} kind="work_order" /> : <StatusBadge status="idle" label="Boşta" tone="muted" />}
-                        </span>
-                      </div>
-                      {l.current ? (
-                        <>
-                          {pct > 0 ? <div className="mt-1.5"><ProgressBar pct={pct} /></div> : null}
-                          <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
-                            <span className="font-mono">{l.current.docNo} · {l.current.productName}</span>
-                            <span className="tabular-nums">{pct > 0 ? `%${pct}` : `${l.openCount} açık`}</span>
-                          </div>
-                        </>
+              {data.recentWorkOrders.map((w) => (
+                <li key={w.id}>
+                  <RowLink href="/uretim/is-emirleri">
+                    <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                      <span className="flex min-w-0 items-center gap-2 sm:contents">
+                        <span className="shrink-0 text-xs text-muted-foreground sm:w-24">{w.lineName}</span>
+                        <span className="truncate font-mono text-xs sm:w-32 sm:shrink-0">{w.docNo}</span>
+                      </span>
+                      <span className="shrink-0 sm:order-last">
+                        {w.isLate ? <StatusBadge status="late" label="Gecikmiş" tone="danger" /> : <StatusBadge status={w.status} kind="work_order" />}
+                      </span>
+                    </div>
+                    <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                      <span className="min-w-0 flex-1 truncate">{w.productName}</span>
+                      {w.finishedAt ? (
+                        <span className="shrink-0 text-xs text-muted-foreground">{formatDateTime(w.finishedAt)}</span>
                       ) : (
-                        <div className="mt-1 text-[11px] text-muted-foreground">Şu an açık iş emri yok</div>
+                        <QtyCell value={w.producedQty} uom={w.uomCode} className="shrink-0" />
                       )}
-                    </RowLink>
-                  </li>
-                );
-              })}
+                    </div>
+                  </RowLink>
+                </li>
+              ))}
             </ul>
           )}
         </Section>
-      </div>
+      </DashboardGrid>
     </>
   );
 }

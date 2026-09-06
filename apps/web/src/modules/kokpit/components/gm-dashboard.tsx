@@ -5,7 +5,6 @@ import { groupConsecutiveActivity } from '@plantero/core/cockpit/kpis';
 import type { CockpitTodayItem } from '../queries';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
-import { StatusBadge } from '@/components/status-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { LotBadge } from '@/components/lot-badge';
 import { MoneyCell } from '@/components/money-cell';

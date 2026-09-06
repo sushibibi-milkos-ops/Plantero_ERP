@@ -1,15 +1,17 @@
 import type { SalesCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
+import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
+import { formatDate } from '@/lib/format';
 import { ChannelBars } from './channel-bars';
-import { Section, DashboardGrid } from './shared';
+import { Section, DashboardGrid, RowLink, RankBar } from './shared';
 
 const FUNNEL_ORDER = ['lead', 'qualified', 'proposal', 'negotiation'];
 
-/** Satış panosu — huni, bugünkü sipariş sayısı, kanal ciro (bugün), son 30 gün en çok satan 5. */
+/** Satış panosu — huni, bugünkü sipariş sayısı, kanal ciro (bugün), son siparişler, son 30 gün en çok satan 5. */
 export function SalesDashboardView({ data }: { data: SalesCards }) {
   const funnel = [...data.funnel].sort((a, b) => FUNNEL_ORDER.indexOf(a.stageCode) - FUNNEL_ORDER.indexOf(b.stageCode)).filter((f) => FUNNEL_ORDER.includes(f.stageCode));
   const maxFunnel = Math.max(...funnel.map((f) => f.count), 1);
@@ -41,10 +43,37 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
                 {funnel.map((f) => (
                   <li key={f.stageCode} className="flex items-center gap-3">
                     <span className="w-24 shrink-0 text-xs text-muted-foreground">{f.stageName}</span>
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                      <div className="h-full rounded-full bg-primary/70" style={{ width: `${(f.count / maxFunnel) * 100}%` }} />
-                    </div>
+                    <RankBar pct={(f.count / maxFunnel) * 100} />
                     <span className="w-6 shrink-0 text-right text-xs tabular-nums">{f.count}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
+
+          {/* Kök neden (Tur 1 P1 kokpit-satis-density-01): önceden bu kolonda yalnızca kanal çubuğu +
+              huni vardı, ilk ekranın üçte biri boş kalıyordu ve satış rolünün gerçek işi (son siparişler)
+              hiç görünmüyordu. */}
+          <Section title="Son siparişler" href="/satis/siparisler">
+            {data.recentOrders.length === 0 ? (
+              <EmptyState compact title="Son 14 günde sipariş yok" />
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {data.recentOrders.map((o) => (
+                  <li key={o.id}>
+                    <RowLink href={`/satis/siparisler/${o.id}`}>
+                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                        <span className="flex min-w-0 items-center gap-2 sm:contents">
+                          <span className="shrink-0 text-xs text-muted-foreground sm:w-24">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
+                          <span className="truncate font-mono text-xs sm:w-32 sm:shrink-0">{o.docNo}</span>
+                        </span>
+                        <span className="shrink-0 sm:order-last"><StatusBadge status={o.status} kind="sales_order" /></span>
+                      </div>
+                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                        <span className="min-w-0 flex-1 truncate">{o.partnerName} <span className="text-muted-foreground">· {o.channelName}</span></span>
+                        <MoneyCell value={o.netRevenue} className="shrink-0" />
+                      </div>
+                    </RowLink>
                   </li>
                 ))}
               </ul>
@@ -58,15 +87,22 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
           ) : (
             <ul className="divide-y divide-border/50">
               {data.top5Products.map((p, i) => (
-                <li key={p.productId} className="flex h-11 items-center justify-between gap-3 px-4 text-[13px]">
-                  <span className="flex min-w-0 items-center gap-2">
-                    <span className="w-4 shrink-0 text-xs text-muted-foreground">{i + 1}</span>
-                    <span className="min-w-0 truncate">{p.name}</span>
-                  </span>
-                  <span className="flex shrink-0 items-center gap-3">
-                    <QtyCell value={p.qty} uom={p.uomCode} />
-                    <MoneyCell value={p.revenue} />
-                  </span>
+                <li key={p.productId}>
+                  {/* Kök neden (Tur 1 P1 kokpit-top5-mobile-01 + P2 kokpit-top5-consistency-01): bu liste
+                      sabit `h-11` + tek satır + tıklanamaz `li` idi — kokpitteki TEK etkileşimsiz/tek-
+                      satırlı liste. 390px'te sıra+ad+miktar+tutar tek satıra sıkışınca ad 145.9px'e
+                      düşüp kırpılıyordu. Artık diğer tüm listelerle aynı `RowLink` deseni: mobilde 2
+                      satıra kırılır (ad tam görünür), masaüstünde `sm:contents` ile tek satıra döner. */}
+                  <RowLink href={`/ana-veri/urunler/${p.productId}`}>
+                    <span className="flex min-w-0 items-center gap-2 sm:contents">
+                      <span className="w-4 shrink-0 text-xs text-muted-foreground">{i + 1}</span>
+                      <span className="min-w-0 flex-1 truncate">{p.name}</span>
+                    </span>
+                    <span className="flex shrink-0 items-center justify-between gap-3 sm:contents">
+                      <QtyCell value={p.qty} uom={p.uomCode} />
+                      <MoneyCell value={p.revenue} />
+                    </span>
+                  </RowLink>
                 </li>
               ))}
             </ul>
