@@ -6,7 +6,10 @@ import { DataTable, type ColumnDef } from '@/components/data-table';
 import { LotBadge } from '@/components/lot-badge';
 import { EmptyState } from '@/components/empty-state';
 import { formatQty } from '@/lib/format';
-import { D } from '@plantero/core';
+// `@plantero/core` barrel (`src/index.ts`) `auth/session.ts` üzerinden `node:crypto` içe aktarır —
+// istemci paketine (bu dosya 'use client') sızınca webpack'i kırar. `@plantero/core/money` alt yolu
+// (`package.json` `exports: "./*"`) yalnızca saf `money.ts`'i (decimal.js) getirir, barrel'ı atlar.
+import { D } from '@plantero/core/money';
 import type { getShipmentDetail } from '../queries';
 
 type Packages = NonNullable<Awaited<ReturnType<typeof getShipmentDetail>>>['packages'];

@@ -1,0 +1,238 @@
+{
+ "shipmentId": "adabe6d3-2aac-4982-b6dc-f594cbe06ca4",
+ "detayDesk": {
+  "Belgeler": {
+   "tables": [
+    {
+     "i": 0,
+     "rows": 8,
+     "cols": [
+      {
+       "head": "Belge",
+       "w": 982,
+       "dash": 0,
+       "rows": 8,
+       "ratio": 0
+      },
+      {
+       "head": "Durum",
+       "w": 130,
+       "dash": 0,
+       "rows": 8,
+       "ratio": 0
+      },
+      {
+       "head": "Eylemler",
+       "w": 40,
+       "dash": 8,
+       "rows": 8,
+       "ratio": 1
+      }
+     ]
+    }
+   ]
+  },
+  "Çeki listesi": {
+   "tables": [
+    {
+     "i": 0,
+     "rows": 1,
+     "cols": [
+      {
+       "head": "Kap no",
+       "w": 80.2,
+       "dash": 0,
+       "rows": 1,
+       "ratio": 0
+      },
+      {
+       "head": "Ürün",
+       "w": 421.8,
+       "dash": 0,
+       "rows": 1,
+       "ratio": 0
+      },
+      {
+       "head": "SKU",
+       "w": 120,
+       "dash": 0,
+       "rows": 1,
+       "ratio": 0
+      },
+      {
+       "head": "Lot",
+       "w": 150,
+       "dash": 0,
+       "rows": 1,
+       "ratio": 0
+      },
+      {
+       "head": "Miktar",
+       "w": 100,
+       "dash": 0,
+       "rows": 1,
+       "ratio": 0
+      },
+      {
+       "head": "GTİP",
+       "w": 100,
+       "dash": 0,
+       "rows": 1,
+       "ratio": 0
+      },
+      {
+       "head": "Net kg",
+       "w": 90,
+       "dash": 1,
+       "rows": 1,
+       "ratio": 1
+      },
+      {
+       "head": "Brüt kg",
+       "w": 90,
+       "dash": 1,
+       "rows": 1,
+       "ratio": 1
+      }
+     ]
+    }
+   ]
+  },
+  "weightPanel": {
+   "text": "— / —",
+   "colors": [
+    "oklch(0.552 0.016 285.9)",
+    "oklch(0.552 0.016 285.9)"
+   ]
+  }
+ },
+ "detayMob": {
+  "page": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "overflowX": false,
+   "touchBelow44": [
+    {
+     "sel": "a",
+     "t": "DN-2026-000028",
+     "w": 109.2,
+     "h": 19.5
+    }
+   ]
+  },
+  "Belgeler": {
+   "cards": [
+    {
+     "count": 8,
+     "heights": [
+      60,
+      60,
+      60,
+      60,
+      60,
+      60,
+      60,
+      60
+     ],
+     "samples": [
+      "Proforma faturaGönderildiPROFORMA · Belge no PF-EXP-2026-000002",
+      "Ticari faturaGerekliINVOICE",
+      "Çeki listesi (packing list)HazırPACKING_LIST"
+     ]
+    }
+   ],
+   "page": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflowX": false,
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "DN-2026-000028",
+      "w": 109.2,
+      "h": 19.5
+     }
+    ]
+   }
+  }
+ },
+ "kurlarDesk": {
+  "kpiBlocks": [],
+  "yAxisTicks": []
+ },
+ "gtipDesk": {
+  "kpis": [],
+  "hsCol": {
+   "distinct": [
+    "Eşlenmedi",
+    "0901.21Kavrulmuş kahve (kafeinsiz olmayan)"
+   ],
+   "count": 39
+  }
+ },
+ "gtipMob": {
+  "cards": [
+   {
+    "count": 39,
+    "heights": [
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60
+    ],
+    "samples": [
+     "BADEM BAZIEşlenmedi110010001",
+     "2x Badem BazıEşlenmedi110010002",
+     "3x Badem BazıEşlenmedi110010003"
+    ]
+   }
+  ]
+ },
+ "yeniDesk": {
+  "fields": [
+   {
+    "cls": "max-w-3xl space-y-1.5",
+    "right": 1032
+   },
+   {
+    "cls": "max-w-3xl border-t border-border/60 pt-5",
+    "right": 1032
+   }
+  ]
+ }
+}
