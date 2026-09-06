@@ -248,15 +248,19 @@ async function seedDraftShipment(tx: DbOrTx, summary: SeedSummary): Promise<void
 
 /**
  * `/ihracat/sevkiyatlar/yeni` formunun (ShipmentCreateForm) render olabilmesi için
- * `listEligibleExportOrders` en az 1 satır dönmeli — gerçek akış önce satış ekibinin ihracat
- * kanalından siparişi açıp ONAYLAMASI, SONRA ihracat ekibinin bu sipariş üzerinden sevkiyatı
- * KURMASIdır (docs/modules/ihracat.md). Yukarıdaki 3 senaryonun (kapanmış/gümrükte/taslak) ÜÇÜ DE
- * kendi sevkiyatını `createFromOrder` ile anında kurduğundan `sales_orders.export_shipment_id`
- * her zaman dolu kalıyor, form daima boş duruma düşüyordu (Tur 1 P0, ihracat-yeni-01 — ölçüm:
- * `SELECT count(*) FROM sales_orders WHERE doc_type='order' AND is_export AND
- * export_shipment_id IS NULL` → 0). Bu adım o boşluğu, akışın "sevkiyat henüz açılmadı" ilk
- * durumunu temsil eden onaylı (confirmed) bir ihracat siparişiyle kapatır — `createFromOrder`
- * BİLEREK çağrılmaz.
+ * `listEligibleExportOrders` en az 1 satır dönmeli. Yukarıdaki 3 senaryonun (kapanmış/gümrükte/
+ * taslak) ÜÇÜ DE kendi sevkiyatını `createFromOrder` ile anında kurduğundan
+ * `sales_orders.export_shipment_id` her zaman dolu kalıyor, form daima boş duruma düşüyordu
+ * (Tur 1 P0, ihracat-yeni-01 — ölçüm: `SELECT count(*) FROM sales_orders WHERE doc_type='order'
+ * AND is_export AND export_shipment_id IS NULL` → 0).
+ *
+ * ÖNEMLİ KISIT — `docs/INVARIANTS.md` I36 (`36_export_shipment_gap.sql`): `draft`/`cancelled`
+ * DIŞINDAKİ her `is_export=true` sipariş bir sevkiyata bağlı OLMALI; bu yüzden sevkiyatsız
+ * bırakılan sipariş `confirmOrder` ile onaylanamaz (onaylanmış ama sevkiyatsız bir ihracat
+ * siparişi I36'yı ihlal eder — ilk denemede tam olarak bu yüzden `pnpm test` kırmızı çıktı).
+ * Sipariş bilinçli olarak `draft` bırakılır — I36'nın MUAF tuttuğu tek durum ve gerçek akışın
+ * ("satış ekibi ihracat siparişini önce oluşturur, ihracat ekibi sevkiyatı bundan SONRA kurar")
+ * en erken/doğal adımıyla birebir örtüşür.
  */
 async function seedPendingExportOrder(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   const channel = await channelByCode(tx, 'IHRACAT');
@@ -267,11 +271,10 @@ async function seedPendingExportOrder(tx: DbOrTx, summary: SeedSummary): Promise
   const { order } = await createSalesDoc(tx, {
     docType: 'order', partnerId: customer.id, channelId: channel.id, warehouseId: warehouse.id,
     orderDate: new Date(Date.now() - 1 * 86_400_000), currency: 'EUR', incoterm: 'FOB', customerRef: 'SEED-EXPORT-PENDING',
-    origin: 'manual', note: 'Onaylandı, sevkiyat henüz açılmadı (seed demo verisi) — /ihracat/sevkiyatlar/yeni formunu besler',
+    origin: 'manual', note: 'Taslak — henüz onaylanmadı, sevkiyat açılmadı (seed demo verisi) — /ihracat/sevkiyatlar/yeni formunu besler',
     lines: [{ productId: product.id, qty: D(20), unitPrice: D('10.80') }],
   }, SYSTEM_ACTOR);
-  await auditCreate(tx, 'sales_orders', order.id, `${order.docNo} ihracat siparişi oluşturuldu (${customer.name} — seed demo verisi, sevkiyat henüz açılmadı)`);
-  await confirmOrder(tx, order.id, SYSTEM_ACTOR);
+  await auditCreate(tx, 'sales_orders', order.id, `${order.docNo} ihracat siparişi oluşturuldu (${customer.name} — seed demo verisi, taslak, sevkiyat henüz açılmadı)`);
   summary.add('sales_orders (ihracat, sevkiyata bağlanmamış)', 1);
 }
 
@@ -301,6 +304,6 @@ export async function seedExport(tx: DbOrTx, summary: SeedSummary): Promise<void
   log('export', 'yeni ihracat siparişi → taslak sevkiyat...');
   await seedDraftShipment(tx, summary);
 
-  log('export', 'yeni ihracat siparişi → sevkiyat henüz açılmadı (onaylı, sevkiyata bağlanmamış)...');
+  log('export', 'yeni ihracat siparişi → sevkiyat henüz açılmadı (taslak, sevkiyata bağlanmamış — I36 muafiyeti)...');
   await seedPendingExportOrder(tx, summary);
 }

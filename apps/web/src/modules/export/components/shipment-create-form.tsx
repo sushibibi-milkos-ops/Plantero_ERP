@@ -49,11 +49,16 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 type EligibleOrder = Awaited<ReturnType<typeof listEligibleExportOrders>>[number];
 
-export function ShipmentCreateForm({ orders }: { orders: EligibleOrder[] }) {
+export function ShipmentCreateForm({ orders, initialOrderId }: { orders: EligibleOrder[]; initialOrderId?: string }) {
   const router = useRouter();
+  // Deep-link (`/ihracat/sevkiyatlar/yeni?order=<id>` — Tur 1 P2 kök neden düzeltmesi): sipariş
+  // detayından/siparişler listesinden gelen bir bağlantı siparişi ÖNCEDEN SEÇMELİ; yalnızca gerçekten
+  // uygun (sevkiyata henüz bağlanmamış, `orders` listesinde) bir sipariş için geçerli — aksi halde
+  // sessizce boş bırakılır, hatalı/eski bir bağlantı formu bozmaz.
+  const initialSalesOrderId = initialOrderId && orders.some((o) => o.id === initialOrderId) ? initialOrderId : '';
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { salesOrderId: '', incoterm: 'FOB', incotermPlace: '', destinationCountry: 'DE', portOfLoading: 'İzmir', portOfDischarge: '', transportMode: 'road', carrier: '', regime: undefined, note: '' },
+    defaultValues: { salesOrderId: initialSalesOrderId, incoterm: 'FOB', incotermPlace: '', destinationCountry: 'DE', portOfLoading: 'İzmir', portOfDischarge: '', transportMode: 'road', carrier: '', regime: undefined, note: '' },
   });
   const watchedOrderId = form.watch('salesOrderId');
   const orderById = useMemo(() => new Map(orders.map((o) => [o.id, o])), [orders]);

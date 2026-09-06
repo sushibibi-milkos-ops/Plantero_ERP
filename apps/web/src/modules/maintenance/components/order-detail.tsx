@@ -158,7 +158,13 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
               Parça bekliyor
             </Button>
           ) : null}
-          <Button variant="outline" className="border-success/40 text-success hover:bg-success/10" onClick={() => setCompleteOpen(true)} disabled={pending}>
+          {/* Kriter 4 (Tur 1 P1 bakim-isemirleri-detay-01) kök neden düzeltmesi: eskiden 'İşleme al'
+              (dolu yeşil primary) yanında 'Tamamla' de KENDİ yeşil tonunu (`border-success/40 text-
+              success`) taşıyordu — aynı ekranda iki yeşil buton hangisinin birincil eylem olduğunu
+              belirsizleştiriyordu. 'Tamamla' artık nötr `outline` (ikincil eylem); yeşil yalnızca
+              gerçek birincil eylemde ('İşleme al', varsayılan buton) kalır. Kırmızı da yalnızca
+              aşağıdaki onay diyaloğunun İÇİNDEKİ onay butonunda (`ConfirmDialog destructive`). */}
+          <Button variant="outline" onClick={() => setCompleteOpen(true)} disabled={pending}>
             <CheckCircle2 className="size-4" /> Tamamla
           </Button>
           <ConfirmDialog
@@ -203,7 +209,7 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
             </div>
           </ConfirmDialog>
           <ConfirmDialog
-            trigger={<Button variant="ghost" className="text-destructive hover:bg-destructive/10 hover:text-destructive" disabled={pending}><XCircle className="size-4" /> İptal et</Button>}
+            trigger={<Button variant="ghost" disabled={pending}><XCircle className="size-4" /> İptal et</Button>}
             title={`İş emrini iptal et — ${order.docNo}`}
             description="Açık duruş varsa kapatılır, başka açık iş emri kalmadıysa makine boşta durumuna döner."
             destructive

@@ -30,20 +30,27 @@ export default async function ExportGtipPage() {
         <KpiCard variant="strip" title="Eşlenmemiş" value={unmapped} format="int" hint={unmapped > 0 ? 'GTİP atanmalı' : 'Tamamlandı'} />
       </KpiStripRow>
 
+      {/* Tur 1 P1 kök neden düzeltmesi: başlık önceden UPPERCASE (ihracat-gtip-03) idi — alttaki
+          ürün eşleme tablosu (`DataTable`) cümle düzeni 12px muted kullanıyor, sekmesiz tek ekranda
+          fark doğrudan görülüyordu. `text-[12px] font-medium text-muted-foreground` artık `DataTable`
+          th'siyle birebir aynı. Sütun genişlikleri (ihracat-gtip-04, `DataTable`'daki gibi INLINE
+          `style` — `table-layout:fixed` + Tailwind `w-*` denendi ama üç sütun da genişlik alınca
+          tarayıcı oranlı ölçekleyip w-full'e geri yayıyordu): 'Açıklama' önceden genişliğin %74'ünü
+          (847px) kaplıyordu, artık ≤480px (~%42) — 'Birim' sütunu sağ kenarda yalnız kalmaz. */}
       <div className="mb-6 overflow-x-auto rounded-lg border border-border/60">
-        <table className="w-full text-[13px]">
+        <table className="min-w-full text-[13px]">
           <thead>
-            <tr className="border-b border-border/60 text-left text-xs text-muted-foreground uppercase">
-              <th className="px-3 py-2 font-medium">GTİP</th>
-              <th className="px-3 py-2 font-medium">Açıklama</th>
-              <th className="px-3 py-2 font-medium">Birim</th>
+            <tr className="border-b border-border/60 text-left text-[12px] font-medium text-muted-foreground">
+              <th className="px-3 py-2" style={{ width: 140, minWidth: 140 }}>GTİP</th>
+              <th className="px-3 py-2" style={{ width: 480, maxWidth: 480 }}>Açıklama</th>
+              <th className="px-3 py-2" style={{ width: 110, minWidth: 110 }}>Birim</th>
             </tr>
           </thead>
           <tbody>
             {hsCodeOptions.map((h) => (
               <tr key={h.id} className="border-b border-border/60 last:border-0 hover:bg-muted/40">
                 <td className="px-3 py-2.5 font-mono font-medium">{h.code}</td>
-                <td className="px-3 py-2.5">{h.description}</td>
+                <td className="px-3 py-2.5" style={{ maxWidth: 480 }} title={h.description}>{h.description}</td>
                 <td className="px-3 py-2.5 text-muted-foreground">{h.unit ?? '—'}</td>
               </tr>
             ))}

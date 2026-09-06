@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { eq } from 'drizzle-orm';
-import { machines, downtimes, attachments } from '@plantero/db';
+import { eq, and } from 'drizzle-orm';
+import { machines, downtimes, attachments, journalEntries, journalLines } from '@plantero/db';
 import { reportBreakdown, startOrder, completeOrder, cancelOrder, markWaitingParts } from './orders.js';
 import { createPlan, generateOrderNow } from './plans.js';
 import { seedMaintenanceBase } from './__test-utils__.js';
@@ -54,6 +54,44 @@ describe('maintenance/orders', () => {
       expect(dt!.endedAt).not.toBeNull();
       expect(dt!.minutes).toBeGreaterThanOrEqual(0);
       expect(completed.downtimeMinutes).toBe(dt!.minutes);
+    });
+  });
+
+  it('I51: tamamlanan işçilik+parça maliyeti tek bir muhasebe fişine (VUK+UFRS, 730/100) dönüşür', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedMaintenanceBase(tx);
+      const order = await reportBreakdown(tx, { machineId: b.machine.id, title: 'Pompa arızası' }, ctx);
+      await startOrder(tx, order.id, ctx);
+      const completed = await completeOrder(tx, order.id, { laborCost: '450', partsCost: '180' }, ctx);
+      expect(completed.status).toBe('done');
+
+      const entries = await tx.select().from(journalEntries).where(and(eq(journalEntries.refType, 'maintenance_order'), eq(journalEntries.refId, order.id)));
+      // ledger:'both' → VUK + UFRS, twinEntryId ile çapraz bağlı
+      expect(entries).toHaveLength(2);
+      expect(new Set(entries.map((e) => e.ledger))).toEqual(new Set(['VUK', 'UFRS']));
+      for (const e of entries) {
+        expect(e.totalDebit).toBe('630.0000');
+        expect(e.totalCredit).toBe('630.0000');
+      }
+
+      const vuk = entries.find((e) => e.ledger === 'VUK')!;
+      const lines = await tx.select().from(journalLines).where(eq(journalLines.entryId, vuk.id));
+      const byAccount = new Map(lines.map((l) => [l.accountCode, l]));
+      expect(byAccount.get('730')?.debit).toBe('630.0000');
+      expect(byAccount.get('100')?.credit).toBe('630.0000');
+    });
+  });
+
+  it('maliyeti sıfır olan iş emri tamamlanınca fiş üretilmez', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedMaintenanceBase(tx);
+      const plan = await createPlan(tx, { machineId: b.machine.id, name: 'Kontrol', intervalValue: 7, intervalUnit: 'day' }, ctx);
+      const { order } = await generateOrderNow(tx, plan.id, ctx);
+      await startOrder(tx, order.id, ctx);
+      await completeOrder(tx, order.id, {}, ctx);
+
+      const entries = await tx.select().from(journalEntries).where(and(eq(journalEntries.refType, 'maintenance_order'), eq(journalEntries.refId, order.id)));
+      expect(entries).toHaveLength(0);
     });
   });
 

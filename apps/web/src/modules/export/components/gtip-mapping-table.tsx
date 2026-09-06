@@ -34,7 +34,15 @@ function HsCodeCell({ row, hsCodeOptions, editable }: { row: GtipProductRow; hsC
         });
       }}
     >
-      <SelectTrigger className="h-9 w-full min-w-[9rem] font-mono text-[13px]">
+      {/* Tur 1 P1 ihracat-gtip-01 kök neden: bu tetikleyici DURAĞAN hâlde her zaman 1px çerçeveli bir
+          kutuydu — 39 satırda 39 kutu alt alta Linear'ın sessiz satırı yerine "form ızgarası"na
+          dönüşüyordu. Çerçeve/arka plan artık yalnızca hover/focus-visible/açık durumda görünür;
+          durağan hâlde düz metin (eşlenmemişse muted) gibi okunur — tek fark GTİP kodunun kendisi.
+          `data-[size=default]:h-11 md:...:h-9` (ihracat-gtip-02): taban sınıf `data-[size=default]:h-9`
+          bir ATTRIBUTE selector taşıdığı için düz `h-9`/`md:h-9` override'ından daha yüksek özgüllüğe
+          sahip — 390px'te bu ekranın TEK birincil eylemi 36px'te (44px dokunma hedefinin altında)
+          kalıyordu (fields.tsx'teki aynı kök nedenin ikinci örneği). */}
+      <SelectTrigger className="w-full min-w-[9rem] border-transparent bg-transparent px-2 font-mono text-[13px] shadow-none data-[size=default]:h-11 hover:border-input focus-visible:border-ring data-[state=open]:border-input md:data-[size=default]:h-9 dark:bg-transparent dark:hover:bg-input/30 dark:data-[state=open]:bg-input/30">
         <SelectValue placeholder="GTİP seçin" />
       </SelectTrigger>
       <SelectContent>

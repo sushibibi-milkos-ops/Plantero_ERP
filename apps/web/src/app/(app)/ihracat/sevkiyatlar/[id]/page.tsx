@@ -7,6 +7,7 @@ import { getShipmentDetail, listResponsibleUsers } from '@/modules/export/querie
 import { ShipmentActions } from '@/modules/export/components/shipment-actions';
 import { LogisticsPanel } from '@/modules/export/components/logistics-panel';
 import { PackingListTable } from '@/modules/export/components/packing-list-table';
+import { OrderLinesTable } from '@/modules/export/components/order-lines-table';
 import { DocumentsTable } from '@/modules/export/components/documents-table';
 import { PageHeader } from '@/components/page-header';
 import { StatusBadge } from '@/components/status-badge';
@@ -14,13 +15,26 @@ import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
 import { DocumentChain } from '@/components/document-chain';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { formatDate, formatQty } from '@/lib/format';
+import { formatDate, formatQty, formatRate } from '@/lib/format';
 import { D } from '@plantero/core';
 
 export const metadata: Metadata = { title: 'Sevkiyat Detayı' };
 export const dynamic = 'force-dynamic';
 
 const REGIME_LABEL: Record<string, string> = { standard: 'Standart', etgb: 'ETGB (mikro ihracat)' };
+
+/**
+ * Ağırlık hücresi — kök neden (Tur 1 P1, ihracat-detay-04): `numeric(18,4)` alanı DB'den her zaman
+ * `"0.0000"` gibi bir STRING olarak gelir; bu her zaman truthy olduğundan eski `v ? … : '—'` deseni
+ * sıfırı hiçbir zaman '—' dalına düşürmüyor, tam kontrast basıyordu — aynı sayfadaki Çeki listesi
+ * sekmesi ise aynı sıfırı sütun düzeyinde sabit `text-muted-foreground` ile (değerden bağımsız)
+ * gösteriyordu; iki panel aynı veriyi iki farklı ağırlıkta sunuyordu. `D(v).isZero()` gerçek
+ * sayısal değere bakar — sıfır/boş her iki panelde de aynı (muted '—') görünür.
+ */
+function weightCell(v: string | null): React.ReactNode {
+  if (v === null || D(v).isZero()) return <span className="font-normal text-muted-foreground">—</span>;
+  return `${formatQty(v)} kg`;
+}
 
 export default async function ExportShipmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -95,7 +109,7 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
             </div>
             <div>
               <div className="text-xs text-muted-foreground">Net / brüt ağırlık</div>
-              <div className="text-[13px] font-medium">{shipment.netWeightKg ? `${formatQty(shipment.netWeightKg)} kg` : '—'} / {shipment.grossWeightKg ? `${formatQty(shipment.grossWeightKg)} kg` : '—'}</div>
+              <div className="text-[13px] font-medium">{weightCell(shipment.netWeightKg)} / {weightCell(shipment.grossWeightKg)}</div>
             </div>
           </div>
         </div>
@@ -110,37 +124,7 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
         </TabsList>
 
         <TabsContent value="lines">
-          {orderLines.length === 0 ? (
-            <EmptyState compact title="Sipariş bulunamadı" />
-          ) : (
-            <div className="overflow-x-auto rounded-lg border border-border/60">
-              <table className="w-full text-[13px]">
-                <thead>
-                  <tr className="border-b border-border/60 text-left text-xs text-muted-foreground uppercase">
-                    <th className="px-3 py-2 font-medium">Ürün</th>
-                    <th className="px-3 py-2 text-right font-medium">Miktar</th>
-                    <th className="px-3 py-2 text-right font-medium">Sevk edilen</th>
-                    <th className="px-3 py-2 text-right font-medium">Birim fiyat</th>
-                    <th className="px-3 py-2 text-right font-medium">Tutar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderLines.map((r) => (
-                    <tr key={r.line.id} className="border-b border-border/60 last:border-0 hover:bg-muted/40">
-                      <td className="px-3 py-2.5">
-                        <div className="font-medium">{r.productName}</div>
-                        <div className="font-mono text-xs text-muted-foreground">{r.sku}</div>
-                      </td>
-                      <td className="px-3 py-2.5 text-right font-mono tabular-nums">{formatQty(r.line.qty, r.uomCode)}</td>
-                      <td className={`px-3 py-2.5 text-right font-mono tabular-nums ${D(r.line.deliveredQty).gte(D(r.line.qty)) ? 'text-success' : 'text-muted-foreground'}`}>{formatQty(r.line.deliveredQty)}</td>
-                      <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.unitPrice} currency={order?.currency} /></td>
-                      <td className="px-3 py-2.5 text-right"><MoneyCell value={r.line.lineTotal} currency={order?.currency} /></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <OrderLinesTable lines={orderLines} currency={order?.currency} />
         </TabsContent>
 
         <TabsContent value="packing">
@@ -174,7 +158,7 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground">Kur</div>
-                      <div className="font-mono tabular-nums">{invoice.exchangeRate}</div>
+                      <div className="font-mono tabular-nums">{formatRate(invoice.exchangeRate)}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground">Vade</div>
@@ -203,7 +187,7 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">Kur (TCMB)</div>
-                  <div className="font-mono tabular-nums">{shipment.exchangeRate}</div>
+                  <div className="font-mono tabular-nums">{formatRate(shipment.exchangeRate)}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground">Kur tarihi</div>

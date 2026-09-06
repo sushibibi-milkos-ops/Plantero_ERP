@@ -22,7 +22,29 @@ const DOT_CLASS: Record<string, string> = {
 function Card({ order, onOpen, onStart, onCancel }: { order: MaintenanceOrderRow; onOpen: () => void; onStart: () => void; onCancel: () => void }) {
   const open = !['done', 'cancelled'].includes(order.status);
   return (
-    <div onClick={onOpen} className="cursor-pointer space-y-2 rounded-lg border border-border/70 bg-card p-3 hover:border-border">
+    // Kriter 8 (Tur 1 P1 bakim-isemirleri-03) kök neden düzeltmesi: eskiden salt bir `div onClick` —
+    // tabIndex/role yoktu, klavyeyle sekmelenemiyor, Enter çalışmıyor, odak halkası görünmüyordu.
+    // Aynı modülün DataTable satırları (`rowHref`) klavyeyle erişilebilirken kart erişilemiyordu.
+    // `role="link"` + `tabIndex=0` + Enter/Space aktivasyonu + görünür `focus-visible` halkası
+    // eklendi (kart iç içe bir `<button>` — dropdown tetikleyicisi — barındırdığından gerçek bir
+    // `<a>`/`<Link>` içine alınmadı; dropdown'ın `stopPropagation`'ı korunur).
+    <div
+      onClick={onOpen}
+      onKeyDown={(e) => {
+        // e.target === e.currentTarget: yalnızca kartın KENDİSİ odaktayken Enter/Space açar — iç içe
+        // aksiyon menüsü (dropdown tetikleyici/öge) React'ın sentetik olay sistemi Portal'a rağmen
+        // JSX ağacından yukarı kabarcıklandığından, bu koruma olmadan menüde Enter'a basmak HEM
+        // menü ögesini seçer HEM kartı açardı (çift/çakışan eylem).
+        if ((e.key === 'Enter' || e.key === ' ') && e.target === e.currentTarget) {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
+      role="link"
+      tabIndex={0}
+      aria-label={`${order.docNo} — ${order.title}`}
+      className="cursor-pointer space-y-2 rounded-lg border border-border/70 bg-card p-3 outline-none hover:border-border focus-visible:ring-2 focus-visible:ring-ring/50"
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="font-mono text-[11px] text-muted-foreground">{order.docNo}</div>

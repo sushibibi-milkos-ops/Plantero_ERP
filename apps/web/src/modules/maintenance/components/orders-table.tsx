@@ -12,7 +12,21 @@ import { formatDateTime } from '@/lib/format';
 import { startOrderAction, cancelOrderAction } from '../actions';
 import type { MaintenanceOrderRow } from '../queries';
 
-export function OrdersTable({ orders }: { orders: MaintenanceOrderRow[] }) {
+export function OrdersTable({
+  orders,
+  searchable = true,
+  filters: filtersProp,
+  externallyFiltered = false,
+}: {
+  orders: MaintenanceOrderRow[];
+  /** OrdersView arama/filtreyi görünümden bağımsız üst araç çubuğuna taşıdığında `false` verilir. */
+  searchable?: boolean;
+  filters?: DataTableFilter[];
+  /** `orders` zaten OrdersView'in araç çubuğunca (arama/filtre) daraltıldıysa `true` — boş durum
+   *  metni "kayıt yok" yerine "eşleşen kayıt yok" olur (DataTable'ın kendi iç filtre durumu bunu
+   *  bilemez, çünkü arama/filtre artık kendi state'inde değil). */
+  externallyFiltered?: boolean;
+}) {
   const router = useRouter();
   const [cancelTarget, setCancelTarget] = useState<MaintenanceOrderRow | null>(null);
 
@@ -46,7 +60,7 @@ export function OrdersTable({ orders }: { orders: MaintenanceOrderRow[] }) {
     [],
   );
 
-  const filters: DataTableFilter[] = [
+  const filters: DataTableFilter[] = filtersProp ?? [
     { columnId: 'status', title: 'Durum', options: statusOptions('maintenance') },
     { columnId: 'kind', title: 'Tür', options: statusOptions('maintenance_kind') },
     { columnId: 'priority', title: 'Öncelik', options: statusOptions('maintenance_priority') },
@@ -59,11 +73,13 @@ export function OrdersTable({ orders }: { orders: MaintenanceOrderRow[] }) {
         data={orders}
         getRowId={(r) => r.id}
         rowHref={(r) => `/bakim/is-emirleri/${r.id}`}
+        searchable={searchable}
         searchPlaceholder="İş emri no, başlık, makine ara…"
         filters={filters}
+        columnToggle={searchable}
         initialSorting={[{ id: 'reportedAt', desc: true }]}
-        emptyTitle="Henüz bakım iş emri yok"
-        emptyDescription="Arıza bildirin ya da bir bakım planından iş emri üretin."
+        emptyTitle={externallyFiltered ? 'Eşleşen kayıt yok' : 'Henüz bakım iş emri yok'}
+        emptyDescription={externallyFiltered ? 'Arama ya da filtreleri değiştirmeyi deneyin.' : 'Arıza bildirin ya da bir bakım planından iş emri üretin.'}
         rowActions={(row) => {
           const open = !['done', 'cancelled'].includes(row.status);
           if (!open) return [];

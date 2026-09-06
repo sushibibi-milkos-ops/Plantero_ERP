@@ -10,10 +10,16 @@ import { DOWNTIME_REASON_LABELS } from '../labels';
 // üzerinde 4 seri (OEE/Kullanılabilirlik/Performans/Kalite) — hepsi aynı ölçekte (%) olduğundan
 // dataviz kuralı "tek eksen" ihlal edilmez (bkz. references/anti-patterns.md — ihlal yalnızca FARKLI
 // büyüklükte iki ölçümü aynı grafiğe iki y ekseniyle sıkıştırmaktır).
+//
+// Kriter 4 (Tur 1 P1 bakim-oee-01) kök neden düzeltmesi: eskiden 4 seri EŞİT ağırlıkta 4 DOYGUN
+// tonda çiziliyordu; 'Kalite' serisi (--chart-4, hue≈20) uygulamanın destructive kırmızısıyla
+// (hue≈27) aynı aile — aynı sayfada kırmızı zaten 'Arızalı'/hata anlamı taşıdığından semantik
+// çakışma vardı, ve dört renk arasında başlık metrik OEE eksende boğuluyordu. Artık yalnızca OEE
+// kendi vurgu rengini (yeşil, kalın çizgi + dolgu) taşır; üç bileşen serisi (Kullanılabilirlik/
+// Performans/Kalite) TEK nötr tonda (`--muted-foreground`) — birbirlerinden çizgi deseniyle (düz/
+// kesik/noktalı) ayrılır, renk sayısı artık kartta 2 (vurgu + nötr).
 const OEE_COLOR = 'var(--chart-1)';
-const AVAILABILITY_COLOR = 'var(--chart-2)';
-const PERFORMANCE_COLOR = 'var(--chart-3)';
-const QUALITY_COLOR = 'var(--chart-4)';
+const COMPONENT_COLOR = 'var(--muted-foreground)';
 const PARETO_COLOR = 'var(--chart-1)';
 
 const xTick = { fontSize: 11, fill: 'var(--muted-foreground)' };
@@ -59,9 +65,9 @@ export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
           formatter={(value: string) => <span style={{ color: 'var(--muted-foreground)' }}>{value}</span>}
         />
         <Area type="monotone" dataKey="oee" name="OEE" stroke={OEE_COLOR} strokeWidth={2} fill="url(#fill-oee)" isAnimationActive={false} />
-        <Area type="monotone" dataKey="availability" name="Kullanılabilirlik" stroke={AVAILABILITY_COLOR} strokeWidth={1.5} fill="none" isAnimationActive={false} />
-        <Area type="monotone" dataKey="performance" name="Performans" stroke={PERFORMANCE_COLOR} strokeWidth={1.5} fill="none" isAnimationActive={false} />
-        <Area type="monotone" dataKey="quality" name="Kalite" stroke={QUALITY_COLOR} strokeWidth={1.5} fill="none" isAnimationActive={false} />
+        <Area type="monotone" dataKey="availability" name="Kullanılabilirlik" stroke={COMPONENT_COLOR} strokeOpacity={0.85} strokeWidth={1} fill="none" isAnimationActive={false} />
+        <Area type="monotone" dataKey="performance" name="Performans" stroke={COMPONENT_COLOR} strokeOpacity={0.85} strokeWidth={1} strokeDasharray="4 3" fill="none" isAnimationActive={false} />
+        <Area type="monotone" dataKey="quality" name="Kalite" stroke={COMPONENT_COLOR} strokeOpacity={0.85} strokeWidth={1} strokeDasharray="1 3" fill="none" isAnimationActive={false} />
       </AreaChart>
     </ResponsiveContainer>
   );

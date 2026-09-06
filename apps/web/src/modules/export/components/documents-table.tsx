@@ -48,11 +48,24 @@ export function DocumentsTable({
       base.push({ id: 'shipmentDocNo', accessorFn: (r) => r.shipmentDocNo, header: 'Sevkiyat', meta: { className: 'font-mono', mobile: 'subtitle' } });
       base.push({ id: 'partnerName', accessorFn: (r) => r.partnerName, header: 'Müşteri', meta: { mobile: 'hidden' } });
     }
+    // `defaultHidden`: yalnızca tüm sevkiyatların ortak belge panosunda (/ihracat/belgeler) — burada
+    // Belge no/Vade/Sorumlu satırların %80'inden fazlasında boş (Tur 1 P1, ihracat-belgeler-01: 30
+    // satırın 30'u Vade'de, 30'u Sorumlu'da, 26'sı Belge no'da '—'), üç sütun birlikte tablo
+    // genişliğinin %35'ini hiç bilgi taşımadan tüketiyordu. Sütun görünürlüğü menüsünden açılabilir;
+    // varsayılan kapatma yalnızca İLK ekranı yoğunlaştırır. Tek bir sevkiyatın kendi belge sekmesinde
+    // (showShipmentColumn=false) doluluk çok daha yüksek olduğundan bu davranış uygulanmaz.
+    const sparseDefault = showShipmentColumn ? ({ defaultHidden: true } as const) : {};
     base.push(
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="export_doc" /> },
-      { accessorKey: 'docNo', header: 'Belge no', meta: { width: 140, mobile: 'hidden' }, cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span> },
-      { accessorKey: 'dueDate', header: 'Vade', meta: { width: 100 }, cell: ({ getValue }) => { const v = getValue<string | null>(); return v ? formatDate(v) : <span className="text-muted-foreground">—</span>; } },
-      { accessorKey: 'responsibleName', header: 'Sorumlu', meta: { width: 140, mobile: 'hidden' }, cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span> },
+      { accessorKey: 'docNo', header: 'Belge no', meta: { width: 140, mobile: 'hidden', ...sparseDefault }, cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span> },
+      // `mobile: 'meta'` (Tur 1 P1, ihracat-belgeler-02 kök neden): önceden bu sütun mobil kartta
+      // varsayılan 'row' (= `rest`) sayılıyordu — docNo/responsibleName zaten 'hidden' olduğundan
+      // `rest`in TEK/SON elemanı bu oluyor, mobile-cards.tsx onu METRİK yuvasına koyuyordu; sütun boş
+      // olduğunda (30/30 satırda) yuva anlamsız bir '—' ile doluyordu. 'meta' işaretiyle boş değer hiç
+      // eklenmiyor (mobile-cards.tsx `isEmptyValue` filtresi), dolu olduğunda da metrik değil bağlam
+      // ipucu olarak görünür.
+      { accessorKey: 'dueDate', header: 'Vade', meta: { width: 100, mobile: 'meta', ...sparseDefault }, cell: ({ getValue }) => { const v = getValue<string | null>(); return v ? formatDate(v) : <span className="text-muted-foreground">—</span>; } },
+      { accessorKey: 'responsibleName', header: 'Sorumlu', meta: { width: 140, mobile: 'hidden', ...sparseDefault }, cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span> },
     );
     return base;
   }, [showShipmentColumn]);

@@ -44,9 +44,21 @@ export function PlansTable({ plans }: { plans: PlanRow[] }) {
     () => [
       { accessorKey: 'name', header: 'Plan', meta: { mobile: 'title', flex: true } },
       {
-        id: 'machine', accessorFn: (r) => `${r.machineCode} ${r.machineName}`, header: 'Makine', meta: { mobile: 'subtitle' },
+        // Kriter 5 (Tur 1 P1 bakim-planlar-01) kök neden düzeltmesi: bu sütun ne `meta.width` ne
+        // `meta.flex` taşıyordu — uzun makine adları sütunu şişiriyor, sabit genişlikli 5 sütun
+        // (110+120+130+140+100=600px) 1440px'de kalan alanı 'Sorumlu'/satır eylemlerine bırakmıyordu
+        // (tablo kabı scrollWidth 1386 > clientWidth 1152). `flex` artık YALNIZCA 'name' sütununda.
+        // `width:200` + salt `overflow-hidden` (Tailwind `truncate`) YETMEDİ: hücre hâlâ ata TD'nin
+        // `whitespace-nowrap`'ını miras alıyordu — CSS auto tablo düzeni bir sütunu KENDİ min-content
+        // genişliğinin (nowrap'ta TÜM metnin kırılmaz genişliği) altına asla indiremez; overflow:hidden
+        // yalnızca kutu boyutu belirlendikten SONRAKİ çizimi kırpar, boyutlandırma algoritmasını
+        // etkilemez (ölçüldü: en uzun makine adında `width:200px` inline stiline rağmen gerçek genişlik
+        // 471px'e çıktı). Kök neden düzeltmesi: hücre içeriği `whitespace-normal` ile kelime
+        // kırılmasına açılır (min-content artık TÜM ifade değil, EN UZUN TEK kelime — çok daha dar) ve
+        // `line-clamp-1` tek satıra görsel olarak kırpar (…) — sonuç, TD gerçekten 200px'e sabitlenir.
+        id: 'machine', accessorFn: (r) => `${r.machineCode} ${r.machineName}`, header: 'Makine', meta: { mobile: 'subtitle', width: 200, className: 'whitespace-normal' },
         cell: ({ row }) => (
-          <span>
+          <span className="line-clamp-1 leading-[18px] break-words whitespace-normal" title={`${row.original.machineCode} ${row.original.machineName}`}>
             <span className="font-mono text-xs text-muted-foreground">{row.original.machineCode}</span> {row.original.machineName}
           </span>
         ),

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { StatusBadge } from '@/components/status-badge';
@@ -22,6 +23,7 @@ function StatCell({ label, value }: { label: string; value: React.ReactNode }) {
 
 export function MachineDetailView({ detail }: { detail: MachineDetail }) {
   const { machine, lineCode, lineName, warehouseCode, productSku, productName, responsibleName, plans, orders, downtimes, photos, oeeTrend, mtbfHours, mttrHours, failureCount } = detail;
+  const router = useRouter();
 
   return (
     <Tabs defaultValue="ozellikler" className="gap-4">
@@ -87,7 +89,21 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
               <TableHeader><TableRow><TableHead>No</TableHead><TableHead>Başlık</TableHead><TableHead>Tür</TableHead><TableHead className="text-right">Durum</TableHead><TableHead>Bildirim</TableHead><TableHead className="text-right">Duruş (dk)</TableHead></TableRow></TableHeader>
               <TableBody>
                 {orders.map((o) => (
-                  <TableRow key={o.id} className="cursor-pointer hover:bg-muted/40" onClick={() => { window.location.href = `/bakim/is-emirleri/${o.id}`; }}>
+                  // Kriter 8 (Tur 1 P1 bakim-makine-detay-01) kök neden düzeltmesi: `window.location.
+                  // href` tam sayfa yeniden yükleme yapıyordu (beyaz flaş, istemci durumu/kaydırma
+                  // konumu kaybı) — uygulamadaki TEK `window.location` kullanımıydı. `router.push`
+                  // (App Router istemci taraflı gezinme) + klavye erişilebilirliği (`tabIndex`,
+                  // Enter/Space, `focus-visible` halkası) — DataTable satırlarıyla (`rowHref`) aynı
+                  // desen (bkz. `apps/web/src/components/data-table/data-table.tsx` `rowProps`).
+                  <TableRow
+                    key={o.id}
+                    tabIndex={0}
+                    onClick={() => router.push(`/bakim/is-emirleri/${o.id}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') router.push(`/bakim/is-emirleri/${o.id}`);
+                    }}
+                    className="cursor-pointer outline-none hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+                  >
                     <TableCell className="font-mono text-xs">{o.docNo}</TableCell>
                     <TableCell>{o.title}</TableCell>
                     <TableCell><StatusBadge status={o.kind} kind="maintenance_kind" /></TableCell>

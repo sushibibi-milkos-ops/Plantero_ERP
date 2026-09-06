@@ -223,6 +223,32 @@ export async function completeOrder(tx: DbOrTx, orderId: string, input: Complete
   const [machine] = await tx.select().from(machines).where(eq(machines.id, order.machineId)).limit(1);
   if (machine) await closeMachineIfNoOpenOrders(tx, machine, orderId, ctx);
 
+  // I51 kök neden düzeltmesi: bakım maliyeti (işçilik+parça) yalnızca `maintenance_orders` üzerinde
+  // sayı olarak kalıyor, hiçbir mizanda görünmüyordu (CLAUDE.md "muhasebe yazımı yalnızca
+  // postJournalEntry" ilkesinin ihlali). Tamamlanma anındaki NİHAİ maliyet (`updated`) tek seferlik
+  // bir fişe dönüştürülür — `completeOrder` yalnızca açık bir iş emrinde çalışır (üstteki
+  // MO_ALREADY_CLOSED koruması) ve durum makinesi aynı emri ikinci kez tamamlatamaz, dolayısıyla bu
+  // satır aynı iş emri için asla iki kez çalışmaz (çift kayıt riski yok). 730 "Genel Üretim
+  // Giderleri" bakım/onarım maliyetinin standart TDHP karşılığı; karşı taraf 100 Kasa (saha bakımı
+  // nakit/küçük harcama varsayımı — cari/banka bilgisi maintenance_orders şemasında yok).
+  const totalCost = D(updated!.partsCost).plus(D(updated!.laborCost));
+  if (totalCost.gt(0)) {
+    await postJournalEntry(tx, {
+      ledger: 'both',
+      journalCode: 'GEN',
+      entryDate: now,
+      description: `Bakım maliyeti: ${order.docNo}${machine ? ` — ${machine.name}` : ''}`,
+      refType: 'maintenance_order',
+      refId: order.id,
+      refNo: order.docNo,
+      origin: documentOrigin(order),
+      lines: [
+        { accountCode: '730', debit: totalCost, description: `${order.docNo} işçilik + parça maliyeti` },
+        { accountCode: '100', credit: totalCost },
+      ],
+    }, ctx);
+  }
+
   if (order.planId) {
     const [plan] = await tx.select().from(maintenancePlans).where(eq(maintenancePlans.id, order.planId)).limit(1);
     if (plan) {

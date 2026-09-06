@@ -5,7 +5,12 @@ import { DataTable, type ColumnDef } from '@/components/data-table';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
 import { formatQty } from '@/lib/format';
-import { D } from '@plantero/core';
+// `@plantero/core`'un `D` sarmalayıcısı DEĞİL, doğrudan `decimal.js` — bu 'use client' bileşeni
+// tarayıcıda paketlenir; `@plantero/core` (`bcryptjs`/`node:crypto` kullanan auth alt modülleri
+// dahil) istemci demetine karışınca `UnhandledSchemeError: node:crypto` build hatasıyla çöküyordu
+// (form/number-input.tsx, sales-doc-lines.tsx gibi diğer istemci bileşenleri de aynı nedenle
+// `@plantero/core` yerine doğrudan `decimal.js` kullanır).
+import Decimal from 'decimal.js';
 import type { getShipmentDetail } from '../queries';
 
 type OrderLines = NonNullable<Awaited<ReturnType<typeof getShipmentDetail>>>['orderLines'];
@@ -32,7 +37,7 @@ export function OrderLinesTable({ lines, currency }: { lines: OrderLines; curren
       {
         id: 'deliveredQty', accessorFn: (r) => r.line.deliveredQty, header: 'Sevk edilen', meta: { align: 'right', width: 110, mobile: 'hidden' },
         cell: ({ row }) => {
-          const full = D(row.original.line.deliveredQty).gte(D(row.original.line.qty));
+          const full = new Decimal(row.original.line.deliveredQty).gte(new Decimal(row.original.line.qty));
           return <span className={`font-mono tabular-nums ${full ? 'text-success' : 'text-muted-foreground'}`}>{formatQty(row.original.line.deliveredQty)}</span>;
         },
       },

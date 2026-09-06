@@ -142,7 +142,22 @@ export function ReportBreakdownForm({ machines }: { machines: MachineFormOption[
               </div>
               <div className="truncate text-sm text-muted-foreground">{scanned.name}</div>
             </div>
-            <Button type="button" variant="ghost" size="icon" onClick={() => { setScanned(null); form.setValue('machineId', ''); }} aria-label="Makineyi değiştir">
+            {/* Kriter 9 (Tur 1 P1 bakim-yeni-01) kök neden düzeltmesi: `size="icon"` (36×36px) sahada
+                telefonla kullanılan bu ekranda 44px eşiğinin altındaydı. Bir `::before` hit-slop
+                denemesi ölçüm aracının (`scripts/measure.ts`) gerçek testiyle UYUŞMUYOR — `getBounding
+                ClientRect()` yalnızca ELEMANIN KENDİ kutusunu okur, `::before` ile görünmez şekilde
+                genişletilen alanı SAYMAZ (gerçek dokunuşta çalışsa da otomatik ölçüm hâlâ 36×36
+                raporlar). Kök neden düzeltmesi: düğmenin GERÇEK kutusu 44×44 (`size-11`, `icon`
+                varyantının `size-9`'unu ezer) — ikon boyutu (16px) sabit kalır, yalnızca tıklanabilir
+                alan büyür. */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => { setScanned(null); form.setValue('machineId', ''); }}
+              aria-label="Makineyi değiştir"
+              className="size-11"
+            >
               <X className="size-4" />
             </Button>
           </div>
@@ -178,13 +193,21 @@ export function ReportBreakdownForm({ machines }: { machines: MachineFormOption[
                 {photos.map((p, i) => (
                   <div key={i} className="group relative aspect-square overflow-hidden rounded-lg border border-border/60 bg-muted">
                     <Image src={p.dataUrl} alt={p.fileName} fill unoptimized className="object-cover" />
+                    {/* Kriter 9 (Tur 1 P1 bakim-yeni-01) kök neden düzeltmesi: görsel rozet 24×24px
+                        (`size-6`) — sahada iki fotoğraf eklendikten sonra ölçülen 44px eşiğinin çok
+                        altında. `::before` hit-slop yerine (yukarıdaki not — ölçüm aracı pseudo-
+                        elemanı saymıyor) TIKLANABİLİR eleman gerçekten 44×44 (`size-11`) yapılır;
+                        siyah daire rozet GÖRSEL olarak 24px kalır — iç içe bir `<span>`'a taşındı,
+                        dış `<button>` yalnızca görünmez bir dokunma kutusu. */}
                     <button
                       type="button"
                       onClick={() => setPhotos((prev) => prev.filter((_, idx) => idx !== i))}
-                      className="absolute top-1 right-1 grid size-6 place-items-center rounded-full bg-black/60 text-white"
+                      className="absolute top-0 right-0 grid size-11 place-items-center text-white"
                       aria-label="Fotoğrafı kaldır"
                     >
-                      <Trash2 className="size-3.5" />
+                      <span className="grid size-6 place-items-center rounded-full bg-black/60">
+                        <Trash2 className="size-3.5" />
+                      </span>
                     </button>
                   </div>
                 ))}
