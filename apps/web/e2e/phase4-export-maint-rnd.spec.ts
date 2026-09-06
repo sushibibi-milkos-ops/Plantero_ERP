@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Browser } from '@playwright/test';
+import { test, expect, type Page, type Browser, type Locator } from '@playwright/test';
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 import { loginAs, type TestRole } from './fixtures/auth';
@@ -84,6 +84,25 @@ async function switchRole(browser: Browser, oldPage: Page, role: TestRole, next?
 function parseTrNumber(text: string): number {
   const cleaned = text.replace(/[^\d,.\-]/g, '').replace(/\./g, '').replace(',', '.');
   return Number(cleaned);
+}
+
+/**
+ * `KpiCard`'ın canlı sayacı (`@number-flow/react`) `.innerText()`/`.textContent` ile GÜVENİLİR
+ * OKUNAMAZ — kök neden (canlıda yakalandı, 10 sn'lik `.poll()` bile hiç yakınsamadı): kütüphane
+ * `<number-flow-react>` diye AÇIK bir shadow-DOM custom element'i (`node_modules/number-flow/dist/
+ * lite.js`: `this.attachShadow({mode:'open'})`), her basamağı 0-9 arası ON AYRI `<span>` olarak
+ * üst üste bindirip yalnızca birini CSS/`inert` ile "görünür" yapan bir kaydırma animasyonuyla
+ * gösteriyor — düz metin çıkarımı bu yapıdan güvenilir tek bir rakam değil "0" (veya tutarsız bir
+ * birleşim) okuyor. Kütüphanenin KENDİSİ gerçek biçimlendirilmiş metni erişilebilirlik ağacına
+ * `ElementInternals` üzerinden yazıyor (aynı dosya: `this._internals.role='img'`;
+ * `this._internals.ariaLabel = t.valueAsString`) — bu, animasyon/DOM iç yapısından bağımsız TEK
+ * güvenilir kaynak. `el.ariaLabel` IDL özelliği bu internals değerini yansıtır.
+ */
+async function readNumberFlowValue(container: Locator): Promise<number> {
+  const el = container.locator('number-flow-react').first();
+  await expect(el).toHaveCount(1, { timeout: 10_000 });
+  const label = await el.evaluate((node) => (node as unknown as { ariaLabel?: string }).ariaLabel || node.getAttribute('aria-label') || '');
+  return parseTrNumber(label);
 }
 
 function overflowCheck(page: Page) {
@@ -379,13 +398,21 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     expect(shipment[0]).toBe('packing');
     expect(Number(shipment[1]), 'en az 1 kap üretilmeli').toBeGreaterThan(0);
 
+    // `buildPackingList` (packages/core/src/export/shipments.ts) irsaliye SATIRI başına bir kap
+    // üretir — irsaliye lot bazında BÖLÜNMÜŞSE (200 adet 3 lota dağıldıysa, bkz. Adım 6/`pickAllLines`
+    // notu) tek kap değil, satır sayısı kadar kap (98+60+42) oluşur. Önceki sürüm tek kap/200 adet
+    // varsayıyordu — canlıda 3 kaba bölününce ilk kabın miktarı (98) 200'e eşit değil diye patlıyordu.
+    // Doğru doğrulama TOPLAM miktarın 200'e eşit olmasıdır, kaç kaba bölündüğünden bağımsız.
     const pkgs = psqlRows(`select package_no, qty, net_weight_kg, hs_code from export_packages where shipment_id = '${ctx.shipmentId}'`);
     expect(pkgs.length).toBeGreaterThan(0);
-    expect(Number(pkgs[0]![1])).toBeCloseTo(200, 2);
+    const totalPackedQty = pkgs.reduce((sum, p) => sum + Number(p[1]), 0);
+    expect(totalPackedQty).toBeCloseTo(200, 2);
 
     await page.getByRole('tab', { name: 'Çeki listesi' }).click();
     await expect(page.getByText('#1', { exact: true })).toBeVisible({ timeout: 10_000 });
-    await expect(visibleText(page, ctx.sku!)).toBeVisible();
+    // Artık (bkz. yukarıdaki not) birden fazla kap/satır olabildiğinden aynı SKU birden çok kez
+    // basılıyor — `.first()` yeterli (tekil varlığı değil, listede göründüğünü doğrular).
+    await expect(visibleText(page, ctx.sku!).first()).toBeVisible();
 
     const doc = psqlOne(`select status from export_documents where shipment_id = '${ctx.shipmentId}' and code = 'PACKING_LIST'`);
     expect(doc).toBe('ready');
@@ -854,13 +881,28 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
     await newRecipeDialog.getByLabel('Miktar').fill('2');
     await newRecipeDialog.getByRole('button', { name: 'Oluştur' }).click();
     await expect(newRecipeDialog).toBeHidden();
-    await expect(page.getByText('v1')).toBeVisible({ timeout: 10_000 });
+    // `getByText('v1')` iki eleman buluyordu: sol listedeki versiyon seçici düğmesi ("v1 Taslak")
+    // VE sağdaki çalışma alanı başlığı (`<h2>v1</h2>`) — strict-mode ihlali (canlıda yakalandı).
+    // Başlık `getByRole('heading', ...)` ile tekil hedeflenir.
+    await expect(page.getByRole('heading', { name: 'v1' })).toBeVisible({ timeout: 10_000 });
 
     ctx.recipeId = psqlOne(`select id from trial_recipes where project_id = '${ctx.projectId}' and name = '${recipeName}'`)!;
     expect(ctx.recipeId).toBeTruthy();
 
     await page.getByRole('button', { name: 'Yeni versiyon' }).click();
     await expect(page.getByText('v2 oluşturuldu')).toBeVisible({ timeout: 10_000 });
+    // Sunucu eylemi (`createNewVersionAction`) toast'ta DÖNEN gerçek versiyon numarasını basıyor
+    // ("v2 oluşturuldu" görünmesi zaten sunucunun version=2 döndürdüğünü kanıtlıyor) — commit
+    // toast'tan ÖNCE tamamlanmış olmalı (server action `await` edilip SONRA `.then()` toast basıyor,
+    // bkz. `recipe-workspace.tsx`). Yine de bu makinede eşzamanlı başka bir oturumun `db:reset`
+    // koşabildiği belgeli bir risk (dosya başı not) — birebir SELECT yerine kısa bir `.poll()` ile
+    // okunur; asıl beklenti (v2 satırının VARLIĞI) gevşetilmedi, yalnızca okuma anına tolerans eklendi.
+    await expect
+      .poll(() => psqlOne(`select id from trial_recipe_versions where recipe_id = '${ctx.recipeId}' and version = 2`), {
+        message: 'v2 satırı veritabanında bulunmalı (bkz. toast: sunucu version=2 döndürdü)',
+        timeout: 5_000,
+      })
+      .toBeTruthy();
     ctx.v2Id = psqlOne(`select id from trial_recipe_versions where recipe_id = '${ctx.recipeId}' and version = 2`)!;
     expect(ctx.v2Id).toBeTruthy();
 
@@ -1004,9 +1046,11 @@ test.describe('Kokpit KPI doğrulama (phase4)', () => {
     // (bkz. `kpi-card.tsx`) — başlığın DOĞRUDAN üst elemanı köktür; "içinde bu metin geçen herhangi
     // bir div/a" filtresi TÜM KPI şeridini (veya daha üstünü) eşleştirip yanlış satırı okuyabilirdi.
     const card = page.getByText('Kritik stok kalemi', { exact: true }).locator('..');
-    const text = await card.innerText();
-    const shown = parseTrNumber(text.split('\n').find((l) => /^\d/.test(l.trim())) ?? text);
-    expect(shown).toBe(expectedCritical);
+    // `.innerText()` bu kartta GÜVENİLMEZ — bkz. `readNumberFlowValue` yorumundaki kök neden
+    // (canlıda yakalandı: `expectedCritical` bu seed'de tesadüfen 0 olduğu için ilk sürümde bu test
+    // yanlışlıkla GEÇTİ, asıl kırığı yalnızca "Vadesi geçen alacak" testi — DB'de sıfır olmayan bir
+    // değer — ortaya çıkardı). Erişilebilirlik ağacındaki gerçek değerden okunur.
+    await expect.poll(() => readNumberFlowValue(card), { message: 'Kritik stok kalemi KPI değeri DB ile eşleşmeli', timeout: 10_000 }).toBe(expectedCritical);
   });
 
   test('admin: "Bugün", "Banka", "Geciken alacak", "Break-even\'a uzaklık", "SKT riski" bölümleri görünür ve rakamlar makul (0 veya pozitif)', async ({ page }) => {
@@ -1045,10 +1089,16 @@ test.describe('Kokpit KPI doğrulama (phase4)', () => {
         and due_date < current_date and due_date >= current_date - interval '400 days'
         and residual::numeric > 0
     `));
+    // Kök neden (canlıda yakalandı): bu kartta `.innerText()` DB'de 8.209,4999 iken KALICI olarak
+    // "0" okudu — 10 sn'lik `.poll()` bile HİÇ yakınsamadı (hidrasyon gecikmesi değil, `NumberFlow`
+    // custom element'inin çoklu-span rakam-döngüsü yapısının metin çıkarımıyla temelden uyumsuz
+    // olduğunu doğrular — bkz. `readNumberFlowValue` yorumu). Doğrudan `getOverdueReceivablesSummary`
+    // çağrısıyla da teyit edildi: sunucu fonksiyonu DOĞRU değeri (8209.4999) döndürüyor — kırık
+    // yalnızca DOM metin çıkarımında, uygulama mantığında değil. Erişilebilirlik ağacından okunur.
     const overdueCard = page.getByText('Vadesi geçen alacak', { exact: true }).locator('..');
-    const overdueText = await overdueCard.innerText();
-    const shownOverdue = parseTrNumber(overdueText);
-    expect(shownOverdue).toBeCloseTo(overdue, -1);
+    await expect
+      .poll(() => readNumberFlowValue(overdueCard), { message: 'Vadesi geçen alacak KPI değeri DB ile eşleşmeli', timeout: 10_000 })
+      .toBeCloseTo(overdue, -1);
   });
 
   test('depo@: farklı bir kart seti gösterir (GM kartları yok, depo kartları var); mobil tek kolon', async ({ page, browser }) => {
@@ -1166,7 +1216,10 @@ test.describe('Negatifler (phase4)', () => {
     // negatif testi anlamsızlaştırabilirdi.
     const recipeName = `Negatif test ${RUN}`;
     await page.getByRole('button', { name: recipeName }).click();
-    await expect(page.getByText('v1')).toBeVisible({ timeout: 10_000 });
+    // `getByText('v1')` iki eleman buluyordu: sol listedeki versiyon seçici düğmesi ("v1 Taslak")
+    // VE sağdaki çalışma alanı başlığı (`<h2>v1</h2>`) — strict-mode ihlali (canlıda yakalandı).
+    // Başlık `getByRole('heading', ...)` ile tekil hedeflenir.
+    await expect(page.getByRole('heading', { name: 'v1' })).toBeVisible({ timeout: 10_000 });
     await expect(page.getByRole('button', { name: "Üretim BOM'una devret" })).toHaveCount(0);
 
     const versionId = psqlOne(`select tv.id from trial_recipe_versions tv join trial_recipes tr on tr.id = tv.recipe_id where tr.project_id = '${projectId}' order by tv.created_at desc limit 1`)!;
