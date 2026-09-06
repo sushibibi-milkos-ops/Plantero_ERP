@@ -6,7 +6,7 @@ import {
 } from '../schema/index.js';
 import {
   D, SYSTEM_ACTOR, writeAudit, createPurchaseOrder, approvePurchaseOrder, markPurchaseOrderSent,
-  createRetroactivePurchaseOrderForReceipt,
+  createRetroactivePurchaseOrderForReceipt, evaluateAutoOrderEligibility, isSupplierWhitelisted,
 } from '@plantero/core';
 import { log, type SeedSummary } from './_helpers.js';
 
@@ -51,6 +51,15 @@ async function partnerByCode(tx: DbOrTx, code: string) {
 async function productBySku(tx: DbOrTx, sku: string) {
   const [row] = await tx.select().from(products).where(eq(products.sku, sku)).limit(1);
   if (!row) throw new Error(`seed:purchasing — ürün bulunamadı (SKU): ${sku}`);
+  return row;
+}
+async function reorderRuleFor(tx: DbOrTx, productId: string, warehouseId: string) {
+  const [row] = await tx
+    .select()
+    .from(reorderRules)
+    .where(and(eq(reorderRules.productId, productId), eq(reorderRules.warehouseId, warehouseId)))
+    .limit(1);
+  if (!row) throw new Error(`seed:purchasing — kritik stok kuralı bulunamadı (productId: ${productId}, warehouseId: ${warehouseId})`);
   return row;
 }
 
@@ -180,11 +189,12 @@ async function seedDemoDrafts(tx: DbOrTx, tireId: string, summary: SeedSummary):
   // AI taslağı — beyaz listede olmayan kural (Vanilya Aroması, S-000003) → onay bekliyor.
   const aromatik = await partnerByCode(tx, 'S-000003');
   const vanilya = await productBySku(tx, '304010000');
+  const vanilyaRule = await reorderRuleFor(tx, vanilya.id, tireId);
   const { order: draftOrder } = await createPurchaseOrder(tx, {
     partnerId: aromatik.id, warehouseId: tireId, isAiGenerated: true, status: 'pending_approval',
     aiRationale: 'Vanilya Aroması kapsama süresi lead time (20 gün) altında — kritik stok motoru önerisi',
     aiConfidence: D('0.82'),
-    lines: [{ productId: vanilya.id, qty: D(30), uomId: vanilya.uomId, unitPrice: D(910), vatRate: D(vanilya.purchaseVatRate ?? '20') }],
+    lines: [{ productId: vanilya.id, qty: D(30), uomId: vanilya.uomId, unitPrice: D(910), vatRate: D(vanilya.purchaseVatRate ?? '20'), reorderRuleId: vanilyaRule.id }],
   }, SYSTEM_ACTOR);
   await auditCreate(tx, 'purchase_orders', draftOrder.id, `AI taslağı ${draftOrder.docNo} oluşturuldu (onay bekliyor)`);
   const [approvalRow] = await tx
@@ -202,13 +212,27 @@ async function seedDemoDrafts(tx: DbOrTx, tireId: string, summary: SeedSummary):
   // Otomatik onaylanıp gönderilmiş — beyaz listedeki ambalaj kalemi (Etiket, S-000004), tutar sınırı altında.
   const ege = await partnerByCode(tx, 'S-000004');
   const etiket = await productBySku(tx, '401030000');
+  const etiketRule = await reorderRuleFor(tx, etiket.id, tireId);
   const { order: autoOrder } = await createPurchaseOrder(tx, {
     partnerId: ege.id, warehouseId: tireId, isAiGenerated: true,
     aiRationale: 'Etiket kapsama süresi lead+güvenlik altında; beyaz liste + tutar sınırı içinde → otomatik onay/gönderim',
     aiConfidence: D('0.91'), status: 'ai_draft',
-    lines: [{ productId: etiket.id, qty: D(1500), uomId: etiket.uomId, unitPrice: D(8), vatRate: D(etiket.purchaseVatRate ?? '20') }],
+    lines: [{ productId: etiket.id, qty: D(1500), uomId: etiket.uomId, unitPrice: D(8), vatRate: D(etiket.purchaseVatRate ?? '20'), reorderRuleId: etiketRule.id }],
   }, SYSTEM_ACTOR);
   const autoApproved = await approvePurchaseOrder(tx, autoOrder.id, SYSTEM_ACTOR);
+  // Bayrağı elle yazmak yerine gerçek beyaz liste kapısından geçir (I48 — checks/48_reorder_whitelist_gate.sql):
+  // (a) tedarikçi genel satın alma beyaz listesinde mi, (b) kural otomatik siparişe açık mı + tutar sınırı içinde mi.
+  // Seed verisi (S-000004 whitelisted, 401030000 kuralı isAutoOrderWhitelisted + ₺20.000 sınır, sipariş ₺12.000+KDV)
+  // bu kapıyı zaten geçer; kapı gerçekten çalıştırılır ki demo veri motorun kendisiyle tutarsız düşmesin.
+  const eligibility = evaluateAutoOrderEligibility({
+    supplierWhitelisted: await isSupplierWhitelisted(tx, ege.id),
+    ruleWhitelisted: etiketRule.isAutoOrderWhitelisted,
+    autoOrderMaxAmount: etiketRule.autoOrderMaxAmount ? D(etiketRule.autoOrderMaxAmount) : null,
+    orderAmount: D(autoApproved.grandTotal),
+  });
+  if (!eligibility.eligible) {
+    throw new Error(`seed:purchasing — demo otomatik sipariş beyaz liste kapısından geçemedi: ${eligibility.reason}`);
+  }
   await tx.update(purchaseOrders).set({ isAutoApproved: true }).where(eq(purchaseOrders.id, autoApproved.id));
   const autoSent = await markPurchaseOrderSent(tx, autoOrder.id, { sentVia: 'email', sentTo: ege.email, isAutoApproved: true }, SYSTEM_ACTOR);
   await auditPost(tx, 'purchase_orders', autoOrder.id, `Satın alma siparişi ${autoOrder.docNo}: beyaz liste + tutar sınırı içinde otomatik onaylanıp gönderildi (${autoSent.status})`);
