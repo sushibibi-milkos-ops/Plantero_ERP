@@ -317,7 +317,10 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
 
   test('Adım 4 — ihracat@ proforma üret', async () => {
     await page.getByRole('button', { name: 'Proforma gönder' }).click();
-    await expect(page.getByText('Proforma gönderildi')).toBeVisible({ timeout: 10_000 });
+    // `StatusBadge` durumunu DOM'da masaüstü+mobil için İKİ KEZ render eder (bkz. dosya başı
+    // `DataTable` notu, aynı kalıp burada da geçerli) + bir de geçici toast — üçü de aynı metni
+    // taşıyor, adsız eşleşme strict-mode ihlaline düşüyordu (canlıda yakalandı). `.first()` yeterli.
+    await expect(page.getByText('Proforma gönderildi').first()).toBeVisible({ timeout: 10_000 });
 
     const shipment = psqlRows(`select status, proforma_no, proforma_date from export_shipments where id = '${ctx.shipmentId}'`)[0]!;
     expect(shipment[0]).toBe('proforma_sent');
@@ -331,7 +334,7 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
 
   test('Adım 5 — ihracat@ irsaliyeye bağla', async () => {
     await page.getByRole('button', { name: 'İrsaliyeye bağla' }).click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot="dialog-content"]');
     await expect(dialog).toBeVisible();
     await dialog.getByRole('combobox').click();
     await page.getByRole('option', { name: ctx.deliveryDocNo! }).click();
@@ -421,7 +424,7 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
   test('Adım 9 — ihracat@ sevkiyat detayında faturaya bağla', async () => {
     await page.goto(`/ihracat/sevkiyatlar/${ctx.shipmentId}`);
     await page.getByRole('button', { name: 'Faturaya bağla' }).click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot="dialog-content"]');
     await expect(dialog).toBeVisible();
     await dialog.getByRole('combobox').click();
     await page.getByRole('option', { name: new RegExp(ctx.invoiceDocNo!) }).click();
@@ -441,7 +444,7 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     await expect(visibleText(page, 'Gerekli')).toBeVisible();
 
     await page.getByRole('button', { name: 'Gümrüğe al' }).click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot="dialog-content"]');
     await expect(dialog).toBeVisible();
     const etgbNo = `ETGB2026DE${RUN}`;
     // `Label` burada `htmlFor` bağlamıyor (K-A11Y — bkz. phase1/phase3 aynı not), `Input`in de `id`si
@@ -633,7 +636,7 @@ test.describe('Akış: Bakım arıza → downtime → OEE (phase4, mobil 390×84
     expect(machineStillDown).toBe('down');
 
     await page.getByRole('button', { name: 'Tamamla' }).click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot="dialog-content"]');
     await expect(dialog).toBeVisible();
     // `Label` burada da `htmlFor` bağlamıyor (K-A11Y — bkz. ETGB no notu), placeholder ile hedeflenir.
     await dialog.getByPlaceholder('Ör. conta aşınmış').fill('Conta aşınmış (QA phase4)');
@@ -783,7 +786,7 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
 
     ctx.newCardTitle = `QA phase4 kart ${RUN}`;
     await page.getByRole('button', { name: 'Kart ekle' }).first().click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot="dialog-content"]');
     await expect(dialog).toBeVisible();
     await dialog.getByLabel('Başlık').fill(ctx.newCardTitle);
     await dialog.getByRole('button', { name: 'Oluştur' }).click();
@@ -821,7 +824,7 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
     const newColName = `Pilot Üretim (QA ${RUN})`;
     await pilotColumn.getByRole('button', { name: 'Kolon menüsü' }).click();
     await page.getByRole('menuitem', { name: 'Yeniden adlandır' }).click();
-    const renameDialog = page.getByRole('dialog');
+    const renameDialog = page.locator('[data-slot="dialog-content"]');
     await renameDialog.getByRole('textbox').fill(newColName);
     await renameDialog.getByRole('button', { name: 'Kaydet' }).click();
     await expect(renameDialog).toBeHidden();
@@ -841,7 +844,7 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
     await page.goto(ctx.recetelerUrl!);
     await expect(page.getByRole('heading', { name: 'Deneme Reçeteleri' })).toBeVisible().catch(() => {});
     await page.getByRole('button', { name: 'Yeni deneme reçetesi' }).click();
-    const newRecipeDialog = page.getByRole('dialog');
+    const newRecipeDialog = page.locator('[data-slot="dialog-content"]');
     await expect(newRecipeDialog).toBeVisible();
     const recipeName = `Fıstık Bazı deneme ${RUN}`;
     await newRecipeDialog.getByLabel('Ad').fill(recipeName);
@@ -1138,7 +1141,7 @@ test.describe('Negatifler (phase4)', () => {
     // yansıdığını gösterir.
     await page.goto(`/arge/projeler/${projectId}/receteler`);
     await page.getByRole('button', { name: 'Yeni deneme reçetesi' }).click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot="dialog-content"]');
     await dialog.getByLabel('Ad').fill(`Negatif test ${RUN}`);
     await dialog.getByRole('combobox').click();
     await page.getByPlaceholder('Ara…').fill(raw[1]!);

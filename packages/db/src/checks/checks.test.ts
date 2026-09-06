@@ -78,7 +78,7 @@ const FILES = await checkFiles();
 // yorumunda. I52 (aynı tur, YENİ, P2, saf regresyon güvenlik ağı — fresh seed'de 0 ihlal): ihracat
 // packing list (export_packages) satırlarının lot/miktar zinciri bağlı delivery_lines'la birebir
 // örtüşmesini doğrular (bkz. checks/52_export_package_lot_integrity.sql üst yorumu).
-const RULE_COUNT = 52;
+const RULE_COUNT = 53;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
