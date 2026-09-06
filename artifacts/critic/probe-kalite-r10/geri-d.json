@@ -1,0 +1,98 @@
+{
+ "label": "geri-d",
+ "route": "/kalite/geri-cagirma",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "span",
+   "cls": "inline-block max-w-full truncate align-bottom text-[13px] text-muted-foreground md:w-[296px]",
+   "scrollWidth": 514,
+   "clientWidth": 296,
+   "overflowX": "hidden",
+   "hidden": 218
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [
+  {
+   "text": "Rutin izlenebilirlik tatbikatı — müşteri şikayeti simülasyon",
+   "w": 296,
+   "full": 514
+  }
+ ],
+ "clippedCount": 1,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 1,
+ "rowHeight": 36,
+ "rowBorderBottom": "0px oklab(0.92 0.00112267 -0.00383922 / 0.5)",
+ "kpiValues": [],
+ "interactiveCount": 35,
+ "smallTargetsInMain": [
+  {
+   "sel": "button \"Yeni Simülasyon\"",
+   "w": 158,
+   "h": 36
+  },
+  {
+   "sel": "input \"Tabloda ara\"",
+   "w": 256,
+   "h": 32
+  },
+  {
+   "sel": "button \"Durum\"",
+   "w": 84,
+   "h": 32
+  },
+  {
+   "sel": "button \"Sütunlar\"",
+   "w": 32,
+   "h": 32
+  },
+  {
+   "sel": "button \"Geri çağırma no\"",
+   "w": 109,
+   "h": 28
+  },
+  {
+   "sel": "button \"Ürün / Lot\"",
+   "w": 85,
+   "h": 28
+  },
+  {
+   "sel": "button \"Durum\"",
+   "w": 66,
+   "h": 28
+  },
+  {
+   "sel": "button \"Gerekçe\"",
+   "w": 76,
+   "h": 28
+  },
+  {
+   "sel": "button \"Oluşturulma\"",
+   "w": 98,
+   "h": 28
+  }
+ ],
+ "fontSizesMain": {
+  "12": 7,
+  "13": 3,
+  "14": 1,
+  "24": 1
+ },
+ "shadowCount": 3,
+ "borderedInsideBordered": 2,
+ "borderedInsideBorderedSample": [
+  "rounded border bg-background px-1 py-px font-mono  <= flex items-center border-t border-sidebar-border/7",
+  "rounded border bg-background px-1.5 py-px font-mon <= hidden h-8 w-56 items-center gap-2 rounded-md bord"
+ ],
+ "bottomNav": null
+}

@@ -1,0 +1,46 @@
+{
+ "label": "kontroller-m",
+ "route": "/kalite/kontroller",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 21,
+ "smallTargetsInMain": [],
+ "fontSizesMain": {
+  "12": 16,
+  "14": 9,
+  "20": 1
+ },
+ "shadowCount": 3,
+ "borderedInsideBordered": 8,
+ "borderedInsideBorderedSample": [
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-lg border border-border/70 bg-card p-2.5 c",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-lg border border-border/70 bg-card p-2.5 c",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-lg border border-border/70 bg-card p-2.5 c",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-lg border border-border/70 bg-card p-2.5 c",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-lg border border-border/70 bg-card p-2.5 c",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-lg border border-border/70 bg-card p-2.5 c"
+ ],
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 344,
+  "docH": 1188
+ }
+}

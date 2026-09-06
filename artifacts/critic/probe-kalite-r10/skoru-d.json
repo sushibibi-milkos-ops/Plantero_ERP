@@ -1,0 +1,97 @@
+{
+ "label": "skoru-d",
+ "route": "/kalite/tedarikci-skoru",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [
+  "2026 @span"
+ ],
+ "rowCount": 6,
+ "rowHeight": 36,
+ "rowBorderBottom": "1px oklab(0.92 0.00112267 -0.00383922 / 0.5)",
+ "kpiValues": [],
+ "interactiveCount": 37,
+ "smallTargetsInMain": [
+  {
+   "sel": "button \"Eylül\"",
+   "w": 112,
+   "h": 36
+  },
+  {
+   "sel": "button \"2026\"",
+   "w": 96,
+   "h": 36
+  },
+  {
+   "sel": "button \"Skoru Hesapla\"",
+   "w": 145,
+   "h": 36
+  },
+  {
+   "sel": "input \"Tabloda ara\"",
+   "w": 256,
+   "h": 32
+  },
+  {
+   "sel": "button \"Sütunlar\"",
+   "w": 32,
+   "h": 32
+  },
+  {
+   "sel": "button \"Tedarikçi\"",
+   "w": 80,
+   "h": 28
+  },
+  {
+   "sel": "button \"Dönem\"",
+   "w": 66,
+   "h": 28
+  },
+  {
+   "sel": "button \"Skor\"",
+   "w": 54,
+   "h": 28
+  },
+  {
+   "sel": "button \"Zamanında\"",
+   "w": 80,
+   "h": 28
+  },
+  {
+   "sel": "button \"QC geçme\"",
+   "w": 76,
+   "h": 28
+  },
+  {
+   "sel": "button \"Miktar doğruluğu\"",
+   "w": 114,
+   "h": 28
+  }
+ ],
+ "fontSizesMain": {
+  "11": 1,
+  "12": 10,
+  "13": 38,
+  "14": 1,
+  "24": 1
+ },
+ "shadowCount": 4,
+ "borderedInsideBordered": 2,
+ "borderedInsideBorderedSample": [
+  "rounded border bg-background px-1 py-px font-mono  <= flex items-center border-t border-sidebar-border/7",
+  "rounded border bg-background px-1.5 py-px font-mon <= hidden h-8 w-56 items-center gap-2 rounded-md bord"
+ ],
+ "bottomNav": null
+}

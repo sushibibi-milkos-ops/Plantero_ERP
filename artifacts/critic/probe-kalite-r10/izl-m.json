@@ -1,0 +1,40 @@
+{
+ "label": "izl-m",
+ "route": "/kalite/izlenebilirlik",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 11,
+ "smallTargetsInMain": [],
+ "fontSizesMain": {
+  "13": 1,
+  "14": 1,
+  "16": 1,
+  "20": 1
+ },
+ "shadowCount": 1,
+ "borderedInsideBordered": 0,
+ "borderedInsideBorderedSample": [],
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 0,
+  "docH": 844
+ }
+}

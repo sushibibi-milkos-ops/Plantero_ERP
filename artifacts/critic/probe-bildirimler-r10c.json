@@ -1,0 +1,50 @@
+[
+  {
+    "tag": "BUTTON",
+    "role": "tab",
+    "text": "Tümü (3)",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+    "outline": "auto 1px off:0px",
+    "fv": true
+  },
+  {
+    "tag": "BUTTON",
+    "role": "tab",
+    "text": "Okunmamış (3)",
+    "boxShadow": "none",
+    "outline": "auto 1px off:0px",
+    "fv": true
+  },
+  {
+    "tag": "BUTTON",
+    "role": null,
+    "text": "Tümünü okundu işaretle",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+    "outline": "none 0px off:0px",
+    "fv": true
+  },
+  {
+    "tag": "A",
+    "role": null,
+    "text": "SKT uyarısıSKT GEÇMİŞ: 1 lot23",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+    "outline": "none 0px off:1px",
+    "fv": true
+  },
+  {
+    "tag": "A",
+    "role": null,
+    "text": "SKT uyarısıSKT KRİTİK (30 gün)",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+    "outline": "none 0px off:1px",
+    "fv": true
+  },
+  {
+    "tag": "A",
+    "role": null,
+    "text": "SKT uyarısıSKT UYARI (60 gün):",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+    "outline": "none 0px off:1px",
+    "fv": true
+  }
+]
