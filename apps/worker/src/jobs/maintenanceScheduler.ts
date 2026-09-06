@@ -1,19 +1,15 @@
-import { and, eq, lte } from 'drizzle-orm';
-import { db, maintenancePlans } from '@plantero/db';
+import { db } from '@plantero/db';
+import { SYSTEM_ACTOR } from '@plantero/core';
+import { generateDueOrders } from '@plantero/core/maintenance/plans';
 
 /**
- * Bakım planlayıcı — iskelet.
- * TODO: core bağlanacak — bakım modülü için `packages/core/src/maintenance/*.ts` servisi hazır
- * olduğunda, vadesi gelen (`nextDueAt <= bugün`) her plan için otomatik `maintenance_orders`
- * kaydı (MO-YYYY-NNNNNN, `nextDocNo` ile) burada açılacak. Şimdilik yalnızca vadesi gelen plan
- * sayısını okuyup raporluyoruz.
+ * Bakım planlayıcı (worker cron `maintenance-scheduler`, 05:00) — docs/modules/bakim.md §2.
+ * Mantık `packages/core/src/maintenance/plans.ts::generateDueOrders`de (ARCHITECTURE §12: worker
+ * yalnızca tetikler); vadesi `bugün + 3 gün` içine düşen her aktif periyodik plan için otomatik
+ * `kind: 'preventive'`, `status: 'planned'` bakım iş emri açar. İdempotent: bir plan için zaten açık
+ * bir iş emri varsa yenisi açılmaz (worker her gün tekrar çalışır, çift üretmez).
  */
 export async function runMaintenanceScheduler(): Promise<Record<string, unknown>> {
-  const todayIso = new Date().toISOString().slice(0, 10);
-  const due = await db
-    .select({ id: maintenancePlans.id, name: maintenancePlans.name, machineId: maintenancePlans.machineId })
-    .from(maintenancePlans)
-    .where(and(eq(maintenancePlans.isActive, true), lte(maintenancePlans.nextDueAt, todayIso)));
-
-  return { duePlans: due.length, status: 'core bağlanacak (bakım modülü)' };
+  const result = await db.transaction((tx) => generateDueOrders(tx, SYSTEM_ACTOR));
+  return { ...result };
 }

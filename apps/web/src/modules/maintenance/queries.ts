@@ -1,5 +1,5 @@
 import 'server-only';
-import { and, asc, desc, eq, gte, inArray, isNotNull, lte } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, lte } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
 import { D, round2, sum } from '@plantero/core';
 import { businessDate, addDays } from '@plantero/core/dates';

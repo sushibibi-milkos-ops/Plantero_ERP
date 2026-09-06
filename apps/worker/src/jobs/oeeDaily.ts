@@ -1,16 +1,16 @@
-import { eq } from 'drizzle-orm';
-import { db, machines, productionLines } from '@plantero/db';
+import { db } from '@plantero/db';
+import { businessDate } from '@plantero/core/dates';
+import { recomputeOeeForDay } from '@plantero/core/maintenance/oee';
 
 /**
- * Günlük OEE hesaplama — iskelet.
- * TODO: core bağlanacak — üretim/bakım modülü `downtimes` + `work_order_events` +
- * `work_order_outputs` verisinden günlük availability/performance/quality/OEE hesaplayıp
- * `oee_records`'a yazan servisi sağladığında burada çağrılacak. Şimdilik yalnızca aktif
- * hat/makine sayısını raporluyoruz.
+ * Günlük OEE hesaplama (worker cron `oee-daily`, 23:30) — docs/modules/bakim.md §4.
+ * Hesap `packages/core/src/production/yield.ts::computeLineOeeForDay`de (üretim modülü `/uretim/hatlar`
+ * canlı gösterim için zaten yazmıştı); bu job yalnızca GÜNÜN SONUNDA (23:30, gün büyük ölçüde
+ * tamamlanmışken) o günün sonucunu `oee_records`'a KALICI olarak yazar (`packages/core/src/maintenance/oee.ts`)
+ * — `/bakim/oee` trend grafiği ve duruş pareto'su bu kalıcı kayıtlardan beslenir.
  */
 export async function runOeeDaily(): Promise<Record<string, unknown>> {
-  const activeMachines = await db.select({ id: machines.id }).from(machines).where(eq(machines.isActive, true));
-  const activeLines = await db.select({ id: productionLines.id }).from(productionLines).where(eq(productionLines.isActive, true));
-
-  return { activeMachines: activeMachines.length, activeLines: activeLines.length, status: 'core bağlanacak (üretim/bakım modülü)' };
+  const today = businessDate(new Date());
+  const rows = await db.transaction((tx) => recomputeOeeForDay(tx, today));
+  return { day: today, linesComputed: rows.length, records: rows };
 }
