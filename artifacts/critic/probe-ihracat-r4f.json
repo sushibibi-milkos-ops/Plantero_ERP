@@ -1,0 +1,7 @@
+{
+ "ariaInvalid": "true",
+ "activeElId": "shipment-sales-order-trigger",
+ "isActiveTrigger": true,
+ "errorText": true,
+ "placeholderStillSame": true
+}

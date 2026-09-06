@@ -33,7 +33,10 @@ export function PackingListTable({ packages }: { packages: Packages }) {
         id: 'lot', accessorFn: (r) => r.lotNo ?? '', header: 'Lot', meta: { width: 150, mobile: 'badge' },
         cell: ({ row }) => (row.original.lotId ? <LotBadge lotNo={row.original.lotNo} status={row.original.lotStatus} id={row.original.lotId} /> : <span className="text-muted-foreground">—</span>),
       },
-      { id: 'qty', accessorFn: (r) => r.qty, header: 'Miktar', meta: { align: 'right', width: 100 }, cell: ({ row }) => <span className="font-mono tabular-nums">{formatQty(row.original.qty)}</span> },
+      // Tur 4 P2 ihracat-detay-12 kök neden düzeltmesi: aynı sayfadaki "Sipariş satırları" sekmesi
+      // miktarı birimle basıyordu ("40 ADET"), bu sütun çıplak sayı basıyordu ("40") — tek kural:
+      // ikisi de `formatQty(qty, uomCode)`.
+      { id: 'qty', accessorFn: (r) => r.qty, header: 'Miktar', meta: { align: 'right', width: 110 }, cell: ({ row }) => <span className="font-mono tabular-nums">{formatQty(row.original.qty, row.original.uomCode)}</span> },
       { id: 'hsCode', accessorFn: (r) => r.hsCode ?? '', header: 'GTİP', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono text-muted-foreground">{getValue<string>() || '—'}</span> },
       // Tur 2 P2 ihracat-detay-09 kök neden düzeltmesi: bu hücreler sıfır ağırlığı (numeric(18,4)
       // string'i "0.0000" — her zaman truthy) `formatQty` ile "0" basıyordu, aynı sayfadaki

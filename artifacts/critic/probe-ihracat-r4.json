@@ -16,24 +16,12 @@
    },
    {
     "head": "Ürün",
-    "w": 532,
+    "w": 692,
     "distinct": 39,
     "top": [
      "BADEM BAZI",
      "2x Badem Bazı",
      "3x Badem Bazı"
-    ],
-    "dash": 0,
-    "rows": 39,
-    "maxContent": 0
-   },
-   {
-    "head": "Kategori",
-    "w": 160,
-    "distinct": 2,
-    "top": [
-     "Mamul Ürünler",
-     "Hammaddeler"
     ],
     "dash": 0,
     "rows": 39,
@@ -144,9 +132,9 @@
     "w": 403,
     "distinct": 12,
     "top": [
-     "ATR dolaşım belgesi",
-     "EUR.1 dolaşım sertifikası",
-     "Sağlık sertifikası"
+     "Ticari fatura",
+     "ETGB (mikro ihracat beyanı)",
+     "Çeki listesi (packing list)"
     ],
     "dash": 0,
     "rows": 30,
@@ -181,9 +169,9 @@
     "w": 130,
     "distinct": 5,
     "top": [
-     "Gerekmiyor",
-     "Gerekli",
-     "Gönderildi"
+     "Gönderildi",
+     "Alındı",
+     "Hazır"
     ],
     "dash": 0,
     "rows": 30,
@@ -338,21 +326,21 @@
  "sevkMob": [
   {
    "h": 64,
-   "text": "EXP-2026-000001KapalıBioGrün Handels GmbH · 06.09.2026₺10.044,00",
-   "glued": true,
-   "raw": "\"EXP-2026-000001KapalıBioGrün Handels GmbH · 06.09.2026₺10.044,00\""
+   "text": "EXP-2026-000001KapalıBioGrün Handels GmbH₺10.044,00",
+   "glued": false,
+   "raw": "\"EXP-2026-000001KapalıBioGrün Handels GmbH₺10.044,00\""
   },
   {
    "h": 64,
-   "text": "EXP-2026-000002GümrükteBioGrün Handels GmbH · 09.09.2026 · 06.09.2026₺624.960,00",
+   "text": "EXP-2026-000002GümrükteBioGrün Handels GmbH · 09.09.2026₺624.960,00",
    "glued": true,
-   "raw": "\"EXP-2026-000002GümrükteBioGrün Handels GmbH · 09.09.2026 · 06.09.2026₺624.960,00\""
+   "raw": "\"EXP-2026-000002GümrükteBioGrün Handels GmbH · 09.09.2026₺624.960,00\""
   },
   {
    "h": 64,
-   "text": "EXP-2026-000003TaslakBioGrün Handels GmbH · 06.09.2026₺2.678,40",
-   "glued": true,
-   "raw": "\"EXP-2026-000003TaslakBioGrün Handels GmbH · 06.09.2026₺2.678,40\""
+   "text": "EXP-2026-000003TaslakBioGrün Handels GmbH₺2.678,40",
+   "glued": false,
+   "raw": "\"EXP-2026-000003TaslakBioGrün Handels GmbH₺2.678,40\""
   }
  ],
  "kurlarMob": [
@@ -396,33 +384,33 @@
  "belgelerMob": [
   {
    "h": 60,
-   "text": "ATR dolaşım belgesiGerekmiyorEXP-2026-000001",
+   "text": "Ticari faturaGönderildiEXP-2026-000001",
    "glued": false,
-   "raw": "\"ATR dolaşım belgesiGerekmiyorEXP-2026-000001\""
+   "raw": "\"Ticari faturaGönderildiEXP-2026-000001\""
   },
   {
    "h": 60,
-   "text": "EUR.1 dolaşım sertifikasıGerekmiyorEXP-2026-000001",
+   "text": "ETGB (mikro ihracat beyanı)AlındıEXP-2026-000001",
    "glued": false,
-   "raw": "\"EUR.1 dolaşım sertifikasıGerekmiyorEXP-2026-000001\""
+   "raw": "\"ETGB (mikro ihracat beyanı)AlındıEXP-2026-000001\""
   },
   {
    "h": 60,
-   "text": "Sağlık sertifikasıGerekliEXP-2026-000001",
+   "text": "Çeki listesi (packing list)HazırEXP-2026-000001",
    "glued": false,
-   "raw": "\"Sağlık sertifikasıGerekliEXP-2026-000001\""
+   "raw": "\"Çeki listesi (packing list)HazırEXP-2026-000001\""
   },
   {
    "h": 60,
-   "text": "Konşimento (B/L)GerekmiyorEXP-2026-000001",
+   "text": "Proforma faturaGönderildiEXP-2026-000001",
    "glued": false,
-   "raw": "\"Konşimento (B/L)GerekmiyorEXP-2026-000001\""
+   "raw": "\"Proforma faturaGönderildiEXP-2026-000001\""
   },
   {
    "h": 60,
-   "text": "CMR taşıma senediGerekmiyorEXP-2026-000001",
+   "text": "Nakliye sigortasıGerekmiyorEXP-2026-000001",
    "glued": false,
-   "raw": "\"CMR taşıma senediGerekmiyorEXP-2026-000001\""
+   "raw": "\"Nakliye sigortasıGerekmiyorEXP-2026-000001\""
   },
   {
    "h": 60,
@@ -518,9 +506,7 @@
   "Miktar",
   "Sevk edilen"
  ],
- "detaySeed": [
-  "MAEU-SEED-0042ETD09"
- ],
+ "detaySeed": [],
  "detayPacking": {
   "cols": [
    {
@@ -536,7 +522,7 @@
    },
    {
     "head": "Ürün",
-    "w": 422,
+    "w": 412,
     "distinct": 1,
     "top": [
      "Badem İçeceği 1 Litrelik UHT"
@@ -569,10 +555,10 @@
    },
    {
     "head": "Miktar",
-    "w": 100,
+    "w": 110,
     "distinct": 1,
     "top": [
-     "40"
+     "40 ADET"
     ],
     "dash": 0,
     "rows": 1,

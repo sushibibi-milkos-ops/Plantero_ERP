@@ -89,10 +89,15 @@ export async function getShipmentDetail(id: string) {
     ? await db.select().from(invoices).where(and(eq(invoices.salesOrderId, shipment.salesOrderId), eq(invoices.isExport, true))).orderBy(desc(invoices.createdAt))
     : [];
 
+  // Tur 4 P2 ihracat-detay-12 kök neden düzeltmesi: `uoms` join'i "Sipariş satırları" sekmesindeki
+  // `formatQty(qty, uomCode)` ile AYNI birimi ("40 ADET") üretmek için eklendi — daha önce çeki
+  // listesindeki Miktar hücresi çıplak sayıydı ("40"), aynı sayfadaki iki sekme aynı 40 adedi iki
+  // farklı biçimde gösteriyordu.
   const packages = await db
-    .select({ pkg: exportPackages, sku: products.sku, productName: products.name, lotNo: stockLots.lotNo, lotStatus: stockLots.status })
+    .select({ pkg: exportPackages, sku: products.sku, productName: products.name, uomCode: uoms.code, lotNo: stockLots.lotNo, lotStatus: stockLots.status })
     .from(exportPackages)
     .innerJoin(products, eq(products.id, exportPackages.productId))
+    .innerJoin(uoms, eq(uoms.id, products.uomId))
     .leftJoin(stockLots, eq(stockLots.id, exportPackages.lotId))
     .where(eq(exportPackages.shipmentId, id))
     .orderBy(asc(exportPackages.packageNo));
@@ -108,7 +113,7 @@ export async function getShipmentDetail(id: string) {
 
   return {
     shipment, partner: partner ?? null, order: order ?? null, orderLines, delivery: delivery ?? null, invoice: invoice ?? null,
-    otherDeliveries, otherInvoices, packages: packages.map((p) => ({ ...p.pkg, sku: p.sku, productName: p.productName, lotNo: p.lotNo, lotStatus: p.lotStatus })),
+    otherDeliveries, otherInvoices, packages: packages.map((p) => ({ ...p.pkg, sku: p.sku, productName: p.productName, uomCode: p.uomCode, lotNo: p.lotNo, lotStatus: p.lotStatus })),
     documents: documents.map((d) => ({ ...d.doc, responsibleName: d.responsibleName ?? null })), chain,
     progress: docProgress(documents.map((d) => ({ status: d.doc.status }))),
   };

@@ -233,7 +233,12 @@ async function seedCustomsShipment(tx: DbOrTx, summary: SeedSummary): Promise<vo
   await generateProforma(tx, shipment.id, SYSTEM_ACTOR);
   await linkDelivery(tx, shipment.id, delivery.id, SYSTEM_ACTOR);
   const packed = await buildPackingList(tx, shipment.id, SYSTEM_ACTOR);
-  await updateLogistics(tx, shipment.id, { trackingNo: 'MAEU-SEED-0042', etd: new Date(Date.now() + 3 * 86_400_000).toISOString().slice(0, 10) }, SYSTEM_ACTOR);
+  // Tur 4 P2 ihracat-detay-13 kök neden düzeltmesi: 'MAEU-SEED-0042' tohumlama artefaktıydı,
+  // kullanıcıya sevkiyat detayında ("Takip no") ham hâliyle görünüyordu. Maersk konşimento numarası
+  // biçimine uyan gerçekçi bir değer (MAEU + 9 hane, tire yok) — ihracat-kurlar-08'in aynı sınıf
+  // kusuru ('TCMB-SEED') kapatılırken burası atlanmıştı, kök neden aynı: kullanıcıya görünen hiçbir
+  // alanda 'SEED' dizesi bulunmamalı.
+  await updateLogistics(tx, shipment.id, { trackingNo: 'MAEU4207731', etd: new Date(Date.now() + 3 * 86_400_000).toISOString().slice(0, 10) }, SYSTEM_ACTOR);
   const customs = await advanceToCustoms(tx, shipment.id, { customsDeclarationNo: 'GB2026000045', customsDate: new Date().toISOString().slice(0, 10) }, SYSTEM_ACTOR);
 
   await auditCreate(tx, 'export_shipments', customs.id, `${customs.docNo} gümrükte (rejim: ${packed.shipment.regime}, ${customs.customsDeclarationNo})`);

@@ -18,14 +18,6 @@
     "truncated": false
    },
    {
-    "t": "···",
-    "x": 161,
-    "right": 168,
-    "w": 7,
-    "sw": 0,
-    "truncated": false
-   },
-   {
     "t": "₺10.044,00",
     "x": 291,
     "right": 363,
@@ -46,24 +38,16 @@
    {
     "t": "BioGrün·Handels·GmbH",
     "x": 27,
-    "right": 138,
-    "w": 111,
+    "right": 161,
+    "w": 134,
     "sw": 134,
-    "truncated": true
-   },
-   {
-    "t": "···",
-    "x": 138,
-    "right": 145,
-    "w": 7,
-    "sw": 0,
     "truncated": false
    },
    {
     "t": "···",
-    "x": 211,
-    "right": 221,
-    "w": 10,
+    "x": 161,
+    "right": 168,
+    "w": 7,
     "sw": 0,
     "truncated": false
    },
@@ -91,14 +75,6 @@
     "right": 161,
     "w": 134,
     "sw": 134,
-    "truncated": false
-   },
-   {
-    "t": "···",
-    "x": 161,
-    "right": 168,
-    "w": 7,
-    "sw": 0,
     "truncated": false
    },
    {

@@ -89,7 +89,12 @@ export function GtipMappingTable({ products, hsCodeOptions, editable }: { produc
     () => [
       { accessorKey: 'sku', header: 'SKU', meta: { width: 130, className: 'font-mono', mobile: 'subtitle' } },
       { accessorKey: 'name', header: 'Ürün', meta: { mobile: 'title' } },
-      { id: 'category1', accessorFn: (r) => r.category1 ?? '', header: 'Kategori', meta: { width: 160, mobile: 'hidden' }, cell: ({ getValue }) => getValue<string>() || <span className="text-muted-foreground">—</span> },
+      // Tur 4 P1 ihracat-gtip-08 kök neden düzeltmesi: `category1` ile `type` birebir eşlemeli
+      // (satılabilir ürünlerde 'Mamul Ürünler'↔finished, 'Hammaddeler'↔raw_material) — ikisi de
+      // aynı ayrımı gösteriyor, "Kategori" sıfır ek bilgiyle 160px'lik sütun genişliği tüketiyordu ve
+      // ekranın asli sütunları (Ürün/GTİP) sıkışıyordu. `defaultHidden`: sütun seçiciden hâlâ
+      // açılabilir, ayrım zaten filtre çubuğundaki "Tip" filtresinde var.
+      { id: 'category1', accessorFn: (r) => r.category1 ?? '', header: 'Kategori', meta: { width: 160, mobile: 'hidden', defaultHidden: true }, cell: ({ getValue }) => getValue<string>() || <span className="text-muted-foreground">—</span> },
       { id: 'type', accessorFn: (r) => r.type, header: 'Tip', meta: { width: 110, mobile: 'hidden' }, cell: ({ getValue }) => TYPE_LABEL[getValue<string>()] ?? getValue<string>() },
       {
         id: 'hsCode', accessorFn: (r) => r.hsCode ?? '', header: 'GTİP', meta: { width: 220, mobile: 'badge' },

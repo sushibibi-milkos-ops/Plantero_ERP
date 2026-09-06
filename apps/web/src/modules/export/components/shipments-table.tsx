@@ -23,11 +23,15 @@ export function ShipmentsTable({ shipments }: { shipments: ShipmentRow[] }) {
         cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.docsDone}/{row.original.docsTotal}</span>,
       },
       { id: 'proformaAmount', accessorFn: (r) => r.proformaAmount, header: 'Tutar (döviz)', meta: { align: 'right', width: 120, mobile: 'hidden' }, cell: ({ row }) => <MoneyCell value={row.original.proformaAmount} currency={row.original.currency} /> },
-      // `etd`/`createdAt`: mobil kartta `rest` alanı SAYILMASIN diye `mobile:'meta'` (mobile-cards.tsx —
-      // aksi halde `rest`in SONUNCUSU (en "parasal" alan sayılır) `createdAt` olur ve tutar hiç
+      // `etd`: mobil kartta `rest` alanı SAYILMASIN diye `mobile:'meta'` (mobile-cards.tsx — aksi
+      // halde `rest`in SONUNCUSU (en "parasal" alan sayılır) `createdAt` olur ve tutar hiç
       // görünmezdi, ihracat-sevk-02 kök nedeni). `amountTry` artık `rest`teki TEK/son alan.
+      // Tur 4 P1 ihracat-sevk-03 kök neden düzeltmesi: `createdAt` de `mobile:'meta'` idi — 390px'te
+      // alt satır "müşteri · ETD · oluşturma" üç segmente ayrılıyor, ETD dolu kartlarda hem müşteri
+      // adı hem son segment (oluşturma tarihi) kırpılıyordu. Sevkiyat için ETD daha bilgilendirici
+      // olduğundan `createdAt` mobilde tamamen gizlenir (masaüstünde sütun aynen kalır).
       { accessorKey: 'etd', header: 'ETD', meta: { width: 96, mobile: 'meta' }, cell: ({ row }) => (row.original.etd ? formatDate(row.original.etd) : <span className="text-muted-foreground">—</span>) },
-      { accessorKey: 'createdAt', header: 'Oluşturma', meta: { width: 96, mobile: 'meta' }, cell: ({ row }) => formatDate(row.original.createdAt) },
+      { accessorKey: 'createdAt', header: 'Oluşturma', meta: { width: 96, mobile: 'hidden' }, cell: ({ row }) => formatDate(row.original.createdAt) },
       { accessorKey: 'amountTry', header: 'Tutar (₺)', meta: { align: 'right', width: 120 }, cell: ({ row }) => <MoneyCell value={row.original.amountTry} /> },
     ],
     [],

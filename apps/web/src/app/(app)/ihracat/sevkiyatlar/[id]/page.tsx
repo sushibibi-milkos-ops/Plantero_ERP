@@ -47,6 +47,12 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
 
   const deliveryCandidates = otherDeliveries.filter((d) => d.id !== shipment.deliveryId).map((d) => ({ id: d.id, docNo: d.docNo }));
   const invoiceCandidates = otherInvoices.filter((i) => i.id !== shipment.invoiceId).map((i) => ({ id: i.id, docNo: i.docNo, label: `${i.grandTotal} ${i.currency}` }));
+  // Tur 4 P1 ihracat-detay-11 kök neden düzeltmesi: "Fatura & kur" boş durumu her zaman "üstteki
+  // 'Faturaya bağla' eylemiyle bağlanır" diyordu, ama o düğme (shipment-actions.tsx) yalnızca
+  // status ∈ {shipped, delivered} VE bağlanabilecek fatura adayı varken render edilir — ör. 'customs'
+  // durumunda düğme yok, boş durum kullanıcıyı var olmayan bir eyleme yönlendiriyordu. Aynı koşulu
+  // burada tekrarlamak yerine tek doğruluk kaynağı: `canLinkInvoice`.
+  const canLinkInvoice = !shipment.invoiceId && ['shipped', 'delivered'].includes(shipment.status) && invoiceCandidates.length > 0;
 
   return (
     <>
@@ -175,7 +181,15 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
                   </div>
                 </div>
               ) : (
-                <EmptyState compact title="Henüz bağlı fatura yok" description="Sevkiyat sipariş/irsaliye üzerinden faturalandıktan sonra üstteki “Faturaya bağla” eylemiyle bağlanır." />
+                <EmptyState
+                  compact
+                  title="Henüz bağlı fatura yok"
+                  description={
+                    canLinkInvoice
+                      ? 'Sevkiyat sipariş/irsaliye üzerinden faturalandıktan sonra üstteki “Faturaya bağla” eylemiyle bağlanır.'
+                      : 'Sevkiyat yüklendikten (Yüklendi/Teslim edildi) ve faturalandıktan sonra buraya bağlanır.'
+                  }
+                />
               )}
             </div>
             <div className="rounded-lg border border-border/60 p-4">

@@ -24,7 +24,8 @@
    ],
    "total": 59,
    "scoreNotes": "Tur 3→4: 60 → 59. Kriter 9: 5→4 — 390px'te ETD'si olan sevkiyat kartının meta satırı İKİ yerden kırpılıyor (müşteri adı sw134→w111 truncate + son tarih '06.09....' kırpık); modül `etd` ve `createdAt` alanlarının İKİSİNİ birden mobile:'meta' yapıyor (shipments-table.tsx:29-30), 390px'te 3 segment + 2 ayraç sığmıyor (probe-ihracat-r4e.json card 1). Diğer kriterler doğrulandı: 1440x900 h1 24px/600, gövde 13px (49 düğüm), etiket 12px (15), 14px (3) — 3 kademe; 10 sütun, 3 satır x 36px, wrapScrollW=wrapClientW=1152 (taşma yok); €/₺ sağ hizalı tabular-nums, €0,00 muted; 390x844: documentElement 390=390, 3/3 kart 63,5px, gerçek dokunma hedefi <44px yok (yalnız breadcrumb metni).",
-   "open": [
+   "open": [],
+   "closed": [
     {
      "id": "ihracat-sevk-03",
      "criterion": 9,
@@ -33,10 +34,10 @@
      "measure": "390x844 EXP-2026-000002 kartı: partnerName span scrollWidth=134 > width=111 (truncated), meta zincirinde 2 ayraç, son segment kırpık ('06.09....'); ETD'siz kartlarda 0 kırpma (probe-ihracat-r4e.json '/ihracat/sevkiyatlar' card 1)",
      "target": "390px'te kart meta satırındaki HİÇBİR segment kırpılmasın (her segment için scrollWidth ≤ width) ve alt başlıktan sonra en çok 1 meta segmenti kalsın: `createdAt` sütununu mobile:'hidden' yap (ETD sevkiyat için daha bilgilendirici) — ya da meta zincirini tek segmente indir.",
      "file": "apps/web/src/modules/export/components/shipments-table.tsx:29-30",
-     "openedRound": 4
-    }
-   ],
-   "closed": [
+     "openedRound": 4,
+     "measureAfter": "390x844: EXP-2026-000002 kartında partnerName scrollWidth=134=width=134 (0 kırpma), meta zincirinde artık tek segment (ETD '09.09.2026'); createdAt sütunu mobile:'hidden' yapıldı — 3/3 kartta 0 kırpma (probe-ihracat-r4e.json, artifacts/screens/ihracat-sevkiyatlar/mobile.png canlı doğrulandı).",
+     "closedRound": 5
+    },
     {
      "id": "ihracat-sevk-01",
      "criterion": 5,
@@ -89,7 +90,8 @@
    ],
    "total": 57,
    "scoreNotes": "Tur 3→4: 60 → 57 (yeni DB kaydı EXP-2026-000002 / e9603270-… üzerinde 4 sekme x 2 viewport yeniden ölçüldü). Kriter 7: 5→4 — 'Fatura & kur' boş durumu ekranda BULUNMAYAN bir eyleme yönlendiriyor. Kriter 6: 5→4 — aynı sayfada aynı miktar iki farklı biçimde ('40 ADET' / '40'). Kriter 11: 5→4 — 'Takip no MAEU-SEED-0042' tohumlama artefaktı ekranda; aynı sınıftaki kurlar-08 ('TCMB-SEED') Tur 4'te kapatılmışken bu yüzey atlanmış. Doğrulananlar: 1440x900 taşma yok (4 sekmede de wrapScrollW=wrapClientW=1152), Belgeler sekmesi dash 0/8 (detay-06 kapalı), Çeki listesi Net/Brüt kg tek glif '—' (detay-09 kapalı), Belgeler mobil kartları 60px, mobilde 'Düzenle' 44px (detay-07/08 kapalı), ham enum yok (detay-10 kapalı).",
-   "open": [
+   "open": [],
+   "closed": [
     {
      "id": "ihracat-detay-11",
      "criterion": 7,
@@ -98,7 +100,9 @@
      "measure": "1440x900 Fatura & kur sekmesi, EXP-2026-000002 (status=customs): boş durum metni “Faturaya bağla” diyor; main içindeki düğmeler = ['Gümrük bilgisini güncelle','Yüklendi işaretle','İptal et','Düzenle'] → eşleşme 0 (probe-ihracat-r4.json detayHeaderButtons + detayInvoiceEmpty.btns)",
      "target": "Boş durum metni yalnızca o anda ekranda görünen bir eylemi adlandırsın: metni duruma bağla — 'Faturaya bağla' düğmesi görünmüyorsa 'Sevkiyat yüklendikten ve faturalandıktan sonra buraya bağlanır.' gibi eylemsiz metin; düğme görünüyorsa EmptyState.action ile aynı eylemi boş durumun içine koy. Kabul ölçütü: boş durum metninde tırnak içinde adlandırılan her eylem için ekranda o metni taşıyan bir düğme bulunsun (eşleşme 1/1).",
      "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx:178 (+ shipment-actions.tsx:148)",
-     "openedRound": 4
+     "openedRound": 4,
+     "measureAfter": "1440x900, EXP-2026-000002 (status=customs) Fatura & kur sekmesi: boş durum metni artık 'Sevkiyat yüklendikten (Yüklendi/Teslim edildi) ve faturalandıktan sonra buraya bağlanır.' — tırnak içinde adlandırılan bir eylem yok (canLinkInvoice=false); ctaNamed=null, btns=['Gümrük bilgisini güncelle','Yüklendi işaretle','İptal et','Düzenle', ...] (probe-ihracat-r4.json detayInvoiceEmpty; artifacts/screens/ihracat-sevkiyat-detay-sekmeler-r4/desktop-fatura-kur.png).",
+     "closedRound": 5
     },
     {
      "id": "ihracat-detay-12",
@@ -108,7 +112,9 @@
      "measure": "1440x900: detayLines 'Miktar' hücresi = '40 ADET'; detayPacking 'Miktar' hücresi = '40' (probe-ihracat-r4.json)",
      "target": "Aynı sayfadaki iki tabloda miktar tek kuralla yazılsın: çeki listesi Miktar hücresi de QtyCell/birimli olsun (ör. '40 ADET') — ya da başlık 'Miktar (ADET)' olup ikisi de çıplak sayı kalsın. Kabul ölçütü: iki sekmede miktar biçimi aynı.",
      "file": "apps/web/src/modules/export/components/packing-list-table.tsx",
-     "openedRound": 4
+     "openedRound": 4,
+     "measureAfter": "1440x900: Çeki listesi sekmesi Miktar hücresi artık '40 ADET' (packages sorgusuna uoms join eklendi, hücre formatQty(qty, uomCode) kullanıyor) — Sipariş satırları sekmesiyle birebir aynı biçim (probe-ihracat-r4.json detayPacking.cols[Miktar].top=['40 ADET']; önceki ölçüm '40' idi).",
+     "closedRound": 5
     },
     {
      "id": "ihracat-detay-13",
@@ -118,10 +124,10 @@
      "measure": "1440x900 detay: main metninde /SEED/ eşleşmesi = ['MAEU-SEED-0042'] (probe-ihracat-r4.json detaySeed)",
      "target": "Kullanıcıya gösterilen hiçbir alanda 'SEED' dizesi olmasın: seed verisi gerçekçi taşıyıcı takip numarası üretsin (ör. MAEU4207731) ya da UI aynı etiket eşlemesinden geçirsin. Kabul ölçütü: /ihracat/** rotalarında görünür metinde /SEED/ eşleşmesi 0.",
      "file": "packages/db/src/seed/*.ts (export_shipments.tracking_no) veya apps/web/src/modules/export/components/logistics-panel.tsx",
-     "openedRound": 4
-    }
-   ],
-   "closed": [
+     "openedRound": 4,
+     "measureAfter": "main metninde /SEED/ eşleşmesi artık 0 (detaySeed=[]); Takip no alanı 'MAEU4207731' (seed/export.ts trackingNo güncellendi, gerçekçi Maersk B/L biçimi) — probe-ihracat-r4.json detaySeed; artifacts/screens/ihracat-sevkiyat-detay-sekmeler-r4/desktop-fatura-kur.png Lojistik panelinde görünür.",
+     "closedRound": 5
+    },
     {
      "id": "ihracat-detay-01",
      "criterion": 9,
@@ -284,7 +290,8 @@
    ],
    "total": 55,
    "scoreNotes": "Tur 3→4: 60 → 55. Ekranın TEK asli kontrolü (sipariş seçici) ilk kez AÇIK hâlde ölçüldü ve ham DB sayısı gösterdiği görüldü. Kriter 6: 5→3 — seçenek satırı '216.0000 EUR' (nokta ondalık, 4 basamak, simge yok) ve müşteri adına yapışık; 2px altındaki seçim rozeti aynı tutarı '€216,00' yazıyor. Kriter 7: 5→4 — geçersiz gönderimde kırmızı metin çıkıyor ama alan aria-invalid/destructive kenarlık almıyor ve hata metni placeholder'ın aynısı. Kriter 8: 5→4 — hata alana değil yalnızca altındaki metne yansıyor. Kriter 11: 5→4 — 6 metin alanının yalnız 2'sinde placeholder var. Doğrulananlar: 1440x900 blok sağ kenarları 1032/1032/1032, gönder düğmesi right=1032 (yeni-03/04 kapalı); alanlar 36px (masaüstü) / 44px (mobil), 390px'te tek kolon, taşma yok.",
-   "open": [
+   "open": [],
+   "closed": [
     {
      "id": "ihracat-yeni-05",
      "criterion": 6,
@@ -293,7 +300,9 @@
      "measure": "1440x900 ve 390x844, seçici açık: [role=option] metni = 'SO-2026-000033 — BioGrün Handels GmbH216.0000 EUR'; seçim sonrası rozet metni '€216,00' (probe-ihracat-r4d.json desktop/mobile + desktopChip)",
      "target": "Seçenek açıklaması ortak para biçimleyiciden geçsin (MoneyCell/formatMoney ile aynı çıktı): '€216,00'. Kabul ölçütü: seçenek metninde /\\d+\\.\\d{3,}/ eşleşmesi 0, para simgesi var, ondalık ayracı virgül ve 2 basamak, ad ile tutar arasında görünür ayrım (ayrı hizalanmış sütun ya da ' · ') — yani ekrandaki iki tutar birebir aynı dizeyle yazılsın.",
      "file": "apps/web/src/modules/export/components/shipment-create-form.tsx:66",
-     "openedRound": 4
+     "openedRound": 4,
+     "measureAfter": "1440x900 ve 390x844, seçici açık: [role=option] metni artık 'SO-2026-000033 — BioGrün Handels GmbH' + sağda ayrı '€216,00' (formatMoney ile); seçim sonrası rozet de '€216,00' — iki yerde birebir aynı dize, /\\d+\\.\\d{3,}/ eşleşmesi 0 (probe-ihracat-r4d.json yeniden çalıştırıldı: option.text='SO-2026-000033 — BioGrün Handels GmbH€216,00', desktopChip '...€216,00').",
+     "closedRound": 5
     },
     {
      "id": "ihracat-yeni-06",
@@ -303,7 +312,9 @@
      "measure": "1440x900, boş formla gönderim sonrası: [aria-invalid=true] sayısı 0, toast 0, kırmızı metin 'Sipariş seçin' var, seçici kenarlığı değişmedi (probe-ihracat-r4c.json afterSubmit; artifacts/screens/ihracat-sevkiyatlar-yeni/desktop-submit-empty.png)",
      "target": "Hatalı alan görünür ve erişilebilir biçimde işaretlensin: Combobox tetikleyicisine `aria-invalid={!!error}` ve destructive kenarlık (`aria-invalid:border-destructive aria-invalid:ring-destructive/20`), hata metni placeholder'dan farklı bir cümle olsun (ör. 'İhracat siparişi seçilmedi'). Kabul ölçütü: geçersiz gönderim sonrası [aria-invalid=true] ≥ 1 ve hata metni ≠ placeholder metni.",
      "file": "apps/web/src/modules/export/components/shipment-create-form.tsx:101-102, apps/web/src/components/form/combobox.tsx",
-     "openedRound": 4
+     "openedRound": 4,
+     "measureAfter": "1440x900, boş formla gönderim sonrası: tetikleyici artık aria-invalid='true' (Combobox → FormCombobox'a geçildi, FormControl'ün Slot birleştirmesi ile) ve destructive kenarlık görünür; hata metni 'İhracat siparişi seçilmedi' ≠ placeholder 'Sipariş seçin' (probe-ihracat-r4f.json: ariaInvalid='true', errorText=true; artifacts/screens/ihracat-sevkiyatlar-yeni/desktop-submit-empty.png).",
+     "closedRound": 5
     },
     {
      "id": "ihracat-yeni-07",
@@ -313,7 +324,9 @@
      "measure": "1440x900: boş gönderim sonrası [data-sonner-toast]/[role=alert]/[role=status] sayısı 0, document.activeElement değişmedi, URL aynı (probe-ihracat-r4c.json afterSubmit.toasts=[])",
      "target": "Geçersiz gönderimde odak ilk hatalı alana taşınsın (`form.setFocus`/`shouldFocusError`) ve/veya tek satırlık hata özeti gösterilsin. Kabul ölçütü: gönderim sonrası activeElement = hatalı kontrol, ya da görünür [role=alert] sayısı ≥ 1.",
      "file": "apps/web/src/modules/export/components/shipment-create-form.tsx (useForm / onSubmit)",
-     "openedRound": 4
+     "openedRound": 4,
+     "measureAfter": "1440x900, boş formla gönderim sonrası document.activeElement artık #shipment-sales-order-trigger (onInvalid handler ile odak taşınıyor) — probe-ihracat-r4f.json isActiveTrigger=true, activeElId='shipment-sales-order-trigger'.",
+     "closedRound": 5
     },
     {
      "id": "ihracat-yeni-08",
@@ -323,10 +336,10 @@
      "measure": "1440x900: main içindeki input/textarea placeholder dağılımı = 2 dolu / 6 boş (probe-ihracat-r4b.json formFields)",
      "target": "Tek kural: ya biçimi belirsiz olan HER serbest metin alanına örnek placeholder ver (liman, nakliyeci, not), ya da yalnızca biçim kısıtı olan alanda bırak (ISO-2) ve diğerlerini temizle. Kabul ölçütü: aynı tipteki alanlarda placeholder oranı 0/6 veya 6/6.",
      "file": "apps/web/src/modules/export/components/shipment-create-form.tsx",
-     "openedRound": 4
-    }
-   ],
-   "closed": [
+     "openedRound": 4,
+     "measureAfter": "1440x900: main içindeki 6 serbest metin alanının 6/6'sında artık örnek placeholder var (Yükleme/Varış limanı, Nakliyeci, Not eklendi) — 0/6↔6/6 kuralı sağlandı (artifacts/screens/ihracat-sevkiyatlar-yeni/desktop.png canlı doğrulandı).",
+     "closedRound": 5
+    },
     {
      "id": "ihracat-yeni-01",
      "criterion": 7,
@@ -591,7 +604,8 @@
    ],
    "total": 59,
    "scoreNotes": "Tur 3→4: 60 → 59. Kriter 3: 5→4 — 'Kategori' (160px) ve 'Tip' (110px) sütunları AYNI alanın iki kopyası: 39/39 satırda eşleme bire bir ('Mamul Ürünler'↔'Mamul' 38 satır, 'Hammaddeler'↔'Hammadde' 1 satır) ve etiketler neredeyse aynı kelime; ikisi birlikte 1152px tablonun %23,4'ünü tek bir bit bilgi için harcıyor, üstelik başlıkta ayrıca bir 'Tip' filtresi var. Doğrulananlar: taşma yok (wrapScrollW=wrapClientW=1152, gtip-07 kapalı kaldı), GTİP sütunu distinct=2 (gtip-05 kapalı), 39 satır x 36,5–37px, 390x844: 39/39 kart 60px, dokunma hedefi <44px yok (gtip-06 kapalı).",
-   "open": [
+   "open": [],
+   "closed": [
     {
      "id": "ihracat-gtip-08",
      "criterion": 3,
@@ -600,10 +614,10 @@
      "measure": "1440x900: Kategori w=160 distinct=2 ['Mamul Ürünler','Hammaddeler'], Tip w=110 distinct=2 ['Mamul','Hammadde'], 39/39 satırda eşleme bijektif (psql: category1×type = {Mamul Ürünler,finished}:38, {Hammaddeler,raw_material}:1); 270/1152 = %23,4 (probe-ihracat-r4.json gtipCols)",
      "target": "Aynı ayrımı iki sütun yapmasın: 'Kategori' sütununu varsayılan görünümden kaldır (sütun seçicide kalsın; ayrım zaten 'Tip' filtresinde) ya da category1 gerçekten farklı bir kırılım taşıyana kadar tek sütuna indir. Kabul ölçütü: varsayılan görünümde hiçbir iki sütunun değer eşlemesi bijektif olmasın; kazanılan ≥110px 'Ürün'/'GTİP' sütunlarına gitsin.",
      "file": "apps/web/src/modules/export/components/gtip-mapping-table.tsx:92-93",
-     "openedRound": 4
-    }
-   ],
-   "closed": [
+     "openedRound": 4,
+     "measureAfter": "1440x900: 'Kategori' sütunu varsayılan görünümden kaldırıldı (meta.defaultHidden:true, sütun seçicide kalıyor); görünür sütunlar artık SKU/Ürün/Tip/GTİP, Tip (distinct=2) ile bijektif eşleşen ikinci sütun yok; Ürün genişliği 692px'e çıktı (kazanılan alan Ürün'e gitti) (probe-ihracat-r4.json gtipCols).",
+     "closedRound": 5
+    },
     {
      "id": "ihracat-gtip-01",
      "criterion": 12,
