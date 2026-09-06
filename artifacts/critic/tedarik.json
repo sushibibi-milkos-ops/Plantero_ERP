@@ -1,10 +1,10 @@
 {
  "module": "tedarik",
- "round": 8,
+ "round": 9,
  "note": "Tur 6 (kritik gecisi). Tur 5'te builder tarafindan kapatilan 19 bulgunun tamami yeniden olculdu; 19'u da KAPALI dogrulandi (kritik-stok-07/08/09/10/11/12, onay-06/07/08, siparisler-04, po-detay-06/07/09/10/11, yeni-06, tedarikciler-08..15). Tur 5'in iki acik bulgusundan po-detay-05 modul tarafinda hedefe ulasti ve paylasilan bilesene (module:'shell') tasindi; po-detay-08 hala acik (8px, degismedi) ve o da shell'e tasindi. Tur 6'da 3 rota KAZANDI (/satin-alma/onay-kuyrugu 58, /satin-alma/siparisler 57, /satin-alma/siparisler/yeni 57), 3 rota KAYBETTI (/satin-alma/kritik-stok 57 ama acik P1 var, /satin-alma/siparisler/[id] 54, /satin-alma/tedarikciler 54). En cok tekrar eden kusur: kimlik sutunlarinin kirpilmasi -- kritik-stok 'Tercihli tedarikci' 36/36 (165px), tedarikciler 'Tedarikci' 6/6 (135px), her ikisinde de ayni tabloda tek haneli sayilara 86-175px veriliyor. Ikinci: mobil kart yuksekligi hedefi (56-72px) asiyor -- tedarikciler 87,5px, po-detay satir karti 81px. Ucuncu: yesilin iki anlama gelmesi -- tedarikciler (anahtar + %100), po-detay (mevcut belge isareti + Tamamlandi rozeti); ayni sorun /satin-alma/onay-kuyrugu'nda Tur 5'te notr secim durumuna cevrilerek cozulmustu. Modul geneli: 6 rota segmentinin 0'inda loading.tsx/error.tsx yok (satis, ana-veri gibi diger modullerde var) -> kriter 7 modul boyunca 4'te sikisiyor. Dinamik rota: PO-2026-000003 = 35a69148-991d-46e1-a37b-ce1646900b6f (DB yeniden seed edildi). Olcum kaynaklari: artifacts/critic/measure-tedarik-r6/*.clean.json + artifacts/critic/probe-tedarik-r6.json + probe-tedarik-r6b.json (1440x900 & 390x844, PO-2026-000003 = 35a69148-991d-46e1-a37b-ce1646900b6f); kod duzeyi tarama: modulde `transition: all`, `ease-in`, `scale(0)`, >300ms sure YOK; tek animasyon `transition-colors`/`transition-transform` (suppliers-table.tsx:181/185) ve `animate-spin` (replenishment-panel.tsx:81).",
  "routes": {
   "/satin-alma/kritik-stok": {
-   "round": 8,
+   "round": 9,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -23,7 +23,7 @@
    ],
    "total": 58,
    "verdict": "KAZANAN: Linear (toplam 57 = 57 ve hiçbir kriter < 4, ancak açık P1 var: tedarik-kritik-stok-13)",
-   "scoreNotes": "Tur 8. KAPANDI: shell-mobile-card-meta-gap-01 (390px 36/36 kartta gap 181-196 -> 0, yetim '·' yok, kart 61,3px). Puan deltalari: kriter 9: 4->5 (mobil meta satiri onarildi; sw=cw=390, 44px alti etkilesimli eleman yok, kart 61,3px hedef 56-72 icinde). kriter 12: 4->5 (12'yi 4'te tutan TEK neden mobil yetim ayracti, olcumle kapandi; kutu-icinde-kutu yok, main'de default HTML gorunumu yok). kriter 7: 5 korunuyor ((app)/loading.tsx iskeleti + (app)/error.tsx sinirlari bu segmenti de kapsiyor; DataTable emptyState ikon+baslik+aciklama+eylem tasiyor). kriter 3: 4 korunuyor (satir 36px ve mobil kart 61,3px hedefte ama theadTop 414 -> ilk ekranda 13 satir < 15; tedarik-kritik-stok-density-01). kriter 5: 4 korunuyor (over=0, kirpma 5/36 -> 1/36 iyilesti ama thW 360 / ic kutu 276 kilidi 84px olu alan birakiyor; tedarik-colwidth-lock-01). Toplam 58 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 9 yeniden olcum — GERILEME YOK, IYILESME YOK (modul dosyalari Tur 6 commit'inden beri degismemis). Olcumler: 1440x900 theadTop 414 / aboveFold 13 / satir 36px, scroller over=0, main font kademeleri [24,19,14,13,12]; 390x844 sw=cw=390, mobil kart 61,3px (hedef 56-72), 44px alti etkilesimli eleman yok (yalnizca etkilesimsiz breadcrumb metni), h1 20/600, farkli renk 16; satir hover olculdu (bg rgba(0,0,0,0) -> oklab(.955/.5), cursor pointer); sayisal hucrelerde tabular-nums var. Puanlar Tur 8 ile ayni: kriter 3: 4 (aboveFold 13 < 15 — tedarik-kritik-stok-density-01), kriter 5: 4 (thW 360 / ic 276 kilit acigi — tedarik-colwidth-lock-01). Toplam 58 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero (acik 3 bulgu P2).",
    "open": [
     {
      "id": "tedarik-colwidth-lock-01",
@@ -31,10 +31,11 @@
      "severity": "P2",
      "openedRound": 7,
      "text": "Sutun genisligi ile hucre ic genisligi birbirini tutmuyor: 'Tercihli tedarikci' th 360px ama hucredeki `inline-block w-[276px] truncate` sabit -- 60px+ olu alan dururken 5/36 satir kirpiliyor ('Anadolu Kuruyemis ve Tarim Urunleri Ltd. Sti.' 1px farkla 'Ltd. ...' olup 'Sti.' kayboluyor, 'Kahve Dunyasi...' 55px). Ayni kalip iki kardes tabloda da var.",
-     "measure": "Tur 8 yeniden olcum (probe-tedarik-r8.json): kritik-stok col5 'Tercihli tedarikci' thW 360 / hucre ic kutu 276 (slack 84), kirpma 5/36 -> 1/36, maxClip 55. siparisler col1 thW 319 / ic 280 (slack 39), kirpma 2/16, maxClip 51. tedarikciler col0 thW 334 / ic 296 (slack 38), kirpma 1/6, maxClip 35. Uc tabloda da scroller over=0.",
+     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json): DEGISIKLIK YOK. kritik-stok col5 'Tercihli tedarikci' thW 360 / hucre ic kutu 276 (slack 84), kirpma 1/36, maxClip 55. siparisler col1 thW 319 / ic 280 (slack 39), kirpma 2/16, maxClip 51. tedarikciler col0 thW 334 / ic 296 (slack 38), kirpma 1/6, maxClip 35. Uc tabloda da scroller over=0. Kaynak dosyalar Tur 6'dan (d536fa1) beri dokunulmamis.",
      "target": "Hucre ic genisligi sutun genisligine kilitlensin (sabit `w-[Npx]` yerine `w-full max-w-full truncate`, ya da sutuna `meta.flex:true` verilip icerik `max-w-full` ile kilitlensin). Kabul olcumu: her uc tabloda innerW >= thW - 24 VE clipped 0 satir VE scroller over = 0.",
      "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:150 (preferredSupplierName `w-[276px]`), orders-table.tsx (Tedarikci hucresi `w-[280px]`), suppliers-table.tsx:33-36 (name hucresi `md:w-[296px]`)",
-     "reopenedRound": 8
+     "reopenedRound": 8,
+     "recheckedRound": 9
     },
     {
      "id": "tedarik-console-01",
@@ -42,10 +43,11 @@
      "severity": "P2",
      "openedRound": 7,
      "text": "Rota her yuklendiginde konsola 3 hata basiyor: motor calismamisken 'risk' ve 'suggestedQty' sutunlari render edilmiyor (Tur 6 -13/-10 duzeltmesi) ama sutun gorunurluk durumu (columnVisibility / defaultHidden) hala bu id'leri tasiyor. Islevsel etkisi yok (sutun menusu 7 dogru kaydi listeliyor) ama dev overlay 'Issues' rozeti aciyor.",
-     "measure": "Tur 8 yeniden olcum (probe-tedarik-r8.json kritik-stok.console): 3 tablo hatasi devam ediyor — \"[Table] Column with id 'suggestedQty' does not exist.\" x1, \"...'risk' does not exist.\" x2. Kardes 5 rotada 0 konsol hatasi. KOK NEDEN BULUNDU: critical-stock-table.tsx:167-169 `filters` HER ZAMAN columnId:'risk' tasiyor ve satir 186 `initialSorting=[{id:'suggestedQty'}]` — iki sutun da yalnizca hasEvaluation=true iken render ediliyor; DataTable bunlar icin table.getColumn(id) cagiriyor.",
+     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json + r9b): 3 tablo hatasi devam ediyor — \"[Table] Column with id 'suggestedQty' does not exist.\" x1, \"...'risk' does not exist.\" x2; ayrica atfedilemeyen 1 adet '404 (Not Found)' konsol satiri (r9d ile ag izlendi: 400+ donen istek YOK, dev overlay kaynakli). Kardes 5 rotada 0 konsol hatasi. Ekran goruntusunde sol altta kirmizi '2 Issues' dev rozeti gorunuyor.",
      "target": "Rotada konsol hatasi = 0. columnVisibility/defaultHidden anahtarlari yalnizca o an var olan sutun id'lerini icersin (hasEvaluation false iken 'risk'/'suggestedQty' anahtarlari da elensin).",
      "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:75-130 (kosullu sutunlar) + gorunurluk durumu",
-     "reopenedRound": 8
+     "reopenedRound": 8,
+     "recheckedRound": 9
     },
     {
      "id": "tedarik-kritik-stok-density-01",
@@ -53,9 +55,10 @@
      "severity": "P2",
      "openedRound": 8,
      "text": "Tablodan once UC ayri kontrol satiri yiginiyor (KPI seridi -> amber serit -> 'Sadece kritik/uyari' + 'Motoru calistir' satiri -> arac cubugu), thead 414px'e itiliyor; 1440x900'de ilk ekranda yalnizca 13 satir goruluyor. Kardes /satin-alma/siparisler'de thead 300px, 16 satir.",
-     "measure": "probe-tedarik-r8d.json kritik-stok blocks: PageHeader top72/h56, KPI top152/h80, amber serit top256/h38, icerik top310; probe-tedarik-r8.json theadTop=414, aboveFold=13. Karsilastirma siparisler: theadTop=300, aboveFold=16.",
+     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json): theadTop=414, aboveFold=13, satir 36px. Karsilastirma /satin-alma/siparisler: theadTop=300, aboveFold=16. Degisiklik yok.",
      "target": "theadTop <= 324 (900 - 36 baslik satiri - 15x36 satir) => ilk ekranda >=15 satir. Iki yol: (a) 'Sadece kritik/uyari' onay kutusu + 'Motoru calistir' butonu DataTable arac cubugu satirina tasinsin (ayri satir kalksin, ~52px kazanc), (b) amber serit (h38 + 16px bosluk = 54px) tek satirlik bir arac-cubugu ipucuna ya da KPI 'Kritik/Uyari' degerlerinin hint'ine indirgensin. Ikisi birlikte ~106px kazandirir.",
-     "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx (onay kutusu + 'Motoru calistir' satiri) + apps/web/src/app/(app)/satin-alma/kritik-stok/page.tsx (amber serit)"
+     "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx (onay kutusu + 'Motoru calistir' satiri) + apps/web/src/app/(app)/satin-alma/kritik-stok/page.tsx (amber serit)",
+     "recheckedRound": 9
     }
    ],
    "closed": [
@@ -204,7 +207,7 @@
    "winner": "Plantero"
   },
   "/satin-alma/onay-kuyrugu": {
-   "round": 8,
+   "round": 9,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -223,7 +226,7 @@
    ],
    "total": 59,
    "verdict": "KAZANAN: Plantero (58 >= 57, hicbir kriter < 4, acik P0/P1 yok)",
-   "scoreNotes": "Tur 8 yeniden olcum, gerileme yok: 1440x900 ve 390x844'te sw=cw (tasma yok), main font kademeleri [24,14,13,12], konsol hatasi 0, 390px'te 44px alti etkilesimli eleman yok (yalnizca etkilesimsiz breadcrumb 88,4x19,5), mobil kart eylemleri 44px. Puan deltasi: kriter 7: 4->5 — Tur 7'nin gerekcesi ('segmentte loading.tsx/error.tsx yok') hatali onermeye dayaniyordu: Next.js App Router en yakin ATA segmentin sinirini miras alir ve (app)/loading.tsx (baslik+KPI+8 satir iskeleti) ile (app)/error.tsx (ForbiddenError ayrimi + yeniden dene + guvenli ana sayfa) bu rotayi da kapsiyor; ustune ozenli bos/tek-kayit durumu var. kriter 3: 4 korunuyor (tek bekleyen taslak; 1440x900'de sayfanin ~%60'i bos — veri kaynakli, tasarim kaynakli degil). Toplam 59 >= 57 -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 9 yeniden olcum — gerileme yok: 1440x900 ve 390x844'te sw=cw (tasma yok), konsol hatasi 0, main font kademeleri [24,14,13,12], 390px'te 44px alti etkilesimli eleman yok, h1 20/600, farkli renk 14; klavye kisayol ipucu satiri + tek kart + ozenli eylem grubu duruyor. Puanlar degismedi; kriter 3: 4 korunuyor (tek bekleyen taslak — veri kaynakli bosluk). Toplam 59 >= 57, acik bulgu yok -> KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -308,7 +311,7 @@
    "winner": "Plantero"
   },
   "/satin-alma/siparisler": {
-   "round": 8,
+   "round": 9,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -327,7 +330,7 @@
    ],
    "total": 58,
    "verdict": "KAZANAN: Plantero (57 = 57, hicbir kriter < 4, acik P0/P1 yok)",
-   "scoreNotes": "Tur 8 yeniden olcum, gerileme yok: 16 satir x 36px, aboveFold 16, scroller over=0, mobil kart 63,5px ve meta satiri bitisik (gap -68, yetim ayrac yok), konsol hatasi 0, satir hover'i olculdu (bg rgba(0,0,0,0) -> oklab(.955/.5), cursor pointer). Puan deltasi: kriter 7: 4->5 (ayni gerekce: (app)/loading.tsx + (app)/error.tsx bu segmenti kapsiyor). kriter 4: 4 korunuyor (--primary iki anlam tasiyor: 'Yeni siparis' butonu + satir ici AI Sparkles isareti x2 -> tedarik-siparisler-05). kriter 6: 4 korunuyor (KpiCard.isStrip '₺47.160' 0 ondalik, tabloda '₺4.620,00' 2 ondalik -- ayni ekranda iki para bicimi). Toplam 58 >= 57 -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 9 yeniden olcum — gerileme yok: 16 satir x 36px, aboveFold 16, theadTop 300, scroller over=0, konsol hatasi 0, mobil kart 63,5px, 390px'te sw=cw=390 ve 44px alti etkilesimli eleman yok, satir hover olculdu (oklab(.955/.5) + pointer), para/oran hucrelerinde tabular-nums. Puanlar Tur 8 ile ayni: kriter 4: 4 (--primary iki anlam: 'Yeni siparis' butonu + satir ici AI Sparkles x2 — tedarik-siparisler-05 hala acik), kriter 6: 4 (KPI '₺47.160' 0 ondalik vs tablo '₺4.620,00' 2 ondalik — ayni ekranda iki para bicimi). Toplam 58 >= 57, acik P0/P1 yok -> KAZANAN: Plantero.",
    "open": [
     {
      "id": "tedarik-siparisler-05",
@@ -335,10 +338,11 @@
      "severity": "P2",
      "openedRound": 7,
      "text": "--primary (yesil) bu ekranda IKI anlam tasiyor: birincil eylem butonu ('Yeni siparis') VE satir icinde bir VERI isareti (AI taslagi Sparkles ikonu, 2 satirda). Ayni modulun kardes rotasi bu tam kusuru zaten cozmus: approval-queue-list.tsx:129 ayni Sparkles'i `text-muted-foreground` ile basiyor (Tur 4 P1 tedarik-onay-06 gerekcesi dosyada yorumla duruyor).",
-     "measure": "Tur 8 yeniden olcum: orders-table.tsx:24 hala `<Sparkles className='size-3.5 shrink-0 text-primary'>`; ekran goruntusunde PO-2026-000007 ve PO-2026-000008 satirlarinda yesil ikon + 'Yeni siparis' butonu = --primary tasiyan 2 anlam grubu. approval-queue-list.tsx:129 ayni ikonu text-muted-foreground ile basiyor.",
+     "measure": "Tur 9 yeniden olcum: orders-table.tsx:24 hala `<Sparkles className='size-3.5 shrink-0 text-primary'>`; masaustu ekran goruntusunde PO-2026-000007 ve PO-2026-000008 satirlarinda yesil ikon + yesil 'Yeni siparis' butonu = --primary tasiyan 2 anlam grubu. approval-queue-list.tsx:129 ayni ikonu text-muted-foreground ile basiyor (kardes rota bu kusuru cozmus).",
      "target": "--primary tasiyan gorunur eleman grubu = 1 (yalnizca birincil eylem). orders-table.tsx:24 `text-primary` -> `text-muted-foreground` (kardes dosyayla birebir).",
      "file": "apps/web/src/modules/purchasing/components/orders-table.tsx:24",
-     "reopenedRound": 8
+     "reopenedRound": 8,
+     "recheckedRound": 9
     }
    ],
    "closed": [
@@ -375,7 +379,7 @@
    "winner": "Plantero"
   },
   "/satin-alma/siparisler/[id]": {
-   "round": 8,
+   "round": 9,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -394,7 +398,7 @@
    ],
    "total": 60,
    "verdict": "KAZANAN: Stripe (54 < 56; acik P1: 3 rota-ici + 3 shell)",
-   "scoreNotes": "Tur 8. KAPANDI: tedarik-po-detay-08 (belge zinciri docNo taban cizgileri 266/258/258 -> 265/265/265, fark 0px). Puan deltasi: kriter 2: 4->5 (zincir kartlarinin okuma cizgisi duzeldi; dikey ritim 8pt, satir tablosu 36/36,5px). Diger kriterler korunuyor: over=0, konsol hatasi 0, mobil satir karti 62,5px (hedef 56-72), main font kademesi 6 ([24,20,14,13,12,11]), 390px'te 44px alti etkilesimli eleman yok. Toplam 60 >= 56, acik bulgu yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 9 yeniden olcum — gerileme yok: theadTop 241, satir 36px, scroller over=0, konsol hatasi 0, main font kademeleri [24,20,14,13,12,11], 390x844 sw=cw=390 ve mobil satir karti 62,5px, 44px alti etkilesimli eleman yok, toplam blogu (Ara toplam / KDV / Genel toplam) tabular-nums ve sag hizali. Puanlar korunuyor (12x5). Toplam 60 >= 56, acik bulgu yok -> KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -565,7 +569,7 @@
    "winner": "Plantero"
   },
   "/satin-alma/siparisler/yeni": {
-   "round": 8,
+   "round": 9,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -584,7 +588,7 @@
    ],
    "total": 57,
    "verdict": "KAZANAN: Plantero (57 = 57, hicbir kriter < 4, acik P0/P1 yok)",
-   "scoreNotes": "Tur 8 yeniden olcum, gerileme yok: main font kademeleri [24,14,13,11], iki viewport'ta da tasma yok, 390px'te 44px alti etkilesimli eleman yok, mobilde tek kolon, 'Henuz satir yok' bos durumu ikon+baslik+aciklama+'Urun ekle' tasiyor, konsol hatasi 0, mobil alt navigasyon son bloklari ortmuyor (main padding-bottom 128px). kriter 8: 4 korunuyor -- ARTIK OLCULU GEREKCEYLE: Tab ile 8 duraktan 7'si focus-visible ring 3px/2px tasiyor, 1'i (takvim tetikleyici) tarayici varsayilani 'outline: 1px auto'ya dusuyor (tedarik-focusring-token-01). kriter 3: 4 korunuyor (form seyrek; 1440x900'de icerik ~1050px'te bitiyor). kriter 12: 4 korunuyor (iki sutunlu etiketli form standart ERP formuna yakin). Toplam 57 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 9 yeniden olcum — gerileme yok: main font kademeleri [24,14,13,11], 1440x900 ve 390x844'te tasma yok, 390px'te 44px alti etkilesimli eleman yok ve tek kolon, 'Henuz satir yok' bos durumu ikon+baslik+aciklama+'Urun ekle' tasiyor, konsol hatasi 0. kriter 8: 4 korunuyor (Tab ile 8 duraktan 1'i — takvim tetikleyici — 'outline: 1px auto'ya dusuyor; tedarik-focusring-token-01). kriter 3: 4 korunuyor (form seyrek; icerik ~1050px'te bitiyor). kriter 12: 4 korunuyor (iki sutunlu etiketli form standart ERP formuna yakin). Toplam 57 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
    "open": [
     {
      "id": "tedarik-focusring-token-01",
@@ -592,9 +596,10 @@
      "severity": "P2",
      "openedRound": 8,
      "text": "Klavye ile gezerken tek bir kontrol uygulama focus token'ini kullanmiyor: tarih alanindaki takvim tetikleyici dugmesi tarayicinin varsayilan `outline: 1px auto` halkasini basiyor, digerlerinde `focus-visible:ring-[3px]` var. Ayni kalip /satin-alma/onay-kuyrugu'ndaki belge baglantisinda da gorulur (a 'PO-2026-000007': outline 1px auto, ring yok).",
-     "measure": "probe-tedarik-r8c.json (Tab ile 28 durak, main icinde): yeni -> 8 duraktan 7'si ring 'calc(3px)'/'calc(2px)', 1'i (adsiz button = takvim tetikleyici) outline '1px auto' + ring '0 0 #0000'. onay -> 4 duraktan 3'u ring 3px, 1'i (a PO-2026-000007) outline '1px auto'.",
+     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9c.json, Tab ile main icinde): yeni -> 8 duraktan 7'si ring 'calc(3px)'/'calc(2px)', 1'i (adsiz button = takvim tetikleyici) outline '1px auto' + ring '0 0 #0000'. onay -> 4 duraktan 3'u ring 3px, 1'i (a 'PO-2026-000007') outline '1px auto'. Degisiklik yok.",
      "target": "main icinde klavyeyle odaklanabilen HER eleman focus-visible'da ring >= 2px + outline-none tasisin: probe-tedarik-r8c'de 'outline: 1px auto' dostu 0 durak.",
-     "file": "apps/web/src/components/ui/date-field.tsx (takvim tetikleyici dugmesi) ve apps/web/src/modules/purchasing/components/approval-queue-list.tsx (belge baglantisi) — Button/Link'e `focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none` verilsin"
+     "file": "apps/web/src/components/ui/date-field.tsx (takvim tetikleyici dugmesi) ve apps/web/src/modules/purchasing/components/approval-queue-list.tsx (belge baglantisi) — Button/Link'e `focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none` verilsin",
+     "recheckedRound": 9
     }
    ],
    "closed": [
@@ -652,7 +657,7 @@
    "winner": "Plantero"
   },
   "/satin-alma/tedarikciler": {
-   "round": 8,
+   "round": 9,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -671,7 +676,7 @@
    ],
    "total": 60,
    "verdict": "KAZANAN: Linear (54 < 57; 4 acik P1)",
-   "scoreNotes": "Tur 8 yeniden olcum, gerileme yok: 6 satir x 36px, mobil kart 63,5px, scroller over=0, konsol hatasi 0, main font kademeleri [24,14,13,12], 390px'te 44px alti etkilesimli eleman yok, satir hover'i olculdu, yesil tasiyan tek semantik rol = 6 beyaz-liste anahtari (destructive yalnizca 'Zamaninda' <70). kriter 5: 5 korunuyor (kalan 38px slack + 1/6 kirpma tedarik-colwidth-lock-01 P2 kapsaminda, kriteri 5'ten dusurecek buyuklukte degil -- Tur 7 ile ayni olcum). Toplam 60 >= 57, acik bulgu yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 9 yeniden olcum — gerileme yok: 6 satir x 36px, theadTop 196, scroller over=0, konsol hatasi 0, mobil kart 63,5px, 390px'te sw=cw=390 ve 44px alti etkilesimli eleman yok, satir hover olculdu, yesil tasiyan tek semantik rol = 6 beyaz-liste anahtari, destructive yalnizca 'Zamaninda' <%70. kriter 5: 5 korunuyor (38px slack + 1/6 kirpma tedarik-colwidth-lock-01 P2 kapsaminda). Toplam 60 >= 57, acik bulgu yok -> KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {

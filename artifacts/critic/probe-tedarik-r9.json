@@ -1,0 +1,471 @@
+{
+ "kritik-stok": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Ürün",
+    "thW": 228,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 166,
+    "sample": ""
+   },
+   {
+    "i": 1,
+    "head": "SKU",
+    "thW": 108,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 0,
+    "sample": ""
+   },
+   {
+    "i": 2,
+    "head": "Kullanılabilir",
+    "thW": 132,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 47,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Min–Max",
+    "thW": 132,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 86,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Tedarik süresi",
+    "thW": 145,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 47,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "Tercihli tedarikçi",
+    "thW": 360,
+    "clipped": 1,
+    "rows": 36,
+    "maxClip": 55,
+    "innerW": 276,
+    "maxInner": 276,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü"
+   },
+   {
+    "i": 6,
+    "head": "Eylemler",
+    "thW": 48,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 24,
+    "sample": ""
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "12": 47,
+   "13": 181,
+   "14": 3,
+   "19": 2,
+   "24": 1
+  },
+  "aboveFold": 13,
+  "rowH": [
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "primaryEls": [],
+  "chainTops": [],
+  "iconCount": 81,
+  "colorTones": [],
+  "theadTop": 414,
+  "console": [
+   "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "error: [Table] Column with id 'suggestedQty' does not exist.",
+   "error: [Table] Column with id 'risk' does not exist.",
+   "error: [Table] Column with id 'risk' does not exist."
+  ]
+ },
+ "onay-kuyrugu": {
+  "cells": [],
+  "overflowNodes": [],
+  "fonts": {
+   "12": 10,
+   "13": 8,
+   "14": 4,
+   "24": 1
+  },
+  "aboveFold": 0,
+  "rowH": [],
+  "primaryEls": [],
+  "chainTops": [],
+  "iconCount": 5,
+  "colorTones": [],
+  "console": []
+ },
+ "siparisler": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Sipariş no",
+    "thW": 161,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 129,
+    "sample": ""
+   },
+   {
+    "i": 1,
+    "head": "Tedarikçi",
+    "thW": 319,
+    "clipped": 2,
+    "rows": 16,
+    "maxClip": 51,
+    "innerW": 280,
+    "maxInner": 280,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü"
+   },
+   {
+    "i": 2,
+    "head": "Durum",
+    "thW": 179,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 146,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Alınan",
+    "thW": 94,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 31,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Beklenen tarih",
+    "thW": 136,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 74,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "Sipariş tarihi",
+    "thW": 126,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 74,
+    "sample": ""
+   },
+   {
+    "i": 6,
+    "head": "Tutar",
+    "thW": 136,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 81,
+    "sample": ""
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "11": 16,
+   "12": 12,
+   "13": 97,
+   "14": 2,
+   "24": 1
+  },
+  "aboveFold": 16,
+  "rowH": [
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "primaryEls": [],
+  "chainTops": [],
+  "iconCount": 15,
+  "colorTones": [],
+  "theadTop": 300,
+  "console": []
+ },
+ "po-detay": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Ürün",
+    "thW": 588,
+    "clipped": 0,
+    "rows": 1,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 100,
+    "sample": ""
+   },
+   {
+    "i": 1,
+    "head": "Sipariş",
+    "thW": 84,
+    "clipped": 0,
+    "rows": 1,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 0,
+    "sample": ""
+   },
+   {
+    "i": 2,
+    "head": "Alınan",
+    "thW": 80,
+    "clipped": 0,
+    "rows": 1,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 8,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Faturalanan",
+    "thW": 104,
+    "clipped": 0,
+    "rows": 1,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 0,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Birim fiyat",
+    "thW": 108,
+    "clipped": 0,
+    "rows": 1,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 52,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "KDV",
+    "thW": 64,
+    "clipped": 0,
+    "rows": 1,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 0,
+    "sample": ""
+   },
+   {
+    "i": 6,
+    "head": "Tutar",
+    "thW": 122,
+    "clipped": 0,
+    "rows": 1,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 72,
+    "sample": ""
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "11": 1,
+   "12": 11,
+   "13": 15,
+   "14": 4,
+   "20": 1,
+   "24": 1
+  },
+  "aboveFold": 1,
+  "rowH": [
+   36
+  ],
+  "primaryEls": [],
+  "chainTops": [],
+  "iconCount": 4,
+  "colorTones": [],
+  "theadTop": 241,
+  "console": []
+ },
+ "yeni": {
+  "cells": [],
+  "overflowNodes": [],
+  "fonts": {
+   "11": 3,
+   "13": 11,
+   "14": 5,
+   "24": 1
+  },
+  "aboveFold": 0,
+  "rowH": [],
+  "primaryEls": [],
+  "chainTops": [],
+  "iconCount": 6,
+  "colorTones": [],
+  "console": []
+ },
+ "tedarikciler": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Tedarikçi",
+    "thW": 334,
+    "clipped": 1,
+    "rows": 6,
+    "maxClip": 35,
+    "innerW": 296,
+    "maxInner": 296,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü"
+   },
+   {
+    "i": 1,
+    "head": "Kod",
+    "thW": 92,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 0,
+    "sample": ""
+   },
+   {
+    "i": 2,
+    "head": "Beyaz liste",
+    "thW": 90,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 32,
+    "sample": ""
+   },
+   {
+    "i": 3,
+    "head": "Tedarik süresi",
+    "thW": 126,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 47,
+    "sample": ""
+   },
+   {
+    "i": 4,
+    "head": "Kalite",
+    "thW": 84,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 55,
+    "sample": ""
+   },
+   {
+    "i": 5,
+    "head": "Zamanında",
+    "thW": 108,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 31,
+    "sample": ""
+   },
+   {
+    "i": 6,
+    "head": "Ürün",
+    "thW": 71,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 16,
+    "sample": ""
+   },
+   {
+    "i": 7,
+    "head": "Açık sipariş",
+    "thW": 111,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 8,
+    "sample": ""
+   },
+   {
+    "i": 8,
+    "head": "Açık tutar",
+    "thW": 136,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "innerW": 0,
+    "maxInner": 72,
+    "sample": ""
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "12": 16,
+   "13": 43,
+   "14": 1,
+   "24": 1
+  },
+  "aboveFold": 6,
+  "rowH": [
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "primaryEls": [],
+  "chainTops": [],
+  "iconCount": 11,
+  "colorTones": [],
+  "theadTop": 196,
+  "console": []
+ }
+}

@@ -4,7 +4,7 @@ import { resolve, join } from 'node:path';
 import { launchBrowser, openRoute, defaultBaseUrl } from './lib/browser';
 
 async function main() {
-  const route = '/kalite/izlenebilirlik?lot=PL-260902-H1-01';
+  const route = '/kalite/izlenebilirlik?lot=PL-260903-H1-01';
   const base = defaultBaseUrl();
   const outDir = resolve(process.cwd(), 'artifacts', 'screens', 'kalite-izlenebilirlik-lot');
   mkdirSync(outDir, { recursive: true });

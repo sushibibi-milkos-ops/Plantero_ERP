@@ -1,0 +1,281 @@
+{
+ "kritik-stok": {
+  "before": "rgba(0, 0, 0, 0)",
+  "hoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "cursor": "pointer",
+  "nums": [
+   {
+    "txt": "304030000",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "82",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "28–80",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "fvn": "normal",
+    "align": "right"
+   }
+  ],
+  "kpis": [
+   {
+    "t": "—",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "—",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "36 kayıt",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "82",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "28–80",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "20 gün",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "257",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "21–60",
+    "fvn": "tabular-nums"
+   }
+  ]
+ },
+ "siparisler": {
+  "before": "rgba(0, 0, 0, 0)",
+  "hoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "cursor": "pointer",
+  "nums": [
+   {
+    "txt": "PO-2026-000016",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "%100",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "07.09.2026",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "07.09.2026",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "₺4.620,00",
+    "fvn": "normal",
+    "align": "right"
+   }
+  ],
+  "kpis": [
+   {
+    "t": "16 kayıt",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "%100",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "%100",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "%100",
+    "fvn": "tabular-nums"
+   }
+  ]
+ },
+ "po-detay": {
+  "before": "rgba(0, 0, 0, 0)",
+  "hoverBg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+  "cursor": "auto",
+  "nums": [
+   {
+    "txt": "Vanilya Aroması· 304",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "30 KG",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "0",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "0",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "₺910,00",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "%20",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "₺27.300,00",
+    "fvn": "normal",
+    "align": "right"
+   }
+  ],
+  "kpis": [
+   {
+    "t": "₺32.760,00",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "30 KG",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "0",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "0",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "%20",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "₺27.300,00",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "₺910,00 · %20",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "₺910,00",
+    "fvn": "tabular-nums"
+   }
+  ]
+ },
+ "tedarikciler": {
+  "before": "rgba(0, 0, 0, 0)",
+  "hoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "cursor": "pointer",
+  "nums": [
+   {
+    "txt": "S-000005",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "10 gün",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "50/100",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "4",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "0",
+    "fvn": "normal",
+    "align": "right"
+   },
+   {
+    "txt": "₺0,00",
+    "fvn": "normal",
+    "align": "right"
+   }
+  ],
+  "kpis": [
+   {
+    "t": "6 kayıt",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "10 gün",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "50/100",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "%100",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "4",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "0",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "20 gün",
+    "fvn": "tabular-nums"
+   },
+   {
+    "t": "70/100",
+    "fvn": "tabular-nums"
+   }
+  ]
+ }
+}

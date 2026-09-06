@@ -1,0 +1,9 @@
+{
+ "failedRequests": [],
+ "console": [
+  "Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "[Table] Column with id 'suggestedQty' does not exist.",
+  "[Table] Column with id 'risk' does not exist.",
+  "[Table] Column with id 'risk' does not exist."
+ ]
+}
