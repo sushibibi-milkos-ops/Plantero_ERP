@@ -131,7 +131,10 @@ export async function generateOrderForPlan(tx: DbOrTx, plan: MaintenancePlanRow,
     })
     .returning();
 
-  await indexDocument(tx, { type: 'maintenance_order', recordId: order!.id, docNo, status: 'planned', origin: 'system', title: `Periyodik bakım: ${plan.name}`, docDate: new Date(`${scheduledFor}T00:00:00Z`) });
+  // origin='manual': periyodik plan `document_links`/`document_type` kapsamında bir "belge" değildir
+  // (documentTypeEnum'da `maintenance_plan` yok) — bu iş emrinin gerçek bir üst belgesi olmadığından
+  // I7 (belge zinciri) kuralı gereği kaynak referanssız belgeler için doğru köken budur (CLAUDE.md #5).
+  await indexDocument(tx, { type: 'maintenance_order', recordId: order!.id, docNo, status: 'planned', origin: 'manual', title: `Periyodik bakım: ${plan.name}`, docDate: new Date(`${scheduledFor}T00:00:00Z`) });
   await writeAudit(tx, { action: 'create', tableName: 'maintenance_orders', recordId: order!.id, summary: `Periyodik bakım iş emri ${docNo} otomatik oluşturuldu (${plan.name})`, after: order }, ctx);
   return { order: order!, created: true };
 }

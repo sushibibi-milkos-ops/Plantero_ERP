@@ -9,11 +9,7 @@ import { EmptyState } from '@/components/empty-state';
 import { Sparkline } from '@/components/sparkline';
 import { formatDate, formatDateTime, formatPct } from '@/lib/format';
 import type { MachineDetail } from '../queries';
-
-const DOWNTIME_REASON_LABELS: Record<string, string> = {
-  breakdown: 'Arıza', changeover: 'Model değişimi', cleaning: 'Temizlik', material_shortage: 'Malzeme yok',
-  no_operator: 'Operatör yok', planned_maintenance: 'Planlı bakım', quality_hold: 'Kalite bekletme', power: 'Elektrik kesintisi', break: 'Mola', other: 'Diğer',
-};
+import { DOWNTIME_REASON_LABELS, INTERVAL_UNIT_LABELS } from '../labels';
 
 function StatCell({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -69,7 +65,7 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
                 {plans.map((p) => (
                   <TableRow key={p.id}>
                     <TableCell>{p.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.intervalValue} {{ day: 'gün', week: 'hafta', month: 'ay', runtime_hours: 'çalışma saati' }[p.intervalUnit] ?? p.intervalUnit}</TableCell>
+                    <TableCell className="text-muted-foreground">{p.intervalValue} {INTERVAL_UNIT_LABELS[p.intervalUnit] ?? p.intervalUnit}</TableCell>
                     <TableCell>{p.lastDoneAt ? formatDate(p.lastDoneAt) : '—'}</TableCell>
                     <TableCell>{p.nextDueAt ? formatDate(p.nextDueAt) : '—'}</TableCell>
                     <TableCell className="text-muted-foreground">{p.assigneeName ?? '—'}</TableCell>

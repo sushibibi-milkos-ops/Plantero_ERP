@@ -4,6 +4,7 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { formatDate, formatPct } from '@/lib/format';
 import { niceTicks } from '@/modules/finance/components/cashflow-chart';
 import type { OeeTrendPoint, DowntimeParetoRow } from '../queries';
+import { DOWNTIME_REASON_LABELS } from '../labels';
 
 // Aynı renk sözleşmesi: apps/web/src/modules/finance/components/cashflow-chart.tsx. Tek eksen (0-100%)
 // üzerinde 4 seri (OEE/Kullanılabilirlik/Performans/Kalite) — hepsi aynı ölçekte (%) olduğundan
@@ -66,11 +67,6 @@ export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
   );
 }
 
-const REASON_LABELS: Record<string, string> = {
-  breakdown: 'Arıza', changeover: 'Model değişimi', cleaning: 'Temizlik', material_shortage: 'Malzeme yok',
-  no_operator: 'Operatör yok', planned_maintenance: 'Planlı bakım', quality_hold: 'Kalite bekletme', power: 'Elektrik kesintisi', break: 'Mola', other: 'Diğer',
-};
-
 function ParetoTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value: number; payload: { reasonLabel: string } }> }) {
   if (!active || !payload?.length) return null;
   return (
@@ -82,7 +78,7 @@ function ParetoTooltip({ active, payload }: { active?: boolean; payload?: Array<
 }
 
 export function DowntimeParetoChart({ data }: { data: DowntimeParetoRow[] }) {
-  const points = data.slice(0, 8).map((d) => ({ reasonLabel: REASON_LABELS[d.reason] ?? d.reason, minutes: d.minutes }));
+  const points = data.slice(0, 8).map((d) => ({ reasonLabel: DOWNTIME_REASON_LABELS[d.reason] ?? d.reason, minutes: d.minutes }));
   return (
     <ResponsiveContainer width="100%" height={240}>
       <BarChart data={points} layout="vertical" margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>

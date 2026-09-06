@@ -31,8 +31,20 @@ async function loadOrder(tx: DbOrTx, id: string, lock = false): Promise<Maintena
   return row;
 }
 
+/**
+ * `maintenance_orders` şemasında (dondurulmuş) bir `origin` kolonu yok — I7 (belge zinciri) için doğru
+ * köken her `reindex` çağrısında `workOrderId`/`planId`'den YENİDEN türetilir (oluşturuşta kullanılan
+ * mantıkla birebir aynı): üretim iş emrine bağlıysa 'chain', aksi halde (arıza kendi başına ya da
+ * periyodik plandan — plan `documentTypeEnum`'da bir belge türü değil) 'manual'. `indexDocument`
+ * `origin` verilmezse varsayılan olarak 'chain' yazar — bu satır olmadan her durum geçişi (start/
+ * complete/cancel) sessizce I7 ihlali üretirdi (kök neden: seed sonrası `pnpm db:check` bulgusu).
+ */
+function documentOrigin(order: Pick<MaintenanceOrderRow, 'workOrderId'>): 'chain' | 'manual' {
+  return order.workOrderId ? 'chain' : 'manual';
+}
+
 async function reindex(tx: DbOrTx, order: MaintenanceOrderRow, title: string): Promise<void> {
-  await indexDocument(tx, { type: 'maintenance_order', recordId: order.id, docNo: order.docNo, status: order.status, title, docDate: order.reportedAt });
+  await indexDocument(tx, { type: 'maintenance_order', recordId: order.id, docNo: order.docNo, status: order.status, origin: documentOrigin(order), title, docDate: order.reportedAt });
 }
 
 type PhotoInput = { fileName: string; mimeType: string; dataUrl: string };

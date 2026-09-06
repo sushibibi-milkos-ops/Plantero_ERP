@@ -10,8 +10,7 @@ import { formatDate, daysUntil } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { setPlanActiveAction, generateOrderNowAction } from '../actions';
 import type { PlanRow } from '../queries';
-
-const INTERVAL_LABELS: Record<string, string> = { day: 'gün', week: 'hafta', month: 'ay', runtime_hours: 'çalışma saati' };
+import { INTERVAL_UNIT_LABELS } from '../labels';
 
 export function PlansTable({ plans }: { plans: PlanRow[] }) {
   const router = useRouter();
@@ -52,7 +51,7 @@ export function PlansTable({ plans }: { plans: PlanRow[] }) {
           </span>
         ),
       },
-      { id: 'interval', accessorFn: (r) => r.intervalValue, header: 'Aralık', meta: { width: 110 }, cell: ({ row }) => `${row.original.intervalValue} ${INTERVAL_LABELS[row.original.intervalUnit] ?? row.original.intervalUnit}` },
+      { id: 'interval', accessorFn: (r) => r.intervalValue, header: 'Aralık', meta: { width: 110 }, cell: ({ row }) => `${row.original.intervalValue} ${INTERVAL_UNIT_LABELS[row.original.intervalUnit] ?? row.original.intervalUnit}` },
       { id: 'lastDoneAt', accessorFn: (r) => r.lastDoneAt ?? '', header: 'Son yapılan', meta: { width: 120, mobile: 'hidden' }, cell: ({ row }) => (row.original.lastDoneAt ? formatDate(row.original.lastDoneAt) : '—') },
       {
         id: 'nextDueAt', accessorFn: (r) => r.nextDueAt ?? '', header: 'Sonraki', meta: { width: 130 },

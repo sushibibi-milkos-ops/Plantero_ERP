@@ -9,13 +9,7 @@ import { statusOptions } from '@/lib/status';
 import { formatDate, daysUntil } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { MachineListRow } from '../queries';
-
-const CATEGORY_LABELS: Record<string, string> = {
-  mixer: 'Mikser', homogenizer: 'Homojenizatör', tank: 'Tank', filler: 'Dolum', sealer: 'Kapatma',
-  coder: 'Kodlama', kettle: 'Kazan', hopper: 'Tekne', conveyor: 'Taşıyıcı', packaging: 'Paketleme',
-  grinder: 'Öğütücü', roaster: 'Kavurma', inspection: 'Kontrol', lab: 'Laboratuvar', utility: 'Yardımcı tesis',
-  handling: 'Taşıma', scale: 'Tartı',
-};
+import { MACHINE_CATEGORY_LABELS } from '../labels';
 
 export function MachinesTable({ machines }: { machines: MachineListRow[] }) {
   const columns = useMemo<ColumnDef<MachineListRow, unknown>[]>(
@@ -26,7 +20,7 @@ export function MachinesTable({ machines }: { machines: MachineListRow[] }) {
         cell: ({ row }) => (
           <div>
             <div>{row.original.name}</div>
-            <div className="text-[11px] text-muted-foreground">{CATEGORY_LABELS[row.original.category] ?? row.original.category}</div>
+            <div className="text-[11px] text-muted-foreground">{MACHINE_CATEGORY_LABELS[row.original.category] ?? row.original.category}</div>
           </div>
         ),
       },

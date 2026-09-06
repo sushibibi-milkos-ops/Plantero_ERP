@@ -16,11 +16,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import { formatDateTime } from '@/lib/format';
 import { startOrderAction, markWaitingPartsAction, updateChecklistAction, completeOrderAction, cancelOrderAction } from '../actions';
 import type { MaintenanceOrderDetail } from '../queries';
-
-const DOWNTIME_REASON_LABELS: Record<string, string> = {
-  breakdown: 'Arıza', changeover: 'Model değişimi', cleaning: 'Temizlik', material_shortage: 'Malzeme yok',
-  no_operator: 'Operatör yok', planned_maintenance: 'Planlı bakım', quality_hold: 'Kalite bekletme', power: 'Elektrik kesintisi', break: 'Mola', other: 'Diğer',
-};
+import { DOWNTIME_REASON_LABELS } from '../labels';
 
 function StatCell({ label, value }: { label: string; value: React.ReactNode }) {
   return (
