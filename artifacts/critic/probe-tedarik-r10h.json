@@ -1,0 +1,323 @@
+{
+ "interactive": [
+  {
+   "tag": "input",
+   "role": "",
+   "id": "",
+   "txt": "",
+   "w": 358,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "checkbox",
+   "id": "only-critical",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "",
+   "txt": "Motoru çalıştır",
+   "w": 138.4,
+   "h": 32
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2g_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2i_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2k_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2m_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2o_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2q_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2s_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_2u_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_30_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_32_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_34_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_36_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_38_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3a_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3c_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3e_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3g_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3i_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3k_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3m_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3o_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3q_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3s_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_3u_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_40_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_42_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_44_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_46_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_48_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_4a_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_4c_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_4e_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_4g_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_4i_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_4k_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "tag": "button",
+   "role": "",
+   "id": "radix-_r_4m_",
+   "txt": "",
+   "w": 44,
+   "h": 44
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+   "sw": 472,
+   "cw": 358
+  }
+ ]
+}

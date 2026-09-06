@@ -1,0 +1,1586 @@
+{
+ "kritik-stok": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Ürün",
+    "thW": 190,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "maxInner": 166,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 1,
+    "head": "SKU",
+    "thW": 90,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "maxInner": 0,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 2,
+    "head": "Kullanılabilir",
+    "thW": 110,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "maxInner": 47,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 3,
+    "head": "Min–Max",
+    "thW": 110,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "maxInner": 86,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 4,
+    "head": "Tedarik süresi",
+    "thW": 120,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "maxInner": 47,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 5,
+    "head": "Tercihli tedarikçi",
+    "thW": 492,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "maxInner": 468,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 6,
+    "head": "Eylemler",
+    "thW": 40,
+    "clipped": 0,
+    "rows": 36,
+    "maxClip": 0,
+    "maxInner": 24,
+    "sample": "",
+    "align": "right"
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "11": 2,
+   "12": 48,
+   "13": 180,
+   "14": 3,
+   "19": 2,
+   "24": 1
+  },
+  "aboveFold": 16,
+  "rowH": [
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "theadTop": 312,
+  "iconCount": 81,
+  "tabularCells": [
+   {
+    "txt": "306040000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "35",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "301050000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "38",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "10 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "306050000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "50",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "306060000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "50",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "308030000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "50",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "304040000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "50",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "304020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "52",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "305010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "52,9",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "304050000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "53",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "303010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "58,75",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "303020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "58,85",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "304010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "62",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "307010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "65",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "306020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "75",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "308020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "75",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "304030000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "82",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "306030000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "306010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "107",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "302020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "112",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "15 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "302030000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "136,6",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "15 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "302010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "155,5",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "15 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "308040000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "160",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "308010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "198",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "25 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "301040000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "209",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "10 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "301030000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "257",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "10 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "301010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "261,6",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "301020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "350",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "301060000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "399",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "10 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "307020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "704,52",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "401040000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "1.100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "402010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "1.650",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "402030000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "2.550",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "401010000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "3.300",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "401020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "4.300",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "401030000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "7.450",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "402020000",
+    "tabular": false,
+    "align": "start"
+   },
+   {
+    "txt": "8.220",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   }
+  ],
+  "zeroDim": [],
+  "greenEls": [],
+  "iconSizes": {
+   "14x14": 2,
+   "16x16": 37,
+   "12x12": 1
+  },
+  "console": [
+   "error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+   "cursor": "pointer",
+   "changed": true
+  },
+  "tabStops": []
+ },
+ "onay-kuyrugu": {
+  "cells": [],
+  "overflowNodes": [],
+  "fonts": {
+   "12": 10,
+   "13": 8,
+   "14": 4,
+   "24": 1
+  },
+  "aboveFold": 0,
+  "rowH": [],
+  "theadTop": null,
+  "iconCount": 5,
+  "tabularCells": [],
+  "zeroDim": [],
+  "greenEls": [],
+  "iconSizes": {
+   "14x14": 5
+  },
+  "console": [],
+  "tabStops": []
+ },
+ "siparisler": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Sipariş no",
+    "thW": 153,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "maxInner": 129,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 1,
+    "head": "Tedarikçi",
+    "thW": 359,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "maxInner": 335,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 2,
+    "head": "Durum",
+    "thW": 170,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "maxInner": 146,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 3,
+    "head": "Alınan",
+    "thW": 90,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "maxInner": 31,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 4,
+    "head": "Beklenen tarih",
+    "thW": 130,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "maxInner": 74,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 5,
+    "head": "Sipariş tarihi",
+    "thW": 120,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "maxInner": 74,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 6,
+    "head": "Tutar",
+    "thW": 130,
+    "clipped": 0,
+    "rows": 16,
+    "maxClip": 0,
+    "maxInner": 81,
+    "sample": "",
+    "align": "right"
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "11": 16,
+   "12": 12,
+   "13": 97,
+   "14": 2,
+   "24": 1
+  },
+  "aboveFold": 16,
+  "rowH": [
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "theadTop": 300,
+  "iconCount": 15,
+  "tabularCells": [
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "07.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "07.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺4.620,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "07.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "07.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺9.450,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺5.508,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺95.316,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "08.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺125.100,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "11.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺43.680,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "07.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺66.600,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "31.08.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺54.900,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺32.760,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "02.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺30.240,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺14.400,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "04.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "06.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺113.040,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "05.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "05.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺13.104,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "04.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "04.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺16.560,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "04.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "04.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺7.800,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "03.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "03.09.2026",
+    "tabular": true,
+    "align": "start"
+   },
+   {
+    "txt": "₺3.780,00",
+    "tabular": true,
+    "align": "right"
+   }
+  ],
+  "zeroDim": [],
+  "greenEls": [],
+  "iconSizes": {
+   "16x16": 1,
+   "14x14": 5,
+   "12x12": 1
+  },
+  "console": [],
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+   "cursor": "pointer",
+   "changed": true
+  },
+  "tabStops": []
+ },
+ "po-detay": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Ürün",
+    "thW": 588,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "maxInner": 79,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 1,
+    "head": "Sipariş",
+    "thW": 84,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "maxInner": 0,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 2,
+    "head": "Alınan",
+    "thW": 80,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "maxInner": 32,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 3,
+    "head": "Faturalanan",
+    "thW": 104,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "maxInner": 0,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 4,
+    "head": "Birim fiyat",
+    "thW": 108,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "maxInner": 52,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 5,
+    "head": "KDV",
+    "thW": 64,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "maxInner": 0,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 6,
+    "head": "Tutar",
+    "thW": 122,
+    "clipped": 0,
+    "rows": 2,
+    "maxClip": 0,
+    "maxInner": 72,
+    "sample": "",
+    "align": "right"
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "11": 17,
+   "12": 11,
+   "13": 31,
+   "14": 1,
+   "20": 1,
+   "24": 1
+  },
+  "aboveFold": 2,
+  "rowH": [
+   36.5,
+   36
+  ],
+  "theadTop": 370,
+  "iconCount": 6,
+  "tabularCells": [
+   {
+    "txt": "80 KG",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "80",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "80",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺690,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%20",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺55.200,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "60 KG",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "60",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "60",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺650,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%20",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺39.000,00",
+    "tabular": true,
+    "align": "right"
+   }
+  ],
+  "zeroDim": [],
+  "greenEls": [],
+  "iconSizes": {
+   "16x16": 2,
+   "12x12": 2
+  },
+  "console": [],
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+   "cursor": "auto",
+   "changed": true
+  },
+  "tabStops": []
+ },
+ "yeni": {
+  "cells": [],
+  "overflowNodes": [],
+  "fonts": {
+   "11": 3,
+   "13": 11,
+   "14": 5,
+   "24": 1
+  },
+  "aboveFold": 0,
+  "rowH": [],
+  "theadTop": null,
+  "iconCount": 6,
+  "tabularCells": [],
+  "zeroDim": [],
+  "greenEls": [],
+  "iconSizes": {
+   "14x14": 4,
+   "16x16": 2
+  },
+  "console": [],
+  "tabStops": []
+ },
+ "tedarikciler": {
+  "cells": [
+   {
+    "i": 0,
+    "head": "Tedarikçi",
+    "thW": 369,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 345,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 1,
+    "head": "Kod",
+    "thW": 88,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 0,
+    "sample": "",
+    "align": "left"
+   },
+   {
+    "i": 2,
+    "head": "Beyaz liste",
+    "thW": 86,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 32,
+    "sample": "",
+    "align": "center"
+   },
+   {
+    "i": 3,
+    "head": "Tedarik süresi",
+    "thW": 121,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 47,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 4,
+    "head": "Kalite",
+    "thW": 80,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 55,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 5,
+    "head": "Zamanında",
+    "thW": 104,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 31,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 6,
+    "head": "Ürün",
+    "thW": 68,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 16,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 7,
+    "head": "Açık sipariş",
+    "thW": 106,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 8,
+    "sample": "",
+    "align": "right"
+   },
+   {
+    "i": 8,
+    "head": "Açık tutar",
+    "thW": 130,
+    "clipped": 0,
+    "rows": 6,
+    "maxClip": 0,
+    "maxInner": 72,
+    "sample": "",
+    "align": "right"
+   }
+  ],
+  "overflowNodes": [],
+  "fonts": {
+   "12": 16,
+   "13": 43,
+   "14": 1,
+   "24": 1
+  },
+  "aboveFold": 6,
+  "rowH": [
+   36,
+   36,
+   36,
+   36,
+   36
+  ],
+  "theadTop": 196,
+  "iconCount": 11,
+  "tabularCells": [
+   {
+    "txt": "10 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "4",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺0,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "20 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%50",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "10",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "1",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺32.760,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "12 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%100",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "7",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "1",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺14.400,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "25 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%50",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "1",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺0,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "18 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "11",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺0,00",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "15 gün",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "%0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "3",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "0",
+    "tabular": true,
+    "align": "right"
+   },
+   {
+    "txt": "₺0,00",
+    "tabular": true,
+    "align": "right"
+   }
+  ],
+  "zeroDim": [],
+  "greenEls": [],
+  "iconSizes": {
+   "14x14": 3,
+   "12x12": 1
+  },
+  "console": [],
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+   "cursor": "pointer",
+   "changed": true
+  },
+  "tabStops": []
+ }
+}

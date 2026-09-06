@@ -1,0 +1,34 @@
+[
+ {
+  "txt": "PO-2026-000007",
+  "fv": true,
+  "f": true,
+  "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "cls": "inline-flex max-sm:min-h-11 max-sm:items-center max-sm:-my-3 truncate rounded-sm font-mono text-[13px] font-medium outli"
+ },
+ {
+  "txt": "Reddet",
+  "fv": true,
+  "f": true,
+  "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "cls": "inline-flex shrink-0 items-center justify-center text-sm font-medium whitespace-nowrap transition-[color,background-colo"
+ },
+ {
+  "txt": "Düzenle",
+  "fv": true,
+  "f": true,
+  "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "cls": "inline-flex shrink-0 items-center justify-center text-sm font-medium whitespace-nowrap transition-[color,background-colo"
+ },
+ {
+  "txt": "Onayla",
+  "fv": true,
+  "f": true,
+  "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "cls": "inline-flex shrink-0 items-center justify-center text-sm font-medium whitespace-nowrap transition-[color,background-colo"
+ }
+]

@@ -1,0 +1,253 @@
+{
+ "yeni": [
+  {
+   "tag": "button",
+   "txt": "Tedarikçi seçin",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "TIRE — Tire Fabrika",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "input",
+   "txt": "",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "",
+   "aria": "Takvim",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "ring": "none"
+  },
+  {
+   "tag": "button",
+   "txt": "Ürün ara ve ekle…",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Ürün ekle",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Vazgeç",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  }
+ ],
+ "onay-kuyrugu": [
+  {
+   "tag": "a",
+   "txt": "PO-2026-000007",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Reddet",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "a",
+   "txt": "Düzenle",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Onayla",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  }
+ ],
+ "kritik-stok": [
+  {
+   "tag": "input",
+   "txt": "",
+   "aria": "Tabloda ara",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Motoru çalıştır",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "",
+   "aria": "Sütunlar",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Ürün",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "ring": "none"
+  },
+  {
+   "tag": "button",
+   "txt": "SKU",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "ring": "none"
+  },
+  {
+   "tag": "button",
+   "txt": "Kullanılabilir",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "ring": "none"
+  },
+  {
+   "tag": "button",
+   "txt": "Min–Max",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "ring": "none"
+  },
+  {
+   "tag": "button",
+   "txt": "Tedarik süresi",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "ring": "none"
+  },
+  {
+   "tag": "button",
+   "txt": "Tercihli tedarikçi",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Spriluna3060400003518–5018",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "button",
+   "txt": "",
+   "aria": "Satır eylemleri",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "tr",
+   "txt": "Kaju3010500003872–11010 gü",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Bromelain3060500005065–100",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Strawberry3060600005018–50",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Vanilya Tozu (Toptan)30803",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "çikolata aroması3040400005",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "masker3040200005218–5020 g",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "b2+b12+e30501000052,918–50",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Çilek Aroma Verici30405000",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Guar Gum30301000058,7519–5",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Xhantam Gum30302000058,851",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Vanilya Aroması30401000062",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  },
+  {
+   "tag": "tr",
+   "txt": "Cream3070100006521–6020 gü",
+   "aria": "",
+   "outline": "oklch(0.55 0.16 152) solid 2px",
+   "ring": "none"
+  }
+ ]
+}
