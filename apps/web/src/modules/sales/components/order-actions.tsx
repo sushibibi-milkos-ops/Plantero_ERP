@@ -8,7 +8,10 @@ import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { confirmOrderAction, cancelOrderAction, createInvoiceFromOrderAction } from '../actions';
 
-export function OrderActions({ id, status, hasDeliveries }: { id: string; status: string; hasDeliveries: boolean }) {
+// İzin bayrakları sunucudan gelir: 'Onayla'/'İptal et' yalnızca sales.confirm, 'Teslimatsız fatura' yalnızca
+// accounting.invoice olan kullanıcıya gösterilir — sunucu eylemi zaten reddediyor ama düğmeyi göstermek
+// kullanıcıyı yanıltıyordu (ihracat rolü: accounting.invoice var, sales.confirm yok).
+export function OrderActions({ id, status, hasDeliveries, canConfirm = true, canInvoice = true }: { id: string; status: string; hasDeliveries: boolean; canConfirm?: boolean; canInvoice?: boolean }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -42,17 +45,17 @@ export function OrderActions({ id, status, hasDeliveries }: { id: string; status
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {status === 'draft' ? (
+      {status === 'draft' && canConfirm ? (
         <Button size="sm" onClick={confirm} disabled={pending}>
           {pending ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCircle2 className="size-3.5" />} Onayla
         </Button>
       ) : null}
-      {['confirmed', 'partially_delivered', 'delivered'].includes(status) ? (
+      {canInvoice && ['confirmed', 'partially_delivered', 'delivered'].includes(status) ? (
         <Button size="sm" variant="outline" onClick={invoiceWithoutDelivery} disabled={pending}>
           <ReceiptText className="size-3.5" /> Teslimatsız fatura
         </Button>
       ) : null}
-      {status === 'draft' && !hasDeliveries ? (
+      {status === 'draft' && !hasDeliveries && canConfirm ? (
         <ConfirmDialog
           trigger={<Button size="sm" variant="ghost" className="text-muted-foreground hover:text-destructive"><XCircle className="size-3.5" /> İptal et</Button>}
           title="Sipariş iptal edilsin mi?"

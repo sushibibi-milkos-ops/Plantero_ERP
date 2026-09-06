@@ -45,7 +45,7 @@ export default async function SalesOrderDetailPage({ params }: { params: Promise
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <StatusBadge status={order.status} kind="sales_order" size="md" />
-          {userCan(user, 'sales.confirm') || userCan(user, 'accounting.invoice') ? <OrderActions id={order.id} status={order.status} hasDeliveries={deliveries.length > 0} /> : null}
+          {userCan(user, 'sales.confirm') || userCan(user, 'accounting.invoice') ? <OrderActions id={order.id} status={order.status} hasDeliveries={deliveries.length > 0} canConfirm={userCan(user, 'sales.confirm')} canInvoice={userCan(user, 'accounting.invoice')} /> : null}
         </div>
       </PageHeader>
 
