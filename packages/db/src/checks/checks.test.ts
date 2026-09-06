@@ -38,8 +38,15 @@ const FILES = await checkFiles();
 // checks/45_budget_cashflow_actual_freshness.sql üst yorumu): fresh seed sonrası doğrudan
 // `postJournalEntry` ile 770.02 hesabına 5.000 TL'lik posted bir fiş yazıldı, I1-I44'ün HİÇBİRİ
 // bunu yakalamadı ama `budget_lines.actual`/`cashflow_lines.actual_fixed_expenses` eski (0,00 TL)
-// değerde donuk kaldı — test verisi temizlenip `db:reset` ile taze seed'e dönüldü.
-const RULE_COUNT = 45;
+// değerde donuk kaldı — test verisi temizlenip `db:reset` ile taze seed'e dönüldü. I46 (veri-critic
+// Tur 8, YENİ, P0): iptal edilen bir satış siparişinin (`cancelOrder`) zaten FEFO ile rezerve edilmiş
+// ('reserved'/'picking'/'picked') ama henüz sevk edilmemiş irsaliyesi hiç kontrol edilmiyor/kapatılmıyor
+// — canlı egzersizle kanıtlandı (bkz. checks/46_orphan_reservation.sql üst yorumu): fresh seed'deki
+// SO-2026-000003 (irsaliyesi DN-2026-000003, 27 birim rezerve) üzerinde `cancelOrder` doğrudan çağrıldı,
+// hatasız tamamlandı, irsaliye 'reserved'de kaldı ve stock_quants.reserved_qty hiç değişmedi — I1-I45'in
+// HİÇBİRİ bunu yakalamadı (I2 yalnızca reserved≤qty'yi kontrol ediyor, arkasındaki belgenin hâlâ canlı
+// olup olmadığını sormuyor); test verisi `pnpm db:reset` ile temizlendi.
+const RULE_COUNT = 46;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
