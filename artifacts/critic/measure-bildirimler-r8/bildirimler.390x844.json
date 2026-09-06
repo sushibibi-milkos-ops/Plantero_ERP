@@ -1,0 +1,4 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /bildirimler --viewport 390x844
+
