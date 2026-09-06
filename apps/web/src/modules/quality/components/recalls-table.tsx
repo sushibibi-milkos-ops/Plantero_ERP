@@ -14,7 +14,7 @@ export function RecallsTable({ recalls }: { recalls: RecallRow[] }) {
       { id: 'docNo', accessorFn: (r) => r.docNo, header: 'Geri çağırma no', meta: { mobile: 'title', className: 'font-mono' } },
       { id: 'lot', accessorFn: (r) => `${r.productName} · ${r.lotNo}`, header: 'Ürün / Lot', meta: { mobile: 'subtitle', flex: true }, cell: ({ row }) => <span>{row.original.productName} <LotBadge lotNo={row.original.lotNo} className="ml-1" /></span> },
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="recall" /> },
-      { accessorKey: 'reason', header: 'Gerekçe', meta: { mobile: 'hidden', width: 320, className: 'truncate' }, cell: ({ row }) => <span className="truncate text-[13px] text-muted-foreground">{row.original.reason}</span> },
+      { accessorKey: 'reason', header: 'Gerekçe', meta: { mobile: 'hidden', width: 320 }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom text-[13px] text-muted-foreground md:w-[296px]" title={row.original.reason}>{row.original.reason}</span> },
       { id: 'createdAt', accessorFn: (r) => r.createdAt, header: 'Oluşturulma', meta: { width: 150 }, cell: ({ row }) => formatDateTime(row.original.createdAt) },
     ],
     [],
