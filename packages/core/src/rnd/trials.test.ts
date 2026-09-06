@@ -111,6 +111,37 @@ describe('rnd/trials — versiyon + canlı maliyet', () => {
     });
   });
 
+  it('releaseToBom: mevcut ürünün aktif BOM\'undan defaultLineId devralınır (iş emri hat seçmeden açılabilir)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const [line] = await tx.insert(productionLines).values({ code: `HAT-${b.s}`, name: `Hat ${b.s}`, warehouseId: b.wh.id, locationId: b.loc.mamul.id, capacityPerHour: '10', shiftMinutes: 480 }).returning();
+
+      const { createBomVersion, activateBom } = await import('../masterdata/boms.js');
+      const existingBom = await createBomVersion(tx, {
+        productId: b.finished.id, defaultLineId: line!.id,
+        lines: [{ productId: b.raw.id, qty: '1', uomId: b.kg.id }],
+      });
+      await activateBom(tx, existingBom.id);
+
+      const project = await createProject(tx, { name: 'Mevcut Ürün Geliştirme', productId: b.finished.id }, ctx);
+      const { rollup } = await createTrialRecipe(tx, {
+        projectId: project.id, name: 'v2 iyileştirme', batchQty: '1',
+        lines: [{ productId: b.raw.id, qty: '1.1', uomId: b.kg.id, costSource: 'average', scrapPct: '0' }],
+      }, ctx);
+      const { approvalId } = await submitForApproval(tx, rollup.version.id, ctx);
+      await approveRecipeRelease(tx, approvalId, ctx);
+      const { bomId } = await releaseToBom(tx, rollup.version.id, { activate: true }, ctx);
+
+      const [newBom] = await tx.select().from(boms).where(eq(boms.id, bomId));
+      expect(newBom!.defaultLineId).toBe(line!.id);
+
+      // lineId VERİLMEDEN iş emri açılabiliyor — bom.defaultLineId'den çözülüyor.
+      const { workOrder } = await createWorkOrder(tx, { productId: b.finished.id, plannedQty: new Decimal('1'), warehouseId: b.wh.id }, ctx);
+      expect(workOrder.bomId).toBe(bomId);
+      expect(workOrder.lineId).toBe(line!.id);
+    });
+  });
+
   it('reddedilen versiyon durum rejected olur ve devredilemez', async () => {
     await withRollback(async (tx) => {
       const b = await seedBase(tx);

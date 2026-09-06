@@ -338,6 +338,11 @@ export async function releaseToBom(tx: DbOrTx, versionId: string, opts: { activa
   const lines = await tx.select().from(trialRecipeLines).where(eq(trialRecipeLines.versionId, versionId)).orderBy(trialRecipeLines.sequence);
   if (lines.length === 0) throw new ValidationError('Reçetede satır yok');
 
+  // Deneme reçetesi bir üretim hattı/çevrim süresi taşımaz (Ar-Ge'nin kapsamı dışında) — ürünün
+  // hâlihazırda aktif bir BOM'u varsa (mevcut ürün geliştirmesi) `defaultLineId`/`cycleMinutes`
+  // oradan devralınır; aksi halde (yeni SKU adayı) boş kalır ve iş emri formunda elle seçilir.
+  const [currentActiveBom] = await tx.select({ defaultLineId: boms.defaultLineId, cycleMinutes: boms.cycleMinutes }).from(boms).where(and(eq(boms.productId, project.productId), eq(boms.status, 'active'))).limit(1);
+
   const bom = await createBomVersion(tx, {
     productId: project.productId,
     name: `${recipe.name} (Ar-Ge v${version.version})`,
@@ -346,6 +351,8 @@ export async function releaseToBom(tx: DbOrTx, versionId: string, opts: { activa
     expectedYieldPct: version.expectedYieldPct,
     overheadPerBatch: version.overheadPerBatch,
     overheadPerUnit: version.overheadPerUnit,
+    defaultLineId: currentActiveBom?.defaultLineId ?? undefined,
+    cycleMinutes: currentActiveBom?.cycleMinutes ?? undefined,
     note: version.changeNote ? `Ar-Ge devri: ${recipe.name} v${version.version} — ${version.changeNote}` : `Ar-Ge devri: ${recipe.name} v${version.version}`,
     lines: lines.map((l) => ({ productId: l.productId, qty: l.qty, uomId: l.uomId, scrapPct: l.scrapPct, sequence: l.sequence, note: l.note })),
   });
