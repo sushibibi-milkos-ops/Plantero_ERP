@@ -4,6 +4,7 @@ import { D, toDb } from '../money.js';
 import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
 import { indexDocument, linkDocuments } from '../documents/chain.js';
+import { postJournalEntry } from '../accounting/journal.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { businessDate } from '../dates.js';
 import { computeNextDueDate, type IntervalUnit } from './plans.js';

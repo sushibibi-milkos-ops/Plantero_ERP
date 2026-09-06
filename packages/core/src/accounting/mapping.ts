@@ -41,6 +41,7 @@ export const ACCOUNT_CATALOG: readonly AccountDef[] = [
   { code: '656', name: 'Kambiyo Zararları (-)', type: 'expense' },
   { code: '659', name: 'Diğer Olağan Gider ve Zararlar (-)', type: 'expense' },
   { code: '679', name: 'Diğer Olağandışı Gelir ve Kârlar', type: 'income' },
+  { code: '730', name: 'Genel Üretim Giderleri', type: 'expense' },
   { code: '731', name: 'Genel Üretim Giderleri Yansıtma', type: 'expense' },
   { code: '760', name: 'Pazarlama Satış ve Dağıtım Giderleri', type: 'expense' },
   { code: '770', name: 'Genel Yönetim Giderleri', type: 'expense' },
