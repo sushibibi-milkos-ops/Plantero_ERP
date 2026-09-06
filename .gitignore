@@ -13,3 +13,5 @@ coverage
 .DS_Store
 dump.rdb
 .next-*
+apps/web/e2e/fixtures/ekstre.csv
+apps/web/e2e/fixtures/ekstre.mt940

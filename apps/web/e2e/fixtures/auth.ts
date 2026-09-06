@@ -40,8 +40,21 @@ export async function loginAs(page: Page, role: TestRole = 'admin', next?: strin
  * /login'i /kokpit'e geri yönlendirir).
  */
 export async function logout(page: Page): Promise<void> {
-  await page.waitForLoadState('networkidle');
-  await page.getByTestId('user-menu').click();
+  // 'networkidle' BEKLENMEZ: bildirim zili 30 sn'de bir yokladığı ve bazı ekranlar canlı yenilendiği için ağ
+  // hiç sakinleşmeyebilir (kapanış kapısında 60 sn zaman aşımıyla düştü). Gerçek ön koşul: kullanıcı menüsü
+  // görünür VE hydrate olmuş — tıklayınca açılır menüde 'logout' görünene kadar tıklama yinelenir.
+  const menu = page.getByTestId('user-menu');
+  await expect(menu).toBeVisible();
+  await expect
+    .poll(
+      async () => {
+        if (await page.getByTestId('logout').isVisible().catch(() => false)) return true;
+        await menu.click();
+        return page.getByTestId('logout').isVisible().catch(() => false);
+      },
+      { message: 'kullanıcı menüsü açılmalı (hydration)', timeout: 15_000, intervals: [300, 600, 1000] },
+    )
+    .toBe(true);
   await page.getByTestId('logout').click();
   await page.waitForURL(/\/login/, { timeout: 30_000 });
   await expect
