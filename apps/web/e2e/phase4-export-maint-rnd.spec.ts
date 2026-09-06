@@ -1020,14 +1020,22 @@ test.describe('Kokpit KPI doğrulama (phase4)', () => {
     // gerçek bir işletmede kredili mevduat/nakit açığı normaldir) — `KpiCard`/`MoneyCell` negatif
     // tutarı kırmızı ama DOĞRU basar (bkz. `getMoneyTone`, format.ts). Önceki sürüm burada
     // `toBeGreaterThanOrEqual(0)` bekliyordu — bu YANLIŞ bir varsayımdı (uygulama davranışı değil,
-    // test tarafının hatalı beklentisiydi) ve canlıda -254.348,4973 ile patlıyordu. Doğru doğrulama
-    // ekrandaki "Banka toplamı" KPI kartının DB toplamıyla birebir eşleşmesi (işaret dahil).
+    // test tarafının hatalı beklentisiydi) ve canlıda -254.348,4973 ile patlıyordu.
+    //
+    // Kök neden (ikinci canlı bulgu): "Banka toplamı" başlıklı KpiCard yalnızca `finans` rolünün
+    // gördüğü `FinanceDashboardView`'de var (finance-dashboard.tsx satır 23) — admin/GM
+    // `GmDashboardView` görür (kokpit/page.tsx: `dashboard.role==='gm'` → GmDashboardView), o ekranda
+    // toplam bir KpiCard değil, "Banka" bölümünün ilk satırıdır: `<span>Toplam (TRY hesaplar)</span>`
+    // + yanında `MoneyCell` (gm-dashboard.tsx satır ~127-131). `getByText('Banka toplamı')` admin
+    // ekranında hiç YOKTUR — locator sıfır eşleşmeyle 60 sn boyunca beklemede kaldı (timeout, canlıda
+    // yakalandı). Doğru doğrulama admin için "Toplam (TRY hesaplar)" satırını okur.
     const bankTotal = Number(psqlOne(`select coalesce(sum(statement_balance),0) from bank_accounts where is_active = true and currency = 'TRY'`));
-    const bankCard = page.getByText('Banka toplamı', { exact: true }).locator('..');
-    const bankText = await bankCard.innerText();
+    const bankRow = page.getByText('Toplam (TRY hesaplar)', { exact: true }).locator('..');
+    const bankText = await bankRow.innerText();
     const shownBank = parseTrNumber(bankText.split('\n').find((l) => /-?\d/.test(l.trim())) ?? bankText);
-    // KpiCard `fractionDigits={0}` ile basar — ekran tam sayıya yuvarlanmış olabilir.
-    expect(shownBank).toBeCloseTo(bankTotal, 0);
+    // `MoneyCell` (admin/GM görünümü) her zaman 2 ondalıkla basar (`Banka toplamı` KpiCard'ının
+    // aksine) — hassasiyet 2 ondalığa (toBeCloseTo 2. argüman) kadar karşılaştırılır.
+    expect(shownBank).toBeCloseTo(bankTotal, 2);
 
     // `findDueInvoices` (packages/core/src/finance/dunning.ts) tanımıyla birebir: kind='sales',
     // status IN ('posted','partially_paid'), due_date < bugün (400 günlük pencere dahil), residual>0.
