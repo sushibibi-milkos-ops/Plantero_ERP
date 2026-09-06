@@ -1,47 +1,88 @@
 {
  "module": "kokpit",
- "round": 1,
- "note": "Tur 1: kokpit.json bu turda ilk kez oluşturuldu — önceki tur yok, bu yüzden 'closed' listesi boş ve puan deltası yok. Beş rol kesiti (admin/GM, depo, muhasebe/finans, satis, uretim_sefi) AYNI rotanın (/kokpit) farklı görünümleridir; her biri ayrı puan kartı satırı olarak tutulur çünkü her rol farklı bir bileşen ağacı render eder (gm-dashboard / depo-dashboard / finance-dashboard / sales-dashboard / production-chief-dashboard). Ölçümler: pnpm measure (artifacts/critic/measure-kokpit-r1/) + scripts/probe-kokpit-r1{,b,c}.ts (Playwright bounding-box + shadowRoot/NumberFlow taşma ölçümü). Kod düzeyi hareket taraması (transition-all, ease-in, scale(0), >300ms süre, hover gating) TEMİZ — bulgu açılmadı. `span[data-slot=\"breadcrumb-page\"]` 39x19.5px olarak measure.ts'in touchTargetsBelow44 listesine düşüyor ama href/tabindex'i yok (yalnızca role=\"link\"), gerçek bir dokunma hedefi DEĞİL — ölçüm aracının yanlış pozitifi, bulgu açılmadı.",
+ "round": 2,
+ "note": "Tur 2: Tur 1 bulgularının tamamı yeniden ölçüldü (artifacts/critic/measure-kokpit-r2/, artifacts/critic/probe-kokpit-r2/, scripts/probe-kokpit-r2.ts). kokpit-empty-action-01 DIŞINDA hepsi kapalı doğrulandı; o bulgu EKSİK kapatılmıştı (kokpitteki 14 compact EmptyState’in yalnızca 2’sine eylem eklenmiş), bu turda ekranda görünen diğer ikisi (\"Bugün tahsilat yok\", \"Son 7 günde fire kaydı yok\") hâlâ çıplak — yeni bulgu olarak açıldı (kokpit-empty-action-02/03). Kod düzeyi hareket taraması (transition-all / ease-in / scale(0) / >300ms süre / hover gating) TEMİZ: kokpit dosyalarında tek eşleşme yok, Tailwind v4 hover varyantı globals.css:11’de @media (hover: hover) and (pointer: fine) ile korunuyor. Ekran görüntülerinin sol altındaki siyah daire Next.js dev overlay göstergesidir (uygulama kodu değil) — bulgu açılmadı. measure.ts touchTargetsBelow44 listesindeki breadcrumb-page (39x19.5) ve masaüstü \"Tümü\" bağlantıları (47.8x16) mobilde max-md:min-h-11 ile 44px’e çıkıyor — yanlış pozitif, bulgu açılmadı.",
  "routes": {
   "/kokpit?rol=admin": {
-   "round": 1,
+   "round": 2,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
     4,
-    4,
-    5,
-    4,
-    4,
-    3,
-    4,
     5,
     4,
     5,
+    5,
     4,
-    4
+    5,
+    5,
+    4,
+    5,
+    5,
+    5
    ],
-   "total": 50,
+   "total": 56,
    "verdict": "KAZANAN: Stripe",
    "shots": [
     "artifacts/screens/kokpit-admin/desktop.png",
     "artifacts/screens/kokpit-admin/mobile.png"
    ],
    "scoreNotes": {
-    "1": "4 — h1 24/600, göz kaşı 11px uppercase, gövde 13px sağlam; ama 'büyük sayı' için tek ekranda 5 farklı kademe kullanılıyor (KPI şeridi 19px, KPI kartı 22px, Onay kuyruğu 17px, SKT kovaları 15px, Geciken alacak kovaları 13px) — sayısal ölçek tek bir merdivene oturmuyor.",
-    "2": "4 — 24px sayfa kenarı, gap-4 ritmi doğru; ama iki kolon 898.5px / 1819px (fark 920.5px) — sol kolonun altında bir ekran boyu ölü alan.",
-    "3": "5 — ilk ekranda 33 satır, contentBottom 2095px; Stripe yoğunluğunda.",
-    "4": "4 — 19 ayrı renk; yeşil hem marka/vurgu (kanal çubuğu bg-primary) hem başarı (StatusBadge) taşıyor, ikinci çubuk mavi (--chart-2, hue 250) — tek ölçülü sıralama grafiğinde iki hue.",
-    "5": "4 — hairline ayraçlar, sağ hizalı sayılar, satır hover, yatay taşma yok; ama 'Günlük kanal satışları' bölümünde çerçeveli Section içinde iki çerçeveli KpiCard (kutu içinde kutu).",
-    "6": "3 — P0: 'Brüt (bugün)' para değeri kırpılıyor, ekranda ₺689.442.2 yazıyor (gerçek: ₺689.442.211).",
-    "7": "4 — EmptyState'ler özenli (ikon+başlık+açıklama) ama eylem düğmesi yok; /kokpit'in kendi loading.tsx'i yok, 52 rotanın aksine jenerik (app)/loading.tsx iskeleti düşüyor ve nihai düzenle uyuşmuyor.",
-    "8": "5 — hover/focus-visible ring-inset/active scale(0.97) hepsi var, hover `(hover:hover)` ile korunmuş, 140ms.",
-    "9": "4 — 390px'te yatay taşma yok, kart 65.5px; ama boştaki üretim hattı satırları 40px (<44px) dokunma hedefi.",
-    "10": "5 — 16px lucide, süs ikonu yok.",
-    "11": "4 — üç ayrı 'mini istatistik şeridi' anatomisi (SKT 15px+10px divide-x, Geciken alacak 13px+11px divide-x, Onay kuyruğu 17px+11px gap-px bg-border) ve iki ayrı çubuk anatomisi aynı ekranda.",
-    "12": "4 — kutu içinde kutu + 'Son aktiviteler'de 8 satırın 8'i birebir aynı metin (giriş yaptı)."
+    "1": "4 — h1 24/600, KPI 19px, StatStrip 15px, gövde 13px, etiket 10-12px: sayısal merdiven Tur 1’de 5 kademeden 2’ye indi (kokpit-numeric-scale-01 kapalı). Kalan kusur: 14px’lik yetim gövde kademesi.",
+    "2": "4→5 — kolon yükseklikleri 1290px / 1445px (fark 155px, hedef ≤200px; Tur 1’de 920px). Sayfa kenarı 24px, kart arası gap-4, kart içi 16px.",
+    "3": "5→4 — masaüstü yoğunluğu korunuyor (24 satır, contentBottom 1721px, ilk ekranda ~15 satır), ama bu tur mobil kart yüksekliği ilk kez ölçüldü: SKT riski 84.5px (hedef 56-72). Ayrıca aynı KPI 3 kez tekrar ediyor.",
+    "4": "4→5 — ChannelBars’daki ikinci hue (mavi chart-2) kalktı, tüm veri çubukları tek yeşil ton. distinctColors 23; doygun yeşil yalnızca durum rozetleri + marka işareti.",
+    "5": "4→5 — kutu içinde kutu kalmadı (strip variant), hairline satır ayracı, sağ hizalı sayılar, satır hoverı var, scrollWidth = clientWidth. \"Bugün\"de partner sütunu 104px’e sıkışıyor ama satır gerçekten dolu (ölü alan yok) — yoğun listede kabul edilebilir kesme.",
+    "6": "3→4 — NumberFlow kırpması kapandı (1440x900’de kesilen değer 0), tabular-nums ve 0/2 basamak notasyonu tutarlı. Kalan: sıfır değerler soluk değil.",
+    "7": "4→5 — kokpit/loading.tsx eklendi, (app)/error.tsx mevcut, ekrandaki tek boş durum (\"Kritik stok yok\") ikon+başlık+açıklama+eylem taşıyor.",
+    "8": "5 — RowLink hover:bg-muted/40 + focus-visible:ring-2 ring-inset; hover Tailwind v4’te @media (hover: hover) ile korunuyor.",
+    "9": "4 — 390px’te yatay taşma yok (scrollWidth = clientWidth = 390), dokunma hedefi <44px yok, tek kolon. Kalan: SKT satırları 84.5px.",
+    "10": "5 — lucide 16px, süs ikonu yok, metinle hizalı.",
+    "11": "4→5 — StatStrip / ExpiryBucketStrip / AgingStrip / ProductionLineRow / BreakEvenPanel / TodayRow tek paylaşılan bileşen; üç farklı mini şerit anatomisi tek anatomiye indi (hücreler 59.5px).",
+    "12": "4→5 — çerçeve içinde çerçeve yok, ikon çorbası yok, default HTML görünümü yok."
    },
-   "open": [],
+   "open": [
+    {
+     "id": "kokpit-skt-mobile-card-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "390px’te \"SKT riski\" listesi 3 satırlık anatomiyle (lot kodu / ürün adı / SKT rozeti ayrı satırlarda) 84.5px’lik kart üretiyor; puan kartı hedefi 56-72px. Aynı panodaki \"Bugün\" (65.5px) ve \"Geciken alacak\" (63.5px) 2 satırlık anatomiyle hedefin içinde — kaymayı yalnızca SKT satırı yapıyor.",
+     "measure": "390x844 rowStats: SKT riski min 84 / max 85px (artifacts/critic/probe-kokpit-r2/admin-390x844.json)",
+     "target": "mobil kart ≤72px: LotBadge ile ExpiryBadge tek sm:contents grubuna alınıp 2 satırlık anatomiye insin",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:186-205",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-14px-tier-01",
+     "criterion": 1,
+     "severity": "P2",
+     "text": "Gövde metni için iki komşu kademe var: tüm liste satırları 13px, ama BreakEvenPanel’in dört satırı ve ChannelBars’ın tek-kanal satırı text-sm (14px). 1px’lik fark hiçbir anlam taşımıyor. ChannelBars kendi içinde de tutarsız: çok kanallı halde etiket 12px, tek kanallı halde 14px.",
+     "measure": "1440x900 font-size dağılımı (admin): 14px’te 7 element — PageHeader alt başlığı (1, shell) + BreakEvenPanel (4) + ChannelBars tek-kanal (1) + EmptyState başlığı (1, shell)",
+     "target": "kokpit’e ait 14px element 0: BreakEvenPanel satırları ve ChannelBars tek-kanal satırı 13px’e insin",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:195-206 + channel-bars.tsx:31-34",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-statstrip-zero-01",
+     "criterion": 6,
+     "severity": "P2",
+     "text": "StatStrip sıfır değerleri tam kontrastla basıyor: \"Onay kuyruğu\"nda 0/12/0/0 dördünün rengi aynı. Uygulamanın kendi kuralı (MoneyCell) sıfırı zaten soluk basıyor (€0,00 %70 opaklık) — aynı ekranda iki farklı sıfır dili.",
+     "measure": "1440x900: 6 sıfır değerin 6’sı oklch(0.21 0.006 285.9) — sıfır olmayanlarla birebir aynı; MoneyCell €0,00 ise oklab(..., 0.7)",
+     "target": "StatStrip value=0 iken text-muted-foreground; ekranda tam kontrastlı sıfır sayısı 0",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:113",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-kpi-dupe-01",
+     "criterion": 3,
+     "severity": "P2",
+     "text": "\"Bugünkü net ciro ₺2.678 ↓%67,8 dünden\" KPI şeridinde; 130px altında \"Günlük kanal satışları\" kartının içinde \"Net (bugün)\" olarak birebir aynı değer+delta ile tekrar; üçüncü kez de kanal satırında (İhracat ₺2.678).",
+     "measure": "1440x900: aynı (değer, delta) çiftini taşıyan KPI bloğu 2 adet",
+     "target": "tekrar eden KPI bloğu 0 — kart içindeki \"Net (bugün)\" kaldırılsın ya da şerit KPI’si başka bir ölçüye ayrılsın",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:44-48",
+     "openedRound": 2
+    }
+   ],
    "closed": [
     {
      "id": "kokpit-kpi-clip-01",
@@ -54,7 +95,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: NumberFlow shadowRoot kırpma taraması 0/6 element (probe-kokpit-r1b), genel kpiVals kırpma 0/21 (measure.ts). Kök neden düzeltmesi: kpi-card.tsx'e container query (@container + @min-[300px]) eklendi — kart <300px genişlikte sparkline'ı otomatik gizler; ayrıca 'Brüt/Net (bugün)' artık variant='strip' (19px, KpiStripRow) kullanıyor, sparkline'lı 262px'lik dar 'card' varyantı hiç render edilmiyor.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-col-balance-01",
@@ -67,7 +110,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: sol kolon 1289.5px / sağ kolon 1444.5px (fark 155px, hedef ≤200px). 'Onay kuyruğu' ve 'Son aktiviteler' sol kolona, 'Üretim hatları'+'Kritik stok'+'SKT riski'+'Geciken alacak' sağ kolonda kaldı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-loading-skeleton-01",
@@ -80,7 +125,9 @@
      "openedRound": 1,
      "measureAfter": "apps/web/src/app/(app)/kokpit/loading.tsx eklendi: KpiStripRow (4x80px hairline) + lg:grid-cols-2, her kolonda 3 Section iskeleti (header+3 satır) — DashboardGrid'i artık 5 rol panosu da paylaştığı için tek iskelet hepsine uyuyor.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-line-touch-01",
@@ -93,7 +140,9 @@
      "openedRound": 1,
      "measureAfter": "390x844: 'Bazlar, Barista & Kremalar' / 'Saşe / Stick Toz Dolum' satırları artık 64.5px (probe rowLinks). Kök neden: RowLink taban sınıfına `max-sm:min-h-11` eklendi — tüm mobil satırlar ≥44px garantili.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-nested-card-01",
@@ -106,7 +155,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: 'Brüt (bugün)'/'Net (bugün)' artık KpiStripRow+KpiCard(variant='strip') — çerçevesiz, dikey hairline (md:border-l). İç içe border+rounded sayısı 0.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-ministrip-consistency-01",
@@ -119,7 +170,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: SKT riski / Geciken alacak / Onay kuyruğu üçü de aynı `StatStrip` bileşeni — hücre yükseklikleri 59.5 / 59.5 / 59.5px (probe grids), değer 15px/600 tabular-nums, etiket 10px muted, px-2 py-2.5, divide-x divide-border/60 birebir aynı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-channelbar-hue-01",
@@ -132,7 +185,9 @@
      "openedRound": 1,
      "measureAfter": "ChannelBars artık `RankBar` (shared.tsx) kullanıyor: tek hue (bg-primary / bg-primary/45), 8px yükseklik rounded-full — 'Satış hunisi' ile birebir aynı bileşen/anatomi. Hue farkı 0°.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-numeric-scale-01",
@@ -145,7 +200,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900 tabular-nums font-size dağılımı: {19px: 6 (KPI şeridi + Brüt/Net), 15px: 13 (StatStrip blokları)} — sayısal vurgu için toplam kademe 5'ten 2'ye indi.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-activity-dupe-01",
@@ -158,7 +215,9 @@
      "openedRound": 1,
      "measureAfter": "'Son aktiviteler' artık `groupConsecutiveActivity` (packages/core/src/cockpit/kpis.ts, birim testli) ile ardışık aynı (kullanıcı,özet) kayıtları katlıyor — reset sonrası ekranda 8 satırın 8'i de FARKLI kullanıcı/özet (ör. 'Üretim Şefi · … · 12 kez'), tekrar eden metin kalmadı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-empty-action-01",
@@ -171,43 +230,72 @@
      "openedRound": 1,
      "measureAfter": "'Bugün henüz belge yok' → 'Yeni sipariş oluştur' (/satis/siparisler/yeni), 'Kritik stok yok' → 'Satın alma siparişi oluştur' (/satin-alma/siparisler/yeni) eylem düğmeleri eklendi (h-11 md:h-8, 390px'te 44px dokunma hedefi).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     }
    ]
   },
   "/kokpit?rol=depo": {
-   "round": 1,
+   "round": 2,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
     5,
     5,
-    3,
-    5,
     4,
     5,
     4,
+    4,
+    5,
     5,
     4,
     5,
-    4,
+    5,
     4
    ],
-   "total": 53,
+   "total": 55,
    "verdict": "KAZANAN: Linear",
    "shots": [
     "artifacts/screens/kokpit-depo/desktop.png",
     "artifacts/screens/kokpit-depo/mobile.png"
    ],
    "scoreNotes": {
-    "3": "3 — 1440x900'de ilk ekranda yalnızca 6 satır (Linear eşiği ≥15); contentBottom 719.5px, viewport'un 180px'i boş; 'Karantina değeri' 110px'lik koca bir kartı tek bir sayı için harcıyor.",
-    "5": "4 — satırlar 44px, hairline ayraç, hover var; ama 'Bugün' 1152px tam genişlikte tek kolonda ve satırın ortasında ~900px'lik ölü boşluk oluşuyor (partner x=755, tutar x=1700).",
-    "7": "4 — kokpit'in loading.tsx'i yok (shell/kokpit ortak bulgu).",
-    "9": "4 — 390px'te taşma yok, dokunma hedefi ihlali yok; ama mobil kart yüksekliği 108-109px (hedef 56-72px).",
-    "11": "4 — 'SKT riski' kartı GM panosundakiyle aynı isim/aynı veri ama farklı anatomi (burada 17px/py-3, GM'de 15px/py-2.5 + alt liste).",
-    "12": "4 — tek sayı için ayrı kart + sayfanın alt yarısının boş kalması kurumsal-pano kokusu."
+    "1": "5 — h1 24/600, gövde 13px, etiket 10-12px, mono 12px belge no. Bu kesitte 14px yalnızca PageHeader alt başlığı (shell).",
+    "2": "5 — kolonlar 269px / 331px (fark 62px), gap-4, sayfa kenarı 24px.",
+    "3": "3→4 — Tur 1’deki 6 satır / %20 boş ilk ekran gitti: 19 satır, contentBottom 1118px, karantina artık en değerli 5 lotu listeliyor. Kalan: mobil kart 83-84px.",
+    "4": "5 — distinctColors 24; karantina noktaları amber, durum rozetleri yeşil/amber/gri, başka hue yok.",
+    "5": "4 — hairline ayraç, sağ hizalı tutar, hover, taşma yok; ama \"Bugün\" kartının sağında 368px kullanılmayan kolon.",
+    "6": "5→4 — tabular-nums ve 0/2 basamak notasyonu tutarlı; ekrandaki tek sıfır (SKT 60-90 gün) tam kontrastlı — kokpit-statstrip-zero-01 ile aynı kök.",
+    "7": "4→5 — kokpit/loading.tsx eklendi; bu kesitte boş durum render edilmiyor (tüm listeler dolu).",
+    "8": "5 — hover / focus-visible / active tutarlı.",
+    "9": "4 — yatay taşma yok, dokunma hedefi <44px yok; ama iki listede kart 83-84px.",
+    "10": "5 — 16px ikon, LotBadge nokta göstergesi, süs yok.",
+    "11": "4→5 — SKT şeridi GM ile birebir aynı (ExpiryBucketStrip, hücre 59.5px), TodayRow paylaşılıyor.",
+    "12": "4 — çerçeve çorbası yok ama tam genişlik kartın içinde 2/3 dolu tablo \"bitmemiş yönetim paneli\" hissi veriyor."
    },
-   "open": [],
+   "open": [
+    {
+     "id": "kokpit-depo-row-void-02",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Bugün\" bölümü lg:col-span-2 ile 1152px genişlikte ama satırın kendisi sm:max-w-3xl (768px) ile sınırlı — Tur 1’deki satır İÇİ 930px’lik boşluk kapandı, yerine her satırın SAĞINDA 368px’lik kullanılmayan kolon oluştu. Görsel sonuç aynı: tam genişlik bir kartın içinde 2/3 dolu bir tablo.",
+     "measure": "1440x900: bölüm 1152px, satır bağlantısı 768px (linkL 265 → linkR 1033; kart iç sağ kenarı 1385) → satır sonu ölü alan 352-368px, son metin öğesinden kart kenarına 504px",
+     "target": "satır sonu ölü alan ≤24px: ya bölüm lg:col-span-2 olmaktan çıksın ya da satır tam genişliğe yayılıp rozet/tutar kart kenarına sağ hizalansın",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:75-84",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-depo-mobile-card-02",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "390px’te \"Karantina\" (83.5px) ve \"SKT riski\" (84.5px) satırları 3 satırlık anatomi (rozet / ürün adı / konum+tutar) üretiyor; puan kartı hedefi 56-72px. Aynı panodaki \"Bugün\" (65.5px) hedefin içinde.",
+     "measure": "390x844 rowStats: Karantina 83-84px, SKT riski 84-85px, Bugün 65-66px (artifacts/critic/probe-kokpit-r2/depo-390x844.json)",
+     "target": "mobil kart ≤72px — LotBadge sağındaki rozet/konum ile tek satır paylaşsın (2 satırlık anatomi)",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:41-50, 62-70",
+     "openedRound": 2
+    }
+   ],
    "closed": [
     {
      "id": "kokpit-depo-density-01",
@@ -220,7 +308,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: contentBottom 1117.5px (viewport 900, tam dolu), toplam satır sayısı 19 (hedef ≥15). 'Karantina' artık en değerli 5 lotu listeliyor (getWarehouseCards.quarantine.top5, core/cockpit/kpis.ts), 'SKT riski' GM'deki gibi top5 lot listesi kazandı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-depo-mobile-card-01",
@@ -233,7 +323,9 @@
      "openedRound": 1,
      "measureAfter": "390x844: 'Bugün' satırları artık 64.5px (probe rowLinks) — hedef ≤72px. Kök neden: GM ile paylaşılan `TodayRow` (shared.tsx) bileşenine taşındı (2 gruplu sm:contents anatomisi).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-depo-row-void-01",
@@ -246,7 +338,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: 'Bugün' satırı artık `sm:max-w-3xl` (768px) ile sınırlı; partner kutusu ile MoneyCell arası boşluk yalnızca gap-3 (12px) — flex-1 kutusunun kendisi 306px (önceki ~930px'lik boşluktan sonra hedefin (≤240px) belirgin altında).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-skt-strip-drift-01",
@@ -259,45 +353,72 @@
      "openedRound": 1,
      "measureAfter": "Depo ve GM artık aynı `ExpiryBucketStrip` bileşenini kullanıyor: ikisinde de değer 15px/600, hücre 59.5px (fark 0px) — depo tarafında ayrıca top5 lot listesi eklendi (öncesinde yoktu).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     }
    ]
   },
   "/kokpit?rol=muhasebe": {
-   "round": 1,
+   "round": 2,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
+    4,
+    5,
+    5,
+    5,
     5,
     4,
     4,
-    3,
-    4,
-    4,
-    4,
     5,
     4,
     5,
-    4,
-    4
+    5,
+    5
    ],
-   "total": 50,
+   "total": 56,
    "verdict": "KAZANAN: Stripe",
    "shots": [
     "artifacts/screens/kokpit-muhasebe/desktop.png",
     "artifacts/screens/kokpit-muhasebe/mobile.png"
    ],
    "scoreNotes": {
-    "2": "4 — kolonlar 542px / 788px (fark 246px).",
-    "3": "4 — 10 satır, contentBottom 1064px; 'Mutabakat kuyruğu' 110px'lik kartı tek sayı için harcıyor.",
-    "4": "3 — AYNI tutar (−₺254.348) KPI şeridinde siyah, 30px altındaki Banka satırında kırmızı; 'Nakit projeksiyonu'nda 3/3 değer yeşil (ayırt edici bilgi taşımıyor).",
-    "5": "4 — 'KDV pozisyonu' 2x2 ızgarası ekrandaki tek ayraçsız blok; diğer tüm bloklar divide-x kullanıyor.",
-    "6": "4 — 'Nakit projeksiyonu' aynı 79px'lik hücrede iki farklı gösterim: ₺33.278 (tam) ve 'kapanış ₺33,3 B' (kısaltılmış).",
-    "7": "4 — kokpit loading.tsx yok.",
-    "9": "4 — 390px'te taşma yok; 'Geciken alacak' kartlarında tutar tek başına üçüncü satıra düşüyor (84px).",
-    "11": "4 — 'Break-even'a uzaklık' etiketleri GM panosundakinden farklı ('Bu ay gereken' vs 'Bu ay gereken (KDV hariç)', 'Gerçekleşen' vs 'Gerçekleşen net ciro'), aynı bileşen iki metin setiyle."
+    "1": "5→4 — hiyerarşi sağlam (h1 24/600, KPI 19px, StatStrip 15px, gövde 13px) ama BreakEvenPanel’in 4 satırı 14px: gövde için iki komşu kademe (kokpit-14px-tier-01, admin kesitinde açık).",
+    "2": "4→5 — kolonlar 842px / 726px (fark 116px, hedef ≤120px; Tur 1’de 246px). Tek satırlık bölüm kalmadı.",
+    "3": "4→5 — 15 satır (hedef ≥15), \"Mutabakat kuyruğu\" artık 8 satırlık gerçek liste, tek sayaca kart harcanmıyor.",
+    "4": "3→5 — distinctColors 15 (tüm kesitlerin en temizi); negatif tutarlar KPI şeridinde de MoneyCell’de de aynı kırmızı; nakit projeksiyonundaki dekoratif yeşil kalktı.",
+    "5": "4→5 — KDV pozisyonu artık divide-x StatStrip; tüm satırlar 44px, hairline ayraç, sağ hizalı tutar, taşma yok.",
+    "6": "4 — nakit projeksiyonundaki karışık notasyon kapandı (ikisi de tam basamaklı), tabular-nums var; kalan: 3 adet ₺0 tam kontrastlı — MoneyCell’in soluk-sıfır kuralıyla çelişiyor.",
+    "7": "4 — loading.tsx eklendi ama ekrandaki tek boş durum (\"Bugün tahsilat yok\") eylemsiz ve açıklamasız.",
+    "8": "5 — hover / focus tutarlı.",
+    "9": "4 — \"Geciken alacak\" satırları 63px’e indi (Tur 1: 84px), yatay taşma yok; kalan: KDV şeridi 390px’te 4 sütun kalıp etiket kırpıyor.",
+    "10": "5 — banka satırlarında 16px ikon, başka süs ikonu yok.",
+    "11": "4→5 — BreakEvenPanel GM ile tek kod; KDV / aging / nakit şeritleri tek StatStrip anatomisi.",
+    "12": "4→5 — kutu içinde kutu yok, ayraçsız blok kalmadı."
    },
-   "open": [],
+   "open": [
+    {
+     "id": "kokpit-empty-action-02",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "\"Bugünün tahsilatları\" boş durumu 190px’lik kartı yalnızca ikon + \"Bugün tahsilat yok\" başlığı için harcıyor — açıklama da eylem de yok. Tur 1’de açılan kokpit-empty-action-01 yalnızca 2 boş duruma eylem ekleyip kapatılmıştı; kokpitteki 14 compact EmptyState’in 12’si hâlâ çıplak.",
+     "measure": "1440x900: bölüm yüksekliği 190px, içerik = 1 ikon + 1 başlık; EmptyState action/description prop’u geçilmiyor",
+     "target": "ikon + başlık + açıklama + eylem (ör. \"Tahsilat kaydet\" → /finans/tahsilat) — puan kartı kriter 7 tanımı",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:73-77",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-kdv-strip-mobile-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px’te \"KDV pozisyonu\" 4 sütunlu StatStrip olarak kalıyor; hücre genişliği ~85px’e düşüp etiketlerin 2’si kırpılıyor (\"Hesaplanan (...\", \"İndirilecek (1...\") ve ilk hücrenin değeri (\"Ağustos 2026\") iki satıra sarıp hücreyi yükseltiyor.",
+     "measure": "390x844: StatStrip 4 sütun, 4 etiketin 2’si truncate ile kesik; \"Ağustos 2026\" 2 satır (artifacts/screens/kokpit-muhasebe/mobile.png)",
+     "target": "<640px’te 2 sütun (grid-cols-2) — kırpılan etiket 0, hücre yükseklikleri eşit",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:104-108 (StatStrip gridTemplateColumns) + finance-dashboard.tsx:95-109",
+     "openedRound": 2
+    }
+   ],
    "closed": [
     {
      "id": "kokpit-neg-money-color-01",
@@ -311,7 +432,9 @@
      "module": "shell",
      "measureAfter": "1440x900: KPI şeridi 'Banka toplamı −₺254.348' ve altındaki MoneyCell '−₺254.348,50' ikisi de text-destructive (kırmızı) — ekran görüntüsüyle doğrulandı. kpi-card.tsx zaten paylaşılan `getMoneyTone` yardımcısını kullanıyor (önceki shell turunda düzeltilmiş); bu turda regresyon yok, kart tekrar doğrulandı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-cash-mixed-format-01",
@@ -324,7 +447,9 @@
      "openedRound": 1,
      "measureAfter": "'Nakit projeksiyonu' artık StatStrip: hem net akış hem kapanış TAM basamaklı formatMoney(digits:0) — 'Eylül 2026 / ₺33.278 / kapanış ₺33.278' tek notasyon.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-cash-green-01",
@@ -337,7 +462,9 @@
      "openedRound": 1,
      "measureAfter": "Ekran görüntüsü: 3 ayın 3'ü de nötr (siyah) — text-success kaldırıldı, yalnızca negatif akışta text-destructive uygulanıyor (StatStrip valueClassName).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-kdv-divider-01",
@@ -350,7 +477,9 @@
      "openedRound": 1,
      "measureAfter": "'KDV pozisyonu' artık StatStrip (divide-x divide-border/60), diğer bloklarla aynı hücre anatomisi — ekran görüntüsüyle doğrulandı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-fin-col-balance-01",
@@ -363,7 +492,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: kolonlar 842px / 726px (fark 116px, hedef ≤120px). 'Mutabakat kuyruğu' sayacı KPI şeridine taşındı, bölümün kendisi bekleyen önerilerin gerçek listesine dönüştü.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-breakeven-label-drift-01",
@@ -376,7 +507,9 @@
      "openedRound": 1,
      "measureAfter": "GM ve muhasebe artık aynı `BreakEvenPanel` (shared.tsx) bileşenini render ediyor — beş etiket metni birebir aynı, iki kod kopyası kalmadı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-fin-mobile-row-01",
@@ -389,7 +522,9 @@
      "openedRound": 1,
      "measureAfter": "390x844: 'Geciken alacak' satırları artık 63px (hedef ≤72px) — gün ve tutar aynı satırda (OverdueTop5List, shared.tsx).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-fin-density-01",
@@ -402,43 +537,72 @@
      "openedRound": 1,
      "measureAfter": "1440x900: toplam satır sayısı 15 (hedef ≥15), tek satırlık bölüm kalmadı — 'Mutabakat kuyruğu' artık gerçek bekleyen öneri listesi (getReconciliationQueueDetail, core/cockpit/kpis.ts).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     }
    ]
   },
   "/kokpit?rol=satis": {
-   "round": 1,
+   "round": 2,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
-    5,
-    5,
-    3,
-    3,
+    4,
+    4,
     4,
     5,
     4,
     5,
-    4,
     5,
-    4,
+    5,
+    5,
+    5,
+    5,
     4
    ],
-   "total": 51,
+   "total": 55,
    "verdict": "KAZANAN: Stripe",
    "shots": [
     "artifacts/screens/kokpit-satis/desktop.png",
     "artifacts/screens/kokpit-satis/mobile.png"
    ],
    "scoreNotes": {
-    "3": "3 — contentBottom 592px / viewport 900px: ilk ekranın %34'ü boş; 'Kanal ciro' kartında tek bir çubuk var (tek kategorili çubuk grafiği daima %100 dolu — hiçbir şey anlatmıyor).",
-    "4": "3 — ChannelBars iki hue (yeşil hue 152 + mavi hue 250), 20px yüksek tam doygun yeşil dolgu, huni çubukları ayrı bir yeşil tonu (bg-primary/70): tek ekranda üç yeşil + bir mavi.",
-    "5": "4 — iki farklı çubuk anatomisi: kanal çubuğu h-5 rounded-md, huni çubuğu h-2 rounded-full.",
-    "7": "4 — kokpit loading.tsx yok.",
-    "9": "4 — 390px'te 'En çok satan 5' ürün adı 145.9px kutuya sığmıyor (gerekli 180px), ad 'BARISTA BASE - FIN…' diye kesiliyor; aynı ekrandaki diğer listeler mobilde iki satıra kırılıyor.",
-    "11": "4 — 'En çok satan 5' sabit h-11 satır + truncate kullanırken diğer tüm kokpit listeleri RowLink ile mobilde iki satıra kırılıyor."
+    "1": "5→4 — tek kanal durumunda ChannelBars etiketi 14px (çok kanallı halde 12px): aynı bileşen iki farklı kademe basıyor.",
+    "2": "5→4 — Tur 1’de eklenen \"Son siparişler\" yoğunluğu çözdü ama tamamı sol kolona eklendiği için kolon dengesi bozuldu (800/270, fark 530px).",
+    "3": "3→4 — toplam 19 satır (Tur 1: 9), contentBottom 1076px; ama ilk ekranın sağ yarısı 546px’ten sonra boş.",
+    "4": "3→5 — kanal çubuğu ile huni çubuğu tek RankBar (8px, rounded-full, tek hue); doygun yeşil yüzey sayısı 4’ten 1’e indi.",
+    "5": "4 — hairline / hover / sağ hizalama tamam, çubuk anatomisi tekleşti; kalan: partner sütunu 102px’e sıkışıp 8 satırda kanal eki kayboluyor.",
+    "6": "5 — tabular-nums, QtyCell birimi ayrı ve muted, MoneyCell 2 basamak; ekranda sıfır değer yok.",
+    "7": "4→5 — loading.tsx eklendi; bu kesitte boş durum render edilmiyor.",
+    "8": "5 — hover / focus tutarlı.",
+    "9": "4→5 — \"En çok satan 5\" artık RowLink (mobilde 2 satır, 63.5px), \"Son siparişler\" 65.5px, yatay taşma yok, dokunma hedefi <44px yok.",
+    "10": "5 — süs ikonu yok.",
+    "11": "4→5 — tüm listeler RowLink, çubuklar RankBar; kokpitte etkileşimsiz liste kalmadı.",
+    "12": "4 — ekranın sağ yarısı boşken sol yarıda adların kesilmesi \"bitmemiş yönetim paneli\" hissi veriyor."
    },
-   "open": [],
+   "open": [
+    {
+     "id": "kokpit-satis-col-balance-01",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "İki kolonlu pano ızgarasında sol kolon 800px, sağ kolon 270px — fark 530px. \"Son siparişler\" 10 satırla sol kolonu doldururken sağ kolonun altında yarım ekran boş kalıyor; aynı anda sol kolondaki partner adları 102px’e sıkışıyor.",
+     "measure": "1440x900: kolon yükseklikleri 800px / 270px (artifacts/critic/probe-kokpit-r2/satis-1440x900.json)",
+     "target": "kolon yükseklik farkı ≤200px — \"Son siparişler\" sağ kolona ya da lg:col-span-2 alt şeride taşınsın",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:36-113",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-satis-order-trunc-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Son siparişler\"de partner+kanal metni 102-146px’lik kutuya sıkışıyor (gerçek metin 180-404px): 10 satırın 8’inde \"· kanal\" eki TAMAMEN görünmez oluyor, partner adı ~14 karakterde kesiliyor — satırın sonunda 103px, bölümün sağında 568px boş alan dururken.",
+     "measure": "1440x900: truncate kutuları clientWidth 102/109/118/134/146px, scrollWidth 180/199/229/320/404px (10 satırın 8’i kırpılı); satır sonu boş 103px",
+     "target": "partner sütunu ≥220px ve kırpılan satır ≤2/10 — tarih (sm:w-24) + belge no (sm:w-32) sütunları daraltılsın ya da bölüm geniş kolona taşınsın",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:66-84",
+     "openedRound": 2
+    }
+   ],
    "closed": [
     {
      "id": "kokpit-satis-density-01",
@@ -451,7 +615,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: toplam satır 19 (hedef ≥15). Yeni 'Son siparişler' bölümü eklendi (getSalesCards.recentOrders, son 14 gün); tek kanal olduğunda ChannelBars artık %100 dolu sahte çubuk yerine düz tutar satırı basıyor.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-bar-anatomy-01",
@@ -464,7 +630,9 @@
      "openedRound": 1,
      "measureAfter": "Kanal çubuğu ve Satış hunisi artık aynı `RankBar` bileşeni (8px, rounded-full, bg-primary/bg-primary-45) — ekranda çubuk yüksekliği çeşidi 1.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-top5-mobile-01",
@@ -477,7 +645,9 @@
      "openedRound": 1,
      "measureAfter": "390x844: 'En çok satan 5' artık RowLink (sm:contents ile 2 satıra kırılıyor), ürün adı tam görünüyor, kırpma yok — ekran görüntüsüyle doğrulandı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-satis-green-count-01",
@@ -490,7 +660,9 @@
      "openedRound": 1,
      "measureAfter": "ChannelBars tek hue'ya indi (RankBar); bugünün verisiyle tek kanal olduğu için çubuk hiç basılmıyor (düz satır) — huni çubukları da aynı tek yeşil tonu (bg-primary/45) kullanıyor, ekranda ikinci bir hue (mavi --chart-2) kalmadı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-top5-consistency-01",
@@ -503,42 +675,92 @@
      "openedRound": 1,
      "measureAfter": "'En çok satan 5' satırları artık `RowLink` (href=/ana-veri/urunler/:id) — hover/focus/dokunma dili diğer tüm kokpit listeleriyle aynı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     }
    ]
   },
   "/kokpit?rol=uretim": {
-   "round": 1,
+   "round": 2,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
     5,
-    3,
-    2,
+    4,
+    4,
     5,
-    3,
+    4,
+    4,
+    4,
     5,
     4,
     5,
     5,
-    5,
-    4,
     4
    ],
-   "total": 50,
+   "total": 53,
    "verdict": "KAZANAN: Linear",
    "shots": [
     "artifacts/screens/kokpit-uretim_sefi/desktop.png",
     "artifacts/screens/kokpit-uretim_sefi/mobile.png"
    ],
    "scoreNotes": {
-    "2": "3 — 'Hat durumu' satırlarında masaüstünde dikey padding 0px (RowLink taban sınıfındaki `sm:py-0` alt bileşenin `py-3`'ünü medya sorgusu özgüllüğüyle eziyor): metin hairline'lara yapışık.",
-    "3": "2 — ilk ekranın %46.5'i boş, toplam 3 satır. Üretim şefinin panosunda iş emri listesi, vardiya/duruş bilgisi, günün üretim miktarı hiç yok.",
-    "5": "3 — satır anatomisi bozuk: py 0px, üst satır ile alt satır arası 4px, satır ile ayraç arası ~1px; ayraçlar satırın alt kenarında değil metnin dibinde okunuyor.",
-    "7": "4 — kokpit loading.tsx yok.",
-    "11": "4 — GM panosundaki aynı 'Üretim hatları' listesi `sm:py-2.5` + ProgressBar taşırken üretim şefi panosundaki kopyası padding'siz ve %0'da çubuksuz."
+    "1": "5 — h1 24/600, gövde 13px, meta 11-12px; bu kesitte 14px yalnızca shell bileşenlerinden (PageHeader alt başlığı + EmptyState başlığı) geliyor.",
+    "2": "3→4 — Tur 1’deki tek bölümlü / yarı boş pano gitti (4 bölüm), 8pt ritmi temiz; ama kolon farkı 290px.",
+    "3": "2→4 — contentBottom 481px’ten 971px’e, satır sayısı 3’ten 15’e çıktı; kalan: sağ kolon 681px’ten sonra boş + 190px’lik boş durum kartı.",
+    "4": "5 — distinctColors 24; yeşil / amber / gri durum rozetleri + tek mavi \"Planlandı\" rozeti anlam taşıyor, dekoratif renk yok.",
+    "5": "3→4 — RowLink padding hatası kapandı (satır 72.5px, GM ile birebir), hairline / hover / sağ hizalama tamam; kalan: sarılan hat adı + karışık 4. sütun + \"Son duruşlar\" satır sonunda 363px ölü alan.",
+    "6": "5→4 — tabular-nums ve QtyCell birimi tamam; ama \"Geciken iş emri 0\", \"Fire oranı %0\" ve \"0 ADET\" tam kontrastlı — soluk sıfır kuralı uygulanmıyor.",
+    "7": "2→4 — loading.tsx eklendi (Tur 1 P2 kapandı); ama ekrandaki boş durum eylemsiz / açıklamasız.",
+    "8": "5 — hover / focus tutarlı.",
+    "9": "5→4 — kartlar 65.5px, yatay taşma yok, dokunma hedefi <44px yok; ama 390px’te ölçülen 0px metin çakışması var.",
+    "10": "5 — süs ikonu yok.",
+    "11": "4→5 — ProductionLineRow artık GM ile tek bileşen (ikisi de 72.5px, pt/pb 10px), StatStrip paylaşılıyor.",
+    "12": "4 — sarılan ragged satırlar + boş sağ kolon + 363px’lik satır sonu boşluğu."
    },
-   "open": [],
+   "open": [
+    {
+     "id": "kokpit-wo-wrap-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Son iş emirleri\"nde hat adı 96px’lik sabit sütunda (sm:w-24) truncate OLMADAN basılıyor — 8 satırın 6’sında \"Bazlar, Barista & Kremalar\" / \"Toz Karıştırma & Dolum\" iki satıra sarıp 44px’lik satırın içini tıkıyor, liste dikey ritmi tarağımsı görünüyor. Aynı tabloda 4. sütun aynı konumda ya bitiş tarihi ya üretilen miktar basıyor (tek sütun, iki veri tipi).",
+     "measure": "1440x900: 8 satırın 6’sında hat adı 2 satır (sm:w-24 = 96px, en uzun ad ~168px); 4. sütunda 4 satır tarih + 4 satır \"0 ADET\"",
+     "target": "hat adı tek satır (truncate ya da sm:w-32 = 128px) — sarılan satır 0; 4. sütun tek veri tipi taşısın",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:93-105",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-uretim-col-balance-01",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "İki kolon 695px / 405px — fark 290px (hedef ≤200px). Sağ kolon 681px’te bitip altında ~290px boş kalırken sol kolonda \"Fire kırılımı\" 190px’lik kartı boş durum için harcıyor.",
+     "measure": "1440x900: kolon yükseklikleri 695px / 405px (artifacts/critic/probe-kokpit-r2/uretim_sefi-1440x900.json)",
+     "target": "kolon yükseklik farkı ≤200px",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:33-115",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-line-row-collision-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px’te \"Hat durumu\" satırının alt satırında iki metin çakışıyor: kırpılmış \"WO-2026-000007 · Strawberry Protein Mi…\" ile \"1 açık iş emri\" arasında 0px boşluk var, tek bozuk dizge gibi okunuyor. Kök neden: sarmalayıcı flex justify-between’de gap tanımlı değil, sol kutu min-w-0 truncate ile tüm genişliği alıyor.",
+     "measure": "390x844: iki komşu leaf metin kutusu arası gap 0px (artifacts/critic/probe-kokpit-r2/uretim_sefi-390x844.json collisions[0])",
+     "target": "komşu metinler arası boşluk ≥8px (sarmalayıcıya gap-2 / gap-3)",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:270-276 (ProductionLineRow alt satırı)",
+     "openedRound": 2
+    },
+    {
+     "id": "kokpit-empty-action-03",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "\"Fire kırılımı (7 gün)\" boş durumu 190px’lik kartı yalnızca ikon + \"Son 7 günde fire kaydı yok\" başlığı için harcıyor — açıklama ve eylem yok (kokpit-empty-action-01 eksik kapatılmıştı).",
+     "measure": "1440x900: bölüm 190px; EmptyState action/description prop’u geçilmiyor",
+     "target": "ikon + başlık + açıklama + eylem",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:50-63",
+     "openedRound": 2
+    }
+   ],
    "closed": [
     {
      "id": "kokpit-rowlink-padding-01",
@@ -551,7 +773,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: 'Hat durumu' satırı computed padding-top/bottom 10px/10px, yükseklik 72.5px — GM'nin 'Üretim hatları' satırıyla BİREBİR AYNI (probe: ikisi de {pt:10px,pb:10px,h:72.5}). Kök neden: RowLink taban sınıfından `sm:py-0` kaldırıldı.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-uretim-density-01",
@@ -564,7 +788,9 @@
      "openedRound": 1,
      "measureAfter": "1440x900: contentBottom 971px (viewport 900, tam dolu — önceki 481.5px'ten), toplam satır 15 (hedef ≥15), bölüm sayısı 4 (Hat durumu + Fire kırılımı + Son duruşlar + Son iş emirleri). Yeni core sorguları: getProductionChiefCards artık recentWorkOrders (son 10 iş emri) ve recentDowntimes (downtimes tablosu) döndürüyor.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-line-list-drift-01",
@@ -577,7 +803,9 @@
      "openedRound": 1,
      "measureAfter": "GM ve üretim şefi artık aynı `ProductionLineRow` bileşeni (shared.tsx) — padding/yükseklik/alt satır içeriği (docNo · productName) birebir aynı (probe: ikisi de 72.5px, pt/pb 10px).",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     },
     {
      "id": "kokpit-uretim-loading-01",
@@ -590,7 +818,9 @@
      "openedRound": 1,
      "measureAfter": "Aynı kökten (route-level loading.tsx eksikliği) — kokpit-loading-skeleton-01 ile aynı dosyayla kapandı; rol bilgisi olmadığı için tek ortak iskelet tüm rollere (üretim şefi dahil) uygulanıyor.",
      "closedRound": 2,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "reverifiedRound": 2,
+     "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
     }
    ]
   }
