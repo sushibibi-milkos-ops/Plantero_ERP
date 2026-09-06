@@ -1,0 +1,222 @@
+{
+ "as": "muhasebe",
+ "viewport": "390x844",
+ "columns": [],
+ "sections": [
+  {
+   "title": "Banka",
+   "top": 256,
+   "h": 222,
+   "w": 358,
+   "rows": 3,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Mutabakat kuyruğu",
+   "top": 494,
+   "h": 398,
+   "w": 358,
+   "rows": 8,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Bugünün tahsilatları",
+   "top": 908,
+   "h": 190,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 1114,
+   "h": 362,
+   "w": 358,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "KDV pozisyonu",
+   "top": 1492,
+   "h": 122,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Nakit projeksiyonu (3 ay)",
+   "top": 1630,
+   "h": 123,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 1768,
+   "h": 165,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+   "scrollWidth": 792,
+   "clientWidth": 358,
+   "text": "Banka toplamıVadesi geçen alacakKDV ödenecekMutabakat kuyruğ"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 331,
+   "clientWidth": 231,
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti."
+  }
+ ],
+ "clipped": [
+  {
+   "text": "KDV ödenecek",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "Mutabakat kuyruğu",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "Break-even ilerleme",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  }
+ ],
+ "gaps": [
+  {
+   "section": "Banka",
+   "gap": 91,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Mutabakat kuyruğu",
+   "gap": 12,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "Geciken alacak",
+   "gap": 223,
+   "trailing": 16,
+   "rowW": 356
+  }
+ ],
+ "strips": [
+  {
+   "section": "Geciken alacak",
+   "cells": 4,
+   "cellH": 60,
+   "order": [
+    {
+     "t": "₺7.109",
+     "fs": "15px",
+     "top": 1169
+    },
+    {
+     "t": "0-30 gün",
+     "fs": "10px",
+     "top": 1194
+    }
+   ]
+  },
+  {
+   "section": "KDV pozisyonu",
+   "cells": 4,
+   "cellH": 76,
+   "order": [
+    {
+     "t": "Ağustos 2026",
+     "fs": "13px",
+     "top": 1547
+    },
+    {
+     "t": "Dönem",
+     "fs": "10px",
+     "top": 1588
+    }
+   ]
+  },
+  {
+   "section": "Nakit projeksiyonu (3 ay)",
+   "cells": 3,
+   "cellH": 77,
+   "order": [
+    {
+     "t": "Eylül 2026",
+     "fs": "10px",
+     "top": 1685
+    },
+    {
+     "t": "₺33.278",
+     "fs": "15px",
+     "top": 1702
+    },
+    {
+     "t": "kapanış ₺33.278",
+     "fs": "10px",
+     "top": 1726
+    }
+   ]
+  }
+ ],
+ "rowStats": [
+  {
+   "title": "Banka",
+   "n": 3,
+   "min": 44,
+   "max": 44
+  },
+  {
+   "title": "Mutabakat kuyruğu",
+   "n": 8,
+   "min": 44,
+   "max": 44
+  },
+  {
+   "title": "Geciken alacak",
+   "n": 4,
+   "min": 63,
+   "max": 64
+  }
+ ],
+ "collisions": [],
+ "contentBottom": 1933
+}

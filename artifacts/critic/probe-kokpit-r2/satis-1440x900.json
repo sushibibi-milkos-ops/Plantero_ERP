@@ -1,0 +1,208 @@
+{
+ "as": "satis",
+ "viewport": "1440x900",
+ "columns": [
+  {
+   "cls": "mt-4 grid gap-4 lg:grid-cols-2 lg:items-start",
+   "children": [
+    {
+     "h": 800,
+     "top": 276,
+     "bottom": 1076,
+     "label": "Kanal ciro (bugün)"
+    },
+    {
+     "h": 270,
+     "top": 276,
+     "bottom": 546,
+     "label": "En çok satan 5 (son 30 gün)"
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "title": "Kanal ciro (bugün)",
+   "top": 276,
+   "h": 101,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Satış hunisi",
+   "top": 393,
+   "h": 172,
+   "w": 568,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son siparişler",
+   "top": 581,
+   "h": 495,
+   "w": 568,
+   "rows": 10,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "top": 276,
+   "h": 270,
+   "w": 568,
+   "rows": 5,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 199,
+   "clientWidth": 118,
+   "text": "BioGrün Handels GmbH · İhracat"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 199,
+   "clientWidth": 146,
+   "text": "BioGrün Handels GmbH · İhracat"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 199,
+   "clientWidth": 102,
+   "text": "BioGrün Handels GmbH · İhracat"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 320,
+   "clientWidth": 134,
+   "text": "Doğal Yaşam Market Zinciri Ltd. Şti. · Toptan / Fason"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 180,
+   "clientWidth": 134,
+   "text": "Trendyol Pazaryeri · Trendyol"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 180,
+   "clientWidth": 109,
+   "text": "Trendyol Pazaryeri · Trendyol"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 229,
+   "clientWidth": 134,
+   "text": "Hepsiburada Pazaryeri · Hepsiburada"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 180,
+   "clientWidth": 109,
+   "text": "Trendyol Pazaryeri · Trendyol"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 229,
+   "clientWidth": 109,
+   "text": "Hepsiburada Pazaryeri · Hepsiburada"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 404,
+   "clientWidth": 102,
+   "text": "Vegan Gıda Üretim San. Tic. Ltd. Şti. · Doğrudan Hammadde Sa"
+  }
+ ],
+ "clipped": [],
+ "gaps": [
+  {
+   "section": "Satış hunisi",
+   "gap": 414,
+   "trailing": 0,
+   "rowW": 534
+  },
+  {
+   "section": "Son siparişler",
+   "gap": 142,
+   "trailing": 103,
+   "rowW": 566
+  },
+  {
+   "section": "En çok satan 5 (son 30 gün)",
+   "gap": 33,
+   "trailing": 16,
+   "rowW": 566
+  }
+ ],
+ "strips": [],
+ "rowStats": [
+  {
+   "title": "Satış hunisi",
+   "n": 4,
+   "min": 16,
+   "max": 16
+  },
+  {
+   "title": "Son siparişler",
+   "n": 10,
+   "min": 44,
+   "max": 45
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "n": 5,
+   "min": 44,
+   "max": 45
+  }
+ ],
+ "collisions": [
+  {
+   "a": "₺72,00",
+   "b": "· İhracat",
+   "gap": -24
+  },
+  {
+   "a": "· İhracat",
+   "b": "₺216,00",
+   "gap": -41
+  },
+  {
+   "a": "₺16.800,00",
+   "b": "· İhracat",
+   "gap": -38
+  },
+  {
+   "a": "· Trendyol",
+   "b": "₺1.714,90",
+   "gap": -34
+  },
+  {
+   "a": "· Trendyol",
+   "b": "₺3.021,14",
+   "gap": -59
+  },
+  {
+   "a": "· Hepsiburada",
+   "b": "₺2.593,61",
+   "gap": -83
+  },
+  {
+   "a": "· Trendyol",
+   "b": "₺4.178,76",
+   "gap": -59
+  },
+  {
+   "a": "₺1.659,95",
+   "b": "· Hepsiburada",
+   "gap": -42
+  }
+ ],
+ "contentBottom": 1076
+}

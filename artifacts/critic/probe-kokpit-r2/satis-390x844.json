@@ -1,0 +1,149 @@
+{
+ "as": "satis",
+ "viewport": "390x844",
+ "columns": [],
+ "sections": [
+  {
+   "title": "Kanal ciro (bugün)",
+   "top": 256,
+   "h": 101,
+   "w": 358,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Satış hunisi",
+   "top": 373,
+   "h": 172,
+   "w": 358,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son siparişler",
+   "top": 561,
+   "h": 700,
+   "w": 358,
+   "rows": 10,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "top": 1277,
+   "h": 365,
+   "w": 358,
+   "rows": 5,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+   "scrollWidth": 632,
+   "clientWidth": 358,
+   "text": "Bugünkü siparişBugünkü brüt ciro%67,8dündenBugünkü net ciro%"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 320,
+   "clientWidth": 248,
+   "text": "Doğal Yaşam Market Zinciri Ltd. Şti. · Toptan / Fason"
+  },
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 404,
+   "clientWidth": 240,
+   "text": "Vegan Gıda Üretim San. Tic. Ltd. Şti. · Doğrudan Hammadde Sa"
+  }
+ ],
+ "clipped": [
+  {
+   "text": "Bugünkü net ciro",
+   "sw": 126,
+   "cw": 41,
+   "visible": 41
+  },
+  {
+   "text": "dünden",
+   "sw": 43,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "Açık fırsat",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "",
+   "sw": 126,
+   "cw": 0,
+   "visible": 0
+  },
+  {
+   "text": "· Doğrudan Hammadde Satışı",
+   "sw": 179,
+   "cw": 132,
+   "visible": 132
+  }
+ ],
+ "gaps": [
+  {
+   "section": "Satış hunisi",
+   "gap": 204,
+   "trailing": 0,
+   "rowW": 324
+  },
+  {
+   "section": "Son siparişler",
+   "gap": 81,
+   "trailing": 16,
+   "rowW": 356
+  },
+  {
+   "section": "En çok satan 5 (son 30 gün)",
+   "gap": 5,
+   "trailing": 16,
+   "rowW": 356
+  }
+ ],
+ "strips": [],
+ "rowStats": [
+  {
+   "title": "Satış hunisi",
+   "n": 4,
+   "min": 16,
+   "max": 16
+  },
+  {
+   "title": "Son siparişler",
+   "n": 10,
+   "min": 65,
+   "max": 66
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "n": 5,
+   "min": 63,
+   "max": 64
+  }
+ ],
+ "collisions": [
+  {
+   "a": "· Toptan / Fason",
+   "b": "₺2.277,23",
+   "gap": -60
+  },
+  {
+   "a": "· Doğrudan Hammadde Satışı",
+   "b": "₺14.250,00",
+   "gap": -153
+  }
+ ],
+ "contentBottom": 1642
+}

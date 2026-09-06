@@ -1,0 +1,128 @@
+{
+ "as": "depo",
+ "viewport": "1440x900",
+ "columns": [
+  {
+   "cls": "mt-4 grid gap-4 lg:grid-cols-2 lg:items-start",
+   "children": [
+    {
+     "h": 269,
+     "top": 276,
+     "bottom": 545,
+     "label": "Karantina"
+    },
+    {
+     "h": 331,
+     "top": 276,
+     "bottom": 607,
+     "label": "SKT riski"
+    },
+    {
+     "h": 495,
+     "top": 623,
+     "bottom": 1118,
+     "label": "Bugün"
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "title": "Karantina",
+   "top": 276,
+   "h": 269,
+   "w": 568,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "SKT riski",
+   "top": 276,
+   "h": 331,
+   "w": 568,
+   "rows": 5,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Bugün",
+   "top": 623,
+   "h": 495,
+   "w": 1152,
+   "rows": 10,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 331,
+   "clientWidth": 306,
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti."
+  }
+ ],
+ "clipped": [],
+ "gaps": [
+  {
+   "section": "Karantina",
+   "gap": 12,
+   "trailing": 16,
+   "rowW": 566
+  },
+  {
+   "section": "SKT riski",
+   "gap": 12,
+   "trailing": 16,
+   "rowW": 566
+  },
+  {
+   "section": "Bugün",
+   "gap": 12,
+   "trailing": 504,
+   "rowW": 1150
+  }
+ ],
+ "strips": [
+  {
+   "section": "SKT riski",
+   "cells": 4,
+   "cellH": 60,
+   "order": [
+    {
+     "t": "1",
+     "fs": "15px",
+     "top": 331
+    },
+    {
+     "t": "Süresi geçti",
+     "fs": "10px",
+     "top": 356
+    }
+   ]
+  }
+ ],
+ "rowStats": [
+  {
+   "title": "Karantina",
+   "n": 4,
+   "min": 44,
+   "max": 45
+  },
+  {
+   "title": "SKT riski",
+   "n": 5,
+   "min": 44,
+   "max": 45
+  },
+  {
+   "title": "Bugün",
+   "n": 10,
+   "min": 44,
+   "max": 45
+  }
+ ],
+ "collisions": [],
+ "contentBottom": 1118
+}

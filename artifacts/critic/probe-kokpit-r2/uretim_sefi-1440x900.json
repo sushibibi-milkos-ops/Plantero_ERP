@@ -1,0 +1,134 @@
+{
+ "as": "uretim_sefi",
+ "viewport": "1440x900",
+ "columns": [
+  {
+   "cls": "mt-4 grid gap-4 lg:grid-cols-2 lg:items-start",
+   "children": [
+    {
+     "h": 695,
+     "top": 276,
+     "bottom": 971,
+     "label": "Hat durumu"
+    },
+    {
+     "h": 405,
+     "top": 276,
+     "bottom": 681,
+     "label": "Son iş emirleri"
+    }
+   ]
+  }
+ ],
+ "sections": [
+  {
+   "title": "Hat durumu",
+   "top": 276,
+   "h": 266,
+   "w": 568,
+   "rows": 3,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Fire kırılımı (7 gün)",
+   "top": 558,
+   "h": 190,
+   "w": 568,
+   "rows": 0,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son duruşlar",
+   "top": 764,
+   "h": 208,
+   "w": 568,
+   "rows": 4,
+   "empty": false,
+   "emptyHasAction": false
+  },
+  {
+   "title": "Son iş emirleri",
+   "top": 276,
+   "h": 405,
+   "w": 568,
+   "rows": 8,
+   "empty": false,
+   "emptyHasAction": false
+  }
+ ],
+ "scrollers": [
+  {
+   "cls": "min-w-0 flex-1 truncate",
+   "scrollWidth": 263,
+   "clientWidth": 112,
+   "text": "Plantero Guatemala Huehuetenango Kahve"
+  }
+ ],
+ "clipped": [],
+ "gaps": [
+  {
+   "section": "Hat durumu",
+   "gap": 0,
+   "trailing": 16,
+   "rowW": 566
+  },
+  {
+   "section": "Son duruşlar",
+   "gap": 0,
+   "trailing": 363,
+   "rowW": 566
+  },
+  {
+   "section": "Son iş emirleri",
+   "gap": 24,
+   "trailing": 106,
+   "rowW": 566
+  }
+ ],
+ "strips": [],
+ "rowStats": [
+  {
+   "title": "Hat durumu",
+   "n": 3,
+   "min": 73,
+   "max": 74
+  },
+  {
+   "title": "Son duruşlar",
+   "n": 4,
+   "min": 40,
+   "max": 41
+  },
+  {
+   "title": "Son iş emirleri",
+   "n": 8,
+   "min": 44,
+   "max": 45
+  }
+ ],
+ "collisions": [
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Bazlar, Barista & Kremalar",
+   "b": "· Arıza",
+   "gap": 0
+  },
+  {
+   "a": "Toz Karıştırma & Dolum",
+   "b": "· Mola",
+   "gap": 0
+  }
+ ],
+ "contentBottom": 971
+}
