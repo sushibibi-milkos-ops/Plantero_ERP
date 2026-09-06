@@ -18,26 +18,6 @@ export async function listActiveMachinesForForm() {
   return db.select({ id: machines.id, code: machines.code, name: machines.name, category: machines.category, lineId: machines.lineId, status: machines.status }).from(machines).where(eq(machines.isActive, true)).orderBy(asc(machines.code));
 }
 
-export type RecentBreakdownRow = {
-  id: string; docNo: string; title: string; status: string; priority: string; machineCode: string; machineName: string; reportedAt: Date;
-};
-
-/** "Arıza Bildir" formunun altında kısa bağlam paneli — son bildirilen arızalar (varsayılan 3 satır,
- *  bkz. Tur 5 bakim-yeni-05: eskiden sağ rayda 5+iç-kaydırmalı 36 makinelik dolgu vardı, kaldırıldı). */
-export async function listRecentBreakdowns(limit = 5): Promise<RecentBreakdownRow[]> {
-  const rows = await db
-    .select({ o: maintenanceOrders, machineCode: machines.code, machineName: machines.name })
-    .from(maintenanceOrders)
-    .innerJoin(machines, eq(machines.id, maintenanceOrders.machineId))
-    .where(eq(maintenanceOrders.kind, 'corrective'))
-    .orderBy(desc(maintenanceOrders.reportedAt))
-    .limit(limit);
-  return rows.map((r) => ({
-    id: r.o.id, docNo: r.o.docNo, title: r.o.title, status: r.o.status, priority: r.o.priority,
-    machineCode: r.machineCode, machineName: r.machineName, reportedAt: r.o.reportedAt,
-  }));
-}
-
 export type AssigneeOption = { id: string; fullName: string };
 
 /** Bakım/üretim şefi rolündeki kullanıcılar — plan/iş emri sorumlusu seçimi. */

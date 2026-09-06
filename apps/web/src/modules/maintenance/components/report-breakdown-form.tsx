@@ -169,8 +169,14 @@ export function ReportBreakdownForm({ machines }: { machines: MachineFormOption[
         )}
         {form.formState.errors.machineId && !scanned ? <p className="text-xs text-destructive">{form.formState.errors.machineId.message}</p> : null}
 
-        {scanned ? (
-          <div className="space-y-4 rounded-xl border border-border/70 bg-card p-4">
+        {/* Kök neden (Tur 5 P1 bakim-yeni-02): bu kart eskiden yalnızca `scanned` (makine seçili)
+            İKEN görünüyordu — makine seçilmeden önce sayfa yalnızca QR/combobox'tan ibaret kalıyor,
+            "Vazgeç" düğmesi 337px'te bitiyor, geri kalan viewport (`min-h-dvh` — app-shell genel
+            kuralı) boş kalıyordu. 2. adım alanları (başlık/açıklama/öncelik/fotoğraf) artık İLK
+            EKRANDA, makine seçiminden BAĞIMSIZ görünür — kullanıcı arızayı makineyi bulmadan önce de
+            yazabilir, gönderim yine de `machineId` seçilene kadar devre dışı kalır (`FormActions
+            disabled={!scanned}` aşağıda değişmedi). */}
+        <div className="space-y-4 rounded-xl border border-border/70 bg-card p-4">
             <FormText control={form.control} name="title" label="Başlık" required placeholder="Ör. Dolum başlığı sızdırıyor" />
             <FormTextarea control={form.control} name="description" label="Açıklama" placeholder="Ne zaman başladı, nasıl fark edildi…" rows={3} />
             <FormSelect control={form.control} name="priority" label="Öncelik" required options={PRIORITY_OPTIONS} />
@@ -229,8 +235,7 @@ export function ReportBreakdownForm({ machines }: { machines: MachineFormOption[
               </div>
               <input ref={fileInputRef} type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={onPickPhotos} />
             </div>
-          </div>
-        ) : null}
+        </div>
 
         <FormActions submitLabel="Arızayı bildir" onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={!scanned}>
           {scanning ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
