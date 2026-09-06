@@ -153,7 +153,11 @@ async function loadCockpitToday(): Promise<CockpitTodayItem[]> {
     ...invoiceRows.map((r): CockpitTodayItem => ({ kind: 'Fatura', no: r.docNo, href: `/muhasebe/faturalar/${r.id}`, partner: r.partnerName, status: r.status, k: 'invoice', amount: r.grandTotal, at: r.postedAt ?? new Date() })),
   ];
 
-  return items.sort((a, b) => b.at.getTime() - a.at.getTime()).slice(0, 8);
+  // Kırpma BURADA (tüm türler karışık) değil, her panonun kendi görünümünde yapılır — aksi halde
+  // bir türü (ör. depo paneli yalnızca mal kabul+sevkiyat ister) filtrelemeden ÖNCE 8'e kırpmak,
+  // o gün başka türden çok belge varsa ilgili türün tamamen dışarıda kalmasına yol açar (bkz. rapor:
+  // üretim şefi panosunda "bugün" listesi bu yüzden kaldırıldı — iş emirleri zaten tarih bazlı değil).
+  return items.sort((a, b) => b.at.getTime() - a.at.getTime());
 }
 
 export const getCockpitToday = unstable_cache(loadCockpitToday, ['cockpit-today'], { revalidate: 60, tags: ['cockpit'] });

@@ -32,7 +32,11 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
       <DashboardGrid>
         <div className="min-w-0 flex flex-col gap-4">
           <Section title="Günlük kanal satışları" href="/satis/net-ciro">
-            <div className="grid grid-cols-2 gap-3 border-b border-border/60 p-4">
+            {/* grid-cols-1: 390px'te iki KPI yan yana + sağdaki sparkline (96px sabit genişlik)
+                kalan değer kutusunu birkaç on piksele sıkıştırıp NumberFlow rakamlarını
+                kırpıyordu (yalnızca "₺" görünüyordu) — sparkline'lı kart tek başına tam genişlik
+                alınca sorun kalmıyor; masaüstünde (sm+) iki kart yine yan yana. */}
+            <div className="grid grid-cols-1 gap-3 border-b border-border/60 p-4 sm:grid-cols-2">
               <KpiCard title="Brüt (bugün)" value={channelSales.grossTotal} format="money" fractionDigits={0} delta={channelSales.grossDeltaPct} deltaLabel="dünden" sparkline={channelSales.trend7d.map((t) => Number(t.net))} />
               <KpiCard title="Net (bugün)" value={channelSales.netTotal} format="money" fractionDigits={0} delta={channelSales.netDeltaPct} deltaLabel="dünden" />
             </div>

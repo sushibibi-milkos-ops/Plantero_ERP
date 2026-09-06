@@ -2,13 +2,11 @@ import type { ProductionChiefCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
 import { StatusBadge } from '@/components/status-badge';
-import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
-import type { CockpitTodayItem } from '../queries';
 import { Section, RowLink, ProgressBar } from './shared';
 
 /** Üretim şefi panosu — hat durumu, açık/geciken iş emri, bugünkü OEE, son 7 gün fire oranı. */
-export function ProductionChiefDashboardView({ data, today }: { data: ProductionChiefCards; today: CockpitTodayItem[] }) {
+export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCards }) {
   return (
     <>
       <KpiStripRow>

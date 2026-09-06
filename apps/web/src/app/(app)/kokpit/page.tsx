@@ -41,9 +41,14 @@ export default async function CockpitPage() {
   const eyebrow = first && first.toLocaleLowerCase('tr-TR') !== 'sistem' ? `${greeting()}, ${first}` : greeting();
 
   const dashboard = await getCockpitDashboard(user.roles);
-  // "Bugün" belge akışı GM'de tam, depo/üretim şefinde kendi belge türüne (mal kabul+sevkiyat /
-  // iş emri) filtrelenmiş halde gösterilir — aynı önbelleklenmiş sorgu, farklı kesit.
-  const needsToday = dashboard.role === 'gm' || dashboard.role === 'depo' || dashboard.role === 'uretim_sefi';
+  // "Bugün" belge akışı GM'de tam, depoda kendi belge türüne (mal kabul+sevkiyat) filtrelenmiş halde
+  // gösterilir — aynı önbelleklenmiş sorgu, farklı kesit. Üretim şefinde YOK: bu liste "bugün
+  // oluşturulan/güncellenen" belgelere göre en-yeni-8'e kırpılır — iş emirleri ise kasıtlı olarak
+  // "bugün" değil "şu an aktif" mantığıyla seçilir (bir iş emri günler önce başlamış olabilir), bu
+  // yüzden yoğun bir mal kabul/fatura/sevkiyat gününde 8'lik kırpmadan hep dışarıda kalabilir —
+  // "Hat durumu" zaten her hattın güncel iş emrini eksiksiz gösteriyor, bu yanıltıcı ikinci (çoğu
+  // zaman yanlışlıkla boş görünen) listeyi gereksiz kılıyor.
+  const needsToday = dashboard.role === 'gm' || dashboard.role === 'depo';
   const [today, paymentsToday] = await Promise.all([
     needsToday ? getCockpitToday() : Promise.resolve([]),
     dashboard.role === 'finans' ? getCockpitPaymentsToday() : Promise.resolve([]),
@@ -53,9 +58,9 @@ export default async function CockpitPage() {
     <>
       <PageHeader eyebrow={eyebrow} title="Kokpit" description={`${formatDateLong(new Date())} · Tire tesisi · ${ROLE_DESCRIPTION[dashboard.role]}`} />
 
-      {dashboard.role === 'gm' ? <GmDashboardView data={dashboard.data} today={today} /> : null}
-      {dashboard.role === 'depo' ? <DepoDashboardView data={dashboard.data} today={today.filter((t) => t.k === 'receipt' || t.k === 'delivery')} /> : null}
-      {dashboard.role === 'uretim_sefi' ? <ProductionChiefDashboardView data={dashboard.data} today={today.filter((t) => t.k === 'work_order')} /> : null}
+      {dashboard.role === 'gm' ? <GmDashboardView data={dashboard.data} today={today.slice(0, 8)} /> : null}
+      {dashboard.role === 'depo' ? <DepoDashboardView data={dashboard.data} today={today.filter((t) => t.k === 'receipt' || t.k === 'delivery').slice(0, 6)} /> : null}
+      {dashboard.role === 'uretim_sefi' ? <ProductionChiefDashboardView data={dashboard.data} /> : null}
       {dashboard.role === 'finans' ? <FinanceDashboardView data={dashboard.data} paymentsToday={paymentsToday} /> : null}
       {dashboard.role === 'satis' ? <SalesDashboardView data={dashboard.data} /> : null}
       {dashboard.role === 'kalite' ? <QualityDashboardView data={dashboard.data} /> : null}
