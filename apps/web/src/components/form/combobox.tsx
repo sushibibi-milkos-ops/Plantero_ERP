@@ -145,7 +145,12 @@ export function Combobox({
                     onChange(o.value === value && clearable ? null : o.value);
                     setOpen(false);
                   }}
-                  className="text-[13px]"
+                  // min-h-11 md:min-h-8: 390px'te 32px'e düşen seçenek satırları uygulamanın mobil
+                  // dokunma standardının (44px; ör. gtip-mapping-table.tsx, logistics-panel.tsx)
+                  // 12px altındaydı — tetikleyici zaten h-11/md:h-9 iken açılır listenin kendisi bu
+                  // standardı taşımıyordu (shell-combobox-option-touch-01). Masaüstünde (md+) sıkı
+                  // listeye geri döner (≤36px).
+                  className="min-h-11 text-[13px] md:min-h-8"
                 >
                   <Check className={cn('size-3.5', o.value === value ? 'opacity-100' : 'opacity-0')} />
                   <span className={cn('truncate', mono && 'font-mono')}>{o.label}</span>

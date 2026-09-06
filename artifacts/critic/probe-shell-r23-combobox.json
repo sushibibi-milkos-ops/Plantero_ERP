@@ -1,0 +1,20 @@
+{
+ "desktop": {
+  "triggerH": 36,
+  "options": [
+   {
+    "text": "SO-2026-000033 — BioGrün Handels GmbH€216,00",
+    "h": 32
+   }
+  ]
+ },
+ "mobile": {
+  "triggerH": 44,
+  "options": [
+   {
+    "text": "SO-2026-000033 — BioGrün Handels GmbH€216,00",
+    "h": 44
+   }
+  ]
+ }
+}

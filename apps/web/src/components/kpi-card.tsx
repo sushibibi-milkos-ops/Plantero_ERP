@@ -203,7 +203,14 @@ export function KpiCard({
           stripCompact ? 'md:min-w-[196px] md:shrink-0 md:flex-none md:grow-0' : 'md:flex-1 md:shrink',
         ]
       : '@container rounded-xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03)]',
-    (href || onClick) && (isStrip ? 'hover:bg-accent/40 md:hover:bg-accent/30' : 'hover:border-border hover:shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_20px_-12px_rgb(0_0_0/0.15)]'),
+    // active:bg-*: `data-pressable` zaten globals.css'in gövde-genelindeki basma seçicisinden ölçek
+    // (scale) animasyonu alıyor (shell-button-active-state-01 kök nedeniyle AYNI sınıf) — buradaki
+    // zemin koyulaşması RowLink/Button'daki gibi İKİNCİ, TAMAMLAYICI bir basma sinyali; ölçekle
+    // çakışmaz (ayrı özellik).
+    (href || onClick) &&
+      (isStrip
+        ? 'hover:bg-accent/40 active:bg-accent/60 md:hover:bg-accent/30 md:active:bg-accent/45'
+        : 'hover:border-border hover:shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_20px_-12px_rgb(0_0_0/0.15)] active:border-border active:bg-accent/20'),
     active && (isStrip ? 'bg-primary/5 md:bg-primary/5' : 'border-primary/60 ring-2 ring-primary/15'),
     className,
   );

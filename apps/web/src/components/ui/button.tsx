@@ -10,7 +10,14 @@ const buttonVariants = cva(
   // özelliklerini de animasyonluyor ve gereksiz reflow/compositing maliyeti getiriyordu. `transform`
   // listede kalmalı — globals.css'teki `:active { transform: scale(0.97) }` basma efekti bu listeye
   // bağımlı (yoksa geçişsiz aniden küçülür).
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  // Kök neden (shell-button-active-state-01, kriter 8): basma geri bildirimi eskiden YALNIZCA
+  // globals.css'teki gövde-genelindeki `button:active` seçicisinden geliyordu — bileşenin kendi
+  // sınıf listesinde `active:` yoktu, bu yüzden statik denetim (ve Button'ı taklit eden başka bir
+  // etkileşimli yüzey) bunu "geri bildirimi yok" sayıyordu. Aynı seçici (`:active:not(:focus-visible)`)
+  // burada AÇIKÇA tekrarlanır — Tur 4 P2'de Enter/Boşluk'la klavye aktivasyonunun da `:active`'i
+  // tetikleyip gereksiz küçülme oynattığı bug'ı geri getirmemek için guard KORUNUR (çıplak
+  // `active:scale-[0.97]` klavye akışını yeniden bozar).
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 outline-none [&:active:not(:focus-visible)]:scale-[0.97] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {

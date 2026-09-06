@@ -19,7 +19,10 @@ export function Section({ title, href, children, className }: { title: string; h
         <h2 className="text-[13px] font-semibold">{title}</h2>
         {href ? (
           // max-md:min-h-11: mobil dokunma hedefi 44px.
-          <Link href={href} className="inline-flex items-center gap-1 max-md:min-h-11 text-xs text-muted-foreground hover:text-foreground">
+          <Link
+            href={href}
+            className="inline-flex items-center gap-1 max-md:min-h-11 text-xs text-muted-foreground hover:text-foreground active:text-foreground/80"
+          >
             Tümü <ArrowRight className="size-3" />
           </Link>
         ) : null}
@@ -40,6 +43,12 @@ export function Section({ title, href, children, className }: { title: string; h
  *  (13px metin + 2×10px padding ≈ 33px < 44px) hiçbir taşmaya yol açmıyor — güvenli.
  *  `max-sm:min-h-11`: mobilde (<640px) her satır en az 44px dokunma hedefi (Tur 1 P1
  *  kokpit-line-touch-01) — tek satırlık "boşta" satırlar önceden 40px'e düşüyordu.
+ *  Kök neden (shell-button-active-state-01, kriter 8): bu satır `hover:bg-muted/40` ve
+ *  `focus-visible:bg-muted/40` taşıyordu ama BASMA durumu hiç yoktu — `<Link>` `data-pressable`
+ *  taşımadığı için globals.css'teki gövde-genelindeki basma seçicisi de bu satıra uygulanmıyordu.
+ *  `active:bg-muted/60` (transform DEĞİL, zemin rengi) eklendi: Button'daki ölçek animasyonundan
+ *  kasıtlı olarak farklı — bir satırın klavyeyle (Enter) aktive edilmesi anlık bir zemin koyulaşmasına
+ *  yol açsa bile Button'ın `scale()` düzeltmesinin çözdüğü "sıçrama" rahatsızlığını taşımaz.
  *  Kök neden (Tur 3 P1 kokpit-rowheight-01/02): `sm:h-11` (44px) Linear referans bandının (36-40px)
  *  üstündeydi — tüm tek-satırlık listelerde (Karantina, SKT riski, Son siparişler, En çok satan 5, Son
  *  iş emirleri...) masaüstü satırı gereksiz yere şişiriyordu. `sm:h-10` (40px) bandın İÇİNDE; mobil
@@ -49,7 +58,7 @@ export function RowLink({ href, children, className }: { href: string; children:
     <Link
       href={href}
       className={cn(
-        'flex max-sm:min-h-11 flex-col gap-1 px-4 py-2.5 text-[13px] outline-none hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:h-10 sm:flex-row sm:items-center sm:gap-3',
+        'flex max-sm:min-h-11 flex-col gap-1 px-4 py-2.5 text-[13px] outline-none hover:bg-muted/40 active:bg-muted/60 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:h-10 sm:flex-row sm:items-center sm:gap-3',
         className,
       )}
     >
@@ -168,7 +177,7 @@ export function StatStrip({ items, className, divider = true }: { items: StatStr
           </>
         );
         return it.href ? (
-          <Link key={it.key} href={it.href} className="px-2 py-2.5 text-center hover:bg-muted/40">
+          <Link key={it.key} href={it.href} className="px-2 py-2.5 text-center hover:bg-muted/40 active:bg-muted/60">
             {inner}
           </Link>
         ) : (
