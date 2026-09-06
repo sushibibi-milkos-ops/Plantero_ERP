@@ -1,0 +1,176 @@
+{
+ "kontroller": {
+  "cells": [
+   {
+    "head": "Kontrol no",
+    "width": 133,
+    "maxContent": 109,
+    "slack": 24,
+    "sample": "QC-2026-000008"
+   },
+   {
+    "head": "Ürün",
+    "width": 277,
+    "maxContent": 224,
+    "slack": 53,
+    "sample": "Kahve Çekirdeği (Yeşil) · 308010000"
+   },
+   {
+    "head": "Lot",
+    "width": 160,
+    "maxContent": 62,
+    "slack": 98,
+    "sample": "AKY-QC-02"
+   },
+   {
+    "head": "Sonuç",
+    "width": 137,
+    "maxContent": 83,
+    "slack": 54,
+    "sample": "Kontrol bekliyor"
+   },
+   {
+    "head": "Tür",
+    "width": 90,
+    "maxContent": 29,
+    "slack": 61,
+    "sample": "Girdi"
+   },
+   {
+    "head": "Tedarikçi",
+    "width": 355,
+    "maxContent": 331,
+    "slack": 24,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler L"
+   }
+  ],
+  "tableW": 1152
+ },
+ "sablonlar": {
+  "cells": [
+   {
+    "head": "Kod",
+    "width": 94,
+    "maxContent": 70,
+    "slack": 24,
+    "sample": "GENEL-HAM"
+   },
+   {
+    "head": "Ad",
+    "width": 688,
+    "maxContent": 197,
+    "slack": 491,
+    "sample": "Hammadde Genel Girdi Kontrolü"
+   },
+   {
+    "head": "Kapsam",
+    "width": 180,
+    "maxContent": 71,
+    "slack": 109,
+    "sample": "Hammadde"
+   },
+   {
+    "head": "Kalem",
+    "width": 80,
+    "maxContent": 8,
+    "slack": 72,
+    "sample": "4"
+   },
+   {
+    "head": "Durum",
+    "width": 110,
+    "maxContent": 25,
+    "slack": 85,
+    "sample": "Aktif"
+   }
+  ],
+  "tableW": 1152
+ },
+ "tedarikci-skoru": {
+  "cells": [
+   {
+    "head": "Tedarikçi",
+    "width": 590,
+    "maxContent": 331,
+    "slack": 259,
+    "sample": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler L"
+   },
+   {
+    "head": "Dönem",
+    "width": 90,
+    "maxContent": 54,
+    "slack": 36,
+    "sample": "2026-09"
+   },
+   {
+    "head": "Skor",
+    "width": 130,
+    "maxContent": 25,
+    "slack": 105,
+    "sample": "100"
+   },
+   {
+    "head": "Zamanında",
+    "width": 104,
+    "maxContent": 21,
+    "slack": 83,
+    "sample": "2/2"
+   },
+   {
+    "head": "QC geçme",
+    "width": 100,
+    "maxContent": 21,
+    "slack": 79,
+    "sample": "0/1"
+   },
+   {
+    "head": "Miktar doğruluğu",
+    "width": 138,
+    "maxContent": 41,
+    "slack": 97,
+    "sample": "%95,3"
+   }
+  ],
+  "tableW": 1152
+ },
+ "geri-cagirma": {
+  "cells": [
+   {
+    "head": "Geri çağırma no",
+    "width": 133,
+    "maxContent": 109,
+    "slack": 24,
+    "sample": "RC-2026-000001"
+   },
+   {
+    "head": "Ürün / Lot",
+    "width": 419,
+    "maxContent": 209,
+    "slack": 210,
+    "sample": "Plain Protein Mixi PL-260823-H2-01"
+   },
+   {
+    "head": "Durum",
+    "width": 130,
+    "maxContent": 61,
+    "slack": 69,
+    "sample": "Simülasyon"
+   },
+   {
+    "head": "Gerekçe",
+    "width": 320,
+    "maxContent": 514,
+    "slack": -194,
+    "sample": "Rutin izlenebilirlik tatbikatı — müşteri şikay"
+   },
+   {
+    "head": "Oluşturulma",
+    "width": 150,
+    "maxContent": 111,
+    "slack": 39,
+    "sample": "06.09.2026 05:44"
+   }
+  ],
+  "tableW": 1152
+ }
+}

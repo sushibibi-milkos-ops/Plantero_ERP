@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /kalite/geri-cagirma/6000801f-0b66-4633-a7c0-fd5ecb6b79a3 --viewport 390x844
+
+{"route":"/kalite/geri-cagirma/6000801f-0b66-4633-a7c0-fd5ecb6b79a3","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":4,"heights":[38,39,45]},"fontSizes":{"10":5,"11":12,"12":9,"13":5,"14":9,"18":1,"19":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Detay\"","w":36.2,"h":19.5}],"distinctColors":20,"h1":{"size":20,"weight":600},"images":0}

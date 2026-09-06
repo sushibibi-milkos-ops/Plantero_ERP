@@ -678,6 +678,38 @@
     }
    ],
    "open": []
+  },
+  "DataTableColumnHeader — sıralama başlığı odak halkası (DataTable kullanan tüm listeler)": {
+   "open": [
+    {
+     "id": "shell-datatable-sortheader-focus-01",
+     "criterion": 8,
+     "severity": "P2",
+     "openedRound": 11,
+     "text": "`DataTableColumnHeader` sıralama düğmesinde odak halkası token'ı yok; klavye odağı tarayıcının varsayılan `outline: auto 1px` çizgisine düşüyor. Uygulamanın geri kalanındaki her durak 3px `ring-ring/50` alıyor — tablo başlıkları tek istisna, bu yüzden klavyeyle sıralama yaparken odak nereye gittiği okunmuyor.",
+     "measure": "scripts/probe-tedarik-r11b.ts (Tab + 200ms, 1440x900): /satin-alma/kritik-stok'ta 6/6, /satin-alma/siparisler'de 7/7, /satin-alma/tedarikciler'de 9/9 sıralama başlığı `outline: auto 1px` + `box-shadow: none`; aynı sayfalardaki diğer duraklar ('Tabloda ara', 'Motoru çalıştır', 'Sütunlar') `0px 0px 0px 3px` ring veriyor",
+     "target": "column-header.tsx:30 className zincirine `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` eklensin — ölçümde sıralanabilir başlıkların tamamı 3px ring versin, UA outline'a düşen başlık 0 olsun",
+     "file": "apps/web/src/components/data-table/column-header.tsx:30",
+     "sourceModule": "tedarik (Tur 11)"
+    }
+   ],
+   "closed": []
+  },
+  "DateField — takvim tetikleyicisi / Tarihi temizle odak halkası (DateField kullanan tüm formlar)": {
+   "open": [
+    {
+     "id": "shell-datefield-focus-01",
+     "criterion": 8,
+     "severity": "P2",
+     "openedRound": 11,
+     "text": "`DateField` içindeki takvim tetikleyicisi (ve `clearable` iken 'Tarihi temizle' düğmesi) odak halkası token'ı taşımıyor; aynı formdaki diğer tüm duraklar 3px `ring-ring/50` alırken bu ikisi UA `outline: auto 1px`'e düşüyor.",
+     "measure": "scripts/probe-tedarik-r11b.ts (Tab + 200ms, 1440x900, /satin-alma/siparisler/yeni): main içindeki 7 duraktan 6'sı 3px ring; aria-label='Takvim' düğmesi `outline: auto 1px` + `box-shadow: none`",
+     "target": "date-field.tsx:119-129 (takvim tetikleyici) ve :105-115 ('Tarihi temizle') className'lerine `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` eklensin — 7/7 durak 3px ring versin",
+     "file": "apps/web/src/components/form/date-field.tsx:105-129",
+     "sourceModule": "tedarik (Tur 11)"
+    }
+   ],
+   "closed": []
   }
  },
  "measuredAt": "2026-09-06T00:52:39Z"

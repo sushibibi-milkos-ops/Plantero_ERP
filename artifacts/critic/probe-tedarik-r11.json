@@ -1,0 +1,758 @@
+{
+ "kritik-stok": {
+  "stops": [
+   {
+    "tag": "input",
+    "txt": "",
+    "aria": "Tabloda ara",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Motoru çalıştır",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Sütunlar",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Ürün",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "SKU",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Kullanılabilir",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Min–Max",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Tedarik süresi",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Tercihli tedarikçi",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "Spriluna3060400003518–5018 g",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Satır eylemleri",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "tr",
+    "txt": "Kaju3010500003872–11010 günA",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "Bromelain3060500005065–10018",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "Strawberry3060600005018–5018",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "Vanilya Tozu (Toptan)3080300",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   }
+  ],
+  "clipped": [
+   {
+    "txt": "Eylemler",
+    "sw": 50,
+    "cw": 1,
+    "cls": "sr-only"
+   }
+  ],
+  "nums": {
+   "tabular-nums": 184,
+   "normal": 259
+  },
+  "th": [
+   {
+    "txt": "Ürün",
+    "w": 190
+   },
+   {
+    "txt": "SKU",
+    "w": 90
+   },
+   {
+    "txt": "Kullanılabilir",
+    "w": 110
+   },
+   {
+    "txt": "Min–Max",
+    "w": 110
+   },
+   {
+    "txt": "Tedarik süresi",
+    "w": 120
+   },
+   {
+    "txt": "Tercihli tedarikçi",
+    "w": 492
+   },
+   {
+    "txt": "Eylemler",
+    "w": 40
+   }
+  ],
+  "skel": 0,
+  "h1": {
+   "size": "24px",
+   "weight": "600",
+   "ls": "-0.6px"
+  },
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+   "changed": true
+  }
+ },
+ "onay-kuyrugu": {
+  "stops": [
+   {
+    "tag": "a",
+    "txt": "PO-2026-000007",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Reddet",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "a",
+    "txt": "Düzenle",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Onayla",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   }
+  ],
+  "clipped": [],
+  "nums": {
+   "tabular-nums": 3
+  },
+  "th": [],
+  "skel": 0,
+  "h1": {
+   "size": "24px",
+   "weight": "600",
+   "ls": "-0.6px"
+  },
+  "hover": null
+ },
+ "siparisler": {
+  "stops": [
+   {
+    "tag": "a",
+    "txt": "Yeni sipariş",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "input",
+    "txt": "",
+    "aria": "Tabloda ara",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Durum",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Sütunlar",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Sipariş no",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Tedarikçi",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Alınan",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Beklenen tarih",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Sipariş tarihi",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Tutar",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000016Anadolu Kuruye",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000015Anadolu Kuruye",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000014Kahve Dünyası ",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000009Proteinsan Gıd",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000002Anadolu Kuruye",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000004Aromatik Kimya",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000005Ege Ambalaj Sa",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000006Kahve Dünyası ",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "PO-2026-000007Aromatik Kimya",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   }
+  ],
+  "clipped": [],
+  "nums": {
+   "tabular-nums": 114,
+   "normal": 119
+  },
+  "th": [
+   {
+    "txt": "Sipariş no",
+    "w": 153
+   },
+   {
+    "txt": "Tedarikçi",
+    "w": 359
+   },
+   {
+    "txt": "Durum",
+    "w": 170
+   },
+   {
+    "txt": "Alınan",
+    "w": 90
+   },
+   {
+    "txt": "Beklenen tarih",
+    "w": 130
+   },
+   {
+    "txt": "Sipariş tarihi",
+    "w": 120
+   },
+   {
+    "txt": "Tutar",
+    "w": 130
+   }
+  ],
+  "skel": 0,
+  "h1": {
+   "size": "24px",
+   "weight": "600",
+   "ls": "-0.6px"
+  },
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+   "changed": true
+  }
+ },
+ "po-detay": {
+  "stops": [
+   {
+    "tag": "a",
+    "txt": "Satın alma siparişiFaturalan",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "a",
+    "txt": "FaturaKesildiPINV-2026-00000",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "a",
+    "txt": "Mal kabulTamamlandıGR-2026-0",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "a",
+    "txt": "GR-2026-000003",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   }
+  ],
+  "clipped": [
+   {
+    "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+    "sw": 217,
+    "cw": 154,
+    "cls": "truncate text-[11px] text-muted-foreground"
+   },
+   {
+    "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+    "sw": 217,
+    "cw": 154,
+    "cls": "truncate text-[11px] text-muted-foreground"
+   },
+   {
+    "txt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+    "sw": 217,
+    "cw": 154,
+    "cls": "truncate text-[11px] text-muted-foreground"
+   }
+  ],
+  "nums": {
+   "tabular-nums": 26,
+   "normal": 13
+  },
+  "th": [
+   {
+    "txt": "Ürün",
+    "w": 588
+   },
+   {
+    "txt": "Sipariş",
+    "w": 84
+   },
+   {
+    "txt": "Alınan",
+    "w": 80
+   },
+   {
+    "txt": "Faturalanan",
+    "w": 104
+   },
+   {
+    "txt": "Birim fiyat",
+    "w": 108
+   },
+   {
+    "txt": "KDV",
+    "w": 64
+   },
+   {
+    "txt": "Tutar",
+    "w": 122
+   }
+  ],
+  "skel": 0,
+  "h1": {
+   "size": "24px",
+   "weight": "600",
+   "ls": "-0.6px"
+  },
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+   "changed": true
+  }
+ },
+ "yeni": {
+  "stops": [
+   {
+    "tag": "button",
+    "txt": "Tedarikçi seçin",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "TIRE — Tire Fabrika",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "input",
+    "txt": "",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Takvim",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Ürün ara ve ekle…",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Ürün ekle",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Vazgeç",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   }
+  ],
+  "clipped": [],
+  "nums": {
+   "tabular-nums": 1
+  },
+  "th": [],
+  "skel": 0,
+  "h1": {
+   "size": "24px",
+   "weight": "600",
+   "ls": "-0.6px"
+  },
+  "hover": null
+ },
+ "tedarikciler": {
+  "stops": [
+   {
+    "tag": "input",
+    "txt": "",
+    "aria": "Tabloda ara",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Beyaz liste",
+    "aria": "",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Sütunlar",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "button",
+    "txt": "Tedarikçi",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Kod",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Tedarik süresi",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Kalite",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Zamanında",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Ürün",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Açık sipariş",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "Açık tutar",
+    "aria": "",
+    "outline": "1px auto",
+    "ring": "none"
+   },
+   {
+    "tag": "tr",
+    "txt": "Anadolu Kuruyemiş ve Tarım Ü",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti. beyaz liste",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "tr",
+    "txt": "Aromatik Kimya Aroma ve Katk",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Aromatik Kimya Aroma ve Katkı Ltd. Şti. beyaz liste",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "tr",
+    "txt": "Ege Ambalaj Sanayi ve Ticare",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Ege Ambalaj Sanayi ve Ticaret A.Ş. beyaz liste",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "tr",
+    "txt": "Kahve Dünyası Yeşil Kahve ve",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   },
+   {
+    "tag": "button",
+    "txt": "",
+    "aria": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti. beyaz liste",
+    "outline": "0px none",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   },
+   {
+    "tag": "tr",
+    "txt": "Proteinsan Gıda Hammaddeleri",
+    "aria": "",
+    "outline": "2px solid",
+    "ring": "none"
+   }
+  ],
+  "clipped": [],
+  "nums": {
+   "tabular-nums": 43,
+   "normal": 63
+  },
+  "th": [
+   {
+    "txt": "Tedarikçi",
+    "w": 369
+   },
+   {
+    "txt": "Kod",
+    "w": 88
+   },
+   {
+    "txt": "Beyaz liste",
+    "w": 86
+   },
+   {
+    "txt": "Tedarik süresi",
+    "w": 121
+   },
+   {
+    "txt": "Kalite",
+    "w": 80
+   },
+   {
+    "txt": "Zamanında",
+    "w": 104
+   },
+   {
+    "txt": "Ürün",
+    "w": 68
+   },
+   {
+    "txt": "Açık sipariş",
+    "w": 106
+   },
+   {
+    "txt": "Açık tutar",
+    "w": 130
+   }
+  ],
+  "skel": 0,
+  "h1": {
+   "size": "24px",
+   "weight": "600",
+   "ls": "-0.6px"
+  },
+  "hover": {
+   "before": "rgba(0, 0, 0, 0)",
+   "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+   "changed": true
+  }
+ }
+}

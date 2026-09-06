@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /kalite/kontroller/f9696e31-9cc0-4266-b0fc-0fbd0b3dcf06 --viewport 390x844
+
+{"route":"/kalite/kontroller/f9696e31-9cc0-4266-b0fc-0fbd0b3dcf06","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":0,"heights":[0,0,0]},"fontSizes":{"10":5,"11":1,"12":11,"13":10,"14":6,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Detay\"","w":36.2,"h":19.5}],"distinctColors":15,"h1":{"size":20,"weight":600},"images":0}

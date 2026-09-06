@@ -1,0 +1,552 @@
+{
+ "desktop:kritik-stok": {
+  "consoleErrors": 1,
+  "errs": [
+   "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "bad": [],
+  "rails": [],
+  "small": [
+   {
+    "t": "Tabloda ara",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "t": "",
+    "w": 16,
+    "h": 16
+   },
+   {
+    "t": "Motoru çalıştır",
+    "w": 138,
+    "h": 32
+   },
+   {
+    "t": "Sütunlar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Ürün",
+    "w": 56,
+    "h": 28
+   },
+   {
+    "t": "SKU",
+    "w": 53,
+    "h": 28
+   },
+   {
+    "t": "Kullanılabilir",
+    "w": 86,
+    "h": 28
+   },
+   {
+    "t": "Min–Max",
+    "w": 80,
+    "h": 28
+   },
+   {
+    "t": "Tedarik süresi",
+    "w": 96,
+    "h": 28
+   },
+   {
+    "t": "Tercihli tedarikçi",
+    "w": 122,
+    "h": 28
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24
+   }
+  ]
+ },
+ "desktop:onay-kuyrugu": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": [
+   {
+    "t": "PO-2026-000007",
+    "w": 109,
+    "h": 20
+   },
+   {
+    "t": "Reddet",
+    "w": 87,
+    "h": 32
+   },
+   {
+    "t": "Düzenle",
+    "w": 97,
+    "h": 32
+   },
+   {
+    "t": "Onayla",
+    "w": 86,
+    "h": 32
+   }
+  ]
+ },
+ "desktop:siparisler": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": [
+   {
+    "t": "Yeni sipariş",
+    "w": 125,
+    "h": 36
+   },
+   {
+    "t": "Tabloda ara",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "t": "Durum",
+    "w": 84,
+    "h": 32
+   },
+   {
+    "t": "Sütunlar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Sipariş no",
+    "w": 85,
+    "h": 28
+   },
+   {
+    "t": "Tedarikçi",
+    "w": 80,
+    "h": 28
+   },
+   {
+    "t": "Durum",
+    "w": 66,
+    "h": 28
+   },
+   {
+    "t": "Alınan",
+    "w": 64,
+    "h": 28
+   },
+   {
+    "t": "Beklenen tarih",
+    "w": 106,
+    "h": 28
+   },
+   {
+    "t": "Sipariş tarihi",
+    "w": 96,
+    "h": 28
+   },
+   {
+    "t": "Tutar",
+    "w": 58,
+    "h": 28
+   }
+  ]
+ },
+ "desktop:po-detay": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": [
+   {
+    "t": "GR-2026-000003",
+    "w": 109,
+    "h": 20
+   }
+  ]
+ },
+ "desktop:yeni": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": [
+   {
+    "t": "Tedarikçi seçin",
+    "w": 378,
+    "h": 36
+   },
+   {
+    "t": "TIRE — Tire Fabrika",
+    "w": 378,
+    "h": 36
+   },
+   {
+    "t": "",
+    "w": 378,
+    "h": 36
+   },
+   {
+    "t": "Takvim",
+    "w": 36,
+    "h": 36
+   },
+   {
+    "t": "",
+    "w": 378,
+    "h": 36
+   },
+   {
+    "t": "Ürün ara ve ekle…",
+    "w": 768,
+    "h": 36
+   },
+   {
+    "t": "Ürün ekle",
+    "w": 90,
+    "h": 32
+   },
+   {
+    "t": "Vazgeç",
+    "w": 82,
+    "h": 36
+   },
+   {
+    "t": "Sipariş oluştur",
+    "w": 128,
+    "h": 36
+   }
+  ]
+ },
+ "desktop:tedarikciler": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": [
+   {
+    "t": "Tabloda ara",
+    "w": 256,
+    "h": 32
+   },
+   {
+    "t": "Beyaz liste",
+    "w": 109,
+    "h": 32
+   },
+   {
+    "t": "Sütunlar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Tedarikçi",
+    "w": 80,
+    "h": 28
+   },
+   {
+    "t": "Kod",
+    "w": 50,
+    "h": 28
+   },
+   {
+    "t": "Tedarik süresi",
+    "w": 97,
+    "h": 28
+   },
+   {
+    "t": "Kalite",
+    "w": 56,
+    "h": 28
+   },
+   {
+    "t": "Zamanında",
+    "w": 80,
+    "h": 28
+   },
+   {
+    "t": "Ürün",
+    "w": 44,
+    "h": 28
+   },
+   {
+    "t": "Açık sipariş",
+    "w": 82,
+    "h": 28
+   },
+   {
+    "t": "Açık tutar",
+    "w": 83,
+    "h": 28
+   },
+   {
+    "t": "Anadolu Kuruyemiş ve Tar",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Aromatik Kimya Aroma ve ",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Ege Ambalaj Sanayi ve Ti",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Kahve Dünyası Yeşil Kahv",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Proteinsan Gıda Hammadde",
+    "w": 32,
+    "h": 32
+   },
+   {
+    "t": "Tatlısu Tatlandırıcı ve ",
+    "w": 32,
+    "h": 32
+   }
+  ]
+ },
+ "mobile:kritik-stok": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [
+   {
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl",
+    "sw": 472,
+    "cw": 358
+   }
+  ],
+  "small": []
+ },
+ "mobile:onay-kuyrugu": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": []
+ },
+ "mobile:siparisler": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [
+   {
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overfl",
+    "sw": 632,
+    "cw": 358
+   }
+  ],
+  "small": []
+ },
+ "mobile:po-detay": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [
+   {
+    "cls": "relative scrollbar-thin scroll-fade-x -mx-1 overflow-x-auto ",
+    "sw": 981,
+    "cw": 366
+   }
+  ],
+  "small": []
+ },
+ "mobile:yeni": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": []
+ },
+ "mobile:tedarikciler": {
+  "consoleErrors": 0,
+  "errs": [],
+  "bad": [],
+  "rails": [],
+  "small": []
+ }
+}
