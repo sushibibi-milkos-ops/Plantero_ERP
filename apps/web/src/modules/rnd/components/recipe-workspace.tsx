@@ -79,51 +79,11 @@ export function RecipeWorkspace({
     // gap-3 (mobil) / lg:gap-4: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — hedef maliyet
     // paneline kadarki dikey bütçeyi sıkmak için küçük ama gerçek bir kazanım (8pt ölçeğinde kalır).
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[220px_1fr] lg:gap-4">
-      {/* Mobil/tablet (< lg) TEK SATIRLIK araç çubuğu — kök neden düzeltmesi (Tur 4 P1 arge-recete-18,
-          üç turdur açıktı): dikey reçete/versiyon listesi + iki tam-genişlik buton (sonra iki yatay
-          satır) ilk ekranın çoğunu yiyordu. Doğal `<select>` en yoğun (44px'te tek satır) seçim
-          birincili — özel pill listesi/segment YERİNE; "Yeni deneme reçetesi"/"Yeni versiyon" yalnız
-          ikon (44×44) olarak AYNI satırda. Masaüstünde (lg+, aşağıdaki dikey sidebar) zaten bol dikey
-          alan olduğu için burada değişiklik yok. */}
-      <div className="flex items-center gap-2 lg:hidden">
-        {recipesWithVersions.length > 1 ? (
-          <select
-            aria-label="Reçete"
-            value={selectedRecipeId ?? ''}
-            onChange={(e) => {
-              const g = recipesWithVersions.find((x) => x.recipe.id === e.target.value);
-              setSelectedRecipeId(e.target.value);
-              setSelectedVersionId(g?.recipe.currentVersionId ?? g?.versions[0]?.id ?? null);
-            }}
-            className="h-11 min-w-0 flex-1 rounded-md border border-input bg-transparent px-2.5 text-[13px]"
-          >
-            {recipesWithVersions.map((g) => (<option key={g.recipe.id} value={g.recipe.id}>{g.recipe.name}</option>))}
-          </select>
-        ) : null}
-        {versions.length > 0 ? (
-          <select
-            aria-label="Versiyon"
-            value={selectedVersionId ?? ''}
-            onChange={(e) => setSelectedVersionId(e.target.value)}
-            className="h-11 min-w-0 flex-1 rounded-md border border-input bg-transparent px-2.5 text-[13px]"
-          >
-            {versions.map((v) => {
-              const status = TRIAL_STATUS_LABELS[v.status] ?? { label: v.status, tone: 'muted' as const };
-              return <option key={v.id} value={v.id}>{`v${v.version} · ${status.label}`}</option>;
-            })}
-          </select>
-        ) : null}
-        {canManage ? (
-          <>
-            <NewRecipeDialog projectId={projectId} productOptions={productOptions} compact triggerClassName="shrink-0" />
-            {selectedGroup ? (
-              <Button variant="outline" size="icon" className="size-11 shrink-0" onClick={newVersion} disabled={pending} aria-label="Yeni versiyon">
-                {pending ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />}
-              </Button>
-            ) : null}
-          </>
-        ) : null}
-      </div>
+      {/* Mobil (< md) ayrı bir araç çubuğu YOK — kök neden düzeltmesi (Tur 4 P1 arge-recete-18, üç
+          turdur açıktı): reçete/versiyon seçimi artık CostSimulator'ın kendi başlık şeridine taşındı
+          (aşağıda, `recipeGroups`/`versions` prop'ları ile) — Kaydet/Onaya gönder ile AYNI 44px satırda.
+          Önceden burada duran ikinci bir dikey/yatay araç çubuğu satırı, hedef maliyet paneline kadarki
+          bütçeyi gereksiz yere ikiye katlıyordu. Masaüstünde (lg+) aşağıdaki dikey sidebar değişmedi. */}
 
       {/* Masaüstü (lg+) dikey sidebar — orijinal düzen, değişmedi. */}
       <div className="hidden space-y-3 lg:block">
@@ -175,7 +135,17 @@ export function RecipeWorkspace({
         {loading || !detail ? (
           <CostSimulatorSkeleton />
         ) : (
-          <CostSimulator detail={detail} projectId={projectId} productOptions={productOptions} uomOptions={uomOptions} canManage={canManage} canRelease={canRelease} />
+          <CostSimulator
+            detail={detail} projectId={projectId} productOptions={productOptions} uomOptions={uomOptions} canManage={canManage} canRelease={canRelease}
+            recipeGroups={recipesWithVersions.map((g) => ({ id: g.recipe.id, name: g.recipe.name }))}
+            selectedRecipeId={selectedRecipeId}
+            onSelectRecipe={(id) => { const g = recipesWithVersions.find((x) => x.recipe.id === id); setSelectedRecipeId(id); setSelectedVersionId(g?.recipe.currentVersionId ?? g?.versions[0]?.id ?? null); }}
+            versions={versions}
+            selectedVersionId={selectedVersionId}
+            onSelectVersion={setSelectedVersionId}
+            onNewVersion={newVersion}
+            newVersionPending={pending}
+          />
         )}
       </div>
     </div>

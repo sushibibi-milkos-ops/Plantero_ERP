@@ -5,7 +5,7 @@ import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { Trash2, Loader2, Save, Send, Rocket, FlaskConical, Wand2 } from 'lucide-react';
+import { Trash2, Loader2, Save, Send, Rocket, FlaskConical, Wand2, Copy } from 'lucide-react';
 import { D } from '@plantero/core/money';
 import { computeTrialCost } from '@plantero/core/rnd/costFormula';
 // `status.js`'ten (DB'siz/saf dosya) içe aktarılır, `trials.js`'ten DEĞİL: trials.ts sunucuya özgü
@@ -21,9 +21,10 @@ import { MoneyCell } from '@/components/money-cell';
 import { StatusBadge } from '@/components/status-badge';
 import { formatQty } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { NewRecipeDialog } from './new-recipe-dialog';
 import { updateVersionDraftAction, submitForApprovalAction, releaseToBomAction, resolveLineCostAction, linkProductToProjectAction } from '../actions';
 import { TRIAL_STATUS_LABELS, COST_SOURCE_OPTIONS, COST_SOURCE_LABELS } from '../labels';
-import type { CostSource, ProductOption, VersionDetail } from '../queries';
+import type { CostSource, ProductOption, VersionDetail, VersionListItem } from '../queries';
 
 // `resolvedUnitCost`: sunucudan çözülen ortalama/son-alış maliyeti — forma AİTTİR (RHF ile birlikte
 // satır kaldırılıp eklenirken kayar), dışarıda ayrı bir index/id anahtarlı map tutmaya gerek kalmaz.
@@ -46,6 +47,7 @@ function FieldLabel({ children, align }: { children: React.ReactNode; align?: 'r
 
 export function CostSimulator({
   detail, projectId, productOptions, uomOptions, canManage, canRelease,
+  recipeGroups, selectedRecipeId, onSelectRecipe, versions, selectedVersionId, onSelectVersion, onNewVersion, newVersionPending,
 }: {
   detail: VersionDetail;
   projectId: string;
@@ -53,6 +55,18 @@ export function CostSimulator({
   uomOptions: Array<{ id: string; code: string; name: string }>;
   canManage: boolean;
   canRelease: boolean;
+  /** Mobil (< lg) TEK SATIRLIK reçete/versiyon seçici + Kaydet/Onaya gönder — kök neden düzeltmesi
+   *  (Tur 4 P1 arge-recete-18): RecipeWorkspace'in AYRI bir araç çubuğu satırı KALDIRILDI, seçim
+   *  buraya (başlık şeridine) taşındı ki hedef maliyet paneline kadar tek bir 44px satır kalsın,
+   *  iki değil. Masaüstünde (md+) kullanılmaz — dikey sidebar (recipe-workspace.tsx) zaten var. */
+  recipeGroups: Array<{ id: string; name: string }>;
+  selectedRecipeId: string | null;
+  onSelectRecipe: (id: string) => void;
+  versions: VersionListItem[];
+  selectedVersionId: string | null;
+  onSelectVersion: (id: string) => void;
+  onNewVersion: () => void;
+  newVersionPending: boolean;
 }) {
   const router = useRouter();
   // Yalnızca 'draft' düzenlenebilir — core'daki `EDITABLE_STATUSES` (packages/core/src/rnd/status.ts,
@@ -210,14 +224,53 @@ export function CostSimulator({
           (dar genişlikte sığmadığı için), hedef maliyet panelinin üstündeki bütçeyi ~35px fazladan
           tüketiyordu. Artık her zaman TEK satır — gerekirse yatay kaydırma (nadiren, çok dar
           ekranlarda "Onaya gönder" metniyle). */}
-      <div className="flex flex-nowrap items-center justify-between gap-3 overflow-x-auto">
-        <div className="flex shrink-0 items-center gap-2">
+      <div className="flex flex-nowrap items-center gap-2 overflow-x-auto md:justify-between md:gap-3">
+        {/* Masaüstü (md+): v1 + durum rozetleri — değişmedi. */}
+        <div className="hidden shrink-0 items-center gap-2 md:flex">
           <h2 className="text-[15px] font-semibold">v{detail.version.version}</h2>
           <StatusBadge status={detail.version.status} label={status.label} tone={status.tone} />
           {detail.hasPendingApproval ? <StatusBadge status="pending" label="Onay bekliyor" tone="warning" /> : null}
           {/* Kaydedilmemiş değişiklik göstergesi — eskiden yalnızca kaydettikten sonra toast vardı,
               form kirliyken hiçbir görsel ipucu yoktu (Tur 1 P1 arge-recete-08). */}
           {dirty ? <StatusBadge status="dirty" label="Kaydedilmemiş değişiklik" tone="warning" dot /> : null}
+        </div>
+        {/* Mobil (< md): reçete/versiyon seçici + yeni-reçete/yeni-versiyon — AYNI satırda Kaydet/
+            Onaya gönder ile (kök neden düzeltmesi, Tur 4 P1 arge-recete-18): RecipeWorkspace'in ayrı
+            araç çubuğu satırı ortadan kalktı, hedef maliyet paneline kadar TEK bir 44px satır kaldı.
+            Seçili versiyonun metni ("v1 · Taslak") masaüstündeki h2+rozet ikilisinin yerini alır —
+            aynı bilgi iki kez gösterilmez. */}
+        <div className="flex min-w-0 flex-1 shrink-0 items-center gap-1.5 md:hidden">
+          {recipeGroups.length > 1 ? (
+            <select
+              aria-label="Reçete"
+              value={selectedRecipeId ?? ''}
+              onChange={(e) => onSelectRecipe(e.target.value)}
+              className="h-11 max-w-24 shrink-0 rounded-md border border-input bg-transparent px-2 text-[13px]"
+            >
+              {recipeGroups.map((g) => (<option key={g.id} value={g.id}>{g.name}</option>))}
+            </select>
+          ) : null}
+          {versions.length > 0 ? (
+            <select
+              aria-label="Versiyon"
+              value={selectedVersionId ?? ''}
+              onChange={(e) => onSelectVersion(e.target.value)}
+              className="h-11 min-w-0 flex-1 rounded-md border border-input bg-transparent px-2 text-[13px]"
+            >
+              {versions.map((v) => {
+                const s = TRIAL_STATUS_LABELS[v.status] ?? { label: v.status, tone: 'muted' as const };
+                return <option key={v.id} value={v.id}>{`v${v.version} · ${s.label}`}</option>;
+              })}
+            </select>
+          ) : null}
+          {canManage ? (
+            <>
+              <NewRecipeDialog projectId={projectId} productOptions={productOptions} compact triggerClassName="shrink-0" />
+              <Button variant="outline" size="icon" className="size-11 shrink-0" onClick={onNewVersion} disabled={newVersionPending} aria-label="Yeni versiyon">
+                {newVersionPending ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />}
+              </Button>
+            </>
+          ) : null}
         </div>
         <div className="flex shrink-0 flex-nowrap items-center gap-2">
           {editable ? (
