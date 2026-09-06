@@ -1,0 +1,87 @@
+{
+ "siparisler": {
+  "navTop": 787,
+  "nav": [
+   {
+    "top": 787,
+    "h": 57,
+    "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border"
+   }
+  ],
+  "mainBottom": 844,
+  "lastBottom": 716,
+  "lastTxt": "PO-2026-000010FaturalandıProteinsan Gıda",
+  "occluded": -71,
+  "mainPadBottom": "128px",
+  "parentPadBottom": "0px",
+  "vh": 844
+ },
+ "kritik-stok": {
+  "navTop": 787,
+  "nav": [
+   {
+    "top": 787,
+    "h": 57,
+    "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border"
+   }
+  ],
+  "mainBottom": 844,
+  "lastBottom": 716,
+  "lastTxt": "çikolata aroması304040000 · 50 · 18–50",
+  "occluded": -71,
+  "mainPadBottom": "128px",
+  "parentPadBottom": "0px",
+  "vh": 844
+ },
+ "tedarikciler": {
+  "navTop": 787,
+  "nav": [
+   {
+    "top": 787,
+    "h": 57,
+    "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border"
+   }
+  ],
+  "mainBottom": 844,
+  "lastBottom": 665,
+  "lastTxt": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+  "occluded": -122,
+  "mainPadBottom": "128px",
+  "parentPadBottom": "0px",
+  "vh": 844
+ },
+ "po-detay": {
+  "navTop": 787,
+  "nav": [
+   {
+    "top": 787,
+    "h": 57,
+    "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border"
+   }
+  ],
+  "mainBottom": 844,
+  "lastBottom": 699,
+  "lastTxt": "PINV-2026-000003₺113.040,00",
+  "occluded": -88,
+  "mainPadBottom": "128px",
+  "parentPadBottom": "0px",
+  "vh": 844
+ },
+ "yeni": {
+  "navTop": 787,
+  "nav": [
+   {
+    "top": 787,
+    "h": 57,
+    "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border"
+   }
+  ],
+  "mainBottom": 844,
+  "lastBottom": null,
+  "lastTxt": null,
+  "occluded": null,
+  "mainPadBottom": "128px",
+  "parentPadBottom": "0px",
+  "vh": 844
+ }
+}
