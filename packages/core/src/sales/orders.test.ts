@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { journals, salesChannels, salesOrderLines, salesOrders, deliveryLines, type Tx } from '@plantero/db';
+import { journals, salesChannels, salesOrderLines, salesOrders, deliveryLines, deliveries, type Tx } from '@plantero/db';
 import { createSalesDoc, updateLines, sendQuotation, acceptQuotation, convertQuotationToOrder, confirmOrder, cancelOrder, recomputeOrderStatus } from './orders.js';
 import { createInvoiceFromDelivery } from './invoicing.js';
-import { createLot, postStockMove } from '../stock/ledger.js';
+import { createLot, postStockMove, getOnHand } from '../stock/ledger.js';
 import { reserveFefo, confirmPick, shipDelivery } from '../stock/deliveries.js';
 import { getChain } from '../documents/chain.js';
 import { getPartnerBalance } from '../accounting/journal.js';
@@ -143,6 +143,40 @@ describe('sales/orders — sipariş → onay → sevk → fatura', () => {
       const cancelled = await cancelOrder(tx, order.id, ctx, 'test');
       expect(cancelled.status).toBe('cancelled');
       await expect(cancelOrder(tx, order.id, ctx)).rejects.toMatchObject({ code: 'ALREADY_CLOSED' });
+    });
+  });
+
+  it('cancelOrder: FEFO ile rezerve edilmiş ama henüz sevk edilmemiş irsaliyeyi de iptal edip rezervasyonu bırakır (Tur 8 P0 regresyonu)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await ensureSalesJournal(tx);
+      const channel = await seedChannel(tx, b);
+      // SO-2026-000003 canlı egzersizindeki gibi 2 satır, 15+8 birim.
+      await stockFinished(tx, b, 'PL-CANCELRES-1', '15');
+      await stockFinished(tx, b, 'PL-CANCELRES-2', '8');
+
+      const { order } = await createSalesDoc(tx, {
+        docType: 'order', partnerId: b.customer.id, channelId: channel.id, warehouseId: b.wh.id, orderDate: today(), currency: 'TRY',
+        lines: [{ productId: b.finished.id, qty: d(23), unitPrice: d(100) }],
+      }, ctx);
+      const { delivery } = await confirmOrder(tx, order.id, ctx);
+      const reserved = await reserveFefo(tx, delivery.id, ctx);
+      expect(reserved.delivery.status).toBe('reserved');
+
+      const before = await getOnHand(tx, { productId: b.finished.id, warehouseId: b.wh.id });
+      expect(before.reserved.toFixed(4)).toBe('23.0000');
+      expect(before.available.toFixed(4)).toBe('0.0000');
+
+      const cancelled = await cancelOrder(tx, order.id, ctx, 'müşteri vazgeçti');
+      expect(cancelled.status).toBe('cancelled');
+
+      const [deliveryRow] = await tx.select().from(deliveries).where(eq(deliveries.id, delivery.id));
+      expect(deliveryRow!.status).toBe('cancelled'); // irsaliye artık ölü siparişin arkasında 'reserved' kalmıyor
+
+      // Rezervasyon geri bırakıldı — 23 birim artık ölü siparişin arkasında kilitli değil.
+      const after = await getOnHand(tx, { productId: b.finished.id, warehouseId: b.wh.id });
+      expect(after.reserved.toFixed(4)).toBe('0.0000');
+      expect(after.available.toFixed(4)).toBe('23.0000');
     });
   });
 

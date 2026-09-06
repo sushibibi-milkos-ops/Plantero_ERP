@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { salesChannels, salesOrders, salesOrderLines, stockLots, stockQuants, type Tx } from '@plantero/db';
-import { createDeliveryFromOrder, reserveFefo, confirmPick, shipDelivery, markDelivered } from './deliveries.js';
-import { createLot, postStockMove } from './ledger.js';
+import { createDeliveryFromOrder, reserveFefo, confirmPick, shipDelivery, markDelivered, cancelDelivery } from './deliveries.js';
+import { createLot, postStockMove, getOnHand } from './ledger.js';
 import { withRollback, seedBase, ctx, d, daysFromNow, type Base } from '../__tests__/helpers.js';
 import { D } from '../money.js';
 
@@ -83,6 +83,42 @@ describe('stock/deliveries', () => {
       // Lotu karantinaya al, sonra okutmayı dene
       await tx.update(stockLots).set({ status: 'quarantine' }).where(eq(stockLots.id, line.lotId!));
       await expect(confirmPick(tx, { deliveryId: delivery.id, lineId: line.id, scannedLotId: line.lotId }, ctx)).rejects.toMatchObject({ code: 'LOT_NOT_RELEASED' });
+    });
+  });
+
+  it('cancelDelivery: rezerve edilmiş (henüz sevk edilmemiş) irsaliye iptal edilince rezervasyon geri bırakılır', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await stockFinished(tx, b, 'PL-CANCEL', '23', 40);
+      const { order } = await seedSalesOrder(tx, b, 23);
+      const { delivery } = await createDeliveryFromOrder(tx, order.id, {}, ctx);
+
+      const reserved = await reserveFefo(tx, delivery.id, ctx);
+      expect(reserved.delivery.status).toBe('reserved');
+      const before = await getOnHand(tx, { productId: b.finished.id, warehouseId: b.wh.id });
+      expect(before.reserved.toFixed(4)).toBe('23.0000');
+      expect(before.available.toFixed(4)).toBe('0.0000');
+
+      const cancelled = await cancelDelivery(tx, delivery.id, ctx, 'sipariş iptal edildi');
+      expect(cancelled.status).toBe('cancelled');
+
+      // Rezervasyon tamamen geri bırakıldı — fiziksel stok tekrar kullanılabilir.
+      const after = await getOnHand(tx, { productId: b.finished.id, warehouseId: b.wh.id });
+      expect(after.reserved.toFixed(4)).toBe('0.0000');
+      expect(after.available.toFixed(4)).toBe('23.0000');
+      expect(after.qty.toFixed(4)).toBe('23.0000'); // fiziksel miktar hiç değişmedi (postStockMove hiç çağrılmadı)
+    });
+  });
+
+  it('cancelDelivery: sevk edilmiş irsaliye iptal edilemez', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await stockFinished(tx, b, 'PL-SHIPPED', '5', 40);
+      const { order } = await seedSalesOrder(tx, b, 5);
+      const { delivery } = await createDeliveryFromOrder(tx, order.id, {}, ctx);
+      await reserveFefo(tx, delivery.id, ctx);
+      await shipDelivery(tx, delivery.id, ctx);
+      await expect(cancelDelivery(tx, delivery.id, ctx)).rejects.toMatchObject({ code: 'DELIVERY_ALREADY_SHIPPED' });
     });
   });
 });

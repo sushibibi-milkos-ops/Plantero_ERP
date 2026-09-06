@@ -6,7 +6,7 @@ import { businessDate } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
-import { postStockMove, pickFefo, reserve } from './ledger.js';
+import { postStockMove, pickFefo, reserve, release } from './ledger.js';
 import { getCustomersLocation, resolveWarehouseRoot } from './locations.js';
 import type { ActorCtx } from '../types.js';
 
@@ -36,6 +36,12 @@ import type { ActorCtx } from '../types.js';
  *   `reserveFefo` çağrılmalıdır.
  * - `markDelivered(tx, deliveryId, ctx)` → status → 'delivered', `deliveredAt` damgalanır (yalnızca
  *   durum; stok/muhasebe etkisi yok — sevkiyat anında zaten kayda geçmiştir).
+ * - `cancelDelivery(tx, deliveryId, ctx, reason?)` → 'shipped'/'delivered'/'cancelled' değilse: FEFO ile
+ *   rezerve edilmiş (`fromLocationId` dolu) her satır için `stock/ledger.release` ile rezervasyon geri
+ *   bırakılır (henüz `postStockMove` çağrılmadığından fiziksel stok hareketi/muhasebe kaydı yoktur —
+ *   yalnızca `stock_quants.reserved_qty` düşer), `delivery.status` → 'cancelled'. `sales/orders.ts::cancelOrder`
+ *   siparişi iptal ederken bağlı aktif (henüz sevk edilmemiş) irsaliyeleri aynı transaction'da bununla
+ *   kapatır — aksi halde rezerve stok, artık asla sevk edilmeyecek ölü bir siparişin arkasında kilitli kalır.
  */
 
 export type CreateDeliveryOpts = {
@@ -198,6 +204,33 @@ export async function shipDelivery(tx: DbOrTx, deliveryId: string, ctx: ActorCtx
 
   const finalLines = await tx.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, deliveryId));
   return { delivery: updated!, lines: finalLines };
+}
+
+/**
+ * İptal — sevk edilmiş/teslim edilmiş irsaliye iptal edilemez (fiziksel stok zaten çıkmış). Aksi halde
+ * FEFO ile rezerve edilmiş (`fromLocationId` dolu) her satırın rezervasyonu `ledger.release` ile geri
+ * bırakılır ve irsaliye 'cancelled' işaretlenir. Henüz `postStockMove` çağrılmadığı için (`shipDelivery`
+ * öncesi) geri alınacak bir stok hareketi/muhasebe fişi yoktur.
+ */
+export async function cancelDelivery(tx: DbOrTx, deliveryId: string, ctx: ActorCtx, reason?: string | null): Promise<typeof deliveries.$inferSelect> {
+  const [delivery] = await tx.select().from(deliveries).where(eq(deliveries.id, deliveryId)).for('update');
+  if (!delivery) throw new NotFoundError('Sevkiyat', deliveryId);
+  if (['shipped', 'delivered', 'cancelled'].includes(delivery.status)) {
+    throw new DomainError('DELIVERY_ALREADY_SHIPPED', `Sevkiyat ${delivery.docNo} iptal edilemez (durum: ${delivery.status})`);
+  }
+  const lines = await tx.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, deliveryId));
+  for (const line of lines) {
+    if (line.fromLocationId) {
+      await release(tx, { productId: line.productId, lotId: line.lotId, locationId: line.fromLocationId, qty: D(line.qty) });
+    }
+  }
+  const [updated] = await tx
+    .update(deliveries)
+    .set({ status: 'cancelled', note: reason ? `${delivery.note ?? ''}\n${reason}`.trim() : delivery.note, updatedBy: ctx.userId ?? null })
+    .where(eq(deliveries.id, deliveryId))
+    .returning();
+  await indexDocument(tx, { type: 'delivery', recordId: deliveryId, docNo: delivery.docNo, partnerId: delivery.partnerId, status: 'cancelled', origin: delivery.origin, title: `İrsaliye ${delivery.docNo}` });
+  return updated!;
 }
 
 export async function markDelivered(tx: DbOrTx, deliveryId: string, ctx: ActorCtx): Promise<typeof deliveries.$inferSelect> {

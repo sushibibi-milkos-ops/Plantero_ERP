@@ -1,7 +1,7 @@
-import { eq } from 'drizzle-orm';
+import { eq, and, notInArray } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import {
-  salesOrders, salesOrderLines, salesChannels, partners, products, warehouses,
+  salesOrders, salesOrderLines, salesChannels, partners, products, warehouses, deliveries,
   type DbOrTx,
 } from '@plantero/db';
 import { D, toDb, round4, sum, ZERO } from '../money.js';
@@ -9,7 +9,7 @@ import { businessDate } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
-import { createDeliveryFromOrder, type CreateDeliveryOpts, type DeliveryWithLines } from '../stock/deliveries.js';
+import { createDeliveryFromOrder, cancelDelivery, type CreateDeliveryOpts, type DeliveryWithLines } from '../stock/deliveries.js';
 import { getOnHand } from '../stock/ledger.js';
 import { resolvePrice, computeLineTotals, computeChannelDeductions, getExchangeRate, type PriceSource } from './pricing.js';
 import type { ActorCtx, DocumentOrigin } from '../types.js';
@@ -344,7 +344,13 @@ export async function confirmOrder(tx: DbOrTx, orderId: string, ctx: ActorCtx, o
   return { order: updated!, delivery, warnings };
 }
 
-/** İptal — sevk edilmiş irsaliye ya da fatura varsa engeller (yalnızca `order` docType). Teklif için 'lost' işaretler. */
+/**
+ * İptal — sevk edilmiş irsaliye ya da fatura varsa engeller (yalnızca `order` docType). Teklif için 'lost' işaretler.
+ * Siparişe bağlı ama henüz sevk edilmemiş irsaliyeler (`draft`/`reserved`/`picking`/`picked`) varsa —
+ * `confirmOrder` bunları otomatik açtığı için genelde vardır — aynı transaction içinde `cancelDelivery`
+ * ile kapatılır: FEFO ile rezerve edilmiş miktarların rezervasyonu geri bırakılır, aksi halde 23+ birim
+ * gibi fiziksel stok, artık asla sevk edilmeyecek ölü bir siparişin arkasında süresiz kilitli kalırdı.
+ */
 export async function cancelOrder(tx: DbOrTx, orderId: string, ctx: ActorCtx, reason?: string | null): Promise<typeof salesOrders.$inferSelect> {
   const [order] = await tx.select().from(salesOrders).where(eq(salesOrders.id, orderId)).for('update');
   if (!order) throw new NotFoundError('Satış belgesi', orderId);
@@ -354,6 +360,13 @@ export async function cancelOrder(tx: DbOrTx, orderId: string, ctx: ActorCtx, re
     const lines = await tx.select().from(salesOrderLines).where(eq(salesOrderLines.orderId, orderId));
     if (lines.some((l) => D(l.deliveredQty).gt(0) || D(l.invoicedQty).gt(0))) {
       throw new DomainError('ORDER_HAS_ACTIVITY', `${order.docNo} sevk/fatura kaydı olduğu için iptal edilemez`);
+    }
+    const activeDeliveries = await tx
+      .select({ id: deliveries.id })
+      .from(deliveries)
+      .where(and(eq(deliveries.salesOrderId, orderId), notInArray(deliveries.status, ['shipped', 'delivered', 'cancelled'])));
+    for (const d of activeDeliveries) {
+      await cancelDelivery(tx, d.id, ctx, reason ? `${order.docNo} iptal edildi: ${reason}` : `${order.docNo} iptal edildiği için otomatik iptal`);
     }
   }
   const nextStatus = order.docType === 'quotation' ? 'lost' : 'cancelled';
