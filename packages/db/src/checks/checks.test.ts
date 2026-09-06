@@ -45,8 +45,15 @@ const FILES = await checkFiles();
 // SO-2026-000003 (irsaliyesi DN-2026-000003, 27 birim rezerve) üzerinde `cancelOrder` doğrudan çağrıldı,
 // hatasız tamamlandı, irsaliye 'reserved'de kaldı ve stock_quants.reserved_qty hiç değişmedi — I1-I45'in
 // HİÇBİRİ bunu yakalamadı (I2 yalnızca reserved≤qty'yi kontrol ediyor, arkasındaki belgenin hâlâ canlı
-// olup olmadığını sormuyor); test verisi `pnpm db:reset` ile temizlendi.
-const RULE_COUNT = 46;
+// olup olmadığını sormuyor); test verisi `pnpm db:reset` ile temizlendi. I47 (veri-critic Tur 8 düzeltme
+// turu, YENİ, P2): I6'nın `lot_qty_exceeds_initial` alt kuralı miktar dengesini `scraps`/`work_order_scraps`
+// denormalize ara tablolarından kontrol ediyordu; `recordScrap()` (`packages/core/src/production/finish.ts`)
+// `work_order_scraps.lot_id`'yi hiç yazmadığından (fresh seed'deki PL-260816-H1-01/PL-260823-H2-01 mamul
+// lotlarının ikisi de bunu canlı olarak kanıtlıyor) bu join'ler production kökenli lotlar için sessizce
+// boş dönüyor ve I6 gerçek fiziksel dengeyi hiç test etmeden yeşile düşüyordu. I47 aynı dengeyi TEK
+// kanonik kaynaktan (`stock_moves` + `stock_quants`, hiçbir ara tabloya dokunmadan) production kökenli
+// lotlar için yeniden kurar — bkz. checks/47_production_lot_qty_balance.sql üst yorumu.
+const RULE_COUNT = 47;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);

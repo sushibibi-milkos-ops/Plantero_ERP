@@ -1,7 +1,8 @@
 import 'server-only';
 import { and, asc, desc, eq, inArray, isNotNull, or, sql } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import { db, schema } from '@plantero/db';
-import { D, getChain, traceBackward, traceForward } from '@plantero/core';
+import { D, getChain, traceBackward, traceForward, STOCKED_USAGES } from '@plantero/core';
 import { buildDraftMessage } from '@plantero/core/quality/recall';
 import type { RecallImpact } from '@plantero/core/lots/trace';
 
@@ -287,12 +288,27 @@ export async function getTraceForLot(idOrLotNo: string): Promise<TraceView | nul
   const [forward, backward] = await Promise.all([traceForward(db, lotId), traceBackward(db, lotId)]);
 
   const { stockMoves } = schema;
-  const moveRows = await db.select({ kind: stockMoves.kind, qty: stockMoves.qty }).from(stockMoves).where(eq(stockMoves.lotId, lotId));
+  // kalite-izlenebilirlik-miktar-dengesi (tur 8, P1) kök neden: `postStockMove(kind:'production')`
+  // (finish.ts) zaten NET üretimi (fireden arındırılmış) mamul lotuna yazar. Bitirmeden ÖNCE
+  // `recordScrap()` ile kaydedilen fire ise VIRTUAL 'production' lokasyonundan VIRTUAL 'scrap'
+  // lokasyonuna gider (ledger.ts VIRTUAL_USAGES) — hiçbir zaman gerçek stock_quants'a dokunmaz,
+  // yalnızca maliyet amaçlıdır. Bu WIP fireyi giriş'ten düşülmüş gibi saymak denklemi tam o miktar
+  // kadar kaydırıyordu. Fiziksel "miktar dengesi" için yalnızca GERÇEK bir lokasyondan (stoklu,
+  // `STOCKED_USAGES`) çıkan fire sayılır — üretim sonrası/karantinada bulunan fire (stock/expiry.ts,
+  // quality/recall.ts) ya da red lotunun hurdaya ayrılması gibi — çünkü bunlar quant'ı gerçekten azaltır.
+  const fromLoc = alias(schema.locations, 'trace_from_loc');
+  const moveRows = await db
+    .select({ kind: stockMoves.kind, qty: stockMoves.qty, fromUsage: fromLoc.usage })
+    .from(stockMoves)
+    .innerJoin(fromLoc, eq(fromLoc.id, stockMoves.fromLocationId))
+    .where(eq(stockMoves.lotId, lotId));
   const sumBy = (kinds: string[]) => moveRows.filter((m) => kinds.includes(m.kind)).reduce((acc, m) => acc.plus(D(m.qty)), D(0));
   const inQty = sumBy(['receipt', 'production', 'byproduct', 'opening', 'quarantine_release', 'return_in', 'recall_return']);
   const consumedQty = sumBy(['consumption']);
   const deliveredQty = sumBy(['delivery']);
-  const scrapQty = sumBy(['scrap']);
+  const scrapQty = moveRows
+    .filter((m) => m.kind === 'scrap' && (STOCKED_USAGES as readonly string[]).includes(m.fromUsage))
+    .reduce((acc, m) => acc.plus(D(m.qty)), D(0));
   const [onHand] = await db.select({ qty: sql<string>`coalesce(sum(${stockQuants.qty}), 0)` }).from(stockQuants).where(eq(stockQuants.lotId, lotId));
 
   return {

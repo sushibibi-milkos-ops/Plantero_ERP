@@ -19,8 +19,12 @@ export function ChecksTable({ checks }: { checks: QcCheckRow[] }) {
       { id: 'result', accessorFn: (r) => r.result, header: 'Sonuç', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="qc" /> },
       { id: 'kind', accessorFn: (r) => r.kind, header: 'Tür', meta: { width: 90, mobile: 'hidden' }, cell: ({ getValue }) => <span className="text-[13px] text-muted-foreground">{KIND_LABELS[getValue<string>()] ?? getValue<string>()}</span> },
       { accessorKey: 'supplierName', header: 'Tedarikçi', meta: { width: 180, mobile: 'hidden' }, cell: ({ row }) => row.original.supplierName ?? <span className="text-muted-foreground">—</span> },
-      { accessorKey: 'receiptDocNo', header: 'Mal kabul', meta: { width: 140, mobile: 'hidden', className: 'font-mono' }, cell: ({ row }) => row.original.receiptDocNo ?? <span className="text-muted-foreground">—</span> },
-      { id: 'createdAt', accessorFn: (r) => r.createdAt, header: 'Açılış', meta: { width: 150 }, cell: ({ row }) => formatDateTime(row.original.createdAt) },
+      // defaultHidden (tur 8 P2 kalite-kontroller-08 — kök neden): 8 sütunun tamamı sabit genişlikte
+      // 1440px'te 1412px tutuyor ama kap 1152px (scrollbar-thin kaydırıcı) — az bakılan iki sütun
+      // (kaynak mal kabul no'su, açılış zaman damgası; ikisi de satır tıklanınca detayda zaten var)
+      // sütun seçiciden açılabilir kalır, varsayılanda gizlenir (sales/muhasebe tablolarındaki aynı desen).
+      { accessorKey: 'receiptDocNo', header: 'Mal kabul', meta: { width: 140, mobile: 'hidden', defaultHidden: true, className: 'font-mono' }, cell: ({ row }) => row.original.receiptDocNo ?? <span className="text-muted-foreground">—</span> },
+      { id: 'createdAt', accessorFn: (r) => r.createdAt, header: 'Açılış', meta: { width: 150, defaultHidden: true }, cell: ({ row }) => formatDateTime(row.original.createdAt) },
     ],
     [],
   );

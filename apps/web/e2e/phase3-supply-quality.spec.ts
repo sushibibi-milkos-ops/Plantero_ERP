@@ -502,6 +502,13 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     }
 
     // Miktar dengesi: giriş = tüketim + sevk + fire + eldeki (docs/modules/kalite.md) — bağımsız SQL ile doğrulanır.
+    // kalite-izlenebilirlik-miktar-dengesi (tur 8, P1) kök neden: `finishWorkOrder()`'ın 'production'
+    // hareketi zaten NET üretimi (fireden arındırılmış) yazar; bitirmeden ÖNCE `recordScrap()` ile
+    // kaydedilen fire ise VIRTUAL 'production' lokasyonundan VIRTUAL 'scrap' lokasyonuna gider
+    // (ledger.ts VIRTUAL_USAGES) — gerçek stock_quants'a hiç dokunmaz. Bu WIP fireyi giriş'ten
+    // düşülmüş gibi sayan bir SQL denklemi tam o miktar kadar sapar; sadece GERÇEK (stoklu) bir
+    // lokasyondan çıkan fire (üretim sonrası/karantina/red lotu hurdaya ayrılması) fiziksel
+    // dengeye dahil edilir — queries.ts:getTraceForLot() ile birebir aynı mantık.
     const moveSums = psqlRows(`
       select kind, coalesce(sum(qty),0) from stock_moves where lot_id = '${ctx.mamulLotId}' group by kind
     `);
@@ -509,7 +516,10 @@ test.describe('Akış: Tedarik → Kalite zinciri (phase3)', () => {
     const inQty = sumOf(['receipt', 'production', 'byproduct', 'opening', 'quarantine_release', 'return_in', 'recall_return']);
     const consumedQty = sumOf(['consumption']);
     const deliveredQty = sumOf(['delivery']);
-    const scrapQty = sumOf(['scrap']);
+    const scrapQty = Number(psqlOne(`
+      select coalesce(sum(sm.qty),0) from stock_moves sm join locations l on l.id = sm.from_location_id
+      where sm.lot_id = '${ctx.mamulLotId}' and sm.kind = 'scrap' and l.usage in ('internal','quarantine','rejected','transit')
+    `));
     const onHandQty = Number(psqlOne(`select coalesce(sum(qty),0) from stock_quants where lot_id='${ctx.mamulLotId}'`));
     expect(inQty).toBeCloseTo(consumedQty + deliveredQty + scrapQty + onHandQty, 3);
   });
