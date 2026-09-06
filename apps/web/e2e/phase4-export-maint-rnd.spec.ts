@@ -90,6 +90,44 @@ function overflowCheck(page: Page) {
   return page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 }
 
+/**
+ * `/depo/sevkiyat/[id]/topla` ekranını "Toplama tamamlandı" görene kadar satır satır toplar.
+ *
+ * Kök neden (canlıda yakalandı): önceki sürüm tek bir SQL sorgusuyla (`limit` yok, `order by` yok)
+ * TEK bir lot çekip onu bir kez okutuyor, sonra doğrudan "Toplama tamamlandı" bekliyordu — bu
+ * yalnızca FEFO rezervasyonunun TEK lota sığdığı durumda çalışır. 200 adetlik siparişte tek bir
+ * lotta 200 serbest adet OLMAYABİLİR (seed'in o anki dağılımına bağlı) — bu durumda
+ * `reserveDeliveryFefo` (packages/core/src/stock/*) teslimatı BİRDEN FAZLA satıra/lota böler
+ * (`pick-screen.tsx`: `current = pendingLines[0]`, sırayla toplanır). Sabit tek-lot varsayımı
+ * canlıda "0/3 toplandı" durumunda asılı kalıp zaman aşımına uğradı. Artık ekranın kendi
+ * "Sıradaki satır" panelinden GERÇEK lot numarasını okuyup okutuyor, tamamlanana kadar tekrarlıyor
+ * — kaç satıra bölündüğünden bağımsız.
+ */
+async function pickAllLines(page: Page, maxLines = 8) {
+  const progress = page.getByText(/^\d+\/\d+ toplandı$/);
+  for (let i = 0; i < maxLines; i++) {
+    if (await page.getByText('Toplama tamamlandı').isVisible().catch(() => false)) return;
+    const before = await progress.innerText().catch(() => '');
+    // "Sıradaki satır" etiketinin DOĞRUDAN üst elemanı kart köküdür (bkz. `pick-screen.tsx`
+    // `rounded-2xl` kart div'i — etiket onun ilk çocuğu) — lot linki aynı kartın içinde.
+    const card = page.getByText('Sıradaki satır', { exact: true }).locator('..');
+    const lotLink = card.getByRole('link').first();
+    const pickInput = page.getByPlaceholder(/Lot okut…|Enter ile onayla…/);
+    if (await lotLink.count()) {
+      const lotNo = (await lotLink.innerText()).trim();
+      await pickInput.fill(lotNo);
+    }
+    await pickInput.press('Enter');
+    await expect
+      .poll(
+        async () => (await page.getByText('Toplama tamamlandı').isVisible().catch(() => false)) ? 'done' : await progress.innerText().catch(() => ''),
+        { message: `toplama satırı ${i + 1} ilerlemeli (önce: "${before}")`, timeout: 10_000 },
+      )
+      .not.toBe(before);
+  }
+  throw new Error(`Toplama ${maxLines} turda tamamlanmadı — döngü/kilitlenme şüphesi`);
+}
+
 /* ==================================================================== */
 /* Bulgu — K1: ihracat@ kendi ihracat siparişini onaylayamaz             */
 /* ==================================================================== */
@@ -311,15 +349,12 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     await page.getByRole('button', { name: 'FEFO ile rezerve et' }).click();
     await expect(page.locator('[data-status="reserved"]').first()).toBeVisible({ timeout: 10_000 });
 
-    const assigned = psqlRows(`select l.lot_no from delivery_lines dl join stock_lots l on l.id = dl.lot_id where dl.delivery_id = '${ctx.deliveryId}'`)[0];
-    expect(assigned, 'FEFO ile bir lot atanmalı').toBeTruthy();
-    const lotNo = assigned![0]!;
+    const assignedLots = psqlRows(`select distinct l.lot_no from delivery_lines dl join stock_lots l on l.id = dl.lot_id where dl.delivery_id = '${ctx.deliveryId}'`);
+    expect(assignedLots.length, 'FEFO ile en az bir lot atanmalı').toBeGreaterThan(0);
 
     await page.getByRole('link', { name: 'Toplama ekranı' }).click();
     await page.waitForURL(/\/topla$/);
-    const pickInput = page.getByPlaceholder('Lot okut…');
-    await pickInput.fill(lotNo);
-    await pickInput.press('Enter');
+    await pickAllLines(page);
     await expect(page.getByText('Toplama tamamlandı')).toBeVisible({ timeout: 10_000 });
     await page.getByRole('button', { name: 'İrsaliyeye dön ve sevk et' }).click();
     await page.waitForURL(new RegExp(`/depo/sevkiyat/${ctx.deliveryId}$`));
@@ -641,7 +676,9 @@ test.describe('Akış: Bakım arıza → downtime → OEE (phase4, mobil 390×84
 
     const lineCode = psqlOne(`select code from production_lines where id = '${ctx.lineId}'`);
     await loginAs(page, 'bakim', `/bakim/oee?lineId=${ctx.lineId}`);
-    await expect(page.getByRole('heading', { name: 'OEE' })).toBeVisible();
+    // `exact: true` şart — sayfada bir de "OEE trendi" alt-başlığı (h2) var, adsız/varsayılan
+    // eşleşme (alt-dize) her ikisiyle de eşleşip strict-mode ihlaline düşüyordu (canlı yakalandı).
+    await expect(page.getByRole('heading', { name: 'OEE', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: lineCode! })).toBeVisible();
   });
 });
@@ -795,7 +832,10 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
   });
 
   test('Adım 2 — arge@ receteler: yeni deneme reçetesi (v1) → "Yeni versiyon" (v2) → satır miktarını değiştir → birim maliyet anında değişir (SQL ile eşit)', async () => {
-    const raw = psqlRows(`select id, sku, uom_id from products where type = 'raw_material' and is_active = true order by sku limit 1`)[0]!;
+    // `products` tablosunda `is_active` diye bir kolon YOK — aktiflik `status` enum'ıyla
+    // ('active'|'draft'|'cancelled') tutuluyor (bkz. packages/db/src/schema/products.ts). Önceki
+    // sürüm `is_active = true` yazıyordu, canlıda `column "is_active" does not exist` ile patlıyordu.
+    const raw = psqlRows(`select id, sku, uom_id from products where type = 'raw_material' and status = 'active' order by sku limit 1`)[0]!;
     [ctx.rawMaterialId, ctx.rawMaterialSku, ctx.rawMaterialUomId] = raw;
 
     await page.goto(ctx.recetelerUrl!);
@@ -972,8 +1012,19 @@ test.describe('Kokpit KPI doğrulama (phase4)', () => {
       await expect(page.getByText(title, { exact: true }).first()).toBeVisible({ timeout: 10_000 });
     }
 
+    // `getBankSummary` (packages/core/src/cockpit/kpis.ts) tanımıyla birebir: yalnızca aktif TRY
+    // hesaplar toplanır. Bu toplam NEGATİF olabilir (bu seed'de VKF-TIRE-TL ekstre bakiyesi eksi —
+    // gerçek bir işletmede kredili mevduat/nakit açığı normaldir) — `KpiCard`/`MoneyCell` negatif
+    // tutarı kırmızı ama DOĞRU basar (bkz. `getMoneyTone`, format.ts). Önceki sürüm burada
+    // `toBeGreaterThanOrEqual(0)` bekliyordu — bu YANLIŞ bir varsayımdı (uygulama davranışı değil,
+    // test tarafının hatalı beklentisiydi) ve canlıda -254.348,4973 ile patlıyordu. Doğru doğrulama
+    // ekrandaki "Banka toplamı" KPI kartının DB toplamıyla birebir eşleşmesi (işaret dahil).
     const bankTotal = Number(psqlOne(`select coalesce(sum(statement_balance),0) from bank_accounts where is_active = true and currency = 'TRY'`));
-    expect(bankTotal).toBeGreaterThanOrEqual(0);
+    const bankCard = page.getByText('Banka toplamı', { exact: true }).locator('..');
+    const bankText = await bankCard.innerText();
+    const shownBank = parseTrNumber(bankText.split('\n').find((l) => /-?\d/.test(l.trim())) ?? bankText);
+    // KpiCard `fractionDigits={0}` ile basar — ekran tam sayıya yuvarlanmış olabilir.
+    expect(shownBank).toBeCloseTo(bankTotal, 0);
 
     // `findDueInvoices` (packages/core/src/finance/dunning.ts) tanımıyla birebir: kind='sales',
     // status IN ('posted','partially_paid'), due_date < bugün (400 günlük pencere dahil), residual>0.
@@ -1074,7 +1125,8 @@ test.describe('Negatifler (phase4)', () => {
     const productId = psqlOne(`select product_id from rnd_projects where id = '${projectId}'`);
     expect(productId, 'Bu proje zaten bir ürüne bağlı olmalı (no_product engeliyle karışmasın)').toBeTruthy();
 
-    const raw = psqlRows(`select id, sku from products where type = 'raw_material' and is_active = true order by sku limit 1`)[0]!;
+    // Aynı `is_active` düzeltmesi (bkz. Adım 2 yorumu) — `products`'ta bu kolon yok, `status` kullanılır.
+    const raw = psqlRows(`select id, sku from products where type = 'raw_material' and status = 'active' order by sku limit 1`)[0]!;
     const [rawId] = raw;
 
     await loginAs(page, 'arge');
