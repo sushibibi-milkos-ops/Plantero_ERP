@@ -77,7 +77,8 @@ export function RecipeWorkspace({
                 key={g.recipe.id}
                 type="button"
                 onClick={() => { setSelectedRecipeId(g.recipe.id); setSelectedVersionId(g.recipe.currentVersionId ?? g.versions[0]?.id ?? null); }}
-                className={cn('w-full rounded-md px-2.5 py-1.5 text-left text-[13px]', g.recipe.id === selectedRecipeId ? 'bg-primary/10 font-medium text-primary' : 'text-muted-foreground hover:bg-muted')}
+                // min-h-11 md:min-h-0: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-recete-09).
+                className={cn('flex min-h-11 w-full items-center rounded-md px-2.5 py-1.5 text-left text-[13px] md:min-h-0', g.recipe.id === selectedRecipeId ? 'bg-primary/10 font-medium text-primary' : 'text-muted-foreground hover:bg-muted')}
               >
                 {g.recipe.name}
               </button>
@@ -98,7 +99,8 @@ export function RecipeWorkspace({
                 key={v.id}
                 type="button"
                 onClick={() => setSelectedVersionId(v.id)}
-                className={cn('flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px]', v.id === selectedVersionId ? 'bg-muted font-medium' : 'text-muted-foreground hover:bg-muted/60')}
+                // min-h-11 md:min-h-0: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-recete-09).
+                className={cn('flex min-h-11 w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px] md:min-h-0', v.id === selectedVersionId ? 'bg-muted font-medium' : 'text-muted-foreground hover:bg-muted/60')}
               >
                 <span>v{v.version}</span>
                 <StatusBadge status={v.status} label={status.label} tone={status.tone} size="sm" />
@@ -108,7 +110,8 @@ export function RecipeWorkspace({
         </div>
 
         {canManage && selectedGroup ? (
-          <Button variant="outline" size="sm" className="w-full" onClick={newVersion} disabled={pending}>
+          // h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-recete-09).
+          <Button variant="outline" size="sm" className="h-11 w-full md:h-8" onClick={newVersion} disabled={pending}>
             {pending ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />} Yeni versiyon
           </Button>
         ) : null}

@@ -112,8 +112,10 @@ export function ProjectList({
 
   const viewToggle = (
     <div className="flex shrink-0 items-center gap-1 rounded-md border border-border/70 p-0.5">
-      <Button variant={view === 'list' ? 'secondary' : 'ghost'} size="icon-sm" onClick={() => changeView('list')} aria-label="Liste görünümü"><List className="size-3.5" /></Button>
-      <Button variant={view === 'card' ? 'secondary' : 'ghost'} size="icon-sm" onClick={() => changeView('card')} aria-label="Kart görünümü"><LayoutGrid className="size-3.5" /></Button>
+      {/* size-11 md:size-8: 390px'te gerçek 44×44 dokunma hedefi (Tur 2 P1 arge-projeler-07) —
+          depoda kabul edilen desen (board-column.tsx sürükle tutamağı). */}
+      <Button variant={view === 'list' ? 'secondary' : 'ghost'} size="icon-sm" className="size-11 md:size-8" onClick={() => changeView('list')} aria-label="Liste görünümü"><List className="size-3.5" /></Button>
+      <Button variant={view === 'card' ? 'secondary' : 'ghost'} size="icon-sm" className="size-11 md:size-8" onClick={() => changeView('card')} aria-label="Kart görünümü"><LayoutGrid className="size-3.5" /></Button>
     </div>
   );
 

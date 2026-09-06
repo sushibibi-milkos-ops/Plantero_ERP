@@ -52,32 +52,48 @@ export function BoardColumn({
         <ColumnMenu column={column} projectId={projectId} />
       </div>
 
-      {/* min-h-52 (208px): boş kolonun bırakma alanı — eskiden min-h-16 (64px) sürükleyip bırakmak
-          için görsel/hedef olarak çok dardı (Tur 1 P1 arge-board-02). flex-1: kolon `h-full` olduğundan
-          gövde kalan tüm dikey alanı kaplar → tüm kolonlar eşit yükseklikte görünür. */}
+      {/* flex-1 + flex-col: kolon `h-full` olduğundan gövde kalan tüm dikey alanı kaplar → tüm
+          kolonlar eşit yükseklikte görünür. "Kart ekle" artık AYRI bir alt şerit DEĞİL, kart
+          yığınının hemen ardında akışın içinde (Tur 2 P1 arge-board-11 kök neden düzeltmesi):
+          eskiden footer'a sabitlendiği için son karttan 278–450px aşağıda kalıyor, gövdenin büyük
+          kısmı görsel olarak ölü alan gibi duruyordu. Kalan boşluk artık `flex-1` dolgu — hem boş
+          kolonda bırakma ipucu taşır (Tur 2 P2 arge-board-13) hem de tüm gövde tek droppable alan
+          olarak kalır (son kartın altına ya da kolonun herhangi bir boş noktasına bırakılabilir). */}
       <div
         ref={setDropRef}
-        className={cn('min-h-52 flex-1 space-y-2 overflow-y-auto rounded-lg px-3 pb-2 transition-colors duration-150', isOver && 'bg-primary/5')}
+        className={cn('flex min-h-52 flex-1 flex-col overflow-y-auto rounded-lg px-3 pb-2 transition-colors duration-150', isOver && 'bg-primary/5')}
       >
         <SortableContext items={cards.map((c) => c.id)} strategy={verticalListSortingStrategy}>
-          {cards.map((c) => (
-            <BoardCard key={c.id} card={c} onOpen={() => onOpenCard(c.id)} />
-          ))}
+          <div className="space-y-2">
+            {cards.map((c) => (
+              <BoardCard key={c.id} card={c} onOpen={() => onOpenCard(c.id)} />
+            ))}
+          </div>
         </SortableContext>
-      </div>
 
-      <div className="px-3 pb-3">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="h-9 w-full justify-start text-muted-foreground"
-          disabled={atLimit}
-          title={atLimit ? `WIP limiti (${column.wipLimit}) doldu` : undefined}
-          onClick={() => onAddCard(column.id)}
-        >
-          <Plus className="size-4" /> Kart ekle
-        </Button>
+        <div className="pt-2">
+          {/* h-11 md:h-9: 390px'te gerçek 44px dokunma hedefi, masaüstünde eski kompakt boyut
+              (Tur 2 P1 arge-board-10) — depoda kabul edilen `size-11 md:size-8`/`h-11 md:h-9` deseni. */}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-11 w-full justify-start text-muted-foreground md:h-9"
+            disabled={atLimit}
+            title={atLimit ? `WIP limiti (${column.wipLimit}) doldu` : undefined}
+            onClick={() => onAddCard(column.id)}
+          >
+            <Plus className="size-4" /> Kart ekle
+          </Button>
+        </div>
+
+        {cards.length === 0 ? (
+          <div className="mt-2 flex flex-1 min-h-24 items-center justify-center rounded-lg border border-dashed border-border/60 px-2 text-center text-[11px] text-muted-foreground">
+            Kart yok — sürükleyip bırakın
+          </div>
+        ) : (
+          <div className="flex-1" />
+        )}
       </div>
     </div>
   );

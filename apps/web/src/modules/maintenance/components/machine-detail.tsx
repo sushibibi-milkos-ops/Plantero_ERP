@@ -29,7 +29,7 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
     {
       title: 'Genel',
       fields: [
-        { label: 'Hat', value: lineCode, node: lineCode ? `${lineCode} — ${lineName}` : null },
+        { label: 'Hat', value: 1, node: lineCode ? `${lineCode} — ${lineName}` : 'Ortak / depo ekipmanı' },
         { label: 'Depo', value: warehouseCode, node: warehouseCode },
         { label: 'Kapasite', value: machine.capacityPerHour, node: machine.capacityPerHour ? <QtyCell value={machine.capacityPerHour} uom={machine.capacityUnit ?? '/sa'} /> : null },
         { label: 'Güç', value: machine.powerKw, node: machine.powerKw ? <QtyCell value={machine.powerKw} uom="kW" /> : null },
@@ -68,15 +68,15 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
         </TabsList>
       </div>
 
-      <TabsContent value="ozellikler" className="space-y-5">
+      <TabsContent value="ozellikler" className="space-y-8">
         <DetailFieldGroupsGrid groups={groups} />
 
         {/* Kriter 3 (Tur 2 P1 bakim-makine-detay-03) kök neden düzeltmesi: açılış sekmesi salt
             özellik alanlarından ibaretken (çoğu '—') 1440×900'de ekranın yarısı boş kalıyordu.
-            Son iş emirleri/duruşlar özeti — ayrı sekmelerdeki tam listenin ilk 5 satırı — hem boşluğu
-            gerçek, kullanışlı bilgiyle doldurur hem de "bu makinede en son ne oldu" sorusunu sekme
-            değiştirmeden yanıtlar. */}
-        <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+            Son iş emirleri/duruşlar/planlar özeti — ayrı sekmelerdeki tam listenin ilk birkaç satırı —
+            hem boşluğu gerçek, kullanışlı bilgiyle doldurur hem de "bu makinede en son ne oldu" ve
+            "sırada ne var" sorularını sekme değiştirmeden yanıtlar. */}
+        <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <h3 className="mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold">Son iş emirleri</h3>
             {recentOrders.length === 0 ? (
@@ -115,7 +115,42 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
               </ul>
             )}
           </div>
+          <div>
+            <h3 className="mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold">Bakım planları</h3>
+            {plans.length === 0 ? (
+              <p className="text-[13px] text-muted-foreground">Periyodik plan yok.</p>
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {plans.slice(0, 5).map((p) => (
+                  <li key={p.id} className="flex min-h-11 items-center justify-between gap-2 py-1.5 text-[13px]">
+                    <span className="min-w-0 truncate">{p.name}</span>
+                    <span className="shrink-0 text-[11px] text-muted-foreground tabular-nums">{p.nextDueAt ? formatDate(p.nextDueAt) : '—'}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
+
+        {lineCode ? (
+          <div className="border-t border-border/60 pt-5">
+            <div className="mb-4 flex items-baseline justify-between">
+              <h3 className="text-[13px] font-semibold">OEE (hat geneli — {lineCode})</h3>
+              {oeeTrend.length > 0 ? <span className="text-lg font-semibold tabular-nums">{formatPct(oeeTrend[oeeTrend.length - 1]!.oeePct)}</span> : null}
+            </div>
+            {oeeTrend.length === 0 ? (
+              <p className="text-[13px] text-muted-foreground">OEE verisi yok. Worker `oee-daily` her gece hesaplar.</p>
+            ) : (
+              <>
+                <Sparkline data={oeeTrend.map((d) => Number(d.oeePct))} width={1152} height={120} tone="primary" className="w-full" />
+                <div className="mt-1.5 flex justify-between text-[11px] text-muted-foreground">
+                  <span>{formatDate(oeeTrend[0]!.day)}</span>
+                  <span>{formatDate(oeeTrend[oeeTrend.length - 1]!.day)}</span>
+                </div>
+              </>
+            )}
+          </div>
+        ) : null}
       </TabsContent>
 
       <TabsContent value="planlar">

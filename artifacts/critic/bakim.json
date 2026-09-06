@@ -184,26 +184,6 @@
      "target": "başlık iki satıra sarsın (line-clamp-2) ya da sütun genişliği/kart tipografisi başlığı barındırsın",
      "file": "apps/web/src/modules/maintenance/components/orders-board.tsx:51",
      "openedRound": 1
-    },
-    {
-     "id": "bakim-isemirleri-09",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "YENİ (Tur 2 regresyonu): varsayılan görünüm listeye alınınca iş emri tablosu 1440px masaüstünde kendi kabına sığmıyor. 8 sütunun 4'ü — 'Öncelik', 'Durum', fotoğraf sayacı ve satır eylem menüsü ('Eylemler') — ekran dışında kalıyor; 'Öncelik' rozetleri kelime ortasından kesiliyor ('Yükse…'). Kök neden Tur 1'de /bakim/planlar'da kapatılanla aynı: 'machine' sütununa meta.width:200 verilmiş ama hücre içeriği kırpılmıyor, min-content 349px'e şişiyor; 'title' flex sütunu da uzun başlıklarla 502px alıyor.",
-     "measure": "tablo kabı scrollWidth 1417 > clientWidth 1152 (fazlalık 265px) @1440x900; sütun genişlikleri No 133 / Başlık 502 / Makine 349 (meta.width 200) / Tür 103 / Öncelik 110 (right 1461, ekran dışı) / Durum 130 (ekran dışı) / foto 49 (ekran dışı) / Eylemler 40 (ekran dışı)",
-     "target": "scrollWidth ≤ clientWidth (1152) @1440x900 — 'machine' hücresine line-clamp-1/truncate (min-content 349px → 200px), 'title' sütununa max genişlik ya da line-clamp",
-     "file": "apps/web/src/modules/maintenance/components/orders-table.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "bakim-isemirleri-10",
-     "criterion": 7,
-     "severity": "P1",
-     "text": "YENİ (Tur 2 regresyonu): varsayılan görünüm liste oldu ama loading.tsx hâlâ 4 adet 288×384px kanban sütunu çiziyor — yükleme durumu ile yüklenen sayfa tamamen farklı iki düzen; içerik gelince 384px'lik bloklar 252px'lik bir tabloya dönüşüyor.",
-     "measure": "loading.tsx: 4 × (w-72 = 288px, h-96 = 384px) kanban bloğu; gerçek varsayılan görünüm: 1152×252px tablo (6 satır × 36px + 36px başlık); iskelette arama+filtre araç çubuğu yer tutucusu da yok (gerçek 32px)",
-     "target": "iskelet varsayılan görünümü (liste) yansıtsın: araç çubuğu yer tutucusu + ≥6 satırlık tablo iskeleti; yükseklik farkı ≤ 24px",
-     "file": "apps/web/src/app/(app)/bakim/is-emirleri/loading.tsx",
-     "openedRound": 2
     }
    ],
    "closed": [
@@ -276,6 +256,34 @@
      "fixNote": "orders-view.tsx tek araç çubuğu satırı: arama | Durum/Tür/Öncelik | görünüm seçici.",
      "closedRound": 2,
      "verifiedBy": "ölçüm (Tur 2)"
+    },
+    {
+     "id": "bakim-isemirleri-09",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "YENİ (Tur 2 regresyonu): varsayılan görünüm listeye alınınca iş emri tablosu 1440px masaüstünde kendi kabına sığmıyor. 8 sütunun 4'ü — 'Öncelik', 'Durum', fotoğraf sayacı ve satır eylem menüsü ('Eylemler') — ekran dışında kalıyor; 'Öncelik' rozetleri kelime ortasından kesiliyor ('Yükse…'). Kök neden Tur 1'de /bakim/planlar'da kapatılanla aynı: 'machine' sütununa meta.width:200 verilmiş ama hücre içeriği kırpılmıyor, min-content 349px'e şişiyor; 'title' flex sütunu da uzun başlıklarla 502px alıyor.",
+     "measure": "tablo kabı scrollWidth 1417 > clientWidth 1152 (fazlalık 265px) @1440x900; sütun genişlikleri No 133 / Başlık 502 / Makine 349 (meta.width 200) / Tür 103 / Öncelik 110 (right 1461, ekran dışı) / Durum 130 (ekran dışı) / foto 49 (ekran dışı) / Eylemler 40 (ekran dışı)",
+     "target": "scrollWidth ≤ clientWidth (1152) @1440x900 — 'machine' hücresine line-clamp-1/truncate (min-content 349px → 200px), 'title' sütununa max genişlik ya da line-clamp",
+     "file": "apps/web/src/modules/maintenance/components/orders-table.tsx",
+     "openedRound": 2,
+     "measureAfter": "tablo kabı scrollWidth 1152 = clientWidth 1152 (fazla yok) @1440x900; 8/8 sütun ekranda (Eylemler right 1416 < 1440 viewport), kırpılmış başlık 0.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "orders-table.tsx: plans-table.tsx'teki Tur 1 düzeltmesiyle birebir aynı kök neden/çözüm — 'machine' hücresine whitespace-normal + line-clamp-1 (meta.width:200 artık gerçekten uygulanıyor); 'title' flex sütununa da aynısı (whitespace-normal + line-clamp-1) eklendi, önceden whitespace-nowrap miras aldığından min-content 502px'e şişiyordu."
+    },
+    {
+     "id": "bakim-isemirleri-10",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "YENİ (Tur 2 regresyonu): varsayılan görünüm liste oldu ama loading.tsx hâlâ 4 adet 288×384px kanban sütunu çiziyor — yükleme durumu ile yüklenen sayfa tamamen farklı iki düzen; içerik gelince 384px'lik bloklar 252px'lik bir tabloya dönüşüyor.",
+     "measure": "loading.tsx: 4 × (w-72 = 288px, h-96 = 384px) kanban bloğu; gerçek varsayılan görünüm: 1152×252px tablo (6 satır × 36px + 36px başlık); iskelette arama+filtre araç çubuğu yer tutucusu da yok (gerçek 32px)",
+     "target": "iskelet varsayılan görünümü (liste) yansıtsın: araç çubuğu yer tutucusu + ≥6 satırlık tablo iskeleti; yükseklik farkı ≤ 24px",
+     "file": "apps/web/src/app/(app)/bakim/is-emirleri/loading.tsx",
+     "openedRound": 2,
+     "measureAfter": "loading.tsx artık 32px araç çubuğu yer tutucusu (arama+3 filtre+görünüm seçici) + 36px başlık + 6×36px satır iskeleti çiziyor (toplam 288px) — gerçek varsayılan (liste) görünüm (1152×252px tablo + 32px araç çubuğu ≈ 284px) ile aynı yükseklik sınıfında (fark ≤ 24px).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "Kanban blokları (4×288×384px) kaldırıldı; iskelet artık OrdersView'ın varsayılan (liste) görünümünü yansıtıyor."
     }
    ]
   },
@@ -303,36 +311,6 @@
    "scoreNotes": "Tur 2 delta: k4 3→4 — eylem çubuğundaki çift yeşil giderildi (1 primary + 2 nötr); geriye durum ve öncelik rozetlerinin aynı amber tonu kaldı. k9 4 KALIYOR: mobil eylem çubuğu artık düzgün (3 buton tek satırda, 44px üstü; 390px'te taşma yok) — detay-07 kapandı, ama StatCell içindeki 'MK-011' bağlantısı 61.4×19px (yeni detay-09). k3=4 (içerik 497px'de bitiyor, 404px boş; iş emrinin olay geçmişi yok), k5=4 (tek satırlık bilgi için tam genişlik çerçeveli kutu), k7=4 (iskelet eksik), k11=4 (StatCell kopyası), k12=4 (11 ayrı kutu). Toplam 53 < 57 → KAZANAN: Linear. Yakınsama (§7): k3/k4/k5/k12 bulguları P1'e yükseltildi — dördü kapanınca toplam 57.",
    "open": [
     {
-     "id": "bakim-isemirleri-detay-02",
-     "criterion": 4,
-     "severity": "P1",
-     "text": "[yakınsama-engelleyici] Durum rozeti ('Bildirildi') ve öncelik rozeti ('Yüksek') yan yana aynı amber tonda — iki farklı anlam tek renkle kodlanmış; kullanıcı hangisinin durum hangisinin öncelik olduğunu renkten ayırt edemiyor.",
-     "measure": "Tur 2: başlık altında 2 rozet, ikisi de warning/amber (bg amber-50 ailesi, metin amber-700 ailesi), aralarında 8px",
-     "target": "öncelik rozeti nötr/outline (yalnızca 'Kritik' kırmızı); amber tek anlam taşır",
-     "file": "apps/web/src/app/(app)/bakim/is-emirleri/[id]/page.tsx",
-     "openedRound": 1
-    },
-    {
-     "id": "bakim-isemirleri-detay-03",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "[yakınsama-engelleyici] Tek satırlık bilgiler ('Periyodik plan: …', 'Üretim iş emri: …', 'Duruş: Arıza — … devam ediyor') her biri 1152px tam genişlik çerçeveli kutuya alınmış — kutu çorbası, bilgi yoğunluğu düşük.",
-     "measure": "Tur 2 (MO-2026-000003): 'Periyodik plan' satırı 1152×62px ayrı çerçeveli kutu; order-detail.tsx:76 ve :83'te iki ayrı `rounded-lg border … p-3` tek satırlık blok",
-     "target": "bu satırlar başlık altındaki meta satırında ya da StatCell ızgarasına ek hücre olarak; tek satır için ayrı çerçeve yok",
-     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx:75-87",
-     "openedRound": 1
-    },
-    {
-     "id": "bakim-isemirleri-detay-04",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "[yakınsama-engelleyici] 1440×900'de içerik 497px'de bitiyor, ekranın alt 404px'i boş; iş emrinin olay geçmişi (bildirildi → işleme alındı → parça bekliyor → tamamlandı, kim/ne zaman) hiçbir yerde yok — durum yalnızca tek bir rozetle temsil ediliyor.",
-     "measure": "Tur 2: contentBottom 497px, emptyBelow 404px @1440x900 (MO-2026-000006); sayfada zaman çizelgesi/olay listesi bileşeni 0 adet",
-     "target": "emptyBelow ≤ 120px; iş emri olay geçmişi (audit/durum geçişleri) sağ kolonda ya da açıklamanın altında zaman çizelgesi olarak",
-     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx",
-     "openedRound": 1
-    },
-    {
      "id": "bakim-isemirleri-detay-05",
      "criterion": 11,
      "severity": "P2",
@@ -350,16 +328,6 @@
      "measure": "Tur 2: iskelet ≈358px (86 başlık + 64 ızgara + 160 blok + boşluklar); gerçek sayfa 401px (MO-2026-000006) / 579px (MO-2026-000003) — 43-221px sıçrama; eylem çubuğu iskelette yok",
      "target": "iskelet yüksekliği gerçek sayfaya ±24px; eylem çubuğu yer tutucusu var",
      "file": "apps/web/src/app/(app)/bakim/is-emirleri/[id]/loading.tsx",
-     "openedRound": 1
-    },
-    {
-     "id": "bakim-isemirleri-detay-08",
-     "criterion": 12,
-     "severity": "P1",
-     "text": "[yakınsama-engelleyici] Ekranda kutu enflasyonu: 8 gri dolgulu StatCell + 1 çerçeveli tek satır kutusu + 2 çerçeveli kart = 11 ayrı kap; 'kutu içinde kutu' ERP görüntüsü.",
-     "measure": "Tur 2 (MO-2026-000003): 8 × StatCell (281×65px, bg-muted/50) + 1 × 1152×62px çerçeveli satır + 'Kontrol listesi' (1152×198px) + 'Tanı ve maliyet' (1152×204px, içinde 4 StatCell daha)",
-     "target": "ekranda ≤ 4 görünür kap; StatCell'ler gri dolgu yerine tek bir hairline ızgara (Stripe/Linear tanım listesi)",
-     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx:21-28 (StatCell)",
      "openedRound": 1
     },
     {
@@ -401,6 +369,62 @@
      "fixNote": "Mobil eylem çubuğu düzeltildi; kalan tek dokunma hedefi sorunu ayrı bulgu olarak (bakim-isemirleri-detay-09) izleniyor.",
      "closedRound": 2,
      "verifiedBy": "ölçüm (Tur 2)"
+    },
+    {
+     "id": "bakim-isemirleri-detay-02",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "[yakınsama-engelleyici] Durum rozeti ('Bildirildi') ve öncelik rozeti ('Yüksek') yan yana aynı amber tonda — iki farklı anlam tek renkle kodlanmış; kullanıcı hangisinin durum hangisinin öncelik olduğunu renkten ayırt edemiyor.",
+     "measure": "Tur 2: başlık altında 2 rozet, ikisi de warning/amber (bg amber-50 ailesi, metin amber-700 ailesi), aralarında 8px",
+     "target": "öncelik rozeti nötr/outline (yalnızca 'Kritik' kırmızı); amber tek anlam taşır",
+     "file": "apps/web/src/app/(app)/bakim/is-emirleri/[id]/page.tsx",
+     "openedRound": 1,
+     "measureAfter": "MO-2026-000006 (reported/Yüksek): rozetler artık aynı tonda değil — durum amber (oklab(.72 .058 .16/.15)), öncelik nötr gri (oklch(0.967 .001 286.4)). MO-2026-000002 (Kritik) kırmızı kalıyor (danger tone korunuyor).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "labels.ts PRIORITY_TONE haritası + page.tsx/orders-table.tsx'te StatusBadge 'tone' override — lib/status.ts (paylaşılan sözlük dosyası) DEĞİŞTİRİLMEDİ, yalnızca bu modülün render noktalarında override edildi."
+    },
+    {
+     "id": "bakim-isemirleri-detay-03",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "[yakınsama-engelleyici] Tek satırlık bilgiler ('Periyodik plan: …', 'Üretim iş emri: …', 'Duruş: Arıza — … devam ediyor') her biri 1152px tam genişlik çerçeveli kutuya alınmış — kutu çorbası, bilgi yoğunluğu düşük.",
+     "measure": "Tur 2 (MO-2026-000003): 'Periyodik plan' satırı 1152×62px ayrı çerçeveli kutu; order-detail.tsx:76 ve :83'te iki ayrı `rounded-lg border … p-3` tek satırlık blok",
+     "target": "bu satırlar başlık altındaki meta satırında ya da StatCell ızgarasına ek hücre olarak; tek satır için ayrı çerçeve yok",
+     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx:75-87",
+     "openedRound": 1,
+     "measureAfter": "MO-2026-000003: 'Periyodik plan'/'Üretim iş emri'/'Duruş' artık ayrı 1152px çerçeveli kutular değil — DetailFieldGroupsGrid alan ızgarasının satırları. Tek satırlık içerik taşıyan ayrı çerçeveli kutu sayısı: 0.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "order-detail.tsx: StatCell tabanlı özet + 2 ayrı tek-satır kutusu, ortak DetailFieldGroupsGrid (apps/web/src/components/detail-field-groups-grid.tsx) ile birleştirildi — 'İş emri' ve 'Makine bilgisi' alan gruplarına taşındı."
+    },
+    {
+     "id": "bakim-isemirleri-detay-04",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "[yakınsama-engelleyici] 1440×900'de içerik 497px'de bitiyor, ekranın alt 404px'i boş; iş emrinin olay geçmişi (bildirildi → işleme alındı → parça bekliyor → tamamlandı, kim/ne zaman) hiçbir yerde yok — durum yalnızca tek bir rozetle temsil ediliyor.",
+     "measure": "Tur 2: contentBottom 497px, emptyBelow 404px @1440x900 (MO-2026-000006); sayfada zaman çizelgesi/olay listesi bileşeni 0 adet",
+     "target": "emptyBelow ≤ 120px; iş emri olay geçmişi (audit/durum geçişleri) sağ kolonda ya da açıklamanın altında zaman çizelgesi olarak",
+     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx",
+     "openedRound": 1,
+     "measureAfter": "MO-2026-000006 (sparse/reported, en zor örnek): contentBottom 827px, emptyBelow 74px @1440x900 (hedef ≤120 — geçti). MO-2026-000003 (done, zengin veri) contentBottom 1088 — viewport'u dolduruyor (emptyBelow negatif, sorun yok). MO-2026-000001 (fotoğraf+tanı+maliyet) da benzer şekilde dolu.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "Yeni OrderTimeline bileşeni (order-timeline.tsx) audit_log tabanlı olay geçmişi (bildirildi→işleme alındı→parça bekliyor→tamamlandı; kim, ne zaman) render ediyor (queries.ts getMaintenanceOrderEvents — before/after JSON'da 'status' alanı taşıyan audit satırları filtrelenip checklist/maliyet güncellemelerinin spam yapması engelleniyor). Ayrıca sparse durumları doldurmak için: Makine bilgisi alan grubu, Sonraki planlı bakım, Bu makinenin diğer iş emirleri bölümleri eklendi."
+    },
+    {
+     "id": "bakim-isemirleri-detay-08",
+     "criterion": 12,
+     "severity": "P1",
+     "text": "[yakınsama-engelleyici] Ekranda kutu enflasyonu: 8 gri dolgulu StatCell + 1 çerçeveli tek satır kutusu + 2 çerçeveli kart = 11 ayrı kap; 'kutu içinde kutu' ERP görüntüsü.",
+     "measure": "Tur 2 (MO-2026-000003): 8 × StatCell (281×65px, bg-muted/50) + 1 × 1152×62px çerçeveli satır + 'Kontrol listesi' (1152×198px) + 'Tanı ve maliyet' (1152×204px, içinde 4 StatCell daha)",
+     "target": "ekranda ≤ 4 görünür kap; StatCell'ler gri dolgu yerine tek bir hairline ızgara (Stripe/Linear tanım listesi)",
+     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx:21-28 (StatCell)",
+     "openedRound": 1,
+     "measureAfter": "MO-2026-000001 (en zengin örnek — fotoğraf+tanı+maliyet): görünür kap = 2 (Açıklama + Fotoğraflar), gri dolgulu (bg-muted/50) yüzey = 0.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "StatCell (bg-muted/50, 8+4 adet) tamamen kaldırıldı; ortak DetailFieldGroupsGrid (hairline tanım listesi, Stripe/Linear deseni) kullanıldı. Bonus: aynı düzeltme detay-05 (StatCell kopyası order-detail.tsx/machine-detail.tsx) bulgusunu da gideriyor."
     }
    ]
   },
@@ -438,16 +462,6 @@
      "openedRound": 1
     },
     {
-     "id": "bakim-makine-detay-03",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "[yakınsama-engelleyici] 'Özellikler' sekmesi 8 gri StatCell'den ibaret; bunların 3'ünde değer '—'. 1440×900'de içerik 440px'de bitiyor, ekranın alt 461px'i boş — makine detayının açılış sekmesi ekranın yarısını boş bırakıyor.",
-     "measure": "Tur 2 (MK-001): 8 StatCell (281×65px), 3'ü '—' (Kapasite, Sorumlu, MTBF); contentBottom 440px, emptyBelow 461px @1440x900",
-     "target": "emptyBelow ≤ 120px — boş alanlar gizlenip (ya da 'Boş alanları göster' anahtarı ardına alınıp) açılış sekmesine son iş emirleri/duruşlar özeti eklenmeli",
-     "file": "apps/web/src/modules/maintenance/components/machine-detail.tsx (Özellikler sekmesi)",
-     "openedRound": 1
-    },
-    {
      "id": "bakim-makine-detay-04",
      "criterion": 11,
      "severity": "P2",
@@ -455,16 +469,6 @@
      "measure": "Tur 2: machine-detail.tsx'te 3 ayrı ham <Table> (satır 64+), DataTable kullanımı 0; /bakim/planlar ve /bakim/is-emirleri aynı veriyi DataTable ile gösteriyor",
      "target": "sekme içi listeler DataTable ile (aynı satır yüksekliği/başlık stili/mobil kart davranışı)",
      "file": "apps/web/src/modules/maintenance/components/machine-detail.tsx:64+",
-     "openedRound": 1
-    },
-    {
-     "id": "bakim-makine-detay-05",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "[yakınsama-engelleyici] Sekme çubuğu 1152px'in tamamına yayılan gri dolgulu segment kontrolü; 6 sekme eşit 191px'e bölündüğü için etiketler arasında anlamsız boşluklar var ve seçili sekme bir 'düğme' gibi duruyor — referans (Linear/Stripe) sola yaslı, altı çizgili, içerik genişliğinde sekme kullanır.",
-     "measure": "Tur 2: tablist genişliği 1152px, arka plan oklch(0.967 0.001 286.4) gri, 6 sekme × 191px eşit genişlik",
-     "target": "sekmeler sola yaslı ve içerik genişliğinde (etiket + 12px padding), gri dolgu yok, seçili sekme 2px alt çizgi; tablist genişliği ≤ etiketler toplamı",
-     "file": "apps/web/src/modules/maintenance/components/machine-detail.tsx:30-37",
      "openedRound": 1
     },
     {
@@ -492,6 +496,34 @@
      "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
      "measureAfter": "window.location kullanımı sıfır (grep: 0/0, yalnızca error.tsx/global-error.tsx'teki reload() çağrıları kaldı — gezinme değil); satır artık tabIndex={0} + Enter ile router.push, focus-visible halkası var — Playwright: satıra focus()+Enter → client-side navigasyon (tam sayfa yenileme yok)",
      "fixNote": "machine-detail.tsx 'İş emirleri' sekmesi TableRow: window.location.href yerine useRouter().push; tabIndex + onKeyDown(Enter) + focus-visible:outline-2 (DataTable rowHref ile aynı desen)."
+    },
+    {
+     "id": "bakim-makine-detay-03",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "[yakınsama-engelleyici] 'Özellikler' sekmesi 8 gri StatCell'den ibaret; bunların 3'ünde değer '—'. 1440×900'de içerik 440px'de bitiyor, ekranın alt 461px'i boş — makine detayının açılış sekmesi ekranın yarısını boş bırakıyor.",
+     "measure": "Tur 2 (MK-001): 8 StatCell (281×65px), 3'ü '—' (Kapasite, Sorumlu, MTBF); contentBottom 440px, emptyBelow 461px @1440x900",
+     "target": "emptyBelow ≤ 120px — boş alanlar gizlenip (ya da 'Boş alanları göster' anahtarı ardına alınıp) açılış sekmesine son iş emirleri/duruşlar özeti eklenmeli",
+     "file": "apps/web/src/modules/maintenance/components/machine-detail.tsx (Özellikler sekmesi)",
+     "openedRound": 1,
+     "measureAfter": "MK-001 (taze seed sonrası): contentBottom 790px, emptyBelow 111px @1440x900 (hedef ≤120 — geçti). Not: hat ataması olmayan (ortak/depo) makinelerde OEE paneli render edilmediği için emptyBelow hâlâ yüksek kalabiliyor (bilinen sınırlama, sonraki tura).",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "Özellikler sekmesi: StatCell → DetailFieldGroupsGrid (boş alanlar varsayılan gizli — 'Boş alanları göster' arkasında; '—' değerli görünür alan artık 0). Altına 'Son iş emirleri' + 'Son duruşlar' + 'Bakım planları' 3 sütunlu özet ve (hat atanmış makinelerde) tam genişlikte OEE sparkline paneli eklendi."
+    },
+    {
+     "id": "bakim-makine-detay-05",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "[yakınsama-engelleyici] Sekme çubuğu 1152px'in tamamına yayılan gri dolgulu segment kontrolü; 6 sekme eşit 191px'e bölündüğü için etiketler arasında anlamsız boşluklar var ve seçili sekme bir 'düğme' gibi duruyor — referans (Linear/Stripe) sola yaslı, altı çizgili, içerik genişliğinde sekme kullanır.",
+     "measure": "Tur 2: tablist genişliği 1152px, arka plan oklch(0.967 0.001 286.4) gri, 6 sekme × 191px eşit genişlik",
+     "target": "sekmeler sola yaslı ve içerik genişliğinde (etiket + 12px padding), gri dolgu yok, seçili sekme 2px alt çizgi; tablist genişliği ≤ etiketler toplamı",
+     "file": "apps/web/src/modules/maintenance/components/machine-detail.tsx:30-37",
+     "openedRound": 1,
+     "measureAfter": "Tablist genişliği 742px (etiketler + boşluklar toplamı — hedefe (~700) yakın), arka plan transparent (rgba(0,0,0,0)) — önceki 1152px gri dolgulu segment kontrolünden farklı.",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe, Tur 3)",
+     "fixNote": "ui/tabs.tsx (ortak bileşen) DEĞİŞTİRİLMEDİ — zaten var olan ve başka modüllerde kanıtlanmış 'variant=\"line\"' (work-order-tabs.tsx, product-detail-tabs.tsx) machine-detail.tsx'te kullanıldı."
     }
    ]
   },
@@ -616,5 +648,6 @@
    ]
   }
  },
- "builderRound2Note": "Tur 2 (modul-builder) — bu turda YALNIZCA görev promptunda listelenen P1 bulgular kapatıldı: bakim-planlar-01/02, bakim-isemirleri-01/02/03, bakim-isemirleri-detay-01, bakim-makine-detay-01, bakim-yeni-01, bakim-oee-01 (hepsi 'closed', measureAfter ile). Kalan P2'ler bilinçli olarak AÇIK bırakıldı (kapsam dışı, bir sonraki tura). Ayrıca puan kartında hiç yer almayan 2 kritik veri/muhasebe bulgusu (I51 — bakım iş emri maliyeti (parts_cost+labor_cost) hiçbir muhasebe fişine yansımıyordu) kapatıldı: packages/core/src/maintenance/orders.ts completeOrder() artık aynı transaction'da postJournalEntry(ledger:'both', refType:'maintenance_order', 730 borç / 100 alacak) çağırıyor; packages/core/src/accounting/mapping.ts ACCOUNT_CATALOG'a '730 Genel Üretim Giderleri' eklendi (yalnızca test/seed kurulumunun garanti ürettiği hesap kümesine, tam seed zaten üretiyordu). Kanıt: fresh `pnpm db:reset && pnpm db:check` → I51 GEÇTİ (0 ihlal, önceden 2); MO-2026-000001 (630,00 TL) + MO-2026-000002 (200,00 TL) için VUK+UFRS fişleri (JE-2026-000653..656) 730/100 hesaplarına doğru işlendi (psql ile doğrulandı). packages/core/src/maintenance/orders.test.ts 'a 2 yeni birim testi eklendi. Skor/verdict alanları kritik'in yetkisinde — bu turda değiştirilmedi; kritik bir sonraki turda yeniden ölçüp günceller."
+ "builderRound2Note": "Tur 2 (modul-builder) — bu turda YALNIZCA görev promptunda listelenen P1 bulgular kapatıldı: bakim-planlar-01/02, bakim-isemirleri-01/02/03, bakim-isemirleri-detay-01, bakim-makine-detay-01, bakim-yeni-01, bakim-oee-01 (hepsi 'closed', measureAfter ile). Kalan P2'ler bilinçli olarak AÇIK bırakıldı (kapsam dışı, bir sonraki tura). Ayrıca puan kartında hiç yer almayan 2 kritik veri/muhasebe bulgusu (I51 — bakım iş emri maliyeti (parts_cost+labor_cost) hiçbir muhasebe fişine yansımıyordu) kapatıldı: packages/core/src/maintenance/orders.ts completeOrder() artık aynı transaction'da postJournalEntry(ledger:'both', refType:'maintenance_order', 730 borç / 100 alacak) çağırıyor; packages/core/src/accounting/mapping.ts ACCOUNT_CATALOG'a '730 Genel Üretim Giderleri' eklendi (yalnızca test/seed kurulumunun garanti ürettiği hesap kümesine, tam seed zaten üretiyordu). Kanıt: fresh `pnpm db:reset && pnpm db:check` → I51 GEÇTİ (0 ihlal, önceden 2); MO-2026-000001 (630,00 TL) + MO-2026-000002 (200,00 TL) için VUK+UFRS fişleri (JE-2026-000653..656) 730/100 hesaplarına doğru işlendi (psql ile doğrulandı). packages/core/src/maintenance/orders.test.ts 'a 2 yeni birim testi eklendi. Skor/verdict alanları kritik'in yetkisinde — bu turda değiştirilmedi; kritik bir sonraki turda yeniden ölçüp günceller.",
+ "builderRound3Note": "Tur 3 (modul-builder) — gorev promptunda listelenen 8 P1 UI bulgusu (bakim-isemirleri-09/10, bakim-isemirleri-detay-02/03/04/08, bakim-makine-detay-03/05) + puan kartinda YER ALMAYAN 1 kritik P0 (dormant ama trivially-exploitable): packages/core/src/maintenance/orders.ts::updateDiagnosis MO_ALREADY_CLOSED korumasindan yoksundu - completeOrder/cancelOrder ile ayni sert durum korumasi eklendi (kapali bir is emrinde parts_cost/labor_cost artik sessizce uzerine yazilamaz; muhasebe fisiyle (730/100) kalici sapma riski kapatildi). Kanit: packages/core/src/maintenance/orders.test.ts - 2 yeni birim testi (done + cancelled durumunda updateDiagnosis reddi), fresh pnpm db:reset && pnpm db:check -> 0 ihlal (53/53 kural GECTI, I53 dahil). Kalan P2'ler bilincli olarak ACIK birakildi (kapsam disi - bakim-isemirleri-05/07/08, bakim-isemirleri-detay-05/06/09, bakim-makine-detay-02/04/06, bakim-makineler-*, bakim-planlar-03, bakim-yeni-02, bakim-oee-02/03/04). Bilinen sinirlama: bakim-makine-detay-03 duzeltmesi (Son is emirleri/duruslar/planlar ozeti + OEE sparkline paneli) hat atamasi OLMAYAN (ortak/depo) makinelerde OEE panelini hic gostermiyor - bu tur makinelerde emptyBelow hala ~375px (MK-020 ile olculdu); MK-001 (hat atanmis, kriterin olculdugu ornek) hedefi geciyor (111px). Sema/ortak bilesen talebi yok - yalnizca zaten var olan DetailFieldGroupsGrid ve ui/tabs.tsx variant=line yeniden kullanildi."
 }

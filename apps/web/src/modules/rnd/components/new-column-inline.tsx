@@ -29,8 +29,9 @@ export function NewColumnInline({ projectId }: { projectId: string }) {
   }
 
   if (!editing) {
+    // h-11 md:h-10: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-board-10) — masaüstünde eski boyut.
     return (
-      <Button type="button" variant="ghost" className="h-10 w-64 shrink-0 justify-start border border-dashed border-border/60 text-muted-foreground" onClick={() => setEditing(true)}>
+      <Button type="button" variant="ghost" className="h-11 w-64 shrink-0 justify-start border border-dashed border-border/60 text-muted-foreground md:h-10" onClick={() => setEditing(true)}>
         <Plus className="size-4" /> Kolon ekle
       </Button>
     );

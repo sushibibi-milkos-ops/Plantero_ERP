@@ -22,7 +22,8 @@ export function ProjectNavTabs({ projectId }: { projectId: string }) {
             key={t.href}
             href={t.href}
             className={cn(
-              'relative -mb-px flex h-9 items-center text-[13px] font-medium transition-colors duration-150',
+              // h-11 md:h-9: 390px'te gerçek 44px dokunma hedefi (Tur 2 P1 arge-board-10) — masaüstünde eski boyut.
+              'relative -mb-px flex h-11 items-center text-[13px] font-medium transition-colors duration-150 md:h-9',
               active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
             )}
           >

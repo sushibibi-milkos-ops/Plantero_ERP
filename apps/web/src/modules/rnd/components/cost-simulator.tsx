@@ -75,6 +75,9 @@ export function CostSimulator({
 
   const productById = useMemo(() => new Map(productOptions.map((p) => [p.id, p])), [productOptions]);
   const productPickerOptions = useMemo(() => productOptions.map((p) => ({ value: p.id, label: p.name, description: p.sku, keywords: [p.sku] })), [productOptions]);
+  // uomById: satırdaki miktarın yanında birim kodunu göstermek için (Tur 2 P1 arge-recete-12 —
+  // birim hiç gösterilmiyordu, "Kavanoz 500ml → 1" (ADET) ile "Yulaf → 0,2" (KG) ayırt edilemiyordu).
+  const uomById = useMemo(() => new Map(uomOptions.map((u) => [u.id, u])), [uomOptions]);
 
   function unitCostFor(index: number): string {
     const line = watched.lines[index];
@@ -262,36 +265,45 @@ export function CostSimulator({
       ) : null}
 
       {deltaVsPrev ? (
+        // Kök neden (Tur 2 P1 arge-recete-11): dıştaki span text-success/text-warning veriyordu AMA
+        // MoneyCell'in `signed` modu kendi text-destructive/text-warning sınıfını uyguluyor ve
+        // kazanıyordu — maliyet DÜŞÜŞÜ (iyi haber) kırmızı basılıyordu. `signed` KULLANILMIYOR artık;
+        // işaret + ton tamamen burada (çağrı yerinde) belirlenir, MoneyCell salt biçimlendirici.
         <p className="text-[11px] text-muted-foreground">
           v{detail.previousVersion!.version}&apos;e göre fark:{' '}
-          <span className={cn('font-medium tabular-nums', deltaVsPrev.gt(0) ? 'text-warning' : deltaVsPrev.lt(0) ? 'text-success' : '')}>
-            {deltaVsPrev.gt(0) ? '+' : ''}<MoneyCell value={deltaVsPrev.toFixed(4)} digits={2} signed />
+          <span className={cn('inline-flex items-baseline font-medium tabular-nums', deltaVsPrev.gt(0) ? 'text-warning' : deltaVsPrev.lt(0) ? 'text-success' : 'text-muted-foreground')}>
+            {deltaVsPrev.gt(0) ? '+' : deltaVsPrev.lt(0) ? '−' : ''}
+            <MoneyCell value={deltaVsPrev.abs().toFixed(4)} digits={2} className="text-inherit" />
           </span>
         </p>
       ) : null}
 
+      {/* h-11 md:h-8 (kontroller) / data-[size=sm]:h-11 md:data-[size=sm]:h-8 (SelectTrigger): 390px'te
+          gerçek 44px dokunma hedefi, masaüstünde eski 32px kompakt satır korunur (Tur 2 P1
+          arge-recete-09) — depoda kabul edilen desen (data-table/pagination.tsx, finance/cashflow-
+          toolbar.tsx vb.). */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Field label="Parti miktarı">
           <Controller control={form.control} name="batchQty" render={({ field }) => (
-            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} disabled={!editable} className="w-full" inputClassName="h-8 md:h-8" />
+            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} disabled={!editable} className="w-full" inputClassName="h-11 md:h-8" />
           )} />
         </Field>
         <Field label="Birim">
           <Controller control={form.control} name="batchUomId" render={({ field }) => (
             <Select value={field.value || undefined} onValueChange={field.onChange} disabled={!editable}>
-              <SelectTrigger size="sm" className="w-full text-[13px]"><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectTrigger size="sm" className="w-full text-[13px] data-[size=sm]:h-11 md:data-[size=sm]:h-8"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>{uomOptions.map((u) => (<SelectItem key={u.id} value={u.id}>{u.code}</SelectItem>))}</SelectContent>
             </Select>
           )} />
         </Field>
         <Field label="Verim %">
           <Controller control={form.control} name="expectedYieldPct" render={({ field }) => (
-            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} disabled={!editable} className="w-full" inputClassName="h-8 md:h-8" />
+            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} disabled={!editable} className="w-full" inputClassName="h-11 md:h-8" />
           )} />
         </Field>
         <Field label="Genel gider (parti)">
           <Controller control={form.control} name="overheadPerBatch" render={({ field }) => (
-            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} minDigits={2} prefix="₺" disabled={!editable} className="w-full" inputClassName="h-8 md:h-8" />
+            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} minDigits={2} prefix="₺" disabled={!editable} className="w-full" inputClassName="h-11 md:h-8" />
           )} />
         </Field>
       </div>
@@ -309,11 +321,11 @@ export function CostSimulator({
           orantılı küçültüyordu, Miktar/Fire % input'ları görünür genişlikten daha uzun metin taşıyıp
           kırpılıyordu — 390px'te '0.1500' → '0.1'). */}
       <div className="scrollbar-thin scroll-fade-x overflow-x-auto rounded-lg border border-border/60">
-        <table className="w-full min-w-[760px] text-[13px]">
+        <table className="w-full min-w-[800px] text-[13px]">
           <thead>
             <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               <th className="px-2.5 py-2">Ürün</th>
-              <th className="w-28 px-2 py-2 text-right">Miktar</th>
+              <th className="w-36 px-2 py-2 text-right">Miktar</th>
               <th className="w-36 px-2 py-2">Maliyet kaynağı</th>
               <th className="w-32 px-2 py-2 text-right">Birim maliyet</th>
               <th className="w-24 px-2 py-2 text-right">Fire %</th>
@@ -335,37 +347,53 @@ export function CostSimulator({
                     <td className="px-2.5 py-[3px]">
                       {editable ? (
                         // Dinlenmede kenarlıksız/saydam, yalnızca hover/focus'ta kenarlık — "çerçeve
-                        // çorbası" kök neden düzeltmesi (Tur 1 P1 arge-recete-03).
+                        // çorbası" kök neden düzeltmesi (Tur 1 P1 arge-recete-03). `[@media(hover:none)]`
+                        // taban affordance'ı: proje genelindeki `hover:` custom variant `(hover:hover)
+                        // and (pointer:fine)` ile sınırlı — dokunmatikte hover ASLA tetiklenmiyor, bu
+                        // satırın düzenlenebilir olduğu hiç görünmüyordu (Tur 2 P1 arge-recete-10);
+                        // row-actions.tsx'teki aynı `[@media(hover:none)]:` deseni.
                         <Combobox
                           value={watched.lines[i]?.productId ?? null}
                           onChange={(v) => v && onProductChange(i, v)}
                           options={productPickerOptions}
                           placeholder="Ürün seçin"
                           clearable={false}
-                          className="h-8 border-transparent bg-transparent hover:border-input md:h-8"
+                          className="h-11 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
                         />
                       ) : (
-                        <div><div className="font-medium">{product?.name}</div><div className="font-mono text-[11px] text-muted-foreground">{product?.sku}</div></div>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="font-medium">{product?.name}</span>
+                          <span className="font-mono text-[11px] text-muted-foreground">{product?.sku}</span>
+                        </div>
                       )}
                     </td>
-                    <td className="px-2 py-[3px]">
-                      <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => (
-                        <NumberInput
-                          value={field.value}
-                          onChange={(v) => field.onChange(v ?? '')}
-                          onBlur={field.onBlur}
-                          maxDigits={4}
-                          disabled={!editable}
-                          aria-invalid={qtyMissing}
-                          className="w-full"
-                          inputClassName="h-8 min-w-16 border-transparent bg-transparent hover:border-input md:h-8"
-                        />
-                      )} />
+                    <td className="px-2 py-[3px] text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => (
+                          <NumberInput
+                            value={field.value}
+                            onChange={(v) => field.onChange(v ?? '')}
+                            onBlur={field.onBlur}
+                            maxDigits={4}
+                            minDigits={4}
+                            disabled={!editable}
+                            aria-invalid={qtyMissing}
+                            className="min-w-0 flex-1"
+                            inputClassName="h-11 min-w-16 border-transparent bg-transparent text-right hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
+                          />
+                        )} />
+                        {/* Birim kodu (11px muted): "0,2 KG" / "1 ADET" — birimsiz miktar hücresi
+                            "Kavanoz 500ml → 1" ile "Yulaf → 0,2"yi ayırt edilemez kılıyordu
+                            (Tur 2 P1 arge-recete-12). minDigits=4=maxDigits: ondalık basamak sayısı
+                            satırdan satıra değişmiyor artık, ondalık ayırıcı aynı x'te hizalanır
+                            (Tur 2 P2 arge-recete-13). */}
+                        <span className="shrink-0 text-[11px] text-muted-foreground">{uomById.get(watched.lines[i]?.uomId ?? '')?.code ?? ''}</span>
+                      </div>
                     </td>
                     <td className="px-2 py-[3px]">
                       {editable ? (
                         <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
-                          <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input"><SelectValue /></SelectTrigger>
+                          <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input data-[size=sm]:h-11 md:data-[size=sm]:h-8 [@media(hover:none)]:border-input/50"><SelectValue /></SelectTrigger>
                           <SelectContent>{COST_SOURCE_OPTIONS.map((o) => (<SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>))}</SelectContent>
                         </Select>
                       ) : (
@@ -383,7 +411,7 @@ export function CostSimulator({
                             minDigits={2}
                             prefix="₺"
                             className="w-full"
-                            inputClassName="h-8 min-w-16 border-transparent bg-transparent hover:border-input md:h-8"
+                            inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
                           />
                         )} />
                       ) : (
@@ -399,7 +427,7 @@ export function CostSimulator({
                           maxDigits={4}
                           disabled={!editable}
                           className="w-full"
-                          inputClassName="h-8 min-w-16 border-transparent bg-transparent hover:border-input md:h-8"
+                          inputClassName="h-11 min-w-16 border-transparent bg-transparent hover:border-input md:h-8 [@media(hover:none)]:border-input/50"
                         />
                       )} />
                     </td>
@@ -408,7 +436,7 @@ export function CostSimulator({
                     </td>
                     {editable ? (
                       <td className="px-1 py-[3px]">
-                        <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="text-muted-foreground hover:text-destructive" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
+                        <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="size-11 text-muted-foreground hover:text-destructive md:size-8" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
                       </td>
                     ) : null}
                   </tr>

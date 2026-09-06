@@ -2,7 +2,10 @@
 
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { FolderKanban } from 'lucide-react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
+import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { TRIAL_STATUS_LABELS } from '../labels';
@@ -57,6 +60,10 @@ export function AllRecipesTable({ recipes }: { recipes: RecipeSummaryRow[] }) {
       initialSorting={[{ id: 'unitCost', desc: true }]}
       emptyTitle="Henüz deneme reçetesi yok"
       emptyDescription="Bir Ar-Ge projesinde deneme reçetesi oluşturduğunuzda burada listelenir."
+      // Reçete bir projeye bağlı olduğundan (belge zinciri: proje → reçete → versiyon) burada
+      // doğrudan oluşturma yok — proje listesine yönlendirir (Tur 2 P2 arge-receteler-03: eylemsiz
+      // boş durum, /arge/projeler'deki EmptyState eylemiyle tutarsızdı).
+      emptyAction={<Button asChild size="sm"><Link href="/arge/projeler"><FolderKanban className="size-4" /> Ar-Ge projelerine git</Link></Button>}
       onRowClick={(row) => router.push(`/arge/projeler/${row.projectId}/receteler`)}
     />
   );

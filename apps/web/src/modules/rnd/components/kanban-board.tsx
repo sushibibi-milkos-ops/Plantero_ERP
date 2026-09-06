@@ -67,6 +67,25 @@ export function KanbanBoard({
     setColumnCards(buildColumnCards(columns, cards));
   }, [columns, cards]);
 
+  // Mobilde ilk kolon boşsa ilk boyamada HİÇ kart görünmüyordu (Tur 2 P2 arge-board-12) — sayfa
+  // yüklendiğinde ilk kolon boşsa, kart taşıyan ilk kolona (varsa) sıçrar. Yalnızca bir kez, mount'ta.
+  const jumpedOnMountRef = useRef(false);
+  useEffect(() => {
+    if (jumpedOnMountRef.current) return;
+    const order = columns.map((c) => c.id);
+    if (order.length === 0) return;
+    const cardsByColumn = buildColumnCards(columns, cards);
+    const firstHasCards = (cardsByColumn[order[0]!] ?? []).length > 0;
+    if (firstHasCards) { jumpedOnMountRef.current = true; return; }
+    const target = order.find((id) => (cardsByColumn[id] ?? []).length > 0);
+    if (target) {
+      // 'auto': sayfa ilk açılırken smooth animasyon değil, doğrudan konumlanma.
+      requestAnimationFrame(() => columnNodesRef.current[target]?.scrollIntoView({ behavior: 'auto', inline: 'start', block: 'nearest' }));
+    }
+    jumpedOnMountRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Klavye: N → yeni kart (yalnızca form alanı odaklı değilken — dokümandaki "N yeni kart" kısayolu).
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -192,7 +211,9 @@ export function KanbanBoard({
   return (
     <>
       {/* Kolon mini-nav: yatay kaydırmanın kenar fade'i dışında bir atlama affordance'ı yoktu
-          (Tur 1 P1 arge-board-04) — tıklanan kolon smooth scroll ile görünüme gelir. */}
+          (Tur 1 P1 arge-board-04) — tıklanan kolon smooth scroll ile görünüme gelir. Yalnızca ad
+          (sayaç YOK): kart sayısı 12px aşağıdaki kolon başlığında zaten var — aynı ad+sayı çifti
+          iki kez basmak "tek yerde söyle" ilkesine aykırıydı (Tur 2 P2 arge-board-14). */}
       <div className="scrollbar-thin mb-2 flex items-center gap-1.5 overflow-x-auto pb-1">
         {orderedColumns.map((col) => (
           <button
@@ -203,7 +224,7 @@ export function KanbanBoard({
             // etkileşimli her öğe bu eşiği karşılamalı (kriter 9).
             className="flex min-h-11 shrink-0 items-center rounded-full border border-border/60 px-2.5 text-[11px] whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:border-border hover:text-foreground md:min-h-8"
           >
-            {col.name} <span className="ml-1 tabular-nums">{(columnCards[col.id] ?? []).length}</span>
+            {col.name}
           </button>
         ))}
       </div>
@@ -213,8 +234,15 @@ export function KanbanBoard({
           {/* h-full + items-stretch: kolonlar (board-column.tsx `h-full`) konteynerin tüm yüksekliğini
               paylaşır → eşit yükseklik (Tur 1 P1 arge-board-02). Yükseklik `100dvh`ten üst bar + sayfa
               başlığı + sekme + mini-nav için ayrılan sabit payın çıkarılmasıyla hesaplanır; taban
-              520px altına düşmez (küçük pencerelerde de kolon gövdesi 420px hedefinin üstünde kalır). */}
-          <div className="scrollbar-thin scroll-fade-x flex h-[calc(100dvh-19rem)] min-h-[520px] snap-x snap-mandatory items-stretch gap-3 overflow-x-auto pb-2">
+              520px altına düşmez (küçük pencerelerde de kolon gövdesi 420px hedefinin üstünde kalır).
+              Kök neden düzeltmesi (Tur 2 P1 arge-board-09): `19rem` tek sabiti masaüstü için
+              ayarlanmıştı ve mobil başlık yığınını (eyebrow+başlık+açıklama+sekmeler+mini-nav ≈316px)
+              + kabuğun mobil alt boşluğunu (`<main>` `pb-32`=128px, alt sekme çubuğuna pay ayırır)
+              hesaba katmıyordu → kapsayıcı viewport'u taşıyor, "+ Kart ekle" alt sekme çubuğunun
+              altında kalıyordu VE sayfa ekstra dikey kaydırma kazanıyordu. Mobilde reserve artık
+              (üst yığın + `pb-32`) toplamına göre `28.5rem`; masaüstünde kabuğun alt boşluğu küçük
+              (`md:pb-10`) ve başlık tek satıra yakın olduğundan eski `19rem`/`520px` korunur. */}
+          <div className="scrollbar-thin scroll-fade-x flex h-[calc(100dvh-28.5rem)] min-h-[320px] snap-x snap-mandatory items-stretch gap-3 overflow-x-auto pb-2 md:h-[calc(100dvh-19rem)] md:min-h-[520px]">
             <AnimatePresence initial={false}>
               {orderedColumns.map((col) => (
                 <motion.div key={col.id} ref={columnRef(col.id)} layout="position" transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }} className="flex">
