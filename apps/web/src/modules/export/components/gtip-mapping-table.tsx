@@ -16,9 +16,14 @@ const TYPE_LABEL: Record<string, string> = {
 
 function HsCodeCell({ row, hsCodeOptions, editable }: { row: GtipProductRow; hsCodeOptions: HsCode[]; editable: boolean }) {
   const [pending, startTransition] = useTransition();
+  const selected = row.hsCode ? hsCodeOptions.find((h) => h.code === row.hsCode) : undefined;
 
   if (!editable) {
-    return row.hsCode ? <span className="font-mono">{row.hsCode}</span> : <span className="text-muted-foreground">Eşlenmedi</span>;
+    return row.hsCode ? (
+      <span className="block truncate font-mono" title={selected?.description}>{row.hsCode}</span>
+    ) : (
+      <span className="text-muted-foreground">Eşlenmedi</span>
+    );
   }
 
   return (
@@ -48,9 +53,21 @@ function HsCodeCell({ row, hsCodeOptions, editable }: { row: GtipProductRow; hsC
           yüksekliğini 44px'e zorlayıp kartı 84px'e (56-72 bandının üstüne) taşıyordu. Negatif dikey
           margin dokunma kutusunu (`getBoundingClientRect`, marj'dan etkilenmez) 44x44 aynen KORURKEN
           satıra katkısını rozet satırının kendi ölçeğine (11px/leading-4=16px) indirir; masaüstünde
-          (`md:my-0`) etkisizdir. */}
-      <SelectTrigger className="w-full min-w-[9rem] border-transparent bg-transparent px-2 font-mono text-[13px] shadow-none data-[size=default]:h-11 -my-3.5 md:my-0 hover:border-input focus-visible:border-ring data-[state=open]:border-input md:data-[size=default]:h-9 dark:bg-transparent dark:hover:bg-input/30 dark:data-[state=open]:bg-input/30">
-        <SelectValue placeholder="GTİP seçin" />
+          (`md:my-0`) etkisizdir.
+          Tur 3 P1 ihracat-gtip-07 kök neden: `SelectValue` varsayılan olarak seçilen `SelectItem`'ın
+          TÜM içeriğini (kod + tarife açıklaması) tetikleyiciye kopyalıyordu; açıklama kırpılmadığından
+          tetikleyicinin (dolayısıyla `min-w-[9rem]` dışında hiçbir üst sınırı olmayan) doğal genişliği
+          eşlenen ürün sayısı arttıkça büyüyor, sabit `meta.width` sütun genişliğini (260→408px) aşıyordu.
+          `SelectValue`'ya AÇIK children verilince (Radix: children sağlanırsa seçili öğenin içeriği
+          yerine bunlar basılır, placeholder mantığı bozulmaz) yalnızca kodu, `truncate` ile kırparak
+          basıyoruz; açıklama artık yalnızca açılır listede ve tetikleyicinin `title` özniteliğinde. */}
+      <SelectTrigger
+        title={selected?.description}
+        className="w-full min-w-[9rem] overflow-hidden border-transparent bg-transparent px-2 font-mono text-[13px] shadow-none data-[size=default]:h-11 -my-3.5 md:my-0 hover:border-input focus-visible:border-ring data-[state=open]:border-input md:data-[size=default]:h-9 dark:bg-transparent dark:hover:bg-input/30 dark:data-[state=open]:bg-input/30"
+      >
+        <SelectValue placeholder="GTİP seçin">
+          {row.hsCode ? <span className="truncate">{row.hsCode}</span> : undefined}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="__none">
@@ -75,7 +92,7 @@ export function GtipMappingTable({ products, hsCodeOptions, editable }: { produc
       { id: 'category1', accessorFn: (r) => r.category1 ?? '', header: 'Kategori', meta: { width: 160, mobile: 'hidden' }, cell: ({ getValue }) => getValue<string>() || <span className="text-muted-foreground">—</span> },
       { id: 'type', accessorFn: (r) => r.type, header: 'Tip', meta: { width: 110, mobile: 'hidden' }, cell: ({ getValue }) => TYPE_LABEL[getValue<string>()] ?? getValue<string>() },
       {
-        id: 'hsCode', accessorFn: (r) => r.hsCode ?? '', header: 'GTİP', meta: { width: 260, mobile: 'badge' },
+        id: 'hsCode', accessorFn: (r) => r.hsCode ?? '', header: 'GTİP', meta: { width: 220, mobile: 'badge' },
         cell: ({ row }) => <HsCodeCell row={row.original} hsCodeOptions={hsCodeOptions} editable={editable} />,
       },
     ],

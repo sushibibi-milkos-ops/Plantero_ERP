@@ -126,7 +126,14 @@ export function ShipmentCreateForm({ orders, initialOrderId }: { orders: Eligibl
           </div>
         </div>
 
-        <FormActions submitLabel="Sevkiyat oluştur" onCancel={() => router.back()} pending={form.formState.isSubmitting} />
+        {/* Tur 4 P2 ihracat-yeni-04 kök neden düzeltmesi: `FormActions` (paylaşılan bileşen) kendi
+            genişliğini formun akış genişliğinden alır — bu form yukarıdaki bloklarda içeriği
+            bilinçli olarak `max-w-3xl`'e sabitlerken eylem çubuğu tam genişlikte kalıyor, "Sevkiyat
+            oluştur" düğmesi form alanlarının sağ kenarından 384px uzakta duruyordu. Paylaşılan dosya
+            DEĞİŞTİRİLMEDEN, `className` uzantı noktasından yalnızca masaüstünde (`md:`) genişlik
+            sabitlenir — mobildeki kasıtlı tam genişlikte yapışkan çubuk davranışı (sticky/-mx-4)
+            etkilenmez. */}
+        <FormActions submitLabel="Sevkiyat oluştur" onCancel={() => router.back()} pending={form.formState.isSubmitting} className="md:max-w-3xl" />
       </form>
     </Form>
   );

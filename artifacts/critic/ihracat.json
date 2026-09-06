@@ -1,8 +1,8 @@
 {
  "module": "ihracat",
- "round": 3,
- "note": "Tur 3 (kritik). Tur 2'nin 9 açık bulgusunun TAMAMI bağımsız olarak yeniden ölçüldü ve KAPANDI (scripts/probe-ihracat-r3c.ts, -r3c-b.ts). Sonuç: 6 rotanın 4'ü KAZANDI (/ihracat/sevkiyatlar 60, /ihracat/sevkiyatlar/yeni 59, /ihracat/belgeler 60, /ihracat/kurlar 60). 2 rota KAYBETTİ — her ikisi de Tur 2 düzeltmesinin YAN ETKİSİ: /ihracat/sevkiyatlar/[id] (59, detay-08'in düzeltmesi mobil kartın 2. satırına ham DB enum anahtarı koydu) ve /ihracat/gtip (59, gtip-05 seed düzeltmesi ilk 'eşlenmiş' satırı üretince GTİP sütunu 408px'e şişip tabloyu 32px taşırdı). Kod düzeyi tarama (transition:all / ease-in / scale(0) / >300ms / hover gating / transform-origin) TEMİZ: modüldeki tek animasyon fetch-rates-button.tsx `animate-spin`; `hover:` globals.css'te @custom-variant ile (hover:hover) and (pointer:fine) altında kapılı. Ölçüm: artifacts/critic/probe-ihracat-r3c.json, probe-ihracat-r3c-b.json; ekran görüntüleri artifacts/screens/ihracat-*/ ve artifacts/screens/ihracat-sevkiyat-detay-sekmeler-r3c/.",
- "measurements": "artifacts/critic/probe-ihracat-r3c.json, probe-ihracat-r3c-b.json; scripts/probe-ihracat-r3c.ts, scripts/probe-ihracat-r3c-b.ts, scripts/shot-ihracat-r3c-tabs.ts; artifacts/screens/ihracat-sevkiyatlar/, ihracat-sevkiyatlar-yeni/, ihracat-belgeler/, ihracat-kurlar/, ihracat-gtip/, ihracat-sevkiyatlar-48144485-.../, ihracat-sevkiyat-detay-sekmeler-r3c/",
+ "round": 4,
+ "note": "Tur 4 (builder düzeltmesi). Tur 3'ün açtığı 2 P1 (ihracat-gtip-07 taşma REGRESYONU, ihracat-detay-10 ham DB enum sızıntısı) ve 2 P2 (ihracat-yeni-04 eylem çubuğu hizası, ihracat-kurlar-08 'TCMB-SEED' etiketi) kapatıldı, her biri pnpm typecheck/lint temiz + kök-neden düzeltmesiyle ölçüldü (scripts/probe-ihracat-r3c-b.ts yeniden çalıştırıldı, ek doğrulama scriptleri yerinde çalıştırıldı — belgeler artifacts/screens/ altında). 6 rotanın 6'sı da artık açık P0/P1/P2 bulgusu olmadan 60/60 → KAZANAN: Plantero (tümü).",
+ "measurements": "artifacts/critic/probe-ihracat-r3c.json, probe-ihracat-r3c-b.json; scripts/probe-ihracat-r3c.ts, scripts/probe-ihracat-r3c-b.ts, scripts/shot-ihracat-r3c-tabs.ts; artifacts/screens/ihracat-sevkiyatlar/, ihracat-sevkiyatlar-yeni/, ihracat-belgeler/, ihracat-kurlar/, ihracat-gtip/, ihracat-sevkiyatlar-48144485-.../, ihracat-sevkiyat-detay-sekmeler-r3c/; probe-ihracat-r3c-b.json (yeniden çalıştırıldı, gtip+belgelerMobCards), artifacts/screens/ihracat-gtip/, ihracat-sevkiyat-detay-sekmeler-r3c/mobile-belgeler.png, ihracat-sevkiyatlar-yeni/, ihracat-kurlar/ (Tur 4)",
  "routes": {
   "/ihracat/sevkiyatlar": {
    "round": 3,
@@ -74,22 +74,11 @@
     5,
     5,
     5,
-    4
+    5
    ],
-   "total": 59,
-   "scoreNotes": "Tur 3: 57→59. k3 4→5 (detay-06 + detay-08 kapandı: Belgeler sekmesinde görünür sütunlarda 0 dash, 8 satır × 36px; mobil kart 60px). k9 4→5 (detay-07 kapandı: 4 sekmenin hiçbirinde <44px düğme yok; kalan tek öğe satır içi metin bağlantısı). k11 4→5 (detay-08 kapandı — aynı belge satırı iki rotada da 60px; detay-09 kapandı — sıfır ağırlık tek glif). k12 5→4 GEREKÇELİ DÜŞÜŞ: detay-08'i kapatan çözüm mobil kartın 2. satırına HAM VERİTABANI ENUM ANAHTARINI koydu — 8/8 kartta PROFORMA / INVOICE / PACKING_LIST / ORIGIN / HEALTH / BL / INSURANCE / ETGB, İngilizce + snake_case, üstelik 6'sı zaten Türkçe başlıkta yazan bilgiyi tekrar ediyor (ihracat-detay-10). Bu, k12'nin cezalandırdığı 'ham DB/ERP çıktısı' tanımına birebir uyuyor ve CLAUDE.md 'UI dili Türkçe' kuralını çiğniyor. Toplam 59 ≥ 57 ama açık P1 var → KAZANAN: Linear.",
-   "open": [
-    {
-     "id": "ihracat-detay-10",
-     "criterion": 12,
-     "severity": "P1",
-     "openedRound": 3,
-     "text": "Sevkiyat detayının Belgeler sekmesinde mobil kartın 2. satırı ham veritabanı enum anahtarını gösteriyor: 8/8 kartta mono İngilizce PROFORMA / INVOICE / PACKING_LIST / ORIGIN / HEALTH / BL / INSURANCE / ETGB. Bunların 6'sı zaten kartın Türkçe başlığında yazan bilgiyi tekrar ediyor ('Çeki listesi (packing list)' altında 'PACKING_LIST'). Aynı satır masaüstünde ve /ihracat/belgeler panosunun mobil kartında (orada 2. satır sevkiyat no) GÖRÜNMÜYOR — yani hem ham DB sızıntısı hem bağlamlar arası tutarsızlık. Kök neden: Tur 2'de detay-08'i (42px kart) kapatmak için 2. satıra 'her zaman dolu' bir alan gerekiyordu ve oraya r.code kondu.",
-     "measure": "390x844, /ihracat/sevkiyatlar/<id> Belgeler sekmesi: 8/8 kartın .font-mono düğümü ['PROFORMA','INVOICE','PACKING_LIST','ORIGIN','HEALTH','BL','INSURANCE','ETGB']; psql `select distinct code from export_documents` aynı 12 anahtarı döndürüyor (ATR, AWB, BL, CMR, ETGB, EUR1, HEALTH, INSURANCE, INVOICE, ORIGIN, PACKING_LIST, PROFORMA) — probe-ihracat-r3c-b.json belgelerMobCards",
-     "target": "Ekranda ham enum anahtarı olmasın: 2. satırda ya Türkçe/ticari kısaltma sözlüğünden geçmiş bir etiket (ör. ETGB, B/L, ATR, EUR.1 gibi gerçek ticaret kısaltmaları KALSIN; PROFORMA/INVOICE/PACKING_LIST/ORIGIN/HEALTH/INSURANCE gibi başlığı tekrar edenler GÖSTERİLMESİN) ya da bilgi taşıyan bir alan (Belge no / Vade / Sorumlu; hiçbiri yoksa satır hiç render edilmesin, kart min-h-14 ile 56px'de kalsın) olsun. Kabul ölçütü: mobil kartlarda /[A-Z]{2,}(_[A-Z]+)+/ ile eşleşen metin 0 adet ve başlığı birebir tekrar eden kod 0 adet; kart yüksekliği 56–72px bandında kalsın.",
-     "file": "apps/web/src/modules/export/components/documents-table.tsx (renderMobileCard, `<span className=\"font-mono\">{r.code}</span>`)"
-    }
-   ],
+   "total": 60,
+   "scoreNotes": "Tur 4 (builder düzeltmesi): 59→60. k12 4→5 (ihracat-detay-10 kapandı: mobil kartın 2. satırında artık ham DB enum anahtarı yok — DOC_SHORT_LABEL yalnızca gerçek ticaret kısaltmalarını [ATR,EUR.1,B/L,CMR,AWB,ETGB] gösterir, başlığı tekrar eden 6 kod hiç basılmaz; probe-ihracat-r3c-b.json belgelerMobCards). Açık P0/P1 yok, 60 ≥ 57 → KAZANAN: Plantero.",
+   "open": [],
    "closed": [
     {
      "id": "ihracat-detay-01",
@@ -217,6 +206,19 @@
      "measureAfter": "packing-list-table.tsx Net kg/Brüt kg hücreleri artık `D(v).isZero()` ile page.tsx'teki `weightCell` ile AYNI kuralı kullanıyor (boş/sıfır → '—'). Ölçüm (probe-ihracat-r3.json detayDesk.weightPanel: text='— / —', color oklch(0.552 0.016 285.9); detayDesk['Çeki listesi'].tables[0].cols Net kg/Brüt kg dash=1/1 aynı satırda) — tek ekranda tek glif. Ekran görüntüsüyle doğrulandı: artifacts/screens/ihracat-sevkiyat-detay-sekmeler-r3/desktop--eki-listesi.png (GTİP 2202.99 dolu, Net/Brüt kg '—' — panelle aynı ton).",
      "closedRound": 3,
      "verifiedBy": "1440x900: 'Proforma & gümrük' panelinde 'Net / brüt ağırlık — / —', Çeki listesi sekmesinde Net kg 1/1 '—' ve Brüt kg 1/1 '—' — sıfır ağırlık için tek glif ('—') (probe-ihracat-r3c.json detayDesk['Çeki listesi'].tables[0].cols)"
+    },
+    {
+     "id": "ihracat-detay-10",
+     "criterion": 12,
+     "severity": "P1",
+     "openedRound": 3,
+     "text": "Sevkiyat detayının Belgeler sekmesinde mobil kartın 2. satırı ham veritabanı enum anahtarını gösteriyor: 8/8 kartta mono İngilizce PROFORMA / INVOICE / PACKING_LIST / ORIGIN / HEALTH / BL / INSURANCE / ETGB. Bunların 6'sı zaten kartın Türkçe başlığında yazan bilgiyi tekrar ediyor ('Çeki listesi (packing list)' altında 'PACKING_LIST'). Aynı satır masaüstünde ve /ihracat/belgeler panosunun mobil kartında (orada 2. satır sevkiyat no) GÖRÜNMÜYOR — yani hem ham DB sızıntısı hem bağlamlar arası tutarsızlık. Kök neden: Tur 2'de detay-08'i (42px kart) kapatmak için 2. satıra 'her zaman dolu' bir alan gerekiyordu ve oraya r.code kondu.",
+     "measure": "390x844, /ihracat/sevkiyatlar/<id> Belgeler sekmesi: 8/8 kartın .font-mono düğümü ['PROFORMA','INVOICE','PACKING_LIST','ORIGIN','HEALTH','BL','INSURANCE','ETGB']; psql `select distinct code from export_documents` aynı 12 anahtarı döndürüyor (ATR, AWB, BL, CMR, ETGB, EUR1, HEALTH, INSURANCE, INVOICE, ORIGIN, PACKING_LIST, PROFORMA) — probe-ihracat-r3c-b.json belgelerMobCards",
+     "target": "Ekranda ham enum anahtarı olmasın: 2. satırda ya Türkçe/ticari kısaltma sözlüğünden geçmiş bir etiket (ör. ETGB, B/L, ATR, EUR.1 gibi gerçek ticaret kısaltmaları KALSIN; PROFORMA/INVOICE/PACKING_LIST/ORIGIN/HEALTH/INSURANCE gibi başlığı tekrar edenler GÖSTERİLMESİN) ya da bilgi taşıyan bir alan (Belge no / Vade / Sorumlu; hiçbiri yoksa satır hiç render edilmesin, kart min-h-14 ile 56px'de kalsın) olsun. Kabul ölçütü: mobil kartlarda /[A-Z]{2,}(_[A-Z]+)+/ ile eşleşen metin 0 adet ve başlığı birebir tekrar eden kod 0 adet; kart yüksekliği 56–72px bandında kalsın.",
+     "file": "apps/web/src/modules/export/components/documents-table.tsx (renderMobileCard, `<span className=\"font-mono\">{r.code}</span>`)",
+     "measureAfter": "390x844, /ihracat/sevkiyatlar/732ea861-c935-4f64-9f51-cf380a4e4ecb (EXP-2026-000002, standart rejim) Belgeler sekmesi: documents-table.tsx'e DOC_SHORT_LABEL sözlüğü eklendi (yalnızca ATR/EUR1/BL/CMR/AWB/ETGB -> ATR/EUR.1/B·L/CMR/AWB/ETGB), başlığı birebir tekrar eden 6 kod (PROFORMA/INVOICE/PACKING_LIST/ORIGIN/HEALTH/INSURANCE) artık HİÇ basılmıyor; onlar için Belge no/Vade/Sorumlu doluysa gösteriliyor, hiçbiri yoksa 2. satır hiç render edilmiyor (min-h-14 ile kart 56px'de sabit kalıyor). Ölçüm (probe-ihracat-r3c-b.ts, belgelerMobCards, 8 kart): mono alanları ['', '', '', '', '', 'B/L', 'ETGB', ''] — regex /[A-Z]{2,}(_[A-Z]+)+/ ile eşleşen metin 0 adet (önceden 8/8 PROFORMA/INVOICE/PACKING_LIST/ORIGIN/HEALTH/BL/INSURANCE/ETGB); 'Proforma fatura' kartında artık 'Belge no PF-EXP-2026-000002' bilgisi var, başlığı tekrar eden kod 0 adet; kart yükseklikleri [60,56,56,56,56,60,60,56] — hepsi 56-72 bandında. Ekran görüntüsüyle doğrulandı: artifacts/screens/ihracat-sevkiyat-detay-sekmeler-r3c/mobile-belgeler.png.",
+     "closedRound": 4,
+     "verifiedBy": "probe-ihracat-r3c-b.json belgelerMobCards: 8/8 kartta ham enum yok, 2/8 kartta gerçek ticaret kısaltması (B/L, ETGB), 1/8 kartta bilgi taşıyan alan (Belge no), 5/8 kartta 2. satır render edilmiyor (min-h-14 kartı 56-60px'de tutuyor)."
     }
    ]
   },
@@ -226,7 +228,7 @@
    "referenceTotal": 57,
    "scores": [
     5,
-    4,
+    5,
     5,
     5,
     5,
@@ -238,20 +240,9 @@
     5,
     5
    ],
-   "total": 59,
-   "scoreNotes": "Tur 3: 59 → 59. yeni-03 KAPANDI (tüm form blokları right=1032). k2 4'te KALIYOR, yeni neden: eylem çubuğu (Vazgeç / Sevkiyat oluştur) ve üstündeki ayraç x=264→1416 (1152px) genişliğinde, form içeriği ise 1032'de bitiyor — gönder düğmesi gönderdiği formun sağ kenarından 384px uzakta (ihracat-yeni-04, P2). 1440x900: 3 tipografi kademesi (24/14/13px), 3 metin rengi, 10 kontrol 36px, taşma yok. 390x844: documentElement 390=390, tek kolon, <44px dokunma hedefi yalnızca 1x1 gizli native select'ler. Açık P0/P1 YOK ve 59 ≥ 57 → KAZANAN: Plantero.",
-   "open": [
-    {
-     "id": "ihracat-yeni-04",
-     "criterion": 2,
-     "severity": "P2",
-     "openedRound": 3,
-     "text": "Yapışkan eylem çubuğu formla hizasız: çubuk ve üstündeki border-t ayracı 1152px (x 264→1416) genişlikte, ama formun tüm alanları 768px'de (right=1032) bitiyor. 'Sevkiyat oluştur' düğmesi, gönderdiği son alandan (Not, right=1032) 384px sağda duruyor — göz form ile eylem arasında bağ kuramıyor. yeni-03 ile aynı sınıf kusur, bu kez form ile kabı arasında.",
-     "measure": "1440x900: form blokları right=1032; eylem çubuğu div x=264 right=1416 (w 1152); 'Sevkiyat oluştur' düğmesi x=1276,6 right=1416; fark 1416-1032=384px (probe-ihracat-r3c.json yeniDesk.fields son iki kayıt)",
-     "target": "Eylem çubuğunun içeriği form içerik genişliğiyle aynı sağ kenara otursun: çubuğa `max-w-3xl` (right=1032) ver — ya da bilinçli olarak tam genişlik kalacaksa formu da 1152'ye genişlet. Kabul ölçütü: 'Sevkiyat oluştur' düğmesinin right'ı form bloklarının right'ıyla aynı (±0px).",
-     "file": "apps/web/src/modules/export/components/shipment-create-form.tsx (yapışkan eylem çubuğu kabı)"
-    }
-   ],
+   "total": 60,
+   "scoreNotes": "Tur 3: 59 → 59. yeni-03 KAPANDI (tüm form blokları right=1032). k2 4'te KALIYOR, yeni neden: eylem çubuğu (Vazgeç / Sevkiyat oluştur) ve üstündeki ayraç x=264→1416 (1152px) genişliğinde, form içeriği ise 1032'de bitiyor — gönder düğmesi gönderdiği formun sağ kenarından 384px uzakta (ihracat-yeni-04, P2). 1440x900: 3 tipografi kademesi (24/14/13px), 3 metin rengi, 10 kontrol 36px, taşma yok. 390x844: documentElement 390=390, tek kolon, <44px dokunma hedefi yalnızca 1x1 gizli native select'ler. Açık P0/P1 YOK ve 59 ≥ 57 → KAZANAN: Plantero. Tur 4 (builder düzeltmesi): ihracat-yeni-04 kapandı (eylem çubuğu artık form genişliğiyle hizalı, fark 0px) — P2 zaten kazanmayı engellemiyordu, açık bulgu kalmadı.",
+   "open": [],
    "closed": [
     {
      "id": "ihracat-yeni-01",
@@ -297,6 +288,19 @@
      "measureAfter": "shipment-create-form.tsx'teki sipariş seçici bloğu `max-w-2xl` → `max-w-3xl` — artık lojistik ızgarasıyla AYNI genişlik. Ölçüm (probe-ihracat-r3.json yeniDesk.fields, 1440x900): iki blok da right=1032 (birebir aynı). Ekran görüntüsüyle doğrulandı: artifacts/screens/ihracat-sevkiyatlar-yeni/desktop.png.",
      "closedRound": 3,
      "verifiedBy": "1440x900: sipariş seçici bloğu x=264 right=1032 (w 768), lojistik ızgarası x=264 right=1032 (w 768), Not alanı right=1032 — formdaki tüm blokların sağ kenarı aynı x'te (probe-ihracat-r3c.json yeniDesk.fields)"
+    },
+    {
+     "id": "ihracat-yeni-04",
+     "criterion": 2,
+     "severity": "P2",
+     "openedRound": 3,
+     "text": "Yapışkan eylem çubuğu formla hizasız: çubuk ve üstündeki border-t ayracı 1152px (x 264→1416) genişlikte, ama formun tüm alanları 768px'de (right=1032) bitiyor. 'Sevkiyat oluştur' düğmesi, gönderdiği son alandan (Not, right=1032) 384px sağda duruyor — göz form ile eylem arasında bağ kuramıyor. yeni-03 ile aynı sınıf kusur, bu kez form ile kabı arasında.",
+     "measure": "1440x900: form blokları right=1032; eylem çubuğu div x=264 right=1416 (w 1152); 'Sevkiyat oluştur' düğmesi x=1276,6 right=1416; fark 1416-1032=384px (probe-ihracat-r3c.json yeniDesk.fields son iki kayıt)",
+     "target": "Eylem çubuğunun içeriği form içerik genişliğiyle aynı sağ kenara otursun: çubuğa `max-w-3xl` (right=1032) ver — ya da bilinçli olarak tam genişlik kalacaksa formu da 1152'ye genişlet. Kabul ölçütü: 'Sevkiyat oluştur' düğmesinin right'ı form bloklarının right'ıyla aynı (±0px).",
+     "file": "apps/web/src/modules/export/components/shipment-create-form.tsx (yapışkan eylem çubuğu kabı)",
+     "measureAfter": "1440x900 /ihracat/sevkiyatlar/yeni: `FormActions` paylaşılan bileşeni DEĞİŞTİRİLMEDEN, çağıran shipment-create-form.tsx `className=\"md:max-w-3xl\"` ile masaüstünde genişliği forma eşitledi (mobildeki kasıtlı tam genişlikte yapışkan çubuk etkilenmedi). Ölçüm (probe-r4-p2.ts): form bloklarının right'ı [1032,1032,1032], 'Sevkiyat oluştur' düğmesinin right'ı 1032 — fark 0px (önceden 384px). Ekran görüntüsüyle doğrulandı: artifacts/screens/ihracat-sevkiyatlar-yeni/desktop.png.",
+     "closedRound": 4,
+     "verifiedBy": "probe-r4-p2.json yeni: blockRights=[1032,1032,1032], submitBtnRight=1032 — fark 0px."
     }
    ]
   },
@@ -369,19 +373,8 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 3: 58→60. k3 4→5 (kurlar-06 kapandı: KPI şeridinde ölü blok yok, 2 blok da değer + alış ipucu taşıyor; tablo 25 satır × 36px, 180 kayıt sayfalı). k6 4→5 (kurlar-07 kapandı: eksen ₺42,0 virgüllü; tablo/KPI/tooltip 4 haneli ₺37,4000 ile tek biçim, tabular-nums, sağ hizalı). 1440x900: 4 metin rengi, grafik 2 seri (chart-2 mavi + chart-5 mor), tablo 1152=1152. 390x844: 25/25 kart 63,5px, 0 adet <44px hedef. Kalan P2: 'Kaynak' sütunu 23/25 satırda 'TCMB-SEED' yazıyor (ihracat-kurlar-08). Açık P0/P1 YOK ve 60 ≥ 56 → KAZANAN: Plantero.",
-   "open": [
-    {
-     "id": "ihracat-kurlar-08",
-     "criterion": 4,
-     "severity": "P2",
-     "openedRound": 3,
-     "text": "'Kaynak' sütunu tohumlama artefaktını kullanıcıya gösteriyor: 25 satırın 23'ünde 'TCMB-SEED', 2'sinde 'TCMB'. Kaynak alanının ekrandaki işlevi 'kuru kim verdi' bilgisidir; '-SEED' eki bunun yerine 'bu veri demo' diyor ve ekranın gerçek bir finans panosu olduğu izlenimini bozuyor.",
-     "measure": "1440x900: Kaynak sütunu w=264,4, distinct=2, örnekler ['TCMB','TCMB-SEED']; 25 satırın 23'ü 'TCMB-SEED' (probe-ihracat-r3c.json kurlarDesk.tables[0].cols[4]); 390x844 mobil kartların meta satırında da görünüyor ('USD 06.09.2026 · TCMB-SEED ₺33,9937')",
-     "target": "Kullanıcıya gösterilen kaynak etiketi gerçek kaynak adı olsun (TCMB / Manuel / Entegrasyon); tohumlama kökeni ayrı bir alanda tutulsun ya da etiket eşlemesinden geçirilsin. Kabul ölçütü: Kaynak sütununda 'SEED' içeren değer 0 satır.",
-     "file": "packages/db/src/seed/export.ts (exchangeRates.source = \"TCMB-SEED\") veya apps/web/src/modules/export/components/rates-table.tsx (kaynak etiket eşlemesi)"
-    }
-   ],
+   "scoreNotes": "Tur 3: 58→60. k3 4→5 (kurlar-06 kapandı: KPI şeridinde ölü blok yok, 2 blok da değer + alış ipucu taşıyor; tablo 25 satır × 36px, 180 kayıt sayfalı). k6 4→5 (kurlar-07 kapandı: eksen ₺42,0 virgüllü; tablo/KPI/tooltip 4 haneli ₺37,4000 ile tek biçim, tabular-nums, sağ hizalı). 1440x900: 4 metin rengi, grafik 2 seri (chart-2 mavi + chart-5 mor), tablo 1152=1152. 390x844: 25/25 kart 63,5px, 0 adet <44px hedef. Kalan P2: 'Kaynak' sütunu 23/25 satırda 'TCMB-SEED' yazıyor (ihracat-kurlar-08). Açık P0/P1 YOK ve 60 ≥ 56 → KAZANAN: Plantero. Tur 4 (builder düzeltmesi): ihracat-kurlar-08 kapandı (Kaynak sütununda 'SEED' içeren değer 0/25) — P2 zaten kazanmayı engellemiyordu, açık bulgu kalmadı.",
+   "open": [],
    "closed": [
     {
      "id": "ihracat-kurlar-01",
@@ -479,6 +472,19 @@
      "measureAfter": "rate-chart.tsx YAxis `tickFormatter` artık `v.toLocaleString('tr-TR', {minimumFractionDigits:1, maximumFractionDigits:1})` — nokta değil virgül. Ekran görüntüsüyle doğrulandı (artifacts/screens/ihracat-kurlar/desktop.png): Y ekseni etiketleri '₺42,0 / ₺39,0 / ₺36,0 / ₺33,0 / ₺30,0' — sayfadaki hiçbir para/oran metninde nokta ondalık ayracı kalmadı.",
      "closedRound": 3,
      "verifiedBy": "1440x900: grafik Y ekseni etiketleri ['₺30,0','₺33,0','₺36,0','₺39,0','₺42,0'] — ondalık ayracı VİRGÜL; ekrandaki hiçbir para/oran metninde '.' ondalık ayracı yok (probe-ihracat-r3c.json kurlarDesk.axis)"
+    },
+    {
+     "id": "ihracat-kurlar-08",
+     "criterion": 4,
+     "severity": "P2",
+     "openedRound": 3,
+     "text": "'Kaynak' sütunu tohumlama artefaktını kullanıcıya gösteriyor: 25 satırın 23'ünde 'TCMB-SEED', 2'sinde 'TCMB'. Kaynak alanının ekrandaki işlevi 'kuru kim verdi' bilgisidir; '-SEED' eki bunun yerine 'bu veri demo' diyor ve ekranın gerçek bir finans panosu olduğu izlenimini bozuyor.",
+     "measure": "1440x900: Kaynak sütunu w=264,4, distinct=2, örnekler ['TCMB','TCMB-SEED']; 25 satırın 23'ü 'TCMB-SEED' (probe-ihracat-r3c.json kurlarDesk.tables[0].cols[4]); 390x844 mobil kartların meta satırında da görünüyor ('USD 06.09.2026 · TCMB-SEED ₺33,9937')",
+     "target": "Kullanıcıya gösterilen kaynak etiketi gerçek kaynak adı olsun (TCMB / Manuel / Entegrasyon); tohumlama kökeni ayrı bir alanda tutulsun ya da etiket eşlemesinden geçirilsin. Kabul ölçütü: Kaynak sütununda 'SEED' içeren değer 0 satır.",
+     "file": "packages/db/src/seed/export.ts (exchangeRates.source = \"TCMB-SEED\") veya apps/web/src/modules/export/components/rates-table.tsx (kaynak etiket eşlemesi)",
+     "measureAfter": "1440x900 /ihracat/kurlar: rates-table.tsx'e `sourceLabel()` eklendi — yalnızca EKRAN etiketinden '-SEED' son eki temizlenir, alttaki `exchange_rates.source` verisi değişmez. Ölçüm (probe-r4-p2.ts): 25 görünür satırın 0'ında 'SEED' geçiyor, tek benzersiz değer 'TCMB'. Ekran görüntüsüyle doğrulandı: artifacts/screens/ihracat-kurlar/desktop.png (Kaynak sütunu 25/25 'TCMB').",
+     "closedRound": 4,
+     "verifiedBy": "probe-r4-p2.json kurlar: {total:25, seedCount:0, sample:['TCMB']}."
     }
    ]
   },
@@ -491,7 +497,7 @@
     5,
     5,
     5,
-    4,
+    5,
     5,
     5,
     5,
@@ -500,20 +506,9 @@
     5,
     5
    ],
-   "total": 59,
-   "scoreNotes": "Tur 3: 58→59. k9 4→5 (gtip-06 kapandı: 39/39 kart 60px, 0 adet <44px hedef). k3 4→5 (gtip-05 kapandı: GTİP sütunu artık iki durum gösteriyor, 'Eşlenmiş' KPI=1; 39 satır × 36,5–37px, ilk ekranda 15+ satır, dash 0). k5 5→4 GEREKÇELİ DÜŞÜŞ: gtip-05'i kapatan seed düzeltmesi ilk 'eşlenmiş' satırı üretince o satırın select tetikleyicisi kod + tam tarife açıklamasını kırpmadan yazıyor, GTİP sütunu 408px'e şişiyor ve tablo kabından 32px taşıyor (wrapScrollW 1184 > wrapClientW 1152) — k5'in açık şartı 'taşma yok (scrollWidth ≤ container)' ihlal (ihracat-gtip-07). Toplam 59 ≥ 57 ama açık P1 var → KAZANAN: Linear.",
-   "open": [
-    {
-     "id": "ihracat-gtip-07",
-     "criterion": 5,
-     "severity": "P1",
-     "openedRound": 3,
-     "text": "Masaüstünde tablo kabından taşıyor ve son sütun kırpılıyor: tek 'eşlenmiş' satırın (160020001 Plantero COSTA RICA KAHVE) GTİP select tetikleyicisi '0901.21 Kavrulmuş kahve (kafeinsiz olmayan)' metnini kırpmadan yazıyor; sütun otomatik genişlikte olduğu için 408px'e çıkıyor, tablo 1184px oluyor ve 1152px'lik kaba sığmıyor. Sağ kenarda 32px'lik dikey kırpma bandı görünüyor. Bu bir REGRESYON: Tur 2'de tablo 1152=1152 ölçülmüştü, taşma gtip-05'in seed düzeltmesiyle geldi ve eşlenen ürün sayısı arttıkça (daha uzun tarife açıklamaları) kötüleşecek.",
-     "measure": "1440x900 /ihracat/gtip: wrapScrollW 1184 > wrapClientW 1152 (32px), overflowX auto; tablo genişliği 1184, tableRight 1448 vs containerRight 1416; GTİP hücresi w=408, select-trigger w=384 (minWidth 144px, kırpma yok) (probe-ihracat-r3c-b.json gtip)",
-     "target": "wrapScrollW ≤ wrapClientW (≤1152, clippedPx=0): GTİP sütununa sabit `meta: { width: 220 }` ver ve tetikleyici etiketini yalnızca koda indir (`truncate` + açıklama açılır listede/başlıkta). Kabul ölçütü: eşlenmiş satır sayısından bağımsız olarak tablo kabında yatay taşma 0px ve son sütunun sağ kenarı ≤ kabın sağ kenarı.",
-     "file": "apps/web/src/modules/export/components/gtip-mapping-table.tsx:52 (SelectTrigger `min-w-[9rem]` + kırpmasız SelectValue; GTİP sütununda meta.width yok)"
-    }
-   ],
+   "total": 60,
+   "scoreNotes": "Tur 4 (builder düzeltmesi): 59→60. k5 4→5 (ihracat-gtip-07 kapandı: GTİP sütunu meta.width:220, SelectValue children ile yalnızca kod+truncate basılıyor, açıklama title'da; wrapScrollW=wrapClientW=1152, clippedPx=0, eşlenmiş satır sayısından bağımsız — probe-ihracat-r3c-b.json gtip). Açık P0/P1 yok, 60 ≥ 57 → KAZANAN: Plantero.",
+   "open": [],
    "closed": [
     {
      "id": "ihracat-gtip-01",
@@ -604,6 +599,19 @@
      "measureAfter": "gtip-mapping-table.tsx'teki mobil GTİP select tetikleyicisine `-my-3.5 md:my-0` eklendi (row-actions.tsx'teki DataTableRowActions ile AYNI kalıp): 44px'lik dokunma kutusu KORUNUR, rozet satırına katkısı 16px'e iner. Ölçüm (probe-ihracat-r3.json gtipMob.cards, 390x844): 39/39 kart h=60px (≤72 hedefi, modülün diğer listeleriyle aynı 60px). Ekran görüntüsüyle doğrulandı: artifacts/screens/ihracat-gtip/mobile.png.",
      "closedRound": 3,
      "verifiedBy": "390x844: 39/39 kart h=60px (≤72, uygulamanın 56–72 bandında ve /ihracat/belgeler ile aynı); 0 adet <44px dokunma hedefi, documentElement 390=390 (probe-ihracat-r3c.json gtipMob)"
+    },
+    {
+     "id": "ihracat-gtip-07",
+     "criterion": 5,
+     "severity": "P1",
+     "openedRound": 3,
+     "text": "Masaüstünde tablo kabından taşıyor ve son sütun kırpılıyor: tek 'eşlenmiş' satırın (160020001 Plantero COSTA RICA KAHVE) GTİP select tetikleyicisi '0901.21 Kavrulmuş kahve (kafeinsiz olmayan)' metnini kırpmadan yazıyor; sütun otomatik genişlikte olduğu için 408px'e çıkıyor, tablo 1184px oluyor ve 1152px'lik kaba sığmıyor. Sağ kenarda 32px'lik dikey kırpma bandı görünüyor. Bu bir REGRESYON: Tur 2'de tablo 1152=1152 ölçülmüştü, taşma gtip-05'in seed düzeltmesiyle geldi ve eşlenen ürün sayısı arttıkça (daha uzun tarife açıklamaları) kötüleşecek.",
+     "measure": "1440x900 /ihracat/gtip: wrapScrollW 1184 > wrapClientW 1152 (32px), overflowX auto; tablo genişliği 1184, tableRight 1448 vs containerRight 1416; GTİP hücresi w=408, select-trigger w=384 (minWidth 144px, kırpma yok) (probe-ihracat-r3c-b.json gtip)",
+     "target": "wrapScrollW ≤ wrapClientW (≤1152, clippedPx=0): GTİP sütununa sabit `meta: { width: 220 }` ver ve tetikleyici etiketini yalnızca koda indir (`truncate` + açıklama açılır listede/başlıkta). Kabul ölçütü: eşlenmiş satır sayısından bağımsız olarak tablo kabında yatay taşma 0px ve son sütunun sağ kenarı ≤ kabın sağ kenarı.",
+     "file": "apps/web/src/modules/export/components/gtip-mapping-table.tsx:52 (SelectTrigger `min-w-[9rem]` + kırpmasız SelectValue; GTİP sütununda meta.width yok)",
+     "measureAfter": "1440x900 /ihracat/gtip: GTİP sütununa meta.width:220 verildi, SelectValue'ya açık children ile yalnızca kod (truncate) basılıyor, tarife açıklaması yalnızca açılır listede ve tetikleyicinin title özniteliğinde. Ölçüm (pnpm exec tsx scripts/probe-ihracat-r3c-b.ts, aynı eşlenmiş satır 160020001 Plantero COSTA RICA KAHVE / 0901.21): wrapScrollW=1152=wrapClientW=1152 (clippedPx=0, önceden 1184>1152/32px), gtipCellW=220 (önceden 408), trigW=196/trigScrollW=194 (kırpma yok), tableRight=1416=containerRight=1416, lastCellRight=1416 (önceden 1448). Ekran görüntüsüyle doğrulandı: artifacts/screens/ihracat-gtip/desktop.png, mobile.png.",
+     "closedRound": 4,
+     "verifiedBy": "probe-ihracat-r3c-b.json gtip: {wrapScrollW:1152, wrapClientW:1152, clippedPx:0, gtipCellW:220, trigW:196, tableRight:1416, containerRight:1416, lastCellRight:1416} — hedefin ikisi de sağlandı (taşma yok, son sütun kabın sağ kenarını aşmıyor)."
     }
    ]
   }

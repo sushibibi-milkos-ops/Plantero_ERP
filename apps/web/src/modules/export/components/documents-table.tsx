@@ -17,6 +17,14 @@ import type { ExportDocRow } from '../queries';
 
 const STATUS_LABEL: Record<string, string> = Object.fromEntries(statusOptions('export_doc').map((o) => [o.value, o.label]));
 
+// Tur 3 P1 ihracat-detay-10 kök neden düzeltmesi: mobil kartın 2. satırı önceden HER ZAMAN `r.code`
+// (ham veritabanı enum anahtarı, ör. 'PACKING_LIST') basıyordu. Gerçek ticaret kısaltması taşıyan
+// kodlar (ATR, EUR1, BL, CMR, AWB, ETGB) bilgi verir ve kısaltmalı hâliyle kalır; kalan 6 kod
+// (PROFORMA/INVOICE/PACKING_LIST/ORIGIN/HEALTH/INSURANCE) kartın Türkçe başlığında (`r.name`) zaten
+// yazan bilgiyi birebir tekrar ettiği için hiç basılmaz — bunlar için varsa Belge no/Vade/Sorumlu
+// gösterilir, o da yoksa 2. satır hiç render edilmez (kart `min-h-14` ile 56px'de sabit kalır).
+const DOC_SHORT_LABEL: Partial<Record<string, string>> = { ATR: 'ATR', EUR1: 'EUR.1', BL: 'B/L', CMR: 'CMR', AWB: 'AWB', ETGB: 'ETGB' };
+
 export function DocumentsTable({
   documents,
   responsibleUsers,
@@ -92,19 +100,27 @@ export function DocumentsTable({
         // satır-eylem düğmesinden bile kısa kalıyordu. Paylaşılan `mobile-cards.tsx` değiştirilmeden
         // (kural 2) ikinci satıra HER ZAMAN dolu olan `code` (belge tipi anahtarı) + varsa Belge no/Vade
         // konur; kabın `min-h-14` (56px) ile bant garanti altına alınır.
-        renderMobileCard={!showShipmentColumn ? (r) => (
-          <div className="min-h-14 rounded-lg border border-border/70 bg-card p-2.5">
-            <div className="flex items-center gap-1.5">
-              <div className="min-w-0 flex-1 truncate text-[14px] leading-5 font-medium">{r.name}</div>
-              <StatusBadge status={r.status} kind="export_doc" />
-              <DataTableRowActions row={r} actions={rowActions(r)} />
+        renderMobileCard={!showShipmentColumn ? (r) => {
+          const shortLabel = DOC_SHORT_LABEL[r.code];
+          const info = r.docNo ? `Belge no ${r.docNo}` : r.dueDate ? `Vade ${formatDate(r.dueDate)}` : r.responsibleName ? `Sorumlu ${r.responsibleName}` : null;
+          const hasSubtitle = Boolean(shortLabel || info);
+          return (
+            <div className="min-h-14 rounded-lg border border-border/70 bg-card p-2.5">
+              <div className="flex items-center gap-1.5">
+                <div className="min-w-0 flex-1 truncate text-[14px] leading-5 font-medium">{r.name}</div>
+                <StatusBadge status={r.status} kind="export_doc" />
+                <DataTableRowActions row={r} actions={rowActions(r)} />
+              </div>
+              {hasSubtitle ? (
+                <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                  {shortLabel ? <span className="font-mono">{shortLabel}</span> : null}
+                  {shortLabel && info ? ' · ' : ''}
+                  {info ?? null}
+                </div>
+              ) : null}
             </div>
-            <div className="mt-0.5 truncate text-xs text-muted-foreground">
-              <span className="font-mono">{r.code}</span>
-              {r.docNo ? ` · Belge no ${r.docNo}` : r.dueDate ? ` · Vade ${formatDate(r.dueDate)}` : r.responsibleName ? ` · Sorumlu ${r.responsibleName}` : ''}
-            </div>
-          </div>
-        ) : undefined}
+          );
+        } : undefined}
       />
 
       <ConfirmDialog

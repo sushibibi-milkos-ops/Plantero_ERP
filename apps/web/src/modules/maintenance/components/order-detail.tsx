@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { MoneyCell } from '@/components/money-cell';
+import { QtyCell } from '@/components/qty-cell';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { StatusBadge } from '@/components/status-badge';
 import { DetailFieldGroupsGrid } from '@/components/detail-field-groups-grid';
@@ -81,7 +82,20 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
     {
       title: 'İş emri',
       fields: [
-        { label: 'Makine', value: machine.id, node: <Link href={`/bakim/makineler/${machine.id}`} className="text-primary hover:underline">{machine.code} — {machine.name}</Link> },
+        {
+          label: 'Makine',
+          value: machine.id,
+          // Kriter 9 (Tur 3 P1 bakim-isemirleri-detay-09) kök neden düzeltmesi: bağlantı metnin
+          // satır içi (13px) yüksekliğine sığıyordu — 390x844'te tek gerçek 44px altı dokunma hedefi.
+          // `inline-flex min-h-11 items-center` dokunma alanını dikeyde büyütür; `-my-1.5` bunu alan
+          // ızgarasının satır ritmine (label/value arası boşluk) sızdırmadan yapar (yalnızca dokunma
+          // kutusu büyür, görünür metin konumu/satır aralığı değişmez).
+          node: (
+            <Link href={`/bakim/makineler/${machine.id}`} className="-my-1.5 inline-flex min-h-11 items-center text-primary hover:underline">
+              {machine.code} — {machine.name}
+            </Link>
+          ),
+        },
         { label: 'Tür', value: order.kind, node: <StatusBadge status={order.kind} kind="maintenance_kind" /> },
         { label: 'Bildiren', value: reportedByName, node: reportedByName },
         { label: 'Sorumlu', value: assigneeName, node: assigneeName },
@@ -101,9 +115,20 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
         { label: 'Kategori', value: machine.category, node: MACHINE_CATEGORY_LABELS[machine.category] ?? machine.category },
         { label: 'Hat', value: lineCode, node: lineCode ? `${lineCode} — ${lineName}` : null },
         { label: 'Durum', value: machine.status, node: <StatusBadge status={machine.status} kind="machine" /> },
-        { label: 'Kapasite', value: machine.capacityPerHour, node: machine.capacityPerHour ? `${machine.capacityPerHour} ${machine.capacityUnit ?? ''}` : null },
-        { label: 'Güç', value: machine.powerKw, node: machine.powerKw ? `${machine.powerKw} kW` : null },
-        { label: 'Çalışma saati', value: machine.runtimeHours, node: `${machine.runtimeHours} sa` },
+        {
+          // Kriter 6/11 (Tur 3 P1 bakim-isemirleri-detay-10/11) kök neden düzeltmesi: bu üç alan ham
+          // `numeric(18,4)` dizesini şablon literaliyle basıyordu ("5.0000 kW", "0.0000 sa") — modülün
+          // geri kalanı (MoneyCell %2, QtyCell max 3 basamak) hiçbir yerde 4 ondalık basamak
+          // göstermez, ayrıca `font-variant-numeric` düz metinde 'normal' kalıyordu (tabular-nums yok).
+          // Aynı makinenin `/bakim/makineler/[id]` sayfasında (machine-detail.tsx:34-36) BİREBİR AYNI
+          // alanlar zaten `QtyCell` ile basılıyordu — iki kardeş ekran aynı veriyi iki farklı biçimde
+          // gösteriyordu (kriter 11). Tek düzeltme her iki bulguyu da kapatır.
+          label: 'Kapasite',
+          value: machine.capacityPerHour,
+          node: machine.capacityPerHour ? <QtyCell value={machine.capacityPerHour} uom={machine.capacityUnit ?? '/sa'} /> : null,
+        },
+        { label: 'Güç', value: machine.powerKw, node: machine.powerKw ? <QtyCell value={machine.powerKw} uom="kW" /> : null },
+        { label: 'Çalışma saati', value: machine.runtimeHours, node: <QtyCell value={machine.runtimeHours} uom="sa" /> },
         { label: 'Makine sorumlusu', value: machineResponsibleName, node: machineResponsibleName },
         { label: 'Sonraki planlı bakım', value: nextPlan, node: nextPlan ? <span>{nextPlan.name}{nextPlan.nextDueAt ? ` — ${formatDate(nextPlan.nextDueAt)}` : ''}</span> : null },
       ],

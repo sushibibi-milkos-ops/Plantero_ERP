@@ -2,22 +2,25 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
 import { Sparkline } from '@/components/sparkline';
 import { DetailFieldGroupsGrid } from '@/components/detail-field-groups-grid';
 import type { DetailFieldGroup } from '@/components/detail-fields';
+import { DataTable, type ColumnDef } from '@/components/data-table';
 import { formatDate, formatDateTime, formatPct, relativeTime } from '@/lib/format';
 import type { MachineDetail } from '../queries';
 import { DOWNTIME_REASON_LABELS, INTERVAL_UNIT_LABELS } from '../labels';
 
+type PlanTabRow = MachineDetail['plans'][number];
+type OrderTabRow = MachineDetail['orders'][number];
+type DowntimeTabRow = MachineDetail['downtimes'][number];
+
 export function MachineDetailView({ detail }: { detail: MachineDetail }) {
   const { machine, lineCode, lineName, warehouseCode, productSku, productName, responsibleName, plans, orders, downtimes, photos, oeeTrend, mtbfHours, mttrHours, failureCount } = detail;
-  const router = useRouter();
 
   // Kriter 12 (Tur 2 P1 bakim-makine-detay-06) kök neden düzeltmesi: eskiden 8 gri dolgulu StatCell +
   // "Ana veri" için ayrı çerçeveli kutu = 9 gri yüzey. Ortak `DetailFieldGroupsGrid` (Stripe/Linear
@@ -50,6 +53,48 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
   const recentOrders = orders.slice(0, 5);
   const recentDowntimes = downtimes.slice(0, 5);
 
+  // Kriter 11 (Tur 3 P1 bakim-makine-detay-04) kök neden düzeltmesi: bu üç sekme ham `<Table>` ile
+  // kuruluydu — modülün geri kalanındaki tek gerçek liste bileşeni `DataTable` (mobilde kart
+  // görünümüne döner, 36px satır, aynı sütun başlığı tipografisi). Sütun tanımları plans-table.tsx /
+  // orders-table.tsx ile birebir aynı görünüm dilini üretir (satır aksiyonu/arama olmadan — bunlar
+  // salt makine bağlamındaki salt-okunur özetler, tam liste kendi route'unda zaten var).
+  const planColumns = useMemo<ColumnDef<PlanTabRow, unknown>[]>(
+    () => [
+      { accessorKey: 'name', header: 'Plan', meta: { mobile: 'title', flex: true } },
+      { id: 'interval', accessorFn: (r) => r.intervalValue, header: 'Aralık', meta: { width: 130, mobile: 'subtitle' }, cell: ({ row }) => `${row.original.intervalValue} ${INTERVAL_UNIT_LABELS[row.original.intervalUnit] ?? row.original.intervalUnit}` },
+      { id: 'lastDoneAt', accessorFn: (r) => r.lastDoneAt ?? '', header: 'Son yapılan', meta: { width: 120, mobile: 'hidden' }, cell: ({ row }) => (row.original.lastDoneAt ? formatDate(row.original.lastDoneAt) : '—') },
+      { id: 'nextDueAt', accessorFn: (r) => r.nextDueAt ?? '', header: 'Sonraki', meta: { width: 120, mobile: 'meta' }, cell: ({ row }) => (row.original.nextDueAt ? formatDate(row.original.nextDueAt) : '—') },
+      { id: 'assignee', accessorFn: (r) => r.assigneeName ?? '', header: 'Sorumlu', meta: { width: 140, mobile: 'hidden' }, cell: ({ row }) => row.original.assigneeName ?? <span className="text-muted-foreground">—</span> },
+      {
+        id: 'status', accessorFn: (r) => (r.isActive ? 'active' : 'inactive'), header: 'Durum', meta: { width: 100, align: 'right', mobile: 'badge' },
+        cell: ({ row }) => (row.original.isActive ? <StatusBadge status="active" label="Aktif" tone="success" /> : <StatusBadge status="inactive" label="Pasif" tone="muted" />),
+      },
+    ],
+    [],
+  );
+
+  const orderColumns = useMemo<ColumnDef<OrderTabRow, unknown>[]>(
+    () => [
+      { accessorKey: 'docNo', header: 'No', meta: { mobile: 'title', className: 'font-mono', width: 130 } },
+      { accessorKey: 'title', header: 'Başlık', meta: { mobile: 'subtitle', flex: true, className: 'whitespace-normal' }, cell: ({ row }) => <span className="line-clamp-1 leading-[18px] break-words whitespace-normal" title={row.original.title}>{row.original.title}</span> },
+      { id: 'kind', accessorFn: (r) => r.kind, header: 'Tür', meta: { width: 100, mobile: 'hidden' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance_kind" /> },
+      { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, align: 'right', mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="maintenance" /> },
+      { id: 'reportedAt', accessorFn: (r) => r.reportedAt, header: 'Bildirim', meta: { width: 150, mobile: 'hidden' }, cell: ({ row }) => formatDateTime(row.original.reportedAt) },
+      { id: 'downtimeMinutes', accessorFn: (r) => r.downtimeMinutes, header: 'Duruş (dk)', meta: { width: 100, align: 'right', mobile: 'meta' }, cell: ({ row }) => (row.original.downtimeMinutes ? <QtyCell value={row.original.downtimeMinutes} uom="dk" maxDigits={0} /> : <span className="text-muted-foreground">—</span>) },
+    ],
+    [],
+  );
+
+  const downtimeColumns = useMemo<ColumnDef<DowntimeTabRow, unknown>[]>(
+    () => [
+      { id: 'reason', accessorFn: (r) => DOWNTIME_REASON_LABELS[r.reason] ?? r.reason, header: 'Sebep', meta: { mobile: 'title', flex: true } },
+      { id: 'startedAt', accessorFn: (r) => r.startedAt, header: 'Başlangıç', meta: { width: 170, mobile: 'subtitle' }, cell: ({ row }) => formatDateTime(row.original.startedAt) },
+      { id: 'endedAt', accessorFn: (r) => r.endedAt ?? '', header: 'Bitiş', meta: { width: 170, mobile: 'hidden' }, cell: ({ row }) => (row.original.endedAt ? formatDateTime(row.original.endedAt) : <span className="text-warning">devam ediyor</span>) },
+      { id: 'minutes', accessorFn: (r) => r.minutes, header: 'Dakika', meta: { width: 100, align: 'right', mobile: 'meta' }, cell: ({ row }) => (row.original.minutes ? <QtyCell value={row.original.minutes} uom="dk" maxDigits={0} /> : <span className="text-muted-foreground">—</span>) },
+    ],
+    [],
+  );
+
   return (
     <Tabs defaultValue="ozellikler" className="gap-4">
       {/* Kriter 5 (Tur 2 P1 bakim-makine-detay-05) kök neden düzeltmesi: `variant="line"` (ui/tabs.tsx'te
@@ -76,7 +121,18 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
             Son iş emirleri/duruşlar/planlar özeti — ayrı sekmelerdeki tam listenin ilk birkaç satırı —
             hem boşluğu gerçek, kullanışlı bilgiyle doldurur hem de "bu makinede en son ne oldu" ve
             "sırada ne var" sorularını sekme değiştirmeden yanıtlar. */}
-        <div className="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Kriter 9 (Tur 3 P0 bakim-makine-detay-07) kök neden düzeltmesi: `grid` tek başına, açık
+            bir `grid-cols-1` olmadan, mobilde çocukların min-content'ine göre örtük tek sütuna
+            genişliyordu — ızgara çocukları `min-w-0` taşımadığı için bu örtük sütun en uzun satırın
+            (iş emri başlığı + rozet + tarih) min-content genişliğine (580px) şişiyor, `main` bunu
+            kırpmak yerine görünüm alanının dışına taşırıyordu (main.scrollWidth 596 > 390). Açık
+            `grid-cols-1` + `[&>*]:min-w-0` ızgara çocuklarını gerçekten 390px'e sabitler; içerideki
+            `min-w-0 truncate` o zaman devreye girebilir. Kriter 5 (Tur 3 P1 bakim-makine-detay-08)
+            kök neden düzeltmesi: 3. sütun artık yalnızca 2xl'de (≥1536px) açılıyor — 1440px'de (lg-xl
+            aralığı) ızgara 2 sütunlu kalır, "Son iş emirleri" sütunu ~564px'e genişler; aynı satırda
+            rozet+göreli zaman artık başlığın ALTINDA ikinci bir satırda (`flex-col`) — başlık kalan
+            genişliğin tamamını (~530px) kullanır, kelime ortasından kırpma pratikte oluşmaz. */}
+        <div className="grid grid-cols-1 gap-x-6 gap-y-6 [&>*]:min-w-0 sm:grid-cols-2 2xl:grid-cols-3">
           <div>
             <h3 className="mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold">Son iş emirleri</h3>
             {recentOrders.length === 0 ? (
@@ -85,11 +141,11 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
               <ul className="divide-y divide-border/50">
                 {recentOrders.map((o) => (
                   <li key={o.id}>
-                    <Link href={`/bakim/is-emirleri/${o.id}`} className="flex min-h-11 items-center justify-between gap-2 py-1.5 text-[13px] hover:text-primary">
+                    <Link href={`/bakim/is-emirleri/${o.id}`} className="flex min-h-11 flex-col justify-center gap-1 py-1.5 text-[13px] hover:text-primary">
                       <span className="min-w-0 truncate">{o.title}</span>
-                      <span className="flex shrink-0 items-center gap-2">
+                      <span className="flex items-center gap-2">
                         <StatusBadge status={o.status} kind="maintenance" />
-                        <span className="hidden text-[11px] text-muted-foreground sm:inline">{relativeTime(o.reportedAt)}</span>
+                        <span className="text-[11px] text-muted-foreground">{relativeTime(o.reportedAt)}</span>
                       </span>
                     </Link>
                   </li>
@@ -154,87 +210,44 @@ export function MachineDetailView({ detail }: { detail: MachineDetail }) {
       </TabsContent>
 
       <TabsContent value="planlar">
-        {plans.length === 0 ? (
-          <EmptyState compact title="Bakım planı yok" description="Bu makine için henüz periyodik bir plan tanımlanmadı." />
-        ) : (
-          <div className="overflow-x-auto rounded-xl border border-border/60">
-            <Table>
-              <TableHeader><TableRow><TableHead>Plan</TableHead><TableHead>Aralık</TableHead><TableHead>Son yapılan</TableHead><TableHead>Sonraki</TableHead><TableHead>Sorumlu</TableHead><TableHead className="text-right">Durum</TableHead></TableRow></TableHeader>
-              <TableBody>
-                {plans.map((p) => (
-                  <TableRow key={p.id}>
-                    <TableCell>{p.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.intervalValue} {INTERVAL_UNIT_LABELS[p.intervalUnit] ?? p.intervalUnit}</TableCell>
-                    <TableCell>{p.lastDoneAt ? formatDate(p.lastDoneAt) : '—'}</TableCell>
-                    <TableCell>{p.nextDueAt ? formatDate(p.nextDueAt) : '—'}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.assigneeName ?? '—'}</TableCell>
-                    <TableCell className="text-right">{p.isActive ? <StatusBadge status="active" label="Aktif" tone="success" /> : <StatusBadge status="inactive" label="Pasif" tone="muted" />}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+        <DataTable
+          columns={planColumns}
+          data={plans}
+          getRowId={(r) => r.id}
+          searchable={false}
+          filters={[]}
+          columnToggle={false}
+          initialSorting={[{ id: 'nextDueAt', desc: false }]}
+          emptyTitle="Bakım planı yok"
+          emptyDescription="Bu makine için henüz periyodik bir plan tanımlanmadı."
+        />
       </TabsContent>
 
       <TabsContent value="is-emirleri">
-        {orders.length === 0 ? (
-          <EmptyState compact title="İş emri geçmişi yok" />
-        ) : (
-          <div className="overflow-x-auto rounded-xl border border-border/60">
-            <Table>
-              <TableHeader><TableRow><TableHead>No</TableHead><TableHead>Başlık</TableHead><TableHead>Tür</TableHead><TableHead className="text-right">Durum</TableHead><TableHead>Bildirim</TableHead><TableHead className="text-right">Duruş (dk)</TableHead></TableRow></TableHeader>
-              <TableBody>
-                {orders.map((o) => (
-                  // Kriter 8 (Tur 1 P1 bakim-makine-detay-01) kök neden düzeltmesi: `window.location.
-                  // href` tam sayfa yeniden yükleme yapıyordu (beyaz flaş, istemci durumu/kaydırma
-                  // konumu kaybı) — uygulamadaki TEK `window.location` kullanımıydı. `router.push`
-                  // (App Router istemci taraflı gezinme) + klavye erişilebilirliği (`tabIndex`,
-                  // Enter/Space, `focus-visible` halkası) — DataTable satırlarıyla (`rowHref`) aynı
-                  // desen (bkz. `apps/web/src/components/data-table/data-table.tsx` `rowProps`).
-                  <TableRow
-                    key={o.id}
-                    tabIndex={0}
-                    onClick={() => router.push(`/bakim/is-emirleri/${o.id}`)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') router.push(`/bakim/is-emirleri/${o.id}`);
-                    }}
-                    className="cursor-pointer outline-none hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-                  >
-                    <TableCell className="font-mono text-xs">{o.docNo}</TableCell>
-                    <TableCell>{o.title}</TableCell>
-                    <TableCell><StatusBadge status={o.kind} kind="maintenance_kind" /></TableCell>
-                    <TableCell className="text-right"><StatusBadge status={o.status} kind="maintenance" /></TableCell>
-                    <TableCell className="text-muted-foreground">{formatDateTime(o.reportedAt)}</TableCell>
-                    <TableCell className="num text-right">{o.downtimeMinutes || '—'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+        <DataTable
+          columns={orderColumns}
+          data={orders}
+          getRowId={(r) => r.id}
+          rowHref={(r) => `/bakim/is-emirleri/${r.id}`}
+          searchable={false}
+          filters={[]}
+          columnToggle={false}
+          initialSorting={[{ id: 'reportedAt', desc: true }]}
+          emptyTitle="İş emri geçmişi yok"
+        />
       </TabsContent>
 
       <TabsContent value="duruslar">
-        {downtimes.length === 0 ? (
-          <EmptyState compact title="Duruş kaydı yok" />
-        ) : (
-          <div className="overflow-x-auto rounded-xl border border-border/60">
-            <Table>
-              <TableHeader><TableRow><TableHead>Sebep</TableHead><TableHead>Başlangıç</TableHead><TableHead>Bitiş</TableHead><TableHead className="text-right">Dakika</TableHead></TableRow></TableHeader>
-              <TableBody>
-                {downtimes.map((d) => (
-                  <TableRow key={d.id}>
-                    <TableCell>{DOWNTIME_REASON_LABELS[d.reason] ?? d.reason}</TableCell>
-                    <TableCell className="text-muted-foreground">{formatDateTime(d.startedAt)}</TableCell>
-                    <TableCell className="text-muted-foreground">{d.endedAt ? formatDateTime(d.endedAt) : <span className="text-warning">devam ediyor</span>}</TableCell>
-                    <TableCell className="num text-right">{d.minutes || '—'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+        <DataTable
+          columns={downtimeColumns}
+          data={downtimes}
+          getRowId={(r) => r.id}
+          searchable={false}
+          filters={[]}
+          columnToggle={false}
+          initialSorting={[{ id: 'startedAt', desc: true }]}
+          emptyTitle="Duruş kaydı yok"
+        />
       </TabsContent>
 
       {lineCode ? (

@@ -1,18 +1,18 @@
 {
  "gtip": {
-  "wrapScrollW": 1184,
+  "wrapScrollW": 1152,
   "wrapClientW": 1152,
   "overflowX": "auto",
-  "tableW": 1184,
-  "tableRight": 1448,
+  "tableW": 1152,
+  "tableRight": 1416,
   "containerRight": 1416,
-  "mappedRowText": "160020001Plantero COSTA RICA KAHVEMamul ÜrünlerMamul0901.21Kavrulmuş kahve (kafeinsiz olmayan)",
-  "gtipCellW": 408,
-  "trigW": 384,
+  "mappedRowText": "160020001Plantero COSTA RICA KAHVEMamul ÜrünlerMamul0901.21",
+  "gtipCellW": 220,
+  "trigW": 196,
   "trigMinW": "144px",
-  "trigScrollW": 382,
-  "lastCellRight": 1448,
-  "clippedPx": 32
+  "trigScrollW": 194,
+  "lastCellRight": 1416,
+  "clippedPx": 0
  },
  "belgelerMobCards": [
   {
@@ -144,37 +144,37 @@
   {
    "title": "Proforma fatura",
    "sub": "",
-   "mono": "PROFORMA",
+   "mono": "",
    "h": 60
   },
   {
    "title": "Ticari fatura",
    "sub": "",
-   "mono": "INVOICE",
-   "h": 60
+   "mono": "",
+   "h": 56
   },
   {
    "title": "Çeki listesi (packing list)",
    "sub": "",
-   "mono": "PACKING_LIST",
-   "h": 60
+   "mono": "",
+   "h": 56
   },
   {
    "title": "Menşe şahadetnamesi",
    "sub": "",
-   "mono": "ORIGIN",
-   "h": 60
+   "mono": "",
+   "h": 56
   },
   {
    "title": "Sağlık sertifikası",
    "sub": "",
-   "mono": "HEALTH",
-   "h": 60
+   "mono": "",
+   "h": 56
   },
   {
    "title": "Konşimento (B/L)",
    "sub": "",
-   "mono": "BL",
+   "mono": "B/L",
    "h": 60
   },
   {
@@ -186,8 +186,8 @@
   {
    "title": "Nakliye sigortası",
    "sub": "",
-   "mono": "INSURANCE",
-   "h": 60
+   "mono": "",
+   "h": 56
   }
  ]
 }
