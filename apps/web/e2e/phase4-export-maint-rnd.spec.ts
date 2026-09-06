@@ -467,10 +467,22 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     // ERTELEMİŞTİ, "Faturaya bağla"yı statü hâlâ 'packing' iken (düğme HİÇ yok) denemişti. Bu bir
     // uygulama bulgusu değil — durum makinesi belgelendiği gibi çalışıyor (bir sevkiyat
     // sevk edilmeden faturaya "kapatma" bağı kurulamaz); sıra düzeltilir: önce gümrük+yükleme
-    // (statü → 'shipped'), SONRA faturaya bağlama.
+    // (statü → 'shipped'), SONRA faturaya bağlama. Bu sıra değişikliği nedeniyle artık BU adım
+    // (eskiden önceki adımın devamı olarak zaten sevkiyat sayfasındaydı) kendi navigasyonunu
+    // yapmalı — Adım 8 sipariş sayfasında (`/satis/siparisler/[id]`) kalıyor, sevkiyatta değil
+    // (rol aynı — ihracat@ — yalnızca sayfa değişiyor, `switchRole` gereksiz).
+    await page.goto(`/ihracat/sevkiyatlar/${ctx.shipmentId}`);
     const before = psqlOne(`select status from export_documents where shipment_id = '${ctx.shipmentId}' and code = 'ETGB'`);
     expect(before).toBe('required');
-    await expect(visibleText(page, 'Gerekli')).toBeVisible();
+    // Belge durumları (`DocumentsTable`) sayfanın varsayılan sekmesinde (Sipariş satırları) değil,
+    // "Belgeler" sekmesinde render ediliyor (bkz. `[id]/page.tsx`) — bu ihlal ilk kez BURADA canlı
+    // yakalandı (bu adım daha önce hiç bu noktaya ulaşamamıştı: Adım 6'nın picking kırığı zinciri
+    // erken kesiyordu — bkz. `pickAllLines` notu). Önce sekmeye geçilir.
+    await page.getByRole('tab', { name: 'Belgeler' }).click();
+    // Yalnızca ETGB değil, ORIGIN/INSURANCE gibi başka belgeler de aynı anda "Gerekli" durumunda
+    // olabiliyor (canlıda 3 eşleşme yakalandı) — `.first()` yeterli, tekil bir ETGB rozetini
+    // hedeflemek gerekmiyor (aşağıdaki DB kontrolü zaten spesifik olarak ETGB'yi doğruluyor).
+    await expect(visibleText(page, 'Gerekli').first()).toBeVisible();
 
     await page.getByRole('button', { name: 'Gümrüğe al' }).click();
     const dialog = page.locator('[data-slot="dialog-content"]');
@@ -539,7 +551,14 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     await page.goto('/muhasebe/tahsilatlar/yeni');
     await expect(page.getByRole('heading', { name: 'Yeni Tahsilat' })).toBeVisible().catch(() => {});
 
-    await page.getByLabel('Yön').click();
+    // `getByLabel('Yön')` alt-dize eşleşmesiyle "Yöntem *" alanını da yakalıyordu (strict-mode
+    // ihlali, canlıda yakalandı). `getByLabel('Yön *', {exact:true})` da İŞE YARAMADI (canlıda 150
+    // sn boyunca hiç eşleşme bulamadı) — `<label>` elemanının KENDİ metni yalnızca "Yön" olmalı,
+    // zorunlu-alan yıldızı ayrı bir kardeş eleman (`getByLabel` yalnızca `<label>`'ın kendi metnini
+    // okur); oysa `getByRole('combobox', ...)`'ın ARIA erişilebilir-ad hesaplaması (`aria-labelledby`
+    // ile geniş bir kapsayıcıyı içerebilir) "Yön *" veriyordu — ikisi FARKLI kaynaklar. `role`
+    // tabanlı locator (Playwright'ın strict-mode hata mesajının kendi önerdiği tam eşleşme) kullanılır.
+    await page.getByRole('combobox', { name: 'Yön *' }).click();
     await page.getByRole('option', { name: 'Tahsilat (müşteriden alınan)' }).click();
     await comboboxSelect(page, 'Cari seçin…', ctx.customerName!.split(' ')[0]!, new RegExp(ctx.customerName!.split(' ')[0]!));
     await page.getByLabel('Yöntem').click();
@@ -1003,17 +1022,38 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
     const projectHasProduct = psqlOne(`select product_id from rnd_projects where id = '${ctx.projectId}'`);
     expect(projectHasProduct, "Bulgu doğrulaması: 'Fıstık Bazı' seed'de productId TAŞIMAMALI").toBeFalsy();
 
+    // Kök neden #1 (canlıda yakalandı, Adım 4'te "Sonuç yok" ile ortaya çıktı): `listManufacturableProducts`
+    // (apps/web/src/modules/production/queries.ts) `/uretim/is-emirleri/yeni` ürün listesini
+    // `products.isManufactured = true` ile SÜZÜYOR — önceki sorgu bu şartı taşımıyordu, tip
+    // ('finished'/'semi_finished') tek başına yeterli değilmiş (bazı mamul/yarı mamuller
+    // isManufactured=false — ör. yeniden ambalajlanan/alınan kalemler). BOM aktif olsa bile o ürün
+    // Adım 4'ün beklediği combobox'ta hiç görünmüyordu.
+    //
+    // Kök neden #2 (canlıda yakalandı, bu düzeltmeden HEMEN sonra): `is_manufactured = true` VE
+    // "hiçbir BOM'u yok" ikisi birlikte bu seed'de HİÇBİR üründe sağlanmıyor — 38 üretilebilir
+    // mamul/yarı mamulün TAMAMININ zaten aktif bir BOM'u var (olgun seed). Ama `releaseToBom`
+    // (packages/core/src/rnd/trials.ts) bunu zaten DESTEKLİYOR: ürünün mevcut aktif BOM'u varsa onu
+    // SİLMEZ, `createBomVersion` + `activateBom` ile YENİ bir versiyon oluşturup eskisini pasifleştirir
+    // (satır ~344-361) — "BOM'suz olmalı" şartı gereksiz/yanlış bir test varsayımıydı. Gerçek risk
+    // yalnızca o ürünün AÇIK bir iş emri varken BOM'unun değişmesi (kafa karıştırıcı olur, veri
+    // bozulmaz) — bu yüzden "BOM yok" yerine "açık iş emri yok" aranır.
     const linked = psqlRows(`
-      select id, sku from products p where p.type in ('finished','semi_finished')
-        and not exists (select 1 from boms b where b.product_id = p.id)
+      select id, sku from products p where p.type in ('finished','semi_finished') and p.is_manufactured = true
         and not exists (select 1 from rnd_projects rp where rp.product_id = p.id)
+        and not exists (
+          select 1 from work_orders wo where wo.product_id = p.id
+            and wo.status not in ('finished','closed','cancelled')
+        )
       order by sku limit 1
     `)[0];
-    expect(linked, 'BOM\'suz ve hiçbir Ar-Ge projesine bağlı olmayan bir ürün bulunmalı').toBeTruthy();
+    expect(linked, 'Üretilebilir (isManufactured), açık iş emri olmayan ve hiçbir Ar-Ge projesine bağlı olmayan bir ürün bulunmalı').toBeTruthy();
     [ctx.linkedProductId, ctx.linkedProductSku] = linked!;
 
     await page.goto(ctx.recetelerUrl!);
-    await visibleText(page, 'v2').click();
+    // `visibleText(page, 'v2')` iki eleman buluyordu: sol listedeki versiyon seçici düğmesi
+    // ("v2 Onaylandı") VE sağdaki çalışma alanı başlığı (`<h2>v2</h2>`) — aynı "v1" strict-mode
+    // kalıbı (bkz. Adım 2 notu). Yalnızca TIKLANABİLİR düğme hedeflenir.
+    await page.getByRole('button', { name: /^v2\b/ }).click();
     await page.getByRole('button', { name: "Üretim BOM'una devret" }).click();
     await expect(page.getByText('Proje bir ürüne bağlı değil')).toBeVisible({ timeout: 10_000 });
     // `Combobox`'ın `placeholder` prop'u tetikleyicinin GÖRÜNÜR metnidir, gerçek bir `<input
@@ -1041,7 +1081,8 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
   test('Adım 4 — /ana-veri/receteler aktif BOM (sourceTrialVersionId dolu) → /uretim/is-emirleri/yeni bu ürünle açılabiliyor', async () => {
     await page.goto('/ana-veri/receteler');
     await expect(page.getByRole('heading', { name: 'Reçeteler' })).toBeVisible().catch(() => {});
-    await expect(visibleText(page, ctx.linkedProductSku!)).toBeVisible({ timeout: 10_000 });
+    // `DataTable` masaüstü+mobil için satırı DOM'da iki kez tutuyor (dosya başı notu) — `.first()`.
+    await expect(visibleText(page, ctx.linkedProductSku!).first()).toBeVisible({ timeout: 10_000 });
 
     // `/uretim/is-emirleri/yeni` ürün listesi yalnızca AKTİF BOM'u olan ürünleri getirir
     // (`listManufacturableProducts` — bkz. `apps/web/src/modules/production/queries.ts`) — ürünün bu
