@@ -2,3 +2,4 @@
 > plantero-erp@ measure /home/user/Plantero_ERP
 > tsx scripts/measure.ts /kalite/tedarikci-skoru --viewport 390x844
 
+{"route":"/kalite/tedarikci-skoru","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":6,"heights":[60,60,60]},"fontSizes":{"10":5,"11":2,"12":9,"13":9,"14":9,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Tedarikçi Skoru\"","w":96.2,"h":19.5}],"distinctColors":16,"h1":{"size":20,"weight":600},"images":0}
