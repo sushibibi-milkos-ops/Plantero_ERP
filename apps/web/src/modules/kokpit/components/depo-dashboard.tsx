@@ -1,17 +1,18 @@
 import type { WarehouseCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
-import { StatusBadge } from '@/components/status-badge';
-import { QtyCell } from '@/components/qty-cell';
+import { LotBadge } from '@/components/lot-badge';
+import { ExpiryBadge } from '@/components/expiry-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
 import { formatMoney } from '@/lib/format';
 import type { CockpitTodayItem } from '../queries';
-import { Section, RowLink } from './shared';
+import { Section, RowLink, ExpiryBucketStrip, TodayRow } from './shared';
 
-const EXPIRY_BUCKET_LABEL: Record<string, string> = { expired: 'Süresi geçti', critical: '< 30 gün', warning: '30-60 gün', notice: '60-90 gün' };
-
-/** Depo rolü panosu — büyük dokunma hedefleri (KpiCard strip zaten 72/80px), tek amaca odaklı sayaçlar. */
+/** Depo rolü panosu — büyük dokunma hedefleri (KpiCard strip zaten 72/80px), tek amaca odaklı sayaçlar.
+ *  Kök neden (Tur 1 P1 kokpit-depo-density-01): önceden "Karantina değeri" tek bir sayı için 110px'lik
+ *  bir kart harcıyordu ve "SKT riski" GM'nin aksine alt lot listesiz kalıyordu — ilk ekranın %20'si boş,
+ *  toplam 6 satır. Artık ikisi de GM'deki gibi kova/özet ŞERİDİ + en değerli/en yakın 5 LOT LİSTESİ. */
 export function DepoDashboardView({ data, today }: { data: WarehouseCards; today: CockpitTodayItem[] }) {
   return (
     <>
@@ -23,22 +24,50 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
       </KpiStripRow>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2 lg:items-start">
-        <Section title="Karantina değeri" href="/depo/lotlar">
-          <div className="flex h-16 items-center justify-between px-4">
-            <span className="text-sm text-muted-foreground">{data.quarantine.count} lot bekliyor</span>
-            <span className="num text-lg font-semibold tabular-nums">{formatMoney(data.quarantine.value, 'TRY', { digits: 0 })}</span>
+        <Section title="Karantina" href="/depo/lotlar">
+          <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
+            <span className="text-muted-foreground">{data.quarantine.count} lot bekliyor</span>
+            <span className="num font-medium tabular-nums">{formatMoney(data.quarantine.value, 'TRY', { digits: 0 })}</span>
           </div>
+          {data.quarantine.top5.length === 0 ? (
+            <EmptyState compact title="Karantinada lot yok" />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {data.quarantine.top5.map((r) => (
+                <li key={r.quantId}>
+                  <RowLink href={`/depo/lotlar/${r.lotId}`}>
+                    <span className="flex min-w-0 items-center gap-2 sm:contents">
+                      <LotBadge lotNo={r.lotNo} status="quarantine" />
+                    </span>
+                    <span className="min-w-0 flex-1 truncate">{r.productName}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{r.locationCode}</span>
+                    <MoneyCell value={r.value} className="shrink-0" />
+                  </RowLink>
+                </li>
+              ))}
+            </ul>
+          )}
         </Section>
 
         <Section title="SKT riski" href="/depo/skt">
-          <div className="grid grid-cols-4 divide-x divide-border/60">
-            {(['expired', 'critical', 'warning', 'notice'] as const).map((b) => (
-              <div key={b} className="px-2 py-3 text-center">
-                <div className="text-[17px] font-semibold tabular-nums">{data.expiry[b].count}</div>
-                <div className="mt-0.5 text-[10px] text-muted-foreground">{EXPIRY_BUCKET_LABEL[b]}</div>
-              </div>
-            ))}
-          </div>
+          <ExpiryBucketStrip totals={data.expiry.totals} />
+          {data.expiry.top5.length === 0 ? (
+            <EmptyState compact title="Yaklaşan SKT yok" />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {data.expiry.top5.map((r) => (
+                <li key={r.quantId}>
+                  <RowLink href={`/depo/lotlar/${r.lotId}`}>
+                    <span className="flex min-w-0 items-center gap-2 sm:contents">
+                      <LotBadge lotNo={r.lotNo} status="released" />
+                    </span>
+                    <span className="min-w-0 flex-1 truncate">{r.productName}</span>
+                    <ExpiryBadge date={new Date(`${r.expiryDate}T00:00:00Z`)} showDate={false} className="shrink-0" />
+                  </RowLink>
+                </li>
+              ))}
+            </ul>
+          )}
         </Section>
 
         <Section title="Bugün" href="/depo/mal-kabul" className="lg:col-span-2">
@@ -48,14 +77,14 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
             <ul className="divide-y divide-border/50">
               {today.map((t) => (
                 <li key={`${t.k}-${t.no}`}>
-                  <RowLink href={t.href}>
-                    <span className="flex min-w-0 items-center gap-2 sm:contents">
-                      <span className="shrink-0 text-xs text-muted-foreground sm:w-24">{t.kind}</span>
-                      <span className="truncate font-mono text-xs sm:w-36 sm:shrink-0">{t.no}</span>
-                    </span>
-                    <span className="shrink-0 sm:order-last"><StatusBadge status={t.status} kind={t.k} /></span>
-                    <span className="min-w-0 flex-1 truncate">{t.partner}</span>
-                    <span className="shrink-0">{t.amount !== undefined ? <MoneyCell value={t.amount} /> : t.qty !== undefined ? <QtyCell value={t.qty} uom={t.uom} /> : null}</span>
+                  {/* Kök neden (Tur 1 P1 kokpit-depo-row-void-01): satır Section ile birlikte
+                      lg:col-span-2 (1152px) genişliğe yayılıyordu ama `flex-1` alan partner metni yine
+                      kısa kalıp sağdaki tutarla arasında ~930px "ölü alan" bırakıyordu. `sm:max-w-3xl`
+                      satırın toplam genişliğini 768px'te sınırlar — en büyük boşluk hedefin (≤240px)
+                      altına iner; geniş bölümün geri kalanı satırın SAĞINDA (satır içinde değil) boş kalır,
+                      bu normal bir liste sonrası boşluktur, satır İÇİ bir kopukluk değildir. */}
+                  <RowLink href={t.href} className="sm:max-w-3xl">
+                    <TodayRow item={t} />
                   </RowLink>
                 </li>
               ))}

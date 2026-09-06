@@ -15,7 +15,7 @@ import { findDueInvoices } from '../finance/dunning.js';
 import { getExpiryBuckets } from '../stock/expiry.js';
 import {
   getBankSummary, getLineStatuses, getCriticalStockSummary, getExpiryRiskSummary, getOverdueReceivablesSummary,
-  getBreakEvenDistance, getPendingApprovalsSummary, getRecentActivity, getChannelSalesToday, getSalesCards,
+  getBreakEvenDistance, getPendingApprovalsSummary, getRecentActivity, groupConsecutiveActivity, getChannelSalesToday, getSalesCards,
   getQualityCards, getMaintenanceCards, getWarehouseCards, getProductionChiefCards, getFinanceCards, getGmDashboard,
 } from './kpis.js';
 
@@ -155,6 +155,32 @@ describe('cockpit/kpis — getRecentActivity', () => {
     for (let i = 1; i < rows.length; i++) {
       expect(new Date(rows[i - 1]!.at).getTime()).toBeGreaterThanOrEqual(new Date(rows[i]!.at).getTime());
     }
+  });
+});
+
+describe('cockpit/kpis — groupConsecutiveActivity', () => {
+  const row = (i: number, userName: string, summary: string) => ({ id: `r${i}`, at: `2026-01-01T00:00:0${i}.000Z`, userName, action: 'login', tableName: 'users', summary });
+
+  it('ardışık aynı (kullanıcı, özet) satırları tek gruba katlar ve tekrar sayısını doğru sayar', () => {
+    const rows = [row(8, 'Ayşe', 'giriş yaptı'), row(7, 'Ayşe', 'giriş yaptı'), row(6, 'Ayşe', 'giriş yaptı'), row(5, 'Mehmet', 'çıkış yaptı')];
+    const groups = groupConsecutiveActivity(rows);
+    expect(groups).toHaveLength(2);
+    expect(groups[0]).toMatchObject({ id: 'r8', count: 3 });
+    expect(groups[1]).toMatchObject({ id: 'r5', count: 1 });
+  });
+
+  it('ardışık OLMAYAN aynı içerik ayrı grup kalır (yalnızca bitişik tekrarlar katlanır)', () => {
+    const rows = [row(3, 'Ayşe', 'giriş yaptı'), row(2, 'Mehmet', 'giriş yaptı'), row(1, 'Ayşe', 'giriş yaptı')];
+    const groups = groupConsecutiveActivity(rows);
+    expect(groups).toHaveLength(3);
+    expect(groups.every((g) => g.count === 1)).toBe(true);
+  });
+
+  it('maxGroups sınırına ulaşınca yeni grup açılmaz ama son grup genişlemeye devam eder', () => {
+    const rows = [row(1, 'A', 'x'), row(2, 'B', 'y'), row(3, 'C', 'z'), row(4, 'C', 'z'), row(5, 'D', 'w')];
+    const groups = groupConsecutiveActivity(rows, 3);
+    expect(groups).toHaveLength(3);
+    expect(groups[2]).toMatchObject({ id: 'r3', count: 2 }); // 'D' grubu 3. sınırı aştığı için düşer, 'C' grubu genişlemeye devam eder
   });
 });
 

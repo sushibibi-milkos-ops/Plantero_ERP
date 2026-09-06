@@ -108,7 +108,7 @@ async function loadCockpitToday(): Promise<CockpitTodayItem[]> {
       .innerJoin(partners, eq(partners.id, deliveries.partnerId))
       .where(gte(deliveries.updatedAt, startOfDay))
       .orderBy(desc(deliveries.updatedAt))
-      .limit(4),
+      .limit(6),
     db
       .select({ id: workOrders.id, docNo: workOrders.docNo, status: workOrders.status, lineName: productionLines.name, productName: products.name, producedQty: workOrders.producedQty, uomCode: uoms.code, startedAt: workOrders.startedAt })
       .from(workOrders)
@@ -124,7 +124,7 @@ async function loadCockpitToday(): Promise<CockpitTodayItem[]> {
       .leftJoin(partners, eq(partners.id, receipts.partnerId))
       .where(gte(receipts.updatedAt, startOfDay))
       .orderBy(desc(receipts.updatedAt))
-      .limit(4),
+      .limit(6),
     db
       .select({ id: invoices.id, docNo: invoices.docNo, status: invoices.status, partnerName: partners.name, grandTotal: invoices.grandTotalTry, postedAt: invoices.postedAt })
       .from(invoices)

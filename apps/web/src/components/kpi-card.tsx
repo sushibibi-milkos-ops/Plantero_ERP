@@ -169,8 +169,18 @@ export function KpiCard({
           <div className="truncate text-[22px] leading-none font-semibold tracking-tight tabular-nums">{valueNode}</div>
           {deltaNode}
         </div>
+        {/* Kök neden (Tur 1 P0 kokpit-kpi-clip-01): sparkline sabit ~96px genişlik alıyordu — kart
+            container'ı 300px'in altına düşünce (ör. bir bölümün içinde yan yana 2'li KPI ızgarası)
+            değer kutusuna 120px'ten az yer kalıp NumberFlow (shadow DOM, `truncate` ellipsis basamıyor)
+            SESSİZCE kırpılıyordu ("₺689.442.211" → "₺689.442.2"). `truncate` NumberFlow için gerçek bir
+            kırpma koruması değil; asıl koruma sparkline'ı dar container'da hiç göstermemek — container
+            query (`@container` + `@min-[300px]`), viewport genişliğinden BAĞIMSIZ olarak KARTIN kendi
+            render genişliğini ölçer (bir grid hücresi 1440px ekranda da 4K ekranda da aynı 262px kalabilir,
+            viewport breakpoint'i bu durumu yakalayamaz). */}
         {sparkline?.length ? (
-          <Sparkline data={sparkline} tone={good === false ? 'danger' : good === true ? 'success' : 'muted'} className="mb-0.5" />
+          <div className="hidden shrink-0 @min-[300px]:block">
+            <Sparkline data={sparkline} tone={good === false ? 'danger' : good === true ? 'success' : 'muted'} className="mb-0.5" />
+          </div>
         ) : null}
       </div>
     </>
@@ -192,7 +202,7 @@ export function KpiCard({
           // birkaç kart 1600px şeride yayılır). Aksi halde eskisi gibi `flex-1`.
           stripCompact ? 'md:min-w-[196px] md:shrink-0 md:flex-none md:grow-0' : 'md:flex-1 md:shrink',
         ]
-      : 'rounded-xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03)]',
+      : '@container rounded-xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03)]',
     (href || onClick) && (isStrip ? 'hover:bg-accent/40 md:hover:bg-accent/30' : 'hover:border-border hover:shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_20px_-12px_rgb(0_0_0/0.15)]'),
     active && (isStrip ? 'bg-primary/5 md:bg-primary/5' : 'border-primary/60 ring-2 ring-primary/15'),
     className,

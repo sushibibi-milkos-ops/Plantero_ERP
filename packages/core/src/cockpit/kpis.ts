@@ -9,7 +9,7 @@ import {
   qcChecks, supplierScores, recalls,
   machines, maintenanceOrders, downtimes,
   opportunities, opportunityStages,
-  auditLog, users,
+  auditLog, users, workOrderScraps, bankTransactions,
 } from '@plantero/db';
 import { D, ZERO, toDb, sum, type Decimal } from '../money.js';
 import { businessDate, addDays } from '../dates.js';
@@ -256,6 +256,7 @@ export async function getPendingApprovalsSummary(tx: DbOrTx): Promise<PendingApp
 /* ------------------------------------------------------------------ */
 
 export type RecentActivityRow = { id: string; at: string; userName: string | null; action: string; tableName: string; summary: string | null };
+export type ActivityGroup = RecentActivityRow & { count: number };
 
 /** Denetim günlüğünün son N satırı — en yeni önce. */
 export async function getRecentActivity(tx: DbOrTx, limit = 8): Promise<RecentActivityRow[]> {
@@ -268,37 +269,71 @@ export async function getRecentActivity(tx: DbOrTx, limit = 8): Promise<RecentAc
   return rows.map((r) => ({ id: r.id, at: r.at.toISOString(), userName: r.userName ?? r.userEmail ?? null, action: r.action, tableName: r.tableName, summary: r.summary }));
 }
 
+/** Aynı (kullanıcı, özet) ile ardışık gelen audit satırlarını tek satıra katlar — ör. bir kullanıcının
+ *  arka arkaya 8 "giriş yaptı" kaydı 8 özdeş satır yerine tek satır + tekrar sayısı olur (Tur 1 P2
+ *  bulgusu kokpit-activity-dupe-01). `rows` en yeniden en eskiye sıralı gelir (bkz. `getRecentActivity`)
+ *  — her grubun `at`'i grubun EN YENİ (ilk görülen) üyesinden gelir. `maxGroups`'a ulaşınca yeni grup
+ *  açılmaz, ama halihazırdaki son grubu genişletmeye (tekrar sayısını artırmaya) devam eder — aksi halde
+ *  tam sınırda kesilen bir grubun gerçek tekrar sayısı eksik görünürdü. */
+export function groupConsecutiveActivity(rows: RecentActivityRow[], maxGroups = 8): ActivityGroup[] {
+  const key = (r: RecentActivityRow) => `${r.userName ?? ''}::${r.summary ?? `${r.action}::${r.tableName}`}`;
+  const groups: ActivityGroup[] = [];
+  for (const r of rows) {
+    const last = groups[groups.length - 1];
+    if (last && key(last) === key(r)) {
+      last.count += 1;
+      continue;
+    }
+    if (groups.length >= maxGroups) continue;
+    groups.push({ ...r, count: 1 });
+  }
+  return groups;
+}
+
 /* ------------------------------------------------------------------ */
 /* Depo                                                                 */
 /* ------------------------------------------------------------------ */
 
+export type QuarantineLotRow = {
+  quantId: string; lotId: string; lotNo: string; productName: string; qty: string; uomCode: string; value: string; locationCode: string; expiryDate: string | null;
+};
 export type WarehouseCards = {
   receiptsPending: number; deliveriesPending: number; countsOpen: number;
-  quarantine: { count: number; value: string };
-  expiry: ExpiryBuckets['totals'];
+  quarantine: { count: number; value: string; top5: QuarantineLotRow[] };
+  expiry: ExpiryRiskSummary;
 };
 
-/** Depo rolü kart seti: mal kabul bekleyen, sevk bekleyen, açık sayım, karantina, SKT. */
+/** Depo rolü kart seti: mal kabul bekleyen, sevk bekleyen, açık sayım, karantina (toplam + en değerli 5 lot), SKT. */
 export async function getWarehouseCards(tx: DbOrTx): Promise<WarehouseCards> {
   const [[receiptsRow], [deliveriesRow], [countsRow], quarantineRows, expiry] = await Promise.all([
     tx.select({ n: sql<string>`count(*)` }).from(receipts).where(inArray(receipts.status, ['draft', 'qc_pending'])),
     tx.select({ n: sql<string>`count(*)` }).from(deliveries).where(inArray(deliveries.status, ['draft', 'reserved', 'picking'])),
     tx.select({ n: sql<string>`count(*)` }).from(stockCounts).where(inArray(stockCounts.status, ['draft', 'counting', 'review'])),
     tx
-      .select({ qty: stockQuants.qty, unitCost: stockLots.unitCost })
+      .select({
+        quantId: stockQuants.id, lotId: stockLots.id, lotNo: stockLots.lotNo, productName: products.name,
+        qty: stockQuants.qty, uomCode: uoms.code, unitCost: stockLots.unitCost, locationCode: locations.code, expiryDate: stockLots.expiryDate,
+      })
       .from(stockQuants)
       .innerJoin(stockLots, eq(stockLots.id, stockQuants.lotId))
       .innerJoin(locations, eq(locations.id, stockQuants.locationId))
+      .innerJoin(products, eq(products.id, stockQuants.productId))
+      .innerJoin(uoms, eq(uoms.id, stockLots.uomId))
       .where(and(eq(locations.usage, 'quarantine'), gt(stockQuants.qty, '0'))),
-    getExpiryBuckets(tx),
+    getExpiryRiskSummary(tx),
   ]);
-  const quarantineValue = sum(quarantineRows.map((r) => D(r.qty).mul(D(r.unitCost))));
+  const withValue = quarantineRows.map((r) => ({ ...r, value: D(r.qty).mul(D(r.unitCost)) }));
+  const quarantineValue = sum(withValue.map((r) => r.value));
+  const top5 = [...withValue].sort((a, b) => b.value.minus(a.value).toNumber()).slice(0, 5);
   return {
     receiptsPending: Number(receiptsRow?.n ?? 0),
     deliveriesPending: Number(deliveriesRow?.n ?? 0),
     countsOpen: Number(countsRow?.n ?? 0),
-    quarantine: { count: quarantineRows.length, value: toDb(quarantineValue) },
-    expiry: expiry.totals,
+    quarantine: {
+      count: quarantineRows.length, value: toDb(quarantineValue),
+      top5: top5.map((r) => ({ quantId: r.quantId, lotId: r.lotId, lotNo: r.lotNo, productName: r.productName, qty: toDb(D(r.qty)), uomCode: r.uomCode, value: toDb(r.value), locationCode: r.locationCode, expiryDate: r.expiryDate })),
+    },
+    expiry,
   };
 }
 
@@ -306,15 +341,25 @@ export async function getWarehouseCards(tx: DbOrTx): Promise<WarehouseCards> {
 /* Üretim şefi                                                          */
 /* ------------------------------------------------------------------ */
 
+export type RecentWorkOrderRow = {
+  id: string; docNo: string; status: string; lineName: string; productName: string; plannedQty: string; producedQty: string; uomCode: string; isLate: boolean; finishedAt: string | null;
+};
+export type ScrapReasonRow = { reason: string; qty: string; value: string; entryCount: number };
+
 export type ProductionChiefCards = {
   lines: LineStatus[];
   openWorkOrders: number;
   lateWorkOrders: number;
   todayOeePct: string | null;
   scrapRatePct7d: string;
+  /** Son iş emirleri (durum fark etmeksizin, en yeni önce) — boş bir "Hat durumu" kartının
+   *  ardından panonun tamamen ölü kalmaması için (Tur 1 P1 kokpit-uretim-density-01). */
+  recentWorkOrders: RecentWorkOrderRow[];
+  /** Son 7 gün fire kırılımı, sebebe göre (en yüksek değer önce). */
+  scrapBreakdown7d: ScrapReasonRow[];
 };
 
-/** Üretim şefi kart seti: hat durumu, açık/geciken iş emri, bugünkü ortalama OEE, son 7 gün fire oranı. */
+/** Üretim şefi kart seti: hat durumu, açık/geciken iş emri, bugünkü ortalama OEE, son 7 gün fire oranı + kırılımı, son iş emirleri. */
 export async function getProductionChiefCards(tx: DbOrTx): Promise<ProductionChiefCards> {
   const today = businessDate(new Date());
   const lines = await getLineStatuses(tx);
@@ -327,15 +372,47 @@ export async function getProductionChiefCards(tx: DbOrTx): Promise<ProductionChi
 
   // Fire oranı (son 7 gün): Σ fire değeri / Σ (fire + üretim çıktısı) değeri — iş emri maliyet alanlarından.
   const from = addDays(today, -6);
-  const rows = await tx
-    .select({ producedQty: workOrders.producedQty, scrapQty: workOrders.scrapQty })
-    .from(workOrders)
-    .where(and(isNotNull(workOrders.finishedAt), gte(workOrders.finishedAt, new Date(`${from}T00:00:00.000Z`))));
-  const produced = sum(rows.map((r) => D(r.producedQty)));
-  const scrap = sum(rows.map((r) => D(r.scrapQty)));
+  const fromTs = new Date(`${from}T00:00:00.000Z`);
+  const [rateRows, recentRows, scrapRows] = await Promise.all([
+    tx
+      .select({ producedQty: workOrders.producedQty, scrapQty: workOrders.scrapQty })
+      .from(workOrders)
+      .where(and(isNotNull(workOrders.finishedAt), gte(workOrders.finishedAt, fromTs))),
+    tx
+      .select({ wo: workOrders, lineName: productionLines.name, productName: products.name, uomCode: uoms.code })
+      .from(workOrders)
+      .innerJoin(productionLines, eq(productionLines.id, workOrders.lineId))
+      .innerJoin(products, eq(products.id, workOrders.productId))
+      .innerJoin(uoms, eq(uoms.id, workOrders.uomId))
+      .orderBy(desc(sql`coalesce(${workOrders.startedAt}, ${workOrders.plannedStart})`))
+      .limit(10),
+    tx
+      .select({ reason: workOrderScraps.reason, qty: workOrderScraps.qty, value: workOrderScraps.value })
+      .from(workOrderScraps)
+      .where(gte(workOrderScraps.recordedAt, fromTs)),
+  ]);
+  const produced = sum(rateRows.map((r) => D(r.producedQty)));
+  const scrap = sum(rateRows.map((r) => D(r.scrapQty)));
   const scrapRatePct7d = produced.plus(scrap).isZero() ? '0.0000' : toDb(scrap.div(produced.plus(scrap)).mul(100));
 
-  return { lines, openWorkOrders, lateWorkOrders, todayOeePct, scrapRatePct7d };
+  const now = new Date();
+  const recentWorkOrders: RecentWorkOrderRow[] = recentRows.map((r) => ({
+    id: r.wo.id, docNo: r.wo.docNo, status: r.wo.status, lineName: r.lineName, productName: r.productName,
+    plannedQty: toDb(D(r.wo.plannedQty)), producedQty: toDb(D(r.wo.producedQty)), uomCode: r.uomCode,
+    isLate: r.wo.plannedEnd !== null && r.wo.plannedEnd < now && !r.wo.finishedAt,
+    finishedAt: r.wo.finishedAt ? r.wo.finishedAt.toISOString() : null,
+  }));
+
+  const byReason = new Map<string, { qty: Decimal; value: Decimal; entryCount: number }>();
+  for (const r of scrapRows) {
+    const cur = byReason.get(r.reason) ?? { qty: ZERO, value: ZERO, entryCount: 0 };
+    byReason.set(r.reason, { qty: cur.qty.plus(D(r.qty)), value: cur.value.plus(D(r.value)), entryCount: cur.entryCount + 1 });
+  }
+  const scrapBreakdown7d: ScrapReasonRow[] = [...byReason.entries()]
+    .map(([reason, v]) => ({ reason, qty: toDb(v.qty), value: toDb(v.value), entryCount: v.entryCount }))
+    .sort((a, b) => D(b.value).minus(D(a.value)).toNumber());
+
+  return { lines, openWorkOrders, lateWorkOrders, todayOeePct, scrapRatePct7d, recentWorkOrders, scrapBreakdown7d };
 }
 
 /* ------------------------------------------------------------------ */
@@ -345,23 +422,39 @@ export async function getProductionChiefCards(tx: DbOrTx): Promise<ProductionChi
 export type VatPosition = { period: string; outputVat: string; inputVat: string; payable: string; carriedToNext: string } | null;
 export type CashProjectionMonth = { period: string; netCashflow: string; closingCash: string; actualNetCashflow: string | null };
 
+export type ReconciliationQueueItem = {
+  id: string; txDate: string; description: string; counterpartyName: string | null; partnerName: string | null; amount: string; confidence: string;
+};
+
 export type FinanceCards = {
   bank: BankSummary;
   reconciliationQueue: number;
+  reconciliationQueueItems: ReconciliationQueueItem[];
   overdue: OverdueReceivablesSummary;
   vat: VatPosition;
   cashProjection3m: CashProjectionMonth[];
   breakEven: BreakEvenDistance;
 };
 
-/** Muhasebe/Finans kart seti — banka, mutabakat kuyruğu, vadesi geçen, KDV pozisyonu, 3 aylık nakit projeksiyonu, break-even. */
+/** Muhasebe/Finans kart seti — banka, mutabakat kuyruğu (sayaç + bekleyen öneri listesi), vadesi geçen, KDV pozisyonu, 3 aylık nakit projeksiyonu, break-even. */
 export async function getFinanceCards(tx: DbOrTx): Promise<FinanceCards> {
   const currentPeriod = businessDate(new Date()).slice(0, 7);
   const periods = [currentPeriod, periodAtOffset(currentPeriod, 1), periodAtOffset(currentPeriod, 2)];
 
-  const [bank, [reconRow], overdue, [vat], cashRows, breakEven] = await Promise.all([
+  const [bank, [reconRow], reconItemRows, overdue, [vat], cashRows, breakEven] = await Promise.all([
     getBankSummary(tx),
     tx.select({ n: sql<string>`count(*)` }).from(reconciliationMatches).where(eq(reconciliationMatches.status, 'suggested')),
+    tx
+      .select({
+        id: reconciliationMatches.id, txDate: bankTransactions.txDate, description: bankTransactions.description,
+        counterpartyName: bankTransactions.counterpartyName, partnerName: partners.name, amount: bankTransactions.amount, confidence: reconciliationMatches.confidence,
+      })
+      .from(reconciliationMatches)
+      .innerJoin(bankTransactions, eq(bankTransactions.id, reconciliationMatches.bankTransactionId))
+      .leftJoin(partners, eq(partners.id, reconciliationMatches.partnerId))
+      .where(eq(reconciliationMatches.status, 'suggested'))
+      .orderBy(desc(bankTransactions.txDate))
+      .limit(8),
     getOverdueReceivablesSummary(tx),
     tx.select().from(vatPeriods).orderBy(desc(vatPeriods.period)).limit(1),
     tx.select().from(cashflowLines).where(and(eq(cashflowLines.scenario, 'base'), inArray(cashflowLines.period, periods))).orderBy(asc(cashflowLines.period)),
@@ -375,7 +468,12 @@ export async function getFinanceCards(tx: DbOrTx): Promise<FinanceCards> {
   });
 
   return {
-    bank, reconciliationQueue: Number(reconRow?.n ?? 0), overdue,
+    bank, reconciliationQueue: Number(reconRow?.n ?? 0),
+    reconciliationQueueItems: reconItemRows.map((r) => ({
+      id: r.id, txDate: r.txDate, description: r.description, counterpartyName: r.counterpartyName, partnerName: r.partnerName,
+      amount: toDb(D(r.amount)), confidence: toDb(D(r.confidence)),
+    })),
+    overdue,
     vat: vat ? { period: vat.period, outputVat: toDb(D(vat.outputVat)), inputVat: toDb(D(vat.inputVat)), payable: toDb(D(vat.payable)), carriedToNext: toDb(D(vat.carriedToNext)) } : null,
     cashProjection3m, breakEven,
   };
@@ -387,20 +485,26 @@ export async function getFinanceCards(tx: DbOrTx): Promise<FinanceCards> {
 
 export type FunnelStageRow = { stageCode: string; stageName: string; count: number; amount: string };
 export type TopProductRow = { productId: string; sku: string; name: string; qty: string; uomCode: string; revenue: string };
+export type RecentOrderRow = { id: string; docNo: string; status: string; partnerName: string; channelName: string; netRevenue: string; orderDate: string };
 
 export type SalesCards = {
   funnel: FunnelStageRow[];
   todayOrders: number;
   channelToday: ChannelSalesToday;
   top5Products: TopProductRow[];
+  /** Son siparişler (bugün dahil son 14 gün, en yeni önce) — panonun tek başına huni+kanal
+   *  çubuğuna sıkışıp ilk ekranın üçte birini boş bırakmasını önleyen gerçek belge listesi
+   *  (Tur 1 P1 kokpit-satis-density-01). */
+  recentOrders: RecentOrderRow[];
 };
 
-/** Satış kart seti: huni (açık fırsatlar), bugünkü sipariş sayısı, kanal ciro (bugün), son 30 gün en çok satan 5 ürün. */
+/** Satış kart seti: huni (açık fırsatlar), bugünkü sipariş sayısı, kanal ciro (bugün), son siparişler, son 30 gün en çok satan 5 ürün. */
 export async function getSalesCards(tx: DbOrTx): Promise<SalesCards> {
   const today = businessDate(new Date());
   const from30 = addDays(today, -29);
+  const from14 = addDays(today, -13);
 
-  const [funnelRows, [ordersRow], channelToday, topRows] = await Promise.all([
+  const [funnelRows, [ordersRow], channelToday, topRows, recentRows] = await Promise.all([
     tx
       .select({ stageCode: opportunityStages.code, stageName: opportunityStages.name, count: sql<string>`count(${opportunities.id})`, amount: sql<string>`coalesce(sum(${opportunities.expectedAmount}), 0)` })
       .from(opportunityStages)
@@ -422,6 +526,14 @@ export async function getSalesCards(tx: DbOrTx): Promise<SalesCards> {
       .groupBy(products.id, products.sku, products.name, uoms.code)
       .orderBy(desc(sql`sum(${salesOrderLines.lineTotal})`))
       .limit(5),
+    tx
+      .select({ id: salesOrders.id, docNo: salesOrders.docNo, status: salesOrders.status, partnerName: partners.name, channelName: salesChannels.name, netRevenue: salesOrders.netRevenue, orderDate: salesOrders.orderDate })
+      .from(salesOrders)
+      .innerJoin(partners, eq(partners.id, salesOrders.partnerId))
+      .innerJoin(salesChannels, eq(salesChannels.id, salesOrders.channelId))
+      .where(and(eq(salesOrders.docType, 'order'), gte(salesOrders.orderDate, from14), lte(salesOrders.orderDate, today)))
+      .orderBy(desc(salesOrders.orderDate), desc(salesOrders.createdAt))
+      .limit(10),
   ]);
 
   return {
@@ -429,6 +541,7 @@ export async function getSalesCards(tx: DbOrTx): Promise<SalesCards> {
     todayOrders: Number(ordersRow?.n ?? 0),
     channelToday,
     top5Products: topRows.map((r) => ({ productId: r.productId, sku: r.sku, name: r.name, qty: toDb(D(r.qty)), uomCode: r.uomCode, revenue: toDb(D(r.revenue)) })),
+    recentOrders: recentRows.map((r) => ({ id: r.id, docNo: r.docNo, status: r.status, partnerName: r.partnerName, channelName: r.channelName, netRevenue: toDb(D(r.netRevenue)), orderDate: r.orderDate })),
   };
 }
 
@@ -532,7 +645,12 @@ export type GmDashboard = {
 export async function getGmDashboard(tx: DbOrTx): Promise<GmDashboard> {
   const [channelSales, bank, lines, criticalStock, expiry, overdue, breakEven, approvals, activity] = await Promise.all([
     getChannelSalesToday(tx), getBankSummary(tx), getLineStatuses(tx), getCriticalStockSummary(tx),
-    getExpiryRiskSummary(tx), getOverdueReceivablesSummary(tx), getBreakEvenDistance(tx), getPendingApprovalsSummary(tx), getRecentActivity(tx),
+    getExpiryRiskSummary(tx), getOverdueReceivablesSummary(tx), getBreakEvenDistance(tx), getPendingApprovalsSummary(tx),
+    // 30 ham satır çekilir (varsayılan 8 değil) — `groupConsecutiveActivity` ardışık tekrarları
+    // katladığı için ekranda YİNE en fazla 8 grup görünür, ama art arda aynı kullanıcı/özet gelen
+    // uzun bir seri (ör. 8 ardışık "giriş yaptı") tek bir gruba düşüp geri kalan ham veriyi
+    // tüketmesin diye ham havuz geniş tutulur (Tur 1 P2 kokpit-activity-dupe-01).
+    getRecentActivity(tx, 30),
   ]);
   return { channelSales, bank, lines, criticalStock, expiry, overdue, breakEven, approvals, activity };
 }
