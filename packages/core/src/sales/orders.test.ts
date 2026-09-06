@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { journals, salesChannels, salesOrderLines, salesOrders, deliveryLines, deliveries, type Tx } from '@plantero/db';
+import { journals, salesChannels, salesOrderLines, salesOrders, deliveryLines, deliveries, invoices, exchangeRates, type Tx } from '@plantero/db';
 import { createSalesDoc, updateLines, sendQuotation, acceptQuotation, convertQuotationToOrder, confirmOrder, cancelOrder, recomputeOrderStatus } from './orders.js';
 import { createInvoiceFromDelivery } from './invoicing.js';
 import { createLot, postStockMove, getOnHand } from '../stock/ledger.js';
@@ -76,6 +76,39 @@ describe('sales/orders — sipariş → onay → sevk → fatura', () => {
       const chain = await getChain(tx, 'sales_order', order.id);
       expect(chain.downstream.some((n) => n.type === 'delivery' && n.id === delivery.id)).toBe(true);
       expect(chain.downstream.some((n) => n.type === 'invoice' && n.id === invoice.id)).toBe(true);
+    });
+  });
+
+  it('kök neden (tur 5 P0): dövizli sipariş/fatura kuru 6 ondalık hassasiyetle korunur (2 ondalığa yuvarlanmaz)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await ensureSalesJournal(tx);
+      const channel = await seedChannel(tx, b);
+      await stockFinished(tx, b, 'PL-FX-1', '10');
+      // Canlı örnek: exchange_rates.buying(2026-09-05, EUR)=36.805224 — eski round2() bunu
+      // 36.810000'a yuvarlayıp sipariş/fatura kuruna öyle yazıyordu (fx_difference'ları bozan kök neden).
+      await tx.insert(exchangeRates).values({ currency: 'EUR', rateDate: today(), buying: '36.805224', selling: '37.003102' });
+
+      const { order } = await createSalesDoc(tx, {
+        docType: 'order', partnerId: b.customer.id, channelId: channel.id, warehouseId: b.wh.id, orderDate: today(), currency: 'EUR',
+        lines: [{ productId: b.finished.id, qty: d(1), unitPrice: d(100) }],
+      }, ctx);
+      expect(order.exchangeRate).toBe('36.805224'); // eskiden '36.8100' (toDb 4 ondalık) idi
+
+      const { delivery } = await confirmOrder(tx, order.id, ctx);
+      await reserveFefo(tx, delivery.id, ctx);
+      const [line] = await tx.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, delivery.id));
+      await confirmPick(tx, { deliveryId: delivery.id, lineId: line!.id, scannedLotId: line!.lotId }, ctx);
+      await shipDelivery(tx, delivery.id, ctx);
+
+      const { invoice } = await createInvoiceFromDelivery(tx, delivery.id, ctx);
+      expect(invoice.exchangeRate).toBe('36.805224'); // eskiden '36.8100' idi
+      // grand_total_try, tam hassasiyetli kur ile hesaplanmalı: 101.00 (KDV dahil, %1) × 36.805224
+      expect(invoice.grandTotal).toBe('101.0000');
+      expect(invoice.grandTotalTry).toBe(d('101.0000').mul(d('36.805224')).toDecimalPlaces(4).toFixed(4));
+
+      const [invRow] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
+      expect(invRow!.exchangeRate).toBe('36.805224');
     });
   });
 

@@ -20,6 +20,8 @@ export const toDbRate = (d: Decimal | string | number): string => D(d).toFixed(6
 
 export const round2 = (d: Decimal): Decimal => d.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
 export const round4 = (d: Decimal): Decimal => d.toDecimalPlaces(4, Decimal.ROUND_HALF_UP);
+/** numeric(12,6) kur kolonları (exchange_rates.buying/selling, *.exchange_rate) için Decimal yuvarlama — bkz. `toDbRate` */
+export const round6 = (d: Decimal): Decimal => d.toDecimalPlaces(6, Decimal.ROUND_HALF_UP);
 
 export const ZERO = new Decimal(0);
 export const ONE = new Decimal(1);

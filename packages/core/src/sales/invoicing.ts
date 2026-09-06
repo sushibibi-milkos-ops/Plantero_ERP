@@ -4,7 +4,7 @@ import {
   invoices, invoiceLines, deliveries, deliveryLines, salesOrders, salesOrderLines, products, partners,
   documentLinks, type DbOrTx,
 } from '@plantero/db';
-import { D, toDb, round4, sum, ZERO } from '../money.js';
+import { D, toDb, toDbRate, round4, sum, ZERO } from '../money.js';
 import { businessDate, addDays } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
@@ -76,7 +76,7 @@ async function createInvoiceCore(tx: DbOrTx, input: CreateInvoiceCoreInput, ctx:
     .values({
       docNo, kind: 'sales', status: 'draft', partnerId: partner.id, channelId: input.channelId, salesOrderId: input.salesOrderId,
       deliveryId: input.deliveryId, invoiceDate: input.invoiceDate, dueDate: input.dueDate, currency: input.currency,
-      exchangeRate: toDb(exchangeRate), subtotal: toDb(subtotal), discountTotal: toDb(discountTotal), vatTotal: toDb(vatTotal),
+      exchangeRate: toDbRate(exchangeRate), subtotal: toDb(subtotal), discountTotal: toDb(discountTotal), vatTotal: toDb(vatTotal),
       grandTotal: toDb(grandTotal), grandTotalTry: toDb(grandTotalTry), residual: toDb(grandTotal), isExport: input.isExport,
       origin: input.origin, createdBy: ctx.userId ?? null,
     })

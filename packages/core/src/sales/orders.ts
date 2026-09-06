@@ -4,7 +4,7 @@ import {
   salesOrders, salesOrderLines, salesChannels, partners, products, warehouses, deliveries,
   type DbOrTx,
 } from '@plantero/db';
-import { D, toDb, round4, sum, ZERO } from '../money.js';
+import { D, toDb, toDbRate, round4, sum, ZERO } from '../money.js';
 import { businessDate } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
@@ -142,7 +142,7 @@ export async function createSalesDoc(tx: DbOrTx, input: CreateSalesDocInput, ctx
       validUntil: input.validUntil ? businessDate(input.validUntil) : null,
       requestedDeliveryDate: input.requestedDeliveryDate ? businessDate(input.requestedDeliveryDate) : null,
       currency,
-      exchangeRate: toDb(exchangeRate),
+      exchangeRate: toDbRate(exchangeRate), // kök neden (tur 5 P0): numeric(12,6) kolon — toDb (4 ondalık) kuru sessizce yuvarlardı
       paymentTermDays,
       dueDate: paymentTermDays > 0 ? businessDate(new Date(new Date(orderDate).getTime() + paymentTermDays * 86_400_000)) : orderDate,
       isExport,
@@ -287,7 +287,7 @@ export async function convertQuotationToOrder(tx: DbOrTx, quotationId: string, c
       docType: 'order', docNo, status: 'draft', partnerId: quotation.partnerId, channelId: quotation.channelId, warehouseId: quotation.warehouseId,
       priceListId: quotation.priceListId, billingAddressId: quotation.billingAddressId, shippingAddressId: quotation.shippingAddressId,
       opportunityId: quotation.opportunityId, quotationId: quotation.id, orderDate, requestedDeliveryDate: quotation.requestedDeliveryDate,
-      currency: quotation.currency, exchangeRate: toDb(exchangeRate), paymentTermDays: quotation.paymentTermDays,
+      currency: quotation.currency, exchangeRate: toDbRate(exchangeRate), paymentTermDays: quotation.paymentTermDays,
       dueDate: quotation.paymentTermDays > 0 ? businessDate(new Date(Date.now() + quotation.paymentTermDays * 86_400_000)) : orderDate,
       isExport: quotation.isExport, incoterm: quotation.incoterm, salespersonId: quotation.salespersonId, origin: 'chain',
       createdBy: ctx.userId ?? null,

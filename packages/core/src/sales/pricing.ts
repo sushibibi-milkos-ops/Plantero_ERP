@@ -1,7 +1,7 @@
 import { and, desc, eq, gte, isNull, lte, or } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import { customerPrices, priceLists, priceListItems, products, exchangeRates, type DbOrTx } from '@plantero/db';
-import { D, toDb, round2, round4, pct, netFromGross, ZERO } from '../money.js';
+import { D, toDb, round4, round6, pct, netFromGross, ZERO } from '../money.js';
 import { businessDate } from '../dates.js';
 
 /**
@@ -115,5 +115,8 @@ export async function getExchangeRate(tx: DbOrTx, currency: string, date: string
     .orderBy(desc(exchangeRates.rateDate))
     .limit(1);
   if (!row) return null;
-  return round2(D(side === 'buying' ? row.buying : row.selling));
+  // Kök neden (tur 5 P0): kur bir katsayıdır, 2 ondalığa yuvarlanmaz — exchange_rates/payments/
+  // invoices/sales_orders.exchange_rate kolonları numeric(12,6). round6 yalnızca Decimal aritmetiğinde
+  // tesadüfen fazladan hane oluşmasına karşı savunma; DB'den okunan değer zaten ≤6 ondalıklı.
+  return round6(D(side === 'buying' ? row.buying : row.selling));
 }

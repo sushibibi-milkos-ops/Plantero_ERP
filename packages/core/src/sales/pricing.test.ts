@@ -99,4 +99,16 @@ describe('sales/pricing — getExchangeRate', () => {
       expect(rate!.toFixed(2)).toBe('30.00');
     });
   });
+
+  it('kök neden (tur 5 P0): kur 2 ondalığa yuvarlanmaz — numeric(12,6) hassasiyeti (6 ondalık) korunur', async () => {
+    await withRollback(async (tx) => {
+      // Canlı örnek: exchange_rates.buying(2026-09-05, EUR)=36.805224 — eski round2() bunu
+      // 36.810000'a (36.81) yuvarlayıp döndürüyordu.
+      await tx.insert(exchangeRates).values({ currency: 'AUD', rateDate: '2020-01-01', buying: '36.805224', selling: '37.003102' });
+      const buying = await getExchangeRate(tx, 'AUD', today(), 'buying');
+      expect(buying!.toFixed(6)).toBe('36.805224');
+      const selling = await getExchangeRate(tx, 'AUD', today(), 'selling');
+      expect(selling!.toFixed(6)).toBe('37.003102');
+    });
+  });
 });
