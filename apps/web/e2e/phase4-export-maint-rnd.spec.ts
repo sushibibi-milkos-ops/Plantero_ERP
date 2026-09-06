@@ -885,10 +885,20 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
       .toBe(pilotColId);
 
     await page.reload();
-    // Kolon kökü: başlık span'inden iki üst (span → başlık satırı → kolon kökü) — `BoardColumn`
-    // (board-column.tsx) yapısı sabit; geniş bir "içinde bu metin geçen herhangi bir div" filtresi
-    // TÜM kolonları saran dış kapsayıcıyı da eşleştirip yanlışlıkla her zaman "doğru" çıkabilirdi.
-    const pilotColumn = page.getByText('Pilot Üretim', { exact: true }).locator('..').locator('..');
+    // Kök neden (canlıda yakalandı, Tur 3): `KanbanBoard` (kanban-board.tsx) DndContext'ten ÖNCE bir
+    // "mini-nav" şeridi render ediyor — her kolon adı için AYRI bir `<button>{col.name}</button>`
+    // (hızlı kolon atlama, Tur 1 P1 arge-board-04). Bu yüzden "Pilot Üretim" metni sayfada İKİ yerde
+    // birebir aynı (exact) geçiyor: mini-nav düğmesi VE kolon başlığındaki `<span>`. Önceki sürüm
+    // `getByText(...).locator('..').locator('..')`'ı HER İKİ eşleşmeye birden uyguluyordu — mini-nav
+    // düğmesinden iki üst, TÜM board'u (dolayısıyla her kolonun "Kolon menüsü" düğmesini) saran dış
+    // kapsayıcıya çıkıyordu; canlıda `getByRole('button',{name:'Kolon menüsü'})` 6 elemana (board'daki
+    // TÜM kolonlara) çözülüp strict-mode ihlaliyle patladı. Bu bir uygulama bulgusu değil — mini-nav
+    // kasıtlı, belgeli bir özellik; kırık yalnızca testin "bu metin sayfada tek yerde geçer"
+    // varsayımında. Mini-nav şeridi DndContext/board'dan ÖNCE render edildiğinden (DOM sırası sabit),
+    // `.last()` güvenilir biçimde kolon başlığındaki (board içindeki, mini-nav'dan SONRA gelen) asıl
+    // `<span>`i seçer — `BoardColumn` (board-column.tsx) yapısı hâlâ sabit: span → başlık satırı →
+    // kolon kökü, iki üst hâlâ doğru.
+    const pilotColumn = page.getByText('Pilot Üretim', { exact: true }).last().locator('..').locator('..');
     await expect(pilotColumn.getByText(ctx.newCardTitle!)).toBeVisible({ timeout: 10_000 });
 
     const newColName = `Pilot Üretim (QA ${RUN})`;
@@ -898,7 +908,9 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
     await renameDialog.getByRole('textbox').fill(newColName);
     await renameDialog.getByRole('button', { name: 'Kaydet' }).click();
     await expect(renameDialog).toBeHidden();
-    await expect(visibleText(page, newColName)).toBeVisible({ timeout: 10_000 });
+    // Aynı mini-nav ikilemi (yukarıdaki not) yeniden adlandırma sonrası da geçerli: mini-nav düğmesi
+    // de aynı anda `newColName`'e güncellenir — `.last()` ile board içindeki asıl başlık hedeflenir.
+    await expect(visibleText(page, newColName).last()).toBeVisible({ timeout: 10_000 });
 
     const colName = psqlOne(`select name from rnd_board_columns where id = '${pilotColId}'`);
     expect(colName).toBe(newColName);

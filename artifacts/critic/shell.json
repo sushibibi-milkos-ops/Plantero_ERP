@@ -172,7 +172,28 @@
      "closedRound": 13
     }
    ],
-   "open": []
+   "open": [
+    {
+     "id": "shell-button-active-state-01",
+     "criterion": 8,
+     "severity": "P2",
+     "openedRound": 3,
+     "text": "[kokpit Tur 3 tespiti — ortak bileşen] Uygulamada hiçbir etkileşimli yüzeyde `active:` (basılı) durumu yok: Button varyantlarının hepsinde hover + focus-visible var, `active:` yok; kokpit RowLink de aynı. Puan kartı kriter 8 ölçütü \"buton active scale(0.97)\" karşılanmadığı için kokpitin BEŞ rol kesitinde de kriter 8 en fazla 4 alabiliyor. Tek yerde düzeltilirse beş rota birden +1 alır.",
+     "measure": "grep -n \"active:\" apps/web/src/components/ui/button.tsx → 0 eşleşme; apps/web/src/modules/kokpit/components/shared.tsx (RowLink) → 0 eşleşme. Button taban sınıfı: transition-[color,background-color,border-color,box-shadow,transform] duration-150 (transform zaten geçiş listesinde ama hiçbir kural transformu değiştirmiyor).",
+     "target": "Button taban sınıfına `active:scale-[0.97]` (ya da eşdeğer basılı geri bildirim) ve satır/kart bağlantılarına basılı arka plan (`active:bg-muted/60`) eklensin; ölçüt: pointerdown sırasında butonun transform matrisi ya da arka plan rengi değişsin, hover/focus davranışı bozulmasın.",
+     "file": "apps/web/src/components/ui/button.tsx:13, apps/web/src/modules/kokpit/components/shared.tsx:44"
+    },
+    {
+     "id": "shell-kpicard-zero-tone-01",
+     "criterion": 6,
+     "severity": "P2",
+     "openedRound": 3,
+     "text": "[kokpit Tur 3 tespiti — ortak bileşen] Soluk-sıfır kuralı yalnızca kokpit StatStripinde uygulanıyor (shared.tsx:151 `zero && text-muted-foreground/70`); KpiCard ve QtyCell sıfırı tam kontrastla basıyor. Tek ekranda aynı \"0\" iki farklı tonda görünüyor: admin \"Kritik stok kalemi 0\" (19px tam kontrast) vs SKT şeridi \"0\" (15px soluk); muhasebe \"KDV ödenecek ₺0\" vs aging şeridi \"₺0\"; üretim \"Geciken iş emri 0\" + \"Fire oranı %0\" + iki satırda \"0 ADET\".",
+     "measure": "1440x900: KpiCard değer düğümünde sıfır için özel ton yok (kpi-card.tsx:152/169 — `text-[19px]`/`text-[22px] font-semibold tabular-nums`, koşullu renk yok); StatStrip aynı değeri `text-muted-foreground/70` ile basıyor. Etkilenen sıfır sayısı: admin 1, depo 1, muhasebe 1, üretim 4.",
+     "target": "Sıfır değerler tüm sayı bileşenlerinde (KpiCard, QtyCell, MoneyCell, StatStrip) aynı soluk tonu alsın — ölçüt: aynı ekrandaki iki sıfır değerin computed color değeri birebir aynı.",
+     "file": "apps/web/src/components/kpi-card.tsx:152,169, apps/web/src/components/qty-cell.tsx, apps/web/src/modules/kokpit/components/shared.tsx:151"
+    }
+   ]
   },
   "sol menü (tüm uygulama)": {
    "closed": [
