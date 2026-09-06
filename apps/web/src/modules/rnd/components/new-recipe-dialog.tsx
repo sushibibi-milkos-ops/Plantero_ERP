@@ -46,7 +46,7 @@ export function NewRecipeDialog({ projectId, productOptions }: { projectId: stri
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm"><Plus className="size-3.5" /> Yeni deneme reçetesi</Button>
+        <Button size="sm"><Plus className="size-4" /> Yeni deneme reçetesi</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader><DialogTitle>Yeni deneme reçetesi</DialogTitle></DialogHeader>
@@ -67,7 +67,7 @@ export function NewRecipeDialog({ projectId, productOptions }: { projectId: stri
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>Vazgeç</Button>
           <Button onClick={submit} disabled={pending || !name.trim() || !productId}>
-            {pending ? <Loader2 className="size-3.5 animate-spin" /> : null} Oluştur
+            {pending ? <Loader2 className="size-4 animate-spin" /> : null} Oluştur
           </Button>
         </DialogFooter>
       </DialogContent>

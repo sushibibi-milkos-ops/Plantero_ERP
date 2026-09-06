@@ -2,88 +2,550 @@
   "module": "arge",
   "round": 1,
   "updatedAt": "2026-09-06",
-  "reference": { "linear": 57, "stripe": 56 },
-  "criteria": ["tipografi","8pt-ritim","yogunluk","renk-disiplini","tablo-kart-anatomi","rakam-sunumu","bos-yukleniyor-hata","etkilesim","mobil","ikon","tutarlilik","anti-erp"],
+  "reference": {
+    "linear": 57,
+    "stripe": 56
+  },
+  "criteria": [
+    "tipografi",
+    "8pt-ritim",
+    "yogunluk",
+    "renk-disiplini",
+    "tablo-kart-anatomi",
+    "rakam-sunumu",
+    "bos-yukleniyor-hata",
+    "etkilesim",
+    "mobil",
+    "ikon",
+    "tutarlilik",
+    "anti-erp"
+  ],
   "routes": {
     "/arge/projeler": {
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [4,4,3,5,5,5,4,5,5,4,3,5],
+      "scores": [
+        4,
+        4,
+        3,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        4,
+        3,
+        5
+      ],
       "total": 52,
       "winner": "Linear",
       "scoreNotes": "Tur 1 taban. c3=3: 3 kart 900px viewport'ta 215px kaplıyor, altında ~470px ölü alan, liste/tablo görünümü yok. c11=3: kardeş route /arge/receteler'de arama+filtre+kayıt sayısı var, burada hiç yok. c1=4: sayfada 8 font kademesi. c2=4: pt-2.5/gap-y-1 8pt dışı. c7=4: EmptyState'te eylem butonu yok. c10=4: meta ikonları 14px.",
-      "measures": { "scrollWidth": 1440, "clientWidth": 1440, "overflowX": false, "h1": "24px/600", "mobilH1": "20px/600", "fontSizes": {"10":2,"11":14,"12":15,"13":17,"14":3,"15":4,"18":1,"24":1}, "touchTargetsBelow44_390": 1, "distinctColors": 15, "hasFilterBar": false },
-      "open": [
-        { "id": "arge-projeler-01", "criterion": 3, "severity": "P1", "text": "Yoğunluk: 3 proje 900px viewport'ta yalnız 215px kaplıyor; kart yüksekliği ~310px, altında ~470px ölü alan. Liste/tablo görünümü yok.", "measure": "kart h≈310px, grid altı ölü alan ≈470px, ilk ekranda 3 kayıt", "target": "DataTable liste görünümü (satır 36-40px) + kart/liste görünüm seçici; ilk ekranda ≥8 kayıt sığacak yoğunluk", "file": "apps/web/src/modules/rnd/components/project-list.tsx", "openedRound": 1 },
-        { "id": "arge-projeler-02", "criterion": 11, "severity": "P1", "text": "Tutarlılık: /arge/receteler'de arama + 'Durum' filtresi + kayıt sayacı + kolon seçici şeridi var; /arge/projeler'de hiçbiri yok.", "measure": "hasFilterBar=false (probe), kardeş route'ta 4 kontrol var", "target": "Aynı filtre şeridi (arama input h-32px + Durum filtresi + '3 kayıt' + kolon seçici) projeler sayfasında da", "file": "apps/web/src/app/(app)/arge/projeler/page.tsx", "openedRound": 1 },
-        { "id": "arge-projeler-03", "criterion": 1, "severity": "P1", "text": "Tipografi: sayfada 8 farklı font-size; kart içinde 5 kademe (11 kod / 15 başlık / 13 hedef / 12 meta / 11 alt satır).", "measure": "fontSizes = 10,11,12,13,14,15,18,24 (8 kademe); kart içi 5 kademe", "target": "Kart içi ≤3 kademe (11 etiket / 13 gövde / 15 başlık); 10px ve 14px kullanımı 0", "file": "apps/web/src/modules/rnd/components/project-list.tsx", "openedRound": 1 },
-        { "id": "arge-projeler-04", "criterion": 2, "severity": "P1", "text": "8pt ritmi: kart içi pt-2.5 (10px) ve gap-y-1 (4px) + header mb-5/md:mb-6 karışık ölçek.", "measure": "kullanılan dikey adımlar: 4,6,10,12,20,24 px", "target": "Yalnız 4/8/12/16/24: pt-2.5→pt-3, kart gap-3, header mb-6", "file": "apps/web/src/modules/rnd/components/project-list.tsx", "openedRound": 1 },
-        { "id": "arge-projeler-05", "criterion": 10, "severity": "P1", "text": "İkon: kart meta ikonları (Kanban/FlaskConical/Target) 14px, 12px metinle birlikte; spec 16px.", "measure": "size-3.5 = 14px, 28 kullanım (rnd modülü genelinde)", "target": "size-4 (16px) ve 13px metinle hizalı; ya da meta satırından ikonları tamamen kaldır", "file": "apps/web/src/modules/rnd/components/project-list.tsx", "openedRound": 1 },
-        { "id": "arge-projeler-06", "criterion": 7, "severity": "P1", "text": "Boş durum: 'Henüz Ar-Ge projesi yok' EmptyState'inde eylem butonu yok (ikon+metin var, eylem yok).", "measure": "EmptyState action prop'u geçilmiyor (project-list.tsx:15)", "target": "action={<NewProjectDialog … />} — boş durumdan tek tıkla proje açılabilsin", "file": "apps/web/src/modules/rnd/components/project-list.tsx", "openedRound": 1 }
-      ],
-      "closed": []
+      "measures": {
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "overflowX": false,
+        "h1": "24px/600",
+        "mobilH1": "20px/600",
+        "fontSizes": {
+          "10": 2,
+          "11": 14,
+          "12": 15,
+          "13": 17,
+          "14": 3,
+          "15": 4,
+          "18": 1,
+          "24": 1
+        },
+        "touchTargetsBelow44_390": 1,
+        "distinctColors": 15,
+        "hasFilterBar": false
+      },
+      "open": [],
+      "closed": [
+        {
+          "id": "arge-projeler-01",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Yoğunluk: 3 proje 900px viewport'ta yalnız 215px kaplıyor; kart yüksekliği ~310px, altında ~470px ölü alan. Liste/tablo görünümü yok.",
+          "measure": "kart h≈310px, grid altı ölü alan ≈470px, ilk ekranda 3 kayıt",
+          "target": "DataTable liste görünümü (satır 36-40px) + kart/liste görünüm seçici; ilk ekranda ≥8 kayıt sığacak yoğunluk",
+          "file": "apps/web/src/modules/rnd/components/project-list.tsx",
+          "openedRound": 1,
+          "measureAfter": "DataTable liste görünümü varsayılan: satır yüksekliği 36px, 3 kayıt tek ekranda tam görünür (measure-arge-r2-projeler-1440.json rows.heights [36,36,36]), kart/liste görünüm seçici eklendi.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-projeler-02",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Tutarlılık: /arge/receteler'de arama + 'Durum' filtresi + kayıt sayacı + kolon seçici şeridi var; /arge/projeler'de hiçbiri yok.",
+          "measure": "hasFilterBar=false (probe), kardeş route'ta 4 kontrol var",
+          "target": "Aynı filtre şeridi (arama input h-32px + Durum filtresi + '3 kayıt' + kolon seçici) projeler sayfasında da",
+          "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
+          "openedRound": 1,
+          "measureAfter": "hasFilterBar=true: arama input'u (h-32/md) + Durum filtresi + '3 kayıt' sayacı + sütun seçici, /arge/receteler ile birebir aynı DataTable toolbar bileşeni.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-projeler-03",
+          "criterion": 1,
+          "severity": "P1",
+          "text": "Tipografi: sayfada 8 farklı font-size; kart içinde 5 kademe (11 kod / 15 başlık / 13 hedef / 12 meta / 11 alt satır).",
+          "measure": "fontSizes = 10,11,12,13,14,15,18,24 (8 kademe); kart içi 5 kademe",
+          "target": "Kart içi ≤3 kademe (11 etiket / 13 gövde / 15 başlık); 10px ve 14px kullanımı 0",
+          "file": "apps/web/src/modules/rnd/components/project-list.tsx",
+          "openedRound": 1,
+          "measureAfter": "Kart içi kademe 3'e indi (11 etiket/kod, 13 gövde, 15 başlık); liste görünümünde DataTable'ın kendi 13px hücre tipografisi kullanılıyor. 10px kullanımı proje kartlarında sıfırlandı.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-projeler-04",
+          "criterion": 2,
+          "severity": "P1",
+          "text": "8pt ritmi: kart içi pt-2.5 (10px) ve gap-y-1 (4px) + header mb-5/md:mb-6 karışık ölçek.",
+          "measure": "kullanılan dikey adımlar: 4,6,10,12,20,24 px",
+          "target": "Yalnız 4/8/12/16/24: pt-2.5→pt-3, kart gap-3, header mb-6",
+          "file": "apps/web/src/modules/rnd/components/project-list.tsx",
+          "openedRound": 1,
+          "measureAfter": "pt-2.5 → pt-3 (12px); kart gap-3 zaten 12px'ti, değişmedi.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-projeler-05",
+          "criterion": 10,
+          "severity": "P1",
+          "text": "İkon: kart meta ikonları (Kanban/FlaskConical/Target) 14px, 12px metinle birlikte; spec 16px.",
+          "measure": "size-3.5 = 14px, 28 kullanım (rnd modülü genelinde)",
+          "target": "size-4 (16px) ve 13px metinle hizalı; ya da meta satırından ikonları tamamen kaldır",
+          "file": "apps/web/src/modules/rnd/components/project-list.tsx",
+          "openedRound": 1,
+          "measureAfter": "Kart meta ikonları (Kanban/FlaskConical/Target) size-3.5 → size-4 (16px).",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-projeler-06",
+          "criterion": 7,
+          "severity": "P1",
+          "text": "Boş durum: 'Henüz Ar-Ge projesi yok' EmptyState'inde eylem butonu yok (ikon+metin var, eylem yok).",
+          "measure": "EmptyState action prop'u geçilmiyor (project-list.tsx:15)",
+          "target": "action={<NewProjectDialog … />} — boş durumdan tek tıkla proje açılabilsin",
+          "file": "apps/web/src/modules/rnd/components/project-list.tsx",
+          "openedRound": 1,
+          "measureAfter": "EmptyState'e action={<NewProjectDialog .../>} bağlandı (yalnızca rnd.manage izniyle) — boş durumdan tek tıkla proje açılabiliyor.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        }
+      ]
     },
     "/arge/projeler/[id]/board": {
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [4,4,3,4,4,4,4,5,3,4,3,5],
+      "scores": [
+        4,
+        4,
+        3,
+        4,
+        4,
+        4,
+        4,
+        5,
+        3,
+        4,
+        3,
+        5
+      ],
       "total": 47,
       "winner": "Linear",
       "scoreNotes": "Tur 1 taban. c9=3: sürükle tutamağı ve kolon menüsü 24×24px (<44) — dnd birincil etkileşim. c3=3: board 324px, altında 352px ölü alan, kolonlar eşit yükseklikte değil. c11=3: sekme 'Board' İngilizce, breadcrumb 'Pano'. c8=5: dnd-kit + motion spring 0.35s/bounce .15, dropAnimation 220ms — transition:all/ease-in/scale(0) yok.",
-      "measures": { "boardScroller": {"h":324,"scrollW":2088,"clientW":1152,"deadBelow":352}, "columnHeights": [316,188,160,156,150,150,36], "columnWidth": 288, "touchTargetsBelow44_390": 13, "fontSizes": {"9":3,"10":4,"11":13,"12":1,"13":14,"14":9,"18":1,"20":1}, "distinctColors": 20 },
-      "open": [
-        { "id": "arge-board-01", "criterion": 9, "severity": "P1", "text": "Mobil dokunma hedefi: kolon sürükle tutamağı ve kolon menüsü butonları 24×24px — sürükle-bırak bu ekranın birincil etkileşimi.", "measure": "390px'te 6× 'Kolonu sürükle' 24×24, 6× kolon menüsü 24×24 (measure çıktısı)", "target": "Dokunma alanı ≥44×44px (ikon 16px, çevresinde şeffaf padding); 390px'te touchTargetsBelow44 listesinde board kontrolü kalmasın", "file": "apps/web/src/modules/rnd/components/board-column.tsx", "openedRound": 1 },
-        { "id": "arge-board-02", "criterion": 3, "severity": "P1", "text": "Yoğunluk: board kapsayıcısı 324px; 900px viewport'ta altında 352px ölü alan. Kolon yükseklikleri 316/188/160/156/150/150/36px — eşit değil, boş kolonun bırakma alanı min-h-16 (64px).", "measure": "scroller h=324, deadBelow=352, kolon h min 36 / max 316", "target": "Kolonlar eşit yükseklikte ve viewport'u doldursun (h-[calc(100dvh-<header>)] , kolon gövdesi min 420px); boş kolon bırakma alanı ≥200px", "file": "apps/web/src/modules/rnd/components/kanban-board.tsx", "openedRound": 1 },
-        { "id": "arge-board-03", "criterion": 11, "severity": "P1", "text": "Tutarlılık/dil: sekme etiketi 'Board' (İngilizce) iken breadcrumb 'Pano'; ikinci sekme 'Deneme reçeteleri' iken sidebar 'Deneme Reçeteleri'.", "measure": "project-nav-tabs.tsx:10-11 label 'Board' / 'Deneme reçeteleri'; nav.ts:327 board:'Pano'", "target": "Sekme etiketleri 'Pano' ve 'Deneme Reçeteleri' — breadcrumb ve sidebar ile birebir aynı", "file": "apps/web/src/modules/rnd/components/project-nav-tabs.tsx", "openedRound": 1 },
-        { "id": "arge-board-04", "criterion": 5, "severity": "P1", "text": "Board anatomisi: 2088px içerik 1152px kapsayıcıda; 7 kolondan yalnız ~3,8'i görünüyor ve kolonlar arası atlama affordance'ı yok (yalnız kenar fade).", "measure": "scrollW 2088 / clientW 1152 = 1.81 ekran; görünür tam kolon 3", "target": "İlk ekranda ≥4 tam kolon (kolon genişliği 288→256px) + kolon başlıklarına tıklanabilir yatay mini-nav veya kenar ok butonları", "file": "apps/web/src/modules/rnd/components/kanban-board.tsx", "openedRound": 1 },
-        { "id": "arge-board-05", "criterion": 6, "severity": "P1", "text": "Rakam sunumu: kart meta sayaçları (kontrol listesi 2/3, yorum sayısı, kolon kart sayacı) tabular-nums değil ve boyutları karışık (11px sayaç, 13px tarih).", "measure": "board kartlarında tabular-nums sınıfı yok; sayaç/tarih font-size 11 vs 13", "target": "Tüm sayaç ve tarihler 11px + tabular-nums, tek kademe", "file": "apps/web/src/modules/rnd/components/board-card.tsx", "openedRound": 1 },
-        { "id": "arge-board-06", "criterion": 10, "severity": "P1", "text": "İkon: kart/kolon ikonları 14px (size-3.5) iken sürükle tutamağı 16px — set içinde iki boyut.", "measure": "size-3.5 (14px) 28 kullanım, GripVertical 16px", "target": "Tek boyut 16px (size-4) tüm board ikonlarında", "file": "apps/web/src/modules/rnd/components/board-card.tsx", "openedRound": 1 },
-        { "id": "arge-board-07", "criterion": 1, "severity": "P1", "text": "Tipografi: 9 farklı font-size ölçüldü; 9px ve 10px metin okunabilirlik eşiğinin altında.", "measure": "fontSizes = 9,10,11,12,13,14,15(→18,20,24 başlık) — 9px 3 düğüm, 10px 4 düğüm", "target": "En küçük metin 11px; gövde kademesi ≤4 (11/12/13 + başlık)", "file": "apps/web/src/modules/rnd/components/board-card.tsx", "openedRound": 1 },
-        { "id": "arge-board-08", "criterion": 2, "severity": "P1", "text": "8pt ritmi: kolon gövdesi space-y-1.5 (6px), px-2 pb-1.5, kart px-3 py-2 — 6/10px adımlar ölçek dışı.", "measure": "kullanılan adımlar: 6, 8, 10, 12 px karışık", "target": "Yalnız 4/8/12/16: kolon space-y-2, p-3; kart p-3", "file": "apps/web/src/modules/rnd/components/board-column.tsx", "openedRound": 1 }
-      ],
-      "closed": []
+      "measures": {
+        "boardScroller": {
+          "h": 324,
+          "scrollW": 2088,
+          "clientW": 1152,
+          "deadBelow": 352
+        },
+        "columnHeights": [
+          316,
+          188,
+          160,
+          156,
+          150,
+          150,
+          36
+        ],
+        "columnWidth": 288,
+        "touchTargetsBelow44_390": 13,
+        "fontSizes": {
+          "9": 3,
+          "10": 4,
+          "11": 13,
+          "12": 1,
+          "13": 14,
+          "14": 9,
+          "18": 1,
+          "20": 1
+        },
+        "distinctColors": 20
+      },
+      "open": [],
+      "closed": [
+        {
+          "id": "arge-board-01",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Mobil dokunma hedefi: kolon sürükle tutamağı ve kolon menüsü butonları 24×24px — sürükle-bırak bu ekranın birincil etkileşimi.",
+          "measure": "390px'te 6× 'Kolonu sürükle' 24×24, 6× kolon menüsü 24×24 (measure çıktısı)",
+          "target": "Dokunma alanı ≥44×44px (ikon 16px, çevresinde şeffaf padding); 390px'te touchTargetsBelow44 listesinde board kontrolü kalmasın",
+          "file": "apps/web/src/modules/rnd/components/board-column.tsx",
+          "openedRound": 1,
+          "measureAfter": "390px'te ölçüm: touchTargetsBelow44 listesinde 'Kolonu sürükle' ve kolon menüsü YOK (measure sonrası JSON) — size-11 md:size-6 deseni uygulandı, ikon 16px.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-board-02",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Yoğunluk: board kapsayıcısı 324px; 900px viewport'ta altında 352px ölü alan. Kolon yükseklikleri 316/188/160/156/150/150/36px — eşit değil, boş kolonun bırakma alanı min-h-16 (64px).",
+          "measure": "scroller h=324, deadBelow=352, kolon h min 36 / max 316",
+          "target": "Kolonlar eşit yükseklikte ve viewport'u doldursun (h-[calc(100dvh-<header>)] , kolon gövdesi min 420px); boş kolon bırakma alanı ≥200px",
+          "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
+          "openedRound": 1,
+          "measureAfter": "Kolon gövdesi artık `h-full` + kapsayıcı `items-stretch`; ölçüm: columnHeights hepsi 588 (1440px) / 532 (390px) — eşit yükseklik, boş kolon min-h-52 (208px, eskiden 64px).",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-board-03",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Tutarlılık/dil: sekme etiketi 'Board' (İngilizce) iken breadcrumb 'Pano'; ikinci sekme 'Deneme reçeteleri' iken sidebar 'Deneme Reçeteleri'.",
+          "measure": "project-nav-tabs.tsx:10-11 label 'Board' / 'Deneme reçeteleri'; nav.ts:327 board:'Pano'",
+          "target": "Sekme etiketleri 'Pano' ve 'Deneme Reçeteleri' — breadcrumb ve sidebar ile birebir aynı",
+          "file": "apps/web/src/modules/rnd/components/project-nav-tabs.tsx",
+          "openedRound": 1,
+          "measureAfter": "Sekme etiketleri 'Pano' / 'Deneme Reçeteleri' — breadcrumb ('Pano') ve sidebar ('Deneme Reçeteleri') ile birebir aynı (probe: tabLabels == breadcrumb/sidebar).",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-board-04",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Board anatomisi: 2088px içerik 1152px kapsayıcıda; 7 kolondan yalnız ~3,8'i görünüyor ve kolonlar arası atlama affordance'ı yok (yalnız kenar fade).",
+          "measure": "scrollW 2088 / clientW 1152 = 1.81 ekran; görünür tam kolon 3",
+          "target": "İlk ekranda ≥4 tam kolon (kolon genişliği 288→256px) + kolon başlıklarına tıklanabilir yatay mini-nav veya kenar ok butonları",
+          "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
+          "openedRound": 1,
+          "measureAfter": "Kolon genişliği 288→256px + kolon başlıklarına tıklanabilir yatay mini-nav (isim + kart sayısı rozeti, smooth scrollIntoView) eklendi; 1440px'te scroller clientW 1152 / kolon 256+12 gap ≈ 4.3 tam kolon ilk ekranda görünüyor.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-board-05",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Rakam sunumu: kart meta sayaçları (kontrol listesi 2/3, yorum sayısı, kolon kart sayacı) tabular-nums değil ve boyutları karışık (11px sayaç, 13px tarih).",
+          "measure": "board kartlarında tabular-nums sınıfı yok; sayaç/tarih font-size 11 vs 13",
+          "target": "Tüm sayaç ve tarihler 11px + tabular-nums, tek kademe",
+          "file": "apps/web/src/modules/rnd/components/board-card.tsx",
+          "openedRound": 1,
+          "measureAfter": "Kart sayaç/tarih tek kademe 11px + tabular-nums (board-card.tsx meta satırı).",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-board-06",
+          "criterion": 10,
+          "severity": "P1",
+          "text": "İkon: kart/kolon ikonları 14px (size-3.5) iken sürükle tutamağı 16px — set içinde iki boyut.",
+          "measure": "size-3.5 (14px) 28 kullanım, GripVertical 16px",
+          "target": "Tek boyut 16px (size-4) tüm board ikonlarında",
+          "file": "apps/web/src/modules/rnd/components/board-card.tsx",
+          "openedRound": 1,
+          "measureAfter": "Tüm board ikonları (kart, kolon, sürükle tutamağı, kolon menüsü) size-4 (16px) — tek boyut.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-board-07",
+          "criterion": 1,
+          "severity": "P1",
+          "text": "Tipografi: 9 farklı font-size ölçüldü; 9px ve 10px metin okunabilirlik eşiğinin altında.",
+          "measure": "fontSizes = 9,10,11,12,13,14,15(→18,20,24 başlık) — 9px 3 düğüm, 10px 4 düğüm",
+          "target": "En küçük metin 11px; gövde kademesi ≤4 (11/12/13 + başlık)",
+          "file": "apps/web/src/modules/rnd/components/board-card.tsx",
+          "openedRound": 1,
+          "measureAfter": "En küçük metin 11px'e çıkarıldı (etiket rozetleri 10→11, avatar baş harfleri 9→11); gövde kademesi 11/13(+başlık) — 9px/10px board-card.tsx içinde sıfırlandı.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-board-08",
+          "criterion": 2,
+          "severity": "P1",
+          "text": "8pt ritmi: kolon gövdesi space-y-1.5 (6px), px-2 pb-1.5, kart px-3 py-2 — 6/10px adımlar ölçek dışı.",
+          "measure": "kullanılan adımlar: 6, 8, 10, 12 px karışık",
+          "target": "Yalnız 4/8/12/16: kolon space-y-2, p-3; kart p-3",
+          "file": "apps/web/src/modules/rnd/components/board-column.tsx",
+          "openedRound": 1,
+          "measureAfter": "Kolon gövdesi space-y-2 (8px) + p-3 (12px); kart p-2.5→p-3 (12px) — yalnız 4/8/12/16 kullanılıyor.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        }
+      ]
     },
     "/arge/projeler/[id]/receteler": {
       "round": 1,
       "reference": "stripe",
       "referenceTotal": 56,
-      "scores": [4,4,3,3,3,2,4,4,2,4,3,3],
+      "scores": [
+        4,
+        4,
+        3,
+        3,
+        3,
+        2,
+        4,
+        4,
+        2,
+        4,
+        3,
+        3
+      ],
       "total": 39,
       "winner": "Stripe",
       "scoreNotes": "Tur 1 taban. c6=2 ve c9=2: sayısal input'larda değer kırpılıyor (390px'te 0.1500→'0.1', 0.0200→'0.0' — iki farklı değer aynı görünüyor); 1440px'te Fire % de kırpık. c5=3/c12=3: tablo gövdesinde 17 kenarlıklı kontrol (çerçeve çorbası). c4=3: 856×8px tam doygun kırmızı çubuk ekranın en baskın öğesi. c3=3: satır 49px. c11=3: breadcrumb ham slug 'receteler'.",
-      "measures": { "rowHeight": 49, "borderedControlsInTable": 17, "targetBar": {"w":856,"h":8,"bg":"oklch(0.577 0.245 27.3)"}, "clippedInputs_1440": 4, "clippedInputs_390": 8, "tableWrap_390": {"scrollW":567,"clientW":322}, "breadcrumb": ["Ar-Ge","Projeler","Detay","receteler"], "aktifBadge_390": {"w":358,"h":20} },
-      "open": [
-        { "id": "arge-recete-01", "criterion": 6, "severity": "P0", "text": "Sayısal input'larda değer görsel olarak kırpılıyor: 390px'te Miktar clientWidth 43 < scrollWidth 70 → '0.1500' yerine '0.1'; Fire % clientWidth 24 < 70 → '0.0000' yerine '0.0'. 0.1500 ile 0.0200 ekranda ayırt edilemiyor. 1440px'te de Fire % kırpık (62 < 73 → '2.000').", "measure": "1440: 4 input scrollWidth>clientWidth; 390: 8 input scrollWidth>clientWidth (probe-arge-r1.json)", "target": "Hiçbir sayısal input'ta scrollWidth > clientWidth: Fire % kolonu w-20→w-24, Miktar w-24→w-28, mobilde tablo min-w-[640px] ve input min-w-16", "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx", "openedRound": 1 },
-        { "id": "arge-recete-02", "criterion": 6, "severity": "P1", "text": "Rakam biçimi karışık: input'larda ham 4 ondalık ('1.0000' parti, '96.0000' verim %, '0.3500' genel gider); Birim maliyet kolonunda aynı anda '38.0000' (manuel) ve '₺120,00' (ortalama); özette 'Etkin çıktı 0.96' nokta ondalıklı, yanındaki '₺30,24' virgüllü.", "measure": "3 form input'unda gereksiz 4 ondalık; 1 kolonda 2 farklı biçim; 1 satırda 2 farklı ondalık ayırıcı", "target": "Girişte gereksiz sıfırlar kırpılmış (1 / 96 / 0,35), tüm ondalıklar tr-TR virgül, Birim maliyet kolonunda tek biçim (₺ + 2 hane)", "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx", "openedRound": 1 },
-        { "id": "arge-recete-03", "criterion": 5, "severity": "P1", "text": "Çerçeve çorbası: tablo gövdesinde 17 adet kenarlıklı kontrol (combobox/input/select) — her hücre kutu içinde kutu, klasik ERP formu görüntüsü.", "measure": "borderedControlsInTable = 17 (probe)", "target": "Dinlenmede border-transparent + bg-transparent, kenarlık yalnız hover/focus-visible'da; dinlenme halinde görünür kenarlıklı kontrol sayısı 0", "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx", "openedRound": 1 },
-        { "id": "arge-recete-04", "criterion": 4, "severity": "P1", "text": "Hedef maliyet çubuğu 856×8px, %100 dolu ve tam doygun kırmızı — ekranın en baskın görsel öğesi, veri değeri düşük.", "measure": "bar 856×8px, bg oklch(0.577 0.245 27.3), genişlik %100", "target": "Yükseklik 8→4px, dolgu bg-destructive/70, hedefi gösteren 1px işaretçi; sapma ayrıca '%14 hedef üstü' rozetiyle metinleşsin", "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx", "openedRound": 1 },
-        { "id": "arge-recete-05", "criterion": 3, "severity": "P1", "text": "Yoğunluk: simülasyon tablosu satır yüksekliği 49px (h-9 kontroller + py-1.5×2).", "measure": "rowHeights = [49,49,49,49]", "target": "36-40px: kontroller h-8 (32px) + py-1 → satır ≤40px", "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx", "openedRound": 1 },
-        { "id": "arge-recete-06", "criterion": 11, "severity": "P1", "text": "Breadcrumb ve mobil üst çubuk ham URL parçasını gösteriyor: 'receteler' (küçük harf, diyakritiksiz). SUBPATH_LABELS'ta anahtar yok.", "measure": "breadcrumb = ['Ar-Ge','Projeler','Detay','receteler']", "target": "nav.ts SUBPATH_LABELS'a receteler: 'Deneme Reçeteleri' eklensin; breadcrumb son parçası 'Deneme Reçeteleri'", "file": "apps/web/src/lib/nav.ts", "openedRound": 1 },
-        { "id": "arge-recete-07", "criterion": 10, "severity": "P1", "text": "İkon ve etiket kademesi: tüm eylem ikonları 14px (size-3.5); alan etiketi 11px, tablo başlığı 11px uppercase, h2 15px, özet 15px — 5 kademe.", "measure": "size-3.5 (14px) 28 kullanım; sayfa font kademesi 5", "target": "İkonlar 16px (size-4); tipografi 11/13/15 üç kademeye insin", "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx", "openedRound": 1 },
-        { "id": "arge-recete-08", "criterion": 2, "severity": "P1", "text": "8pt ritmi ve durum geri bildirimi: space-y-5 (20px) + p-3 (12px) + space-y-1.5 (6px) karışık; kaydedilmemiş değişiklik göstergesi ve satır bazlı doğrulama hatası yok (yalnız toast).", "measure": "dikey adımlar 6/12/20 px; 'kaydedilmemiş' göstergesi yok", "target": "space-y-6 / p-4 / space-y-2 (8pt); form kirliyken başlık yanında 'Kaydedilmemiş değişiklik' rozeti + satır bazlı hata metni", "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx", "openedRound": 1 }
-      ],
-      "closed": []
+      "measures": {
+        "rowHeight": 49,
+        "borderedControlsInTable": 17,
+        "targetBar": {
+          "w": 856,
+          "h": 8,
+          "bg": "oklch(0.577 0.245 27.3)"
+        },
+        "clippedInputs_1440": 4,
+        "clippedInputs_390": 8,
+        "tableWrap_390": {
+          "scrollW": 567,
+          "clientW": 322
+        },
+        "breadcrumb": [
+          "Ar-Ge",
+          "Projeler",
+          "Detay",
+          "receteler"
+        ],
+        "aktifBadge_390": {
+          "w": 358,
+          "h": 20
+        }
+      },
+      "open": [],
+      "closed": [
+        {
+          "id": "arge-recete-01",
+          "criterion": 6,
+          "severity": "P0",
+          "text": "Sayısal input'larda değer görsel olarak kırpılıyor: 390px'te Miktar clientWidth 43 < scrollWidth 70 → '0.1500' yerine '0.1'; Fire % clientWidth 24 < 70 → '0.0000' yerine '0.0'. 0.1500 ile 0.0200 ekranda ayırt edilemiyor. 1440px'te de Fire % kırpık (62 < 73 → '2.000').",
+          "measure": "1440: 4 input scrollWidth>clientWidth; 390: 8 input scrollWidth>clientWidth (probe-arge-r1.json)",
+          "target": "Hiçbir sayısal input'ta scrollWidth > clientWidth: Fire % kolonu w-20→w-24, Miktar w-24→w-28, mobilde tablo min-w-[640px] ve input min-w-16",
+          "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+          "openedRound": 1,
+          "measureAfter": "probe-arge-r2.ts (editable v1): clippedInputs=[] hem 1440 hem 390px'te (0 kırpık input, eskiden 4/8) — Miktar w-28, Fire % w-24, tüm sayısal input'lar min-w-16, tablo min-w-[760px].",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-recete-02",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Rakam biçimi karışık: input'larda ham 4 ondalık ('1.0000' parti, '96.0000' verim %, '0.3500' genel gider); Birim maliyet kolonunda aynı anda '38.0000' (manuel) ve '₺120,00' (ortalama); özette 'Etkin çıktı 0.96' nokta ondalıklı, yanındaki '₺30,24' virgüllü.",
+          "measure": "3 form input'unda gereksiz 4 ondalık; 1 kolonda 2 farklı biçim; 1 satırda 2 farklı ondalık ayırıcı",
+          "target": "Girişte gereksiz sıfırlar kırpılmış (1 / 96 / 0,35), tüm ondalıklar tr-TR virgül, Birim maliyet kolonunda tek biçim (₺ + 2 hane)",
+          "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+          "openedRound": 1,
+          "measureAfter": "Tüm sayısal alanlar NumberInput (tr-TR virgül, gereksiz sıfır kırpma) ile değiştirildi: '1' / '97' / '₺50,00' / '0,2' / '0,02'; Birim maliyet kolonu tek biçim (₺ + 2 hane, manuel de dahil); 'Etkin çıktı' artık formatQty ile virgüllü.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-recete-03",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Çerçeve çorbası: tablo gövdesinde 17 adet kenarlıklı kontrol (combobox/input/select) — her hücre kutu içinde kutu, klasik ERP formu görüntüsü.",
+          "measure": "borderedControlsInTable = 17 (probe)",
+          "target": "Dinlenmede border-transparent + bg-transparent, kenarlık yalnız hover/focus-visible'da; dinlenme halinde görünür kenarlıklı kontrol sayısı 0",
+          "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+          "openedRound": 1,
+          "measureAfter": "probe-arge-r2.ts: borderedControlsInTable=0 (eskiden 17) — dinlenmede border-transparent, yalnız hover/focus-visible'da görünür.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-recete-04",
+          "criterion": 4,
+          "severity": "P1",
+          "text": "Hedef maliyet çubuğu 856×8px, %100 dolu ve tam doygun kırmızı — ekranın en baskın görsel öğesi, veri değeri düşük.",
+          "measure": "bar 856×8px, bg oklch(0.577 0.245 27.3), genişlik %100",
+          "target": "Yükseklik 8→4px, dolgu bg-destructive/70, hedefi gösteren 1px işaretçi; sapma ayrıca '%14 hedef üstü' rozetiyle metinleşsin",
+          "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+          "openedRound": 1,
+          "measureAfter": "Çubuk yüksekliği 8→4px (trackH:4), dolgu bg-destructive/70 (oklab .../0.7 — %70 opaklık), hedef noktasında 1px işaretçi eklendi, sapma '%N hedef üstü/altında' rozetiyle metinleşti.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-recete-05",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Yoğunluk: simülasyon tablosu satır yüksekliği 49px (h-9 kontroller + py-1.5×2).",
+          "measure": "rowHeights = [49,49,49,49]",
+          "target": "36-40px: kontroller h-8 (32px) + py-1 → satır ≤40px",
+          "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+          "openedRound": 1,
+          "measureAfter": "probe-arge-r2.ts: rowHeights 39px (eskiden 49px, hedef ≤40px) — kontroller h-8, hücre dolgusu py-[3px].",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-recete-06",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Breadcrumb ve mobil üst çubuk ham URL parçasını gösteriyor: 'receteler' (küçük harf, diyakritiksiz). SUBPATH_LABELS'ta anahtar yok.",
+          "measure": "breadcrumb = ['Ar-Ge','Projeler','Detay','receteler']",
+          "target": "nav.ts SUBPATH_LABELS'a receteler: 'Deneme Reçeteleri' eklensin; breadcrumb son parçası 'Deneme Reçeteleri'",
+          "file": "apps/web/src/lib/nav.ts",
+          "openedRound": 1,
+          "measureAfter": "nav.ts SUBPATH_LABELS'a receteler: 'Deneme Reçeteleri' eklendi — probe: breadcrumb son parçası 'Deneme Reçeteleri'.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-recete-07",
+          "criterion": 10,
+          "severity": "P1",
+          "text": "İkon ve etiket kademesi: tüm eylem ikonları 14px (size-3.5); alan etiketi 11px, tablo başlığı 11px uppercase, h2 15px, özet 15px — 5 kademe.",
+          "measure": "size-3.5 (14px) 28 kullanım; sayfa font kademesi 5",
+          "target": "İkonlar 16px (size-4); tipografi 11/13/15 üç kademeye insin",
+          "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+          "openedRound": 1,
+          "measureAfter": "Tüm eylem ikonları size-4 (16px) — cost-simulator.tsx + recipe-workspace.tsx + new-recipe-dialog.tsx; tipografi 11/13/15 üç kademeye indirildi (kalan 12/14px kullanımı paylaşılan Button/Combobox bileşenlerinden geliyor, bkz. rapor).",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        },
+        {
+          "id": "arge-recete-08",
+          "criterion": 2,
+          "severity": "P1",
+          "text": "8pt ritmi ve durum geri bildirimi: space-y-5 (20px) + p-3 (12px) + space-y-1.5 (6px) karışık; kaydedilmemiş değişiklik göstergesi ve satır bazlı doğrulama hatası yok (yalnız toast).",
+          "measure": "dikey adımlar 6/12/20 px; 'kaydedilmemiş' göstergesi yok",
+          "target": "space-y-6 / p-4 / space-y-2 (8pt); form kirliyken başlık yanında 'Kaydedilmemiş değişiklik' rozeti + satır bazlı hata metni",
+          "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+          "openedRound": 1,
+          "measureAfter": "space-y-5→space-y-6, hedef kutusu p-3→p-4 ve space-y-1.5→space-y-2 (8pt); form kirliyken v1 başlığının yanında 'Kaydedilmemiş değişiklik' rozeti (dirty-check.ts: hasDirtyBadge=true) ve boş miktar için satır altı 'Miktar gerekli' hata metni (hasError=true) eklendi.",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        }
+      ]
     },
     "/arge/receteler": {
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [5,4,5,5,5,5,4,5,5,5,4,5],
+      "scores": [
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        4,
+        5
+      ],
       "total": 57,
       "winner": "Plantero",
       "scoreNotes": "Tur 1 taban. Satır 36px/13px, taşma yok, sağ hizalı tabular para, hairline ayraçlar, sessiz rozetler, mobil kart 63.5px, 390px'te <44px dokunma hedefi yok. c2=4: başlık/açıklama/filtre üç ayrı satırda ~150px tüketiyor. c7=4: DataTable boş durumunda eylem yok. c11=4: mobil kartta 'Versiyon' (v1/v2) alanı düşüyor. Toplam 57 = referans 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
-      "measures": { "rowHeights_1440": [36,36,36], "rowHeights_390": [63.5,63.5,63.5], "scrollWidth": 1440, "overflowX": false, "touchTargetsBelow44_390": 1, "fontSizes_1440": {"10":2,"11":5,"12":9,"13":29,"14":2,"15":1,"18":1,"24":1}, "distinctColors": 21, "h1": "24px/600" },
+      "measures": {
+        "rowHeights_1440": [
+          36,
+          36,
+          36
+        ],
+        "rowHeights_390": [
+          63.5,
+          63.5,
+          63.5
+        ],
+        "scrollWidth": 1440,
+        "overflowX": false,
+        "touchTargetsBelow44_390": 1,
+        "fontSizes_1440": {
+          "10": 2,
+          "11": 5,
+          "12": 9,
+          "13": 29,
+          "14": 2,
+          "15": 1,
+          "18": 1,
+          "24": 1
+        },
+        "distinctColors": 21,
+        "h1": "24px/600"
+      },
       "open": [
-        { "id": "arge-receteler-01", "criterion": 11, "severity": "P2", "text": "Mobil kartta 'Versiyon' (v1/v2) ve 'Devrolmuş BOM' alanları düşüyor; versiyon listesinde hangi versiyonun maliyeti gösterildiği mobilde okunamıyor.", "measure": "version kolonunda meta.mobile tanımlı değil (all-recipes-table.tsx:19); mobil kart 4 alan, masaüstü 7 kolon", "target": "version kolonuna meta.mobile: 'meta' ekle ya da başlığa 'Oat Barista Reçetesi · v2' olarak birleştir", "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx", "openedRound": 1 },
-        { "id": "arge-receteler-02", "criterion": 2, "severity": "P2", "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk satıra kadar ~150px dikey alan tüketiliyor (Linear başlık+filtre+görünüm seçiciyi tek satırda tutar).", "measure": "h1 üstü 88px + açıklama + filtre şeridi = ilk tablo satırına 150px", "target": "Başlık ile filtre şeridi tek satırda; ilk satıra ≤112px", "file": "apps/web/src/app/(app)/arge/receteler/page.tsx", "openedRound": 1 }
+        {
+          "id": "arge-receteler-02",
+          "criterion": 2,
+          "severity": "P2",
+          "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk satıra kadar ~150px dikey alan tüketiliyor (Linear başlık+filtre+görünüm seçiciyi tek satırda tutar).",
+          "measure": "h1 üstü 88px + açıklama + filtre şeridi = ilk tablo satırına 150px",
+          "target": "Başlık ile filtre şeridi tek satırda; ilk satıra ≤112px",
+          "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
+          "openedRound": 1
+        }
       ],
-      "closed": []
+      "closed": [
+        {
+          "id": "arge-receteler-01",
+          "criterion": 11,
+          "severity": "P2",
+          "text": "Mobil kartta 'Versiyon' (v1/v2) ve 'Devrolmuş BOM' alanları düşüyor; versiyon listesinde hangi versiyonun maliyeti gösterildiği mobilde okunamıyor.",
+          "measure": "version kolonunda meta.mobile tanımlı değil (all-recipes-table.tsx:19); mobil kart 4 alan, masaüstü 7 kolon",
+          "target": "version kolonuna meta.mobile: 'meta' ekle ya da başlığa 'Oat Barista Reçetesi · v2' olarak birleştir",
+          "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx",
+          "openedRound": 1,
+          "measureAfter": "meta.mobile:'meta' eklendi — mobil kartta 'Oat Barista v2· v1' gibi versiyon artık görünüyor (all-recipes-table.tsx, shot: arge-receteler/mobile.png).",
+          "closedRound": 2,
+          "verifiedBy": "ölçüm"
+        }
+      ]
     }
   },
   "sharedFindings": [
-    { "id": "shell-pageheader-badge-stretch", "module": "shell", "criterion": 9, "severity": "P1", "text": "PageHeader actions kabı mobilde [&>*]:flex-1 uyguluyor; actions içindeki StatusBadge 390px'te 358×20px'e uzuyor — rozet kendi içerik genişliğini korumalı. Ar-Ge proje detay (board + reçeteler) sayfalarında görünür.", "measure": "390px'te 'Aktif' rozeti w=358, h=20 (probe-arge-r1.json)", "target": "Rozet içerik genişliğinde kalsın (≤80px): [&>*]:flex-1 yerine [&>button]:flex-1 [&>a]:flex-1 ya da rozeti eyebrow satırına al", "file": "apps/web/src/components/page-header.tsx", "openedRound": 1 }
+    {
+      "id": "shell-pageheader-badge-stretch",
+      "module": "shell",
+      "criterion": 9,
+      "severity": "P1",
+      "text": "PageHeader actions kabı mobilde [&>*]:flex-1 uyguluyor; actions içindeki StatusBadge 390px'te 358×20px'e uzuyor — rozet kendi içerik genişliğini korumalı. Ar-Ge proje detay (board + reçeteler) sayfalarında görünür.",
+      "measure": "390px'te 'Aktif' rozeti w=358, h=20 (probe-arge-r1.json)",
+      "target": "Rozet içerik genişliğinde kalsın (≤80px): [&>*]:flex-1 yerine [&>button]:flex-1 [&>a]:flex-1 ya da rozeti eyebrow satırına al",
+      "file": "apps/web/src/components/page-header.tsx",
+      "openedRound": 1
+    }
   ],
   "codeScan": {
     "transitionAll": 0,

@@ -332,7 +332,7 @@ export function CostSimulator({
               return (
                 <Fragment key={f.id}>
                   <tr className="border-b border-border/40 last:border-0 hover:bg-muted/20">
-                    <td className="px-2.5 py-1">
+                    <td className="px-2.5 py-[3px]">
                       {editable ? (
                         // Dinlenmede kenarlıksız/saydam, yalnızca hover/focus'ta kenarlık — "çerçeve
                         // çorbası" kök neden düzeltmesi (Tur 1 P1 arge-recete-03).
@@ -348,7 +348,7 @@ export function CostSimulator({
                         <div><div className="font-medium">{product?.name}</div><div className="font-mono text-[11px] text-muted-foreground">{product?.sku}</div></div>
                       )}
                     </td>
-                    <td className="px-2 py-1">
+                    <td className="px-2 py-[3px]">
                       <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => (
                         <NumberInput
                           value={field.value}
@@ -362,7 +362,7 @@ export function CostSimulator({
                         />
                       )} />
                     </td>
-                    <td className="px-2 py-1">
+                    <td className="px-2 py-[3px]">
                       {editable ? (
                         <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
                           <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input"><SelectValue /></SelectTrigger>
@@ -372,7 +372,7 @@ export function CostSimulator({
                         <span className="text-muted-foreground">{COST_SOURCE_LABELS[source]}</span>
                       )}
                     </td>
-                    <td className="px-2 py-1 text-right">
+                    <td className="px-2 py-[3px] text-right">
                       {editable && source === 'manual' ? (
                         <Controller control={form.control} name={`lines.${i}.manualUnitCost`} render={({ field }) => (
                           <NumberInput
@@ -390,7 +390,7 @@ export function CostSimulator({
                         <MoneyCell value={uCost} digits={2} />
                       )}
                     </td>
-                    <td className="px-2 py-1">
+                    <td className="px-2 py-[3px]">
                       <Controller control={form.control} name={`lines.${i}.scrapPct`} render={({ field }) => (
                         <NumberInput
                           value={field.value}
@@ -403,11 +403,11 @@ export function CostSimulator({
                         />
                       )} />
                     </td>
-                    <td className="px-2 py-1 text-right">
+                    <td className="px-2 py-[3px] text-right">
                       <MoneyCell value={computation.lineCosts[i]?.toFixed(4) ?? '0'} digits={2} />
                     </td>
                     {editable ? (
-                      <td className="px-1 py-1">
+                      <td className="px-1 py-[3px]">
                         <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="text-muted-foreground hover:text-destructive" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
                       </td>
                     ) : null}

@@ -109,7 +109,7 @@ export function RecipeWorkspace({
 
         {canManage && selectedGroup ? (
           <Button variant="outline" size="sm" className="w-full" onClick={newVersion} disabled={pending}>
-            {pending ? <Loader2 className="size-3.5 animate-spin" /> : <Copy className="size-3.5" />} Yeni versiyon
+            {pending ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />} Yeni versiyon
           </Button>
         ) : null}
       </div>

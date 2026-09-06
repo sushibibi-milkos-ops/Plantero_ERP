@@ -199,9 +199,11 @@ export function KanbanBoard({
             key={col.id}
             type="button"
             onClick={() => jumpToColumn(col.id)}
-            className="shrink-0 rounded-full border border-border/60 px-2.5 py-1 text-[11px] whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:border-border hover:text-foreground"
+            // min-h-11: dokunma hedefi ≥44px (390px'te ölçüldü) — küçük bir metin rozeti de olsa
+            // etkileşimli her öğe bu eşiği karşılamalı (kriter 9).
+            className="flex min-h-11 shrink-0 items-center rounded-full border border-border/60 px-2.5 text-[11px] whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:border-border hover:text-foreground md:min-h-8"
           >
-            {col.name} <span className="tabular-nums">{(columnCards[col.id] ?? []).length}</span>
+            {col.name} <span className="ml-1 tabular-nums">{(columnCards[col.id] ?? []).length}</span>
           </button>
         ))}
       </div>

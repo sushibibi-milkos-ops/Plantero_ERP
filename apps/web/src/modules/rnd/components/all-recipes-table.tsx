@@ -15,7 +15,9 @@ export function AllRecipesTable({ recipes }: { recipes: RecipeSummaryRow[] }) {
     () => [
       { accessorKey: 'name', header: 'Reçete', meta: { mobile: 'title', flex: true } },
       { accessorKey: 'projectName', header: 'Proje', meta: { mobile: 'subtitle' } },
-      { id: 'version', accessorFn: (r) => r.latestVersion ?? 0, header: 'Versiyon', meta: { width: 90 }, cell: ({ row }) => (row.original.latestVersion != null ? `v${row.original.latestVersion}` : '—') },
+      // meta.mobile:'meta' — eskiden mobil kartta hiç görünmüyordu (Tur 1 P2 arge-receteler-01):
+      // hangi versiyonun maliyeti gösterildiği mobilde okunamıyordu.
+      { id: 'version', accessorFn: (r) => r.latestVersion ?? 0, header: 'Versiyon', meta: { width: 90, mobile: 'meta', label: 'Versiyon' }, cell: ({ row }) => (row.original.latestVersion != null ? `v${row.original.latestVersion}` : '—') },
       {
         id: 'status', accessorFn: (r) => r.latestStatus ?? '', header: 'Durum', meta: { width: 130, mobile: 'badge' },
         cell: ({ row }) => {
