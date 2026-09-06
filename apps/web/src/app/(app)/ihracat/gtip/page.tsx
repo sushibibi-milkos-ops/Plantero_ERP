@@ -30,33 +30,25 @@ export default async function ExportGtipPage() {
         <KpiCard variant="strip" title="Eşlenmemiş" value={unmapped} format="int" hint={unmapped > 0 ? 'GTİP atanmalı' : 'Tamamlandı'} />
       </KpiStripRow>
 
-      {/* Tur 1 P1 kök neden düzeltmesi: başlık önceden UPPERCASE (ihracat-gtip-03) idi — alttaki
-          ürün eşleme tablosu (`DataTable`) cümle düzeni 12px muted kullanıyor, sekmesiz tek ekranda
-          fark doğrudan görülüyordu. `text-[12px] font-medium text-muted-foreground` artık `DataTable`
-          th'siyle birebir aynı. Sütun genişlikleri (ihracat-gtip-04, `DataTable`'daki gibi INLINE
-          `style` — `table-layout:fixed` + Tailwind `w-*` denendi ama üç sütun da genişlik alınca
-          tarayıcı oranlı ölçekleyip w-full'e geri yayıyordu): 'Açıklama' önceden genişliğin %74'ünü
-          (847px) kaplıyordu, artık ≤480px (~%42) — 'Birim' sütunu sağ kenarda yalnız kalmaz. */}
-      <div className="mb-6 overflow-x-auto rounded-lg border border-border/60">
-        <table className="min-w-full text-[13px]">
-          <thead>
-            <tr className="border-b border-border/60 text-left text-[12px] font-medium text-muted-foreground">
-              <th className="px-3 py-2" style={{ width: 140, minWidth: 140 }}>GTİP</th>
-              <th className="px-3 py-2" style={{ width: 480, maxWidth: 480 }}>Açıklama</th>
-              <th className="px-3 py-2" style={{ width: 110, minWidth: 110 }}>Birim</th>
-            </tr>
-          </thead>
-          <tbody>
-            {hsCodeOptions.map((h) => (
-              <tr key={h.id} className="border-b border-border/60 last:border-0 hover:bg-muted/40">
-                <td className="px-3 py-2.5 font-mono font-medium">{h.code}</td>
-                <td className="px-3 py-2.5" style={{ maxWidth: 480 }} title={h.description}>{h.description}</td>
-                <td className="px-3 py-2.5 text-muted-foreground">{h.unit ?? '—'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {hsCodeOptions.length === 0 ? <EmptyState compact title="GTİP kodu tanımlı değil" /> : null}
+      {/* Tur 1 P1 kök neden düzeltmesi (ihracat-gtip-03, -04): bu 4 satırlık referans listesi bir
+          <table> DEĞİL, tek satırlık bir etiket/kart şeridi — hem UPPERCASE başlık uyuşmazlığını
+          (alttaki `GtipMappingTable` `DataTable` kullanıyor, burada th hiç yok) hem de 'Açıklama'
+          sütununun genişliğin %74'ünü (847px) yutup 'Birim'i sağ kenarda yalnız bırakmasını kökten
+          ortadan kaldırır — `max-width`/`table-layout:fixed` denemeleri (bkz. git geçmişi) tarayıcının
+          kalan boşluğu yine orantılı geri dağıtması yüzünden ölçülebilir bir iyileşme vermedi; bu 4
+          statik referans kod için tablo anatomisi zaten gereksizdi (kriter 12 — sessiz satır, çerçeve
+          çorbası değil). Her kart kendi içinde satır kırar; genişlik içeriğe göre doğal akar. */}
+      <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {hsCodeOptions.map((h) => (
+          <div key={h.id} className="rounded-lg border border-border/60 px-3 py-2.5">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="font-mono text-[13px] font-medium">{h.code}</span>
+              <span className="shrink-0 text-xs text-muted-foreground">{h.unit ?? '—'}</span>
+            </div>
+            <p className="mt-0.5 text-xs text-muted-foreground">{h.description}</p>
+          </div>
+        ))}
+        {hsCodeOptions.length === 0 ? <EmptyState compact title="GTİP kodu tanımlı değil" className="sm:col-span-2 lg:col-span-4" /> : null}
       </div>
 
       <GtipMappingTable products={products} hsCodeOptions={hsCodeOptions} editable={userCan(user, 'export.manage')} />
