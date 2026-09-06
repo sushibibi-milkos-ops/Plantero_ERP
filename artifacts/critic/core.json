@@ -1,6 +1,6 @@
 {
   "module": "core",
-  "round": 23,
+  "round": 24,
   "note": "core modülü (packages/core) UI route taşımaz; bu dosya docs/DESIGN-SCORECARD.md'nin route/kriter şemasını değil, docs/INVARIANTS.md veri bütünlüğü kurallarını (I1-I41, packages/db/src/checks) izler. Ölçüm aracı `pnpm db:check` (SQL tabanlı) — `scripts/measure.ts` (Playwright/DOM ölçümü) burada uygulanamaz. Tur 19 (dış kritik notasyonunda 'Tur 1'): kritik, core'un ürettiği metinleri (izleme düğümü alt metni, geri çağırma bildirim taslağı) gerçek tarayıcı DOM ölçümüyle (probe-kalite-r1) yakaladı — bu iki bulgu için ölçüm dış kritiğin `decimals=[...]` DOM taramasıdır; builder tarafında eşdeğer kanıt aynı seed verisiyle çalıştırılan bir tsx probe scripti (traceForward/traceBackward + buildDraftMessage çıktısı, geçici, komut sonunda silindi) + yeni vitest regresyon testleridir (packages/core/src/__tests__/money.test.ts, trace.test.ts, packages/core/src/quality/recall.test.ts).",
   "findings": [
     {
@@ -181,6 +181,22 @@
       "fix": "budget.test.ts'e yeni bir regresyon testi eklendi: taze bir gider hesabına postJournalEntry (ledger:'both') ile 5.000 TL'lik fiş postalanır (budget_lines.actual/variance ve cashflow_lines.actual_fixed_expenses'in postJournalEntry TEK BAŞINA güncellediği doğrulanır), ardından reverseJournalEntry ile ters çevrilir ve AYNI alanların (bu teste özel, önceden hiç hareket görmemiş hesap sayesinde) TAM SIFIRA / önceki plana göre negatif varyansa döndüğü ve cashflow_lines.actual_fixed_expenses'in en az 4.999 TL azaldığı doğrulanır — elle refreshActuals çağrılmadan.",
       "measureAfter": "pnpm --filter @plantero/core exec vitest run src/finance/budget.test.ts → 4 test GEÇTİ (yeni P2 regresyon testi dahil). pnpm --filter @plantero/core exec vitest run (tüm paket) → 45 dosya / 257 test GEÇTİ; pnpm typecheck, pnpm lint temiz; pnpm db:reset && pnpm db:check → 45/45 kural GEÇTİ (bu bulgu veri bütünlüğünü değil test kapsamını değiştirdi).",
       "verifiedBy": "vitest birim testi (budget.test.ts)"
+    },
+    {
+      "id": "core-lot-fwd-wip-scrap-blindspot-01",
+      "module": "core",
+      "severity": "P2",
+      "rule": "I6",
+      "file": "packages/db/src/checks/06_lot_forward.sql",
+      "route": "pnpm db:check",
+      "status": "closed",
+      "closedRound": 24,
+      "description": "db:check bütünlük paketi (I5/I6 dahil) production kökenli mamul lotlarının miktar dengesini GERÇEKTEN doğrulamıyordu — I6'nın `lot_qty_exceeds_initial` alt kuralı bu dengeyi `scraps`/`work_order_scraps` denormalize ara tablolarından okuyor, ama `packages/core/src/production/finish.ts::recordScrap()` `work_order_scraps.lot_id`'yi (şemada nullable kolon var) hiç yazmıyor. Fresh seed'deki iki mamul lotu — PL-260816-H1-01 (id 71c471a6-…, WO fire 0,6000) ve PL-260823-H2-01 (WO fire 0,5000) — ikisinde de `work_order_scraps.lot_id IS NULL`; I6'nın `ws` LEFT JOIN'i bu iki lot için sessizce 0 döner ve I6 gerçek fiziksel dengeyi hiç test etmeden yeşile düşer. `pnpm db:check` bu yüzden 0 ihlal basıyor olsa da, bu 'geçerliliğin doğrulanmasından' değil, kontrolün YANLIŞ/kopuk kaynağa bakmasından kaynaklanıyor — docs/modules/kalite.md'nin `/kalite/izlenebilirlik` için verdiği 'giriş = tüketim + sevk + fire + eldeki' sözünün hiçbir otomatik SQL kanıtı yoktu, yalnızca `apps/web/src/modules/quality/queries.ts::getTraceForLot` (UI katmanı, Tur 8'de zaten doğru formülle düzeltilmiş) bunu doğru hesaplıyordu — SQL invariant seviyesinde eşdeğeri eksikti.",
+      "failure_scenario": "Bir regresyon production-origin bir lotun fiziksel miktar dengesini bozarsa (ör. fazladan bir `production` kind `stock_moves` satırı — çift postalanan üretim çıktısı, ya da elle/hatalı bir insert), I5/I6/I8/I22'nin HİÇBİRİ bunu yakalamıyor: canlı egzersizle kanıtlandı — fresh seed sonrası PL-260816-H1-01 (id 71c471a6-7723-4f38-8a34-3772def9c68e) lotuna fazladan 10 birimlik fantom bir `production` hareketi eklendi (rollback'li transaction, kalıcı veri değişmedi); aynı anda I5/I6/I8/I22'nin dördü de 0 satır (0 ihlal) döndürdü — hiçbiri 10 birimlik sahte girişi fark etmedi. Yeni I47 aynı mutasyon üzerinde ANINDA 1 ihlal verdi (`production_lot_qty_balance_mismatch`, expected=67,0000, actual=57,0000, diff=-10,0000).",
+      "measureBefore": "pnpm db:reset && pnpm db:check → 46/46 kural 0 ihlal basıyor ('Toplam ihlal: 0'), fakat PL-260816-H1-01/PL-260823-H2-01 için work_order_scraps.lot_id IS NULL olduğu SQL ile doğrulandı (psql sorgusu, 2/2 satır NULL) — I6'nın ws JOIN'i bu iki lotu hiç görmüyor. Canlı egzersiz: aynı iki lottan birine (71c471a6-…) rollback'li transaction içinde fazladan 10 birimlik fantom 'production' stock_moves satırı eklendi → I5/I6/I8/I22 dördü de 0 satır (0 ihlal) döndürdü — hiçbir mevcut kural gerçek bir 10 birimlik miktar sapmasını yakalamadı.",
+      "fix": "packages/db/src/checks/47_production_lot_qty_balance.sql eklendi: production kökenli her lot için (`stock_lots.origin_work_order_id IS NOT NULL`) dengeyi TEK kanonik kaynaktan (`stock_moves`+`stock_quants`, hiçbir denormalize ara tabloya dokunmadan) yeniden kuruyor — Σ(production/byproduct/count_gain/return_in/recall_return girişleri) = Σ(consumption/delivery/count_loss/return_out çıkışları) + Σ(scrap YALNIZCA kaynağı gerçek/stoklu bir lokasyon iken — usage IN internal/quarantine/rejected/transit) + eldeki. `recordScrap()`'ın virtual→virtual WIP fire hareketleri (kaynak usage='production' — SANAL, ledger.ts VIRTUAL_USAGES, `enforceDirection` bunu direction:'wip' işaretler, hiçbir zaman stock_quants'a dokunmaz) bilerek dışlandı — apps/web/src/modules/quality/queries.ts::getTraceForLot'un Tur 8'de düzelttiği formülün birebir SQL karşılığı. checks.test.ts RULE_COUNT 46→47'ye güncellendi, docs/INVARIANTS.md'ye I47 satırı eklendi. `recordScrap()`'ın `work_order_scraps.lot_id`'yi hiç doldurmaması ayrı, dormant bir P2 veri-eksikliği olarak notlandı (bugün hiçbir invariantı kırmıyor, kapsam dışı bırakıldı — gelecek turda `packages/core/src/production/finish.ts::recordScrap`'e `lotId` eklenmesi önerilir).",
+      "measureAfter": "pnpm db:reset && pnpm db:check → 47/47 kural 0 ihlal (I47 dahil, fresh seed — PL-260816-H1-01/PL-260823-H2-01 dahil). Aynı canlı egzersiz (71c471a6-… lotuna rollback'li transaction içinde fazladan 10 birimlik fantom 'production' hareketi) tekrarlandı: I47 ANINDA 1 ihlal verdi (production_lot_qty_balance_mismatch, expected=67.0000, actual=57.0000, diff=-10.0000) — aynı anda I5/I6/I8/I22 hâlâ 0 satır döndürdü (bu regresyonu I47 dışında hiçbir kural yakalamıyor, tam olarak beklenen kapsam ayrımı). Transaction ROLLBACK edildi, pnpm db:check ardından yeniden 47/47 0 ihlal doğrulandı (kalıcı veri değişmedi). pnpm --filter @plantero/db exec vitest run src/checks/checks.test.ts → 49/49 test GEÇTİ (RULE_COUNT=47). pnpm --filter @plantero/db exec vitest run (tüm paket) → 3 dosya / 57 test GEÇTİ. pnpm typecheck, pnpm lint, pnpm test (tüm monorepo) temiz.",
+      "verifiedBy": "pnpm db:check — I47 0 ihlal (fresh seed) + canlı egzersiz (rollback'li fantom stock_moves) I47'nin yakaladığını, I5/I6/I8/I22'nin yakalamadığını kanıtladı"
     }
   ],
   "open": [],
@@ -234,6 +250,11 @@
       "id": "core-budget-actuals-stale-01",
       "closedRound": 22,
       "verifiedBy": "pnpm db:check — I45 0 ihlal (canlı egzersiz kanıtı) + vitest (budget.test.ts yeni regresyon testi)"
+    },
+    {
+      "id": "core-lot-fwd-wip-scrap-blindspot-01",
+      "closedRound": 24,
+      "verifiedBy": "pnpm db:check — I47 0 ihlal (fresh seed) + canlı egzersiz (rollback'li fantom stock_moves) I47'nin yakaladığını, I5/I6/I8/I22'nin yakalamadığını kanıtladı"
     }
   ]
 }
