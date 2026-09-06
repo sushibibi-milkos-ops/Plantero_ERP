@@ -1,11 +1,11 @@
 {
  "module": "ihracat",
  "round": 4,
- "note": "Tur 4 (builder düzeltmesi). Tur 3'ün açtığı 2 P1 (ihracat-gtip-07 taşma REGRESYONU, ihracat-detay-10 ham DB enum sızıntısı) ve 2 P2 (ihracat-yeni-04 eylem çubuğu hizası, ihracat-kurlar-08 'TCMB-SEED' etiketi) kapatıldı, her biri pnpm typecheck/lint temiz + kök-neden düzeltmesiyle ölçüldü (scripts/probe-ihracat-r3c-b.ts yeniden çalıştırıldı, ek doğrulama scriptleri yerinde çalıştırıldı — belgeler artifacts/screens/ altında). 6 rotanın 6'sı da artık açık P0/P1/P2 bulgusu olmadan 60/60 → KAZANAN: Plantero (tümü).",
- "measurements": "artifacts/critic/probe-ihracat-r3c.json, probe-ihracat-r3c-b.json; scripts/probe-ihracat-r3c.ts, scripts/probe-ihracat-r3c-b.ts, scripts/shot-ihracat-r3c-tabs.ts; artifacts/screens/ihracat-sevkiyatlar/, ihracat-sevkiyatlar-yeni/, ihracat-belgeler/, ihracat-kurlar/, ihracat-gtip/, ihracat-sevkiyatlar-48144485-.../, ihracat-sevkiyat-detay-sekmeler-r3c/; probe-ihracat-r3c-b.json (yeniden çalıştırıldı, gtip+belgelerMobCards), artifacts/screens/ihracat-gtip/, ihracat-sevkiyat-detay-sekmeler-r3c/mobile-belgeler.png, ihracat-sevkiyatlar-yeni/, ihracat-kurlar/ (Tur 4)",
+ "note": "Tur 4 (bağımsız kritik). Veritabanı yeniden tohumlandı (3 sevkiyat, EXP-2026-000001..3; önceki turun [id] görüntüleri artık geçersiz), bu yüzden 6 rota da sıfırdan ölçüldü. Tur 3'ün kapattığı bulgular yeniden ölçüldü ve kapalı kaldı (gtip taşma 1152=1152, kurlar Y ekseni virgüllü, Kaynak etiketi 'TCMB' — DB'de hâlâ TCMB-SEED ama UI eşlemesi doğru, Belgeler sekmesi kart 60px, mobil Düzenle 44px, yeni form blok sağ kenarları 1032). ANCAK daha önce hiç ölçülmemiş 4 yüzey ölçüldü ve 4 yeni açık bulgu doğdu: (a) yeni form sipariş seçicisinin AÇIK hâli ham DB sayısı gösteriyor (216.0000 EUR), (b) Fatura & kur boş durumu var olmayan bir eyleme yönlendiriyor, (c) GTİP tablosunda Kategori+Tip aynı alanın iki kopyası, (d) 390px sevkiyat kartının meta zinciri iki yerden kırpılıyor. 6 rotanın 2'si (belgeler, kurlar) kazandı, 4'ü kaybetti.",
+ "measurements": "artifacts/critic/measure-ihracat-r4/*.json (pnpm measure, 6 rota x 1440x900 + 390x844), artifacts/critic/probe-ihracat-r4.json (sütun distinct/genişlik/dash istatistikleri, sekme tabloları, detay eylem butonları), probe-ihracat-r4b.json (sipariş seçici seçenekleri, form alanları, satır hover), probe-ihracat-r4c.json (satır sınıfları, odak halkası, geçersiz gönderim), probe-ihracat-r4d.json (seçici açık hâlde seçenek metni + yükseklik, iki viewport), probe-ihracat-r4e.json (mobil kart meta satırı segment kırpması ve ayraç boşluğu); scripts/probe-ihracat-r4{,b,c,d,e}.ts, scripts/shot-ihracat-r4-tabs.ts; artifacts/screens/ihracat-sevkiyatlar/, ihracat-belgeler/, ihracat-kurlar/, ihracat-gtip/, ihracat-sevkiyatlar-yeni/ (desktop-submit-empty.png, {desktop,mobile}-combobox-open.png, -order-selected.png), ihracat-sevkiyatlar-e9603270-8ee8-471f-b26f-d4cfc2545431/, ihracat-sevkiyat-detay-sekmeler-r4/ (4 sekme x 2 viewport)",
  "routes": {
   "/ihracat/sevkiyatlar": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -17,14 +17,25 @@
     5,
     5,
     5,
-    5,
+    4,
     5,
     5,
     5
    ],
-   "total": 60,
-   "scoreNotes": "Tur 3: 60 → 60 (değişiklik yok, bağımsız yeniden ölçüm). 1440x900: h1 24px/600/-0,6px, gövde 13px (27 düğüm), etiket 12px (15), tek 14px — 3 kademe; main içinde 3 farklı metin rengi; tablo 10 sütun, 3 satır × 36px, wrapScrollW=wrapClientW=1152 (taşma yok), th textTransform:none 12px, €/₺ hücreleri sağ hizalı tabular-nums, €0,00 muted. 390x844: documentElement 390=390, 3/3 kart 63,5px, 0 adet <44px dokunma hedefi; KPI şeridi bilinçli yatay kaydırıcı (scrollbar-thin, sw 632/cw 358). Açık P0/P1 yok, 60 ≥ 57 → KAZANAN: Plantero.",
-   "open": [],
+   "total": 59,
+   "scoreNotes": "Tur 3→4: 60 → 59. Kriter 9: 5→4 — 390px'te ETD'si olan sevkiyat kartının meta satırı İKİ yerden kırpılıyor (müşteri adı sw134→w111 truncate + son tarih '06.09....' kırpık); modül `etd` ve `createdAt` alanlarının İKİSİNİ birden mobile:'meta' yapıyor (shipments-table.tsx:29-30), 390px'te 3 segment + 2 ayraç sığmıyor (probe-ihracat-r4e.json card 1). Diğer kriterler doğrulandı: 1440x900 h1 24px/600, gövde 13px (49 düğüm), etiket 12px (15), 14px (3) — 3 kademe; 10 sütun, 3 satır x 36px, wrapScrollW=wrapClientW=1152 (taşma yok); €/₺ sağ hizalı tabular-nums, €0,00 muted; 390x844: documentElement 390=390, 3/3 kart 63,5px, gerçek dokunma hedefi <44px yok (yalnız breadcrumb metni).",
+   "open": [
+    {
+     "id": "ihracat-sevk-03",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te sevkiyat kartının meta satırı iki yerden kırpılıyor: EXP-2026-000002 kartında müşteri adı truncate ediliyor (scrollWidth 134 > width 111) ve zincirin sonundaki oluşturma tarihi '06.09....' olarak kesiliyor — kullanıcı kartta iki tarihten hiçbirini tam okuyamıyor. Kök neden modülde: shipments-table.tsx hem `etd` (satır 29) hem `createdAt` (satır 30) sütununa mobile:'meta' veriyor; 390px'te alt satır = müşteri + ayraç + ETD + ayraç + oluşturma sığmıyor. ETD'si olmayan kartlarda (2/3) sorun görünmüyor, ama gerçek sevkiyatların çoğunda ETD dolu olur.",
+     "measure": "390x844 EXP-2026-000002 kartı: partnerName span scrollWidth=134 > width=111 (truncated), meta zincirinde 2 ayraç, son segment kırpık ('06.09....'); ETD'siz kartlarda 0 kırpma (probe-ihracat-r4e.json '/ihracat/sevkiyatlar' card 1)",
+     "target": "390px'te kart meta satırındaki HİÇBİR segment kırpılmasın (her segment için scrollWidth ≤ width) ve alt başlıktan sonra en çok 1 meta segmenti kalsın: `createdAt` sütununu mobile:'hidden' yap (ETD sevkiyat için daha bilgilendirici) — ya da meta zincirini tek segmente indir.",
+     "file": "apps/web/src/modules/export/components/shipments-table.tsx:29-30",
+     "openedRound": 4
+    }
+   ],
    "closed": [
     {
      "id": "ihracat-sevk-01",
@@ -58,7 +69,7 @@
    ]
   },
   "/ihracat/sevkiyatlar/[id]": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "probeId": "03241adc-54f8-480a-ba87-45d5f5fe2eb0 (EXP-2026-000002, gümrükte, standart rejim — 4 sekmenin tamamı ölçüldü)",
@@ -68,17 +79,48 @@
     5,
     5,
     5,
+    4,
+    4,
     5,
     5,
     5,
-    5,
-    5,
-    5,
+    4,
     5
    ],
-   "total": 60,
-   "scoreNotes": "Tur 4 (builder düzeltmesi): 59→60. k12 4→5 (ihracat-detay-10 kapandı: mobil kartın 2. satırında artık ham DB enum anahtarı yok — DOC_SHORT_LABEL yalnızca gerçek ticaret kısaltmalarını [ATR,EUR.1,B/L,CMR,AWB,ETGB] gösterir, başlığı tekrar eden 6 kod hiç basılmaz; probe-ihracat-r3c-b.json belgelerMobCards). Açık P0/P1 yok, 60 ≥ 57 → KAZANAN: Plantero.",
-   "open": [],
+   "total": 57,
+   "scoreNotes": "Tur 3→4: 60 → 57 (yeni DB kaydı EXP-2026-000002 / e9603270-… üzerinde 4 sekme x 2 viewport yeniden ölçüldü). Kriter 7: 5→4 — 'Fatura & kur' boş durumu ekranda BULUNMAYAN bir eyleme yönlendiriyor. Kriter 6: 5→4 — aynı sayfada aynı miktar iki farklı biçimde ('40 ADET' / '40'). Kriter 11: 5→4 — 'Takip no MAEU-SEED-0042' tohumlama artefaktı ekranda; aynı sınıftaki kurlar-08 ('TCMB-SEED') Tur 4'te kapatılmışken bu yüzey atlanmış. Doğrulananlar: 1440x900 taşma yok (4 sekmede de wrapScrollW=wrapClientW=1152), Belgeler sekmesi dash 0/8 (detay-06 kapalı), Çeki listesi Net/Brüt kg tek glif '—' (detay-09 kapalı), Belgeler mobil kartları 60px, mobilde 'Düzenle' 44px (detay-07/08 kapalı), ham enum yok (detay-10 kapalı).",
+   "open": [
+    {
+     "id": "ihracat-detay-11",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "'Fatura & kur' sekmesinin boş durumu var olmayan bir eyleme yönlendiriyor: metin 'Sevkiyat sipariş/irsaliye üzerinden faturalandıktan sonra üstteki “Faturaya bağla” eylemiyle bağlanır.' diyor, ama 'Faturaya bağla' düğmesi yalnızca status ∈ {shipped, delivered} VE fatura adayı varken render ediliyor (shipment-actions.tsx:148). 'customs' durumundaki bu sevkiyatta üstteki eylem çubuğunda 3 düğme var ve hiçbiri o değil — boş durum kullanıcıyı ekranda arayıp bulamayacağı bir düğmeye gönderiyor.",
+     "measure": "1440x900 Fatura & kur sekmesi, EXP-2026-000002 (status=customs): boş durum metni “Faturaya bağla” diyor; main içindeki düğmeler = ['Gümrük bilgisini güncelle','Yüklendi işaretle','İptal et','Düzenle'] → eşleşme 0 (probe-ihracat-r4.json detayHeaderButtons + detayInvoiceEmpty.btns)",
+     "target": "Boş durum metni yalnızca o anda ekranda görünen bir eylemi adlandırsın: metni duruma bağla — 'Faturaya bağla' düğmesi görünmüyorsa 'Sevkiyat yüklendikten ve faturalandıktan sonra buraya bağlanır.' gibi eylemsiz metin; düğme görünüyorsa EmptyState.action ile aynı eylemi boş durumun içine koy. Kabul ölçütü: boş durum metninde tırnak içinde adlandırılan her eylem için ekranda o metni taşıyan bir düğme bulunsun (eşleşme 1/1).",
+     "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx:178 (+ shipment-actions.tsx:148)",
+     "openedRound": 4
+    },
+    {
+     "id": "ihracat-detay-12",
+     "criterion": 6,
+     "severity": "P2",
+     "text": "Aynı sayfada aynı miktar iki farklı biçimde yazılıyor: 'Sipariş satırları' sekmesinde '40 ADET' (birimli QtyCell), 'Çeki listesi' sekmesinde aynı 40 adet çıplak '40'. Kullanıcı sekme değiştirdiğinde birimin kaybolduğunu görüyor; çeki listesi gümrüğe giden belgedir, birim orada daha da kritiktir.",
+     "measure": "1440x900: detayLines 'Miktar' hücresi = '40 ADET'; detayPacking 'Miktar' hücresi = '40' (probe-ihracat-r4.json)",
+     "target": "Aynı sayfadaki iki tabloda miktar tek kuralla yazılsın: çeki listesi Miktar hücresi de QtyCell/birimli olsun (ör. '40 ADET') — ya da başlık 'Miktar (ADET)' olup ikisi de çıplak sayı kalsın. Kabul ölçütü: iki sekmede miktar biçimi aynı.",
+     "file": "apps/web/src/modules/export/components/packing-list-table.tsx",
+     "openedRound": 4
+    },
+    {
+     "id": "ihracat-detay-13",
+     "criterion": 11,
+     "severity": "P2",
+     "text": "Lojistik panelinde 'Takip no MAEU-SEED-0042' — tohumlama artefaktı kullanıcıya görünüyor. Bu, Tur 4'te KAPATILAN ihracat-kurlar-08 ('TCMB-SEED' → 'TCMB') ile birebir aynı sınıf; kurlar ekranında etiket eşlemesiyle temizlenirken sevkiyat detayı atlanmış, yani düzeltme kök nedene değil tek yüzeye uygulanmış.",
+     "measure": "1440x900 detay: main metninde /SEED/ eşleşmesi = ['MAEU-SEED-0042'] (probe-ihracat-r4.json detaySeed)",
+     "target": "Kullanıcıya gösterilen hiçbir alanda 'SEED' dizesi olmasın: seed verisi gerçekçi taşıyıcı takip numarası üretsin (ör. MAEU4207731) ya da UI aynı etiket eşlemesinden geçirsin. Kabul ölçütü: /ihracat/** rotalarında görünür metinde /SEED/ eşleşmesi 0.",
+     "file": "packages/db/src/seed/*.ts (export_shipments.tracking_no) veya apps/web/src/modules/export/components/logistics-panel.tsx",
+     "openedRound": 4
+    }
+   ],
    "closed": [
     {
      "id": "ihracat-detay-01",
@@ -223,7 +265,7 @@
    ]
   },
   "/ihracat/sevkiyatlar/yeni": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -232,17 +274,58 @@
     5,
     5,
     5,
+    3,
+    4,
+    4,
     5,
     5,
-    5,
-    5,
-    5,
-    5,
+    4,
     5
    ],
-   "total": 60,
-   "scoreNotes": "Tur 3: 59 → 59. yeni-03 KAPANDI (tüm form blokları right=1032). k2 4'te KALIYOR, yeni neden: eylem çubuğu (Vazgeç / Sevkiyat oluştur) ve üstündeki ayraç x=264→1416 (1152px) genişliğinde, form içeriği ise 1032'de bitiyor — gönder düğmesi gönderdiği formun sağ kenarından 384px uzakta (ihracat-yeni-04, P2). 1440x900: 3 tipografi kademesi (24/14/13px), 3 metin rengi, 10 kontrol 36px, taşma yok. 390x844: documentElement 390=390, tek kolon, <44px dokunma hedefi yalnızca 1x1 gizli native select'ler. Açık P0/P1 YOK ve 59 ≥ 57 → KAZANAN: Plantero. Tur 4 (builder düzeltmesi): ihracat-yeni-04 kapandı (eylem çubuğu artık form genişliğiyle hizalı, fark 0px) — P2 zaten kazanmayı engellemiyordu, açık bulgu kalmadı.",
-   "open": [],
+   "total": 55,
+   "scoreNotes": "Tur 3→4: 60 → 55. Ekranın TEK asli kontrolü (sipariş seçici) ilk kez AÇIK hâlde ölçüldü ve ham DB sayısı gösterdiği görüldü. Kriter 6: 5→3 — seçenek satırı '216.0000 EUR' (nokta ondalık, 4 basamak, simge yok) ve müşteri adına yapışık; 2px altındaki seçim rozeti aynı tutarı '€216,00' yazıyor. Kriter 7: 5→4 — geçersiz gönderimde kırmızı metin çıkıyor ama alan aria-invalid/destructive kenarlık almıyor ve hata metni placeholder'ın aynısı. Kriter 8: 5→4 — hata alana değil yalnızca altındaki metne yansıyor. Kriter 11: 5→4 — 6 metin alanının yalnız 2'sinde placeholder var. Doğrulananlar: 1440x900 blok sağ kenarları 1032/1032/1032, gönder düğmesi right=1032 (yeni-03/04 kapalı); alanlar 36px (masaüstü) / 44px (mobil), 390px'te tek kolon, taşma yok.",
+   "open": [
+    {
+     "id": "ihracat-yeni-05",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "Formun tek zorunlu ve asli kontrolü olan 'İhracat siparişi' seçicisi, açıldığında ham veritabanı sayısı gösteriyor: seçenek satırı 'SO-2026-000033 — BioGrün Handels GmbH216.0000 EUR'. Üç ayrı hata bir arada: (a) '216.0000' tr-TR değil (nokta ondalık) ve numeric(18,4)'ün 4 basamağı olduğu gibi basılıyor, (b) para simgesi yok ('EUR' metin eki), (c) açıklama metni müşteri adına boşluksuz yapışık ('GmbH216.0000'). Aynı ekranda seçim yapıldığında 2px aşağıdaki rozet AYNI tutarı MoneyCell ile '€216,00' yazıyor — kullanıcı tek ekranda aynı sayının iki biçimini görüyor. Mobilde satır dar olduğu için değer '216.0000 …' diye kırpılıyor, para birimi bile görünmüyor. Kaynak: shipment-create-form.tsx:66 `description: `${o.grandTotal} ${o.currency}``.",
+     "measure": "1440x900 ve 390x844, seçici açık: [role=option] metni = 'SO-2026-000033 — BioGrün Handels GmbH216.0000 EUR'; seçim sonrası rozet metni '€216,00' (probe-ihracat-r4d.json desktop/mobile + desktopChip)",
+     "target": "Seçenek açıklaması ortak para biçimleyiciden geçsin (MoneyCell/formatMoney ile aynı çıktı): '€216,00'. Kabul ölçütü: seçenek metninde /\\d+\\.\\d{3,}/ eşleşmesi 0, para simgesi var, ondalık ayracı virgül ve 2 basamak, ad ile tutar arasında görünür ayrım (ayrı hizalanmış sütun ya da ' · ') — yani ekrandaki iki tutar birebir aynı dizeyle yazılsın.",
+     "file": "apps/web/src/modules/export/components/shipment-create-form.tsx:66",
+     "openedRound": 4
+    },
+    {
+     "id": "ihracat-yeni-06",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "Geçersiz gönderimde alanın kendisi hata durumuna GEÇMİYOR: 'Sevkiyat oluştur'a boş formla basıldığında altta kırmızı 'Sipariş seçin' metni beliriyor, ama seçici tetikleyicisi aria-invalid almıyor (sayfada aria-invalid=true olan öğe sayısı 0) ve kenarlığı border-input olarak kalıyor. Üstelik hata metni placeholder'ın kelimesi kelimesine aynısı ('Sipariş seçin' / 'Sipariş seçin'), yani hata bir uyarı değil placeholder'ın tekrarı gibi okunuyor. Uzun formlarda kullanıcı hangi alanın hatalı olduğunu renkten değil yalnızca küçük metinden anlıyor; ekran okuyucu hiç anlamıyor.",
+     "measure": "1440x900, boş formla gönderim sonrası: [aria-invalid=true] sayısı 0, toast 0, kırmızı metin 'Sipariş seçin' var, seçici kenarlığı değişmedi (probe-ihracat-r4c.json afterSubmit; artifacts/screens/ihracat-sevkiyatlar-yeni/desktop-submit-empty.png)",
+     "target": "Hatalı alan görünür ve erişilebilir biçimde işaretlensin: Combobox tetikleyicisine `aria-invalid={!!error}` ve destructive kenarlık (`aria-invalid:border-destructive aria-invalid:ring-destructive/20`), hata metni placeholder'dan farklı bir cümle olsun (ör. 'İhracat siparişi seçilmedi'). Kabul ölçütü: geçersiz gönderim sonrası [aria-invalid=true] ≥ 1 ve hata metni ≠ placeholder metni.",
+     "file": "apps/web/src/modules/export/components/shipment-create-form.tsx:101-102, apps/web/src/components/form/combobox.tsx",
+     "openedRound": 4
+    },
+    {
+     "id": "ihracat-yeni-07",
+     "criterion": 8,
+     "severity": "P1",
+     "text": "Yakınsama bulgusu (DESIGN-SCORECARD §7, kriter 8 = 4). Geçersiz gönderimde hiçbir anlık geri bildirim yok: toast 0, odak ilk hatalı alana taşınmıyor, düğme yükleniyor durumuna geçmiyor. Kullanıcı düğmeye bastıktan sonra ekranın neresine bakacağını bilmiyor; hata sayfanın en üstündeki alanın altında, düğme ise en altta.",
+     "measure": "1440x900: boş gönderim sonrası [data-sonner-toast]/[role=alert]/[role=status] sayısı 0, document.activeElement değişmedi, URL aynı (probe-ihracat-r4c.json afterSubmit.toasts=[])",
+     "target": "Geçersiz gönderimde odak ilk hatalı alana taşınsın (`form.setFocus`/`shouldFocusError`) ve/veya tek satırlık hata özeti gösterilsin. Kabul ölçütü: gönderim sonrası activeElement = hatalı kontrol, ya da görünür [role=alert] sayısı ≥ 1.",
+     "file": "apps/web/src/modules/export/components/shipment-create-form.tsx (useForm / onSubmit)",
+     "openedRound": 4
+    },
+    {
+     "id": "ihracat-yeni-08",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "Yakınsama bulgusu (DESIGN-SCORECARD §7, kriter 11 = 4). Placeholder kullanımı rastgele: 6 serbest metin alanının yalnız 2'sinde placeholder var ('Ör. İzmir FOB', 'DE'); 'Yükleme limanı/noktası', 'Varış limanı/noktası', 'Nakliyeci' ve 'Not' boş. Aynı formda aynı tipteki alanların yarısı örnek veriyor yarısı vermiyor — bu, alanların önem sırası hakkında yanlış sinyal veriyor.",
+     "measure": "1440x900: main içindeki input/textarea placeholder dağılımı = 2 dolu / 6 boş (probe-ihracat-r4b.json formFields)",
+     "target": "Tek kural: ya biçimi belirsiz olan HER serbest metin alanına örnek placeholder ver (liman, nakliyeci, not), ya da yalnızca biçim kısıtı olan alanda bırak (ISO-2) ve diğerlerini temizle. Kabul ölçütü: aynı tipteki alanlarda placeholder oranı 0/6 veya 6/6.",
+     "file": "apps/web/src/modules/export/components/shipment-create-form.tsx",
+     "openedRound": 4
+    }
+   ],
    "closed": [
     {
      "id": "ihracat-yeni-01",
@@ -305,7 +388,7 @@
    ]
   },
   "/ihracat/belgeler": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -323,7 +406,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 3: 60 → 60 (değişiklik yok). 1440x900: 5 sütun (Belge 402,5 / Sevkiyat 263 / Müşteri 316,4 / Durum 130 / Eylemler 40 = 1152), görünür sütunlarda dash 0/30, 30 satır × 36px, wrapScrollW=wrapClientW=1152, main içinde 2 metin rengi. 390x844: 30/30 kart 60px, 0 adet <44px dokunma hedefi, documentElement 390=390. Açık P0/P1 yok, 60 ≥ 57 → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 3→4: 60 → 60 (bağımsız yeniden ölçüm, yeni tohumlanmış 30 kayıt). 1440x900: h1 24px/600, gövde 13px (112 düğüm), 11px (32) ve 12px (10) etiket — 3 kademe; 5 sütun, 30 satır x 36px, scrollWidth=clientWidth=1440 (taşma yok), rozetler sessiz ve yalnızca durum taşıyor, satır eylemi hover'da beliriyor (satırlar tıklanabilir olmadığı için sahte hover zemini de yok — doğru karar). 390x844: 30/30 kart 60px, gerçek dokunma hedefi <44px yok, taşma yok. Açık P0/P1 yok, 60 ≥ 57 → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -355,16 +438,16 @@
    ]
   },
   "/ihracat/kurlar": {
-   "round": 3,
+   "round": 4,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
     5,
     5,
+    4,
     5,
     5,
-    5,
-    5,
+    4,
     5,
     5,
     5,
@@ -372,8 +455,8 @@
     5,
     5
    ],
-   "total": 60,
-   "scoreNotes": "Tur 3: 58→60. k3 4→5 (kurlar-06 kapandı: KPI şeridinde ölü blok yok, 2 blok da değer + alış ipucu taşıyor; tablo 25 satır × 36px, 180 kayıt sayfalı). k6 4→5 (kurlar-07 kapandı: eksen ₺42,0 virgüllü; tablo/KPI/tooltip 4 haneli ₺37,4000 ile tek biçim, tabular-nums, sağ hizalı). 1440x900: 4 metin rengi, grafik 2 seri (chart-2 mavi + chart-5 mor), tablo 1152=1152. 390x844: 25/25 kart 63,5px, 0 adet <44px hedef. Kalan P2: 'Kaynak' sütunu 23/25 satırda 'TCMB-SEED' yazıyor (ihracat-kurlar-08). Açık P0/P1 YOK ve 60 ≥ 56 → KAZANAN: Plantero. Tur 4 (builder düzeltmesi): ihracat-kurlar-08 kapandı (Kaynak sütununda 'SEED' içeren değer 0/25) — P2 zaten kazanmayı engellemiyordu, açık bulgu kalmadı.",
+   "total": 58,
+   "scoreNotes": "Tur 3→4: 60 → 58. Kriter 3: 5→4 — 'Kaynak' sütunu 264px (tablonun %23'ü) genişliğinde ama 25/25 satırda tek ve aynı değeri ('TCMB') taşıyor; bu genişlik ölü mürekkep. Kriter 6: 5→4 — 390px kartında tek bir ₺ değeri etiketsiz gösteriliyor, masaüstünde iki kur (Alış/Satış) varken mobilde hangisinin gösterildiği anlaşılmıyor. Doğrulananlar (Tur 3 kapanışları hâlâ geçerli): KPI şeridinde '—' değerli blok yok (2 blok: USD ₺33,9937 / EUR ₺37,4000, alt satırda alış), grafik Y ekseni virgüllü ('₺30,0'…'₺42,0'), Kaynak etiketi 'TCMB' (DB'de 172/180 satır hâlâ 'TCMB-SEED' ama UI eşlemesi doğru — hedef 'etiket eşlemesi' idi, karşılandı). 25 satır x 36px, taşma yok, sayfalama 1–25/180. 390x844: 25 kart 63,5px, taşma yok. Açık P0/P1 yok, 58 ≥ 56 → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -489,13 +572,13 @@
    ]
   },
   "/ihracat/gtip": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
     5,
     5,
-    5,
+    4,
     5,
     5,
     5,
@@ -506,9 +589,20 @@
     5,
     5
    ],
-   "total": 60,
-   "scoreNotes": "Tur 4 (builder düzeltmesi): 59→60. k5 4→5 (ihracat-gtip-07 kapandı: GTİP sütunu meta.width:220, SelectValue children ile yalnızca kod+truncate basılıyor, açıklama title'da; wrapScrollW=wrapClientW=1152, clippedPx=0, eşlenmiş satır sayısından bağımsız — probe-ihracat-r3c-b.json gtip). Açık P0/P1 yok, 60 ≥ 57 → KAZANAN: Plantero.",
-   "open": [],
+   "total": 59,
+   "scoreNotes": "Tur 3→4: 60 → 59. Kriter 3: 5→4 — 'Kategori' (160px) ve 'Tip' (110px) sütunları AYNI alanın iki kopyası: 39/39 satırda eşleme bire bir ('Mamul Ürünler'↔'Mamul' 38 satır, 'Hammaddeler'↔'Hammadde' 1 satır) ve etiketler neredeyse aynı kelime; ikisi birlikte 1152px tablonun %23,4'ünü tek bir bit bilgi için harcıyor, üstelik başlıkta ayrıca bir 'Tip' filtresi var. Doğrulananlar: taşma yok (wrapScrollW=wrapClientW=1152, gtip-07 kapalı kaldı), GTİP sütunu distinct=2 (gtip-05 kapalı), 39 satır x 36,5–37px, 390x844: 39/39 kart 60px, dokunma hedefi <44px yok (gtip-06 kapalı).",
+   "open": [
+    {
+     "id": "ihracat-gtip-08",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "'Kategori' ve 'Tip' sütunları aynı veriyi iki kez gösteriyor. products.category1 ile products.type arasında bire bir eşleme var (satılabilir 39 üründe: 'Mamul Ürünler'↔finished 38, 'Hammaddeler'↔raw_material 1), yani ikinci sütun sıfır ek bilgi taşıyor; dahası etiketler neredeyse aynı kelime ('Mamul Ürünler' / 'Mamul'), bu yüzden yan yana durduklarında ekran kendini tekrar ediyor gibi okunuyor. İkisi birlikte 270px = 1152px tablonun %23,4'ü. Ekranın asli sütunu olan GTİP'e ve ürün adına giden genişlik bu yüzden kısılıyor. Filtre çubuğunda ayrıca aynı ayrımı yapan bir 'Tip' filtresi var.",
+     "measure": "1440x900: Kategori w=160 distinct=2 ['Mamul Ürünler','Hammaddeler'], Tip w=110 distinct=2 ['Mamul','Hammadde'], 39/39 satırda eşleme bijektif (psql: category1×type = {Mamul Ürünler,finished}:38, {Hammaddeler,raw_material}:1); 270/1152 = %23,4 (probe-ihracat-r4.json gtipCols)",
+     "target": "Aynı ayrımı iki sütun yapmasın: 'Kategori' sütununu varsayılan görünümden kaldır (sütun seçicide kalsın; ayrım zaten 'Tip' filtresinde) ya da category1 gerçekten farklı bir kırılım taşıyana kadar tek sütuna indir. Kabul ölçütü: varsayılan görünümde hiçbir iki sütunun değer eşlemesi bijektif olmasın; kazanılan ≥110px 'Ürün'/'GTİP' sütunlarına gitsin.",
+     "file": "apps/web/src/modules/export/components/gtip-mapping-table.tsx:92-93",
+     "openedRound": 4
+    }
+   ],
    "closed": [
     {
      "id": "ihracat-gtip-01",

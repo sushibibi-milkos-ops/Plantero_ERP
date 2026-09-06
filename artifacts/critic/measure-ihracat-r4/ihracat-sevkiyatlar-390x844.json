@@ -1,5 +1,1 @@
-
-> plantero-erp@ measure /home/user/Plantero_ERP
-> tsx scripts/measure.ts /ihracat/sevkiyatlar --viewport 390x844
-
 {"route":"/ihracat/sevkiyatlar","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":3,"heights":[63.5,63.5,63.5]},"fontSizes":{"10":5,"11":4,"12":15,"13":5,"14":6,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Sevkiyatlar\"","w":68.8,"h":19.5}],"distinctColors":21,"h1":{"size":20,"weight":600},"images":0}

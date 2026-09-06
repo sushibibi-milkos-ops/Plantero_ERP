@@ -1,0 +1,178 @@
+{
+ "/ihracat/sevkiyatlar": [
+  [
+   {
+    "t": "EXP-2026-000001",
+    "x": 27,
+    "right": 294,
+    "w": 267,
+    "sw": 267,
+    "truncated": false
+   },
+   {
+    "t": "BioGrün·Handels·GmbH",
+    "x": 27,
+    "right": 161,
+    "w": 134,
+    "sw": 134,
+    "truncated": false
+   },
+   {
+    "t": "···",
+    "x": 161,
+    "right": 168,
+    "w": 7,
+    "sw": 0,
+    "truncated": false
+   },
+   {
+    "t": "₺10.044,00",
+    "x": 291,
+    "right": 363,
+    "w": 72,
+    "sw": 72,
+    "truncated": false
+   }
+  ],
+  [
+   {
+    "t": "EXP-2026-000002",
+    "x": 27,
+    "right": 275,
+    "w": 248,
+    "sw": 248,
+    "truncated": false
+   },
+   {
+    "t": "BioGrün·Handels·GmbH",
+    "x": 27,
+    "right": 138,
+    "w": 111,
+    "sw": 134,
+    "truncated": true
+   },
+   {
+    "t": "···",
+    "x": 138,
+    "right": 145,
+    "w": 7,
+    "sw": 0,
+    "truncated": false
+   },
+   {
+    "t": "···",
+    "x": 211,
+    "right": 221,
+    "w": 10,
+    "sw": 0,
+    "truncated": false
+   },
+   {
+    "t": "₺624.960,00",
+    "x": 282,
+    "right": 363,
+    "w": 81,
+    "sw": 81,
+    "truncated": false
+   }
+  ],
+  [
+   {
+    "t": "EXP-2026-000003",
+    "x": 27,
+    "right": 293,
+    "w": 266,
+    "sw": 266,
+    "truncated": false
+   },
+   {
+    "t": "BioGrün·Handels·GmbH",
+    "x": 27,
+    "right": 161,
+    "w": 134,
+    "sw": 134,
+    "truncated": false
+   },
+   {
+    "t": "···",
+    "x": 161,
+    "right": 168,
+    "w": 7,
+    "sw": 0,
+    "truncated": false
+   },
+   {
+    "t": "₺2.678,40",
+    "x": 299,
+    "right": 363,
+    "w": 64,
+    "sw": 64,
+    "truncated": false
+   }
+  ]
+ ],
+ "/ihracat/kurlar": [
+  [
+   {
+    "t": "EUR",
+    "x": 156,
+    "right": 180,
+    "w": 24,
+    "sw": 0,
+    "truncated": false
+   }
+  ],
+  [
+   {
+    "t": "USD",
+    "x": 208,
+    "right": 234,
+    "w": 25,
+    "sw": 0,
+    "truncated": false
+   }
+  ],
+  [
+   {
+    "t": "EUR",
+    "x": 27,
+    "right": 55,
+    "w": 28,
+    "sw": 0,
+    "truncated": false
+   },
+   {
+    "t": "06.09.2026",
+    "x": 27,
+    "right": 93,
+    "w": 66,
+    "sw": 66,
+    "truncated": false
+   },
+   {
+    "t": "···",
+    "x": 93,
+    "right": 99,
+    "w": 7,
+    "sw": 0,
+    "truncated": false
+   },
+   {
+    "t": "TCMB",
+    "x": 99,
+    "right": 134,
+    "w": 35,
+    "sw": 0,
+    "truncated": false
+   },
+   {
+    "t": "₺37,4000",
+    "x": 301,
+    "right": 363,
+    "w": 62,
+    "sw": 0,
+    "truncated": false
+   }
+  ]
+ ]
+}

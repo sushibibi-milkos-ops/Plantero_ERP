@@ -1,0 +1,49 @@
+{
+ "rowClasses": {
+  "cls": "group/row h-9 border-b border-border/50 last:border-0",
+  "tdCls": "h-9 px-3 align-middle text-[13px] whitespace-nowrap"
+ },
+ "hoverBg": [
+  "rgba(0, 0, 0, 0) | td:rgba(0, 0, 0, 0)",
+  "rgba(0, 0, 0, 0) | td:rgba(0, 0, 0, 0)",
+  "rgba(0, 0, 0, 0) | td:rgba(0, 0, 0, 0)"
+ ],
+ "focus1": {
+  "el": "BUTTON ",
+  "outlineW": "0px",
+  "outlineStyle": "none",
+  "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "offset": "0px",
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+ },
+ "afterSubmit": {
+  "url": "/ihracat/sevkiyatlar/yeni",
+  "redText": [],
+  "invalid": 0,
+  "toasts": [],
+  "destructive": [
+   "Sipariş seçin",
+   "Sipariş seçin",
+   "Incoterm*",
+   "FOB",
+   "Incoterm yeri",
+   "",
+   "Varış ülkesi (ISO-2)*",
+   "",
+   "Taşıma modu",
+   "Karayolu",
+   "Yükleme limanı/noktası",
+   "",
+   "Varış limanı/noktası",
+   "",
+   "Nakliyeci",
+   "",
+   "Rejim",
+   "Otomatik (tutara göre)",
+   "Not",
+   "",
+   "Vazgeç",
+   "Sevkiyat oluştur"
+  ]
+ }
+}

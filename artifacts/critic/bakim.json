@@ -1,11 +1,11 @@
 {
  "module": "bakim",
  "round": 4,
- "note": "Tur 4 — modul-builder tarafından görev promptundaki 8 P0/P1 UI bulgusu (4× /bakim/makineler/[id]: bakim-makine-detay-04/07/08/09, 4× /bakim/is-emirleri/[id]: bakim-isemirleri-detay-06/09/10/11) kök nedeniyle kapatıldı. DB bu turda paylaşımlı ortamda başka bir ajan tarafından yeniden seed edildi (makine/iş emri id'leri değişti — MK-001/MK-011 ve MO-2026-000003/000006 kod/doc_no'ları sabit, id'ler taze: bkz. fixNote'lardaki tam id'ler); ölçümler taze id'lerle tekrarlandı. İki route da artık referansı (Linear 57) geçiyor: /bakim/makineler/[id] 54→60, /bakim/is-emirleri/[id] 55→60 — modülün 7 route'unun 7'si de KAZANAN. Kanıt: fresh `pnpm db:check` → 54/54 kural GEÇTİ (0 ihlal), `pnpm --filter @plantero/core test` → 54 dosya/328 test GEÇTİ, `pnpm typecheck`/`pnpm lint` temiz. Ortak bileşen kaynaklı konular (KpiCard delta yer tutucusu, KpiStripRow mobil snap-kaydırıcı, DataTable mobil kart iskeleti, primary yeşil ↔ success yeşil ton yakınlığı, PageHeader) kural 5 gereği burada AÇILMADI — shell modülüne aittir. Kalan P2'ler (bakim-makineler-01..04, bakim-planlar-03, bakim-isemirleri-05/07/08) bilinçli olarak açık — kapsam dışı (yalnızca P0/P1 talep edildi).",
+ "note": "Tur 4 — gorsel-critic doğrulama turu. Tüm açık bulgular yeniden ölçüldü (pnpm measure + scripts/probe-bakim-r3.ts + scripts/probe-bakim-r4-oee-skel.ts): hiçbiri kapanmadı (bu tur bakım modülüne düzeltme uygulanmadı; builder Tur 4'te yalnızca iki detay route'unu kapatmıştı, onlar yeniden ölçülüp doğrulandı). İKİ YENİ P1: /bakim/makineler uygulamadaki 154 KpiCard kullanımının `variant=\"strip\"` kullanmayan TEK yeri (136px kart ızgarası) ve `icon=` geçen TEK yeri (4 süs ikonu) → k11 5→4, k10 5→4, toplam 57→55, KAZANAN: Linear. /bakim/oee'de yükleme iskeleti ilk kez ölçüldü (56px sıçrama, çip satırı yok) → k7 5→4, toplam 57→56 = Stripe 56, hâlâ kazanıyor. Kod düzeyi tarama temiz: maintenance modülünde transition-all / ease-in / >300ms / scale(0) yok; hover `@custom-variant hover` ile (hover:hover) and (pointer:fine) altına alınmış (globals.css:7-12).",
  "measuredAt": "2026-09-06",
  "routes": {
   "/bakim/makineler": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -18,20 +18,20 @@
     4,
     5,
     5,
-    5,
-    5,
+    4,
+    4,
     5
    ],
-   "total": 57,
-   "verdict": "Plantero",
-   "scoreNotes": "Tur 3: bu route'a düzeltme uygulanmadı; dört P2 bulgusu da yeniden ölçüldü, ölçümler Tur 2 ile birebir aynı — puanlar değişmedi. k3=4 (tableTop 352px, ilk ekranda 13/36 satır), k6=4 (aynı satırda iki sıfır kuralı), k7=4 (iskelet KPI 104px ≠ gerçek 136px, araç çubuğu yer tutucusu yok). Toplam 57 = referans (Linear 57), hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+   "total": 55,
+   "verdict": "Linear",
+   "scoreNotes": "Tur 4 delta: k10 5→4 ve k11 5→4 — ölçüm: uygulamadaki 154 `<KpiCard>` kullanımından `variant=\"strip\"` KULLANMAYAN tek dosya bu sayfa (page.tsx:26-31, 4 × 279×136px kart, 4'lü ızgara), `icon={<…/>}` geçen tek yer yine bu dört kart (4/154). /bakim/oee, /depo/stok, /muhasebe/faturalar, /satin-alma/siparisler, /ihracat/sevkiyatlar hepsi KpiStripRow + 80px strip. Aynı modülde iki KPI dili + uygulamada eşi olmayan süs ikonları → tutarlılık ve ikon disiplini kriterleri 5 olamaz. k3=4 (tableTop 352px, 13/36 satır ilk ekranda), k6=4 (aynı satırda iki sıfır kuralı), k7=4 (iskelet KPI 104px ≠ gerçek 136px, araç çubuğu yer tutucusu yok) — üçü de Tur 3 ile birebir aynı ölçüldü. Toplam 55 < 57 (Linear) → KAZANAN: Linear. Yakınsama (§7): iki yeni bulgu P1 açıldı; kapandığında k10+k11 5'e çıkar → 57 = referans.",
    "open": [
     {
      "id": "bakim-makineler-01",
      "criterion": 3,
      "severity": "P2",
      "text": "KPI şeridi ızgara varyantında (4×136px kart) araç çubuğunu ve tabloyu aşağı itiyor; ilk ekranda 36 satırın yalnızca 13'ü görünüyor.",
-     "measure": "Tur 3: kpiCardHeight 136px, toolbarTop 308px, tableTop 352px, rowsAboveFold 13/36 @1440x900 — Tur 1/2 ile birebir aynı",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): kpiCardHeight 136px, toolbarTop 308px, tableTop 352px, rowsAboveFold 13/36 @1440x900 — Tur 1/2 ile birebir aynı",
      "target": "tableTop ≤ 300px ve rowsAboveFold ≥ 15 (KpiCard variant=\"strip\" / KpiStripRow — 80px)",
      "file": "apps/web/src/app/(app)/bakim/makineler/page.tsx",
      "openedRound": 1
@@ -41,7 +41,7 @@
      "criterion": 3,
      "severity": "P2",
      "text": "Mobil kart yüksekliği 76.7px — 'Makine' sütunu hücresi ad + kategori olmak üzere iki satır ürettiği için hedef bandın (56-72px) üstünde.",
-     "measure": "Tur 3: mobil kart yüksekliği 76.7px @390x844 (rows.heights [76.7,76.7,76.7], 36 kart) — değişmedi",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): mobil kart yüksekliği 76.7px @390x844 (rows.heights [76.7,76.7,76.7], 36 kart) — değişmedi",
      "target": "kart yüksekliği ≤ 72px",
      "file": "apps/web/src/modules/maintenance/components/machines-table.tsx (name sütunu cell'i)",
      "openedRound": 1
@@ -51,7 +51,7 @@
      "criterion": 6,
      "severity": "P2",
      "text": "Aynı satırda iki farklı sıfır muamelesi: 'Çalışma saati' 0 tam kontrast foreground'ta (QtyCell kendi rengini vermiyor, td'den miras alıyor), 'Açık iş emri' 0 muted.",
-     "measure": "Tur 3: 'Çalışma saati' sıfırı span.num color oklch(0.21 0.006 285.9), 'Açık iş emri' sıfırı span.num.text-muted-foreground oklch(0.552 0.016 285.9) — 36/36 satır, değişmedi",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): 'Çalışma saati' sıfırı span.num color oklch(0.21 0.006 285.9), 'Açık iş emri' sıfırı span.num.text-muted-foreground oklch(0.552 0.016 285.9) — 36/36 satır, değişmedi",
      "target": "sıfır değerler tek kural: text-muted-foreground (QtyCell içinde sıfır sönümleme)",
      "file": "apps/web/src/components/qty-cell.tsx + apps/web/src/modules/maintenance/components/machines-table.tsx (runtimeHours)",
      "openedRound": 1
@@ -61,16 +61,36 @@
      "criterion": 7,
      "severity": "P2",
      "text": "Yükleme iskeletindeki KPI blokları 104px, gerçek kart 136px → içerik gelince 32px dikey sıçrama; iskelet 8 satır çiziyor, ilk ekranda 13 satır var, arama+filtre araç çubuğu iskelette yok.",
-     "measure": "Tur 3: loading.tsx hâlâ h-[104px] KPI × 4 + 8 × h-9 satır, araç çubuğu yer tutucusu 0 — gerçek: 136px KPI, 13 satır, 32px araç çubuğu (toolbarTop 308)",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): loading.tsx hâlâ h-[104px] KPI × 4 + 8 × h-9 satır, araç çubuğu yer tutucusu 0 — gerçek: 136px KPI, 13 satır, 32px araç çubuğu (toolbarTop 308)",
      "target": "iskelet KPI yüksekliği = gerçek kart yüksekliği (±4px), satır sayısı ≥ ilk ekrandaki satır sayısı, araç çubuğu yer tutucusu var",
      "file": "apps/web/src/app/(app)/bakim/makineler/loading.tsx",
      "openedRound": 1
+    },
+    {
+     "id": "bakim-makineler-05",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "KPI şeridi uygulamanın tek istisnası: sayfa KpiCard'ı varsayılan `card` varyantıyla 4'lü ızgarada kullanıyor (279×136px kutu, içinde ~%45 boş alan). Uygulamadaki diğer bütün KPI'lar KpiStripRow + variant=\"strip\" (80px, dikey hairline ayraç) — /bakim/oee dahil. Aynı modülde iki farklı KPI dili; kutular tabloyu 352px'ye itiyor.",
+     "measure": "Tur 4: `grep -rn \"<KpiCard\" apps/web/src` → 154 kullanım; `variant=\"strip\"` içermeyen tek dosya apps/web/src/app/(app)/bakim/makineler/page.tsx:27-30. Geometri: kart 279×136px @top=152, tablo @top=352, ilk ekranda 13/36 satır.",
+     "target": "KpiStripRow + variant=\"strip\" (kart yüksekliği 80px, dikey hairline ayraç) → tableTop ≤ 300px, ilk ekranda ≥ 15 satır",
+     "file": "apps/web/src/app/(app)/bakim/makineler/page.tsx:26-31",
+     "openedRound": 4
+    },
+    {
+     "id": "bakim-makineler-06",
+     "criterion": 10,
+     "severity": "P1",
+     "text": "KPI kartlarında süs ikonu: Cog / Gauge / Wrench / AlertTriangle sağ üst köşede duruyor ve etiketin (\"Toplam makine\", \"Çalışıyor\", \"Arızalı\", \"Vadesi geçen bakım\") taşımadığı hiçbir bilgi taşımıyor. Uygulamadaki 154 KpiCard kullanımı içinde `icon=` geçen tek yer bu dört kart.",
+     "measure": "Tur 4: `<KpiCard` toplam 154 kullanım, `icon={<` geçen 4 kullanım — dördü de apps/web/src/app/(app)/bakim/makineler/page.tsx:27-30. Başka hiçbir modülde KPI ikonu yok.",
+     "target": "KPI kartlarında ikon yok (icon prop'u kaldırılır) — uygulamanın geri kalanıyla birebir aynı KPI anatomisi",
+     "file": "apps/web/src/app/(app)/bakim/makineler/page.tsx:27-30",
+     "openedRound": 4
     }
    ],
    "closed": []
   },
   "/bakim/planlar": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -89,14 +109,14 @@
    ],
    "total": 59,
    "verdict": "Plantero",
-   "scoreNotes": "Tur 3: Tur 2'de kapanan tablo taşması yeniden doğrulandı (kök scrollWidth 1440 = clientWidth 1440 @1440x900, 8/8 sütun ekranda, kırpılan başlık 0, iç kap taşması 0). 12 satır × 36px, mobil kart 63.5px. k7=4 tek açık P2 (iskelet 6 satır / gerçek 12 satır, araç çubuğu yer tutucusu yok). Toplam 59 ≥ 57 → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 4: düzeltme uygulanmadı; ölçümler tekrarlandı ve Tur 3 ile aynı — kök scrollWidth 1440 = clientWidth 1440, iç kap taşması 0, kesik başlık 0, 12 satır × 36px, mobil kart 63.5px, 44px altı gerçek dokunma hedefi 0 (yalnızca breadcrumb metni), distinctColors 17/15. Tek açık P2 iskelet (k7=4). Toplam 59 ≥ 57 → KAZANAN: Plantero.",
    "open": [
     {
      "id": "bakim-planlar-03",
      "criterion": 7,
      "severity": "P2",
      "text": "Yükleme iskeleti 6 satır çiziyor, gerçek liste 12 satır; ayrıca arama+filtre araç çubuğu iskelette hiç yok → içerik gelince araç çubuğu kadar sıçrama.",
-     "measure": "Tur 3: loading.tsx 6 × h-9 + araç çubuğu yer tutucusu yok; gerçek 12 satır (36px) + 32px araç çubuğu — değişmedi",
+     "measure": "Tur 4 (yeniden ölçüldü): loading.tsx 6 × h-9 + araç çubuğu yer tutucusu yok; gerçek 12 satır (36px) + 32px araç çubuğu — değişmedi",
      "target": "iskelet satır sayısı ≥ ilk ekrandaki satır sayısı (12) ve araç çubuğu yer tutucusu var",
      "file": "apps/web/src/app/(app)/bakim/planlar/loading.tsx",
      "openedRound": 1
@@ -134,7 +154,7 @@
    ]
   },
   "/bakim/is-emirleri": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -153,14 +173,14 @@
    ],
    "total": 57,
    "verdict": "Plantero",
-   "scoreNotes": "Tur 3 delta: k5 3→5 — liste tablosu taşması KAPANDI (bakim-isemirleri-09): kök scrollWidth 1440 = clientWidth 1440, tablo kabı 1152 = 1152, 8/8 sütun ekranda (son sütun sağ kenarı 1418 < 1440), kırpılan başlık 0, iç kap taşması 0. k7 4→? : iskelet KAPANDI (bakim-isemirleri-10) — loading.tsx artık 32px araç çubuğu + 36px başlık + 6×36px satır çiziyor, gerçek varsayılan (liste) görünümle aynı düzen; ama pano sütunlarının boş durumu (bakim-isemirleri-07) hâlâ açık, k7=4 kalıyor. k4=4 (distinctColors 27; tek satırda Tür+Öncelik+Durum üç renkli rozet sütunu), k12=4 (pano kart başlıkları 483/365/319 > 244 kırpılıyor). Toplam 57 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 4: düzeltme uygulanmadı; üç açık P2 yeniden ölçüldü, üçü de aynı. k4=4 (distinctColors 27 — modülün en yükseği; tek satırda Tür+Öncelik+Durum üç renkli rozet sütunu), k7=4 (kanban 5 sütunun 4'ü 50px başlık şeridi, boş durum yer tutucusu yok), k12=4 (kanban kart başlıkları scrollWidth 483/365/319 > 244 kırpılıyor). Liste tablosu taşmasız (1440=1440), mobil kart 62-64.5px. Toplam 57 = referans (Linear 57), hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
    "open": [
     {
      "id": "bakim-isemirleri-05",
      "criterion": 4,
      "severity": "P2",
      "text": "Liste görünümünde tek satırda üç ayrı renkli rozet sütunu yan yana: 'Tür' (kırmızı Arıza / mavi Periyodik), 'Öncelik' (amber Yüksek / kırmızı Kritik / nötr Normal) ve 'Durum'. Modülün en yüksek renk sayısı.",
-     "measure": "Tur 3: distinctColors 27 @1440x900 liste görünümü (kıyas: /bakim/makineler 17, /bakim/planlar 17, /bakim/oee 14) — değişmedi",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): distinctColors 27 @1440x900 liste görünümü (kıyas: /bakim/makineler 17, /bakim/planlar 17, /bakim/oee 14) — değişmedi",
      "target": "distinctColors ≤ 20; 'Tür' sütunu nötr metin/ikon, renk yalnızca öncelik+durumun kritik değerlerinde",
      "file": "apps/web/src/modules/maintenance/components/orders-table.tsx (kind/priority sütunları), orders-board.tsx (DOT_CLASS)",
      "openedRound": 1
@@ -170,7 +190,7 @@
      "criterion": 7,
      "severity": "P2",
      "text": "Kanban görünümünde boş sütunlarda hiçbir yer tutucu yok — 5 sütunun 4'ü yalnızca başlık + '0' sayacından ibaret 50px yüksekliğinde şeritler.",
-     "measure": "Tur 3: orders-board.tsx sütun gövdesi boş dizide hiçbir düğüm basmıyor (kod: `{cards.map(...)}` tek çocuk, boş durum dalı yok); pano görünümünde 5 sütunun 4'ü 50px başlık şeridinden ibaret",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): orders-board.tsx sütun gövdesi boş dizide hiçbir düğüm basmıyor (kod: `{cards.map(...)}` tek çocuk, boş durum dalı yok); pano görünümünde 5 sütunun 4'ü 50px başlık şeridinden ibaret",
      "target": "boş sütunda tek satırlık sessiz yer tutucu (ör. 'Bu durumda iş emri yok'), sütun min yüksekliği ≥ 96px",
      "file": "apps/web/src/modules/maintenance/components/orders-board.tsx",
      "openedRound": 1
@@ -180,7 +200,7 @@
      "criterion": 12,
      "severity": "P2",
      "text": "Kanban kart başlıkları 244px kaba sığmadığı için truncate ile kesiliyor — kart içeriği okunamıyor.",
-     "measure": "Tur 3 (pano görünümü, --click \"Kanban görünümü\"): kart başlığı div.truncate scrollWidth 483 / 365 / 319 > clientWidth 244 — değişmedi",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı) (pano görünümü, --click \"Kanban görünümü\"): kart başlığı div.truncate scrollWidth 483 / 365 / 319 > clientWidth 244 — değişmedi",
      "target": "başlık iki satıra sarsın (line-clamp-2) ya da sütun genişliği/kart tipografisi başlığı barındırsın",
      "file": "apps/web/src/modules/maintenance/components/orders-board.tsx:51",
      "openedRound": 1
@@ -308,7 +328,7 @@
    "total": 60,
    "verdict": "Plantero",
    "sampleId": "4e8faceb-c7d3-426d-a7ae-7dd20d398356 (MO-2026-000006, reported) + 9c621b3c-f7ba-4098-aa83-d6a08f60da1d (MO-2026-000003, periyodik/done)",
-   "scoreNotes": "Tur 4: görev promptundaki 4 açık bulgu (bakim-isemirleri-detay-06/09/10/11) kök nedeniyle kapatıldı. k6 3→5 (Güç/Çalışma saati/Kapasite artık QtyCell — '5.0000 kW'→'5 kW', tabular-nums), k7 4→5 (iskelet/gerçek fark 471→6px, sparse referans MO-2026-000006), k9 4→5 (makine linki 35.5px→44px), k11 4→5 (iki kardeş ekranda aynı alan artık birebir aynı dize). Toplam 60 ≥ 57 (referans Linear), hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 4 (kritik doğrulaması, MO-2026-000006 / 00705ae3-eff2-44e9-a854-21fc8efc8535): kök scrollWidth 1440=1440 @1440x900 ve 390=390 @390x844, iç kap taşması 0, 44px altı gerçek dokunma hedefi 0 (yalnızca breadcrumb metni), distinctColors 22/21, h1 24/600 (mobilde 20/600), gövde 13px baskın. İskelet (loading.tsx) gerçek bölüm düzeniyle eşleşiyor (alan grupları + açıklama kartı + olay geçmişi + sabit eylem çubuğu). Detay bileşenleri (DetailFieldGroupsGrid/DetailFields) ana-veri modülüyle ortak → k11=5. 12/12 kriter 5, toplam 60 ≥ 57, açık bulgu yok → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -488,7 +508,7 @@
    "total": 60,
    "verdict": "Plantero",
    "sampleId": "33337421-27cf-411d-be97-5575b41d9222 (MK-001, Ön ezme)",
-   "scoreNotes": "Tur 4: görev promptundaki 4 açık bulgu (bakim-makine-detay-04/07/08/09) kök nedeniyle kapatıldı. k9 2→5 (P0 mobil taşma: main.scrollWidth 390=390, taşan yaprak düğüm 0), k5 4→5 (desktop kırpma: 'Son iş emirleri' başlığı clientWidth 181→564, kırpma 297→0px), k7 4→5 (iskelet/gerçek fark 512→16px), k11 4→5 (ham <Table> 3→0, üç sekme de DataTable). Toplam 60 ≥ 57 (referans Linear), hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 4 (kritik doğrulaması, MK-001 / 14c098fa-df2f-443f-9e61-7d50b7de02c3): kök scrollWidth 1440=1440 ve 390=390, iç kap taşması 0, 44px altı gerçek dokunma hedefi 0, distinctColors 19/18, sekme şeridi mobilde yatay kayan (taşma yok), OEE sparkline dönem uçlarını etiketliyor. İskelet gerçek sayfanın ince-satır dilini yansıtıyor (gri dolgulu kutu yok). 12/12 kriter 5, toplam 60 ≥ 57, açık bulgu yok → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -620,7 +640,7 @@
    ]
   },
   "/bakim/is-emirleri/yeni": {
-   "round": 3,
+   "round": 4,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -639,14 +659,14 @@
    ],
    "total": 58,
    "verdict": "Plantero",
-   "scoreNotes": "Tur 3 delta: k11 5→4 — YENİ bakim-yeni-03: h1 sol kenarı 552px, modülün diğer dört route'unda 264px (288px kayma). k3=4 kalıyor ve ÖLÇÜM KÖTÜLEŞTİ (emptyBelow 430→563px, contentBottom 470→337px) ama kriterin bandı korunuyor: mobil-öncelikli akış, 390px'te kusursuz (kök 390=390, tek kolon, 44px altı gerçek dokunma hedefi 0, tarama input'u 56px). Diğerleri değişmedi. Toplam 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 4: düzeltme uygulanmadı. k3=4 (1. adımda contentBottom 337px, emptyBelow 563px @1440x900 — Tur 3 ile aynı), k11=4 (h1 sol kenarı 552px, modülün diğer dört route'unda 264px). Mobil akış kusursuz: 390=390, tek kolon, 44px altı gerçek dokunma hedefi 0, tarama input'u 56px. Toplam 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
    "open": [
     {
      "id": "bakim-yeni-02",
      "criterion": 3,
      "severity": "P2",
      "text": "1. adımda 1440×900 masaüstü ekranın tamamında tek bir QR tarama input'u ve bir makine combobox'ı var; sahada telefon için tasarlanan akış masaüstünde ekranın %85'ini boş bırakıyor.",
-     "measure": "Tur 3: 1. adım contentBottom 337px, emptyBelow 563px @1440x900 (Tur 2: contentBottom ≈470px, emptyBelow ≈430px — 133px KÖTÜLEŞTİ). Ekranda etkileşimli eleman 4 (tarama input, makine combobox, Vazgeç, Arızayı bildir).",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): 1. adım contentBottom 337px, emptyBelow 563px @1440x900 (Tur 2: contentBottom ≈470px, emptyBelow ≈430px — 133px KÖTÜLEŞTİ). Ekranda etkileşimli eleman 4 (tarama input, makine combobox, Vazgeç, Arızayı bildir).",
      "target": "emptyBelow ≤ 200px — masaüstünde yan panelde son bildirilen arızalar/makine listesi ya da akışın tek sayfada toplanması",
      "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx",
      "openedRound": 1
@@ -656,7 +676,7 @@
      "criterion": 11,
      "severity": "P2",
      "text": "YENİ: Sayfa başlığı modülün diğer route'larıyla hizalanmıyor. Form `mx-auto max-w-xl` ile ortalanırken PageHeader de aynı kabın içinde kaldığından 'Arıza Bildir' başlığı sayfa oluğunun 288px sağında başlıyor; /bakim/makineler, /bakim/planlar, /bakim/is-emirleri, /bakim/oee başlıkları 264px'te. Modülde gezerken başlık ekranın ortasına sıçrıyor.",
-     "measure": "Tur 3 @1440x900: h1 \"Arıza Bildir\" left 552px; /bakim/makineler h1 left 264, /bakim/planlar 264, /bakim/is-emirleri 264, /bakim/oee 264 (içerik kabı innerLeft 264). Fark 288px.",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı) @1440x900: h1 \"Arıza Bildir\" left 552px; /bakim/makineler h1 left 264, /bakim/planlar 264, /bakim/is-emirleri 264, /bakim/oee 264 (içerik kabı innerLeft 264). Fark 288px.",
      "target": "h1 left = 264px (diğer bakım route'larıyla aynı sayfa oluğu) — ortalama yalnızca form gövdesine uygulansın, PageHeader tam genişlikte kalsın",
      "file": "apps/web/src/app/(app)/bakim/is-emirleri/yeni/page.tsx",
      "openedRound": 3
@@ -680,7 +700,7 @@
    ]
   },
   "/bakim/oee": {
-   "round": 3,
+   "round": 4,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -690,23 +710,23 @@
     5,
     5,
     5,
-    5,
+    4,
     4,
     4,
     5,
     5,
     5
    ],
-   "total": 57,
+   "total": 56,
    "verdict": "Plantero",
-   "scoreNotes": "Tur 3: bu route'a düzeltme uygulanmadı; üç P2 bulgusu da yeniden ölçüldü, sonuçlar Tur 2 ile aynı. distinctColors 14 @1440x900 / 12 @390x844 (modülün en düşüğü), KPI şeridi 80px + dikey hairline ayraç, rakamlar tabular-nums. k3=4 (emptyBelow 262px), k8=4 (hat çiplerinde basılı durumu yok), k9=4 (mobil KPI şeridinde 3./4./5. kart görünüm alanı dışında). Toplam 57 ≥ 56 (Stripe), hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 4 delta: k7 5→4 — yükleme iskeleti ilk kez ölçüldü (scripts/probe-bakim-r4-oee-skel.ts): iskelet 4 × 128×80 blok @top=144 + grafikler @top=248; gerçek sayfa çip satırı (h=32) @top=144 + 5 × 231×80 KPI @top=200 + grafik kartları @top=304 → 56px dikey sıçrama, KPI sayısı ve genişliği yanlış, çip satırı yer tutucusu yok. k3=4 (contentBottom 639, emptyBelow 262 — aynı), k8=4 (hat çiplerinde active/data-pressable yok — kod doğrulandı), k9=4 (mobil KPI şeridi scrollWidth 792 > 358, 3. kart kesik). distinctColors 14/12 (modülün en düşüğü), KPI 80px + dikey hairline, rakamlar tabular-nums. Toplam 56 = referans (Stripe 56), hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
    "open": [
     {
      "id": "bakim-oee-02",
      "criterion": 3,
      "severity": "P2",
      "text": "1440×900'de içerik 639px'de bitiyor (262px boş); makine bazlı OEE kırılımı ya da en çok duruş yaşayan makineler listesi yok — sayfa tek satır KPI + iki grafikten ibaret.",
-     "measure": "Tur 3: contentBottom 639px, emptyBelow 262px @1440x900 — Tur 2 ile birebir aynı",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): contentBottom 639px, emptyBelow 262px @1440x900 — Tur 2 ile birebir aynı",
      "target": "emptyBelow ≤ 120px — grafiklerin altına makine bazlı OEE tablosu (kod, OEE, kullanılabilirlik, duruş dk)",
      "file": "apps/web/src/app/(app)/bakim/oee/page.tsx",
      "openedRound": 1
@@ -716,7 +736,7 @@
      "criterion": 8,
      "severity": "P2",
      "text": "Hat filtresi çipleri `<Link>`; seçili olmayanlarda yalnızca hover:bg-accent var — basılı (active) durumu yok, seçili çipin de basılı geri bildirimi yok.",
-     "measure": "Tur 3: oee/page.tsx:24-43 — sınıflarda `active:` yok, `data-pressable` yok; globals.css:173-185 basılı ölçek kuralı yalnızca button/[role=button]/a[data-pressable] için geçerli, bu çipler düz `<Link>`",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): oee/page.tsx:24-43 — sınıflarda `active:` yok, `data-pressable` yok; globals.css:173-185 basılı ölçek kuralı yalnızca button/[role=button]/a[data-pressable] için geçerli, bu çipler düz `<Link>`",
      "target": "çiplere `data-pressable` (ya da active:scale-[0.97]) eklenerek basılı geri bildirimi; seçili çipte de aynı",
      "file": "apps/web/src/app/(app)/bakim/oee/page.tsx:24-43",
      "openedRound": 1
@@ -726,10 +746,30 @@
      "criterion": 9,
      "severity": "P2",
      "text": "Mobilde KPI şeridi yatay kayıyor ve 3. kart ('Performans') etiket ortasından kesik görünüyor; 5 kartın 3'ü ilk bakışta görünüm alanı dışında.",
-     "measure": "Tur 3: KpiStripRow kaydırıcısı scrollWidth 792 > clientWidth 358 @390x844; 3. kart (Performans) etiket ortasından kesik, 5 kartın 3'ü ilk bakışta görünüm alanı dışında. Belge kökünde taşma yok (390 = 390).",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): KpiStripRow kaydırıcısı scrollWidth 792 > clientWidth 358 @390x844; 3. kart (Performans) etiket ortasından kesik, 5 kartın 3'ü ilk bakışta görünüm alanı dışında. Belge kökünde taşma yok (390 = 390).",
      "target": "mobilde ya 2 sütunlu ızgara (kart 152→170px, 2×2+1) ya da ilk ekranda en az 3 kartın tamamının görünmesi",
      "file": "apps/web/src/components/kpi-strip.tsx (ortak bileşen — kök neden shell'e ait, burada yalnızca etkisi izleniyor)",
      "openedRound": 1
+    },
+    {
+     "id": "bakim-oee-05",
+     "criterion": 7,
+     "severity": "P2",
+     "text": "Yükleme iskeleti gerçek düzenle hizalanmıyor: hat filtresi çip satırı iskelette hiç yok, KPI blokları 4 adet ve 128px geniş (gerçek 5 adet, 231px), grafik kartları iskelette 56px yukarıda başlıyor → içerik gelince blok blok sıçrama.",
+     "measure": "Tur 4 (scripts/probe-bakim-r4-oee-skel.ts): iskelet blokları top=144 → 4×(128×80), grafikler top=248; gerçek: çipler top=144 h=32, KPI top=200 → 5×(231×80), grafik kartları top=304 (763px + 373px). Fark 56px.",
+     "target": "iskelet: çip satırı yer tutucusu (h=32) + tam genişlik 5'li 80px KPI şeridi; grafik kartı üst kenarı gerçek sayfayla ±8px",
+     "file": "apps/web/src/app/(app)/bakim/oee/loading.tsx",
+     "openedRound": 4
+    },
+    {
+     "id": "bakim-oee-06",
+     "criterion": 5,
+     "severity": "P2",
+     "text": "OEE trend grafiğinde dört serinin üçü aynı renkte çiziliyor; yalnızca kesik çizgi deseniyle ayrışıyorlar, tooltip'te ise üçünün de noktası birebir aynı gri — ayrım tamamen metin etiketine kalıyor. (Kriter 5'in ölçüm tanımı — tablo/kart anatomisi — karşılandığı için puan düşürülmedi; grafik anatomisi iyileştirmesi.)",
+     "measure": "oee-charts.tsx:22 COMPONENT_COLOR = var(--muted-foreground); satır 68-70 availability/performance/quality üçü de stroke=COMPONENT_COLOR strokeOpacity=0.85, strokeDasharray sırasıyla yok / \"4 3\" / \"1 3\"; TrendTooltip (satır 36) noktayı `backgroundColor: p.color` ile basıyor → 3 seri aynı renk noktada.",
+     "target": "her seri tooltip'te ve gösterge çubuğunda ayırt edilebilir olsun (nötr rampada üç farklı ton ya da noktanın çizgi desenini yansıtması)",
+     "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx:22,36,68-70",
+     "openedRound": 4
     }
    ],
    "closed": [

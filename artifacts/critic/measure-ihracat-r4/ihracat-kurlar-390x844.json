@@ -1,5 +1,1 @@
-
-> plantero-erp@ measure /home/user/Plantero_ERP
-> tsx scripts/measure.ts /ihracat/kurlar --viewport 390x844
-
 {"route":"/ihracat/kurlar","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":27,"heights":[18,63.5,63.5]},"fontSizes":{"10":5,"11":14,"12":82,"13":27,"14":28,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Kurlar\"","w":37.3,"h":19.5}],"distinctColors":15,"h1":{"size":20,"weight":600},"images":0}

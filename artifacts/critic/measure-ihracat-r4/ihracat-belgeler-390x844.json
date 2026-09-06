@@ -1,5 +1,1 @@
-
-> plantero-erp@ measure /home/user/Plantero_ERP
-> tsx scripts/measure.ts /ihracat/belgeler --viewport 390x844
-
 {"route":"/ihracat/belgeler","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":30,"heights":[60,60,60]},"fontSizes":{"10":5,"11":31,"12":34,"13":2,"14":32,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Belgeler\"","w":51.1,"h":19.5}],"distinctColors":20,"h1":{"size":20,"weight":600},"images":0}

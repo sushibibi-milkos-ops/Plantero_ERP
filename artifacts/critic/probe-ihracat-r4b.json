@@ -1,0 +1,82 @@
+{
+ "orderOptions": [
+  "SO-2026-000033 — BioGrün Handels GmbH216.0000 EUR"
+ ],
+ "formFields": [
+  {
+   "tag": "BUTTON",
+   "h": 36,
+   "w": 768,
+   "ph": null
+  },
+  {
+   "tag": "BUTTON",
+   "h": 36,
+   "w": 378,
+   "ph": null
+  },
+  {
+   "tag": "INPUT",
+   "h": 36,
+   "w": 378,
+   "ph": "Ör. İzmir FOB"
+  },
+  {
+   "tag": "INPUT",
+   "h": 36,
+   "w": 378,
+   "ph": "DE"
+  },
+  {
+   "tag": "BUTTON",
+   "h": 36,
+   "w": 378,
+   "ph": null
+  },
+  {
+   "tag": "INPUT",
+   "h": 36,
+   "w": 378,
+   "ph": null
+  },
+  {
+   "tag": "INPUT",
+   "h": 36,
+   "w": 378,
+   "ph": null
+  },
+  {
+   "tag": "INPUT",
+   "h": 36,
+   "w": 378,
+   "ph": null
+  },
+  {
+   "tag": "BUTTON",
+   "h": 36,
+   "w": 378,
+   "ph": null
+  },
+  {
+   "tag": "INPUT",
+   "h": 36,
+   "w": 768,
+   "ph": null
+  }
+ ],
+ "submitEmptyFeedback": {
+  "toasts": [],
+  "aria": 0,
+  "url": "/ihracat/sevkiyatlar/yeni"
+ },
+ "rowHover": {
+  "before": "rgba(0, 0, 0, 0)",
+  "after": "rgba(0, 0, 0, 0)",
+  "changed": false
+ },
+ "focusRing": {
+  "el": "A:Kokpit",
+  "outline": "1px auto",
+  "boxShadow": "none"
+ }
+}

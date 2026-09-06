@@ -1,0 +1,678 @@
+{
+ "gtipCols": {
+  "cols": [
+   {
+    "head": "SKU",
+    "w": 130,
+    "distinct": 39,
+    "top": [
+     "110010001",
+     "110010002",
+     "110010003"
+    ],
+    "dash": 0,
+    "rows": 39,
+    "maxContent": 0
+   },
+   {
+    "head": "Ürün",
+    "w": 532,
+    "distinct": 39,
+    "top": [
+     "BADEM BAZI",
+     "2x Badem Bazı",
+     "3x Badem Bazı"
+    ],
+    "dash": 0,
+    "rows": 39,
+    "maxContent": 0
+   },
+   {
+    "head": "Kategori",
+    "w": 160,
+    "distinct": 2,
+    "top": [
+     "Mamul Ürünler",
+     "Hammaddeler"
+    ],
+    "dash": 0,
+    "rows": 39,
+    "maxContent": 0
+   },
+   {
+    "head": "Tip",
+    "w": 110,
+    "distinct": 2,
+    "top": [
+     "Mamul",
+     "Hammadde"
+    ],
+    "dash": 0,
+    "rows": 39,
+    "maxContent": 0
+   },
+   {
+    "head": "GTİP",
+    "w": 220,
+    "distinct": 2,
+    "top": [
+     "Eşlenmedi",
+     "0901.21"
+    ],
+    "dash": 0,
+    "rows": 39,
+    "maxContent": 194
+   }
+  ],
+  "tableW": 1152,
+  "wrapScrollW": 1152,
+  "wrapClientW": 1152
+ },
+ "kurlarCols": {
+  "cols": [
+   {
+    "head": "Tarih",
+    "w": 208,
+    "distinct": 13,
+    "top": [
+     "06.09.2026",
+     "05.09.2026",
+     "04.09.2026"
+    ],
+    "dash": 0,
+    "rows": 25,
+    "maxContent": 0
+   },
+   {
+    "head": "Para birimi",
+    "w": 227,
+    "distinct": 2,
+    "top": [
+     "EUR",
+     "USD"
+    ],
+    "dash": 0,
+    "rows": 25,
+    "maxContent": 0
+   },
+   {
+    "head": "Alış",
+    "w": 227,
+    "distinct": 23,
+    "top": [
+     "₺37,2000",
+     "₺33,8448",
+     "₺38,5000"
+    ],
+    "dash": 0,
+    "rows": 25,
+    "maxContent": 0
+   },
+   {
+    "head": "Satış",
+    "w": 227,
+    "distinct": 23,
+    "top": [
+     "₺37,4000",
+     "₺33,9937",
+     "₺38,7000"
+    ],
+    "dash": 0,
+    "rows": 25,
+    "maxContent": 0
+   },
+   {
+    "head": "Kaynak",
+    "w": 264,
+    "distinct": 1,
+    "top": [
+     "TCMB"
+    ],
+    "dash": 0,
+    "rows": 25,
+    "maxContent": 0
+   }
+  ],
+  "tableW": 1152,
+  "wrapScrollW": 1152,
+  "wrapClientW": 1152
+ },
+ "belgelerCols": {
+  "cols": [
+   {
+    "head": "Belge",
+    "w": 403,
+    "distinct": 12,
+    "top": [
+     "ATR dolaşım belgesi",
+     "EUR.1 dolaşım sertifikası",
+     "Sağlık sertifikası"
+    ],
+    "dash": 0,
+    "rows": 30,
+    "maxContent": 0
+   },
+   {
+    "head": "Sevkiyat",
+    "w": 263,
+    "distinct": 3,
+    "top": [
+     "EXP-2026-000001",
+     "EXP-2026-000002",
+     "EXP-2026-000003"
+    ],
+    "dash": 0,
+    "rows": 30,
+    "maxContent": 0
+   },
+   {
+    "head": "Müşteri",
+    "w": 316,
+    "distinct": 1,
+    "top": [
+     "BioGrün Handels GmbH"
+    ],
+    "dash": 0,
+    "rows": 30,
+    "maxContent": 0
+   },
+   {
+    "head": "Durum",
+    "w": 130,
+    "distinct": 5,
+    "top": [
+     "Gerekmiyor",
+     "Gerekli",
+     "Gönderildi"
+    ],
+    "dash": 0,
+    "rows": 30,
+    "maxContent": 89
+   },
+   {
+    "head": "Eylemler",
+    "w": 40,
+    "distinct": 1,
+    "top": [
+     ""
+    ],
+    "dash": 30,
+    "rows": 30,
+    "maxContent": 24
+   }
+  ],
+  "tableW": 1152,
+  "wrapScrollW": 1152,
+  "wrapClientW": 1152
+ },
+ "sevkCols": {
+  "cols": [
+   {
+    "head": "Sevkiyat no",
+    "w": 158,
+    "distinct": 3,
+    "top": [
+     "EXP-2026-000001",
+     "EXP-2026-000002",
+     "EXP-2026-000003"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 0
+   },
+   {
+    "head": "Müşteri",
+    "w": 190,
+    "distinct": 1,
+    "top": [
+     "BioGrün Handels GmbH"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 0
+   },
+   {
+    "head": "Durum",
+    "w": 140,
+    "distinct": 3,
+    "top": [
+     "Kapalı",
+     "Gümrükte",
+     "Taslak"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 80
+   },
+   {
+    "head": "Ülke",
+    "w": 65,
+    "distinct": 2,
+    "top": [
+     "DE",
+     "NL"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 0
+   },
+   {
+    "head": "Rejim",
+    "w": 76,
+    "distinct": 2,
+    "top": [
+     "ETGB",
+     "Standart"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 0
+   },
+   {
+    "head": "Belgeler",
+    "w": 87,
+    "distinct": 3,
+    "top": [
+     "9/11",
+     "2/8",
+     "6/11"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 0
+   },
+   {
+    "head": "Tutar (döviz)",
+    "w": 120,
+    "distinct": 3,
+    "top": [
+     "€270,00",
+     "€16.800,00",
+     "€0,00"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 73
+   },
+   {
+    "head": "ETD",
+    "w": 96,
+    "distinct": 2,
+    "top": [
+     "—",
+     "09.09.2026"
+    ],
+    "dash": 2,
+    "rows": 3,
+    "maxContent": 0
+   },
+   {
+    "head": "Oluşturma",
+    "w": 99,
+    "distinct": 1,
+    "top": [
+     "06.09.2026"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 0
+   },
+   {
+    "head": "Tutar (₺)",
+    "w": 120,
+    "distinct": 3,
+    "top": [
+     "₺10.044,00",
+     "₺624.960,00",
+     "₺2.678,40"
+    ],
+    "dash": 0,
+    "rows": 3,
+    "maxContent": 81
+   }
+  ],
+  "tableW": 1152,
+  "wrapScrollW": 1152,
+  "wrapClientW": 1152
+ },
+ "sevkMob": [
+  {
+   "h": 64,
+   "text": "EXP-2026-000001KapalıBioGrün Handels GmbH · 06.09.2026₺10.044,00",
+   "glued": true,
+   "raw": "\"EXP-2026-000001KapalıBioGrün Handels GmbH · 06.09.2026₺10.044,00\""
+  },
+  {
+   "h": 64,
+   "text": "EXP-2026-000002GümrükteBioGrün Handels GmbH · 09.09.2026 · 06.09.2026₺624.960,00",
+   "glued": true,
+   "raw": "\"EXP-2026-000002GümrükteBioGrün Handels GmbH · 09.09.2026 · 06.09.2026₺624.960,00\""
+  },
+  {
+   "h": 64,
+   "text": "EXP-2026-000003TaslakBioGrün Handels GmbH · 06.09.2026₺2.678,40",
+   "glued": true,
+   "raw": "\"EXP-2026-000003TaslakBioGrün Handels GmbH · 06.09.2026₺2.678,40\""
+  }
+ ],
+ "kurlarMob": [
+  {
+   "h": 18,
+   "text": "EUR",
+   "glued": false,
+   "raw": "\"EUR\""
+  },
+  {
+   "h": 18,
+   "text": "USD",
+   "glued": false,
+   "raw": "\"USD\""
+  },
+  {
+   "h": 64,
+   "text": "EUR06.09.2026 · TCMB₺37,4000",
+   "glued": true,
+   "raw": "\"EUR06.09.2026 · TCMB₺37,4000\""
+  },
+  {
+   "h": 64,
+   "text": "USD06.09.2026 · TCMB₺33,9937",
+   "glued": true,
+   "raw": "\"USD06.09.2026 · TCMB₺33,9937\""
+  },
+  {
+   "h": 64,
+   "text": "EUR05.09.2026 · TCMB₺38,7000",
+   "glued": true,
+   "raw": "\"EUR05.09.2026 · TCMB₺38,7000\""
+  },
+  {
+   "h": 64,
+   "text": "USD05.09.2026 · TCMB₺34,6593",
+   "glued": true,
+   "raw": "\"USD05.09.2026 · TCMB₺34,6593\""
+  }
+ ],
+ "belgelerMob": [
+  {
+   "h": 60,
+   "text": "ATR dolaşım belgesiGerekmiyorEXP-2026-000001",
+   "glued": false,
+   "raw": "\"ATR dolaşım belgesiGerekmiyorEXP-2026-000001\""
+  },
+  {
+   "h": 60,
+   "text": "EUR.1 dolaşım sertifikasıGerekmiyorEXP-2026-000001",
+   "glued": false,
+   "raw": "\"EUR.1 dolaşım sertifikasıGerekmiyorEXP-2026-000001\""
+  },
+  {
+   "h": 60,
+   "text": "Sağlık sertifikasıGerekliEXP-2026-000001",
+   "glued": false,
+   "raw": "\"Sağlık sertifikasıGerekliEXP-2026-000001\""
+  },
+  {
+   "h": 60,
+   "text": "Konşimento (B/L)GerekmiyorEXP-2026-000001",
+   "glued": false,
+   "raw": "\"Konşimento (B/L)GerekmiyorEXP-2026-000001\""
+  },
+  {
+   "h": 60,
+   "text": "CMR taşıma senediGerekmiyorEXP-2026-000001",
+   "glued": false,
+   "raw": "\"CMR taşıma senediGerekmiyorEXP-2026-000001\""
+  },
+  {
+   "h": 60,
+   "text": "Hava yolu taşıma senedi (AWB)GerekmiyorEXP-2026-000001",
+   "glued": false,
+   "raw": "\"Hava yolu taşıma senedi (AWB)GerekmiyorEXP-2026-000001\""
+  }
+ ],
+ "detayLines": {
+  "cols": [
+   {
+    "head": "Ürün",
+    "w": 562,
+    "distinct": 1,
+    "top": [
+     "Badem İçeceği 1 Litrelik UHT"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "SKU",
+    "w": 120,
+    "distinct": 1,
+    "top": [
+     "190010099"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "Miktar",
+    "w": 110,
+    "distinct": 1,
+    "top": [
+     "40 ADET"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "Sevk edilen",
+    "w": 110,
+    "distinct": 1,
+    "top": [
+     "40"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "Birim fiyat",
+    "w": 120,
+    "distinct": 1,
+    "top": [
+     "€420,00"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 53
+   },
+   {
+    "head": "Tutar",
+    "w": 130,
+    "distinct": 1,
+    "top": [
+     "€16.800,00"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 73
+   }
+  ],
+  "tableW": 1152,
+  "wrapScrollW": 1152,
+  "wrapClientW": 1152
+ },
+ "detayHeaderButtons": [
+  "Gümrük bilgisini güncelle",
+  "Yüklendi işaretle",
+  "İptal et",
+  "Düzenle",
+  "Sipariş satırları",
+  "Çeki listesi",
+  "Belgeler",
+  "Fatura & kur",
+  "Ürün",
+  "SKU",
+  "Miktar",
+  "Sevk edilen"
+ ],
+ "detaySeed": [
+  "MAEU-SEED-0042ETD09"
+ ],
+ "detayPacking": {
+  "cols": [
+   {
+    "head": "Kap no",
+    "w": 80,
+    "distinct": 1,
+    "top": [
+     "#1"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "Ürün",
+    "w": 422,
+    "distinct": 1,
+    "top": [
+     "Badem İçeceği 1 Litrelik UHT"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "SKU",
+    "w": 120,
+    "distinct": 1,
+    "top": [
+     "190010099"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "Lot",
+    "w": 150,
+    "distinct": 1,
+    "top": [
+     "PL-260822-H1-05"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 104
+   },
+   {
+    "head": "Miktar",
+    "w": 100,
+    "distinct": 1,
+    "top": [
+     "40"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "GTİP",
+    "w": 100,
+    "distinct": 1,
+    "top": [
+     "2202.99"
+    ],
+    "dash": 0,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "Net kg",
+    "w": 90,
+    "distinct": 1,
+    "top": [
+     "—"
+    ],
+    "dash": 1,
+    "rows": 1,
+    "maxContent": 0
+   },
+   {
+    "head": "Brüt kg",
+    "w": 90,
+    "distinct": 1,
+    "top": [
+     "—"
+    ],
+    "dash": 1,
+    "rows": 1,
+    "maxContent": 0
+   }
+  ],
+  "tableW": 1152,
+  "wrapScrollW": 1152,
+  "wrapClientW": 1152
+ },
+ "detayDocs": {
+  "cols": [
+   {
+    "head": "Belge",
+    "w": 982,
+    "distinct": 8,
+    "top": [
+     "Proforma fatura",
+     "Ticari fatura",
+     "Çeki listesi (packing list)"
+    ],
+    "dash": 0,
+    "rows": 8,
+    "maxContent": 0
+   },
+   {
+    "head": "Durum",
+    "w": 130,
+    "distinct": 4,
+    "top": [
+     "Gönderildi",
+     "Gerekli",
+     "Hazır"
+    ],
+    "dash": 0,
+    "rows": 8,
+    "maxContent": 89
+   },
+   {
+    "head": "Eylemler",
+    "w": 40,
+    "distinct": 1,
+    "top": [
+     ""
+    ],
+    "dash": 8,
+    "rows": 8,
+    "maxContent": 24
+   }
+  ],
+  "tableW": 1152,
+  "wrapScrollW": 1152,
+  "wrapClientW": 1152
+ },
+ "detayInvoiceEmpty": {
+  "txt": "Devam belgesi yok",
+  "btns": [
+   "Gümrük bilgisini güncelle",
+   "Yüklendi işaretle",
+   "İptal et",
+   "Düzenle",
+   "Sipariş satırları",
+   "Çeki listesi",
+   "Belgeler",
+   "Fatura & kur"
+  ],
+  "ctaNamed": null,
+  "ctaPresent": null
+ }
+}

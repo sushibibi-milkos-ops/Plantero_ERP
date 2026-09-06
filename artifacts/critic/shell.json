@@ -785,6 +785,35 @@
     }
    ],
    "closed": []
+  },
+  "Combobox / DataTable mobil kart meta ayracı (Combobox kullanan tüm formlar, DataTable kullanan tüm listeler, 390px)": {
+   "round": 4,
+   "reference": "linear",
+   "referenceTotal": 57,
+   "scoreNotes": "ihracat Tur 4 tespiti — ortak bileşen. Modül kartında tekrar açılmadı (DESIGN-SCORECARD kural 5).",
+   "open": [
+    {
+     "id": "shell-combobox-option-touch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "[ihracat Tur 4 tespiti — ortak bileşen] Combobox açılır listesindeki seçenek satırları 390px'te 32px — uygulamanın kendi mobil dokunma standardının (44px; ör. gtip-mapping-table.tsx:66 `data-[size=default]:h-11 md:data-[size=default]:h-9`, logistics-panel.tsx:54 `h-11 md:h-7`) 12px altında. Combobox'ı kullanan her formda (ör. /ihracat/sevkiyatlar/yeni'de formun TEK zorunlu alanı) mobil kullanıcı 32px'lik satırlara dokunuyor. `pnpm measure` bunu yakalayamıyor çünkü ölçüm sırasında popover kapalı.",
+     "measure": "390x844, /ihracat/sevkiyatlar/yeni sipariş seçicisi açık: [role=option] yüksekliği 32px (probe-ihracat-r4d.json mobile[0].h=32); aynı ekrandaki tetikleyici 44px",
+     "target": "Combobox seçenek satırı mobilde ≥44px: CommandItem'a `min-h-11 md:min-h-8` (ya da `py-2.5 md:py-1.5`). Kabul ölçütü: 390px'te açık listede tüm [role=option] yüksekliği ≥44px, 1440px'te ≤36px kalsın.",
+     "file": "apps/web/src/components/form/combobox.tsx",
+     "openedRound": 4
+    },
+    {
+     "id": "shell-mobcard-separator-gap-01",
+     "criterion": 1,
+     "severity": "P2",
+     "text": "[ihracat Tur 4 tespiti — ortak bileşen] DataTable mobil kart meta satırındaki '·' ayracının SOL boşluğu render edilmiyor, sağ boşluğu duruyor: metin 'BioGrün Handels GmbH· 06.09.2026' / '06.09.2026· TCMB' gibi okunuyor. DOM metni doğru (' · ') ama ayraç kendi inline kutusunda olduğu için baştaki boşluk çöküyor. Üç ihracat listesinde birden görünüyor (sevkiyatlar, kurlar, detay çeki listesi kartı).",
+     "measure": "390x844 /ihracat/kurlar: tarih segmenti right=93, ayraç span x=93 (sol boşluk 0px), 'TCMB' x=99 (sağ boşluk ≈4px) — asimetri 4px (probe-ihracat-r4e.json)",
+     "target": "Ayraç boşluğu simetrik olsun: ayraç span'ini `mx-1` ile ver ya da metni `\\u00A0·\\u00A0` yap. Kabul ölçütü: 390px'te ayracın sol ve sağ boşluğu ±1px eşit.",
+     "file": "apps/web/src/components/data-table/mobile-cards.tsx",
+     "openedRound": 4
+    }
+   ],
+   "closed": []
   }
  },
  "measuredAt": "2026-09-06T09:44:55Z"
