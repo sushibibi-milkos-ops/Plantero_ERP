@@ -41,7 +41,11 @@ export default async function PurchaseOrdersPage() {
 
       <KpiStripRow>
         <KpiCard variant="strip" title="Açık sipariş" value={openOrders.length} format="int" />
-        <KpiCard variant="strip" title="Açık sipariş tutarı" value={openValue} format="money" />
+        {/* Tur 10 P2 tedarik-siparisler-money-format-01 kök neden: KpiCard varsayılan olarak
+            parayı 0 ondalıkla basıyor (₺47.160), oysa altındaki tabloda 'Tutar' kolonu 2 ondalıkla
+            (₺4.620,00) gösteriliyordu — aynı ekranda iki para biçimi. `fractionDigits={2}` ile
+            KPI, tablo ile aynı hassasiyete getirildi (bir şeritte tek ondalık kuralı). */}
+        <KpiCard variant="strip" title="Açık sipariş tutarı" value={openValue} format="money" fractionDigits={2} />
         <KpiCard variant="strip" title="Onay bekleyen" value={pendingApproval} format="int" />
         <KpiCard variant="strip" title="AI taslağı" value={aiGenerated} format="int" />
       </KpiStripRow>

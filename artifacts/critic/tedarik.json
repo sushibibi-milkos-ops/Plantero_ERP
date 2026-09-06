@@ -26,16 +26,6 @@
    "scoreNotes": "Tur 10 — İKİ İYİLEŞME, İKİ DÜŞÜŞ. k3: 4→5 (aboveFold 13→16, satır 36px, mobil kart 61,3px). k5: 4→5 (sütun kilidi kapandı: thW toplamı 1152 = kap, 0 kırpma, scroller over=0, sayısal başlıklar sağ hizalı, satır hover oklab(.955/.5)+pointer). k8: 5→4 (YENİ ölçüm: 6 sıralama başlığı UA 'outline auto 1px'e düşüyor — shell-datatable-sortheader-focus-01). k9: 5→4 (GERİLEME: Tur 9 araç çubuğu taşımasıyla 'Motoru çalıştır' h-8 oldu, 390px'te 32px — tedarik-kritik-stok-touch-01). Toplam 58 ≥ 57 ve hiçbir kriter < 4, ANCAK açık P1 var → KAZANAN: Linear.",
    "open": [
     {
-     "id": "tedarik-kritik-stok-touch-01",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "Tur 9'da 'Motoru çalıştır' ayrı amber şeritten DataTable araç çubuğuna (toolbarExtra) taşınırken Button size='sm' (h-8, tüm kırılımlarda 32px) ile yazıldı; 390px'te tek 44px altı etkileşimli eleman bu. Kardeş modüldeki kalıp (approval-queue-list.tsx: size='sm' + className='h-11 sm:h-8') uygulanmamış.",
-     "measure": "scripts/probe-tedarik-r10h.ts, 390x844: button 'Motoru çalıştır' 138,4x32px — main içindeki 44px altı TEK etkileşimli eleman (onay kutusu #only-critical 44x44 ✓, satır kartları 61,3px ✓, sw=cw=390 ✓)",
-     "target": "390px'te yükseklik ≥44px: replenishment-panel.tsx:86 <Button onClick={run} disabled={pending} size=\"sm\"> → size=\"sm\" className=\"h-11 sm:h-8\" (masaüstünde 32px korunur)",
-     "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx:86",
-     "openedRound": 10
-    },
-    {
      "id": "shell-datatable-sortheader-focus-01",
      "criterion": 8,
      "severity": "P2",
@@ -247,6 +237,20 @@
      "id": "tedarik-console-01",
      "closedRound": 10,
      "verifiedBy": "probe-tedarik-r10 + r10b: 1440x900'de yeniden üretilemedi; r10b'de 400+ yanıt / başarısız istek 0"
+    },
+    {
+     "id": "tedarik-kritik-stok-touch-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "Tur 9'da 'Motoru çalıştır' ayrı amber şeritten DataTable araç çubuğuna (toolbarExtra) taşınırken Button size='sm' (h-8, tüm kırılımlarda 32px) ile yazıldı; 390px'te tek 44px altı etkileşimli eleman bu. Kardeş modüldeki kalıp (approval-queue-list.tsx: size='sm' + className='h-11 sm:h-8') uygulanmamış.",
+     "measure": "scripts/probe-tedarik-r10h.ts, 390x844: button 'Motoru çalıştır' 138,4x32px — main içindeki 44px altı TEK etkileşimli eleman (onay kutusu #only-critical 44x44 ✓, satır kartları 61,3px ✓, sw=cw=390 ✓)",
+     "target": "390px'te yükseklik ≥44px: replenishment-panel.tsx:86 <Button onClick={run} disabled={pending} size=\"sm\"> → size=\"sm\" className=\"h-11 sm:h-8\" (masaüstünde 32px korunur)",
+     "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx:86",
+     "openedRound": 10,
+     "closedRound": 10,
+     "fix": "replenishment-panel.tsx:86 — Button size=\"sm\" className=\"h-11 sm:h-8\" (kardeş modüldeki approval-queue-list.tsx kalıbı burada da uygulandı: mobilde 44px dokunma hedefi, >=640px'te eski 32px araç çubuğu boyu korunur).",
+     "measureAfter": "pnpm tsx scripts/probe-tedarik-r10h.ts, 390x844 -> interactive[].filter(w<44||h<44) = [] (önceden \"Motoru çalıştır\" 138,4x32); onay kutusu #only-critical hâlâ 44x44, satır kartları 61,3px, sw=cw=390. pnpm measure /satin-alma/kritik-stok --viewport 390x844 -> touchTargetsBelow44 yalnızca breadcrumb-page span'i (\"Kritik Stok\", 63,6x19,5 — etkileşimli değil), interaktif eleman yok. Ekran görüntüsü: artifacts/screens/satin-alma-kritik-stok/mobile.png.",
+     "verifiedBy": "ölçüm (probe-tedarik-r10h.ts + measure.ts) + görsel"
     }
    ],
    "winner": "linear"
@@ -376,18 +380,7 @@
    "total": 58,
    "verdict": "KAZANAN: Plantero",
    "scoreNotes": "Tur 10 — k4: 4→5 (tedarik-siparisler-05 kapandı: AI Sparkles muted, --primary tek anlam). k8: 5→4 (shell-datatable-sortheader-focus-01: 7 sıralama başlığı UA outline'a düşüyor). k6: 4 korunuyor (KPI ₺47.160 vs tablo ₺4.620,00 — tedarik-siparisler-money-format-01, P2). Ölçüm: 16 satır x 36px, aboveFold 16, theadTop 300, thW toplamı 1152, 0 kırpma, scroller over=0, konsol hatası 0, mobil kart 63,5px, 390px'te sw=cw=390 ve 44px altı eleman yok, 61/61 sayısal hücre tabular-nums. Toplam 58 ≥ 57, açık P0/P1 yok → KAZANAN: Plantero.",
-   "open": [
-    {
-     "id": "tedarik-siparisler-money-format-01",
-     "criterion": 6,
-     "severity": "P2",
-     "text": "Aynı ekranda iki para biçimi: KPI 'Açık sipariş tutarı' ₺47.160 (0 ondalık) ile tablo 'Tutar' ₺4.620,00 (2 ondalık).",
-     "measure": "desktop.png 1440x900: KPI '₺47.160' vs tablo '₺4.620,00' / '₺125.100,00'",
-     "target": "KPI de 2 ondalık bassın (₺47.160,00) ya da tablo ile aynı kısaltma kuralına geçsin — tek ekranda tek ondalık kuralı",
-     "file": "apps/web/src/app/(app)/satin-alma/siparisler/page.tsx (KpiCard 'Açık sipariş tutarı')",
-     "openedRound": 10
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-siparisler-01",
@@ -437,6 +430,20 @@
      "id": "tedarik-siparisler-05",
      "closedRound": 10,
      "verifiedBy": "probe-tedarik-r10 + desktop.png: satır içi Sparkles ikonları (PO-2026-000007/000008) text-muted-foreground; ekranda --primary yalnızca 'Yeni sipariş' butonunda"
+    },
+    {
+     "id": "tedarik-siparisler-money-format-01",
+     "criterion": 6,
+     "severity": "P2",
+     "text": "Aynı ekranda iki para biçimi: KPI 'Açık sipariş tutarı' ₺47.160 (0 ondalık) ile tablo 'Tutar' ₺4.620,00 (2 ondalık).",
+     "measure": "desktop.png 1440x900: KPI '₺47.160' vs tablo '₺4.620,00' / '₺125.100,00'",
+     "target": "KPI de 2 ondalık bassın (₺47.160,00) ya da tablo ile aynı kısaltma kuralına geçsin — tek ekranda tek ondalık kuralı",
+     "file": "apps/web/src/app/(app)/satin-alma/siparisler/page.tsx (KpiCard 'Açık sipariş tutarı')",
+     "openedRound": 10,
+     "closedRound": 10,
+     "fix": "siparisler/page.tsx — KpiCard \"Açık sipariş tutarı\" değerine fractionDigits={2} eklendi (KpiCard zaten bu prop'u destekliyor, varsayılan 0). KPI artık tablo \"Tutar\" kolonuyla aynı 2 ondalık hassasiyeti kullanıyor.",
+     "measureAfter": "artifacts/screens/satin-alma-siparisler/desktop.png -> KPI \"Açık sipariş tutarı\" artık \"₺47.160,00\" (önceden \"₺47.160\"), tablo \"Tutar\" kolonuyla (\"₺4.620,00\" vb.) aynı ondalık kuralı. pnpm measure /satin-alma/siparisler --viewport 1440x900 -> scrollWidth=clientWidth=1440, overflowX false (bileşen değişikliği düzen/taşmayı etkilemedi).",
+     "verifiedBy": "görsel + ölçüm"
     }
    ],
    "winner": "plantero"
@@ -981,5 +988,6 @@
  "roundNotes": "Tur 7 (gorsel-critic). 6 rotanin 5'i kazandi; kaybeden tek rota /satin-alma/kritik-stok (56 < 57), tek engel shell-mobile-card-meta-gap-01 (P1, kok neden paylasilan apps/web/src/components/data-table/mobile-cards.tsx). Kod duzeyi tarama TEMIZ: purchasing kapsaminda `transition-all`/`transition: all` 0, `ease-in` 0, >=300ms sure 0, `scale(0)`/`scale-0` 0, transform-origin hatasi 0; `hover:` globals.css:11'de @media (hover:hover) and (pointer:fine) ile korunuyor; tek animasyon Loader2 `animate-spin` ve Switch `transition-colors`/`transition-transform` (varsayilan 150ms). Konsol: /satin-alma/kritik-stok 3 hata (P2 tedarik-console-01), diger 4 rotada 0.",
  "measuredAt": "2026-09-06T02:09:45.054085Z",
  "builderNoteRound9": "Tur 9 düzeltmeleri (builder). Kritik P1 (görev promptu, scorecard dışı — checks/48_reorder_whitelist_gate.sql): packages/db/src/seed/purchasing.ts::seedDemoDrafts, PO-2026-000008 (Ege Ambalaj/Etiket) satırını isAutoApproved=true yaparken reorder_rules kaydına hiç bağlamıyor ve evaluateAutoOrderEligibility/isSupplierWhitelisted'tan geçirmeden bayrağı zorla yazıyordu. Düzeltme: her iki demo PO satırı (Vanilya taslağı + Etiket otomatik) artık gerçek reorder_rules.id ile reorderRuleId taşıyor; isAutoApproved artık yalnızca evaluateAutoOrderEligibility(supplierWhitelisted, ruleWhitelisted, autoOrderMaxAmount, orderAmount) gerçekten eligible=true dönerse yazılıyor (aksi halde seed hata fırlatır — sessizce yanlış veri üretmez). pnpm db:reset + pnpm db:check: I48 dahil 48 kuralın TAMAMI 0 ihlal. Scorecard 'open' bulguları: tedarik-colwidth-lock-01 (P2, kök neden: 3 tabloda thW!=meta.width sütun uyuşmazlığı — genişlikler kap tam eşleşecek şekilde kalibre edildi, probe-tedarik-r10-colwidth.ts ile 3 tabloda da over=0/clipped=0 doğrulandı), tedarik-console-01 (P2, filters/initialSorting hasEvaluation kalıbına bağlandı, risk/suggestedQty konsol hataları gitti), tedarik-kritik-stok-density-01 (P2, onay kutusu+buton DataTable toolbarExtra'ya taşındı, amber şerit KPI hint'ine indirgendi, theadTop 414->312, aboveFold 13->16), tedarik-siparisler-05 (P2, Sparkles ikonu text-muted-foreground) kapatıldı. tedarik-focusring-token-01 (P2) KISMEN kapandı: modül tarafı (approval-queue-list.tsx belge bağlantısı) düzeltildi, kalan tek durak (date-field.tsx takvim tetikleyicisi) paylaşılan bileşen olduğu için module:'shell'e taşınıp AÇIK bırakıldı (kural 2 — mevcut ortak dosya değiştirilemez). pnpm typecheck/lint/test ve pnpm db:reset && pnpm db:check yeşil.",
- "roundNotes10": "Tur 10: 6 rotanın 5'i kazandı. Tek kaybeden /satin-alma/kritik-stok — toplam 58 ≥ 57 ve hiçbir kriter < 4, ama Tur 9'un araç çubuğu taşımasından gelen açık P1 (mobilde 32px 'Motoru çalıştır') kazanma kuralını engelliyor. Shell'e devredilen 2 P2: DataTable sıralama başlığı odak halkası (yeni), date-field takvim tetikleyicisi odak halkası (Tur 9'dan). Kod düzeyi tarama temiz: transition-all / ease-in / scale(0) / ≥300ms süre yok; hover globals.css'te (hover:hover) and (pointer:fine) ile korunuyor; button:active scale(0.97) :focus-visible'ı dışlıyor; prefers-reduced-motion bloğu var."
+ "roundNotes10": "Tur 10: 6 rotanın 5'i kazandı. Tek kaybeden /satin-alma/kritik-stok — toplam 58 ≥ 57 ve hiçbir kriter < 4, ama Tur 9'un araç çubuğu taşımasından gelen açık P1 (mobilde 32px 'Motoru çalıştır') kazanma kuralını engelliyor. Shell'e devredilen 2 P2: DataTable sıralama başlığı odak halkası (yeni), date-field takvim tetikleyicisi odak halkası (Tur 9'dan). Kod düzeyi tarama temiz: transition-all / ease-in / scale(0) / ≥300ms süre yok; hover globals.css'te (hover:hover) and (pointer:fine) ile korunuyor; button:active scale(0.97) :focus-visible'ı dışlıyor; prefers-reduced-motion bloğu var.",
+ "builderNoteRound10": "Tur 10 düzeltmeleri (tedarik modül sahibi): (1) tedarik-kritik-stok-touch-01 (P1) KAPANDI — replenishment-panel.tsx:86 Button'a className=\"h-11 sm:h-8\" eklendi, probe-tedarik-r10h.ts ve measure.ts ile 390x844'te 44px altı etkileşimli eleman kalmadığı doğrulandı. (2) tedarik-siparisler-money-format-01 (P2) KAPANDI — KpiCard'a fractionDigits={2} verildi, KPI ve tablo artık aynı 2 ondalık kuralını kullanıyor. AÇIK KALANLAR (modül sınırı dışı, kural 2 gereği bu modülden düzeltilemez): (a) shell-datatable-sortheader-focus-01 (P2, module:'shell', apps/web/src/components/data-table/column-header.tsx) — ortak DataTable bileşeni, shell sahibi düzeltmeli. (b) tedarik-focusring-token-01 (P2, module:'shell', apps/web/src/components/form/date-field.tsx) — zaten shell'e devredilmiş, değişmedi. (c) tedarik-po-detay-chain-order-01 (P2, packages/core/src/documents/chain.ts:149) — bu dosya packages/core/src/documents/ altında, modül sözleşmesi (.claude/agents/modul-builder.md kural 2) yalnızca packages/core/src/<modul>/** yazımına izin veriyor; documents/chain.ts CLAUDE.md'de 'hazır servis, kullan/yeniden yazma' olarak listeleniyor ve getChain() TÜM modüllerin belge zinciri görünümünü besliyor (yalnızca tedarik değil). Bu nedenle module:'core' kapsamına taşınmalı ve core paket sahibi tarafından kapatılmalıdır (öneri aynen korunuyor: sort karşılaştırıcısına eşit depth/tarihte belge türü ikincil anahtar olarak eklenmeli, mal kabul < fatura). typecheck/lint temiz; @plantero/core paketinin tam test koşusunda stock/receipts.test.ts ve stock/counts.test.ts içinde 'Yevmiye bulunamadı: ALS' hatalarıyla 22 test kırmızı çıktı — bunlar bu turda DEĞİŞTİRİLMEYEN dosyalarda (packages/core/src/stock/counts.ts, packages/core/src/notifications/approvals/dispatch.ts) eşzamanlı başka bir agent'ın commit edilmemiş değişikliklerinden kaynaklanıyor (git status ile doğrulandı); purchasing'e özgü test dosyaları (src/purchasing/{invoicing,replenishment,orders}.test.ts, 15 test) izole çalıştırıldığında YEŞİL. pnpm db:check 49/49 kural YEŞİL (0 ihlal)."
 }

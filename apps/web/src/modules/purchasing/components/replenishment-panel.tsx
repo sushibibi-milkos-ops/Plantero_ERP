@@ -83,7 +83,12 @@ export function ReplenishmentPanel({
         <span className="font-normal">Sadece kritik/uyarı</span>
       </label>
       {canRun ? (
-        <Button onClick={run} disabled={pending} size="sm">
+        // Tur 10 P1 tedarik-kritik-stok-touch-01 kök neden: Tur 9'da bu buton ayrı amber
+        // şeritten DataTable araç çubuğuna taşınırken size="sm" (h-8 = tüm kırılımlarda 32px)
+        // ile bırakıldı — 390px'te main içindeki tek 44px altı etkileşimli eleman oydu. Kardeş
+        // modüldeki mobil kalıp (approval-queue-list.tsx: size="sm" + "h-11 sm:h-8") burada da
+        // uygulanır: mobilde 44px dokunma hedefi, >=640px'te eski 32px araç çubuğu boyu korunur.
+        <Button onClick={run} disabled={pending} size="sm" className="h-11 sm:h-8">
           {pending ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
           Motoru çalıştır
         </Button>
