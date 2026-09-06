@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /arge/projeler --as arge --viewport 390x844
+
+{"route":"/arge/projeler","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":0,"heights":[0,0,0]},"fontSizes":{"10":2,"11":13,"12":15,"13":7,"14":3,"15":3,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Projeler\"","w":47.8,"h":19.5}],"distinctColors":14,"h1":{"size":20,"weight":600},"images":0}
