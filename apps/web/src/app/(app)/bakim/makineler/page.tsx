@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { AlertTriangle, Cog, Gauge, Wrench } from 'lucide-react';
 import { requirePermission } from '@/lib/auth';
 import { PageHeader } from '@/components/page-header';
 import { KpiCard } from '@/components/kpi-card';
+import { KpiStripRow } from '@/components/kpi-strip';
 import { listMachines } from '@/modules/maintenance/queries';
 import { MachinesTable } from '@/modules/maintenance/components/machines-table';
 
@@ -20,15 +20,17 @@ export default async function MachinesPage() {
   return (
     <>
       <PageHeader title="Makineler" description={`${machines.length} makine kartı — kapasite raporu ekipmanları`} />
-      {/* `icon` sunucu bileşeninden HAZIR ELEMENT olarak geçilir (`<Icon />`) — ham bileşen türü
-          (`icon={Cog}`) sunucu→istemci sınırında serileştirilemeyen bir fonksiyon değeridir
-          (bkz. kpi-card.tsx üstündeki sözleşme yorumu). */}
-      <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KpiCard title="Toplam makine" value={machines.length} icon={<Cog />} />
-        <KpiCard title="Çalışıyor" value={running} icon={<Gauge />} />
-        <KpiCard title="Arızalı" value={down} icon={<Wrench />} invertDelta />
-        <KpiCard title="Vadesi geçen bakım" value={overdue} icon={<AlertTriangle />} invertDelta />
-      </div>
+      {/* Kök neden (Tur 4 P1 bakim-makineler-05/06): bu şerit uygulamadaki 154 KpiCard kullanımı
+          içinde `variant="strip"` KULLANMAYAN ve `icon=` taşıyan tek yerdi (279×136px ızgara kartı +
+          süs ikonu) — /bakim/oee dahil her modül KpiStripRow + variant="strip" kullanıyor. Etiketin
+          ("Toplam makine" vb.) taşımadığı bilgiyi tekrar eden ikonlar kaldırıldı, ızgara yerine tek
+          satırlık şerit (80px, dikey hairline) geldi — tabloyu artık ~256px daha az aşağı itiyor. */}
+      <KpiStripRow>
+        <KpiCard title="Toplam makine" value={machines.length} variant="strip" />
+        <KpiCard title="Çalışıyor" value={running} variant="strip" />
+        <KpiCard title="Arızalı" value={down} invertDelta variant="strip" />
+        <KpiCard title="Vadesi geçen bakım" value={overdue} invertDelta variant="strip" />
+      </KpiStripRow>
       <MachinesTable machines={machines} />
     </>
   );

@@ -17,10 +17,15 @@ export function MachinesTable({ machines }: { machines: MachineListRow[] }) {
       { accessorKey: 'code', header: 'Kod', meta: { mobile: 'title', className: 'font-mono', width: 90 } },
       {
         id: 'name', accessorFn: (r) => r.name, header: 'Makine', meta: { mobile: 'subtitle', flex: true },
+        // Kök neden (Tur 4 P2 bakim-makineler-02): bu hücre masaüstünde iki satır (ad + kategori)
+        // basıyor; mobil kartta "subtitle" olarak tek satırlık ikinci satıra taşındığında kategori
+        // satırı İÇİNDE ikinci bir blok satır daha üretip kartı 3 satıra (76.7px, hedef ≤72px)
+        // şişiriyordu. Kategori masaüstü-yalnızca bilgidir (mobil kartta zaten Kod+Durum rozeti
+        // yeterli bağlamı veriyor) — `hidden md:block` ile yalnızca masaüstü tablo hücresinde basılır.
         cell: ({ row }) => (
           <div>
             <div>{row.original.name}</div>
-            <div className="text-[11px] text-muted-foreground">{MACHINE_CATEGORY_LABELS[row.original.category] ?? row.original.category}</div>
+            <div className="hidden text-[11px] text-muted-foreground md:block">{MACHINE_CATEGORY_LABELS[row.original.category] ?? row.original.category}</div>
           </div>
         ),
       },
