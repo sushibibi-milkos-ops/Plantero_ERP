@@ -1,4 +1,3 @@
-import 'server-only';
 import { PERMISSIONS } from '@plantero/core/auth/rbac';
 
 /**
