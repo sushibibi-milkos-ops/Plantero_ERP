@@ -1,0 +1,45 @@
+{
+  "onaylar-hover": {
+    "before": "rgba(0, 0, 0, 0)",
+    "after": "oklab(0.955 0.000564683 -0.00191863 / 0.2)",
+    "changed": true
+  },
+  "onaylar-j": {
+    "role": "option",
+    "selected": "true",
+    "text": "Hesap İşletim Ücreti%85-₺185",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+    "outline": "none",
+    "fv": true
+  },
+  "bildirimler-tab": [
+    {
+      "tag": "BUTTON",
+      "text": "Tümü (3)",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "outline": "auto",
+      "fv": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Okunmamış (3)",
+      "boxShadow": "none",
+      "outline": "auto",
+      "fv": true
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Tümünü okundu işaretle",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "outline": "none",
+      "fv": true
+    },
+    {
+      "tag": "A",
+      "text": "SKT uyarısıSKT GEÇMİŞ: 1 l",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "outline": "none",
+      "fv": true
+    }
+  ]
+}

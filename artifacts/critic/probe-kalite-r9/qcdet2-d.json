@@ -1,0 +1,66 @@
+{
+ "label": "qcdet2-d",
+ "route": "/kalite/kontroller/8ed72e87-7a3e-497a-8f65-7318d1c648d1",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 32,
+ "smallTargetsInMain": [
+  {
+   "sel": "a \"ARK-2290\"",
+   "w": 67,
+   "h": 16
+  },
+  {
+   "sel": "button \"Boş alanları göster (1)\"",
+   "w": 122,
+   "h": 18
+  },
+  {
+   "sel": "input \"\"",
+   "w": 200,
+   "h": 36
+  },
+  {
+   "sel": "input \"\"",
+   "w": 340,
+   "h": 36
+  },
+  {
+   "sel": "button \"Sonuçları Kaydet\"",
+   "w": 145,
+   "h": 36
+  }
+ ],
+ "fontSizesMain": {
+  "12": 9,
+  "13": 8,
+  "14": 4,
+  "24": 1
+ },
+ "shadowCount": 2,
+ "borderedInsideBordered": 7,
+ "borderedInsideBorderedSample": [
+  "rounded border bg-background px-1 py-px font-mono  <= flex items-center border-t border-sidebar-border/7",
+  "rounded border bg-background px-1.5 py-px font-mon <= hidden h-8 w-56 items-center gap-2 rounded-md bord",
+  "border-t border-border/60 pt-3 text-[13px] font-se <= rounded-xl border border-border/60 p-4",
+  "w-full min-w-0 rounded-md border border-input bg-t <= rounded-xl border border-border/60 p-4",
+  "rounded-lg border border-border/60 p-3 <= rounded-xl border border-border/60 p-4",
+  "w-full min-w-0 rounded-md border border-input bg-t <= rounded-lg border border-border/60 p-3"
+ ],
+ "bottomNav": null
+}

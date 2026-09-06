@@ -1,0 +1,302 @@
+{
+  "onaylar-1440": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "rowCount": 13,
+    "rowHeights": [
+      181.5,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      41,
+      40
+    ],
+    "rowsFullyInFirstScreen": 13,
+    "amountRightGap": [
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58,
+      58
+    ],
+    "amountFontVariant": [
+      "tabular-nums"
+    ],
+    "listScrollWidth": 1150,
+    "listClientWidth": 1150,
+    "tablist": {
+      "scrollWidth": 410,
+      "clientWidth": 410,
+      "maskImage": "none",
+      "lastTabRight": 672.4,
+      "tabHeights": [
+        32,
+        32,
+        32
+      ]
+    },
+    "keyboardHint": {
+      "display": "block",
+      "w": 194.7,
+      "h": 16.5,
+      "top": 161.8,
+      "text": "J/K gezin · A onayla · R reddet"
+    },
+    "docOverflow": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440
+    },
+    "fontLadder": {
+      "11": 33,
+      "13": 33,
+      "14": 4,
+      "24": 1
+    },
+    "fontSamples": {
+      "11": [
+        "J/K gezin · A onayla · R r [400]",
+        "J [400]",
+        "K [400]"
+      ],
+      "13": [
+        "Tümü (13) [500]",
+        "(13) [500]",
+        "Mutabakat önerisi (12) [500]"
+      ],
+      "14": [
+        "13 onay bekliyor — satın a [400]",
+        "Reddet [500]",
+        "Detay [500]"
+      ],
+      "24": [
+        "Onay Merkezi [600]"
+      ]
+    }
+  },
+  "onaylar-390": {
+    "viewport": [
+      390,
+      844
+    ],
+    "rowCount": 13,
+    "rowHeights": [
+      215.5,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      67,
+      66
+    ],
+    "rowsFullyInFirstScreen": 6,
+    "amountRightGap": [
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8,
+      132.8
+    ],
+    "amountFontVariant": [
+      "tabular-nums"
+    ],
+    "listScrollWidth": 356,
+    "listClientWidth": 356,
+    "tablist": {
+      "scrollWidth": 410,
+      "clientWidth": 358,
+      "maskImage": "none",
+      "lastTabRight": 424.4,
+      "tabHeights": [
+        44,
+        44,
+        44
+      ]
+    },
+    "keyboardHint": {
+      "display": "block",
+      "w": 194.7,
+      "h": 16.5,
+      "top": 212,
+      "text": "J/K gezin · A onayla · R reddet"
+    },
+    "docOverflow": {
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "fontLadder": {
+      "11": 20,
+      "13": 33,
+      "14": 4,
+      "20": 1
+    },
+    "fontSamples": {
+      "11": [
+        "J/K gezin · A onayla · R r [400]",
+        "J [400]",
+        "K [400]"
+      ],
+      "13": [
+        "Tümü (13) [500]",
+        "(13) [500]",
+        "Mutabakat önerisi (12) [500]"
+      ],
+      "14": [
+        "13 onay bekliyor — satın a [400]",
+        "Reddet [500]",
+        "Detay [500]"
+      ],
+      "20": [
+        "Onay Merkezi [600]"
+      ]
+    }
+  },
+  "bildirimler-1440": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "rowCount": 3,
+    "rowHeights": [
+      72,
+      72,
+      71
+    ],
+    "listWidth": 768,
+    "mainWidth": 1200,
+    "distinctIconStyles": 1,
+    "iconStyles": [
+      "oklch(0.552 0.016 285.9)|16|lucide lucide-clock4 lucide-clock-4 mt-0"
+    ],
+    "distinctDots": 1,
+    "dotColors": [
+      "oklch(0.55 0.16 152)"
+    ],
+    "distinctRowBgs": 1,
+    "rowBgs": [
+      "rgba(0, 0, 0, 0)"
+    ],
+    "tabs": [
+      32,
+      32
+    ],
+    "docOverflow": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440
+    },
+    "fontLadder": {
+      "11": 3,
+      "13": 10,
+      "14": 2,
+      "24": 1
+    },
+    "fontSamples": {
+      "11": [
+        "16 dakika önce [400]",
+        "16 dakika önce [400]",
+        "16 dakika önce [400]"
+      ],
+      "13": [
+        "Tümü (3) [500]",
+        "(3) [500]",
+        "Okunmamış (3) [500]"
+      ],
+      "14": [
+        "Size gönderilen uygulama i [400]",
+        "Tümünü okundu işaretle [500]"
+      ],
+      "24": [
+        "Bildirimler [600]"
+      ]
+    }
+  },
+  "bildirimler-390": {
+    "viewport": [
+      390,
+      844
+    ],
+    "rowCount": 3,
+    "rowHeights": [
+      72,
+      72,
+      71
+    ],
+    "listWidth": 358,
+    "mainWidth": 390,
+    "distinctIconStyles": 1,
+    "iconStyles": [
+      "oklch(0.552 0.016 285.9)|16|lucide lucide-clock4 lucide-clock-4 mt-0"
+    ],
+    "distinctDots": 1,
+    "dotColors": [
+      "oklch(0.55 0.16 152)"
+    ],
+    "distinctRowBgs": 1,
+    "rowBgs": [
+      "rgba(0, 0, 0, 0)"
+    ],
+    "tabs": [
+      44,
+      44
+    ],
+    "docOverflow": {
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "fontLadder": {
+      "11": 3,
+      "13": 10,
+      "14": 2,
+      "20": 1
+    },
+    "fontSamples": {
+      "11": [
+        "16 dakika önce [400]",
+        "16 dakika önce [400]",
+        "16 dakika önce [400]"
+      ],
+      "13": [
+        "Tümü (3) [500]",
+        "(3) [500]",
+        "Okunmamış (3) [500]"
+      ],
+      "14": [
+        "Size gönderilen uygulama i [400]",
+        "Tümünü okundu işaretle [500]"
+      ],
+      "20": [
+        "Bildirimler [600]"
+      ]
+    }
+  }
+}

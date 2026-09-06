@@ -1,0 +1,42 @@
+{
+ "label": "iz-d",
+ "route": "/kalite/izlenebilirlik",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 27,
+ "smallTargetsInMain": [
+  {
+   "sel": "input \"\"",
+   "w": 512,
+   "h": 36
+  }
+ ],
+ "fontSizesMain": {
+  "13": 1,
+  "14": 1,
+  "16": 1,
+  "24": 1
+ },
+ "shadowCount": 1,
+ "borderedInsideBordered": 2,
+ "borderedInsideBorderedSample": [
+  "rounded border bg-background px-1 py-px font-mono  <= flex items-center border-t border-sidebar-border/7",
+  "rounded border bg-background px-1.5 py-px font-mon <= hidden h-8 w-56 items-center gap-2 rounded-md bord"
+ ],
+ "bottomNav": null
+}

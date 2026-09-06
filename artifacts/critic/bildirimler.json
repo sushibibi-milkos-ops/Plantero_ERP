@@ -1,10 +1,10 @@
 {
   "module": "bildirimler",
-  "round": 8,
-  "note": "Tur 8 (doğrulama turu). Tur 7'den bu yana bildirimler modülünde kod değişikliği YOK (apps/web/src/modules/notifications/**, (app)/onaylar, (app)/bildirimler dokunulmadı; ara commit'ler yalnızca shell/document-chain, core ve tedarik). Tüm açık P2'ler yeniden ölçüldü, hepsi aynı değerlerle AÇIK kaldı; puanlarda delta yok. /onaylar (admin): satır 41px x13 + seçili 181,5px, 1440x900'de 13/14 satır ilk ekranda, listbox scrollWidth=clientWidth=1150 (taşma yok), tüm tutarlar tabular-nums, hover satır zemini rgba(0,0,0,0) → oklab(.955 …/.2), J tuşu ile satır odağı :focus-visible + 2px inset ring oklab(0.55 -0.1412 0.0751 / .5) ölçümle doğrulandı, görünür font kademesi {11,13,14,24} (mobilde 20). Toplam 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANDI. /bildirimler: tur başında notifications tablosu TÜM kullanıcılarda boştu (0 satır); seed'in `notifications` adımıyla aynı core fonksiyonu (generateExpiryAlerts) çalıştıktan sonra depo+kalite için 3'er SKT özeti oluştu ve besleme ölçülebildi (admin'de hâlâ 0 bildirim → admin'de yalnızca boş durum render oluyor; bu tasarım kusuru değil, alıcı rolü kararı). Depo kullanıcısıyla: satır 71-72px, liste 768 / main 1200, sekme 32/44px, Tab ile sekme ve satır bağlantısı :focus-visible (outline oklab(0.55 …) auto 1px), 390px'te taşma yok ve <44px dokunma hedefi yok, boş durum (BellOff + başlık + açıklama + 'Onay Merkezi'ne git') görüntüyle doğrulandı. Toplam 58 ≥ 57 → KAZANDI. Kod taraması temiz: modül dosyalarında transition-all / transition: all / ease-in / scale(0) / >300ms süre / transform-origin yok — yalnızca transition-colors; hover globals.css:10 @custom-variant (hover:hover) and (pointer:fine) altında; :active scale globals.css:179-181 :not(:focus-visible) ile klavyeden muaf; prefers-reduced-motion bloğu (globals.css:262) var. Ölçümler: artifacts/critic/measure-bildirimler-r8/*.json, probe-bildirimler-r8.json, probe-bildirimler-r8b.json; görüntüler artifacts/screens/{onaylar,bildirimler}/ + artifacts/screens/_bildirimler-r8-empty/ (admin boş durumu).",
+  "round": 9,
+  "note": "Tur 9 (doğrulama turu). Tur 8'den bu yana bildirimler modülünde tek satır kod değişikliği YOK — 8ae3b99..HEAD arasında yalnızca quality/*, core sales+stock dosyaları değişti; apps/web/src/modules/notifications/**, (app)/onaylar/**, (app)/bildirimler/** ve globals.css dokunulmadı. 8 açık P2 yeniden ölçüldü, 8'i de birebir aynı değerlerle AÇIK; puanlarda delta yok. /onaylar (admin, 1440x900): 13 satır, seçili 181,5px + 12x40-41px, hepsi ilk ekranda, listbox scrollWidth=clientWidth=1150, tüm tutarlar tabular-nums, font kademesi {11,13,14,24}, h1 24px/600; hover satır zemini rgba(0,0,0,0) → oklab(0.955 …/0.2), J ile odaklanan satırda 2px inset ring oklab(0.55 -0.1412 0.0751/.5) + :focus-visible=true (probe-bildirimler-r9c.json). 390x844: taşma yok (390=390), <44px dokunma hedefi yok (sekmeler 44px, satır 66-67px). /bildirimler (depo): satır 71-72px x3, liste 768 / main 1200, sekme 32/44px, satır bağlantısında hover zemini oklab(0.955 …/0.4), Tab ile sekme+satır :focus-visible; 390px'te taşma yok. /bildirimler (admin): boş durum (BellOff + \"Henüz bildiriminiz yok\" + açıklama + \"Onay Merkezi'ne git\") görüntüyle doğrulandı. Kod taraması temiz: transition-all / transition: all / ease-in / scale(0) / >300ms / transform-origin YOK; yalnızca 3 adet transition-colors. Her iki route da 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANDI (Tur 8 ile aynı).",
   "routes": {
     "/onaylar": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -23,93 +23,17 @@
       ],
       "total": 58,
       "previousTotal": 58,
-      "winner": "plantero",
-      "measuredAt": "2026-09-06T00:35:00.000Z",
+      "winner": "Plantero",
+      "measuredAt": "2026-09-06T01:10:38.252Z",
       "measurements": {
-        "desktop1440x900": {
-          "rowCount": 14,
-          "rowHeights": "seçili 181,5px + 13x40-41px",
-          "rowsFullyInFirstScreen": 13,
-          "amountRightGap": 58,
-          "amountFontVariant": "tabular-nums",
-          "listScrollWidth": 1150,
-          "listClientWidth": 1150,
-          "overflowX": false,
-          "tablist": {
-            "scrollWidth": 410,
-            "clientWidth": 410,
-            "maskImage": "none",
-            "tabHeights": [
-              32,
-              32,
-              32
-            ]
-          },
-          "keyboardHint": {
-            "display": "block",
-            "w": 194.7,
-            "h": 16.5,
-            "top": 161.8
-          },
-          "mainVisibleFontSteps": [
-            24,
-            14,
-            13,
-            11
-          ],
-          "h1": {
-            "size": 24,
-            "weight": 600
-          },
-          "hover": "rgba(0,0,0,0) → oklab(.955 0.00056 -0.0019 / .2)",
-          "keyboardJ": "aria-selected=true, :focus-visible, boxShadow oklab(0.55 -0.1412 0.0751 / .5) 0 0 0 2px inset, outline none",
-          "distinctColorsPage": 20
-        },
-        "mobile390x844": {
-          "rowCount": 14,
-          "rowHeights": "seçili 235px + 13x66-67px",
-          "rowsFullyInFirstScreen": 6,
-          "amountRightGap": 132.8,
-          "listScrollWidth": 356,
-          "listClientWidth": 356,
-          "overflowX": false,
-          "touchTargetsBelow44": 0,
-          "tablist": {
-            "scrollWidth": 410,
-            "clientWidth": 358,
-            "maxScroll": 52,
-            "maskImage": "none",
-            "lastTabRight": 424.4,
-            "tabHeights": [
-              44,
-              44,
-              44
-            ]
-          },
-          "keyboardHint": {
-            "display": "block",
-            "w": 194.7,
-            "h": 16.5,
-            "top": 212
-          },
-          "mainVisibleFontSteps": [
-            20,
-            14,
-            13,
-            11
-          ],
-          "h1": {
-            "size": 20,
-            "weight": 600
-          },
-          "distinctColorsPage": 17
-        }
+        "desktop": "artifacts/critic/measure-bildirimler-r9/onaylar.1440x900.json",
+        "mobile": "artifacts/critic/measure-bildirimler-r9/onaylar.390x844.json",
+        "probe": "artifacts/critic/probe-bildirimler-r9.json",
+        "focus": "artifacts/critic/probe-bildirimler-r9c.json",
+        "screens": "artifacts/screens/onaylar/{desktop,mobile}.png"
       },
       "scoreDeltas": {
-        "1": "4→5: onaylar-17 hedefi (\"≤4 kademe\") ölçümle karşılandı — main içi görünür kademeler {24,14,13,11}; 14px yalnızca ortak Button + PageHeader açıklaması (shell.json: uygulama geneli kasıtlı konvansiyon, ayrı bulgu değil). İçerik hiyerarşisi 24/13/11 net.",
-        "9": "4→4: onaylar-18 (P1) kapandı — mobil başlık 133→306px, kırpma 11/14→1/13, dokunma hedefleri 44px, mainPaddingBottom 128px > sabit alt gezinme 57px. 5 olmasını iki ölçülebilir P2 engelliyor: onaylar-19 (2. hatta tutar satır sağ kenarından 144,8px önce bitiyor — satırın %40'ı boş) ve onaylar-20 (sekme şeridi taşıyor, kaydırma göstergesi yok).",
-        "11": "4→4: bildirimler-10 (tablist ortak ui/tabs.tsx yerine iki modülde elle yazılmış) hâlâ açık; kök neden ortak bileşende (justify-center + flex-1 taşan şeritte ilk sekmeyi kalıcı kırpıyor), modül kapatamaz.",
-        "other": "değişmedi (gerileme yok): 2,3,4,5,6,7,8,10,12"
+        "delta": "yok — 8 kriterin tamamı Tur 8 ölçümleriyle birebir aynı (kod değişmedi); puanlar korunuyor."
       },
       "open": [
         {
@@ -118,11 +42,12 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Mobil (<sm) satırın 2. hattında tutar sabit w-28 kutusunda duruyor ve satırın sağ kenarına hizalanmıyor — her satırda sağda 144,8px (satır genişliğinin %40'ı) boş kalıyor; rozet+tutar sola yığılıyor, Linear/Stripe mobil liste kalıbında sayı sağ kenara yaslanır.",
-          "measure": "Tur 8 (390x844): amountRightGap = 132,8px (14/14 satır, sabit), satır iç genişliği 356px, tutar kutusu w-28=112px. Tur 7 ile birebir aynı — kod değişmedi.",
+          "measure": "Tur 9 (390x844): amountRightGap = 132,8px (13/13 satır, sabit), satır iç genişliği 356px, tutar kutusu w-28=112px. Tur 7-8 ile birebir aynı — kod değişmedi.",
           "target": "amountRightGap ≤ 16px (ör. tutar span'ine `ml-auto sm:ml-0`, masaüstündeki 40px tek hat düzeni ve `w-28` hizası korunarak).",
           "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:216-226",
           "round6": "AÇIK",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         },
         {
           "id": "onaylar-20",
@@ -130,11 +55,12 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Mobilde sekme şeridi taşıyor ve taştığına dair hiçbir görsel ipucu yok (scrollbar gizli, kenar maskesi yok): \"Satın alma taslağı (2)\" sekmesi 390px'te sağ kenarda yarıda kesiliyor, kullanıcı kaydırılabildiğini göremiyor. (Şerit gerçekten kaydırılabiliyor — kalıcı kırpma hatası YOK.)",
-          "measure": "Tur 8 (390x844): tablist scrollWidth 410 > clientWidth 358 (maxScroll 52px), son sekmenin sağ kenarı x=424,4 (viewport 390), maskImage: none. Tur 7 ile birebir aynı.",
+          "measure": "Tur 9 (390x844): tablist scrollWidth 410 > clientWidth 358 (maxScroll 52px), son sekmenin sağ kenarı x=424,4 (viewport 390), maskImage: none. Tur 7-8 ile birebir aynı.",
           "target": "Sağ kenarda 24px `mask-image` gradyanı ya da aktif sekme değişince `scrollIntoView({inline:\"nearest\"})`; taşma varlığı 390px'te görsel olarak belli olsun.",
           "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:149",
           "round6": "AÇIK",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         },
         {
           "id": "onaylar-21",
@@ -142,11 +68,12 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Yükleniyor iskeleti mobil satır yüksekliğiyle uyumsuz: iskelet satırı 44px (h-11), gerçek satır 67px (Tur 4'te satır 2 hatta açıldı, iskelet güncellenmedi) — 13 satırda ~299px'lik yerleşim sıçraması. Masaüstünde uyumlu (40 vs 40-41px).",
-          "measure": "Tur 8: onaylar/loading.tsx:20 hâlâ `h-11 rounded-none sm:h-10`; ölçülen gerçek satır 390px'te 66-67px, 1440px'te 40-41px. Mobil fark 23px x 13 satır ≈ 300px sıçrama.",
+          "measure": "Tur 9: onaylar/loading.tsx:20 hâlâ `h-11 rounded-none sm:h-10`; ölçülen gerçek satır 390px'te 66-67px, 1440px'te 40-41px. Mobil fark 23px x 13 satır ≈ 300px sıçrama.",
           "target": "İskelet satırı mobilde 64-68px (ör. `h-[67px] sm:h-10`); |iskelet − gerçek| ≤ 4px.",
           "file": "apps/web/src/app/(app)/onaylar/loading.tsx:19",
           "round6": "AÇIK",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         },
         {
           "id": "onaylar-22",
@@ -154,10 +81,11 @@
           "severity": "P2",
           "openedRound": 7,
           "text": "Klavye kısayol ipucu (\"J/K gezin · A onayla · R reddet\") dokunmatik 390px viewport'ta da render ediliyor: fiziksel klavyesi olmayan cihazda 195x17px + 8px boşluk yer kaplıyor ve ilk kuyruk satırını aşağı itiyor. Linear kısayol ipuçlarını yalnızca işaretleyici+klavye bağlamında gösterir.",
-          "measure": "Tur 8 (390x844): ipucu p display=block, 194,7x16,5px, top=212px — sekme şeridinin hemen altında görünür; 1440x900'de aynı öğe top=161,8px, sekme hattında.",
+          "measure": "Tur 9 (390x844): ipucu p display=block, 194,7x16,5px, top=212px — sekme şeridinin hemen altında görünür; 1440x900'de aynı öğe top=161,8px. Tur 8 ile birebir aynı.",
           "target": "İpucu `hidden sm:block` (ya da `@media (hover:hover) and (pointer:fine)`) ile 390px'te gizlensin; mobilde ilk satırın top değeri ≥25px yukarı çıksın.",
           "file": "apps/web/src/modules/notifications/components/approval-queue.tsx:170-173",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         }
       ],
       "closed": [
@@ -408,14 +336,14 @@
           "measureAfter": "390x844: titleWidth 306px (hedef ≥220), truncatedTitles 1/13 (hedef ≤3/14), satır 66-67px, overflowX=false; 1440x900: titleWidth 868,8px, 0 kırpma, satır 40-41px (regresyon yok)."
         }
       ],
-      "verdict": "Plantero",
+      "verdict": "KAZANAN: Plantero — toplam 58 ≥ 57 (Linear), hiçbir kriter <4, açık P0/P1 yok. Tur 9 doğrulaması: regresyon yok.",
       "scoreNotes": {
         "9": "4 — 390px'te yatay taşma yok (scrollWidth 390 = clientWidth 390), <44px dokunma hedefi yok (sekmeler 44px, satır 66-67px); ancak tutar hizası (onaylar-19: amountRightGap 132,8px), sekme taşma ipucu (onaylar-20: 410 > 358, maskImage none) ve mobilde görünen klavye ipucu (onaylar-22) açık. Tur 7 ile aynı, delta yok.",
         "11": "4 — sekme şeridi ortak ui/tabs.tsx yerine iki modül dosyasında elle yazılı (bildirimler-10); görsel fark yok (44/32px her iki ekranda da aynı), yalnızca kod tekilliği. Tur 7 ile aynı, delta yok."
       }
     },
     "/bildirimler": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -434,80 +362,17 @@
       ],
       "total": 58,
       "previousTotal": 58,
-      "winner": "plantero",
-      "measuredAt": "2026-09-06T00:35:00.000Z",
+      "winner": "Plantero",
+      "measuredAt": "2026-09-06T01:10:38.252Z",
       "measurements": {
-        "desktop1440x900": {
-          "user": "depo",
-          "rowCount": 3,
-          "rowHeights": [
-            72,
-            72,
-            71
-          ],
-          "listWidth": 768,
-          "mainWidth": 1200,
-          "overflowX": false,
-          "distinctIconStyles": 1,
-          "iconStyle": "oklch(0.552 0.016 285.9) / 16px / lucide-clock-4",
-          "distinctDots": 1,
-          "dotColor": "oklch(0.55 0.16 152)",
-          "distinctRowBgs": 1,
-          "tabHeights": [
-            32,
-            32
-          ],
-          "mainVisibleFontSteps": [
-            24,
-            14,
-            13,
-            11
-          ],
-          "h1": {
-            "size": 24,
-            "weight": 600
-          },
-          "tabFocus": "outline oklab(0.55 -0.1412 0.0751 / .5) auto 1px, :focus-visible"
-        },
-        "mobile390x844": {
-          "user": "depo",
-          "rowCount": 3,
-          "rowHeights": [
-            72,
-            72,
-            71
-          ],
-          "listWidth": 358,
-          "mainWidth": 390,
-          "overflowX": false,
-          "touchTargetsBelow44": 0,
-          "tabHeights": [
-            44,
-            44
-          ],
-          "mainVisibleFontSteps": [
-            20,
-            14,
-            13,
-            11
-          ],
-          "h1": {
-            "size": 20,
-            "weight": 600
-          }
-        },
-        "emptyState1440x900": {
-          "user": "admin",
-          "rows": 0,
-          "container": "768px dashed kutu, BellOff ikonu + başlık + açıklama + 36px \"Onay Merkezi'ne git\" eylemi",
-          "note": "admin kullanıcısında hiç in_app bildirim yok (alıcılar depo+kalite rolleri)"
-        }
+        "desktop": "artifacts/critic/measure-bildirimler-r9/bildirimler.1440x900.json",
+        "mobile": "artifacts/critic/measure-bildirimler-r9/bildirimler.390x844.json",
+        "empty": "artifacts/critic/measure-bildirimler-r9/bildirimler-admin-empty.1440x900.json",
+        "probe": "artifacts/critic/probe-bildirimler-r9.json",
+        "screens": "artifacts/screens/bildirimler/{desktop,mobile}.png + artifacts/screens/bildirimler-admin-empty-r9/"
       },
       "scoreDeltas": {
-        "1": "değişmedi (5): görünür kademeler {24,14,13,11}; sr-only tür etiketleri 16px ama ekranda görünmüyor (clip), kademe saymıyor.",
-        "3": "4→4 (gerekçe değişti): Tur 4'ün gerekçesi (satır 88px > 72px mobil kart hedefi) KAPANDI — satır 71,5px. Yeni gerekçe: aynı 71,5px masaüstünde de geçerli ve kolon 768px ile sınırlı; 900px viewport'ta ~11 satır görünüyor, Linear gelen kutusu aynı yükseklikte ~14-16 satır gösterir (yeni P2 bildirimler-12).",
-        "8": "4→5: satır odak halkası artık projenin dili (boxShadow ring 2px inset primary/50, outline none) — Tur 4'te tarayıcı varsayılanı (outline 1px auto) ölçülmüştü; hover (bg accent/40) + iyimser okundu işaretleme + toast doğrulandı (bildirimler-p2-focus kapandı).",
-        "other": "değişmedi (gerileme yok): 2,4,5,6,7,9,10,11,12"
+        "delta": "yok — 8 kriterin tamamı Tur 8 ölçümleriyle birebir aynı (kod değişmedi); puanlar korunuyor."
       },
       "open": [
         {
@@ -516,11 +381,12 @@
           "severity": "P2",
           "openedRound": 4,
           "text": "Tablist ortak `ui/tabs.tsx` yerine iki modül dosyasında elle yazılmış (karakter-birebir kopya). Font kısmı Tur 4'te kapandı (satır başlığı 13px/500 = /onaylar). Kod tekilliği hedefi ortak bileşendeki hata (justify-center + TabsTrigger flex-1, taşan şeritte ilk sekmeyi kalıcı kırpıyor) giderilmeden kapanamaz — shell.",
-          "measure": "Tur 8: notifications-list.tsx:84-103 ve approval-queue.tsx:149-165 hâlâ ayrı ayrı aynı deseni taşıyor; ölçülen sekme yükseklikleri her iki ekranda da 44px (390) / 32px (1440) — görsel fark YOK.",
+          "measure": "Tur 9: notifications-list.tsx:84-103 ve approval-queue.tsx:149-165 hâlâ ayrı ayrı aynı deseni taşıyor; ölçülen sekme yükseklikleri her iki ekranda da 44px (390) / 32px (1440) — görsel fark YOK.",
           "target": "İki ekran da tek ortak tablist bileşeninden beslensin (ortak `ui/tabs.tsx` taşma hatası düzeltildikten sonra).",
           "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:84 + approval-queue.tsx:149 (kök neden: apps/web/src/components/ui/tabs.tsx)",
           "round6": "AÇIK",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         },
         {
           "id": "bildirimler-11",
@@ -528,11 +394,12 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Yükleniyor iskeleti satır yüksekliği gerçeğiyle uyuşmuyor: iskelet 88px, gerçek satır 71,5px — her yüklemede liste ~50px kısalıyor (3 satır x 16,5px).",
-          "measure": "Tur 8: bildirimler/loading.tsx:20 hâlâ `h-[88px]`; ölçülen gerçek satır 71-72px (hem 1440x900 hem 390x844). Fark 16px x 3 satır ≈ 50px sıçrama.",
+          "measure": "Tur 9: bildirimler/loading.tsx:20 hâlâ `h-[88px]`; ölçülen gerçek satır 71-72px (hem 1440x900 hem 390x844). Fark 16px x 3 satır ≈ 50px sıçrama.",
           "target": "İskelet satırı 72px (`h-[72px]`); |iskelet − gerçek| ≤ 4px.",
           "file": "apps/web/src/app/(app)/bildirimler/loading.tsx:20",
           "round6": "AÇIK",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         },
         {
           "id": "bildirimler-12",
@@ -540,11 +407,12 @@
           "severity": "P2",
           "openedRound": 5,
           "text": "Masaüstünde besleme yoğunluğu düşük: satır 71,5px (başlık + 2 satır line-clamp gövde) ve kolon 768px ile sınırlı — 900px viewport'ta ~11 satır sığıyor; referans gelen kutusu aynı yükseklikte 14-16 satır gösterir. Kolonun sağındaki 432px (main genişliğinin %36'sı) hiçbir şeye ayrılmamış.",
-          "measure": "Tur 8 (1440x900, depo): rowHeights [72,72,71], listWidth 768, mainWidth 1200; besleme 3 kayıt içeriyor (SKT GEÇMİŞ/KRİTİK/UYARI), 768px kolonun sağındaki 432px boş.",
+          "measure": "Tur 9 (1440x900, depo): rowHeights [72,72,71], listWidth 768, mainWidth 1200; besleme 3 kayıt; 768px kolonun sağındaki 432px boş.",
           "target": "Masaüstünde satır ≤ 64px (ör. gövde md+ ekranda `line-clamp-1`, mobilde 2 satır kalsın) → ilk ekranda ≥ 12 satır; ya da 768px kolonun sağındaki alan bir işe yarasın (seçili bildirim detayı).",
           "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:112-136",
           "round6": "AÇIK",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         },
         {
           "id": "bildirimler-p2-severity",
@@ -552,11 +420,12 @@
           "severity": "P2",
           "openedRound": 4,
           "text": "SKT GEÇMİŞ (gerçekleşmiş kayıp) ile SKT UYARI (60 gün) görsel olarak birebir aynı: aynı Clock4 ikonu, aynı muted renk, aynı okunmamış noktası — ciddiyet sinyali yalnızca metinde.",
-          "measure": "Tur 8 (1440 ve 390, depo): 3 satırın 3'ünde de ikon oklch(0.552 0.016 285.9) / 16px / lucide-clock-4, okunmamış noktası oklch(0.55 0.16 152), satır zemini aynı — distinctIconStyles=1, distinctDots=1, distinctRowBgs=1. \"SKT GEÇMİŞ: 1 lot\" (gerçekleşmiş ₺3.675,00 kayıp) ile \"SKT UYARI (60 gün): 30 lot\" görsel olarak ayırt edilemiyor.",
+          "measure": "Tur 9 (1440 ve 390, depo): distinctIconStyles=1 (oklch(0.552 0.016 285.9) / 16px / lucide-clock-4), distinctDots=1 (oklch(0.55 0.16 152)), distinctRowBgs=1 — SKT GEÇMİŞ / KRİTİK / UYARI görsel olarak ayırt edilemiyor.",
           "target": "Geçmiş SKT için destructive, 30 gün için warning tonlu ikon/rozet (StatusBadge token'ları); distinctTypeStyles ≥ 2.",
           "file": "apps/web/src/modules/notifications/components/notifications-list.tsx:18-27,127 + packages/core/src/notifications/systemAlerts.ts",
           "round6": "AÇIK",
-          "round": 8
+          "round": 9,
+          "round8": "AÇIK"
         }
       ],
       "closed": [
@@ -696,7 +565,7 @@
           "measureAfter": "390x844: zaman damgası 72,7px = satır genişliğinin %20'si (iddia %40); başlıklar 112-171px, tek satır, kırpma yok — ölçüm yeniden üretilemiyor."
         }
       ],
-      "verdict": "Plantero",
+      "verdict": "KAZANAN: Plantero — toplam 58 ≥ 57 (Linear), hiçbir kriter <4, açık P0/P1 yok. Tur 9 doğrulaması: regresyon yok.",
       "dataNote": "Tur 6: admin kullanıcısının hiç bildirimi yok (notifications tablosundaki 6 satır depo@ ve kalite@ kullanıcılarına ait) — /bildirimler admin ile BOŞ DURUM, depo ile 3 satırlık besleme render ediyor. Dolu besleme ölçümleri depo hesabıyla alındı.",
       "scoreNotes": {
         "3": "4 — satır 71-72px (1440 ve 390), liste kolonu 768px / main 1200px; besleme satırı Linear çıtasının (36-40px) üstünde, 768px kolonun sağındaki 432px boş. bildirimler-12 açık. Tur 7 ile aynı, delta yok.",
@@ -721,16 +590,15 @@
     "linear": 57,
     "stripe": 56
   },
-  "measuredAt": "2026-09-05 (tur 6)",
+  "measuredAt": "2026-09-06T01:10:38.252Z",
   "notes": "Tur 6: /onaylar admin, /bildirimler depo (dolu besleme) + admin (boş durum) ile ölçüldü. Modül kaynak dosyaları Tur 5'ten beri değişmedi (git log: son dokunuş 7195de7 tur-4) — açık P2'lerin hepsi yeniden ölçülüp açık bırakıldı, puanlar değişmedi.",
   "codeScan": {
-    "round": 6,
-    "files": [
-      "apps/web/src/modules/notifications/components/approval-queue.tsx",
-      "apps/web/src/modules/notifications/components/notifications-list.tsx",
-      "apps/web/src/app/(app)/onaylar/{page,loading}.tsx",
-      "apps/web/src/app/(app)/bildirimler/{page,loading}.tsx"
+    "round": 9,
+    "scanned": [
+      "apps/web/src/modules/notifications/**",
+      "apps/web/src/app/(app)/onaylar/**",
+      "apps/web/src/app/(app)/bildirimler/**"
     ],
-    "result": "TEMİZ — `transition: all` / `transition-all` yok (yalnızca `transition-colors`), `ease-in` yok, `scale(0)` / `scale-0` yok, ≥300ms süre yok, hatalı `transform-origin` yok. `hover:` varyantı globals.css:10-17'deki @custom-variant ile `@media (hover:hover) and (pointer:fine)` altına alınmış (proje geneli). Klavye aksiyonu (J/K) `scrollIntoView({block:\"nearest\"})` ile animasyonsuz. Tek animasyon: onay sürerken `Loader2 animate-spin` (amaçlı bekleme geri bildirimi)."
+    "result": "TEMİZ — transition-all/transition: all/ease-in/scale(0)/duration≥300ms/transform-origin bulgusu yok; yalnızca 3x transition-colors (notifications-list.tsx:90,99 · approval-queue.tsx:158). hover: globals.css:10 @custom-variant (hover:hover) and (pointer:fine) altında; :active scale(0.97) globals.css:176-181 :not(:focus-visible) korumalı; prefers-reduced-motion bloğu globals.css:261 mevcut."
   }
 }
