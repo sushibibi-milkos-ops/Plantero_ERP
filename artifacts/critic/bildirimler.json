@@ -1,10 +1,10 @@
 {
   "module": "bildirimler",
-  "round": 10,
-  "note": "Tur 10 (doğrulama turu). Tur 9'dan (958e7dd) bu yana bildirimler modülünde tek satır kod değişikliği YOK — git diff 958e7dd..HEAD apps/web/src/modules/notifications, (app)/onaylar, (app)/bildirimler, apps/web/src/components, apps/web/src/app/globals.css, packages/core/src/notifications için BOŞ; çalışma ağacı temiz. 8 açık P2 yeniden ölçüldü, 8'i de birebir aynı değerlerle AÇIK; puanlarda delta yok. /onaylar (admin, 1440x900): 13 satır, seçili 181,5px + 11x41px + 40px, 13/13 ilk ekranda, listbox scrollWidth=clientWidth=1150, tüm tutarlar tabular-nums, sağ boşluk 58px sabit, font kademesi {11,13,14,24}, h1 24px/600, distinctColors 20. 390x844: taşma yok (390=390), <44px etkileşimli dokunma hedefi yok (sekmeler 44px, satır 66-67px; listede yalnızca etkileşimsiz breadcrumb span 62x19,5). J ile odaklanan satırda 2px inset ring oklab(0.55 -0.1412 0.0751/.5) + :focus-visible=true, satır zemini oklab(0.955 …/0.4) (probe-bildirimler-r10b.json). /bildirimler (depo): satır 71-72px x3, liste 768 / main 1200, sekme 32px (masaüstü) / 44px (mobil), satır bağlantısında hover zemini oklab(0.955 …/0.4); Tab ile sekme+buton+3 satır bağlantısı :focus-visible=true (probe-bildirimler-r10c.json). /bildirimler (admin): boş durum (BellOff + 'Henüz bildiriminiz yok' + açıklama + 'Onay Merkezi'ne git') görüntüyle doğrulandı (artifacts/critic/bildirimler-admin-empty-r10.png). Kod taraması temiz: transition-all / transition: all / ease-in / scale(0) / >300ms süre / transform-origin YOK; yalnızca 3 adet transition-colors, 1 adet animate-spin (yalnızca busy durumunda); hover: varyantı globals.css'te (hover:hover) and (pointer:fine) ile korunuyor. Her iki route da 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANDI (Tur 8-9 ile aynı). | Ek düzeltme (Tur 10, aynı tur içinde): görsel critic turundan bağımsız veri-critic P1 bulgusu (onay kuyruğu count_variance reddi stock_counts'u 'cancelled'a taşımıyordu) packages/core'da (dispatch.ts + counts.ts::cancelCount) kapatıldı — kanıt: I49 SQL kuralı (packages/db/src/checks/49_approval_queue_integrity.sql) + vitest (counts.test.ts) + pnpm measure/shot ile UI regresyonu yok doğrulandı. Ayrıntı: routes['/onaylar'].closed['onaylar-p1-count-variance-reject-stuck'].",
+  "round": 11,
+  "note": "Tur 11 (doğrulama turu). Tur 10 kartından (35a1612) bu yana bildirimler modülünün GÖRSEL yüzeyinde tek satır değişiklik YOK — git diff 35a1612..HEAD apps/web/src/modules/notifications, (app)/onaylar, (app)/bildirimler, apps/web/src/components, apps/web/src/app/globals.css için BOŞ; tek fark packages/core/src/notifications/approvals/dispatch.ts (+7/-1, Tur 10 içindeki veri düzeltmesi, UI'ya etkisi yok). 8 açık P2 yeniden ölçüldü, 8'i de BİREBİR aynı değerlerle AÇIK; puanlarda delta yok. /onaylar (admin, 1440x900): 13 satır (seçili 181,5px + 11x41px + 40px), 13/13 ilk ekranda, listbox scrollWidth=clientWidth=1150, tüm tutarlar font-variant-numeric: tabular-nums, amountRightGap 58px sabit, font kademesi {11,13,14,24}, h1 24px/600, docOverflow 1440=1440. 390x844: taşma yok (390=390), <44px etkileşimli dokunma hedefi yok (sekmeler 44px, satır 66-67px; tek <44px öğe etkileşimsiz breadcrumb span 85,6x19,5), h1 20px/600. J ile odaklanan satır: 2px inset ring oklab(0.55 -0.1412 0.0751/.5) + :focus-visible=true, zemin oklab(0.955 …/0.4) (probe-bildirimler-r11b.json). /bildirimler (depo): satır 72/72/71px (1440 ve 390 aynı), liste 768 / main 1200, sekme 32px masaüstü / 44px mobil, satır bağlantısı hover zemini oklab(0.955 …/0.4); Tab ile 2 sekme + 'Tümünü okundu işaretle' + 3 satır bağlantısı :focus-visible=true (probe-bildirimler-r11c.json). /bildirimler (admin) boş durumu (BellOff + 'Henüz bildiriminiz yok' + açıklama + 'Onay Merkezi'ne git') görüntüyle yeniden doğrulandı (bildirimler-admin-empty-r10.png; kod değişmedi). Kod taraması temiz: transition-all / transition: all / ease-in / scale(0) / >=300ms süre / origin-* YOK; yalnızca 3 adet transition-colors ve 1 adet animate-spin (yalnızca busy). hover: varyantı globals.css:11'de (hover:hover) and (pointer:fine) ile korunuyor. Her iki route da 58 >= 57, hiçbir kriter <4, açık P0/P1 yok → KAZANDI (Tur 8-9-10 ile aynı).",
   "routes": {
     "/onaylar": {
-      "round": 10,
+      "round": 11,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -24,16 +24,137 @@
       "total": 58,
       "previousTotal": 58,
       "winner": "Plantero",
-      "measuredAt": "2026-09-06T00:00:00Z",
+      "measuredAt": "2026-09-06T03:12:06",
       "measurements": {
-        "desktop": "artifacts/critic/measure-bildirimler-r10/onaylar.1440x900.json",
-        "mobile": "artifacts/critic/measure-bildirimler-r10/onaylar.390x844.json",
-        "probe": "artifacts/critic/probe-bildirimler-r10.json",
-        "focus": "artifacts/critic/probe-bildirimler-r10b.json",
-        "screens": "artifacts/screens/onaylar/{desktop,mobile}.png"
+        "desktop": {
+          "viewport": "1440x900",
+          "rowCount": 13,
+          "rowHeights": [
+            181.5,
+            41,
+            41,
+            41,
+            41,
+            41,
+            41,
+            41,
+            41,
+            41,
+            41,
+            41,
+            40
+          ],
+          "rowsFullyInFirstScreen": 13,
+          "amountRightGap": 58,
+          "amountFontVariant": "tabular-nums",
+          "listScrollWidth": 1150,
+          "listClientWidth": 1150,
+          "tablist": {
+            "scrollWidth": 410,
+            "clientWidth": 410,
+            "maskImage": "none",
+            "tabHeights": [
+              32,
+              32,
+              32
+            ]
+          },
+          "keyboardHint": {
+            "display": "block",
+            "w": 194.7,
+            "h": 16.5,
+            "top": 161.8
+          },
+          "fontLadder": {
+            "11": 33,
+            "13": 33,
+            "14": 4,
+            "24": 1
+          },
+          "h1": {
+            "size": 24,
+            "weight": 600
+          },
+          "docOverflow": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440
+          },
+          "distinctColors": null
+        },
+        "mobile": {
+          "viewport": "390x844",
+          "rowCount": 13,
+          "rowHeights": [
+            215.5,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            67,
+            66
+          ],
+          "rowsFullyInFirstScreen": 6,
+          "amountRightGap": 132.8,
+          "listScrollWidth": 356,
+          "listClientWidth": 356,
+          "tablist": {
+            "scrollWidth": 410,
+            "clientWidth": 358,
+            "maskImage": "none",
+            "tabHeights": [
+              44,
+              44,
+              44
+            ]
+          },
+          "keyboardHint": {
+            "display": "block",
+            "w": 194.7,
+            "h": 16.5,
+            "top": 212
+          },
+          "fontLadder": {
+            "11": 20,
+            "13": 33,
+            "14": 4,
+            "20": 1
+          },
+          "h1": {
+            "size": 20,
+            "weight": 600
+          },
+          "touchTargetsBelow44": [
+            {
+              "selector": "span[data-slot=\"breadcrumb-page\"] \"Onay Merkezi\"",
+              "w": 85.6,
+              "h": 19.5,
+              "interactive": false
+            }
+          ],
+          "distinctColors": 17,
+          "docOverflow": {
+            "scrollWidth": 390,
+            "clientWidth": 390
+          }
+        },
+        "focus": {
+          "source": "artifacts/critic/probe-bildirimler-r11b.json",
+          "jFocusedRow": {
+            "boxShadow": "oklab(0.55 -0.141272 0.0751154 / 0.5) 0 0 0 2px inset",
+            "focusVisible": true,
+            "bg": "oklab(0.955 … / 0.4)"
+          }
+        },
+        "source": "artifacts/critic/probe-bildirimler-r11.json + artifacts/critic/measure-bildirimler-r11/"
       },
       "scoreDeltas": {
-        "delta": "yok — 12 kriterin tamamı Tur 9 ölçümleriyle birebir aynı (ilgili dosyalarda kod değişikliği yok); puanlar korunuyor."
+        "hepsi": "delta yok — 8 açık P2 birebir aynı ölçümlerle açık, görsel kod değişmedi (git diff boş)."
       },
       "open": [
         {
@@ -49,7 +170,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         },
         {
           "id": "onaylar-20",
@@ -64,7 +187,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         },
         {
           "id": "onaylar-21",
@@ -79,7 +204,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         },
         {
           "id": "onaylar-22",
@@ -93,7 +220,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         }
       ],
       "closed": [
@@ -354,14 +483,14 @@
           "file": "packages/core/src/notifications/approvals/dispatch.ts (kök neden), packages/core/src/stock/counts.ts (yeni cancelCount)"
         }
       ],
-      "verdict": "KAZANAN: Plantero — toplam 58 ≥ 57 (Linear), hiçbir kriter <4, açık P0/P1 yok. Tur 9 doğrulaması: regresyon yok.",
+      "verdict": "KAZANAN: Plantero (58 ≥ 57 · hiçbir kriter <4 · açık P0/P1 yok · Tur 11 doğrulaması)",
       "scoreNotes": {
         "9": "4 — 390px'te yatay taşma yok (scrollWidth 390 = clientWidth 390), <44px dokunma hedefi yok (sekmeler 44px, satır 66-67px); ancak tutar hizası (onaylar-19: amountRightGap 132,8px), sekme taşma ipucu (onaylar-20: 410 > 358, maskImage none) ve mobilde görünen klavye ipucu (onaylar-22) açık. Tur 7 ile aynı, delta yok.",
         "11": "4 — sekme şeridi ortak ui/tabs.tsx yerine iki modül dosyasında elle yazılı (bildirimler-10); görsel fark yok (44/32px her iki ekranda da aynı), yalnızca kod tekilliği. Tur 7 ile aynı, delta yok."
       }
     },
     "/bildirimler": {
-      "round": 10,
+      "round": 11,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -381,18 +510,94 @@
       "total": 58,
       "previousTotal": 58,
       "winner": "Plantero",
-      "measuredAt": "2026-09-06T00:00:00Z",
+      "measuredAt": "2026-09-06T03:12:06",
       "measurements": {
-        "desktop": "artifacts/critic/measure-bildirimler-r10/bildirimler.1440x900.json",
-        "mobile": "artifacts/critic/measure-bildirimler-r10/bildirimler.390x844.json",
-        "empty": "artifacts/critic/measure-bildirimler-r10/bildirimler-admin-empty.1440x900.json",
-        "emptyScreen": "artifacts/critic/bildirimler-admin-empty-r10.png",
-        "probe": "artifacts/critic/probe-bildirimler-r10.json",
-        "focus": "artifacts/critic/probe-bildirimler-r10c.json",
-        "screens": "artifacts/screens/bildirimler/{desktop,mobile}.png"
+        "desktop": {
+          "viewport": "1440x900",
+          "rowCount": 3,
+          "rowHeights": [
+            72,
+            72,
+            71
+          ],
+          "listWidth": 768,
+          "mainWidth": 1200,
+          "distinctIconStyles": 1,
+          "iconStyles": [
+            "oklch(0.552 0.016 285.9)|16|lucide-clock-4"
+          ],
+          "distinctDots": 1,
+          "dotColors": [
+            "oklch(0.55 0.16 152)"
+          ],
+          "tabs": [
+            32,
+            32
+          ],
+          "fontLadder": {
+            "11": 3,
+            "13": 10,
+            "14": 2,
+            "24": 1
+          },
+          "h1": {
+            "size": 24,
+            "weight": 600
+          },
+          "docOverflow": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440
+          }
+        },
+        "mobile": {
+          "viewport": "390x844",
+          "rowCount": 3,
+          "rowHeights": [
+            72,
+            72,
+            71
+          ],
+          "listWidth": 358,
+          "mainWidth": 390,
+          "tabs": [
+            44,
+            44
+          ],
+          "fontLadder": {
+            "11": 3,
+            "13": 10,
+            "14": 2,
+            "20": 1
+          },
+          "h1": {
+            "size": 20,
+            "weight": 600
+          },
+          "docOverflow": {
+            "scrollWidth": 390,
+            "clientWidth": 390
+          }
+        },
+        "focus": {
+          "source": "artifacts/critic/probe-bildirimler-r11c.json",
+          "tabOrder": [
+            "tab Tümü (3)",
+            "tab Okunmamış (3)",
+            "button Tümünü okundu işaretle",
+            "a satır 1",
+            "a satır 2",
+            "a satır 3"
+          ],
+          "allFocusVisible": true
+        },
+        "emptyState": {
+          "user": "admin",
+          "evidence": "artifacts/critic/bildirimler-admin-empty-r10.png (kod değişmedi, Tur 11 için yeniden görüntülendi)"
+        },
+        "source": "artifacts/critic/probe-bildirimler-r11.json"
       },
       "scoreDeltas": {
-        "delta": "yok — 12 kriterin tamamı Tur 9 ölçümleriyle birebir aynı (ilgili dosyalarda kod değişikliği yok); puanlar korunuyor."
+        "hepsi": "delta yok — 4 açık P2 birebir aynı ölçümlerle açık, görsel kod değişmedi (git diff boş)."
       },
       "open": [
         {
@@ -408,7 +613,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         },
         {
           "id": "bildirimler-11",
@@ -423,7 +630,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         },
         {
           "id": "bildirimler-12",
@@ -438,7 +647,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         },
         {
           "id": "bildirimler-p2-severity",
@@ -453,7 +664,9 @@
           "round": 10,
           "round8": "AÇIK",
           "round9": "AÇIK",
-          "round10": "AÇIK"
+          "round10": "AÇIK",
+          "reMeasuredRound": 11,
+          "reMeasureNote": "Tur 11: birebir aynı değer, AÇIK kalıyor (kod değişmedi)."
         }
       ],
       "closed": [
@@ -593,7 +806,7 @@
           "measureAfter": "390x844: zaman damgası 72,7px = satır genişliğinin %20'si (iddia %40); başlıklar 112-171px, tek satır, kırpma yok — ölçüm yeniden üretilemiyor."
         }
       ],
-      "verdict": "KAZANAN: Plantero — toplam 58 ≥ 57 (Linear), hiçbir kriter <4, açık P0/P1 yok. Tur 9 doğrulaması: regresyon yok.",
+      "verdict": "KAZANAN: Plantero (58 ≥ 57 · hiçbir kriter <4 · açık P0/P1 yok · Tur 11 doğrulaması)",
       "dataNote": "Tur 6: admin kullanıcısının hiç bildirimi yok (notifications tablosundaki 6 satır depo@ ve kalite@ kullanıcılarına ait) — /bildirimler admin ile BOŞ DURUM, depo ile 3 satırlık besleme render ediyor. Dolu besleme ölçümleri depo hesabıyla alındı.",
       "scoreNotes": {
         "3": "4 — satır 71-72px (1440 ve 390), liste kolonu 768px / main 1200px; besleme satırı Linear çıtasının (36-40px) üstünde, 768px kolonun sağındaki 432px boş. bildirimler-12 açık. Tur 7 ile aynı, delta yok.",
