@@ -1,0 +1,208 @@
+{
+ "metaGap": [
+  {
+   "text": "Kokpit",
+   "sep": null
+  },
+  {
+   "text": "Bildirimler",
+   "sep": null
+  },
+  {
+   "text": "Ana Veri",
+   "sep": null
+  },
+  {
+   "text": "Depo",
+   "sep": null
+  },
+  {
+   "text": "Üretim",
+   "sep": null
+  },
+  {
+   "text": "Satış & CRM",
+   "sep": null
+  },
+  {
+   "text": "Satın Alma",
+   "sep": null
+  },
+  {
+   "text": "Kalite",
+   "sep": null
+  },
+  {
+   "text": "Muhasebe",
+   "sep": null
+  },
+  {
+   "text": "Finans",
+   "sep": null
+  },
+  {
+   "text": "İhracat",
+   "sep": null
+  },
+  {
+   "text": "Bakım",
+   "sep": null
+  },
+  {
+   "text": "Ar-GeProjelerDeneme Reçeteleri",
+   "sep": null
+  },
+  {
+   "text": "Projeler",
+   "sep": null
+  },
+  {
+   "text": "Deneme Reçeteleri",
+   "sep": null
+  },
+  {
+   "text": "Ayarlar",
+   "sep": null
+  },
+  {
+   "text": "Şekersiz Protein Test/Onayda Şekersiz Protein · v1 ₺166,17",
+   "sepText": "\" · \"",
+   "sepRect": {
+    "l": 119,
+    "r": 126,
+    "w": 7
+   },
+   "gapLeft": null,
+   "leftText": null,
+   "gapRight": null,
+   "nextText": null
+  },
+  {
+   "text": "Oat Barista Reçetesi Devredildi Oat Barista v2 · v2 ₺103,41",
+   "sepText": "\" · \"",
+   "sepRect": {
+    "l": 107,
+    "r": 114,
+    "w": 7
+   },
+   "gapLeft": null,
+   "leftText": null,
+   "gapRight": null,
+   "nextText": null
+  },
+  {
+   "text": "Fıstık Bazı Taslak Fıstık Bazı · v1 ₺31,92",
+   "sepText": "\" · \"",
+   "sepRect": {
+    "l": 84,
+    "r": 91,
+    "w": 7
+   },
+   "gapLeft": null,
+   "leftText": null,
+   "gapRight": null,
+   "nextText": null
+  }
+ ],
+ "loadingPhase": {
+  "firstBusySample": {
+   "t": 641,
+   "busy": true,
+   "panelH": 194,
+   "hasTable": false,
+   "docH": 871
+  },
+  "lastBusySample": {
+   "t": 2339,
+   "busy": true,
+   "panelH": 194,
+   "hasTable": false,
+   "docH": 871
+  },
+  "firstReadySample": {
+   "t": 2569,
+   "busy": false,
+   "panelH": 982,
+   "hasTable": true,
+   "docH": 1659
+  },
+  "totalSamples": 20,
+  "timeline": [
+   "17ms busy=false panelH=null table=false docH=844",
+   "120ms busy=false panelH=null table=false docH=844",
+   "224ms busy=false panelH=null table=false docH=920",
+   "328ms busy=false panelH=null table=false docH=920",
+   "480ms busy=false panelH=0 table=false docH=920",
+   "641ms busy=true panelH=194 table=false docH=871",
+   "744ms busy=true panelH=194 table=false docH=871",
+   "849ms busy=true panelH=194 table=false docH=871",
+   "952ms busy=true panelH=194 table=false docH=871",
+   "1392ms busy=true panelH=194 table=false docH=871",
+   "1498ms busy=true panelH=194 table=false docH=871",
+   "1612ms busy=true panelH=194 table=false docH=871",
+   "1715ms busy=true panelH=194 table=false docH=871",
+   "1819ms busy=true panelH=194 table=false docH=871",
+   "1924ms busy=true panelH=194 table=false docH=871",
+   "2027ms busy=true panelH=194 table=false docH=871",
+   "2130ms busy=true panelH=194 table=false docH=871",
+   "2236ms busy=true panelH=194 table=false docH=871",
+   "2339ms busy=true panelH=194 table=false docH=871",
+   "2569ms busy=false panelH=982 table=true docH=1659"
+  ]
+ },
+ "tableOverflow": {
+  "wrapClass": "scrollbar-thin scroll-fade-x overflow-x-auto rounded-lg border border-border/60",
+  "scrollW": 800,
+  "clientW": 322,
+  "hiddenPx": 478,
+  "headers": [
+   {
+    "t": "Ürün",
+    "l": 34,
+    "r": 210,
+    "visible": true
+   },
+   {
+    "t": "Miktar",
+    "l": 210,
+    "r": 354,
+    "visible": true
+   },
+   {
+    "t": "Maliyet kaynağı",
+    "l": 354,
+    "r": 498,
+    "visible": false
+   },
+   {
+    "t": "Birim maliyet",
+    "l": 498,
+    "r": 626,
+    "visible": false
+   },
+   {
+    "t": "Fire %",
+    "l": 626,
+    "r": 722,
+    "visible": false
+   },
+   {
+    "t": "Satır maliyeti",
+    "l": 722,
+    "r": 834,
+    "visible": false
+   }
+  ],
+  "visibleHeaders": [
+   "Ürün",
+   "Miktar"
+  ],
+  "hiddenHeaders": [
+   "Maliyet kaynağı",
+   "Birim maliyet",
+   "Fire %",
+   "Satır maliyeti"
+  ],
+  "hasFadeAffordance": true
+ }
+}
