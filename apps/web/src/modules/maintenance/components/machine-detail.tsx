@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -8,52 +9,109 @@ import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
 import { Sparkline } from '@/components/sparkline';
-import { formatDate, formatDateTime, formatPct } from '@/lib/format';
+import { DetailFieldGroupsGrid } from '@/components/detail-field-groups-grid';
+import type { DetailFieldGroup } from '@/components/detail-fields';
+import { formatDate, formatDateTime, formatPct, relativeTime } from '@/lib/format';
 import type { MachineDetail } from '../queries';
 import { DOWNTIME_REASON_LABELS, INTERVAL_UNIT_LABELS } from '../labels';
-
-function StatCell({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="rounded-lg bg-muted/50 p-3">
-      <div className="text-[11px] text-muted-foreground">{label}</div>
-      <div className="mt-0.5 text-[15px] font-medium tabular-nums">{value}</div>
-    </div>
-  );
-}
 
 export function MachineDetailView({ detail }: { detail: MachineDetail }) {
   const { machine, lineCode, lineName, warehouseCode, productSku, productName, responsibleName, plans, orders, downtimes, photos, oeeTrend, mtbfHours, mttrHours, failureCount } = detail;
   const router = useRouter();
 
+  // Kriter 12 (Tur 2 P1 bakim-makine-detay-06) kök neden düzeltmesi: eskiden 8 gri dolgulu StatCell +
+  // "Ana veri" için ayrı çerçeveli kutu = 9 gri yüzey. Ortak `DetailFieldGroupsGrid` (Stripe/Linear
+  // hairline tanım listesi) hiç gri dolgu taşımaz; boş alanlar (Kapasite/Sorumlu/MTBF sık '—' olur)
+  // varsayılan gizli — Kriter 3 (bakim-makine-detay-03) bulgusundaki "3 tane görünür '—'" de böylece
+  // ortadan kalkar. Kriter 1 (bakim-makine-detay-02) düzeltmesi: makine notu artık etiketsiz çıplak
+  // metin değil, aynı ızgaranın "Not" alanı.
+  const groups: DetailFieldGroup[] = [
+    {
+      title: 'Genel',
+      fields: [
+        { label: 'Hat', value: lineCode, node: lineCode ? `${lineCode} — ${lineName}` : null },
+        { label: 'Depo', value: warehouseCode, node: warehouseCode },
+        { label: 'Kapasite', value: machine.capacityPerHour, node: machine.capacityPerHour ? <QtyCell value={machine.capacityPerHour} uom={machine.capacityUnit ?? '/sa'} /> : null },
+        { label: 'Güç', value: machine.powerKw, node: machine.powerKw ? <QtyCell value={machine.powerKw} uom="kW" /> : null },
+        { label: 'Çalışma saati', value: 1, node: <QtyCell value={machine.runtimeHours} uom="sa" /> },
+        { label: 'Sorumlu', value: responsibleName, node: responsibleName },
+        { label: 'MTBF (arızalar arası)', value: mtbfHours, node: mtbfHours !== null ? `${mtbfHours.toFixed(1)} sa` : null },
+        { label: 'MTTR (ort. onarım süresi)', value: mttrHours ?? (failureCount === 0 ? null : undefined), node: mttrHours !== null ? `${mttrHours!.toFixed(1)} sa` : failureCount > 0 ? null : 'Arıza yok' },
+        { label: 'Ana veri ekipman kaydı', value: productSku, node: productSku ? <span><span className="font-mono">{productSku}</span> — {productName}</span> : null },
+        { label: 'Not', value: machine.note, node: machine.note },
+      ],
+    },
+  ];
+
+  const recentOrders = orders.slice(0, 5);
+  const recentDowntimes = downtimes.slice(0, 5);
+
   return (
     <Tabs defaultValue="ozellikler" className="gap-4">
-      <TabsList className="scrollbar-thin w-full justify-start overflow-x-auto">
-        <TabsTrigger value="ozellikler">Özellikler</TabsTrigger>
-        <TabsTrigger value="planlar">Bakım planları ({plans.length})</TabsTrigger>
-        <TabsTrigger value="is-emirleri">İş emirleri ({orders.length})</TabsTrigger>
-        <TabsTrigger value="duruslar">Duruşlar ({downtimes.length})</TabsTrigger>
-        {lineCode ? <TabsTrigger value="oee">OEE trendi</TabsTrigger> : null}
-        <TabsTrigger value="fotograflar">Fotoğraflar ({photos.length})</TabsTrigger>
-      </TabsList>
+      {/* Kriter 5 (Tur 2 P1 bakim-makine-detay-05) kök neden düzeltmesi: `variant="line"` (ui/tabs.tsx'te
+          zaten var olan, work-order-tabs.tsx/product-detail-tabs.tsx'te kanıtlanmış varyant) — 1152px'e
+          yayılan gri dolgulu 6-eşit-parçalı segment kontrolü yerine sola yaslı, içerik genişliğinde,
+          seçilide 2px alt çizgili sekmeler. Ortak `ui/tabs.tsx` DEĞİŞTİRİLMEDİ, yalnızca zaten var olan
+          varyant burada kullanıldı. */}
+      <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+        <TabsList variant="line" className="w-max min-w-full justify-start gap-6 border-b border-border/60 md:w-fit md:min-w-0">
+          <TabsTrigger value="ozellikler">Özellikler</TabsTrigger>
+          <TabsTrigger value="planlar">Bakım planları ({plans.length})</TabsTrigger>
+          <TabsTrigger value="is-emirleri">İş emirleri ({orders.length})</TabsTrigger>
+          <TabsTrigger value="duruslar">Duruşlar ({downtimes.length})</TabsTrigger>
+          {lineCode ? <TabsTrigger value="oee">OEE trendi</TabsTrigger> : null}
+          <TabsTrigger value="fotograflar">Fotoğraflar ({photos.length})</TabsTrigger>
+        </TabsList>
+      </div>
 
-      <TabsContent value="ozellikler" className="space-y-4">
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
-          <StatCell label="Hat" value={lineCode ? `${lineCode} — ${lineName}` : 'Ortak / depo'} />
-          <StatCell label="Depo" value={warehouseCode ?? '—'} />
-          <StatCell label="Kapasite" value={machine.capacityPerHour ? <QtyCell value={machine.capacityPerHour} uom={machine.capacityUnit ?? '/sa'} /> : '—'} />
-          <StatCell label="Güç" value={machine.powerKw ? <QtyCell value={machine.powerKw} uom="kW" /> : '—'} />
-          <StatCell label="Çalışma saati" value={<QtyCell value={machine.runtimeHours} uom="sa" />} />
-          <StatCell label="Sorumlu" value={responsibleName ?? '—'} />
-          <StatCell label="MTBF (arızalar arası)" value={mtbfHours !== null ? `${mtbfHours.toFixed(1)} sa` : '—'} />
-          <StatCell label="MTTR (ort. onarım süresi)" value={mttrHours !== null ? `${mttrHours.toFixed(1)} sa` : failureCount > 0 ? '—' : 'Arıza yok'} />
-        </div>
-        {productSku ? (
-          <div className="rounded-lg border border-border/60 bg-card p-3 text-[13px]">
-            <span className="text-muted-foreground">Ana veri ekipman kaydı: </span>
-            <span className="font-mono">{productSku}</span> — {productName}
+      <TabsContent value="ozellikler" className="space-y-5">
+        <DetailFieldGroupsGrid groups={groups} />
+
+        {/* Kriter 3 (Tur 2 P1 bakim-makine-detay-03) kök neden düzeltmesi: açılış sekmesi salt
+            özellik alanlarından ibaretken (çoğu '—') 1440×900'de ekranın yarısı boş kalıyordu.
+            Son iş emirleri/duruşlar özeti — ayrı sekmelerdeki tam listenin ilk 5 satırı — hem boşluğu
+            gerçek, kullanışlı bilgiyle doldurur hem de "bu makinede en son ne oldu" sorusunu sekme
+            değiştirmeden yanıtlar. */}
+        <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+          <div>
+            <h3 className="mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold">Son iş emirleri</h3>
+            {recentOrders.length === 0 ? (
+              <p className="text-[13px] text-muted-foreground">Henüz iş emri yok.</p>
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {recentOrders.map((o) => (
+                  <li key={o.id}>
+                    <Link href={`/bakim/is-emirleri/${o.id}`} className="flex min-h-11 items-center justify-between gap-2 py-1.5 text-[13px] hover:text-primary">
+                      <span className="min-w-0 truncate">{o.title}</span>
+                      <span className="flex shrink-0 items-center gap-2">
+                        <StatusBadge status={o.status} kind="maintenance" />
+                        <span className="hidden text-[11px] text-muted-foreground sm:inline">{relativeTime(o.reportedAt)}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-        ) : null}
-        {machine.note ? <p className="text-[13px] text-muted-foreground">{machine.note}</p> : null}
+          <div>
+            <h3 className="mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold">Son duruşlar</h3>
+            {recentDowntimes.length === 0 ? (
+              <p className="text-[13px] text-muted-foreground">Duruş kaydı yok.</p>
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {recentDowntimes.map((d) => (
+                  <li key={d.id} className="flex min-h-11 items-center justify-between gap-2 py-1.5 text-[13px]">
+                    <span className="min-w-0 truncate">{DOWNTIME_REASON_LABELS[d.reason] ?? d.reason}</span>
+                    <span className="flex shrink-0 items-center gap-2 text-[11px] text-muted-foreground">
+                      {d.endedAt ? `${d.minutes} dk` : <span className="text-warning">devam ediyor</span>}
+                      <span className="tabular-nums">{formatDate(d.startedAt)}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </TabsContent>
 
       <TabsContent value="planlar">
