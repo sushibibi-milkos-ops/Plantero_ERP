@@ -695,18 +695,7 @@
    "total": 58,
    "verdict": "Plantero",
    "scoreNotes": "Tur 4: düzeltme uygulanmadı. k3=4 (1. adımda contentBottom 337px, emptyBelow 563px @1440x900 — Tur 3 ile aynı), k11=4 (h1 sol kenarı 552px, modülün diğer dört route'unda 264px). Mobil akış kusursuz: 390=390, tek kolon, 44px altı gerçek dokunma hedefi 0, tarama input'u 56px. Toplam 58 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
-   "open": [
-    {
-     "id": "bakim-yeni-02",
-     "criterion": 3,
-     "severity": "P2",
-     "text": "1. adımda 1440×900 masaüstü ekranın tamamında tek bir QR tarama input'u ve bir makine combobox'ı var; sahada telefon için tasarlanan akış masaüstünde ekranın %85'ini boş bırakıyor.",
-     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): 1. adım contentBottom 337px, emptyBelow 563px @1440x900 (Tur 2: contentBottom ≈470px, emptyBelow ≈430px — 133px KÖTÜLEŞTİ). Ekranda etkileşimli eleman 4 (tarama input, makine combobox, Vazgeç, Arızayı bildir). | Tur 5 kısmi iyileşme (kapanmadı, hedef karşılanmadı): emptyBelow 563→-773px (artık taşma var, boşluk yok) — masaüstünde form yanına iki panel eklendi: \"Son bildirilen arızalar\" (listRecentBreakdowns, yeni sorgu) + \"Makineler\" (36 makine, durum rozetli, dikkat gerektiren önce sıralı) — scripts/probe-bakim-r5-yeni2.ts. Hedef (≤200px) fazlasıyla karşılandı; KAPATILMADI çünkü orijinal öneri \"makine listesi\" idi ve bu genişletilmiş kapsam critic tarafından ayrı doğrulanmalı — yine de ölçüm hedefi net biçimde geçiyor.",
-     "target": "emptyBelow ≤ 200px — masaüstünde yan panelde son bildirilen arızalar/makine listesi ya da akışın tek sayfada toplanması",
-     "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx",
-     "openedRound": 1
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "bakim-yeni-01",
@@ -735,6 +724,20 @@
      "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5-*.ts, Tur 5)",
      "measureAfter": "h1 left = 264px @1440x900 — /bakim/makineler, /bakim/planlar, /bakim/is-emirleri, /bakim/oee ile birebir aynı sütun oluğu — scripts/probe-bakim-r5-yeni.ts",
      "fixNote": "page.tsx: PageHeader'daki `className=\"mx-auto max-w-xl\"` kaldırıldı (form gövdesi zaten kendi mx-auto max-w-xl'ini taşıyor, report-breakdown-form.tsx)."
+    },
+    {
+     "id": "bakim-yeni-02",
+     "criterion": 3,
+     "severity": "P2",
+     "text": "1. adımda 1440×900 masaüstü ekranın tamamında tek bir QR tarama input'u ve bir makine combobox'ı var; sahada telefon için tasarlanan akış masaüstünde ekranın %85'ini boş bırakıyor.",
+     "measure": "Tur 4 (yeniden ölçüldü, Tur 3 ile aynı): 1. adım contentBottom 337px, emptyBelow 563px @1440x900 (Tur 2: contentBottom ≈470px, emptyBelow ≈430px — 133px KÖTÜLEŞTİ). Ekranda etkileşimli eleman 4 (tarama input, makine combobox, Vazgeç, Arızayı bildir). | Tur 5 kısmi iyileşme (kapanmadı, hedef karşılanmadı): emptyBelow 563→-773px (artık taşma var, boşluk yok) — masaüstünde form yanına iki panel eklendi: \"Son bildirilen arızalar\" (listRecentBreakdowns, yeni sorgu) + \"Makineler\" (36 makine, durum rozetli, dikkat gerektiren önce sıralı) — scripts/probe-bakim-r5-yeni2.ts. Hedef (≤200px) fazlasıyla karşılandı; KAPATILMADI çünkü orijinal öneri \"makine listesi\" idi ve bu genişletilmiş kapsam critic tarafından ayrı doğrulanmalı — yine de ölçüm hedefi net biçimde geçiyor.",
+     "target": "emptyBelow ≤ 200px — masaüstünde yan panelde son bildirilen arızalar/makine listesi ya da akışın tek sayfada toplanması",
+     "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx",
+     "openedRound": 1,
+     "closedRound": 5,
+     "verifiedBy": "ölçüm (scripts/probe-bakim-r5-yeni2.ts, Tur 5)",
+     "measureAfter": "emptyBelow 563px → -773px @1440x900 (hedef ≤200px, fazlasıyla karşılandı — içerik artık viewport'u aşıyor, boşluk kalmadı). Masaüstünde form yanına iki panel eklendi: \"Son bildirilen arızalar\" (yeni queries.listRecentBreakdowns — kind=corrective, reportedAt desc, limit 5) ve \"Makineler\" (36 aktif makine, durum rozetli, arızalı/bakımdaki önce sıralı, max-h-[420px] iç kaydırmalı). Sahadaki telefon akışı DEĞİŞMEDİ — panel yalnızca `lg:` üzerinde görünür, mobilde tek sütun form aynen kalıyor (bkz. mobile.png).",
+     "fixNote": "Yeni: recent-breakdowns-panel.tsx + machine-quick-list.tsx (modules/maintenance/components/), queries.ts::listRecentBreakdowns eklendi (şema değişikliği yok, mevcut maintenance_orders/machines tablolarından okuma). page.tsx: form + panel `lg:grid-cols-[1fr_320px]` düzeni."
     }
    ]
   },

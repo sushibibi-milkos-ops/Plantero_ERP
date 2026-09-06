@@ -202,9 +202,16 @@ export function CostSimulator({
   const dirty = editable && form.formState.isDirty;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+    // space-y-4 (mobil) / md:space-y-6: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
+    // hedef maliyete kadarki bütçeyi sıkmak için küçük bir kazanım (8pt ölçeğinde kalır).
+    <div className="space-y-4 md:space-y-6">
+      {/* flex-nowrap + overflow-x-auto: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
+          önceki `flex-wrap` v1/Taslak rozetini Kaydet/Onaya gönder'den AYRI bir SATIRA düşürüyordu
+          (dar genişlikte sığmadığı için), hedef maliyet panelinin üstündeki bütçeyi ~35px fazladan
+          tüketiyordu. Artık her zaman TEK satır — gerekirse yatay kaydırma (nadiren, çok dar
+          ekranlarda "Onaya gönder" metniyle). */}
+      <div className="flex flex-nowrap items-center justify-between gap-3 overflow-x-auto">
+        <div className="flex shrink-0 items-center gap-2">
           <h2 className="text-[15px] font-semibold">v{detail.version.version}</h2>
           <StatusBadge status={detail.version.status} label={status.label} tone={status.tone} />
           {detail.hasPendingApproval ? <StatusBadge status="pending" label="Onay bekliyor" tone="warning" /> : null}
@@ -212,7 +219,7 @@ export function CostSimulator({
               form kirliyken hiçbir görsel ipucu yoktu (Tur 1 P1 arge-recete-08). */}
           {dirty ? <StatusBadge status="dirty" label="Kaydedilmemiş değişiklik" tone="warning" dot /> : null}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex shrink-0 flex-nowrap items-center gap-2">
           {editable ? (
             // h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi — sayfadaki diğer TÜM kontrollerle
             // aynı desen (Tur 4 P1 arge-recete-20; önceden yalnız bu iki başlık şeridi butonu atlanmıştı).
