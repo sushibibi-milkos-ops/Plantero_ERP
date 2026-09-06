@@ -1,0 +1,62 @@
+{
+ "label": "gc-id-d",
+ "route": "/kalite/geri-cagirma/41d02000-f437-4bdf-b4c8-ce4e7a73a7b7",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [
+  "06.09.2026 @span"
+ ],
+ "rowCount": 0,
+ "kpiValues": [
+  {
+   "text": "38 ADET · 78,6 KG",
+   "fontSize": 19,
+   "right": 1208,
+   "gapToDivider": 16
+  }
+ ],
+ "interactiveCount": 31,
+ "smallTargetsInMain": [
+  {
+   "sel": "a \"PL-260823-H2-01\"",
+   "w": 104,
+   "h": 16
+  },
+  {
+   "sel": "button \"Geri Çağırmayı Başlat\"",
+   "w": 192,
+   "h": 36
+  }
+ ],
+ "fontSizesMain": {
+  "11": 10,
+  "12": 8,
+  "13": 4,
+  "14": 6,
+  "19": 1,
+  "24": 1
+ },
+ "shadowCount": 0,
+ "borderedInsideBordered": 7,
+ "borderedInsideBorderedSample": [
+  "rounded border bg-background px-1 py-px font-mono  <= flex items-center border-t border-sidebar-border/7",
+  "rounded border bg-background px-1.5 py-px font-mon <= hidden h-8 w-56 items-center gap-2 rounded-md bord",
+  "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= flex w-[78vw] shrink-0 snap-start flex-col gap-1.5",
+  "flex w-[78vw] shrink-0 snap-start flex-col gap-1.5 <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= flex w-[78vw] shrink-0 snap-start flex-col gap-1.5"
+ ],
+ "bottomNav": null
+}

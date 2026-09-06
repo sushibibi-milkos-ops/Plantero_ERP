@@ -1,0 +1,22 @@
+[
+ {
+  "route": "/satin-alma/kritik-stok",
+  "url": "http://localhost:3000/login?next=%2Fsatin-alma%2Fkritik-stok",
+  "failed": "net::ERR_ABORTED"
+ },
+ {
+  "route": "/satin-alma/kritik-stok",
+  "url": "http://localhost:3000/satin-alma/kritik-stok",
+  "failed": "net::ERR_ABORTED"
+ },
+ {
+  "route": "/satin-alma/siparisler",
+  "url": "http://localhost:3000/login?next=%2Fsatin-alma%2Fsiparisler",
+  "failed": "net::ERR_ABORTED"
+ },
+ {
+  "route": "/satin-alma/siparisler",
+  "url": "http://localhost:3000/satin-alma/siparisler",
+  "failed": "net::ERR_ABORTED"
+ }
+]

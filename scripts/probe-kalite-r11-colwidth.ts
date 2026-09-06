@@ -56,7 +56,7 @@ async function main() {
     await c.close();
   }
   await browser.close();
-  writeFileSync('artifacts/critic/probe-kalite-r11/colwidth.json', JSON.stringify(out, null, 1));
+  writeFileSync('artifacts/critic/probe-kalite-r12/colwidth.json', JSON.stringify(out, null, 1));
   console.log(JSON.stringify(out, null, 1));
 }
 main().catch((e) => { console.error(e); process.exit(1); });

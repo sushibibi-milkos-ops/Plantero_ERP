@@ -1,0 +1,69 @@
+{
+ "kritik-stok": [
+  {
+   "tag": "input",
+   "txt": "",
+   "aria": "Tabloda ara",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Motoru çalıştır",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "",
+   "aria": "Sütunlar",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "Ürün",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "shadow": "none"
+  }
+ ],
+ "yeni": [
+  {
+   "tag": "button",
+   "txt": "Tedarikçi seçin",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "TIRE — Tire Fabrika",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "input",
+   "txt": "",
+   "aria": "",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "button",
+   "txt": "",
+   "aria": "Takvim",
+   "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) auto 1px",
+   "shadow": "none"
+  }
+ ]
+}

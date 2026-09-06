@@ -1,10 +1,10 @@
 {
  "module": "tedarik",
- "round": 11,
+ "round": 12,
  "note": "Tur 11 (kritik). Tur 10'da builder'in kapattigi iki bulgu yeniden olculdu ve KAPALI dogrulandi: tedarik-kritik-stok-touch-01 (390x844'te main icindeki 44px alti ETKILESIMLI eleman sayisi 0/0 — 'Motoru calistir' artik >=44; probe-tedarik-r11c.json mobile:kritik-stok.small=[]) ve tedarik-siparisler-money-format-01 (KPI 'Acik siparis tutari' artik TL47.160,00 — tablo Tutar sutunuyla ayni 2 basamak; desktop.png). Buna bagli iki puan yukseldi (kritik-stok k9 4->5, siparisler k6 4->5). Ucu de acik kalan P2: shell-datatable-sortheader-focus-01 (6/6 ve 9/9 siralama basligi hala 'outline: auto 1px' UA cizgisine dusuyor — column-header.tsx:30'da focus-visible ring token'i yok; probe-tedarik-r11b.json), tedarik-focusring-token-01 (date-field takvim tetikleyicisi ayni sekilde UA outline; probe-tedarik-r11b.json 'yeni'), tedarik-po-detay-chain-order-01 (zincir hala PO -> FATURA -> MAL KABUL). Iki YENI P2 acildi: tedarik-tedarikciler-mobile-ontime-color-01 (mobil kartta 'Zamaninda' <%70 destructive rengi kayboluyor) ve tedarik-po-detay-chain-basis-01 (zincir kartlarinda KDV dahil/haric taban karisik, etiketsiz). Kod duzeyi tarama: modulde `transition: all`, `ease-in`, `scale(0)`, >300ms sure, `transform-origin` YOK; tek hareket suppliers-table.tsx:196/200 transition-colors/transition-transform ve replenishment-panel.tsx:92 animate-spin. hover: globals.css:7'de (hover:hover) and (pointer:fine) ile korumali. Yukleme/hata: kritik-stok, onay-kuyrugu, siparisler, siparisler/yeni segmentlerinde rota ozel loading.tsx/error.tsx yok; grup duzeyi (app)/loading.tsx + (app)/error.tsx devrede. Prefetch nedeniyle bu rotalarda yanlis sekilli iskelet FLASH'i UREYTILEMEDI (probe-tedarik-r11e) — olculebilir kusur gosterilemedigi icin k7 bulgusu ACILMADI, k7=5 korundu. Konsol: 6 rota x 2 viewport'ta hata 0; kritik-stok masaustunde bir kosuda gorulen 404 uc tekrarda ureyemedi ve login yonlendirmesinin ERR_ABORTED navigasyonuna baglandi (probe-tedarik-r11d). Dinamik rota: PO-2026-000003 = 8c8ef372-f51e-4499-9a61-b589ac36af47 (DB yeniden seed edildi). Olcum kaynaklari: artifacts/critic/measure-tedarik-r11/*.clean.json, probe-tedarik-r11.json, probe-tedarik-r11b.json, probe-tedarik-r11c.json. SONUC: 6 rotanin 6'si KAZANDI (toplam >= referans, hicbir kriter < 4, acik P0/P1 yok).",
  "routes": {
   "/satin-alma/kritik-stok": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -23,7 +23,7 @@
    ],
    "total": 59,
    "verdict": "KAZANAN: Linear",
-   "scoreNotes": "Tur 11 — k9: 4->5 (GERILEME KAPANDI: tedarik-kritik-stok-touch-01 dogrulandi; 390x844'te main icindeki 44px alti etkilesimli eleman 0, 'Motoru calistir' >=44, mobil kart 61,3px 56-72 bandinda, KPI serit rayinda scroll-fade-x maskesi var — probe-tedarik-r11c + measure-r11). k8: 4 korunuyor (6/6 siralama basligi hala UA outline — shell-datatable-sortheader-focus-01, P2). Gerileme yok: 36 satir x 36px, sw=cw (1440 ve 390), 184 tabular-nums hucre, satir hover oklab(0.955/.5), h1 24px/600 tracking -0.6px, farkli renk 16/14, konsol hatasi 0. Toplam 59 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 12 yeniden olcum — gerileme yok, olcumler Tur 11 ile birebir ayni: 36 satir x 36px, sw=cw (1440 ve 390), 187 tabular-nums hucre, h1 24px/600 (mobil 20px/600), farkli renk 16/14, 390px'te 44px alti etkilesimli eleman 0 (yalnizca breadcrumb-page span'i — etkilesimli degil), mobil kart 61,3px 56-72 bandinda. k8: 4 korunuyor — probe-tedarik-r12: 'Urun' siralama basligi hala `outline: auto 1px` + `box-shadow: none`, ayni sayfadaki 'Motoru calistir'/'Sutunlar' 3px ring aliyor (shell-datatable-sortheader-focus-01, P2). Tek konsol 404'u 3 kosudan 1'inde ureyip context duzeyi response dinleyicisine hic dusmedi (probe-r12c/r12e: 4xx yok) — Next dev overlay kaynakli, urun yuzeyinde kanit yok, bulgu ACILMADI. Toplam 59 >= 57 -> KAZANAN: Plantero.",
    "open": [
     {
      "id": "shell-datatable-sortheader-focus-01",
@@ -31,11 +31,12 @@
      "severity": "P2",
      "module": "shell",
      "text": "DataTableColumnHeader sıralama düğmesinde odak halkası token'ı yok; klavye odağı tarayıcının varsayılan `outline: auto 1px` çizgisine düşüyor. Uygulamanın geri kalanı (Button/Input/Popover trigger/satır) 3px ring ya da 2px solid outline kullanıyor — aynı ekranda iki farklı odak dili. Tedarik'te 6 (kritik-stok), 7 (siparişler), 9 (tedarikçiler) başlık düğmesini etkiliyor; shell sahibi bir kez düzeltir.",
-     "measure": "Tur 11 yeniden olcum (probe-tedarik-r11b.ts, Tab + 200ms bekleme, 1440x900): 'Urun','SKU','Kullanilabilir','Min-Max','Tedarik suresi','Tercihli tedarikci' basliklarinin 6/6'si `outline: oklab(...) auto 1px` + `box-shadow: none`; ayni sayfadaki 'Tabloda ara', 'Motoru calistir', 'Sutunlar' duraklari 3px ring aliyor. DEGISMEDI — ACIK.",
+     "measure": "Tur 12 yeniden olcum (probe-tedarik-r12.ts, Tab + 200ms, 1440x900): 'Urun' siralama basligi `outline: oklab(...) auto 1px` + `box-shadow: none`; ayni sayfadaki 'Motoru calistir' ve 'Sutunlar' duraklari '0px 0px 0px 3px' ring aliyor. DEGISMEDI — ACIK.",
      "target": "column-header.tsx:30 className zincirine `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` eklensin — ölçümde 6/6 başlık '0px 0px 0px 3px' ring versin",
      "file": "apps/web/src/components/data-table/column-header.tsx:30",
      "openedRound": 10,
-     "lastMeasuredRound": 11
+     "lastMeasuredRound": 11,
+     "lastVerifiedRound": 12
     }
    ],
    "closed": [
@@ -257,7 +258,7 @@
    "winner": "linear"
   },
   "/satin-alma/onay-kuyrugu": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -276,7 +277,7 @@
    ],
    "total": 59,
    "verdict": "KAZANAN: Plantero",
-   "scoreNotes": "Tur 11 yeniden olcum — gerileme yok: sw=cw (1440 ve 390), konsol hatasi 0, 390px'te 44px alti etkilesimli eleman yok, h1 masaustu 24px/600 - mobil 20px/600, farkli renk 15/14, main duraklarinin 4/4'u 3px ring, mobilde klavye kisayol seridi gizleniyor (dokunmada anlamsiz kisayol gosterilmiyor). k3: 4 korunuyor (tek bekleyen AI taslagi — veri kaynakli seyreklik, tasarim degil). Toplam 59 >= 57, acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 12 yeniden olcum — gerileme yok: sw=cw (1440 ve 390), konsol hatasi 0, kirpma 0, 390px'te 44px alti etkilesimli eleman yok, h1 24px/600 (mobil 20px/600), farkli renk 15/14, mobilde klavye kisayol seridi gizleniyor. k3: 4 korunuyor (tek bekleyen AI taslagi — veri kaynakli seyreklik; kart anatomisi ve eylem seridi dogru). Toplam 59 >= 57, acik P0/P1 yok -> KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -361,7 +362,7 @@
    "winner": "plantero"
   },
   "/satin-alma/siparisler": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -380,7 +381,7 @@
    ],
    "total": 59,
    "verdict": "KAZANAN: Plantero",
-   "scoreNotes": "Tur 11 — k6: 4->5 (tedarik-siparisler-money-format-01 KAPALI dogrulandi: KPI 'Acik siparis tutari' TL47.160,00, tablo 'Tutar' sutunuyla ayni 2 basamak + tabular-nums + sag hizali; 114 tabular-nums hucre). k8: 4 korunuyor (7 siralama basligi UA outline'a dusuyor — shell bulgusu). Gerileme yok: 16 satir x 36px, ilk ekranda 16 satir, sw=cw (1440 ve 390), mobil kart 63,5px, 390px'te 44px alti etkilesimli eleman yok, satir hover oklab(0.955/.5), konsol hatasi 0, ekranda --primary yalnizca 'Yeni siparis' butonunda. Toplam 59 >= 57, acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 12 yeniden olcum — gerileme yok: 16 satir x 36px, ilk ekranda 16 satir, sw=cw (1440 ve 390), mobil kart 63,5px, 118 tabular-nums hucre, kirpma 0, konsol hatasi 0, KPI seridi dikey hairline ayracli (Stripe), --primary yalnizca 'Yeni siparis' butonunda. k8: 4 korunuyor (siralama basliklari UA outline'a dusuyor — shell-datatable-sortheader-focus-01, kritik-stok kartinda tutuluyor). Toplam 59 >= 57, acik P0/P1 yok -> KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -450,7 +451,7 @@
    "winner": "plantero"
   },
   "/satin-alma/siparisler/[id]": {
-   "round": 11,
+   "round": 12,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -459,28 +460,29 @@
     5,
     5,
     5,
+    4,
     5,
     5,
     5,
     5,
-    5,
-    5,
+    4,
     5
    ],
-   "total": 60,
+   "total": 58,
    "verdict": "KAZANAN: Plantero",
-   "scoreNotes": "Tur 11 yeniden olcum — gerileme yok: satir 36/36,5px, sw=cw (1440 ve 390), mobil satir karti 62,5px, 390px'te 44px alti etkilesimli eleman yok, 26 tabular-nums hucre, satir hover oklab(0.967/.4), konsol hatasi 0, mobil zincir raycasi scroll-fade-x maskeli. Kirpma: yalnizca zincir kartlarinin 11px muted ikincil satirinda tedarikci adi (217px -> 154px, `truncate`) — kart basligi ve belge no tam, kimlik sutunu degil, kabul edildi. Kalem tablosu siralanabilir degil -> k8: 5. Iki acik P2 (zincir sirasi, zincir tutar tabani) puani dusurmuyor: birincisi siralama mantigi, ikincisi etiket eksigi; ikisi de olculebilir ve kritere bagli. Toplam 60 >= 56 (Stripe), acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 12 (PO-2026-000003 = 1743a5bd-a194-4b90-a8e3-5b2f246c9b72; veritabani yeniden seed edildigi icin id degisti). Gerileme yok: satir 36/36,5px, sw=cw (1440 ve 390), mobil satir karti 62,5px, 35 tabular-nums hucre, konsol hatasi 0, mobil zincir raycasi scroll-fade-x maskeli, kirpma yalnizca zincir kartinin 11px ikincil satirindaki tedarikci adi (217>154, truncate — kimlik sutunu degil). PUAN DUZELTMESI (Tur 11'de tutarsizdi): k6 5->4 — acik bulgu tedarik-po-detay-chain-basis-01 tam da bu kriterin tanimina giriyor (3 zincir kartinda ayni 13px mono/tabular-nums/sag hizali yuvada TL113.040,00 KDV dahil ile TL94.200,00 KDV haric yan yana, 0/3 kartta taban etiketi); k11 5->4 — tedarik-po-detay-chain-order-01 zincir sirasini PO -> FATURA -> MAL KABUL gosteriyor, uygulamanin kendi belge zinciri (siparis -> mal kabul -> fatura) ile ters okunuyor. Iki bulgu da Tur 11'de aciti, puanlari 5 birakmak gerekcesizdi. Ikisi de P2, kazanmayi engellemez. Toplam 58 >= 56 (Stripe), hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
    "open": [
     {
      "id": "tedarik-po-detay-chain-order-01",
      "criterion": 11,
      "severity": "P2",
      "text": "Belge zinciri kartları PO → FATURA → MAL KABUL sırasında; CLAUDE.md'deki zincir (sipariş → irsaliye/mal kabul → fatura) ile ters okunuyor.",
-     "measure": "Tur 11 yeniden olcum (desktop.png, PO-2026-000003 = 8c8ef372-f51e-4499-9a61-b589ac36af47): kart sirasi hala 'SATIN ALMA SIPARISI' -> 'FATURA PINV-2026-000003' -> 'MAL KABUL GR-2026-000003', ikisi de 06.09.2026. DEGISMEDI — ACIK.",
+     "measure": "Tur 12 yeniden olcum (PO-2026-000003 = 1743a5bd-a194-4b90-a8e3-5b2f246c9b72, desktop.png): kart sirasi 'SATIN ALMA SIPARISI' -> 'FATURA PINV-2026-000003' -> 'MAL KABUL GR-2026-000003', ucu de 06.09.2026 (chain.ts:149 sort yalnizca depth + date). DEGISMEDI — ACIK.",
      "target": "Eşit derinlik/aynı gün durumunda belge türü ikincil anahtar olsun (mal kabul < fatura) — kart sırası PO → MAL KABUL → FATURA",
      "file": "packages/core/src/documents/chain.ts:149 (sort karşılaştırıcısı)",
      "openedRound": 10,
-     "lastMeasuredRound": 11
+     "lastMeasuredRound": 11,
+     "lastVerifiedRound": 12
     },
     {
      "id": "tedarik-po-detay-chain-basis-01",
@@ -488,9 +490,10 @@
      "severity": "P2",
      "openedRound": 11,
      "text": "Belge zinciri kartlarinin ucunde de tutar ayni tipografik yuvada (13px mono, tabular-nums, sag hizali) ama vergi tabani farkli: PO ve FATURA KDV DAHIL (TL113.040,00), MAL KABUL KDV HARIC maliyet (TL94.200,00). Yuvalar ayirt edilemedigi icin ucu yan yana okundugunda 'mal kabul eksik' yanilsamasi doguyor; sayfanin ust sagindaki tek etiketli tutar 'Toplam (KDV dahil)' diyor, kartlarda boyle bir taban etiketi yok.",
-     "measure": "desktop.png: 3 zincir karti, ayni sinif zinciri, tutarlar TL113.040,00 / TL113.040,00 / TL94.200,00; hicbir kartta KDV tabani etiketi yok",
+     "measure": "Tur 12 yeniden olcum: 3 zincir karti ayni sinif zincirinde, tutarlar TL113.040,00 (PO, KDV dahil) / TL113.040,00 (FATURA, KDV dahil) / TL94.200,00 (MAL KABUL, KDV haric); 0/3 kartta taban etiketi. DEGISMEDI — ACIK.",
      "target": "Zincir kartindaki tutara taban etiketi eklensin (or. 11px muted 'KDV dahil' / 'KDV haric') ya da uc kart da ayni tabani gostersin — olcum: 3/3 kartta tutarin yaninda taban etiketi ya da 3/3 kartta ayni taban",
-     "file": "apps/web/src/components/document-chain.tsx (zincir kart tutar yuvasi)"
+     "file": "apps/web/src/components/document-chain.tsx (zincir kart tutar yuvasi)",
+     "lastVerifiedRound": 12
     }
    ],
    "closed": [
@@ -662,7 +665,7 @@
    "winner": "plantero"
   },
   "/satin-alma/siparisler/yeni": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -681,7 +684,7 @@
    ],
    "total": 57,
    "verdict": "KAZANAN: Plantero",
-   "scoreNotes": "Tur 11 yeniden olcum — gerileme yok: main font kademeleri [24,14,13,11], sw=cw (1440 ve 390), 390px'te tek kolon ve 44px alti etkilesimli eleman yok, 'Henuz satir yok' bos durumu ikon+baslik+aciklama+'Urun ekle' eylemi tasiyor, konsol hatasi 0. k8: 4 korunuyor (7 duraktan 1'i — takvim tetikleyicisi — UA outline'a dusuyor; tedarik-focusring-token-01, shell, P2). k3: 4 (form seyrek; icerik ~1050px'te bitiyor, ilk ekranin yarisi bos). k12: 4 (iki kolonlu etiketli baslik formu klasik ERP formuna yakin). k7: 5 korundu — rota ozel loading.tsx yok ama grup duzeyi (app)/loading.tsx + (app)/error.tsx devrede ve prefetch nedeniyle yanlis sekilli iskelet flash'i ureyemedi (probe-tedarik-r11e); olculebilir kusur gosterilemedigi icin bulgu ACILMADI. Toplam 57 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 12 yeniden olcum — gerileme yok: main font kademeleri [24,14,13,11], sw=cw (1440 ve 390), 390px'te tek kolon, 44px alti etkilesimli eleman yok, 'Henuz satir yok' bos durumu ikon+baslik+aciklama+'Urun ekle' eylemi tasiyor, kirpma 0, konsol hatasi 0. k8: 4 korunuyor — probe-tedarik-r12: 'Tedarikci secin' ve 'TIRE — Tire Fabrika' 3px ring, aria-label='Takvim' tetikleyicisi hala `outline: auto 1px` + `box-shadow: none` (tedarik-focusring-token-01, shell, P2). k3: 4 (form seyrek, icerik ~1050px'te bitiyor). k12: 4 (iki kolonlu etiketli baslik formu klasik ERP formuna yakin). Toplam 57 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
    "open": [
     {
      "id": "tedarik-focusring-token-01",
@@ -689,14 +692,15 @@
      "severity": "P2",
      "openedRound": 8,
      "text": "Tur 9 düzeltmesiyle MODÜL tarafındaki durak (onay-kuyrugu'ndaki belge bağlantısı, approval-queue-list.tsx:135, `<a>` PO-2026-000007) artık `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` taşıyor ve kapandı. Kalan TEK durak paylaşılan bileşende: date-field.tsx'teki takvim tetikleyici düğmesi (`<button aria-label=\"Takvim\">`) hâlâ tarayıcı varsayılan `outline:1px auto` halkasını basıyor — bu dosya `apps/web/src/components/form/` altında ORTAK bir bileşen (kural 2: yalnızca yeni dosya eklenebilir, mevcut dosya değiştirilemez), modülün TÜM tarih alanlarını (mal kabul, sipariş formu, vb.) etkiler.",
-     "measure": "Tur 11 yeniden olcum (probe-tedarik-r11b.ts, Tab + 200ms, 1440x900): main icindeki 7 duraktan 6'si 3px ring ('Tedarikci secin','TIRE — Tire Fabrika','Not' input,'Urun ara ve ekle…','Urun ekle','Vazgec'); 1'i — aria-label='Takvim' tetikleyicisi — `outline: auto 1px` + `box-shadow: none`. DEGISMEDI — ACIK.",
+     "measure": "Tur 12 yeniden olcum (probe-tedarik-r12.ts): /siparisler/yeni'de 'Tedarikci secin' ve 'TIRE — Tire Fabrika' 3px ring; aria-label='Takvim' tetikleyicisi `outline: oklab(...) auto 1px` + `box-shadow: none`. DEGISMEDI — ACIK.",
      "target": "date-field.tsx takvim tetikleyicisine ve 'Tarihi temizle' düğmesine `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` eklensin — 7/7 durak 3px ring versin",
      "file": "apps/web/src/components/form/date-field.tsx:119-129 (takvim tetikleyici) ve :110 (Tarihi temizle) — module:'shell'",
      "recheckedRound": 9,
      "module": "shell",
      "note": "Modül tarafı (approval-queue-list.tsx) Tur 9'da kapandı — measureAfter: onay-kuyrugu rotasında artık 0 durak. Kalan tek durak (date-field.tsx) shell'e taşındı, AÇIK kalır.",
      "stillOpenRound": 10,
-     "lastMeasuredRound": 11
+     "lastMeasuredRound": 11,
+     "lastVerifiedRound": 12
     }
    ],
    "closed": [
@@ -754,7 +758,7 @@
    "winner": "plantero"
   },
   "/satin-alma/tedarikciler": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -773,7 +777,7 @@
    ],
    "total": 58,
    "verdict": "KAZANAN: Plantero",
-   "scoreNotes": "Tur 11 — k11: 5->4 (YENI olcum: masaustu tabloda 'Zamaninda' <%70 destructive kirmizi, ayni deger 390px mobil kartta notr muted'a dusuyor — 6 satirin 4'unde sinyal kayboluyor; tedarik-tedarikciler-mobile-ontime-color-01, P2). k8: 4 korunuyor (9 siralama basligi UA outline — shell bulgusu kritik-stok kartinda tutuluyor, burada tekrarlanmadi). Gerileme yok: 6 satir x 36px, sw=cw (1440 ve 390), mobil kart 63,5px, 390px'te 44px alti etkilesimli eleman yok (beyaz-liste anahtarinin dokunma koku 44px), satir hover oklab(0.955/.5), 43 tabular-nums hucre, 0 kirpma, konsol hatasi 0. Toplam 58 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
+   "scoreNotes": "Tur 12 yeniden olcum — gerileme yok: 6 satir x 36px, sw=cw (1440 ve 390), mobil kart 63,5px, 43 tabular-nums hucre, kirpma 0, konsol hatasi 0, 390px'te 44px alti etkilesimli eleman yok. k11: 4 korunuyor — tedarik-tedarikciler-mobile-ontime-color-01 dogrulandi: masaustu tabloda %50/%0/%50/%0 (4/6 satir) text-destructive kirmizi, ayni degerler 390px mobil kartta tek `text-xs text-muted-foreground` span icinde notr; suppliers-table.tsx:118 kosullu renk tasimiyor. k8: 4 korunuyor (siralama basliklari — shell bulgusu). Toplam 58 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero.",
    "open": [
     {
      "id": "tedarik-tedarikciler-mobile-ontime-color-01",
@@ -781,9 +785,10 @@
      "severity": "P2",
      "openedRound": 11,
      "text": "Ayni veri iki gorunumde farkli anlam tasiyor: masaustu tabloda 'Zamaninda' < %70 degeri `text-destructive` (oklch(0.577 0.245 27.3)) ile kirmizi; 390px mobil kartta ayni yuzde tek bir `text-muted-foreground` meta akisinin icine gomulu ve rengi kayboluyor. 6 tedarikcinin 4'unde (%50, %50, %0, %0) mobil kullanici performans uyarisini goremiyor.",
-     "measure": "probe-tedarik-r11f.ts: masaustu 4/6 hucre oklch(0.577 0.245 27.3) `text-destructive`; suppliers-table.tsx:118 mobil kart satiri ` · %${r.onTimeDeliveryPct}` tek `text-xs text-muted-foreground` span icinde, kosullu renk yok",
+     "measure": "Tur 12 yeniden olcum (desktop.png + mobile.png): masaustu tabloda 'Zamaninda' sutununda %50/%50/%0/%0 (6 satirin 4'u) destructive kirmizi; 390px mobil kartta ayni dort deger notr muted. suppliers-table.tsx:118 hala kosulsuz tek span. DEGISMEDI — ACIK.",
      "target": "suppliers-table.tsx:108-122 renderMobileCard — yuzde masaustuyle ayni kosulu tasisin (`<span className={cn(r.onTimeDeliveryPct < 70 && 'text-destructive')}>`); olcum: mobilde 4/4 <%70 degeri destructive renkte",
-     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:118"
+     "file": "apps/web/src/modules/purchasing/components/suppliers-table.tsx:118",
+     "lastVerifiedRound": 12
     }
    ],
    "closed": [

@@ -1,0 +1,46 @@
+{
+ "kritik-stok": {
+  "errors": [
+   "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "tabularNums": 187,
+  "rowCount": 36,
+  "clipped": [
+   "Eylemler [50>1]"
+  ]
+ },
+ "onay-kuyrugu": {
+  "errors": [],
+  "tabularNums": 3,
+  "rowCount": 0,
+  "clipped": []
+ },
+ "siparisler": {
+  "errors": [],
+  "tabularNums": 118,
+  "rowCount": 16,
+  "clipped": []
+ },
+ "po-detay": {
+  "errors": [],
+  "tabularNums": 35,
+  "rowCount": 2,
+  "clipped": [
+   "Tatlısu Tatlandırıcı ve Katkı  [217>154]",
+   "Tatlısu Tatlandırıcı ve Katkı  [217>154]",
+   "Tatlısu Tatlandırıcı ve Katkı  [217>154]"
+  ]
+ },
+ "yeni": {
+  "errors": [],
+  "tabularNums": 1,
+  "rowCount": 0,
+  "clipped": []
+ },
+ "tedarikciler": {
+  "errors": [],
+  "tabularNums": 43,
+  "rowCount": 6,
+  "clipped": []
+ }
+}
