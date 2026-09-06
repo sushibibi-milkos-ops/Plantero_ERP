@@ -1,0 +1,344 @@
+{
+ "as": "admin",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Günlük kanal satışları",
+   "top": 256,
+   "h": 194,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 466,
+   "h": 164,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Bugün",
+   "top": 645,
+   "h": 569,
+   "w": 358,
+   "rowCount": 8,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Onay kuyruğu",
+   "top": 1230,
+   "h": 167,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son aktiviteler",
+   "top": 1413,
+   "h": 337,
+   "w": 358,
+   "rowCount": 8,
+   "rowH": [
+    35.5,
+    36.5,
+    36.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Banka",
+   "top": 1766,
+   "h": 222,
+   "w": 358,
+   "rowCount": 3,
+   "rowH": [
+    44,
+    44,
+    44
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Üretim hatları",
+   "top": 2004,
+   "h": 242,
+   "w": 358,
+   "rowCount": 3,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Kritik stok",
+   "top": 2262,
+   "h": 289,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "SKT riski",
+   "top": 2567,
+   "h": 490,
+   "w": 358,
+   "rowCount": 5,
+   "rowH": [
+    63.5,
+    64.5,
+    64.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 3072,
+   "h": 423,
+   "w": 358,
+   "rowCount": 4,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [],
+ "truncated": [
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd.",
+   "clientW": 248,
+   "scrollW": 277,
+   "section": "Bugün"
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd.",
+   "clientW": 248,
+   "scrollW": 277,
+   "section": "Bugün"
+  },
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü",
+   "clientW": 248,
+   "scrollW": 331,
+   "section": "Bugün"
+  },
+  {
+   "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+   "clientW": 240,
+   "scrollW": 242,
+   "section": "Bugün"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+   "clientW": 248,
+   "scrollW": 257,
+   "section": "Bugün"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+   "clientW": 240,
+   "scrollW": 257,
+   "section": "Bugün"
+  },
+  {
+   "text": "WO-2026-000007 · Strawberry Protein Mixi",
+   "clientW": 246,
+   "scrollW": 264,
+   "section": "Üretim hatları"
+  }
+ ],
+ "badges": [],
+ "money": [
+  {
+   "text": "₺2.678",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "start"
+  },
+  {
+   "text": "₺1.560.717,48",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.881,19",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.850,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.875,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺4.590,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺10.920,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺6.500,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺13.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "-₺254.348,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.250,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "€0,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "-₺255.598,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.109",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺1.100",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺0",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺0",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺3.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.282,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.100,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺27,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  }
+ ],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · G",
+  "Kritik stok yok",
+  "Satın alma siparişi oluştur",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 3,
+ "pageH": 3623,
+ "vpH": 844
+}

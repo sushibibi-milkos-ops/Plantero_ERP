@@ -1,0 +1,174 @@
+{
+ "as": "depo",
+ "vp": "1440x900",
+ "sections": [
+  {
+   "title": "Karantina",
+   "top": 276,
+   "h": 269,
+   "w": 568,
+   "rowCount": 4,
+   "rowH": [
+    44,
+    45,
+    45
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "SKT riski",
+   "top": 276,
+   "h": 331,
+   "w": 568,
+   "rowCount": 5,
+   "rowH": [
+    44,
+    45,
+    45
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Bugün",
+   "top": 623,
+   "h": 495,
+   "w": 1152,
+   "rowCount": 10,
+   "rowH": [
+    44,
+    45,
+    45
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [
+  {
+   "cols": "568px 568px",
+   "tops": [
+    {
+     "left": 264,
+     "bottom": 1118
+    },
+    {
+     "left": 848,
+     "bottom": 607
+    }
+   ],
+   "kids": [
+    {
+     "h": 269,
+     "left": 264,
+     "bottom": 545,
+     "label": "Karantina"
+    },
+    {
+     "h": 331,
+     "left": 848,
+     "bottom": 607,
+     "label": "SKT riski"
+    },
+    {
+     "h": 495,
+     "left": 264,
+     "bottom": 1118,
+     "label": "Bugün"
+    }
+   ]
+  }
+ ],
+ "truncated": [],
+ "badges": [],
+ "money": [
+  {
+   "text": "₺55.355",
+   "dec": false,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "start"
+  },
+  {
+   "text": "₺36.400,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.875,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺5.760,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺5.320,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.850,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.875,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺4.590,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺10.920,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺6.500,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺13.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  }
+ ],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · D",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 15,
+ "pageH": 1158,
+ "vpH": 900
+}

@@ -1,6 +1,6 @@
 {
  "module": "arge",
- "round": 2,
+ "round": 3,
  "updatedAt": "2026-09-06",
  "reference": {
   "linear": 57,
@@ -22,7 +22,7 @@
  ],
  "routes": {
   "/arge/projeler": {
-   "round": 2,
+   "round": 3,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -34,14 +34,14 @@
     5,
     5,
     5,
-    4,
+    5,
     5,
     5,
     5
    ],
-   "total": 58,
-   "winner": "Linear",
-   "scoreNotes": "Tur 2. Tur 1'in 6 bulgusu yeniden ölçüldü, hepsi KAPALI: satır 36px (rows.heights [36,36,36]), liste/kart görünüm seçici + arama + Durum filtresi + '3 kayıt' toolbar'ı var, kart içi kademe 3, meta ikonları 16px, EmptyState action bağlı. Delta gerekçeleri — c3 3→5 (DataTable liste varsayılan, 36px satır, taşma yok), c11 3→5 (/arge/receteler ile birebir aynı toolbar), c1 4→5 (içerik alanı 24/13/12/11 = 3 gövde kademesi + h1; kalan 10px/14px düğümler shell'den), c2 4→5 değil 4 (pt-2.5 düzeldi ama başlık+açıklama+filtre şeridi hâlâ üç ayrı satır, ilk satıra 168px), c10 4→5 (16px), c7 4→5 (EmptyState eylemi). c9 5→4 GERİLEME: tur 2'de eklenen liste/kart görünüm seçici 390px'te 32×32 (measure: touchTargetsBelow44 içinde 'Liste görünümü' + 'Kart görünümü').",
+   "total": 59,
+   "winner": "Plantero",
+   "scoreNotes": "Tur 3. Tur 2'nin tek P1'i (arge-projeler-07, görünüm seçici 390px'te 32×32) yeniden ölçüldü ve KAPALI: `pnpm measure /arge/projeler --viewport 390x844` → touchTargetsBelow44 = yalnızca etkileşimsiz breadcrumb span'i; liste/kart butonları listede yok. Delta: c9 4→5 (390px'te <44px etkileşimli hedef yok, overflowX=false, tek kolon kartlar 63.5px). Diğer 11 kriter değişmedi. c2=4 kalıyor: başlık + açıklama + filtre şeridi hâlâ üç ayrı satır; ilk tablo satırı viewport 238px (tur 2: 232px — iyileşme yok, 6px kötüleşme görünüm seçicinin üçüncü butonuyla ilgili değil, ölçüm gürültüsü sınırında). Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero.",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -69,20 +69,25 @@
      "24": 1
     },
     "touchTargetsBelow44_390": [
-     {
-      "sel": "button[aria-label='Liste görünümü']",
-      "w": 32,
-      "h": 32
-     },
-     {
-      "sel": "button[aria-label='Kart görünümü']",
-      "w": 32,
-      "h": 32
-     }
+     "span[data-slot=breadcrumb-page] 'Projeler' 47.8x19.5 (etkileşimsiz metin)"
     ],
     "distinctColors": 17,
-    "hasFilterBar": true,
-    "firstRowTop_contentOffset": 168
+    "firstRowTop_viewport": 238,
+    "firstRowTop_mainOffset": 190,
+    "birimMaliyetRenkleri": [
+     {
+      "t": "₺31,92",
+      "color": "oklch(0.72 0.17 70) = warning"
+     },
+     {
+      "t": "₺166,17",
+      "color": "oklch(0.21 0.006 285.9) = foreground"
+     },
+     {
+      "t": "₺103,41",
+      "color": "oklch(0.72 0.17 70) = warning"
+     }
+    ]
    },
    "open": [
     {
@@ -90,7 +95,7 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar içerik alanında 168px tüketiliyor (Linear başlığı, sayacı ve filtreyi tek satırda tutar). /arge/receteler ile aynı kalıp (arge-receteler-02).",
-     "measure": "tbody ilk satır top = 232px (viewport), üst bar 64px çıkınca içerik ofseti 168px",
+     "measure": "tbody ilk satır top = 238px (viewport), <main> üstünden ofset 190px (tur 2: 232px / 168px)",
      "target": "Başlık + '3 kayıt' + filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
      "openedRound": 2
@@ -197,26 +202,26 @@
    ]
   },
   "/arge/projeler/[id]/board": {
-   "round": 2,
+   "round": 3,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
     5,
     5,
-    4,
+    5,
+    5,
+    5,
+    5,
+    5,
     5,
     4,
-    5,
-    4,
-    5,
-    3,
     5,
     5,
     5
    ],
-   "total": 55,
-   "winner": "Linear",
-   "scoreNotes": "Tur 2. Tur 1'in 8 bulgusu yeniden ölçüldü: 01 KISMEN (sürükle tutamağı/kolon menüsü artık ≥44 — measure listesinde yok — ama 'Kart ekle' 6×36px, 'Kolon ekle' 40px, sekmeler 36px hâlâ <44), 02/03/04/05/06/07/08 KAPALI (kolon yükseklikleri hepsi 588, sekme etiketleri 'Pano'/'Deneme Reçeteleri', kolon 256px + mini-nav, kart sayaçları 11px tabular-nums, board-card 9/10px sıfırlandı). Delta gerekçeleri — c1 4→5 (board-card en küçük metin 11px; kalan 10px×2 shell'den), c2 4→5, c11 3→5 (dil birliği), c6 4→5, c10 4→5, c4 4→5. c3 3→4: kolonlar viewport'u dolduruyor ve 4 tam kolon görünüyor, AMA kolon gövdesi 498px iken kart yığını 48–212px → 278–450px boşluk; 390px'te ilk kolon boş, ilk ekranda 0 kart. c5 4→4: '+ Kart ekle' son karttan 278–450px aşağıda (Trello/Linear'da son kartın hemen altındadır). c9 3→3: 390px'te 10 etkileşimli hedef <44px VE board kapsayıcısı viewport'u 12px taşıyıp 'Kart ekle'yi sabit alt sekme çubuğunun altına sokuyor. c7 4→4: boş kolonun 498px'lik bırakma alanında hiçbir metin/ipucu yok.",
+   "total": 59,
+   "winner": "Plantero",
+   "scoreNotes": "Tur 3. Tur 2'de builder'ın kapattığı 6 bulgu (09/10/11/12/13/14) bağımsız olarak yeniden ölçüldü, hepsi KAPALI DOĞRULANDI: 390px'te document.scrollHeight 844 = innerHeight 844 (sayfa dikey taşması yok, 'Kart ekle' alt sekme çubuğunun altında değil), 'Kart ekle' 6/6 kolonda son karttan 8px sonra (tur 2: 278–450px), 390px'te 'Kart ekle' 44px / 'Kolon ekle' 44px / sekmeler 44px yükseklik, mount'ta kart taşıyan ilk kolona ('Formülasyon') kaydırma yapılıyor (scrollLeft=268, ilk boyamada 2 kart görünür), boş 'Fikir' kolonunda 'Kart yok — sürükleyip bırakın' ipucu var, mini-nav pilleri sayaçsız. Delta gerekçeleri — c3 4→5 ('Kart ekle' kart yığınının 8px ardında, kolon gövdesinin kalanı bilinçli bırakma bölgesi + ipuçlu; 1440px'te 4 tam + 1 kısmi kolon, 6 kartın 5'i ilk ekranda), c5 4→5 (buton kopukluğu bitti, mini-nav bilgi ikilemesi bitti), c7 4→5 (boş kolon ipucu + route loading.tsx iskeleti), c9 3→4 (10 hedef → 0 yükseklik ihlali, sayfa taşması yok; TEK kalan: 'Pano' sekmesi 31.3px GENİŞ — arge-board-15). Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero.",
    "measures": {
     "columnHeights_1440": [
      588,
@@ -226,68 +231,57 @@
      588,
      588
     ],
-    "columnBodyH_1440": 498,
-    "cardStackH_1440": [
+    "cardsPerColumn": [
      0,
-     212,
-     68,
-     64,
-     48,
-     113
+     2,
+     1,
+     1,
+     1,
+     1
     ],
     "gapLastCardToAddBtn_1440": [
      null,
-     278,
-     430,
-     434,
-     450,
-     386
+     8,
+     8,
+     8,
+     8,
+     8
     ],
+    "addBtnH_1440": 36,
+    "addBtnH_390": 44,
+    "bosKolonIpucu": "Fikir kolonu gövdesi: 'Kart yok — sürükleyip bırakın' (DOM metni doğrulandı)",
+    "miniNav": "6 pil, sayaç YOK (yalnız kolon adı); 390px'te pil yükseklikleri [44,44,44,44,44,44]",
     "scroller_1440": {
-     "h": 596,
-     "top": 268,
-     "bottom": 864,
      "scrollW": 1864,
      "clientW": 1152,
-     "deadBelow": 36
+     "h": 596,
+     "scrollLeft": 268
     },
-    "board390": {
-     "viewportH": 844,
-     "scrollerTop": 316,
-     "scrollerH": 540,
-     "scrollerBottom": 856,
-     "bottomNavTop": 787,
-     "addBtnTop": 799,
-     "addBtnHiddenUnderNav": true,
-     "docScrollH": 984,
-     "firstColumnCards": 0
+    "scroller_390": {
+     "scrollW": 1864,
+     "clientW": 358,
+     "h": 388,
+     "scrollLeft": 268
     },
-    "touchTargetsBelow44_390": 10,
-    "touchTargets_390_detay": [
+    "docScrollH_390": 844,
+    "innerH_390": 844,
+    "docScrollH_1440": 904,
+    "innerH_1440": 900,
+    "touchTargetsBelow44_390": [
      {
-      "sel": "Kart ekle ×6",
-      "w": 230,
-      "h": 36
-     },
-     {
-      "sel": "Kolon ekle",
-      "w": 256,
-      "h": 40
-     },
-     {
-      "sel": "sekme Pano",
+      "sel": "a 'Pano' (proje sekmesi)",
       "w": 31.3,
-      "h": 36
+      "h": 44
      },
      {
-      "sel": "sekme Deneme Reçeteleri",
-      "w": 117.4,
-      "h": 36
+      "sel": "breadcrumb span (etkileşimsiz)",
+      "w": 31.3,
+      "h": 19.5
      }
     ],
     "fontSizes_1440": {
      "10": 2,
-     "11": 30,
+     "11": 25,
      "12": 1,
      "13": 35,
      "14": 9,
@@ -295,10 +289,20 @@
      "18": 1,
      "24": 1
     },
-    "distinctColors": 18,
-    "mininavCount": 6
+    "distinctColors": 18
    },
-   "open": [],
+   "open": [
+    {
+     "id": "arge-board-15",
+     "criterion": 9,
+     "severity": "P2",
+     "text": "390px'te proje sekmesi 'Pano' 31.3px GENİŞ (yükseklik 44px doğru). Dokunma hedefi hem genişlik hem yükseklikte ≥44px olmalı; kısa etiketli sekme tek parmakla ıskalanabilir. Kardeş sekme 'Deneme Reçeteleri' 117px olduğu için sorun yalnız kısa etiketli sekmede.",
+     "measure": "pnpm measure /arge/projeler/<id>/board --viewport 390x844 → a 'Pano' 31.3×44; probe: tabs [{Pano 31×44},{Deneme Reçeteleri 117×44}]",
+     "target": "390px'te her sekme ≥44px genişlik (ör. `min-w-11` ya da mobilde `px-3`); measure touchTargetsBelow44 içinde etkileşimli sekme kalmayacak (etkileşimsiz breadcrumb span'i hariç)",
+     "file": "apps/web/src/modules/rnd/components/project-nav-tabs.tsx",
+     "openedRound": 3
+    }
+   ],
    "closed": [
     {
      "id": "arge-board-01",
@@ -493,28 +497,28 @@
    ]
   },
   "/arge/projeler/[id]/receteler": {
-   "round": 2,
+   "round": 3,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
     5,
     5,
+    5,
     4,
     4,
     5,
-    4,
-    5,
-    4,
     3,
+    5,
+    4,
     5,
     5,
     5
    ],
-   "total": 54,
+   "total": 55,
    "winner": "Linear",
-   "scoreNotes": "Tur 2. Tur 1'in 8 bulgusu yeniden ölçüldü, hepsi KAPALI: clippedInputs=[] (1440 ve 390), tr-TR virgül, borderedControlsInTable=0, hedef çubuğu 4px + bg oklab(.../0.7) + hedef işaretçisi + '%3 hedef üstü' rozeti, editable satır 39px, breadcrumb 'Deneme Reçeteleri', ikonlar 16px, space-y-6/p-4 + 'Kaydedilmemiş değişiklik' rozeti + satır altı 'Miktar gerekli'. Delta gerekçeleri — c1 4→5, c2 4→5, c5 3→5 (çerçeve çorbası bitti), c11 3→5, c10 4→5, c7 4→5 (dirty rozeti + satır bazlı hata), c3 3→4 (editable 39px ✓ ama devredilmiş/salt-okunur görünümde satır 43px, hedef ≤40), c4 5→4 ve c6 2→4 ve c8 4→4 aşağıdaki açık bulgular nedeniyle, c9 2→3 (kırpma bitti ama 390px'te tüm kontroller 32px).",
+   "scoreNotes": "Tur 3. Tur 2'de kapatılan 6 bulgu (09/10/11/12/13/14) yeniden ölçüldü, hepsi KAPALI DOĞRULANDI: 390px'te tablo/form kontrollerinin TAMAMI ≥44px (controlsBelow44=0), miktarlar 4 hanede hizalı ve birim kodu her satırda (KG/KG/KG/ADET/ADET/ADET), salt-okunur ve düzenlenebilir satır yükseklikleri aynı (39px). Delta gerekçeleri — c3 4→5 (39px satır, iki görünüm aynı ritim), c6 4→5 (sabit 4 hane + birim + tabular), c8 4→5 ([@media(hover:none)] taban kenarlığı dokunmatikte de görünür). AZALAN/AÇILAN: c7 5→3 — sayfanın BİRİNCİL paneli hidrasyondan sonra client'ta çekiliyor; 641ms–2339ms arası 194px'lik kutuda çıplak 'Yükleniyor…' spinner'ı duruyor, sonra panel 982px'e sıçrıyor (+788px, docH 871→1659); ne aria-busy ne de iskelet var (depoda components/data-table/skeleton.tsx ve route'un kendi loading.tsx'i varken). Kanıt: `pnpm shot` bile (aria-busy/skeleton bekleyen openRoute ile) masaüstü görüntüsünü spinner fazında yakaladı. c4 5→4 — aynı `overTarget` koşulu project-list.tsx'te text-warning, cost-simulator.tsx'te text-destructive; tek olgu iki tonda. c5 5→4 ve c9 3→4 — 390px'te malzeme tablosu min-w-[800px] ile 322px kabın içinde: 478px ve 6 sütunun 4'ü (tüm para sütunları) gizli. Toplam 55 < 57 → KAZANAN: Linear. Yakınsama (§7): 4 puanlı c4/c5/c9 için de ölçülebilir bulgu açıldı.",
    "measures": {
-    "rowHeights_editable_v1": [
+    "rowHeights_1440": [
      39,
      39,
      39,
@@ -522,60 +526,57 @@
      39,
      39
     ],
-    "rowHeights_readonly_v2": [
-     43,
-     43,
-     43,
-     43,
-     43,
-     43
+    "rowHeights_390": [
+     51,
+     51,
+     51,
+     51,
+     51,
+     51
     ],
-    "borderedControlsInTable": 0,
-    "clippedInputs_1440": [],
-    "clippedInputs_390": [],
-    "targetBar": {
-     "trackH": 4,
-     "trackW": 848,
-     "barW": 585,
-     "bg": "oklab(0.577 0.217711 0.112369 / 0.7)"
-    },
-    "deltaVsPrev": {
-     "text": "v1'e göre fark: -₺0,63",
-     "parentClass": "text-success",
-     "parentColor": "oklch(0.6 0.16 152)",
-     "renderedNumberColor": "oklch(0.577 0.245 27.3)",
-     "renderedNumberClass": "text-destructive"
-    },
-    "qtyColumn": [
-     "0,2",
-     "0,015",
-     "0,0015",
-     "1",
-     "1",
-     "1"
-    ],
-    "qtyUnitShown": false,
-    "controls390": {
-     "heights": [
-      32
+    "controlsBelow44_390": 0,
+    "tabloSarmalayici_390": {
+     "scrollW": 800,
+     "clientW": 322,
+     "hiddenPx": 478,
+     "gorunurBasliklar": [
+      "Ürün",
+      "Miktar"
      ],
-     "below44_readonly": 16,
-     "below44_editable": 40
+     "gizliBasliklar": [
+      "Maliyet kaynağı",
+      "Birim maliyet",
+      "Fire %",
+      "Satır maliyeti"
+     ],
+     "affordance": "scroll-fade-x var"
     },
-    "hoverMedia_390": false,
-    "restStateControlBorder_390": "1px rgba(0, 0, 0, 0)",
-    "restStateControlBg_390": "rgba(0, 0, 0, 0)",
-    "tableWrap_390": {
-     "scrollW": 760,
-     "clientW": 322
+    "tabloSarmalayici_1440": {
+     "scrollW": 880,
+     "clientW": 880,
+     "hiddenPx": 0
     },
-    "badgeAktif_390": {
-     "w": 55,
-     "h": 20
+    "yuklemeFazi_390": {
+     "busyBaslangic": "641ms",
+     "busyBitis": "2339ms",
+     "icerikHazir": "2569ms",
+     "spinnerPanelH": 194,
+     "icerikPanelH": 982,
+     "panelSicramasi": 788,
+     "docH": "871 → 1659",
+     "ariaBusy": false,
+     "skeleton": false
     },
+    "hedefUstuRenkleri": {
+     "/arge/projeler tablo": "oklch(0.72 0.17 70) = warning",
+     "bu sayfa hedef çubuğu ve tutar": "oklch(0.577 0.245 27.3) = destructive",
+     "/arge/receteler tablo": "oklch(0.21 0.006 285.9) = foreground (renk yok)"
+    },
+    "docScrollH_390": 1659,
+    "panelTop_390": "≈650px (ilk ekranın %77'si başlık+sekme+versiyon seçici)",
     "fontSizes_1440": {
      "10": 2,
-     "11": 32,
+     "11": 39,
      "12": 1,
      "13": 58,
      "14": 4,
@@ -585,7 +586,48 @@
     },
     "distinctColors": 21
    },
-   "open": [],
+   "open": [
+    {
+     "id": "arge-recete-15",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "Sayfanın birincil paneli (maliyet simülasyonu) sunucuda değil, hidrasyondan sonra client'ta bir server action ile çekiliyor; bu sürede 194px'lik kutuda çıplak 'Yükleniyor…' spinner'ı duruyor ve içerik gelince panel 982px'e sıçrıyor. Spinner ne `aria-busy` taşıyor ne de iskelet: depodaki `DataTableSkeleton` (gerçek satır yüksekliğiyle) ve route'un kendi `loading.tsx` iskeleti bu panelde kullanılmıyor. `pnpm shot` — ki openRoute'u aria-busy/skeleton kaybolana dek bekler — masaüstü görüntüsünü spinner fazında yakaladı (artifacts/screens/arge-projeler-3e6d916f-…-receteler/desktop.png).",
+     "measure": "390×844, navigasyon commit'inden itibaren örnekleme: busy=true 641ms→2339ms (1.70s), spinner panelH=194px, içerik panelH=982px (+788px sıçrama), document.scrollHeight 871→1659; hasSkeleton=false, aria-busy yok",
+     "target": "Yükleme durumu içerik ölçüsünde iskelet olsun ve `aria-busy` taşısın: panel yükseklik sıçraması ≤64px, `[aria-busy], [data-slot=\"skeleton\"], .animate-pulse` seçicisi yükleme fazında eşleşsin (böylece `pnpm shot`/`pnpm measure` spinner yakalayamasın). Tercihen ilk versiyon detayı sunucuda getirilip RecipeWorkspace'e prop olarak verilsin (client fetch yalnızca versiyon değişiminde).",
+     "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx:120-126 + apps/web/src/app/(app)/arge/projeler/[id]/receteler/page.tsx",
+     "openedRound": 3
+    },
+    {
+     "id": "arge-recete-16",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "390px'te malzeme tablosu `min-w-[800px]` ile 322px'lik kaba sıkıştırılıyor: 478px yatay taşma ve 6 sütunun 4'ü — 'Maliyet kaynağı', 'Birim maliyet', 'Fire %', 'Satır maliyeti' — ekran dışında. Yani maliyet simülasyonunun bütün PARA sütunları mobilde görünmüyor; ekranda yalnız 'Ürün' ve 'Miktar' var. Depodaki ortak DataTable aynı genişlikte mobil kart düzenine geçiyor (bkz. /arge/receteler 63.5px kartlar), bu tablo geçmiyor. scroll-fade-x ipucu var ama 2,5 kat taşmayı çözmüyor.",
+     "measure": "390×844: sarmalayıcı scrollWidth 800 / clientWidth 322 → 478px gizli; görünür başlıklar ['Ürün','Miktar'], gizli başlıklar ['Maliyet kaynağı','Birim maliyet','Fire %','Satır maliyeti']. 1440×900'de taşma yok (880/880).",
+     "target": "390px'te `wrap.scrollWidth ≤ wrap.clientWidth` ve gizli başlık sayısı 0: ≤640px'te `min-w-[800px]` bırakılıp satır başına yığılmış (etiket+değer) mobil düzene geçilsin (mobile-cards.tsx deseni) ya da en az 'Satır maliyeti' sabitlensin.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:324-325",
+     "openedRound": 3
+    },
+    {
+     "id": "arge-recete-17",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "Aynı olgu — 'birim maliyet hedefin üstünde' — Ar-Ge'nin üç ekranında üç ayrı tonda basılıyor: /arge/projeler tablosunda `text-warning` (turuncu), bu sayfada hedef çubuğu + tutar `text-destructive` (kırmızı), /arge/receteler tablosunda hiç renk yok. Kırmızı bu üründe hata/tehlike tonu (satır silme, 'Miktar gerekli'); %3 hedef aşımı bir uyarı, hata değil. Renk anlam taşımalı, ekrana göre değişmemeli.",
+     "measure": "Aynı ₺103,41 değerinin hesaplanmış rengi: /arge/projeler 'oklch(0.72 0.17 70)' (warning), bu sayfa hedef çubuğu tutarı 'oklch(0.577 0.245 27.3)' (destructive), /arge/receteler 'oklch(0.21 0.006 285.9)' (foreground). Kod: project-list.tsx:87,171 `overTarget && 'text-warning'` ↔ cost-simulator.tsx:242,249,258 `overTarget ? 'text-destructive' : 'text-success'`.",
+     "target": "Tek ton: `overTarget` her yerde warning (metin `text-warning`, çubuk `bg-warning/70`); destructive yalnız gerçek hata/yıkıcı eylemde kalsın. Ölçüt: aynı reçetenin birim maliyeti /arge/projeler ve bu sayfada AYNI computed color.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:242,249,258",
+     "openedRound": 3
+    },
+    {
+     "id": "arge-recete-18",
+     "criterion": 9,
+     "severity": "P2",
+     "text": "390px'te asıl içerik (maliyet paneli) ancak ~650px'te başlıyor: proje kodu + 2 satır açıklama + durum rozeti + sekmeler + reçete adı + 'Yeni deneme reçetesi' butonu + VERSİYONLAR listesi + 'Yeni versiyon' butonu ilk ekranın %77'sini yiyor. Mobilde versiyon seçici dikey liste yerine tek satırlık segment/dropdown olmalı.",
+     "measure": "390×844: panel yüksekliği 982px, document.scrollHeight 1659 → panel üst kenarı ≈650px (viewport 844'ün %77'si); ilk ekranda hiçbir maliyet satırı görünmüyor",
+     "target": "390px'te panelin üst kenarı ≤280px (versiyon seçici mobilde yatay segment/select; açıklama 1 satıra clamp)",
+     "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx:68-113",
+     "openedRound": 3
+    }
+   ],
    "closed": [
     {
      "id": "arge-recete-01",
@@ -780,7 +822,7 @@
    ]
   },
   "/arge/receteler": {
-   "round": 2,
+   "round": 3,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -790,48 +832,40 @@
     5,
     5,
     5,
-    4,
+    5,
     5,
     5,
     5,
     4,
     5
    ],
-   "total": 57,
+   "total": 58,
    "winner": "Plantero",
-   "scoreNotes": "Tur 2. arge-receteler-01 KAPALI (mobil kartta versiyon görünüyor). Ölçüm: satır 36px, mobil kart 64px, 390px'te <44px etkileşimli hedef YOK (yalnız breadcrumb metni, tıklanamaz), page overflowX=false, sağ hizalı tabular ₺, hairline ayraç, sessiz rozet. c11 4→4 (versiyon geldi ama mobil kartta ayraç boşluksuz basılıyor: 'Şekersiz Protein· v1' — kök neden ortak DataTable/MetaChain, shell'e yazıldı). c2=4 (başlık/açıklama/filtre üç satır, ilk satır ofseti 168px), c7=4 (DataTable boş durumunda eylem yok). Toplam 57 = referans 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 3. arge-receteler-03 (c7, boş durumda eylem yok) KAPALI: all-recipes-table.tsx:66 emptyAction bağlı ve DataTable (data-table.tsx:273) filtresiz boş durumda render ediyor → c7 4→5. Diğer ölçümler değişmedi: satır 36px, mobil kart 63.5px, 390px'te <44px etkileşimli hedef yok, overflowX=false, sağ hizalı tabular ₺. c11=4 KALIYOR: mobil kartta meta ayracının SOL boşluğu çöküyor ('Şekersiz Protein· v1'); kök neden ortak bileşen (data-table/mobile-cards.tsx:131) → shell'e yazıldı, arge'de tekrar açılmadı. c2=4 kalıyor (başlık/açıklama/filtre üç satır, ilk satır <main> ofseti 184px). Açık P0/P1 yok, toplam 58 ≥ 57 → KAZANAN: Plantero.",
    "measures": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "overflowX": false,
     "rowHeights_1440": [
      36,
      36,
      36
     ],
     "rowHeights_390": [
-     64,
-     64,
-     64
+     63.5,
+     63.5,
+     63.5
     ],
-    "scrollWidth": 1440,
-    "overflowX": false,
-    "touchTargetsBelow44_390_interactive": 0,
-    "fontSizes_1440": {
-     "10": 2,
-     "11": 5,
-     "12": 9,
-     "13": 37,
-     "14": 2,
-     "15": 1,
-     "18": 1,
-     "24": 1
-    },
-    "distinctColors": 21,
     "h1": "24px/600",
-    "firstRowTop_contentOffset": 168,
-    "mobilKartMeta": [
-     "Şekersiz Protein ⏎ · v1",
-     "Oat Barista v2 ⏎ · v2",
-     "Fıstık Bazı ⏎ · v1"
-    ]
+    "mobilH1": "20px/600",
+    "touchTargetsBelow44_390": [
+     "span[data-slot=breadcrumb-page] (etkileşimsiz)"
+    ],
+    "birimMaliyetRenkleri": "3/3 satır oklch(0.21 0.006 285.9) = foreground (renksiz)",
+    "firstRowTop_mainOffset": 184,
+    "emptyAction": "all-recipes-table.tsx:66 emptyAction=<Link /arge/projeler> — data-table.tsx:273 `action={filtered ? undefined : emptyAction}` ile filtresiz boş durumda render ediliyor",
+    "mobilKartAyraci": "' · ' span'ı 12px'te yalnız 6.8px geniş → SOL boşluk çöküyor; ekranda 'Şekersiz Protein· v1'",
+    "distinctColors": 21
    },
    "open": [
     {
@@ -839,7 +873,7 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar 168px dikey alan tüketiliyor.",
-     "measure": "tbody ilk satır top = 232px (viewport), içerik ofseti 168px (tur 1: 150px — iyileşme yok)",
+     "measure": "tbody ilk satır <main> üstünden 184px (tur 2: 168px ölçüsüyle aynı baz değil; viewport top 232px, değişmedi)",
      "target": "Başlık ile filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1
@@ -910,5 +944,6 @@
   "durationOver300ms": 0,
   "hoverGating": "Tailwind v4 hover: varyantı @media (hover:hover) ile korunuyor — ÖLÇÜLDÜ (390px'te matchMedia('(hover:hover)').matches=false).",
   "notes": "Tur 2: rnd modülünde transition:all / ease-in / scale(0) / >300ms süre YOK. Kanban: motion layout spring 0.35s bounce 0.15, DragOverlay dropAnimation 220ms cubic-bezier(0.23,1,0.32,1) — kesilebilir, transform-origin hatası yok, klavye aksiyonu (N kısayolu) animasyona bağlı değil. TEK kod düzeyi kusur animasyon değil ETKİLEŞİM: cost-simulator.tsx tablo kontrollerinde affordance yalnız `hover:border-input` ile veriliyor; hover varyantı @media (hover:hover) altında olduğundan dokunmatikte hiç uygulanmıyor (arge-recete-10)."
- }
+ },
+ "projectIdUsed": "3e6d916f-0151-42b8-a051-376b9200fa87 (RD-2026-000003 Oat Barista v2) — tur 1-2 kullanılan fe7c28be… artık yok (DB yeniden seed edildi); kolon/kart dağılımı aynı (Fikir 0, Formülasyon 2, diğerleri 1)."
 }

@@ -1,0 +1,333 @@
+{
+ "as": "muhasebe",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Banka",
+   "top": 256,
+   "h": 222,
+   "w": 358,
+   "rowCount": 3,
+   "rowH": [
+    44,
+    44,
+    44
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Mutabakat kuyruğu",
+   "top": 494,
+   "h": 398,
+   "w": 358,
+   "rowCount": 8,
+   "rowH": [
+    44,
+    44,
+    44
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Bugünün tahsilatları",
+   "top": 908,
+   "h": 270,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 1194,
+   "h": 423,
+   "w": 358,
+   "rowCount": 4,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "KDV pozisyonu",
+   "top": 1633,
+   "h": 167,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Nakit projeksiyonu (3 ay)",
+   "top": 1816,
+   "h": 123,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 1954,
+   "h": 164,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [],
+ "truncated": [
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü",
+   "clientW": 231,
+   "scrollW": 331,
+   "section": "Mutabakat kuyruğu"
+  }
+ ],
+ "badges": [],
+ "money": [
+  {
+   "text": "-₺254.348,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.250,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "€0,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "-₺255.598,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "-₺54.900,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺5.000,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺5.000,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺5.000,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "-₺450,75",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.109",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺1.100",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺0",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺0",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺3.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.282,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.100,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺27,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺0",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺443",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺35.080",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "₺33.278",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "kapanış ₺33.278",
+   "dec": false,
+   "fs": "10px",
+   "fvn": "normal",
+   "align": "center"
+  },
+  {
+   "text": "₺32.340",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "kapanış ₺65.618",
+   "dec": false,
+   "fs": "10px",
+   "fvn": "normal",
+   "align": "center"
+  },
+  {
+   "text": "₺31.227",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "center"
+  },
+  {
+   "text": "kapanış ₺96.845",
+   "dec": false,
+   "fs": "10px",
+   "fvn": "normal",
+   "align": "center"
+  },
+  {
+   "text": "₺1.560.717,48",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.881,19",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  }
+ ],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · M",
+  "Bugün tahsilat yok",
+  "Tahsilat kaydet",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 10,
+ "pageH": 2246,
+ "vpH": 844
+}

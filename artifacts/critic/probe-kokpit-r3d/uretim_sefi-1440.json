@@ -1,0 +1,176 @@
+{
+ "as": "uretim_sefi",
+ "vp": "1440x900",
+ "sections": [
+  {
+   "title": "Hat durumu",
+   "top": 276,
+   "h": 266,
+   "w": 568,
+   "rowCount": 3,
+   "rowH": [
+    72.5,
+    73.5,
+    73.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Fire kırılımı (7 gün)",
+   "top": 558,
+   "h": 258,
+   "w": 568,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son iş emirleri",
+   "top": 276,
+   "h": 405,
+   "w": 568,
+   "rowCount": 8,
+   "rowH": [
+    44,
+    45,
+    45
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son duruşlar",
+   "top": 697,
+   "h": 208,
+   "w": 568,
+   "rowCount": 4,
+   "rowH": [
+    39.5,
+    40.5,
+    41
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [
+  {
+   "cols": "568px 568px",
+   "tops": [
+    {
+     "left": 264,
+     "bottom": 815
+    },
+    {
+     "left": 848,
+     "bottom": 905
+    }
+   ],
+   "kids": [
+    {
+     "h": 539,
+     "left": 264,
+     "bottom": 815,
+     "label": "Hat durumu"
+    },
+    {
+     "h": 629,
+     "left": 848,
+     "bottom": 905,
+     "label": "Son iş emirleri"
+    }
+   ]
+  }
+ ],
+ "truncated": [
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 128,
+   "scrollW": 146,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Toz Karıştırma & Dolum",
+   "clientW": 128,
+   "scrollW": 132,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Strawberry Protein Mixi",
+   "clientW": 111,
+   "scrollW": 144,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Toz Karıştırma & Dolum",
+   "clientW": 128,
+   "scrollW": 132,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Plantero Guatemala Huehuetenango Kahve",
+   "clientW": 130,
+   "scrollW": 263,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 128,
+   "scrollW": 146,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Saşe / Stick Toz Dolum",
+   "clientW": 128,
+   "scrollW": 130,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Oat Coffee Creamer",
+   "clientW": 97,
+   "scrollW": 123,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Toz Karıştırma & Dolum",
+   "clientW": 128,
+   "scrollW": 132,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 128,
+   "scrollW": 146,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "%100 Oat Spredable",
+   "clientW": 105,
+   "scrollW": 126,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 128,
+   "scrollW": 146,
+   "section": "Son iş emirleri"
+  }
+ ],
+ "badges": [],
+ "money": [],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · Ü",
+  "Son 7 günde fire kaydı yok",
+  "İş emirlerini gör",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 15,
+ "pageH": 945,
+ "vpH": 900
+}

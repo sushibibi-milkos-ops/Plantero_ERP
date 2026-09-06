@@ -1,0 +1,186 @@
+{
+ "as": "satis",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Kanal ciro (bugün)",
+   "top": 256,
+   "h": 101,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Satış hunisi",
+   "top": 373,
+   "h": 172,
+   "w": 358,
+   "rowCount": 4,
+   "rowH": [
+    16,
+    16,
+    16
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "En çok satan 5 (son 30 gün)",
+   "top": 561,
+   "h": 365,
+   "w": 358,
+   "rowCount": 5,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son siparişler",
+   "top": 942,
+   "h": 700,
+   "w": 358,
+   "rowCount": 10,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [],
+ "truncated": [],
+ "badges": [],
+ "money": [
+  {
+   "text": "₺2.678",
+   "dec": false,
+   "fs": "15px",
+   "fvn": "tabular-nums",
+   "align": "start"
+  },
+  {
+   "text": "₺17.100,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺16.932,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺16.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺13.587,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺12.181,50",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺72,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺216,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺16.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺2.277,23",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.714,90",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.021,14",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺2.593,61",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺4.178,76",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺1.659,95",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺14.250,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  }
+ ],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · S",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 8,
+ "pageH": 1770,
+ "vpH": 844
+}

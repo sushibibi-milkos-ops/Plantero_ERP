@@ -746,6 +746,24 @@
     }
    ],
    "open": []
+  },
+  "DataTable mobil kart meta zinciri — ayraç sol boşluğu (tüm modüller, 390px)": {
+   "round": 3,
+   "reference": "linear",
+   "referenceTotal": 57,
+   "open": [
+    {
+     "id": "shell-mobile-card-meta-sep-space-01",
+     "criterion": 11,
+     "severity": "P2",
+     "text": "[Ar-Ge tur 3 tespiti — ortak bileşen] Mobil kart meta zincirinin ayraç span'ı `<span aria-hidden className=\"text-muted-foreground/40\"> · </span>` (mobile-cards.tsx:131) bir flex öğesi olarak basıldığı için BAŞTAKİ boşluk CSS beyaz-boşluk işlemesiyle çöküyor; ekranda alt başlığa yapışık '… Protein· v1' görünüyor. Sağdaki boşluk duruyor, soldaki yok — asimetrik ayraç. /arge/receteler mobil kartlarında 3/3 kartta görünür; aynı bileşeni kullanan tüm modülleri etkiler.",
+     "measure": "390×844 /arge/receteler: ayraç span'ının textContent'i \" · \" ama getBoundingClientRect().width = 6.8px (12px Inter'de \" · \" ≈ 10.3px olmalı; 6.8 ≈ '·' + TEK boşluk). Ekran görüntüsü: 'Şekersiz Protein· v1', 'Oat Barista v2· v2', 'Fıstık Bazı· v1'.",
+     "target": "Ayracın iki yanındaki boşluk eşit: metin boşluğu yerine CSS ile (ör. ayraç span'ına `mx-1` / kapsayıcıya `gap-1`) verilsin. Ölçüt: 390px'te ayraç span'ı ile solundaki metin kutusu arası ≥3px ve sağındakiyle eşit (±1px); ayraç span genişliği ≥10px.",
+     "file": "apps/web/src/components/data-table/mobile-cards.tsx:131",
+     "openedRound": 3
+    }
+   ],
+   "closed": []
   }
  },
  "measuredAt": "2026-09-06T09:44:55Z"

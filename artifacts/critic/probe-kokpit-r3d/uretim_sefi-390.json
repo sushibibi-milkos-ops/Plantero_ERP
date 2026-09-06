@@ -1,0 +1,118 @@
+{
+ "as": "uretim_sefi",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Hat durumu",
+   "top": 256,
+   "h": 242,
+   "w": 358,
+   "rowCount": 3,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Fire kırılımı (7 gün)",
+   "top": 514,
+   "h": 289,
+   "w": 358,
+   "rowCount": 0,
+   "rowH": null,
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son iş emirleri",
+   "top": 819,
+   "h": 569,
+   "w": 358,
+   "rowCount": 8,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Son duruşlar",
+   "top": 1404,
+   "h": 208,
+   "w": 358,
+   "rowCount": 4,
+   "rowH": [
+    39.5,
+    40.5,
+    41
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [],
+ "truncated": [
+  {
+   "text": "WO-2026-000007 · Strawberry Protein Mixi",
+   "clientW": 246,
+   "scrollW": 264,
+   "section": "Hat durumu"
+  },
+  {
+   "text": "WO-2026-000008",
+   "clientW": 80,
+   "scrollW": 101,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "WO-2026-000007",
+   "clientW": 94,
+   "scrollW": 101,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "WO-2026-000004",
+   "clientW": 98,
+   "scrollW": 101,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "WO-2026-000003",
+   "clientW": 96,
+   "scrollW": 101,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "WO-2026-000002",
+   "clientW": 82,
+   "scrollW": 101,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "WO-2026-000001",
+   "clientW": 82,
+   "scrollW": 101,
+   "section": "Son iş emirleri"
+  }
+ ],
+ "badges": [],
+ "money": [],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · Ü",
+  "Son 7 günde fire kaydı yok",
+  "İş emirlerini gör",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 3,
+ "pageH": 1739,
+ "vpH": 844
+}

@@ -1,0 +1,177 @@
+{
+ "as": "depo",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Karantina",
+   "top": 256,
+   "h": 345,
+   "w": 358,
+   "rowCount": 4,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "SKT riski",
+   "top": 617,
+   "h": 490,
+   "w": 358,
+   "rowCount": 5,
+   "rowH": [
+    63.5,
+    64.5,
+    64.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  },
+  {
+   "title": "Bugün",
+   "top": 1123,
+   "h": 700,
+   "w": 358,
+   "rowCount": 10,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "empty": false,
+   "emptyH": 0,
+   "emptyAction": false
+  }
+ ],
+ "columns": [],
+ "truncated": [
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd.",
+   "clientW": 248,
+   "scrollW": 277,
+   "section": "Bugün"
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd.",
+   "clientW": 248,
+   "scrollW": 277,
+   "section": "Bugün"
+  },
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü",
+   "clientW": 248,
+   "scrollW": 331,
+   "section": "Bugün"
+  },
+  {
+   "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+   "clientW": 240,
+   "scrollW": 242,
+   "section": "Bugün"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+   "clientW": 248,
+   "scrollW": 257,
+   "section": "Bugün"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri ",
+   "clientW": 240,
+   "scrollW": 257,
+   "section": "Bugün"
+  }
+ ],
+ "badges": [],
+ "money": [
+  {
+   "text": "₺55.355",
+   "dec": false,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "start"
+  },
+  {
+   "text": "₺36.400,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.875,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺5.760,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺5.320,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺3.850,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺7.875,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺4.590,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺10.920,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺6.500,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  },
+  {
+   "text": "₺13.800,00",
+   "dec": true,
+   "fs": "13px",
+   "fvn": "tabular-nums",
+   "align": "right"
+  }
+ ],
+ "px14": [
+  "6 Eylül 2026 · Tire tesisi · D",
+  "Sayfa ara veya hızlı eylem çal"
+ ],
+ "foldRows": 5,
+ "pageH": 1951,
+ "vpH": 844
+}
