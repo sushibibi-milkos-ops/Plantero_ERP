@@ -6,9 +6,12 @@ import { cn } from '@/lib/utils';
 
 export function ProjectNavTabs({ projectId }: { projectId: string }) {
   const pathname = usePathname();
+  // Etiketler breadcrumb (nav.ts SUBPATH_LABELS) ve sidebar (NAV) ile BİREBİR aynı olmalı — 'Board'
+  // (İngilizce) ve küçük harfli 'Deneme reçeteleri' aynı ekranın iki farklı adı gibi duruyordu
+  // (Tur 1 P1 arge-board-03).
   const tabs = [
-    { href: `/arge/projeler/${projectId}/board`, label: 'Board' },
-    { href: `/arge/projeler/${projectId}/receteler`, label: 'Deneme reçeteleri' },
+    { href: `/arge/projeler/${projectId}/board`, label: 'Pano' },
+    { href: `/arge/projeler/${projectId}/receteler`, label: 'Deneme Reçeteleri' },
   ];
   return (
     <div className="flex gap-5 border-b border-border/60">

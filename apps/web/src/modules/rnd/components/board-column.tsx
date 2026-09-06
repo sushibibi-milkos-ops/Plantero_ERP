@@ -30,13 +30,21 @@ export function BoardColumn({
     <div
       ref={setNodeRef}
       style={style}
-      className={cn('flex w-72 shrink-0 snap-start flex-col rounded-xl border border-border/60 bg-muted/30', isDragging && 'opacity-50')}
+      className={cn('flex h-full w-64 shrink-0 snap-start flex-col rounded-xl border border-border/60 bg-muted/30', isDragging && 'opacity-50')}
     >
-      <div className="flex items-center gap-1.5 px-2.5 py-2">
-        <button {...attributes} {...listeners} type="button" className="grid size-6 shrink-0 cursor-grab place-items-center rounded text-muted-foreground/60 hover:bg-muted hover:text-muted-foreground active:cursor-grabbing" aria-label="Kolonu sürükle">
-          <GripVertical className="size-3.5" />
+      <div className="flex items-center gap-2 px-3 py-2">
+        {/* size-11 md:size-6: mobilde gerçek 44×44 dokunma hedefi, masaüstünde eski kompakt boyut
+            (Tur 1 P1 arge-board-01) — data-table/row-actions.tsx ile aynı desen. */}
+        <button
+          {...attributes}
+          {...listeners}
+          type="button"
+          className="grid size-11 shrink-0 cursor-grab place-items-center rounded text-muted-foreground/60 hover:bg-muted hover:text-muted-foreground active:cursor-grabbing md:size-6"
+          aria-label="Kolonu sürükle"
+        >
+          <GripVertical className="size-4" />
         </button>
-        {column.isDone ? <CheckCircle2 className="size-3.5 shrink-0 text-success" /> : null}
+        {column.isDone ? <CheckCircle2 className="size-4 shrink-0 text-success" /> : null}
         <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{column.name}</span>
         <span className={cn('shrink-0 rounded-full px-1.5 py-px text-[11px] tabular-nums', atLimit ? 'bg-warning/15 text-[oklch(0.5_0.14_70)] dark:text-warning' : 'bg-muted text-muted-foreground')}>
           {cards.length}{column.wipLimit != null ? `/${column.wipLimit}` : ''}
@@ -44,10 +52,12 @@ export function BoardColumn({
         <ColumnMenu column={column} projectId={projectId} />
       </div>
 
+      {/* min-h-52 (208px): boş kolonun bırakma alanı — eskiden min-h-16 (64px) sürükleyip bırakmak
+          için görsel/hedef olarak çok dardı (Tur 1 P1 arge-board-02). flex-1: kolon `h-full` olduğundan
+          gövde kalan tüm dikey alanı kaplar → tüm kolonlar eşit yükseklikte görünür. */}
       <div
         ref={setDropRef}
-        className={cn('min-h-16 flex-1 space-y-1.5 overflow-y-auto rounded-lg px-2 pb-1.5 transition-colors duration-150', isOver && 'bg-primary/5')}
-        style={{ maxHeight: 'min(600px, calc(100dvh - 20rem))' }}
+        className={cn('min-h-52 flex-1 space-y-2 overflow-y-auto rounded-lg px-3 pb-2 transition-colors duration-150', isOver && 'bg-primary/5')}
       >
         <SortableContext items={cards.map((c) => c.id)} strategy={verticalListSortingStrategy}>
           {cards.map((c) => (
@@ -56,7 +66,7 @@ export function BoardColumn({
         </SortableContext>
       </div>
 
-      <div className="px-2 pb-2">
+      <div className="px-3 pb-3">
         <Button
           type="button"
           variant="ghost"
@@ -66,7 +76,7 @@ export function BoardColumn({
           title={atLimit ? `WIP limiti (${column.wipLimit}) doldu` : undefined}
           onClick={() => onAddCard(column.id)}
         >
-          <Plus className="size-3.5" /> Kart ekle
+          <Plus className="size-4" /> Kart ekle
         </Button>
       </div>
     </div>

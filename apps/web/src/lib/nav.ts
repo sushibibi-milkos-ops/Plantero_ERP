@@ -329,6 +329,9 @@ export const SUBPATH_LABELS: Record<string, string> = {
   topla: 'Toplama',
   cariler: 'Cariler',
   ekstre: 'Ekstre',
+  // Ar-Ge proje sekmesi ham slug'ı ('receteler') breadcrumb'a sızıyordu (Tur 1 P1 arge-recete-06) —
+  // sekme etiketiyle (ProjectNavTabs) birebir aynı metin.
+  receteler: 'Deneme Reçeteleri',
 };
 
 /** İstemci tarafı izin denetleyicisi: admin rolü her şeyi görür, `*` joker izindir */

@@ -30,14 +30,14 @@ export function NewColumnInline({ projectId }: { projectId: string }) {
 
   if (!editing) {
     return (
-      <Button type="button" variant="ghost" className="h-10 w-72 shrink-0 justify-start border border-dashed border-border/60 text-muted-foreground" onClick={() => setEditing(true)}>
+      <Button type="button" variant="ghost" className="h-10 w-64 shrink-0 justify-start border border-dashed border-border/60 text-muted-foreground" onClick={() => setEditing(true)}>
         <Plus className="size-4" /> Kolon ekle
       </Button>
     );
   }
 
   return (
-    <div className="w-72 shrink-0 space-y-2 rounded-xl border border-border/60 bg-muted/30 p-2.5">
+    <div className="w-64 shrink-0 space-y-2 rounded-xl border border-border/60 bg-muted/30 p-2.5">
       <Input
         autoFocus
         value={name}

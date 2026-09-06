@@ -41,29 +41,30 @@ export function BoardCard({ card, onOpen, dragging = false }: { card: BoardCardR
       {card.labels.length > 0 ? (
         <div className="mb-1.5 flex flex-wrap gap-1">
           {card.labels.map((l) => (
-            <span key={l} className={cn('rounded px-1.5 py-0.5 text-[10px] font-medium', labelClass(l))}>{l}</span>
+            <span key={l} className={cn('rounded px-1.5 py-0.5 text-[11px] font-medium', labelClass(l))}>{l}</span>
           ))}
         </div>
       ) : null}
       <p className="text-[13px] leading-snug font-medium text-foreground">{card.title}</p>
       {card.trialVersionLabel ? (
         <span className="mt-1.5 inline-flex items-center gap-1 rounded bg-primary/10 px-1.5 py-0.5 text-[11px] text-primary">
-          <FlaskConical className="size-3" /> {card.trialVersionLabel}
+          <FlaskConical className="size-4" /> {card.trialVersionLabel}
         </span>
       ) : null}
-      <div className="mt-2 flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
+      {/* Sayaç/tarih: tek kademe (11px) + tabular-nums (Tur 1 P1 arge-board-05/07) */}
+      <div className="mt-2 flex items-center justify-between gap-2 text-[11px] text-muted-foreground tabular-nums">
         <div className="flex flex-wrap items-center gap-2.5">
           {card.dueDate ? <span className={cn(overdue && 'font-medium text-destructive')}>{formatDate(card.dueDate)}</span> : null}
           {card.checklistTotal > 0 ? (
             <span className={cn('inline-flex items-center gap-1', card.checklistDone === card.checklistTotal && 'text-success')}>
-              <CheckSquare className="size-3" /> {card.checklistDone}/{card.checklistTotal}
+              <CheckSquare className="size-4" /> {card.checklistDone}/{card.checklistTotal}
             </span>
           ) : null}
-          {card.commentCount > 0 ? <span className="inline-flex items-center gap-1"><MessageSquare className="size-3" /> {card.commentCount}</span> : null}
-          {card.attachmentCount > 0 ? <span className="inline-flex items-center gap-1"><Paperclip className="size-3" /> {card.attachmentCount}</span> : null}
+          {card.commentCount > 0 ? <span className="inline-flex items-center gap-1"><MessageSquare className="size-4" /> {card.commentCount}</span> : null}
+          {card.attachmentCount > 0 ? <span className="inline-flex items-center gap-1"><Paperclip className="size-4" /> {card.attachmentCount}</span> : null}
         </div>
         {card.assigneeName ? (
-          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-muted text-[9px] font-medium text-foreground/80" title={card.assigneeName}>
+          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-muted text-[11px] font-medium text-foreground/80" title={card.assigneeName}>
             {initials(card.assigneeName)}
           </span>
         ) : null}

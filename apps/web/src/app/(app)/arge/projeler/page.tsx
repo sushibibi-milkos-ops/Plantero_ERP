@@ -11,15 +11,16 @@ export const dynamic = 'force-dynamic';
 export default async function RndProjectsPage() {
   const user = await requirePermission('rnd.view');
   const [projects, productOptions] = await Promise.all([listProjects(), listManufacturableProductOptions()]);
+  const canManage = userCan(user, 'rnd.manage');
 
   return (
     <>
       <PageHeader
         title="Ar-Ge Projeleri"
         description={`${projects.length} proje — Trello mantığı kanban board, versiyonlu deneme reçetesi ve canlı maliyet simülasyonu`}
-        actions={userCan(user, 'rnd.manage') ? <NewProjectDialog productOptions={productOptions} /> : undefined}
+        actions={canManage ? <NewProjectDialog productOptions={productOptions} /> : undefined}
       />
-      <ProjectList projects={projects} />
+      <ProjectList projects={projects} canManage={canManage} productOptions={productOptions} />
     </>
   );
 }

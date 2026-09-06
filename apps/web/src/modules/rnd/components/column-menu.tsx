@@ -54,16 +54,18 @@ export function ColumnMenu({ column, projectId }: { column: BoardColumnRow; proj
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon-xs" className="text-muted-foreground" aria-label="Kolon menüsü">
-            <MoreHorizontal className="size-3.5" />
+          {/* size-11 md:size-6: data-table/row-actions.tsx ile aynı desen — mobilde gerçek 44×44
+              dokunma hedefi, masaüstünde eski kompakt boyut (Tur 1 P1 arge-board-01). */}
+          <Button variant="ghost" size="icon-xs" className="size-11 md:size-6 text-muted-foreground" aria-label="Kolon menüsü">
+            <MoreHorizontal className="size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem onSelect={() => setRenameOpen(true)}><Pencil className="size-3.5" /> Yeniden adlandır</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setWipOpen(true)}><Gauge className="size-3.5" /> WIP limiti</DropdownMenuItem>
-          <DropdownMenuItem onSelect={toggleDone}><CheckCircle2 className="size-3.5" /> {column.isDone ? '"Tamamlandı" işaretini kaldır' : '"Tamamlandı" olarak işaretle'}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setRenameOpen(true)}><Pencil className="size-4" /> Yeniden adlandır</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setWipOpen(true)}><Gauge className="size-4" /> WIP limiti</DropdownMenuItem>
+          <DropdownMenuItem onSelect={toggleDone}><CheckCircle2 className="size-4" /> {column.isDone ? '"Tamamlandı" işaretini kaldır' : '"Tamamlandı" olarak işaretle'}</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" onSelect={() => setDeleteOpen(true)}><Trash2 className="size-3.5" /> Kolonu sil</DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" onSelect={() => setDeleteOpen(true)}><Trash2 className="size-4" /> Kolonu sil</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

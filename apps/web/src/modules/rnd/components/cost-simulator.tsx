@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -9,12 +9,13 @@ import { Trash2, Loader2, Save, Send, Rocket, FlaskConical, Wand2 } from 'lucide
 import { D } from '@plantero/core/money';
 import { computeTrialCost } from '@plantero/core/rnd/costFormula';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Combobox } from '@/components/form/combobox';
+import { NumberInput } from '@/components/form/number-input';
 import { MoneyCell } from '@/components/money-cell';
 import { StatusBadge } from '@/components/status-badge';
+import { formatQty } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { updateVersionDraftAction, submitForApprovalAction, releaseToBomAction, resolveLineCostAction, linkProductToProjectAction } from '../actions';
 import { TRIAL_STATUS_LABELS, COST_SOURCE_OPTIONS, COST_SOURCE_LABELS } from '../labels';
@@ -167,32 +168,43 @@ export function CostSimulator({
 
   const status = TRIAL_STATUS_LABELS[detail.version.status] ?? { label: detail.version.status, tone: 'muted' as const };
   const targetCost = detail.targetUnitCost ? D(detail.targetUnitCost) : null;
+  // targetRatio: hedefe göre YÜZDE (100 = tam hedefte) — UNCAPPED, sapma rozetinde gerçek değeri gösterir.
+  const targetRatio = targetCost && targetCost.gt(0) ? computation.unitCost.div(targetCost).mul(100) : null;
   const overTarget = targetCost && computation.unitCost.gt(targetCost);
-  const barPct = targetCost && targetCost.gt(0) ? Math.min(150, computation.unitCost.div(targetCost).mul(100).toNumber()) : null;
+  // Çubuk 0–150% hedef aralığını temsil eder (150 = hedefin %50 üstü) — 100 noktası işaretçiyle
+  // gösterilir, dolgu bu ölçeğe göre orantılanır (Tur 1 P1 arge-recete-04: eskiden barPct 100'de
+  // tavanlanıp dolgu HER ZAMAN konteynerin %100'ünü kaplıyordu, sapma miktarı görünmüyordu).
+  const barScaleMax = 150;
+  const barFillPct = targetRatio ? Math.min(100, Math.max(0, (targetRatio.toNumber() / barScaleMax) * 100)) : 0;
+  const barTargetMarkerPct = (100 / barScaleMax) * 100;
   const deltaVsPrev = detail.previousVersion ? computation.unitCost.minus(D(detail.previousVersion.unitCost)) : null;
+  const dirty = editable && form.formState.isDirty;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <h2 className="text-[15px] font-semibold">v{detail.version.version}</h2>
           <StatusBadge status={detail.version.status} label={status.label} tone={status.tone} />
           {detail.hasPendingApproval ? <StatusBadge status="pending" label="Onay bekliyor" tone="warning" /> : null}
+          {/* Kaydedilmemiş değişiklik göstergesi — eskiden yalnızca kaydettikten sonra toast vardı,
+              form kirliyken hiçbir görsel ipucu yoktu (Tur 1 P1 arge-recete-08). */}
+          {dirty ? <StatusBadge status="dirty" label="Kaydedilmemiş değişiklik" tone="warning" dot /> : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {editable ? (
             <Button size="sm" variant="outline" onClick={save} disabled={pending}>
-              {pending ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />} Kaydet
+              {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />} Kaydet
             </Button>
           ) : null}
           {editable && !detail.hasPendingApproval ? (
             <Button size="sm" onClick={submitApproval} disabled={pending}>
-              <Send className="size-3.5" /> Onaya gönder
+              <Send className="size-4" /> Onaya gönder
             </Button>
           ) : null}
           {canRelease && detail.version.status === 'approved' ? (
             <Button size="sm" onClick={release} disabled={pending} className="bg-primary">
-              <Rocket className="size-3.5" /> Üretim BOM&apos;una devret
+              <Rocket className="size-4" /> Üretim BOM&apos;una devret
             </Button>
           ) : null}
         </div>
@@ -207,32 +219,50 @@ export function CostSimulator({
       {showLinkProduct ? (
         <div className="space-y-2 rounded-lg border border-warning/40 bg-warning/10 p-3">
           <p className="text-[13px] font-medium">Proje bir ürüne bağlı değil</p>
-          <p className="text-[12px] text-muted-foreground">Devretmeden önce mevcut bir SKU seçin ya da Ana Veri sihirbazından yeni bir SKU oluşturun.</p>
+          <p className="text-[11px] text-muted-foreground">Devretmeden önce mevcut bir SKU seçin ya da Ana Veri sihirbazından yeni bir SKU oluşturun.</p>
           <div className="flex flex-wrap items-center gap-2">
             <Combobox value={linkProductId} onChange={setLinkProductId} options={manufacturableOptions} placeholder="Mevcut ürün seçin…" clearable={false} className="h-8 min-w-56" />
             <Button size="sm" onClick={linkProduct} disabled={!linkProductId || pending}>Bağla</Button>
-            <Button size="sm" variant="outline" asChild><Link href="/ana-veri/urunler/yeni"><Wand2 className="size-3.5" /> Yeni SKU oluştur</Link></Button>
+            <Button size="sm" variant="outline" asChild><Link href="/ana-veri/urunler/yeni"><Wand2 className="size-4" /> Yeni SKU oluştur</Link></Button>
           </div>
         </div>
       ) : null}
 
-      {/* Hedef maliyet karşılaştırma çubuğu */}
+      {/* Hedef maliyet karşılaştırma çubuğu — kök neden düzeltmesi (Tur 1 P1 arge-recete-04): 8px
+          tam-doygun kırmızı çubuk ekranın en baskın öğesiydi ve tek taşıdığı bilgi (üstünde/altında)
+          zaten metinle de anlatılabiliyordu. Artık 4px, yarı saydam dolgu, hedef noktasında işaretçi
+          + "%N hedef üstü/altında" rozetiyle sapma sayısallaştırılıyor. */}
       {targetCost ? (
-        <div className="space-y-1.5 rounded-lg border border-border/60 p-3">
-          <div className="flex items-center justify-between text-[12px]">
+        <div className="space-y-2 rounded-lg border border-border/60 p-4">
+          <div className="flex items-center justify-between text-[11px]">
             <span className="text-muted-foreground">Hedef maliyete göre</span>
             <span className={cn('font-mono font-medium tabular-nums', overTarget ? 'text-destructive' : 'text-success')}>
               <MoneyCell value={computation.unitCost.toFixed(4)} digits={2} /> / <MoneyCell value={targetCost.toFixed(4)} digits={2} muted />
             </span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div className={cn('h-full transition-[width] duration-200 ease-out', overTarget ? 'bg-destructive' : 'bg-success')} style={{ width: `${Math.min(100, barPct ?? 0)}%` }} />
+          <div className="relative">
+            <div className="h-1 overflow-hidden rounded-full bg-muted">
+              <div
+                className={cn('h-full rounded-full transition-[width] duration-200 ease-out', overTarget ? 'bg-destructive/70' : 'bg-success/70')}
+                style={{ width: `${barFillPct}%` }}
+              />
+            </div>
+            {/* Hedef noktası işaretçisi: 150% ölçekte hedefin (100%) konumu, sabit ~%66,7 */}
+            <div className="absolute -top-0.5 -bottom-0.5 w-px bg-foreground/40" style={{ left: `${barTargetMarkerPct}%` }} />
           </div>
+          {targetRatio ? (
+            <p className="text-[11px] text-muted-foreground">
+              <span className={cn('font-medium tabular-nums', overTarget ? 'text-destructive' : 'text-success')}>
+                %{Math.abs(targetRatio.minus(100).toNumber()).toFixed(0)}
+              </span>{' '}
+              {overTarget ? 'hedef üstü' : targetRatio.lt(100) ? 'hedef altında' : 'tam hedefte'}
+            </p>
+          ) : null}
         </div>
       ) : null}
 
       {deltaVsPrev ? (
-        <p className="text-[12px] text-muted-foreground">
+        <p className="text-[11px] text-muted-foreground">
           v{detail.previousVersion!.version}&apos;e göre fark:{' '}
           <span className={cn('font-medium tabular-nums', deltaVsPrev.gt(0) ? 'text-warning' : deltaVsPrev.lt(0) ? 'text-success' : '')}>
             {deltaVsPrev.gt(0) ? '+' : ''}<MoneyCell value={deltaVsPrev.toFixed(4)} digits={2} signed />
@@ -242,21 +272,27 @@ export function CostSimulator({
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Field label="Parti miktarı">
-          <Controller control={form.control} name="batchQty" render={({ field }) => <Input {...field} disabled={!editable} className="h-8 text-[13px] tabular-nums" />} />
+          <Controller control={form.control} name="batchQty" render={({ field }) => (
+            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} disabled={!editable} className="w-full" inputClassName="h-8 md:h-8" />
+          )} />
         </Field>
         <Field label="Birim">
           <Controller control={form.control} name="batchUomId" render={({ field }) => (
             <Select value={field.value || undefined} onValueChange={field.onChange} disabled={!editable}>
-              <SelectTrigger className="h-8 w-full text-[13px]"><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectTrigger size="sm" className="w-full text-[13px]"><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>{uomOptions.map((u) => (<SelectItem key={u.id} value={u.id}>{u.code}</SelectItem>))}</SelectContent>
             </Select>
           )} />
         </Field>
         <Field label="Verim %">
-          <Controller control={form.control} name="expectedYieldPct" render={({ field }) => <Input {...field} disabled={!editable} className="h-8 text-[13px] tabular-nums" />} />
+          <Controller control={form.control} name="expectedYieldPct" render={({ field }) => (
+            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} disabled={!editable} className="w-full" inputClassName="h-8 md:h-8" />
+          )} />
         </Field>
         <Field label="Genel gider (parti)">
-          <Controller control={form.control} name="overheadPerBatch" render={({ field }) => <Input {...field} disabled={!editable} className="h-8 text-[13px] tabular-nums" />} />
+          <Controller control={form.control} name="overheadPerBatch" render={({ field }) => (
+            <NumberInput value={field.value} onChange={(v) => field.onChange(v ?? '')} onBlur={field.onBlur} maxDigits={4} minDigits={2} prefix="₺" disabled={!editable} className="w-full" inputClassName="h-8 md:h-8" />
+          )} />
         </Field>
       </div>
 
@@ -267,15 +303,20 @@ export function CostSimulator({
         </div>
       ) : null}
 
+      {/* min-w-[760px]: sütun genişlik ipuçlarının toplamı (~630px) + Ürün sütununa gerçekçi bir
+          taban — tablo bu genişliğin altına SIKIŞTIRILAMAZ, dar viewport'ta sarmalayıcı div kaydırır
+          (Tur 1 P0 arge-recete-01: eskiden `table-auto` konteynerin genişliğine göre sütunları
+          orantılı küçültüyordu, Miktar/Fire % input'ları görünür genişlikten daha uzun metin taşıyıp
+          kırpılıyordu — 390px'te '0.1500' → '0.1'). */}
       <div className="scrollbar-thin scroll-fade-x overflow-x-auto rounded-lg border border-border/60">
-        <table className="w-full text-[13px]">
+        <table className="w-full min-w-[760px] text-[13px]">
           <thead>
             <tr className="border-b border-border/60 bg-muted/40 text-left text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
               <th className="px-2.5 py-2">Ürün</th>
-              <th className="w-24 px-2 py-2 text-right">Miktar</th>
+              <th className="w-28 px-2 py-2 text-right">Miktar</th>
               <th className="w-36 px-2 py-2">Maliyet kaynağı</th>
-              <th className="w-28 px-2 py-2 text-right">Birim maliyet</th>
-              <th className="w-20 px-2 py-2 text-right">Fire %</th>
+              <th className="w-32 px-2 py-2 text-right">Birim maliyet</th>
+              <th className="w-24 px-2 py-2 text-right">Fire %</th>
               <th className="w-28 px-2 py-2 text-right">Satır maliyeti</th>
               {editable ? <th className="w-9" /> : null}
             </tr>
@@ -285,47 +326,98 @@ export function CostSimulator({
               const product = productById.get(watched.lines[i]?.productId ?? '');
               const source = watched.lines[i]?.costSource ?? 'average';
               const uCost = unitCostFor(i);
+              // Satır bazlı doğrulama: miktar boş/0 ise satır altına hata metni (eskiden yalnızca
+              // kayıt sırasında genel bir toast vardı — Tur 1 P1 arge-recete-08).
+              const qtyMissing = editable && !(watched.lines[i]?.qty ?? '').trim();
               return (
-                <tr key={f.id} className="border-b border-border/40 last:border-0 hover:bg-muted/20">
-                  <td className="px-2.5 py-1.5">
-                    {editable ? (
-                      <Combobox value={watched.lines[i]?.productId ?? null} onChange={(v) => v && onProductChange(i, v)} options={productPickerOptions} placeholder="Ürün seçin" clearable={false} className="h-8" />
-                    ) : (
-                      <div><div className="font-medium">{product?.name}</div><div className="font-mono text-[11px] text-muted-foreground">{product?.sku}</div></div>
-                    )}
-                  </td>
-                  <td className="px-2 py-1.5">
-                    <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => <Input {...field} disabled={!editable} className="h-8 text-right text-[13px] tabular-nums" />} />
-                  </td>
-                  <td className="px-2 py-1.5">
-                    {editable ? (
-                      <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
-                        <SelectTrigger className="h-8 w-full text-[13px]"><SelectValue /></SelectTrigger>
-                        <SelectContent>{COST_SOURCE_OPTIONS.map((o) => (<SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>))}</SelectContent>
-                      </Select>
-                    ) : (
-                      <span className="text-muted-foreground">{COST_SOURCE_LABELS[source]}</span>
-                    )}
-                  </td>
-                  <td className="px-2 py-1.5 text-right">
-                    {editable && source === 'manual' ? (
-                      <Controller control={form.control} name={`lines.${i}.manualUnitCost`} render={({ field }) => <Input {...field} className="h-8 text-right text-[13px] tabular-nums" />} />
-                    ) : (
-                      <MoneyCell value={uCost} digits={2} />
-                    )}
-                  </td>
-                  <td className="px-2 py-1.5">
-                    <Controller control={form.control} name={`lines.${i}.scrapPct`} render={({ field }) => <Input {...field} disabled={!editable} className="h-8 text-right text-[13px] tabular-nums" />} />
-                  </td>
-                  <td className="px-2 py-1.5 text-right">
-                    <MoneyCell value={computation.lineCosts[i]?.toFixed(4) ?? '0'} digits={2} />
-                  </td>
-                  {editable ? (
-                    <td className="px-1 py-1.5">
-                      <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="text-muted-foreground hover:text-destructive" aria-label="Satırı sil"><Trash2 className="size-3.5" /></Button>
+                <Fragment key={f.id}>
+                  <tr className="border-b border-border/40 last:border-0 hover:bg-muted/20">
+                    <td className="px-2.5 py-1">
+                      {editable ? (
+                        // Dinlenmede kenarlıksız/saydam, yalnızca hover/focus'ta kenarlık — "çerçeve
+                        // çorbası" kök neden düzeltmesi (Tur 1 P1 arge-recete-03).
+                        <Combobox
+                          value={watched.lines[i]?.productId ?? null}
+                          onChange={(v) => v && onProductChange(i, v)}
+                          options={productPickerOptions}
+                          placeholder="Ürün seçin"
+                          clearable={false}
+                          className="h-8 border-transparent bg-transparent hover:border-input md:h-8"
+                        />
+                      ) : (
+                        <div><div className="font-medium">{product?.name}</div><div className="font-mono text-[11px] text-muted-foreground">{product?.sku}</div></div>
+                      )}
                     </td>
+                    <td className="px-2 py-1">
+                      <Controller control={form.control} name={`lines.${i}.qty`} render={({ field }) => (
+                        <NumberInput
+                          value={field.value}
+                          onChange={(v) => field.onChange(v ?? '')}
+                          onBlur={field.onBlur}
+                          maxDigits={4}
+                          disabled={!editable}
+                          aria-invalid={qtyMissing}
+                          className="w-full"
+                          inputClassName="h-8 min-w-16 border-transparent bg-transparent hover:border-input md:h-8"
+                        />
+                      )} />
+                    </td>
+                    <td className="px-2 py-1">
+                      {editable ? (
+                        <Select value={source} onValueChange={(v) => onCostSourceChange(i, v as CostSource)}>
+                          <SelectTrigger size="sm" className="w-full border-transparent bg-transparent text-[13px] hover:border-input"><SelectValue /></SelectTrigger>
+                          <SelectContent>{COST_SOURCE_OPTIONS.map((o) => (<SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>))}</SelectContent>
+                        </Select>
+                      ) : (
+                        <span className="text-muted-foreground">{COST_SOURCE_LABELS[source]}</span>
+                      )}
+                    </td>
+                    <td className="px-2 py-1 text-right">
+                      {editable && source === 'manual' ? (
+                        <Controller control={form.control} name={`lines.${i}.manualUnitCost`} render={({ field }) => (
+                          <NumberInput
+                            value={field.value}
+                            onChange={(v) => field.onChange(v ?? '')}
+                            onBlur={field.onBlur}
+                            maxDigits={4}
+                            minDigits={2}
+                            prefix="₺"
+                            className="w-full"
+                            inputClassName="h-8 min-w-16 border-transparent bg-transparent hover:border-input md:h-8"
+                          />
+                        )} />
+                      ) : (
+                        <MoneyCell value={uCost} digits={2} />
+                      )}
+                    </td>
+                    <td className="px-2 py-1">
+                      <Controller control={form.control} name={`lines.${i}.scrapPct`} render={({ field }) => (
+                        <NumberInput
+                          value={field.value}
+                          onChange={(v) => field.onChange(v ?? '')}
+                          onBlur={field.onBlur}
+                          maxDigits={4}
+                          disabled={!editable}
+                          className="w-full"
+                          inputClassName="h-8 min-w-16 border-transparent bg-transparent hover:border-input md:h-8"
+                        />
+                      )} />
+                    </td>
+                    <td className="px-2 py-1 text-right">
+                      <MoneyCell value={computation.lineCosts[i]?.toFixed(4) ?? '0'} digits={2} />
+                    </td>
+                    {editable ? (
+                      <td className="px-1 py-1">
+                        <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="text-muted-foreground hover:text-destructive" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
+                      </td>
+                    ) : null}
+                  </tr>
+                  {qtyMissing ? (
+                    <tr className="border-b border-border/40 last:border-0">
+                      <td colSpan={editable ? 7 : 6} className="px-2.5 pb-1.5 text-[11px] text-destructive">Miktar gerekli</td>
+                    </tr>
                   ) : null}
-                </tr>
+                </Fragment>
               );
             })}
           </tbody>
@@ -334,14 +426,16 @@ export function CostSimulator({
 
       <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-1 border-t border-border/60 pt-3 text-[13px]">
         <span className="text-muted-foreground">Malzeme maliyeti <MoneyCell value={computation.materialCost.toFixed(4)} digits={2} /></span>
-        <span className="text-muted-foreground">Etkin çıktı <span className="font-mono tabular-nums">{computation.effectiveOutputQty.toFixed(2)}</span></span>
+        {/* formatQty: tr-TR virgül ondalık — eskiden .toFixed(2) nokta ondalık basıyordu, hemen
+            yanındaki ₺ tutarı virgüllüydü (Tur 1 P1 arge-recete-02). */}
+        <span className="text-muted-foreground">Etkin çıktı <span className="tabular-nums">{formatQty(computation.effectiveOutputQty.toFixed(4), undefined, { maxDigits: 2 })}</span></span>
         <span className="font-medium">Birim maliyet <MoneyCell value={computation.unitCost.toFixed(4)} digits={2} className="text-[15px] font-semibold" /></span>
       </div>
 
       {editable ? (
         <Controller control={form.control} name="changeNote" render={({ field }) => <Textarea {...field} placeholder="Değişiklik notu…" rows={2} className="text-[13px]" />} />
       ) : detail.version.changeNote ? (
-        <p className="text-[12px] text-muted-foreground">Not: {detail.version.changeNote}</p>
+        <p className="text-[11px] text-muted-foreground">Not: {detail.version.changeNote}</p>
       ) : null}
     </div>
   );

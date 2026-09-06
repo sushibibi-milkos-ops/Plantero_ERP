@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type RefCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
@@ -50,6 +50,17 @@ export function KanbanBoard({
   const [newCardOpen, setNewCardOpen] = useState(false);
   const [newCardColumnId, setNewCardColumnId] = useState<string | null>(null);
   const dragOriginRef = useRef<ColumnCards | null>(null);
+  // Kolon başlığına tıklanabilir yatay mini-nav için: her kolonun DOM düğümü (Tur 1 P1 arge-board-04
+  // — 7 kolondan 3'ü görünüyordu, kenar fade dışında atlama affordance'ı yoktu).
+  const columnNodesRef = useRef<Record<string, HTMLDivElement | null>>({});
+  function columnRef(id: string): RefCallback<HTMLDivElement> {
+    return (node) => {
+      columnNodesRef.current[id] = node;
+    };
+  }
+  function jumpToColumn(id: string) {
+    columnNodesRef.current[id]?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  }
 
   useEffect(() => {
     setColumnOrder(columns.map((c) => c.id));
@@ -180,12 +191,31 @@ export function KanbanBoard({
 
   return (
     <>
+      {/* Kolon mini-nav: yatay kaydırmanın kenar fade'i dışında bir atlama affordance'ı yoktu
+          (Tur 1 P1 arge-board-04) — tıklanan kolon smooth scroll ile görünüme gelir. */}
+      <div className="scrollbar-thin mb-2 flex items-center gap-1.5 overflow-x-auto pb-1">
+        {orderedColumns.map((col) => (
+          <button
+            key={col.id}
+            type="button"
+            onClick={() => jumpToColumn(col.id)}
+            className="shrink-0 rounded-full border border-border/60 px-2.5 py-1 text-[11px] whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:border-border hover:text-foreground"
+          >
+            {col.name} <span className="tabular-nums">{(columnCards[col.id] ?? []).length}</span>
+          </button>
+        ))}
+      </div>
+
       <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
         <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
-          <div className="scrollbar-thin scroll-fade-x flex snap-x snap-mandatory items-start gap-3 overflow-x-auto pb-2">
+          {/* h-full + items-stretch: kolonlar (board-column.tsx `h-full`) konteynerin tüm yüksekliğini
+              paylaşır → eşit yükseklik (Tur 1 P1 arge-board-02). Yükseklik `100dvh`ten üst bar + sayfa
+              başlığı + sekme + mini-nav için ayrılan sabit payın çıkarılmasıyla hesaplanır; taban
+              520px altına düşmez (küçük pencerelerde de kolon gövdesi 420px hedefinin üstünde kalır). */}
+          <div className="scrollbar-thin scroll-fade-x flex h-[calc(100dvh-19rem)] min-h-[520px] snap-x snap-mandatory items-stretch gap-3 overflow-x-auto pb-2">
             <AnimatePresence initial={false}>
               {orderedColumns.map((col) => (
-                <motion.div key={col.id} layout="position" transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }}>
+                <motion.div key={col.id} ref={columnRef(col.id)} layout="position" transition={{ type: 'spring', duration: 0.35, bounce: 0.15 }} className="flex">
                   <BoardColumn
                     column={col}
                     projectId={projectId}
@@ -206,7 +236,7 @@ export function KanbanBoard({
               <BoardCard card={activeCard} onOpen={() => {}} dragging />
             </motion.div>
           ) : activeColumn ? (
-            <motion.div initial={{ scale: 1 }} animate={{ scale: 1.02 }} transition={{ type: 'spring', stiffness: 380, damping: 24 }} className="w-72 rounded-xl border border-primary/40 bg-card px-3 py-2 shadow-lg">
+            <motion.div initial={{ scale: 1 }} animate={{ scale: 1.02 }} transition={{ type: 'spring', stiffness: 380, damping: 24 }} className="w-64 rounded-xl border border-primary/40 bg-card px-3 py-2 shadow-lg">
               {activeColumn.name}
             </motion.div>
           ) : null}
