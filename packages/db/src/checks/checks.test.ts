@@ -66,7 +66,7 @@ const FILES = await checkFiles();
 // yazıyor, `stock_counts.status`'e hiç dokunmuyor — reddedilen bir sayım farkı sonsuza dek 'review'de kilitli kalıyor
 // (approve dalı `approveCount()` çağırıp count'u ilerletiyor, reject dalının simetriği yok; `cancelCount` diye bir
 // fonksiyon da yok). Fresh seed'de 0 ihlal (seed hiç count_variance onayı üretmiyor — eşik altı tek sayım fark).
-const RULE_COUNT = 49;
+const RULE_COUNT = 50;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
