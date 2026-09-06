@@ -37,19 +37,20 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
             {/* Kök neden (Tur 1 P0 kokpit-kpi-clip-01 + P1 kokpit-nested-card-01 + kokpit-numeric-scale-01):
                 bu iki değer önceden çerçeveli+gölgeli `variant="card"` (22px değer) olarak basılıyordu —
                 zaten çerçeveli Section'ın İÇİNE ikinci bir kutu (kutu içinde kutu) koyuyordu VE sparkline'lı
-                kartta 262px'lik dar alanda değer kutusuna 119px kalıp NumberFlow kırpılıyordu. `variant="strip"`
-                (KpiStripRow ile) hem çerçevesiz/hairline'lı hem de KPI şeridiyle AYNI 19px tabular-nums
-                kademesini kullanır — ekrandaki "büyük sayı" için toplam kademe sayısı 2'ye iner (KPI 19px,
-                blok içi StatStrip 15px). Sparkline'ın kendi min-genişlik koruması artık kpi-card.tsx'te
-                (container query) — dar hücrede otomatik gizlenir, kırpma bir daha oluşamaz. */}
-            <div className="border-b border-border/60 p-2 sm:p-4">
-              {/* Kök neden (Tur 2 P2 kokpit-kpi-dupe-01): "Net (bugün)" burada üstteki KPI şeridindeki
-                  "Bugünkü net ciro" ile BİREBİR aynı değer+delta çiftini tekrar ediyordu (130px altında,
-                  görsel olarak da yakın) — aynı ölçü ekranda iki kez. Yalnızca şeritte YER ALMAYAN "Brüt"
-                  burada kalır; net ciro zaten üstteki KPI şeridinde bir kez gösteriliyor. */}
-              <KpiStripRow className="mb-0!">
-                <KpiCard title="Brüt (bugün)" value={channelSales.grossTotal} format="money" fractionDigits={0} delta={channelSales.grossDeltaPct} deltaLabel="dünden" sparkline={channelSales.trend7d.map((t) => Number(t.net))} variant="strip" />
-              </KpiStripRow>
+                kartta 262px'lik dar alanda değer kutusuna 119px kalıp NumberFlow kırpılıyordu.
+                Kök neden (Tur 2 P2 kokpit-kpi-dupe-01): "Net (bugün)" burada üstteki KPI şeridindeki
+                "Bugünkü net ciro" ile BİREBİR aynı değer+delta çiftini tekrar ediyordu — yalnızca
+                şeritte YER ALMAYAN "Brüt" kalmıştı.
+                Kök neden (Tur 3 P2 kokpit-fold-rows-01): "Brüt" tek başına bile 214px'lik bölümde
+                sparkline'lı 96px'lik bir KPI bloğu (`variant="strip"`, 19px büyük rakam) taşıyordu — 60px
+                yukarıdaki KPI şeridiyle AYNI büyük-rakam kademesini tekrarlıyor ve katlama üstü satır
+                sayısını (hedef ≥15) düşürüyordu. Tek bir ikincil sayı için ayrı bir KPI bloğu yerine bu
+                bölümün KENDİ Banka/Karantina ile AYNI "başlık altı özet satırı" anatomisi (h-11, 13px,
+                muted etiket + MoneyCell) kullanılır — 96px'ten 44px'e iner, sparkline (zaten KPI
+                şeridinde tekrar eden bir görselleştirme değildi ama küçük alanda anlamsızdı) kaldırılır. */}
+            <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
+              <span className="text-muted-foreground">Brüt (bugün)</span>
+              <MoneyCell value={channelSales.grossTotal} className="font-medium" />
             </div>
             {channelSales.rows.length === 0 ? (
               <EmptyState compact title="Bugün henüz sipariş yok" description="İlk sipariş girildiğinde kanal çubukları burada görünür." />
@@ -80,9 +81,7 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
               <ul className="divide-y divide-border/50">
                 {today.map((t) => (
                   <li key={`${t.k}-${t.no}`}>
-                    <RowLink href={t.href}>
-                      <TodayRow item={t} />
-                    </RowLink>
+                    <TodayRow item={t} />
                   </li>
                 ))}
               </ul>

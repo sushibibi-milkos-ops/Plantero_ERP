@@ -7,10 +7,14 @@ import { QtyCell } from '@/components/qty-cell';
 import { StatusBadge } from '@/components/status-badge';
 import type { CockpitTodayItem } from '../queries';
 
-/** Kokpit'in tüm rol panolarının paylaştığı kart iskeleti: başlık + opsiyonel "Tümü" bağlantısı. */
+/** Kokpit'in tüm rol panolarının paylaştığı kart iskeleti: başlık + opsiyonel "Tümü" bağlantısı.
+ *  `@container` (Tur 3 P1 kokpit-bugun-partner-trunc-01): `TodayRow` aynı bileşeni FARKLI genişlikteki
+ *  kolonlarda render eder (admin/GM'de 568px dar kolon, depo'da `lg:col-span-2` 1152px geniş şerit) —
+ *  doğru anatomi (2 satır mı, tek satır mı) VIEWPORT'a değil bu Section'ın KENDİ genişliğine bağlı.
+ *  `@container` konteks kurar, `TodayRow` içindeki `@min-[…]:` varyantları bunu sorgular. */
 export function Section({ title, href, children, className }: { title: string; href?: string; children: React.ReactNode; className?: string }) {
   return (
-    <section className={cn('min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card', className)}>
+    <section className={cn('@container min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card', className)}>
       <header className="flex h-11 items-center justify-between border-b border-border/60 px-4">
         <h2 className="text-[13px] font-semibold">{title}</h2>
         {href ? (
@@ -35,13 +39,17 @@ export function Section({ title, href, children, className }: { title: string; h
  *  toplam yüksekliği sabitliyor, `py-2.5`'lik varsayılan dikey boşluk STANDART tek satırlık listelerde
  *  (13px metin + 2×10px padding ≈ 33px < 44px) hiçbir taşmaya yol açmıyor — güvenli.
  *  `max-sm:min-h-11`: mobilde (<640px) her satır en az 44px dokunma hedefi (Tur 1 P1
- *  kokpit-line-touch-01) — tek satırlık "boşta" satırlar önceden 40px'e düşüyordu. */
+ *  kokpit-line-touch-01) — tek satırlık "boşta" satırlar önceden 40px'e düşüyordu.
+ *  Kök neden (Tur 3 P1 kokpit-rowheight-01/02): `sm:h-11` (44px) Linear referans bandının (36-40px)
+ *  üstündeydi — tüm tek-satırlık listelerde (Karantina, SKT riski, Son siparişler, En çok satan 5, Son
+ *  iş emirleri...) masaüstü satırı gereksiz yere şişiriyordu. `sm:h-10` (40px) bandın İÇİNDE; mobil
+ *  dokunma hedefi (`max-sm:min-h-11`, 44px) DEĞİŞMEDİ. */
 export function RowLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
   return (
     <Link
       href={href}
       className={cn(
-        'flex max-sm:min-h-11 flex-col gap-1 px-4 py-2.5 text-[13px] outline-none hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:h-11 sm:flex-row sm:items-center sm:gap-3',
+        'flex max-sm:min-h-11 flex-col gap-1 px-4 py-2.5 text-[13px] outline-none hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:h-10 sm:flex-row sm:items-center sm:gap-3',
         className,
       )}
     >
@@ -50,12 +58,14 @@ export function RowLink({ href, children, className }: { href: string; children:
   );
 }
 
-/** İnce ilerleme çubuğu (break-even, OEE, iş emri yüzdesi) — TEK bir değerin hedefe oranını gösterir. */
-export function ProgressBar({ pct, tone = 'primary' }: { pct: number; tone?: 'primary' | 'success' | 'warning' | 'danger' }) {
+/** İnce ilerleme çubuğu (break-even, OEE, iş emri yüzdesi) — TEK bir değerin hedefe oranını gösterir.
+ *  `className` çağıranın track yüksekliğini ezmesine izin verir (Tur 3 P1 kokpit-rowheight-02:
+ *  ProductionLineRow'un masaüstü 2 satırlık anatomisi `h-1.5`'i `sm:h-1`'e indirerek ≤56px hedefine iner). */
+export function ProgressBar({ pct, tone = 'primary', className }: { pct: number; tone?: 'primary' | 'success' | 'warning' | 'danger'; className?: string }) {
   const clamped = Math.max(0, Math.min(100, pct));
   const toneClass = { primary: 'bg-primary', success: 'bg-success', warning: 'bg-warning', danger: 'bg-destructive' }[tone];
   return (
-    <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+    <div className={cn('h-1.5 overflow-hidden rounded-full bg-muted', className)}>
       <div className={cn('h-full rounded-full', toneClass)} style={{ width: `${clamped}%` }} />
     </div>
   );
@@ -149,7 +159,12 @@ export function StatStrip({ items, className, divider = true }: { items: StatStr
           <>
             {it.top ? <div className="truncate text-[10px] text-muted-foreground">{it.top}</div> : null}
             <div className={cn('text-[15px] font-semibold tabular-nums', it.top && 'mt-0.5', zero && 'text-muted-foreground/70', it.valueClassName)}>{it.value}</div>
-            <div className="mt-0.5 truncate text-[10px] text-muted-foreground">{it.label}</div>
+            {/* Kök neden (Tur 3 P2 kokpit-fin-strip-label-tabular-01): alttaki `label` yuvası düz metin
+                ("0-30 gün") taşıyabildiği gibi Nakit projeksiyonu'nda para metni de taşıyor
+                ("kapanış ₺33.278") — bu durumda `tabular-nums` eksikti, 4px üstündeki 15px değer
+                tabular olduğu halde üç ayın kapanış basamakları hizalanmıyordu. `tabular-nums`
+                koşulsuz eklenir; rakam içermeyen etiketlerde (ör. "0-30 gün") hiçbir görsel etkisi yok. */}
+            <div className="mt-0.5 truncate text-[10px] text-muted-foreground tabular-nums">{it.label}</div>
           </>
         );
         return it.href ? (
@@ -251,29 +266,74 @@ export function BreakEvenPanel({ breakEven }: { breakEven: { targetRevenue: stri
 }
 
 /**
- * "Bugün" belge akışı satır içeriği — GM ve depo panosu aynı `CockpitTodayItem` listesini render eder.
+ * "Bugün" belge akışı satırı — GM/admin ve depo panosu aynı `CockpitTodayItem` listesini render eder.
  * Kök neden (Tur 1 P1 kokpit-depo-mobile-card-01): depo kendi kopyasında iki alt grubu (kind+no+rozet,
  * partner+tutar) `sm:contents` sarmalayıcısı OLMADAN doğrudan `RowLink`'in (mobilde `flex-col`) altına
  * koyuyordu — 4 ayrı satıra düşüp 108-109px'e çıkıyordu; GM'nin (doğru) versiyonu iki gruplu olduğu
- * için mobilde 2 satıra (~65px) iniyordu. Artık TEK render fonksiyonu — ikisi de aynı 2 satırlı mobil
- * anatomiyi paylaşır. */
+ * için mobilde 2 satıra (~65px) iniyordu.
+ *
+ * Kök neden (Tur 3 P1 kokpit-bugun-partner-trunc-01 + kokpit-numcol-ragged-01/02): masaüstünde bu iki
+ * grup `sm:contents` ile TEK satıra düzleşiyordu (kind, no, partner, tutar, rozet — 5 öğe aynı flex
+ * satırında). Bunun iki sonucu vardı: (a) dar kolonlarda (568px, admin "Bugün" — GM panosunda bu bölüm
+ * HER ZAMAN 2 kolonlu ızgaranın SOL yarısı, asla tam genişlik değil) partner'a yalnızca kalan boşluk
+ * (~94-104px) kalıyordu — gerçek içerik 242-331px, 8 satırın 6'sı kırpılıyordu; AYNI bileşen depo'nun
+ * `lg:col-span-2` (1152px) "Bugün" şeridinde kırpmıyordu çünkü orada kalan boşluk yeterliydi — kusur
+ * "kalan boşluktan" hesaplanan, GENİŞLİĞE göre iki farklı sonuç veren bir sütun payıydı. (b) tutar her
+ * zaman rozetin SOLUNA düşüyordu (`order-last` rozetten SONRA gelen tek öğe tutardı) — rozet metni
+ * satırdan satıra uzunluk değiştirdikçe (ör. "Tamamlandı" 90px vs "Kalite bekliyor" 120px) tutarın sağ
+ * kenarı 17px'e kadar kayıyordu; bu kusur HER İKİ genişlikte de vardı (rozet konumu genişlikten
+ * bağımsızdı).
+ *
+ * Düzeltme genişliğe göre İKİ AYRI (ama aynı fonksiyonda tutulan) anatomi kullanır — `@container`
+ * (Section'da tanımlı) ile bu Section'ın KENDİ genişliğini sorgular, VIEWPORT'u değil:
+ *  - Dar konteyner (<700px — admin/GM'nin 568px'lik "Bugün" kolonu VE her genişlikte mobil): mobil
+ *    anatomisiyle BİREBİR aynı 2 satır (satır 1: kind+no+rozet, satır 2: partner+tutar). Rozet artık
+ *    partnerle/tutarla AYNI satırda değil — hiçbir şeyi kaydırmıyor; partner'a kalan genişlik 3-4 kata
+ *    çıkıyor (kind+no ayrı bir satırda).
+ *  - Geniş konteyner (≥700px — depo'nun 1152px'lik "Bugün" şeridi): TEK satır KORUNUR (Tur 3 P1
+ *    kokpit-rowheight-01: depo rotasında TÜM satırların medyanı ölçülüyor — "Bugün" 2 satıra dönerse
+ *    Karantina/SKT'nin 40px'lik satırlarını sayıca geçip medyanı 56px'e çıkarır, ≤40px hedefini
+ *    bozardı). Tutar VE rozet artık SABİT genişlikli yuvalarda (`w-24`/`w-32`, sağa yaslı) — tutarın
+ *    sağ kenarı artık rozetin GERÇEK metin genişliğine değil SABİT yuva genişliğine bağlı, bu yüzden
+ *    satırdan satıra kaymıyor (±0px).
+ * İki blok da DOM'da var, yalnızca biri `hidden`/`flex` ile açılır — tek bir elemanın çelişen
+ * (aynı özgüllükte, kaynak sırasına bağlı) genişlik/yükseklik sınıflarıyla "yeniden şekillendirilmesi"
+ * yerine (RowLink `sm:py-0` bugunun ders çıkarılmış hâli, bkz. `RowLink` doc yorumu) HER blok kendi
+ * boyutunu taşır — geçiş belirsizliğe (hangi kural kazanacağına dair CSS kaynak-sırası varsayımına)
+ * bağlı değildir. */
 export function TodayRow({ item }: { item: CockpitTodayItem }) {
+  const money = item.amount !== undefined ? <MoneyCell value={item.amount} /> : <QtyCell value={item.qty ?? '0'} uom={item.uom} />;
   return (
-    <>
-      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-        <span className="flex min-w-0 items-center gap-2 sm:contents">
-          <span className="shrink-0 text-xs text-muted-foreground sm:w-20">{item.kind}</span>
-          <span className="truncate font-mono text-xs sm:w-36 sm:shrink-0">{item.no}</span>
+    <RowLink href={item.href} className="px-0 py-0 sm:h-auto sm:flex-col sm:items-stretch sm:gap-0 sm:px-0 sm:py-0">
+      {/* Dar konteyner + mobil: 2 satır. */}
+      <div className="flex flex-col gap-0.5 px-4 py-2.5 @min-[700px]:hidden sm:py-2">
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <span className="flex min-w-0 items-center gap-2">
+            <span className="shrink-0 truncate text-xs text-muted-foreground">{item.kind}</span>
+            <span className="shrink-0 truncate font-mono text-xs">{item.no}</span>
+          </span>
+          <span className="shrink-0">
+            <StatusBadge status={item.status} kind={item.k} />
+          </span>
+        </div>
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <span className="min-w-0 flex-1 truncate">{item.partner}</span>
+          <span className="shrink-0">{money}</span>
+        </div>
+      </div>
+      {/* Geniş konteyner (depo'nun col-span-2 "Bugün" şeridi): tek satır, tutar/rozet sabit yuvalarda. */}
+      <div className="hidden h-10 min-w-0 items-center gap-3 px-4 @min-[700px]:flex">
+        <span className="flex min-w-0 shrink-0 items-center gap-2">
+          <span className="w-20 shrink-0 text-xs text-muted-foreground">{item.kind}</span>
+          <span className="w-32 shrink-0 truncate font-mono text-xs">{item.no}</span>
         </span>
-        <span className="shrink-0 sm:order-last">
+        <span className="min-w-0 flex-1 truncate">{item.partner}</span>
+        <span className="w-24 shrink-0">{money}</span>
+        <span className="flex w-32 shrink-0 justify-end">
           <StatusBadge status={item.status} kind={item.k} />
         </span>
       </div>
-      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-        <span className="min-w-0 flex-1 truncate">{item.partner}</span>
-        <span className="shrink-0">{item.amount !== undefined ? <MoneyCell value={item.amount} /> : <QtyCell value={item.qty ?? '0'} uom={item.uom} />}</span>
-      </div>
-    </>
+    </RowLink>
   );
 }
 
@@ -284,7 +344,13 @@ export function TodayRow({ item }: { item: CockpitTodayItem }) {
  * (Tur 1 P1 kokpit-line-list-drift-01). Artık tek satır — GM'nin daha ayrıntılı alt satırını
  * (docNo · productName) ikisi de kullanır; `max-sm:min-h-11` boştaki satırların da 44px altına
  * düşmemesini garantiler (Tur 1 P1 kokpit-line-touch-01).
- */
+ *
+ * Kök neden (Tur 3 P1 kokpit-rowheight-02): bu satır 3 alt satır taşıdığı (başlık+rozet, ilerleme
+ * çubuğu, meta) için tek-satırlık listelerin ≤40px hedefine giremez — puan kartı bunu bilerek AYRI bir
+ * bantla ölçer ("iki/çok satırlık satır ≤56px"). Masaüstü ölçümü 72.5-73.5px'ti (mobildeki `py-2.5` +
+ * `mt-1.5`/`mt-1` boşlukları + `h-1.5` çubuk masaüstünde de aynen kullanılıyordu). Yalnızca masaüstü
+ * (`sm:`) daraltıldı — mobil (390px, dokunma hedefi + okunabilirlik) DEĞİŞMEDİ: `sm:py-1.5`,
+ * `sm:mt-1`/`sm:mt-0.5`, çubuk `sm:h-1`. Toplam ~56px'e iner. */
 export function ProductionLineRow({ line, href }: {
   line: {
     lineId: string; name: string; lateCount: number; openCount: number;
@@ -296,7 +362,7 @@ export function ProductionLineRow({ line, href }: {
   const produced = Number(line.current?.producedQty ?? 0);
   const pct = line.current && planned > 0 ? Math.min(100, Math.round((produced / planned) * 100)) : 0;
   return (
-    <RowLink href={href} className="flex-col items-stretch py-2.5 sm:h-auto sm:flex-col sm:items-stretch sm:py-2.5">
+    <RowLink href={href} className="flex-col items-stretch py-2.5 sm:h-auto sm:flex-col sm:items-stretch sm:gap-0.5 sm:py-1.5">
       <div className="flex items-center justify-between">
         <span className="font-medium">{line.name}</span>
         <span className="flex items-center gap-2">
@@ -306,23 +372,23 @@ export function ProductionLineRow({ line, href }: {
       </div>
       {line.current && pct > 0 ? (
         <>
-          <div className="mt-1.5"><ProgressBar pct={pct} /></div>
+          <div className="mt-1.5 sm:mt-1"><ProgressBar pct={pct} className="sm:h-1" /></div>
           {/* Kök neden (Tur 2 P1 kokpit-line-row-collision-01): `justify-between`'de `gap` tanımlı
               değildi — 390px'te kısılan belge no/ürün adı metni ile sağdaki yüzde/sayı arasında 0px
               boşluk kalıp tek bozuk dizge gibi okunuyordu. `gap-3` en az 12px'i garantiler; flex öğesi
               gerekirse bu payı bırakacak kadar daha fazla küçülür (taşma değil). */}
-          <div className="mt-1 flex justify-between gap-3 text-[11px] text-muted-foreground">
+          <div className="mt-1 flex justify-between gap-3 text-[11px] text-muted-foreground sm:mt-0.5">
             <span className="min-w-0 truncate font-mono">{line.current.docNo} · {line.current.productName}</span>
             <span className="shrink-0 tabular-nums">%{pct}</span>
           </div>
         </>
       ) : line.current ? (
-        <div className="mt-1 flex justify-between gap-3 text-[11px] text-muted-foreground">
+        <div className="mt-1 flex justify-between gap-3 text-[11px] text-muted-foreground sm:mt-0.5">
           <span className="min-w-0 truncate font-mono">{line.current.docNo} · {line.current.productName}</span>
           <span className="shrink-0">{line.openCount} açık iş emri</span>
         </div>
       ) : (
-        <div className="mt-1 text-[11px] text-muted-foreground">Şu an açık iş emri yok</div>
+        <div className="mt-1 text-[11px] text-muted-foreground sm:mt-0.5">Şu an açık iş emri yok</div>
       )}
     </RowLink>
   );

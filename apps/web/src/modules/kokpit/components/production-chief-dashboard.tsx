@@ -83,20 +83,32 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
               <ul className="divide-y divide-border/50">
                 {data.recentWorkOrders.map((w) => (
                   <li key={w.id}>
-                    <RowLink href="/uretim/is-emirleri">
-                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-                        <span className="flex min-w-0 items-center gap-2 sm:contents">
-                          {/* Kök neden (Tur 2 P1 kokpit-wo-wrap-01): `truncate` yoktu — 8 satırın 6'sında
-                              hat adı 96px'lik sütunda 2 satıra sarıp satırı tıkıyordu. `truncate` +
-                              sm:w-24→32 (128px) sarmayı önler. */}
-                          <span className="min-w-0 shrink-0 truncate text-xs text-muted-foreground sm:w-32">{w.lineName}</span>
-                          <span className="truncate font-mono text-xs sm:w-32 sm:shrink-0">{w.docNo}</span>
+                    {/* Kök neden (Tur 3 P1 kokpit-wo-line-trunc-02 + kokpit-wo-mobile-docno-trunc-01 +
+                        kokpit-numcol-ragged-04): Tur 2'nin `sm:w-32` (128px) sabit hat adı sütunu
+                        gerçek içerikten (130-146px, ör. "Bazlar, Barista & Kremalar") hâlâ dardı —
+                        sarmayı çözerken kırpmaya döndü. Kök neden aynıydı: masaüstünde `sm:contents`
+                        TEK satıra düzleşiyordu (hat, no, ürün adı, miktar, rozet — 5 öğe), bu yüzden hat
+                        adına ayrılan pay rozet+miktar genişliğinden ARTAN boşluktan hesaplanıyordu VE
+                        miktarın sağ kenarı (rozet ondan SONRA geldiği için) rozet uzunluğuna göre
+                        28px'e kadar kayıyordu. 390px'te de aynı tek-satır mantığı belge no'yu
+                        (bir KİMLİK) hat adından sonra sıkıştırıp kırpıyordu — kimlik asla kırpılmamalı.
+                        Düzeltme TodayRow ile birebir aynı desen (bkz. shared.tsx): satır HER ZAMAN 2
+                        satır. Satır 1: hat adı (artık `flex-1 truncate` — kısıtlı sabit genişlik YOK,
+                        gerçek içeriğe göre büyür) + belge no (`shrink-0` — asla kırpılmaz) + rozet
+                        (satırın kendi sağ kenarı, ondan sonra hizalanacak başka öğe yok). Satır 2: ürün
+                        adı + miktar (rozet artık bu satırda değil — miktarın sağ kenarı her zaman
+                        satırın sağ kenarı, ±0px). */}
+                    <RowLink href="/uretim/is-emirleri" className="sm:h-auto sm:flex-col sm:items-stretch sm:gap-0.5 sm:py-2">
+                      <div className="flex min-w-0 items-center justify-between gap-3">
+                        <span className="flex min-w-0 flex-1 items-center gap-2">
+                          <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">{w.lineName}</span>
+                          <span className="shrink-0 truncate font-mono text-xs">{w.docNo}</span>
                         </span>
-                        <span className="shrink-0 sm:order-last">
+                        <span className="shrink-0">
                           {w.isLate ? <StatusBadge status="late" label="Gecikmiş" tone="danger" /> : <StatusBadge status={w.status} kind="work_order" />}
                         </span>
                       </div>
-                      <div className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                      <div className="flex min-w-0 items-center justify-between gap-3">
                         <span className="min-w-0 flex-1 truncate">{w.productName}</span>
                         {/* Kök neden (Tur 2 P1 kokpit-wo-wrap-01): bu sütun satıra göre ya bitiş tarihi
                             ya üretilen miktar basıyordu (tek sütun, iki veri tipi). Artık HER satırda

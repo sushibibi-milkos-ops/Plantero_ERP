@@ -41,13 +41,21 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
                       Artık rozet + konum+tutar TEK satır 1 grubunda (`justify-between`), ürün adı satır
                       2'de kendi başına — 2 satırlık anatomi (hedef ≤72px). `sm:order-3/4` masaüstü
                       sırasını (rozet, ürün adı, konum, tutar) KORUR: flatten sonrası doğal DOM sırası
-                      rozet→konum→tutar→ürünadı olurdu, order ile ürün adı öne (2) alınır. */}
+                      rozet→konum→tutar→ürünadı olurdu, order ile ürün adı öne (2) alınır.
+                      Kök neden (Tur 3 P1 kokpit-karantina-colalign-01): masaüstünde LotBadge SABİT
+                      genişlikte değildi — lot kodu uzunluğuna göre (ör. tedarikçi lot kodu vs
+                      "PL-260902-H1-01") sonraki öğenin (ürün adı) SOL kenarı satırdan satıra 42px
+                      kayıyordu; aynı şekilde MoneyCell sabit genişlikte olmadığı için konum etiketinin
+                      SAĞ kenarı da (tutar rakam sayısına göre) 8px kayıyordu. `sm:w-36 shrink-0
+                      truncate` (LotBadge) ve `sm:w-24 shrink-0` (MoneyCell, zaten `text-right`) her iki
+                      sütunu da sabit paya kavuşturur — ürün adının sol kenarı ve konum etiketinin sağ
+                      kenarı artık satırdan satıra sabit (±1px). */}
                   <RowLink href={`/depo/lotlar/${r.lotId}`}>
                     <span className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-                      <LotBadge lotNo={r.lotNo} status="quarantine" />
+                      <LotBadge lotNo={r.lotNo} status="quarantine" className="sm:w-36 sm:shrink-0 sm:truncate" />
                       <span className="flex shrink-0 items-center gap-3 sm:contents">
                         <span className="text-xs text-muted-foreground sm:order-3">{r.locationCode}</span>
-                        <MoneyCell value={r.value} className="sm:order-4" />
+                        <MoneyCell value={r.value} className="sm:order-4 sm:w-24 sm:shrink-0" />
                       </span>
                     </span>
                     <span className="min-w-0 flex-1 truncate sm:order-2">{r.productName}</span>
@@ -96,9 +104,7 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
                       deseninin kendi mantığıyla (partner `flex-1`) tam genişliğe yayılıyor, tutar/rozet
                       `justify-between`+`sm:order-last` ile satırın (=bölümün) GERÇEK sağ kenarına
                       hizalanıyor — satır sonunda kullanılmayan kolon kalmıyor. */}
-                  <RowLink href={t.href}>
-                    <TodayRow item={t} />
-                  </RowLink>
+                  <TodayRow item={t} />
                 </li>
               ))}
             </ul>
