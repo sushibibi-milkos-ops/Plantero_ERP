@@ -1,0 +1,89 @@
+{
+ "label": "lot-m",
+ "route": "/kalite/izlenebilirlik?lot=PL-260902-H1-01",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex min-w-0 flex-1 flex-col overflow-x-clip",
+   "scrollWidth": 393,
+   "clientWidth": 390,
+   "overflowX": "clip",
+   "hidden": 3
+  },
+  {
+   "tag": "div",
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory md:",
+   "scrollWidth": 792,
+   "clientWidth": 358,
+   "overflowX": "auto",
+   "hidden": 434
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [
+  {
+   "text": "Sevkiyat",
+   "left": 349,
+   "right": 475,
+   "vw": 390
+  },
+  {
+   "text": "Fire",
+   "left": 509,
+   "right": 635,
+   "vw": 390
+  },
+  {
+   "text": "Eldeki",
+   "left": 669,
+   "right": 795,
+   "vw": 390
+  },
+  {
+   "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+   "left": 153,
+   "right": 393,
+   "vw": 390
+  }
+ ],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 22,
+ "smallTargetsInMain": [],
+ "fontSizesMain": {
+  "11": 9,
+  "12": 13,
+  "13": 9,
+  "14": 3,
+  "20": 1
+ },
+ "shadowCount": 1,
+ "borderedInsideBordered": 9,
+ "borderedInsideBorderedSample": [
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= flex flex-wrap items-center gap-3 rounded-xl borde",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4"
+ ],
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 474,
+  "docH": 1318
+ }
+}

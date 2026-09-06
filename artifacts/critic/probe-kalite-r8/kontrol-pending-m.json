@@ -1,0 +1,46 @@
+{
+ "label": "kontrol-pending-m",
+ "route": "/kalite/kontroller/6c003370-b4d1-485e-926f-5249cbad0790",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 15,
+ "smallTargetsInMain": [],
+ "fontSizesMain": {
+  "12": 9,
+  "13": 8,
+  "14": 4,
+  "20": 1
+ },
+ "shadowCount": 2,
+ "borderedInsideBordered": 5,
+ "borderedInsideBorderedSample": [
+  "border-t border-border/60 pt-3 text-[13px] font-se <= rounded-xl border border-border/60 p-4",
+  "w-full min-w-0 rounded-md border border-input bg-t <= rounded-xl border border-border/60 p-4",
+  "rounded-lg border border-border/60 p-3 <= rounded-xl border border-border/60 p-4",
+  "w-full min-w-0 rounded-md border border-input bg-t <= rounded-lg border border-border/60 p-3",
+  "flex items-center justify-end gap-2 border-t borde <= rounded-xl border border-border/60 p-4"
+ ],
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 273,
+  "docH": 1117
+ }
+}

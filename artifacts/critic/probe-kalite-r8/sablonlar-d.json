@@ -1,0 +1,79 @@
+{
+ "label": "sablonlar-d",
+ "route": "/kalite/sablonlar",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [],
+ "clippedCount": 0,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 2,
+ "rowHeight": 36,
+ "rowBorderBottom": "1px oklab(0.92 0.00112267 -0.00383922 / 0.5)",
+ "kpiValues": [],
+ "interactiveCount": 34,
+ "smallTargetsInMain": [
+  {
+   "sel": "a \"Yeni Şablon\"",
+   "w": 126,
+   "h": 36
+  },
+  {
+   "sel": "input \"Tabloda ara\"",
+   "w": 256,
+   "h": 32
+  },
+  {
+   "sel": "button \"Sütunlar\"",
+   "w": 32,
+   "h": 32
+  },
+  {
+   "sel": "button \"Kod\"",
+   "w": 50,
+   "h": 28
+  },
+  {
+   "sel": "button \"Ad\"",
+   "w": 44,
+   "h": 28
+  },
+  {
+   "sel": "button \"Kapsam\"",
+   "w": 74,
+   "h": 28
+  },
+  {
+   "sel": "button \"Kalem\"",
+   "w": 56,
+   "h": 28
+  },
+  {
+   "sel": "button \"Durum\"",
+   "w": 66,
+   "h": 28
+  }
+ ],
+ "fontSizesMain": {
+  "12": 6,
+  "13": 8,
+  "14": 1,
+  "24": 1
+ },
+ "shadowCount": 2,
+ "borderedInsideBordered": 2,
+ "borderedInsideBorderedSample": [
+  "rounded border bg-background px-1 py-px font-mono  <= flex items-center border-t border-sidebar-border/7",
+  "rounded border bg-background px-1.5 py-px font-mon <= hidden h-8 w-56 items-center gap-2 rounded-md bord"
+ ],
+ "bottomNav": null
+}

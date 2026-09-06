@@ -1,0 +1,156 @@
+{
+ "label": "tedarikci-m",
+ "route": "/kalite/tedarikci-skoru",
+ "viewport": "390x844",
+ "horizontalScrollers": [
+  {
+   "tag": "div",
+   "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory md:",
+   "scrollWidth": 472,
+   "clientWidth": 358,
+   "overflowX": "auto",
+   "hidden": 114
+  },
+  {
+   "tag": "div",
+   "cls": "truncate text-xs font-medium text-muted-foreground",
+   "scrollWidth": 140,
+   "clientWidth": 126,
+   "overflowX": "hidden",
+   "hidden": 14
+  },
+  {
+   "tag": "div",
+   "cls": "truncate text-muted-foreground mt-1 text-[11px]",
+   "scrollWidth": 235,
+   "clientWidth": 126,
+   "overflowX": "hidden",
+   "hidden": 109
+  },
+  {
+   "tag": "div",
+   "cls": "min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:trunc",
+   "scrollWidth": 302,
+   "clientWidth": 249,
+   "overflowX": "hidden",
+   "hidden": 53
+  },
+  {
+   "tag": "div",
+   "cls": "min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:trunc",
+   "scrollWidth": 280,
+   "clientWidth": 249,
+   "overflowX": "hidden",
+   "hidden": 31
+  },
+  {
+   "tag": "div",
+   "cls": "min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:trunc",
+   "scrollWidth": 264,
+   "clientWidth": 249,
+   "overflowX": "hidden",
+   "hidden": 15
+  },
+  {
+   "tag": "div",
+   "cls": "min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:trunc",
+   "scrollWidth": 261,
+   "clientWidth": 249,
+   "overflowX": "hidden",
+   "hidden": 12
+  },
+  {
+   "tag": "div",
+   "cls": "min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:trunc",
+   "scrollWidth": 360,
+   "clientWidth": 249,
+   "overflowX": "hidden",
+   "hidden": 111
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [
+  {
+   "text": "Değerlendirilen tedarikçi",
+   "w": 126,
+   "full": 140
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "w": 126,
+   "full": 235
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "w": 249,
+   "full": 302
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+   "w": 249,
+   "full": 280
+  },
+  {
+   "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+   "w": 249,
+   "full": 264
+  },
+  {
+   "text": "Proteinsan Gıda Hammaddeleri Ltd. Şti.",
+   "w": 249,
+   "full": 261
+  },
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+   "w": 249,
+   "full": 360
+  }
+ ],
+ "clippedCount": 7,
+ "outsideViewport": [
+  {
+   "text": "En düşük skor",
+   "left": 349,
+   "right": 475,
+   "vw": 390
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+   "left": 349,
+   "right": 475,
+   "vw": 390
+  }
+ ],
+ "nonTabularNumbers": [
+  "2026 @span"
+ ],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 14,
+ "smallTargetsInMain": [],
+ "fontSizesMain": {
+  "11": 1,
+  "12": 9,
+  "13": 8,
+  "14": 7,
+  "20": 1
+ },
+ "shadowCount": 3,
+ "borderedInsideBordered": 0,
+ "borderedInsideBorderedSample": [],
+ "bottomNav": {
+  "found": true,
+  "navTop": 787,
+  "navHeight": 57,
+  "overlappedText": null,
+  "scrollY": 112,
+  "docH": 956
+ }
+}

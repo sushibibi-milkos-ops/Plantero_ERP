@@ -1,0 +1,155 @@
+{
+ "label": "lot-d",
+ "route": "/kalite/izlenebilirlik?lot=PL-260902-H1-01",
+ "viewport": "1440x900",
+ "horizontalScrollers": [
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 158,
+   "clientWidth": 113,
+   "overflowX": "hidden",
+   "hidden": 45
+  },
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 118,
+   "clientWidth": 77,
+   "overflowX": "hidden",
+   "hidden": 41
+  },
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 160,
+   "clientWidth": 123,
+   "overflowX": "hidden",
+   "hidden": 37
+  },
+  {
+   "tag": "span",
+   "cls": "hidden min-w-0 truncate text-xs text-muted-foreground sm:inline",
+   "scrollWidth": 140,
+   "clientWidth": 131,
+   "overflowX": "hidden",
+   "hidden": 9
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-2 text-center sm:text-left sr-only",
+   "scrollWidth": 219,
+   "clientWidth": 1,
+   "overflowX": "hidden",
+   "hidden": 218
+  }
+ ],
+ "clippedTexts": [
+  {
+   "text": "İrsaliye SEED-URT-TEDARIK",
+   "w": 113,
+   "full": 158
+  },
+  {
+   "text": "Tedarikçi · S-000001",
+   "w": 77,
+   "full": 118
+  },
+  {
+   "text": "Hurma Şurubu · 302030000",
+   "w": 123,
+   "full": 160
+  },
+  {
+   "text": "Deniz Tuzu · 307020000",
+   "w": 131,
+   "full": 140
+  }
+ ],
+ "clippedCount": 4,
+ "outsideViewport": [],
+ "nonTabularNumbers": [],
+ "rowCount": 0,
+ "kpiValues": [],
+ "interactiveCount": 38,
+ "smallTargetsInMain": [
+  {
+   "sel": "input \"\"",
+   "w": 512,
+   "h": 36
+  },
+  {
+   "sel": "a \"PL-260902-H1-01\"",
+   "w": 104,
+   "h": 16
+  },
+  {
+   "sel": "button \"Yeni arama\"",
+   "w": 98,
+   "h": 32
+  },
+  {
+   "sel": "a \"LotPL-260902-H1-01FINDIK BAZ\"",
+   "w": 530,
+   "h": 36
+  },
+  {
+   "sel": "a \"İş emriWO-2026-000005Üretile\"",
+   "w": 502,
+   "h": 36
+  },
+  {
+   "sel": "a \"LotSEED-URT-301040000Fındık \"",
+   "w": 474,
+   "h": 36
+  },
+  {
+   "sel": "a \"Mal kabulGR-2026-000007İrsal\"",
+   "w": 446,
+   "h": 36
+  },
+  {
+   "sel": "a \"CariProteinsan Gıda Hammadde\"",
+   "w": 418,
+   "h": 36
+  },
+  {
+   "sel": "a \"LotSEED-URT-302030000Hurma Ş\"",
+   "w": 474,
+   "h": 36
+  },
+  {
+   "sel": "a \"LotSEED-URT-307020000Deniz T\"",
+   "w": 474,
+   "h": 36
+  },
+  {
+   "sel": "a \"LotPL-260902-H1-01FINDIK BAZ\"",
+   "w": 530,
+   "h": 36
+  },
+  {
+   "sel": "a \"Eldeki stokTIRE/MAMUL/R01Eld\"",
+   "w": 502,
+   "h": 36
+  }
+ ],
+ "fontSizesMain": {
+  "11": 9,
+  "12": 22,
+  "13": 9,
+  "14": 3,
+  "24": 1
+ },
+ "shadowCount": 1,
+ "borderedInsideBordered": 11,
+ "borderedInsideBorderedSample": [
+  "rounded border bg-background px-1 py-px font-mono  <= flex items-center border-t border-sidebar-border/7",
+  "rounded border bg-background px-1.5 py-px font-mon <= hidden h-8 w-56 items-center gap-2 rounded-md bord",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= flex flex-wrap items-center gap-3 rounded-xl borde",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4",
+  "inline-flex shrink-0 items-center gap-1.5 rounded- <= rounded-xl border border-border/60 p-4"
+ ],
+ "bottomNav": null
+}

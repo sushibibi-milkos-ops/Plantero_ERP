@@ -1,0 +1,114 @@
+{
+ "yeni": [
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "Tedarikçi seçin",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "TIRE — Tire Fabrika",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "input",
+   "txt": "",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(2px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "",
+   "bs": "none",
+   "outline": "1px auto",
+   "fv": true,
+   "ring": "0 0 #0000"
+  },
+  {
+   "inMain": true,
+   "tag": "input",
+   "txt": "",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(2px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "Ürün ara ve ekle…",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "Ürün ekle",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "Vazgeç",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  }
+ ],
+ "onay": [
+  {
+   "inMain": true,
+   "tag": "a",
+   "txt": "PO-2026-000007",
+   "bs": "none",
+   "outline": "1px auto",
+   "fv": true,
+   "ring": "0 0 #0000"
+  },
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "Reddet",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "a",
+   "txt": "Düzenle",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  },
+  {
+   "inMain": true,
+   "tag": "button",
+   "txt": "Onayla",
+   "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+   "outline": "0px none",
+   "fv": true,
+   "ring": "0 0 0 calc(3px + 0px) color-mix(in oklab, oklch(0.55 0.16 152) 50%, transparent)"
+  }
+ ]
+}

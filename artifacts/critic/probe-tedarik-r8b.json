@@ -1,0 +1,253 @@
+{
+ "yeniFocus": [
+  {
+   "sel": "button[role=\"combobox\"]",
+   "txt": "Tedarikçi seçin",
+   "ringChanged": false,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button[role=\"combobox\"]",
+   "txt": "TIRE — Tire Fabrika",
+   "ringChanged": false,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button[role=\"combobox\"]",
+   "txt": "Ürün ara ve ekle…",
+   "ringChanged": false,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "input",
+   "txt": "",
+   "ringChanged": true,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "input",
+   "txt": "",
+   "ringChanged": true,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button",
+   "txt": "Tedarikçi seçin",
+   "ringChanged": false,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button",
+   "txt": "TIRE — Tire Fabrika",
+   "ringChanged": false,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button",
+   "txt": "",
+   "ringChanged": false,
+   "hoverChanged": true,
+   "before": {
+    "bs": "none",
+    "ol": "0px",
+    "bc": "oklch(0.92 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "none",
+    "ol": "0px",
+    "bc": "oklch(0.92 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "oklch(0.967 0.001 286.4)",
+    "bc": "oklch(0.92 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button",
+   "txt": "Ürün ara ve ekle…",
+   "ringChanged": false,
+   "hoverChanged": false,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.9 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "bc": "oklch(0.9 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button",
+   "txt": "Ürün ekle",
+   "ringChanged": false,
+   "hoverChanged": true,
+   "before": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.92 0.004 286.3)",
+    "bg": "oklch(0.985 0.002 250)"
+   },
+   "focused": {
+    "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "ol": "0px",
+    "bc": "oklch(0.92 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "oklab(0.985 -0.00068404 -0.00187939)",
+    "bc": "oklch(0.92 0.004 286.3)"
+   }
+  },
+  {
+   "sel": "button",
+   "txt": "Vazgeç",
+   "ringChanged": false,
+   "hoverChanged": true,
+   "before": {
+    "bs": "none",
+    "ol": "0px",
+    "bc": "oklch(0.92 0.004 286.3)",
+    "bg": "rgba(0, 0, 0, 0)"
+   },
+   "focused": {
+    "bs": "none",
+    "ol": "0px",
+    "bc": "oklch(0.92 0.004 286.3)"
+   },
+   "hovered": {
+    "bg": "oklab(0 0 0 / 0)",
+    "bc": "oklch(0.92 0.004 286.3)"
+   }
+  }
+ ],
+ "hover-siparisler": {
+  "before": "rgba(0, 0, 0, 0)",
+  "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "changed": true,
+  "cursor": "pointer"
+ },
+ "hover-kritik-stok": {
+  "before": "rgba(0, 0, 0, 0)",
+  "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "changed": true,
+  "cursor": "pointer"
+ },
+ "hover-tedarikciler": {
+  "before": "rgba(0, 0, 0, 0)",
+  "after": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "changed": true,
+  "cursor": "pointer"
+ }
+}

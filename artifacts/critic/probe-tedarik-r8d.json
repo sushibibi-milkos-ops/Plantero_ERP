@@ -1,0 +1,99 @@
+{
+ "kritik-stok": {
+  "blocks": [
+   {
+    "d": 0,
+    "tag": "div",
+    "cls": "mx-auto w-full max-w-[1400px]",
+    "top": 72,
+    "h": 986,
+    "txt": "Kritik Stok36 kural — kapsama süresi lead tim"
+   },
+   {
+    "d": 1,
+    "tag": "div",
+    "cls": "mb-5 md:mb-6",
+    "top": 72,
+    "h": 56,
+    "txt": "Kritik Stok36 kural — kapsama süresi lead tim"
+   },
+   {
+    "d": 1,
+    "tag": "div",
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+    "top": 152,
+    "h": 80,
+    "txt": "Kritik—Uyarı—Toplam kural"
+   },
+   {
+    "d": 1,
+    "tag": "p",
+    "cls": "mb-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-",
+    "top": 256,
+    "h": 38,
+    "txt": "Motor henüz çalıştırılmadı — kapsama süresi v"
+   },
+   {
+    "d": 1,
+    "tag": "div",
+    "cls": "",
+    "top": 310,
+    "h": 748,
+    "txt": "Sadece kritik/uyarıMotoru çalıştır36 kayıtÜrü"
+   }
+  ],
+  "odd": [
+   {
+    "fs": 19,
+    "tag": "span",
+    "cls": "text-muted-foreground/60",
+    "txt": "—",
+    "weight": "600"
+   },
+   {
+    "fs": 19,
+    "tag": "span",
+    "cls": "text-muted-foreground/60",
+    "txt": "—",
+    "weight": "600"
+   }
+  ]
+ },
+ "siparisler": {
+  "blocks": [
+   {
+    "d": 0,
+    "tag": "div",
+    "cls": "mx-auto w-full max-w-[1400px]",
+    "top": 72,
+    "h": 840,
+    "txt": "Satın Alma Siparişleri16 sipariş · 1 onay bek"
+   },
+   {
+    "d": 1,
+    "tag": "div",
+    "cls": "mb-5 md:mb-6",
+    "top": 72,
+    "h": 56,
+    "txt": "Satın Alma Siparişleri16 sipariş · 1 onay bek"
+   },
+   {
+    "d": 1,
+    "tag": "div",
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto ",
+    "top": 152,
+    "h": 80,
+    "txt": "Açık siparişAçık sipariş tutarıOnay bekleyenA"
+   },
+   {
+    "d": 1,
+    "tag": "div",
+    "cls": "",
+    "top": 256,
+    "h": 656,
+    "txt": "Durum16 kayıtSipariş noTedarikçiDurumAlınanBe"
+   }
+  ],
+  "odd": []
+ }
+}
