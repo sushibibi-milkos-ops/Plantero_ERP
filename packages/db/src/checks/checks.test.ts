@@ -96,7 +96,20 @@ const FILES = await checkFiles();
 // checks/54_recipe_approval_drift.sql üst yorumu). Düzeltme önerisi: EDITABLE_STATUSES'tan 'testing'i
 // çıkar (versiyon onaya gönderildikten sonra kilitlensin) veya updateVersionDraft bekleyen onayı
 // otomatik reddedip versiyonu 'draft'a düşürsün.
-const RULE_COUNT = 54;
+// I55 (veri-critic, Aşama-4 tur-5 — YENİ, P1, CANLI DOĞRULANDI): İhracat sevkiyatının TL karşılığı
+// (`export_shipments.amount_try`) yalnızca `createFromOrder`'da bir kez donduruluyor;
+// `generateProforma` sonradan `proformaAmount`'u siparişin GÜNCEL toplamına çekiyor ama
+// `exchangeRate`/`amountTry`'a hiç dokunmuyor. Canlı egzersizle kanıtlandı (rollback'li transaction):
+// taze bir EUR ihracat siparişi (200 EUR, kur=38,50 → amountTry=7.700 TL ile sevkiyat açıldı), sipariş
+// hâlâ 'draft' olduğundan satır miktarı 10 katına çıkarıldı (grandTotal 200→2.000 EUR), sonra
+// generateProforma çağrıldı → proformaAmount doğru şekilde 2.000'e güncellendi ama amountTry hâlâ eski
+// 7.700 TL'de donuk kaldı (doğrusu 2.000×38,50=77.000 TL olmalıydı) — 69.300 TL fark, hiç yuvarlama
+// değil. Bu tutar `reindex()` üzerinden belge indeksine (kokpit KPI kartları dahil) sızıyor. Fresh
+// seed'de 0 ihlal (bu saf bir regresyon güvenlik ağı — bkz. checks/55_export_shipment_amount_try.sql
+// üst yorumu). Düzeltme önerisi: generateProforma (ve fatura öncesi diğer durum geçişleri) her
+// çağrıldığında exchangeRate'i taze TCMB kuruyla yeniden çözüp amountTry = round4(proformaAmount ×
+// exchangeRate) olarak yeniden yazmalı.
+const RULE_COUNT = 55;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
