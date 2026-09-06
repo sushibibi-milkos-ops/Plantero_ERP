@@ -21,7 +21,10 @@ export function OrdersTable({ orders }: { orders: PurchaseOrderRow[] }) {
         cell: ({ row }) => (
           <span className="inline-flex items-center gap-1.5">
             {row.original.docNo}
-            {row.original.isAiGenerated ? <Sparkles className="size-3.5 shrink-0 text-primary" aria-label="AI taslağı" /> : null}
+            {/* Tur 9 P2 tedarik-siparisler-05 kök neden: --primary iki anlama geliyordu (birincil eylem
+             * butonu + bu veri işareti) — approval-queue-list.tsx:129 zaten text-muted-foreground kullanıyor,
+             * bu sütun da aynı nötr tona alındı. */}
+            {row.original.isAiGenerated ? <Sparkles className="size-3.5 shrink-0 text-muted-foreground" aria-label="AI taslağı" /> : null}
           </span>
         ),
       },

@@ -132,7 +132,10 @@ export function ApprovalQueueList({ items }: { items: ApprovalQueueRow[] }) {
                    * Kart artık TEK gövde boyutu (13px) konuşuyor; touch hedefi Tur 4 P2 tedarik-onay-08
                    * (`max-sm:min-h-11` — replenishment-panel.tsx'teki checkbox kalıbıyla aynı teknik:
                    * kök yalnızca dokunma hedefini büyütür, `-my-3` çevre satırların boyunu korur). */}
-                  <Link href={`/satin-alma/siparisler/${item.orderId}`} className="inline-flex max-sm:min-h-11 max-sm:items-center max-sm:-my-3 truncate font-mono text-[13px] font-medium hover:underline">{item.docNo}</Link>
+                  {/* Tur 9 P2 tedarik-focusring-token-01 kök neden: bu <a> tarayıcı varsayılan `outline: 1px
+                   * auto` halkasını basıyordu — modülün geri kalanı (checkbox, avatar düğmesi) zaten
+                   * `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` token'ını taşıyor. */}
+                  <Link href={`/satin-alma/siparisler/${item.orderId}`} className="inline-flex max-sm:min-h-11 max-sm:items-center max-sm:-my-3 truncate rounded-sm font-mono text-[13px] font-medium outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50">{item.docNo}</Link>
                 </div>
                 <div className="mt-0.5 flex items-baseline gap-1.5 text-[13px] text-muted-foreground">
                   {/* min-w-0 + truncate: cari adı küçülür, kalem sayısı (shrink-0) her genişlikte
