@@ -35,13 +35,17 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
             <ul className="divide-y divide-border/50">
               {data.quarantine.top5.map((r) => (
                 <li key={r.quantId}>
+                  {/* 390px'te 4 ayrı satır yerine 3: rozet / ürün adı / konum+tutar (aynı satır) —
+                      konum+tutar tek `sm:contents` grubuna alındı, masaüstü sırası DEĞİŞMEDİ. */}
                   <RowLink href={`/depo/lotlar/${r.lotId}`}>
                     <span className="flex min-w-0 items-center gap-2 sm:contents">
                       <LotBadge lotNo={r.lotNo} status="quarantine" />
                     </span>
                     <span className="min-w-0 flex-1 truncate">{r.productName}</span>
-                    <span className="shrink-0 text-xs text-muted-foreground">{r.locationCode}</span>
-                    <MoneyCell value={r.value} className="shrink-0" />
+                    <span className="flex shrink-0 items-center justify-between gap-3 sm:contents">
+                      <span className="text-xs text-muted-foreground">{r.locationCode}</span>
+                      <MoneyCell value={r.value} />
+                    </span>
                   </RowLink>
                 </li>
               ))}

@@ -68,7 +68,7 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
                 title="Bugün henüz belge yok"
                 description="Sevkiyat, iş emri, mal kabul veya fatura oluştuğunda burada görünür."
                 action={
-                  <Button asChild size="sm" variant="outline" className="h-8">
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
                     <Link href="/satis/siparisler/yeni"><Plus className="size-3.5" /> Yeni sipariş oluştur</Link>
                   </Button>
                 }
@@ -163,7 +163,7 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
                 title="Kritik stok yok"
                 description="Kapsama süresi tedarik süresinin altına düşen kalemler burada listelenir."
                 action={
-                  <Button asChild size="sm" variant="outline" className="h-8">
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
                     <Link href="/satin-alma/siparisler/yeni"><Plus className="size-3.5" /> Satın alma siparişi oluştur</Link>
                   </Button>
                 }

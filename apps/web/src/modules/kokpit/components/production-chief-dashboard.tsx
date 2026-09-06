@@ -10,6 +10,10 @@ import { Section, RowLink, DashboardGrid, ProductionLineRow, StatStrip } from '.
 const SCRAP_REASON_LABEL: Record<string, string> = {
   spill: 'Döküm/sızma', burnt: 'Yanma', contamination: 'Kontaminasyon', packaging: 'Ambalaj', startup: 'Başlangıç fire', other: 'Diğer',
 };
+const DOWNTIME_REASON_LABEL: Record<string, string> = {
+  breakdown: 'Arıza', changeover: 'Ürün değişimi', cleaning: 'Temizlik', material_shortage: 'Malzeme yok',
+  no_operator: 'Operatör yok', planned_maintenance: 'Planlı bakım', quality_hold: 'Kalite bekletme', power: 'Elektrik kesintisi', break: 'Mola', other: 'Diğer',
+};
 
 /** Üretim şefi panosu — hat durumu, açık/geciken iş emri, bugünkü OEE, son 7 gün fire oranı + kırılımı, son iş emirleri.
  *  Kök neden (Tur 1 P1 kokpit-uretim-density-01): önceden tek bölüm (Hat durumu, 3 satır) vardı — ilk
@@ -51,6 +55,26 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
                   label: SCRAP_REASON_LABEL[s.reason] ?? s.reason,
                 }))}
               />
+            )}
+          </Section>
+
+          <Section title="Son duruşlar" href="/uretim/hatlar">
+            {data.recentDowntimes.length === 0 ? (
+              <EmptyState compact title="Kayıtlı duruş yok" />
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {data.recentDowntimes.map((d) => (
+                  <li key={d.id} className="flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]">
+                    <span className="min-w-0 flex-1 truncate">
+                      <span className="font-medium">{d.lineName}</span>
+                      <span className="text-muted-foreground"> · {DOWNTIME_REASON_LABEL[d.reason] ?? d.reason}</span>
+                    </span>
+                    <span className="shrink-0 text-xs text-muted-foreground">
+                      {d.ongoing ? <StatusBadge status="in_progress" label="Devam ediyor" tone="warning" /> : `${d.minutes} dk`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             )}
           </Section>
         </div>

@@ -345,6 +345,7 @@ export type RecentWorkOrderRow = {
   id: string; docNo: string; status: string; lineName: string; productName: string; plannedQty: string; producedQty: string; uomCode: string; isLate: boolean; finishedAt: string | null;
 };
 export type ScrapReasonRow = { reason: string; qty: string; value: string; entryCount: number };
+export type RecentDowntimeRow = { id: string; lineName: string; reason: string; isPlanned: boolean; startedAt: string; minutes: number; ongoing: boolean };
 
 export type ProductionChiefCards = {
   lines: LineStatus[];
@@ -357,6 +358,9 @@ export type ProductionChiefCards = {
   recentWorkOrders: RecentWorkOrderRow[];
   /** Son 7 gün fire kırılımı, sebebe göre (en yüksek değer önce). */
   scrapBreakdown7d: ScrapReasonRow[];
+  /** Son duruşlar (hat bazlı, en yeni önce) — "Hat durumu" yalnızca ŞU ANKİ iş emrini gösterir, bugünkü
+   *  duruş geçmişi ayrı bir sinyal (Tur 1 P1 kokpit-uretim-density-01). */
+  recentDowntimes: RecentDowntimeRow[];
 };
 
 /** Üretim şefi kart seti: hat durumu, açık/geciken iş emri, bugünkü ortalama OEE, son 7 gün fire oranı + kırılımı, son iş emirleri. */
@@ -373,7 +377,7 @@ export async function getProductionChiefCards(tx: DbOrTx): Promise<ProductionChi
   // Fire oranı (son 7 gün): Σ fire değeri / Σ (fire + üretim çıktısı) değeri — iş emri maliyet alanlarından.
   const from = addDays(today, -6);
   const fromTs = new Date(`${from}T00:00:00.000Z`);
-  const [rateRows, recentRows, scrapRows] = await Promise.all([
+  const [rateRows, recentRows, scrapRows, downtimeRows] = await Promise.all([
     tx
       .select({ producedQty: workOrders.producedQty, scrapQty: workOrders.scrapQty })
       .from(workOrders)
@@ -390,6 +394,12 @@ export async function getProductionChiefCards(tx: DbOrTx): Promise<ProductionChi
       .select({ reason: workOrderScraps.reason, qty: workOrderScraps.qty, value: workOrderScraps.value })
       .from(workOrderScraps)
       .where(gte(workOrderScraps.recordedAt, fromTs)),
+    tx
+      .select({ id: downtimes.id, lineName: productionLines.name, reason: downtimes.reason, isPlanned: downtimes.isPlanned, startedAt: downtimes.startedAt, endedAt: downtimes.endedAt, minutes: downtimes.minutes })
+      .from(downtimes)
+      .innerJoin(productionLines, eq(productionLines.id, downtimes.lineId))
+      .orderBy(desc(downtimes.startedAt))
+      .limit(8),
   ]);
   const produced = sum(rateRows.map((r) => D(r.producedQty)));
   const scrap = sum(rateRows.map((r) => D(r.scrapQty)));
@@ -412,7 +422,13 @@ export async function getProductionChiefCards(tx: DbOrTx): Promise<ProductionChi
     .map(([reason, v]) => ({ reason, qty: toDb(v.qty), value: toDb(v.value), entryCount: v.entryCount }))
     .sort((a, b) => D(b.value).minus(D(a.value)).toNumber());
 
-  return { lines, openWorkOrders, lateWorkOrders, todayOeePct, scrapRatePct7d, recentWorkOrders, scrapBreakdown7d };
+  const recentDowntimes: RecentDowntimeRow[] = downtimeRows.map((d) => ({
+    id: d.id, lineName: d.lineName, reason: d.reason, isPlanned: d.isPlanned, startedAt: d.startedAt.toISOString(),
+    minutes: d.endedAt ? Math.round((d.endedAt.getTime() - d.startedAt.getTime()) / 60000) : d.minutes,
+    ongoing: !d.endedAt,
+  }));
+
+  return { lines, openWorkOrders, lateWorkOrders, todayOeePct, scrapRatePct7d, recentWorkOrders, scrapBreakdown7d, recentDowntimes };
 }
 
 /* ------------------------------------------------------------------ */
