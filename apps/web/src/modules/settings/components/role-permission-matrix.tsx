@@ -198,7 +198,7 @@ export function RolePermissionMatrix({ role, matrix }: { role: RoleOverview; mat
                       <td key={a} className="h-10 p-0 text-center align-middle">
                         {/* <label>, checkbox'ı sarmalayarak dokunma hedefini tüm hücreye (≥44px yükseklik
                             mobilde) genişletir — görsel yoğunluk (20px kutu) değişmeden. */}
-                        <label className={cn('grid h-11 w-full place-items-center md:h-10', editable && 'cursor-pointer')}>
+                        <label className={cn('grid h-10 w-full place-items-center', editable && 'cursor-pointer')}>
                           <Checkbox
                             checked={checked}
                             disabled={!editable}
