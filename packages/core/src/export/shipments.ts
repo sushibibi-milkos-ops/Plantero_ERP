@@ -1,17 +1,17 @@
-import { eq, and } from 'drizzle-orm';
+import { eq, and, lte, desc } from 'drizzle-orm';
 import type Decimal from 'decimal.js';
 import {
   exportShipments, exportPackages, exportDocuments, salesOrders, deliveries, deliveryLines, invoices, partners, products,
+  exchangeRates,
   type DbOrTx,
 } from '@plantero/db';
-import { D, toDb, toDbRate, round4, ZERO } from '../money.js';
+import { D, toDb, toDbRate, round4, round6, ZERO } from '../money.js';
 import { businessDate } from '../dates.js';
 import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { ensureDocumentSet, updateExportDocument } from './documents.js';
 import { checkEtgbLimit, resolveRegime } from './etgb.js';
-import { getExchangeRate } from '../sales/pricing.js';
 import type { ActorCtx, DocumentOrigin } from '../types.js';
 
 /**
@@ -50,14 +50,34 @@ async function reindex(tx: DbOrTx, s: typeof exportShipments.$inferSelect): Prom
 }
 
 /**
- * I55 — fatura bağlanmadan önceki HER durum geçişinde `amountTry`/`exchangeRate` senkronunu tazeler.
- * Referans tutar `proformaAmount` (>0 ise) yoksa bağlı siparişin GÜNCEL `grandTotal`'ı; kur, I20'nin
- * `exchange_rates` sorgu örüntüsüyle (`sales/pricing.ts::getExchangeRate`, 'buying' — dövizli satışta
- * şirketin bankaya sattığı kur, `accounting/fx.ts` ile aynı kural) proforma tarihine (yoksa bugüne) en
- * yakın günden yeniden çözülür; kur bulunamazsa (TCMB verisi yoksa) mevcut kur korunur, sessizce eski
- * kalmaz — yalnızca referans tutar × kur her zaman tutarlı yazılır (`checks/55_export_shipment_amount_try.sql`).
- * Fatura bağlıysa (`invoiceId` dolu) DOKUNULMAZ: o andan sonra `amountTry`/`exchangeRate` yalnızca
- * `linkInvoice`'ın faturadan kopyaladığı değerlerle izlenir (I55-b) — asıl kaynak artık `invoices`'tır.
+ * `sales/pricing.ts::getExchangeRate` ile AYNI sorgu örüntüsü (I20: currency + rate_date <= tarih,
+ * en yeni önce, 'buying') — ama ayrıca çözülen satırın GERÇEK `rate_date`'ini de döner. `getExchangeRate`
+ * yalnızca katsayıyı döndürdüğü için `syncAmountTry` daha önce `exchangeRateDate` alanına aranan tarihi
+ * (`effectiveDate` — proforma tarihi/bugün) yazıyordu; TCMB o gün için henüz yayın yapmamışsa (`bugün`
+ * her zaman böyledir) sevkiyat hiç var olmayan bir kur gününe işaret ediyor ve `/ihracat/kurlar`
+ * tablosuyla çelişiyordu (tur 6 P1). Burada dönen `rateDate` her zaman `exchange_rates`'te gerçekten
+ * var olan bir satırı gösterir.
+ */
+async function resolveBuyingRate(tx: DbOrTx, currency: string, date: string): Promise<{ rate: Decimal; rateDate: string } | null> {
+  const [row] = await tx
+    .select({ rateDate: exchangeRates.rateDate, buying: exchangeRates.buying })
+    .from(exchangeRates)
+    .where(and(eq(exchangeRates.currency, currency), lte(exchangeRates.rateDate, date)))
+    .orderBy(desc(exchangeRates.rateDate))
+    .limit(1);
+  return row ? { rate: round6(D(row.buying)), rateDate: row.rateDate } : null;
+}
+
+/**
+ * I55 — fatura bağlanmadan önceki HER durum geçişinde `amountTry`/`exchangeRate`/`exchangeRateDate`
+ * senkronunu tazeler. Referans tutar `proformaAmount` (>0 ise) yoksa bağlı siparişin GÜNCEL
+ * `grandTotal`'ı; kur `resolveBuyingRate` ile proforma tarihine (yoksa bugüne) en yakın ÖNCEKİ günden
+ * yeniden çözülür ve `exchangeRateDate`'e o satırın kendi `rate_date`'i yazılır (aranan tarih değil —
+ * bkz. `resolveBuyingRate` yorumu); kur bulunamazsa (TCMB verisi yoksa) mevcut kur/tarih korunur,
+ * sessizce eski kalmaz — yalnızca referans tutar × kur her zaman tutarlı yazılır
+ * (`checks/55_export_shipment_amount_try.sql`). Fatura bağlıysa (`invoiceId` dolu) DOKUNULMAZ: o andan
+ * sonra `amountTry`/`exchangeRate`/`exchangeRateDate` yalnızca `linkInvoice`'ın faturadan kopyaladığı
+ * değerlerle izlenir (I55-b) — asıl kaynak artık `invoices`'tır.
  */
 async function syncAmountTry(tx: DbOrTx, s: typeof exportShipments.$inferSelect): Promise<typeof exportShipments.$inferSelect> {
   if (s.invoiceId) return s;
@@ -69,13 +89,21 @@ async function syncAmountTry(tx: DbOrTx, s: typeof exportShipments.$inferSelect)
     referenceAmount = D(order.grandTotal);
   }
   const effectiveDate = s.proformaDate ?? businessDate(new Date());
-  const resolved = s.currency === 'TRY' ? D(1) : await getExchangeRate(tx, s.currency, effectiveDate, 'buying');
-  const exchangeRate = resolved ?? D(s.exchangeRate);
+  let exchangeRate: Decimal;
+  let exchangeRateDate: string;
+  if (s.currency === 'TRY') {
+    exchangeRate = D(1);
+    exchangeRateDate = effectiveDate;
+  } else {
+    const resolved = await resolveBuyingRate(tx, s.currency, effectiveDate);
+    exchangeRate = resolved?.rate ?? D(s.exchangeRate);
+    exchangeRateDate = resolved?.rateDate ?? s.exchangeRateDate ?? effectiveDate;
+  }
   const amountTry = round4(referenceAmount.mul(exchangeRate));
-  if (exchangeRate.eq(D(s.exchangeRate)) && amountTry.eq(D(s.amountTry))) return s;
+  if (exchangeRate.eq(D(s.exchangeRate)) && amountTry.eq(D(s.amountTry)) && exchangeRateDate === s.exchangeRateDate) return s;
   const [updated] = await tx
     .update(exportShipments)
-    .set({ exchangeRate: toDbRate(exchangeRate), exchangeRateDate: effectiveDate, amountTry: toDb(amountTry) })
+    .set({ exchangeRate: toDbRate(exchangeRate), exchangeRateDate, amountTry: toDb(amountTry) })
     .where(eq(exportShipments.id, s.id))
     .returning();
   return updated!;
@@ -365,9 +393,22 @@ export async function markShipmentDelivered(tx: DbOrTx, shipmentId: string, ctx:
  * `document_links(export_shipment→invoice)` kurulur (I36 `export_shipment_orphan_invoice` kapsamı).
  * Fatura zaten `createInvoiceFromOrder/FromDelivery` (isExport siparişten KDV %0 ile) tarafından
  * oluşturulmuş olmalı — burada YENİ bir fatura ÜRETİLMEZ (tek fatura yazma noktası `sales/invoicing.ts`).
+ *
+ * Tur 6 P1 kök neden düzeltmesi: UI yalnızca status IN ('shipped','delivered') iken "Faturaya bağla"
+ * düğmesini gösteriyordu (`canLinkInvoice`) ama core'da karşılığı yoktu — `assertStatus` eklendi (savunma
+ * katmanı UI'de kaldırılsa/atlansa bile sunucu tarafı korur, diğer tüm durum geçişleriyle aynı desen).
+ * Ayrıca `s.invoiceId` zaten doluyken kontrolsüz üzerine yazılıyordu: eski faturanın `exportShipmentId`'si
+ * temizlenmeden yeni fatura yazılınca `document_links`'te eski+yeni iki satır kalıyor, eski fatura hâlâ
+ * bu sevkiyatı gösteriyordu (mandate #5 belge zinciri simetrisi ihlali — I44'ün `cancelShipment`'e
+ * kazandırdığı simetrik temizleme örüntüsü burada yoktu). Aynı faturayla tekrar çağrı (idempotent) hâlâ
+ * serbest; FARKLI bir faturayla ikinci çağrı reddedilir — önce `cancelShipment`/manuel temizlik gerekir.
  */
 export async function linkInvoice(tx: DbOrTx, shipmentId: string, invoiceId: string, ctx: ActorCtx): Promise<typeof exportShipments.$inferSelect> {
   const s = await getShipmentOrThrow(tx, shipmentId);
+  assertStatus(s, ['shipped', 'delivered']);
+  if (s.invoiceId && s.invoiceId !== invoiceId) {
+    throw new DomainError('INVOICE_ALREADY_LINKED', `${s.docNo} zaten başka bir faturaya (${s.invoiceId}) bağlı — önce o bağlantı kaldırılmalı`, { shipmentId, existingInvoiceId: s.invoiceId, invoiceId });
+  }
   const [invoice] = await tx.select().from(invoices).where(eq(invoices.id, invoiceId)).limit(1);
   if (!invoice) throw new NotFoundError('Fatura', invoiceId);
   if (!invoice.isExport) throw new ValidationError(`Fatura ${invoice.docNo} ihracat faturası değil`, { invoiceId });

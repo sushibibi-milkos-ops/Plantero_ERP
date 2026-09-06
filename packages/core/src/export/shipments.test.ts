@@ -185,7 +185,7 @@ describe('export/shipments — sipariş → sevkiyat → proforma → çeki list
     });
   });
 
-  it('faturaya bağlı bir sevkiyat iptal edilince kendi invoiceId/deliveryId alanları VE invoices.exportShipmentId de temizlenir (I44)', async () => {
+  it('cancelShipment invoiceId dolu olsa bile (anomali/eski veri) kendi invoiceId/deliveryId alanları VE invoices.exportShipmentId temizler (I44)', async () => {
     await withRollback(async (tx) => {
       const b = await seedBase(tx);
       const channel = await seedExportFixtures(tx, b);
@@ -200,9 +200,14 @@ describe('export/shipments — sipariş → sevkiyat → proforma → çeki list
       await shipDelivery(tx, delivery.id, ctx);
 
       const { invoice } = await createInvoiceFromDelivery(tx, delivery.id, ctx);
-      const withInvoice = await linkInvoice(tx, shipment.id, invoice.id, ctx);
-      expect(withInvoice.invoiceId).toBe(invoice.id);
-      expect(withInvoice.deliveryId).toBe(delivery.id);
+
+      // Tur 6 P1 düzeltmesinden sonra `linkInvoice` artık yalnızca 'shipped'/'delivered' durumunda
+      // çalışıyor (bkz. aşağıdaki 'linkInvoice: shipped/delivered dışında reddedilir' testi) — bu
+      // sevkiyat hâlâ 'confirmed'. Bu test artık `linkInvoice`'tan BAĞIMSIZ olarak `cancelShipment`'in
+      // I44 temizleme örüntüsünü (invoiceId her nasılsa dolmuşsa bile — eski veri/anomali senaryosu)
+      // doğruluyor; bağlantı burada `linkInvoice`'ın eskiden (kısıtsız) yaptığı gibi doğrudan yazılır.
+      await tx.update(exportShipments).set({ invoiceId: invoice.id }).where(eq(exportShipments.id, shipment.id));
+      await tx.update(invoices).set({ exportShipmentId: shipment.id }).where(eq(invoices.id, invoice.id));
       const [invoiceBefore] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
       expect(invoiceBefore!.exportShipmentId).toBe(shipment.id);
 
@@ -215,6 +220,64 @@ describe('export/shipments — sipariş → sevkiyat → proforma → çeki list
       expect(invoiceAfter!.exportShipmentId).toBeNull(); // I44 — iptal edilmiş sevkiyata geri işaret edemez
       const [orderAfter] = await tx.select().from(salesOrders).where(eq(salesOrders.id, order.id));
       expect(orderAfter!.exportShipmentId).toBeNull();
+    });
+  });
+
+  it('linkInvoice: shipped/delivered dışında reddedilir (Tur 6 P1 kök neden düzeltmesi)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const channel = await seedExportFixtures(tx, b);
+      const { order, delivery } = await buildExportOrder(tx, b, channel.id, '10', '50');
+      const shipment = await createFromOrder(tx, { salesOrderId: order.id }, ctx);
+      await linkDelivery(tx, shipment.id, delivery.id, ctx);
+      await reserveFefo(tx, delivery.id, ctx);
+      const dLines = await tx.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, delivery.id));
+      for (const line of dLines) await confirmPick(tx, { deliveryId: delivery.id, lineId: line.id, scannedLotId: line.lotId }, ctx);
+      await shipDelivery(tx, delivery.id, ctx);
+      const { invoice } = await createInvoiceFromDelivery(tx, delivery.id, ctx);
+
+      // Sevkiyat hâlâ 'confirmed' — UI'nin "Faturaya bağla" düğmesini gizlediği durumun aynısı
+      // (`canLinkInvoice`, page.tsx); artık core katmanı da bağımsız olarak reddediyor.
+      await expect(linkInvoice(tx, shipment.id, invoice.id, ctx)).rejects.toThrow(/durumu \(confirmed\) bu işlem için uygun değil/);
+      const [shipmentAfter] = await tx.select().from(exportShipments).where(eq(exportShipments.id, shipment.id));
+      expect(shipmentAfter!.invoiceId).toBeNull();
+    });
+  });
+
+  it('linkInvoice: zaten bağlı bir sevkiyat farklı bir faturayla ikinci kez bağlanamaz — belge zinciri simetrisi (Tur 6 P1)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const channel = await seedExportFixtures(tx, b);
+      const { order, delivery } = await buildExportOrder(tx, b, channel.id, '10', '50');
+      const shipment = await createFromOrder(tx, { salesOrderId: order.id }, ctx);
+      await linkDelivery(tx, shipment.id, delivery.id, ctx);
+      await reserveFefo(tx, delivery.id, ctx);
+      const dLines = await tx.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, delivery.id));
+      for (const line of dLines) await confirmPick(tx, { deliveryId: delivery.id, lineId: line.id, scannedLotId: line.lotId }, ctx);
+      await shipDelivery(tx, delivery.id, ctx);
+      await buildPackingList(tx, shipment.id, ctx);
+      await advanceToCustoms(tx, shipment.id, { etgbNo: 'ETGB-DUP' }, ctx);
+      await markShipped(tx, shipment.id, ctx);
+
+      const { invoice } = await createInvoiceFromDelivery(tx, delivery.id, ctx);
+      const linkedOnce = await linkInvoice(tx, shipment.id, invoice.id, ctx);
+      expect(linkedOnce.invoiceId).toBe(invoice.id);
+
+      // Aynı faturayla tekrar çağrı idempotent kalmalı (no-op, hata yok).
+      const linkedAgainSame = await linkInvoice(tx, shipment.id, invoice.id, ctx);
+      expect(linkedAgainSame.invoiceId).toBe(invoice.id);
+
+      // FARKLI bir fatura id'siyle ikinci çağrı reddedilmeli — eski koddaki bug tam olarak bunu
+      // sessizce kabul edip eski faturanın `exportShipmentId`'sini temizlemeden üzerine yazıyordu
+      // (document_links'te yetim/çift kayıt kalıyordu, mandate #5 ihlali). Kontrol `s.invoiceId`
+      // karşılaştırmasıyla YENİ invoiceId'nin var olup olmadığına bakılmadan ÖNCE tetiklenir.
+      const otherInvoiceId = '00000000-0000-4000-8000-000000000fee';
+      await expect(linkInvoice(tx, shipment.id, otherInvoiceId, ctx)).rejects.toThrow(/zaten başka bir faturaya/);
+
+      const [shipmentAfter] = await tx.select().from(exportShipments).where(eq(exportShipments.id, shipment.id));
+      expect(shipmentAfter!.invoiceId).toBe(invoice.id); // bozulmadı
+      const [invoiceAfter] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
+      expect(invoiceAfter!.exportShipmentId).toBe(shipment.id); // eski bağ hâlâ sağlam
     });
   });
 
