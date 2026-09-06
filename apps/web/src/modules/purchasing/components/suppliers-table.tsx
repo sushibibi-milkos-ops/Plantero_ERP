@@ -32,9 +32,16 @@ export function SuppliersTable({ suppliers, canManageWhitelist }: { suppliers: S
       {
         // width 220 -> 320 (Tur 6 P1 tedarik-tedarikciler-18): ekranın kimlik sütunu 6/6 satırda
         // kırpıktı (en fazla 135px gizli); genişlik, kardeş sütunlardan (aşağıda) alınan payla büyütüldü.
-        id: 'name', accessorFn: (r) => r.name, header: 'Tedarikçi', meta: { width: 320, mobile: 'title' },
-        // w-[296px] = meta.width(320) - td dolgusu(24) — bkz. yukarıdaki dosya notu.
-        cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[296px]" title={row.original.name}>{row.original.name}</span>,
+        // width 320 -> 370 (Tur 9 P2 tedarik-colwidth-lock-01 kök neden): 9 sütunun tamamı `meta.width`
+        // taşıyor ve toplamları (1044px) kabın (1152px) altında kalıyordu — tarayıcı aradaki 108px'i
+        // sütunlara dağıtıyor (th 320 -> 334) ama iç kutu ESKİ 320'ye göre 296px'te sabit kalıp 1/6
+        // satırda kırpıyordu. Diğer 5 sütunun kendi organik ihtiyacı (Beyaz liste, Tedarik süresi,
+        // Zamanında, Ürün, Açık sipariş — hepsi probe ile ölçülüp aşağıda ayrı ayrı büyütüldü, toplam
+        // +58px) düşüldükten sonra kalan boşluğun tamamı bu sütuna verildi (370+88+86+120+80+104+68+106+130
+        // = 1152 = kap) — dağıtılacak boşluk sıfırlandı, th artık tam 370px'te sabit durur.
+        id: 'name', accessorFn: (r) => r.name, header: 'Tedarikçi', meta: { width: 369, mobile: 'title' },
+        // w-[345px] = meta.width(369) - td dolgusu(24) — bkz. yukarıdaki dosya notu (1152 kabı tam doldurmak için 370->369, sw/cw 1px farkı giderildi).
+        cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[345px]" title={row.original.name}>{row.original.name}</span>,
       },
       { accessorKey: 'code', header: 'Kod', meta: { width: 88, mobile: 'subtitle', className: 'font-mono text-xs' } },
       {
@@ -45,17 +52,17 @@ export function SuppliersTable({ suppliers, canManageWhitelist }: { suppliers: S
         // veriliyor (Tur 5 P1 tedarik-tedarikciler-12): generic 'meta'/'badge' yuvalarının ikisi de
         // (MetaChain kendi `overflow-hidden`i, rozet yuvası `leading-4` sabit yüksekliği) 44px'lik
         // bir anahtarı dikeyde kırpar — bkz. `WhitelistCell` notu.
-        id: 'whitelisted', accessorFn: (r) => (r.isPurchaseWhitelisted ? 'true' : 'false'), header: 'Beyaz liste', meta: { width: 72, align: 'center', mobile: 'hidden', noSort: true },
+        id: 'whitelisted', accessorFn: (r) => (r.isPurchaseWhitelisted ? 'true' : 'false'), header: 'Beyaz liste', meta: { width: 86, align: 'center', mobile: 'hidden', noSort: true },
         cell: ({ row }) => <WhitelistCell supplier={row.original} canManage={canManageWhitelist} />,
       },
-      { accessorKey: 'leadTimeDays', header: 'Tedarik süresi', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays !== null ? `${row.original.leadTimeDays} gün` : '—'}</span> },
+      { accessorKey: 'leadTimeDays', header: 'Tedarik süresi', meta: { align: 'right', width: 120, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays !== null ? `${row.original.leadTimeDays} gün` : '—'}</span> },
       { accessorKey: 'qualityScore', header: 'Kalite', meta: { align: 'right', width: 80, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums">{row.original.qualityScore ? `${Math.round(Number(row.original.qualityScore))}/100` : <span className="text-muted-foreground">—</span>}</span> },
       {
         // Tur 6 P1 tedarik-tedarikciler-17 kök neden: yeşil bu ekranda iki anlama geliyordu — beyaz
         // liste anahtarı (durum) VE bu sütundaki '%100' (veri). success/warning/destructive üçlüsü
         // kaldırıldı; değer artık nötr (yalnızca <70 uyarı için destructive kalır — bu kırmızı, yeşille
         // ÇAKIŞMAZ), ekranda yeşil taşıyan tek semantik rol anahtarda kalır.
-        accessorKey: 'onTimeDeliveryPct', header: 'Zamanında', meta: { align: 'right', width: 100, mobile: 'hidden' },
+        accessorKey: 'onTimeDeliveryPct', header: 'Zamanında', meta: { align: 'right', width: 104, mobile: 'hidden' },
         cell: ({ row }) => {
           const v = row.original.onTimeDeliveryPct;
           return (
@@ -68,8 +75,8 @@ export function SuppliersTable({ suppliers, canManageWhitelist }: { suppliers: S
           );
         },
       },
-      { accessorKey: 'productCount', header: 'Ürün', meta: { align: 'right', width: 64, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.productCount}</span> },
-      { accessorKey: 'openPoCount', header: 'Açık sipariş', meta: { align: 'right', width: 80, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.openPoCount}</span> },
+      { accessorKey: 'productCount', header: 'Ürün', meta: { align: 'right', width: 68, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.productCount}</span> },
+      { accessorKey: 'openPoCount', header: 'Açık sipariş', meta: { align: 'right', width: 106, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.openPoCount}</span> },
       { accessorKey: 'openPoValue', header: 'Açık tutar', meta: { align: 'right', width: 130, mobile: 'hidden' }, cell: ({ row }) => <MoneyCell value={row.original.openPoValue} muted={Number(row.original.openPoValue) === 0} /> },
     ],
     [canManageWhitelist],

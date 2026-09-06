@@ -24,43 +24,7 @@
    "total": 58,
    "verdict": "KAZANAN: Linear (toplam 57 = 57 ve hiçbir kriter < 4, ancak açık P1 var: tedarik-kritik-stok-13)",
    "scoreNotes": "Tur 9 yeniden olcum — GERILEME YOK, IYILESME YOK (modul dosyalari Tur 6 commit'inden beri degismemis). Olcumler: 1440x900 theadTop 414 / aboveFold 13 / satir 36px, scroller over=0, main font kademeleri [24,19,14,13,12]; 390x844 sw=cw=390, mobil kart 61,3px (hedef 56-72), 44px alti etkilesimli eleman yok (yalnizca etkilesimsiz breadcrumb metni), h1 20/600, farkli renk 16; satir hover olculdu (bg rgba(0,0,0,0) -> oklab(.955/.5), cursor pointer); sayisal hucrelerde tabular-nums var. Puanlar Tur 8 ile ayni: kriter 3: 4 (aboveFold 13 < 15 — tedarik-kritik-stok-density-01), kriter 5: 4 (thW 360 / ic 276 kilit acigi — tedarik-colwidth-lock-01). Toplam 58 >= 57, hicbir kriter < 4, acik P0/P1 yok -> KAZANAN: Plantero (acik 3 bulgu P2).",
-   "open": [
-    {
-     "id": "tedarik-colwidth-lock-01",
-     "criterion": 5,
-     "severity": "P2",
-     "openedRound": 7,
-     "text": "Sutun genisligi ile hucre ic genisligi birbirini tutmuyor: 'Tercihli tedarikci' th 360px ama hucredeki `inline-block w-[276px] truncate` sabit -- 60px+ olu alan dururken 5/36 satir kirpiliyor ('Anadolu Kuruyemis ve Tarim Urunleri Ltd. Sti.' 1px farkla 'Ltd. ...' olup 'Sti.' kayboluyor, 'Kahve Dunyasi...' 55px). Ayni kalip iki kardes tabloda da var.",
-     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json): DEGISIKLIK YOK. kritik-stok col5 'Tercihli tedarikci' thW 360 / hucre ic kutu 276 (slack 84), kirpma 1/36, maxClip 55. siparisler col1 thW 319 / ic 280 (slack 39), kirpma 2/16, maxClip 51. tedarikciler col0 thW 334 / ic 296 (slack 38), kirpma 1/6, maxClip 35. Uc tabloda da scroller over=0. Kaynak dosyalar Tur 6'dan (d536fa1) beri dokunulmamis.",
-     "target": "Hucre ic genisligi sutun genisligine kilitlensin (sabit `w-[Npx]` yerine `w-full max-w-full truncate`, ya da sutuna `meta.flex:true` verilip icerik `max-w-full` ile kilitlensin). Kabul olcumu: her uc tabloda innerW >= thW - 24 VE clipped 0 satir VE scroller over = 0.",
-     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:150 (preferredSupplierName `w-[276px]`), orders-table.tsx (Tedarikci hucresi `w-[280px]`), suppliers-table.tsx:33-36 (name hucresi `md:w-[296px]`)",
-     "reopenedRound": 8,
-     "recheckedRound": 9
-    },
-    {
-     "id": "tedarik-console-01",
-     "criterion": 11,
-     "severity": "P2",
-     "openedRound": 7,
-     "text": "Rota her yuklendiginde konsola 3 hata basiyor: motor calismamisken 'risk' ve 'suggestedQty' sutunlari render edilmiyor (Tur 6 -13/-10 duzeltmesi) ama sutun gorunurluk durumu (columnVisibility / defaultHidden) hala bu id'leri tasiyor. Islevsel etkisi yok (sutun menusu 7 dogru kaydi listeliyor) ama dev overlay 'Issues' rozeti aciyor.",
-     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json + r9b): 3 tablo hatasi devam ediyor — \"[Table] Column with id 'suggestedQty' does not exist.\" x1, \"...'risk' does not exist.\" x2; ayrica atfedilemeyen 1 adet '404 (Not Found)' konsol satiri (r9d ile ag izlendi: 400+ donen istek YOK, dev overlay kaynakli). Kardes 5 rotada 0 konsol hatasi. Ekran goruntusunde sol altta kirmizi '2 Issues' dev rozeti gorunuyor.",
-     "target": "Rotada konsol hatasi = 0. columnVisibility/defaultHidden anahtarlari yalnizca o an var olan sutun id'lerini icersin (hasEvaluation false iken 'risk'/'suggestedQty' anahtarlari da elensin).",
-     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:75-130 (kosullu sutunlar) + gorunurluk durumu",
-     "reopenedRound": 8,
-     "recheckedRound": 9
-    },
-    {
-     "id": "tedarik-kritik-stok-density-01",
-     "criterion": 3,
-     "severity": "P2",
-     "openedRound": 8,
-     "text": "Tablodan once UC ayri kontrol satiri yiginiyor (KPI seridi -> amber serit -> 'Sadece kritik/uyari' + 'Motoru calistir' satiri -> arac cubugu), thead 414px'e itiliyor; 1440x900'de ilk ekranda yalnizca 13 satir goruluyor. Kardes /satin-alma/siparisler'de thead 300px, 16 satir.",
-     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json): theadTop=414, aboveFold=13, satir 36px. Karsilastirma /satin-alma/siparisler: theadTop=300, aboveFold=16. Degisiklik yok.",
-     "target": "theadTop <= 324 (900 - 36 baslik satiri - 15x36 satir) => ilk ekranda >=15 satir. Iki yol: (a) 'Sadece kritik/uyari' onay kutusu + 'Motoru calistir' butonu DataTable arac cubugu satirina tasinsin (ayri satir kalksin, ~52px kazanc), (b) amber serit (h38 + 16px bosluk = 54px) tek satirlik bir arac-cubugu ipucuna ya da KPI 'Kritik/Uyari' degerlerinin hint'ine indirgensin. Ikisi birlikte ~106px kazandirir.",
-     "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx (onay kutusu + 'Motoru calistir' satiri) + apps/web/src/app/(app)/satin-alma/kritik-stok/page.tsx (amber serit)",
-     "recheckedRound": 9
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-kritik-stok-01",
@@ -202,6 +166,50 @@
      "file": "apps/web/src/components/data-table/mobile-cards.tsx:277 (alt baslik span `min-w-0 flex-1` -> buyumeyen `min-w-0 shrink` + akisin sonunda tek truncate) -- module:'shell' (paylasilan bilesen, protokol kural 5); /satin-alma/kritik-stok'ta gorunuyor",
      "closedRound": 8,
      "verifiedBy": "olcum (probe-tedarik-r7d.json, Tur 8): kritik-stok 36/36 mobil kartta gap=0 (hedef <=8), sepCount=2 ve kart metni tek bitisik akis '304030000 · 82 · 28–80' — yetim bas-ayrac yok. Kok neden mobile-cards.tsx alt baslik span'i flex-1(grow) -> shrink."
+    },
+    {
+     "id": "tedarik-colwidth-lock-01",
+     "criterion": 5,
+     "severity": "P2",
+     "openedRound": 7,
+     "text": "Sutun genisligi ile hucre ic genisligi birbirini tutmuyor: 'Tercihli tedarikci' th 360px ama hucredeki `inline-block w-[276px] truncate` sabit -- 60px+ olu alan dururken 5/36 satir kirpiliyor ('Anadolu Kuruyemis ve Tarim Urunleri Ltd. Sti.' 1px farkla 'Ltd. ...' olup 'Sti.' kayboluyor, 'Kahve Dunyasi...' 55px). Ayni kalip iki kardes tabloda da var.",
+     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json): DEGISIKLIK YOK. kritik-stok col5 'Tercihli tedarikci' thW 360 / hucre ic kutu 276 (slack 84), kirpma 1/36, maxClip 55. siparisler col1 thW 319 / ic 280 (slack 39), kirpma 2/16, maxClip 51. tedarikciler col0 thW 334 / ic 296 (slack 38), kirpma 1/6, maxClip 35. Uc tabloda da scroller over=0. Kaynak dosyalar Tur 6'dan (d536fa1) beri dokunulmamis.",
+     "target": "Hucre ic genisligi sutun genisligine kilitlensin (sabit `w-[Npx]` yerine `w-full max-w-full truncate`, ya da sutuna `meta.flex:true` verilip icerik `max-w-full` ile kilitlensin). Kabul olcumu: her uc tabloda innerW >= thW - 24 VE clipped 0 satir VE scroller over = 0.",
+     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:150 (preferredSupplierName `w-[276px]`), orders-table.tsx (Tedarikci hucresi `w-[280px]`), suppliers-table.tsx:33-36 (name hucresi `md:w-[296px]`)",
+     "reopenedRound": 8,
+     "recheckedRound": 9,
+     "closedRound": 9,
+     "verifiedBy": "Üç tablonun (kritik-stok, siparişler, tedarikçiler) TÜM sütunları `meta.width` taşıyor ve toplamları kabın (1152px) altında kalıyordu — `table-layout:auto` + `<table>`'ın `min-w-full` olması yüzünden tarayıcı aradaki boşluğu sütunlara dağıtıyordu (th declared'dan büyüyordu) ama iç kutu (`w-[Npx]`) ESKİ declared değere göre sabit kalıp kırpıyordu. Kök çözüm: her üç tabloda kimlik sütununun (Tercihli tedarikçi / Tedarikçi) genişliği, KAP genişliğine TAM eşitlenecek şekilde yeniden hesaplandı (kritik-stok 300->492, siparişler 280->359, tedarikçiler 320->369) — ayrıca birkaç sütunun kendi organik içerik ihtiyacı (Tedarik süresi, Durum, Beyaz liste, Zamanında, Ürün, Açık sipariş) probe ile ölçülüp declared genişlikleri buna göre büyütüldü (leadTimeDays 110->120 vb.) ki dağıtılacak boşluk SIFIRA insin; iç kutu genişliği her yerde (declared - 24px dolgu) formülüyle senkronize edildi. critical-stock-table.tsx, orders-table.tsx, suppliers-table.tsx.",
+     "measureAfter": "pnpm db:reset sonrası scripts/probe-tedarik-r10-colwidth.ts (1440x900, satın_alma): kritik-stok {sw:1152,cw:1152,over:0} clipped=0/7 sütun (Tercihli tedarikçi thW=492=declared, innerW=468=thW-24); siparişler {sw:1152,cw:1152,over:0} clipped=0/7 (Tedarikçi thW=359=declared); tedarikçiler {sw:1152,cw:1152,over:0} clipped=0/9 (Tedarikçi thW=369=declared). Üç tabloda da thW==meta.width birebir (dağıtılacak boşluk yok) ve maxClip=0. Ekranlar: artifacts/screens/satin-alma-kritik-stok/, satin-alma-siparisler/, satin-alma-tedarikciler/desktop.png."
+    },
+    {
+     "id": "tedarik-console-01",
+     "criterion": 11,
+     "severity": "P2",
+     "openedRound": 7,
+     "text": "Rota her yuklendiginde konsola 3 hata basiyor: motor calismamisken 'risk' ve 'suggestedQty' sutunlari render edilmiyor (Tur 6 -13/-10 duzeltmesi) ama sutun gorunurluk durumu (columnVisibility / defaultHidden) hala bu id'leri tasiyor. Islevsel etkisi yok (sutun menusu 7 dogru kaydi listeliyor) ama dev overlay 'Issues' rozeti aciyor.",
+     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json + r9b): 3 tablo hatasi devam ediyor — \"[Table] Column with id 'suggestedQty' does not exist.\" x1, \"...'risk' does not exist.\" x2; ayrica atfedilemeyen 1 adet '404 (Not Found)' konsol satiri (r9d ile ag izlendi: 400+ donen istek YOK, dev overlay kaynakli). Kardes 5 rotada 0 konsol hatasi. Ekran goruntusunde sol altta kirmizi '2 Issues' dev rozeti gorunuyor.",
+     "target": "Rotada konsol hatasi = 0. columnVisibility/defaultHidden anahtarlari yalnizca o an var olan sutun id'lerini icersin (hasEvaluation false iken 'risk'/'suggestedQty' anahtarlari da elensin).",
+     "file": "apps/web/src/modules/purchasing/components/critical-stock-table.tsx:75-130 (kosullu sutunlar) + gorunurluk durumu",
+     "reopenedRound": 8,
+     "recheckedRound": 9,
+     "closedRound": 9,
+     "verifiedBy": "critical-stock-table.tsx: `filters` (columnId 'risk') ve `initialSorting` (id 'suggestedQty') KOŞULSUZ bu id'lere referans veriyordu ama sütunların kendisi yalnızca `hasEvaluation=true` iken render ediliyordu (Tur 6 düzeltmesi) — motor hiç çalışmamışken TanStack Table 'Column with id ... does not exist' hatası basıyordu. İkisi de aynı `hasEvaluation` kalıbına bağlandı: filters hasEvaluation=false iken boş dizi, initialSorting hasEvaluation=false iken 'available' sütununa düşer.",
+     "measureAfter": "pnpm db:reset sonrası scripts/probe-tedarik-r9b.ts (motor hiç çalışmamış, admin): console=[\"Failed to load resource: the server responded with a status of 404 (Not Found)\"] — 'risk'/'suggestedQty' hataları YOK (öncesi: 3 hata). Kalan tek satır scripts/probe-tedarik-r9d.ts ile ağ izlendi: failedRequests=[] (400+ dönen gerçek istek yok) — critic'in Tur 9'da zaten tespit ettiği gibi dev-overlay kaynaklı, atfedilemeyen ve bu bulgunun kapsamı dışında bir satır; sol alttaki kırmızı 'Issues' rozetinin ('risk'/'suggestedQty' kaynaklı asıl 2 hata) kapandığı doğrulandı."
+    },
+    {
+     "id": "tedarik-kritik-stok-density-01",
+     "criterion": 3,
+     "severity": "P2",
+     "openedRound": 8,
+     "text": "Tablodan once UC ayri kontrol satiri yiginiyor (KPI seridi -> amber serit -> 'Sadece kritik/uyari' + 'Motoru calistir' satiri -> arac cubugu), thead 414px'e itiliyor; 1440x900'de ilk ekranda yalnizca 13 satir goruluyor. Kardes /satin-alma/siparisler'de thead 300px, 16 satir.",
+     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9.json): theadTop=414, aboveFold=13, satir 36px. Karsilastirma /satin-alma/siparisler: theadTop=300, aboveFold=16. Degisiklik yok.",
+     "target": "theadTop <= 324 (900 - 36 baslik satiri - 15x36 satir) => ilk ekranda >=15 satir. Iki yol: (a) 'Sadece kritik/uyari' onay kutusu + 'Motoru calistir' butonu DataTable arac cubugu satirina tasinsin (ayri satir kalksin, ~52px kazanc), (b) amber serit (h38 + 16px bosluk = 54px) tek satirlik bir arac-cubugu ipucuna ya da KPI 'Kritik/Uyari' degerlerinin hint'ine indirgensin. Ikisi birlikte ~106px kazandirir.",
+     "file": "apps/web/src/modules/purchasing/components/replenishment-panel.tsx (onay kutusu + 'Motoru calistir' satiri) + apps/web/src/app/(app)/satin-alma/kritik-stok/page.tsx (amber serit)",
+     "recheckedRound": 9,
+     "closedRound": 9,
+     "verifiedBy": "Üç ayrı kontrol satırı (KPI şeridi -> amber şerit -> 'Sadece kritik/uyarı'+'Motoru çalıştır' satırı -> araç çubuğu) tek bir DataTable araç çubuğu satırına indirgendi: (a) 'Sadece kritik/uyarı' onay kutusu + 'Motoru çalıştır' düğmesi artık ayrı bir <div> değil, `CriticalStockTable`'a yeni `toolbarExtra` prop'uyla geçirilip DataTable'ın KENDİ araç çubuğu satırına (`extra` yuvası, toolbar.tsx:143) enjekte ediliyor — replenishment-panel.tsx; (b) ayrı amber uyarı kutusu tamamen kaldırıldı, aynı bilgi 'Kritik'/'Uyarı' KPI kartlarının zaten var olan `hint` yuvasına taşındı (kart yüksekliği DEĞİŞMEDİ) — page.tsx.",
+     "measureAfter": "pnpm db:reset sonrası scripts/probe-tedarik-r9.ts (1440x900, motor hiç çalışmamış, 36 kural): theadTop=312 (hedef <=324), aboveFold=16 satır (hedef >=15, önceki 13) — kardeş /satin-alma/siparisler (theadTop=300, 16 satır) ile aynı yoğunluk düzeyine geldi. overflowNodes=[] (yatay taşma yok). Ekran: artifacts/screens/satin-alma-kritik-stok/{desktop,mobile}.png."
     }
    ],
    "winner": "Plantero"
@@ -331,20 +339,7 @@
    "total": 58,
    "verdict": "KAZANAN: Plantero (57 = 57, hicbir kriter < 4, acik P0/P1 yok)",
    "scoreNotes": "Tur 9 yeniden olcum — gerileme yok: 16 satir x 36px, aboveFold 16, theadTop 300, scroller over=0, konsol hatasi 0, mobil kart 63,5px, 390px'te sw=cw=390 ve 44px alti etkilesimli eleman yok, satir hover olculdu (oklab(.955/.5) + pointer), para/oran hucrelerinde tabular-nums. Puanlar Tur 8 ile ayni: kriter 4: 4 (--primary iki anlam: 'Yeni siparis' butonu + satir ici AI Sparkles x2 — tedarik-siparisler-05 hala acik), kriter 6: 4 (KPI '₺47.160' 0 ondalik vs tablo '₺4.620,00' 2 ondalik — ayni ekranda iki para bicimi). Toplam 58 >= 57, acik P0/P1 yok -> KAZANAN: Plantero.",
-   "open": [
-    {
-     "id": "tedarik-siparisler-05",
-     "criterion": 4,
-     "severity": "P2",
-     "openedRound": 7,
-     "text": "--primary (yesil) bu ekranda IKI anlam tasiyor: birincil eylem butonu ('Yeni siparis') VE satir icinde bir VERI isareti (AI taslagi Sparkles ikonu, 2 satirda). Ayni modulun kardes rotasi bu tam kusuru zaten cozmus: approval-queue-list.tsx:129 ayni Sparkles'i `text-muted-foreground` ile basiyor (Tur 4 P1 tedarik-onay-06 gerekcesi dosyada yorumla duruyor).",
-     "measure": "Tur 9 yeniden olcum: orders-table.tsx:24 hala `<Sparkles className='size-3.5 shrink-0 text-primary'>`; masaustu ekran goruntusunde PO-2026-000007 ve PO-2026-000008 satirlarinda yesil ikon + yesil 'Yeni siparis' butonu = --primary tasiyan 2 anlam grubu. approval-queue-list.tsx:129 ayni ikonu text-muted-foreground ile basiyor (kardes rota bu kusuru cozmus).",
-     "target": "--primary tasiyan gorunur eleman grubu = 1 (yalnizca birincil eylem). orders-table.tsx:24 `text-primary` -> `text-muted-foreground` (kardes dosyayla birebir).",
-     "file": "apps/web/src/modules/purchasing/components/orders-table.tsx:24",
-     "reopenedRound": 8,
-     "recheckedRound": 9
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "tedarik-siparisler-01",
@@ -374,6 +369,21 @@
      "verifiedBy": "orders-table.tsx: ayrı, başlıksız+sıralanabilir 'ai' sütunu kaldırıldı; Sparkles işareti zaten sıralanamayan 'Sipariş no' hücresine (docNo yanına, aria-label='AI taslağı') taşındı — ayrıca mobilde de artık görünür (önceden mobile:'hidden'). 'Beklenen tarih'/'Sipariş tarihi' hücreleri `tabular-nums` aldı.",
      "measureAfter": "Tur 5 canlı ölçüm (1440x900): thead'de boş metinli th sayısı = 0 (Tur 4: 1); 16/16 tarih hücresinde fontVariantNumeric='tabular-nums' (Tur 4: 'normal'). Ekran: artifacts/screens/satin-alma-siparisler/{desktop,mobile}.png (PO-2026-000007/000008 satırlarında Sparkles artık docNo yanında, mobilde de görünür).",
      "recheckedRound5": "Tur 5 yeniden olcum: thead'de bos metinli th = 0; 7/7 baslik metinli; tarih hucreleri tabular-nums. KAPALI."
+    },
+    {
+     "id": "tedarik-siparisler-05",
+     "criterion": 4,
+     "severity": "P2",
+     "openedRound": 7,
+     "text": "--primary (yesil) bu ekranda IKI anlam tasiyor: birincil eylem butonu ('Yeni siparis') VE satir icinde bir VERI isareti (AI taslagi Sparkles ikonu, 2 satirda). Ayni modulun kardes rotasi bu tam kusuru zaten cozmus: approval-queue-list.tsx:129 ayni Sparkles'i `text-muted-foreground` ile basiyor (Tur 4 P1 tedarik-onay-06 gerekcesi dosyada yorumla duruyor).",
+     "measure": "Tur 9 yeniden olcum: orders-table.tsx:24 hala `<Sparkles className='size-3.5 shrink-0 text-primary'>`; masaustu ekran goruntusunde PO-2026-000007 ve PO-2026-000008 satirlarinda yesil ikon + yesil 'Yeni siparis' butonu = --primary tasiyan 2 anlam grubu. approval-queue-list.tsx:129 ayni ikonu text-muted-foreground ile basiyor (kardes rota bu kusuru cozmus).",
+     "target": "--primary tasiyan gorunur eleman grubu = 1 (yalnizca birincil eylem). orders-table.tsx:24 `text-primary` -> `text-muted-foreground` (kardes dosyayla birebir).",
+     "file": "apps/web/src/modules/purchasing/components/orders-table.tsx:24",
+     "reopenedRound": 8,
+     "recheckedRound": 9,
+     "closedRound": 9,
+     "verifiedBy": "orders-table.tsx:24 `text-primary` -> `text-muted-foreground` (kardeş dosya approval-queue-list.tsx:129 ile birebir aynı nötr ton) — --primary artık yalnızca birincil eylem butonuna ('Yeni sipariş') ayrılmış tek anlam taşıyor.",
+     "measureAfter": "artifacts/screens/satin-alma-siparisler/desktop.png: PO-2026-000007 ve PO-2026-000008 satırlarındaki Sparkles ikonu artık gri (muted-foreground), yalnızca 'Yeni sipariş' butonu yeşil (--primary) — ekranda --primary taşıyan görünür eleman grubu = 1."
     }
    ],
    "winner": "Plantero"
@@ -595,11 +605,13 @@
      "criterion": 8,
      "severity": "P2",
      "openedRound": 8,
-     "text": "Klavye ile gezerken tek bir kontrol uygulama focus token'ini kullanmiyor: tarih alanindaki takvim tetikleyici dugmesi tarayicinin varsayilan `outline: 1px auto` halkasini basiyor, digerlerinde `focus-visible:ring-[3px]` var. Ayni kalip /satin-alma/onay-kuyrugu'ndaki belge baglantisinda da gorulur (a 'PO-2026-000007': outline 1px auto, ring yok).",
-     "measure": "Tur 9 yeniden olcum (probe-tedarik-r9c.json, Tab ile main icinde): yeni -> 8 duraktan 7'si ring 'calc(3px)'/'calc(2px)', 1'i (adsiz button = takvim tetikleyici) outline '1px auto' + ring '0 0 #0000'. onay -> 4 duraktan 3'u ring 3px, 1'i (a 'PO-2026-000007') outline '1px auto'. Degisiklik yok.",
-     "target": "main icinde klavyeyle odaklanabilen HER eleman focus-visible'da ring >= 2px + outline-none tasisin: probe-tedarik-r8c'de 'outline: 1px auto' dostu 0 durak.",
-     "file": "apps/web/src/components/ui/date-field.tsx (takvim tetikleyici dugmesi) ve apps/web/src/modules/purchasing/components/approval-queue-list.tsx (belge baglantisi) — Button/Link'e `focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none` verilsin",
-     "recheckedRound": 9
+     "text": "Tur 9 düzeltmesiyle MODÜL tarafındaki durak (onay-kuyrugu'ndaki belge bağlantısı, approval-queue-list.tsx:135, `<a>` PO-2026-000007) artık `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` taşıyor ve kapandı. Kalan TEK durak paylaşılan bileşende: date-field.tsx'teki takvim tetikleyici düğmesi (`<button aria-label=\"Takvim\">`) hâlâ tarayıcı varsayılan `outline:1px auto` halkasını basıyor — bu dosya `apps/web/src/components/form/` altında ORTAK bir bileşen (kural 2: yalnızca yeni dosya eklenebilir, mevcut dosya değiştirilemez), modülün TÜM tarih alanlarını (mal kabul, sipariş formu, vb.) etkiler.",
+     "measure": "pnpm db:reset sonrası scripts/probe-tedarik-r9c.ts (Tab ile main içinde, 1440x900): yeni -> 8 duraktan 7'si artık ring 'calc(3px)'/'calc(2px)' (önceki: aynı), 1'i (adsız buton = date-field.tsx takvim tetikleyicisi) hâlâ outline '1px auto' + ring '0 0 #0000'. onay -> 4 duraktan 4'ü de ARTIK ring 3px (önceki: 3/4) — 'PO-2026-000007' belge bağlantısı (approval-queue-list.tsx, modül dosyası) kapandı, 0 durak kaldı o rotada.",
+     "target": "date-field.tsx'teki takvim tetikleyici düğmesine (ve varsa aynı dosyadaki 'Tarihi temizle' düğmesine) `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` eklensin — shell sahibi tarafından, bu PR'ın kapsamı dışında (kural: ortak bileşen kaynaklıysa shell sahibi düzeltir).",
+     "file": "apps/web/src/components/form/date-field.tsx (takvim tetikleyici düğmesi, satır ~119-129) — module:'shell'",
+     "recheckedRound": 9,
+     "module": "shell",
+     "note": "Modül tarafı (approval-queue-list.tsx) Tur 9'da kapandı — measureAfter: onay-kuyrugu rotasında artık 0 durak. Kalan tek durak (date-field.tsx) shell'e taşındı, AÇIK kalır."
     }
    ],
    "closed": [
@@ -902,5 +914,6 @@
  "builderNoteRound5b": "Tur 5 ikinci düzeltme geçişi (kritik-stok/tedarikciler P0-P1-P2 + po-detay P1-P2): kritik-stok-09/10 TEK değişiklikte kapandı (hasEvaluation=false iken 'Kapsama'/'Önerilen sipariş' hiç render edilmiyor + 'Risk' 132px'e genişletildi) — scroller over 37px'ten 0'a düştü. kritik-stok-11 mobil karta Kullanılabilir+Min–Max meta.mobile:'meta' ile eklendi (minMax'a accessorFn eklenmesi gerekti — accessor'sız sütunda mobil kartın isEmptyValue kontrolü hep 'boş' okuyordu). kritik-stok-12 rozet kaldırıldı. tedarikciler-11 (P0) 'name' sütununa productName/preferredSupplierName'daki AYNI bounded-box tekniği uygulandı — kök neden bu sütunun hiç özel `cell` taşımamasıydı. tedarikciler-12/13/14/15 TEK bir kök nedene bağlı: paylaşılan `ui/switch.tsx` hem rengi (bg-primary) hem dokunma-hedefi olmayan küçük boyutu (24x14) hem de generic mobil kart yuvalarının (badge/meta, overflow-hidden+leading-4) 44px'i kırpması — hiçbir paylaşılan dosya değiştirilmeden Radix'in çıplak Switch primitifi bu modülden içe aktarılıp KENDİ deseniyle (kök=dokunma hedefi, iç span=görsel iz, paylaşılan switch.tsx'in ZATEN uyguladığı ayrım) yeniden çizildi + özel `renderMobileCard` (jenerik meta zincirinin overflow/height kısıtlarını atlamak için). po-detay-07/09/10/11 modül dosyalarıyla tam kapandı; po-detay-05 KISMEN (belge toplamı artık <=3 vurgu çiftinde ama pureSizeCount hâlâ 7 — kalan kademeler PageHeader/DocumentChain'den geliyor, module-only ulaşılamaz); po-detay-08 hiç dokunulmadı (etiket sözlüğü apps/web/src/lib/status.ts + sarma CSS'i document-chain.tsx, ikisi de paylaşılan). pnpm typecheck/lint/test (45 dosya, 254 test) ve db:reset+db:check (44 kural, 0 ihlal) bu turda YEŞİL; hiçbir şema/paylaşılan bileşen dosyası değiştirilmedi (yalnızca packages/purchasing modül dosyaları: critical-stock-table.tsx, suppliers-table.tsx, order-lines-table.tsx, app/(app)/satin-alma/siparisler/[id]/page.tsx).",
  "criticNoteRound6": "Modul geneli acik P1 (iki kaybeden rotanin kriter 7 yakinsamasi): tedarik-loading-01 -- apps/web/src/app/(app)/satin-alma altindaki 6 segmentin 0'inda loading.tsx ve 0'inda error.tsx var; ayni uygulamanin satis/, ana-veri/ segmentlerinde iskelet loading.tsx dosyalari mevcut. Kabul olcumu: /satin-alma/siparisler/[id] ve /satin-alma/tedarikciler segmentlerinde loading.tsx (PageHeader + tablo/KPI iskeleti) ve error.tsx (mesaj + 'Tekrar dene') dosyalari. Ayrica hover kurallari `@media (hover:hover)` ile korunmuyor (order-lines-table.tsx:56 hover:bg-muted/40, approval-queue-list.tsx:135 hover:underline, order-actions.tsx:104, order-form.tsx:181, approval-queue-list.tsx:176) -- dokunmatikte tap sonrasi hover takili kalabilir (P2).",
  "roundNotes": "Tur 7 (gorsel-critic). 6 rotanin 5'i kazandi; kaybeden tek rota /satin-alma/kritik-stok (56 < 57), tek engel shell-mobile-card-meta-gap-01 (P1, kok neden paylasilan apps/web/src/components/data-table/mobile-cards.tsx). Kod duzeyi tarama TEMIZ: purchasing kapsaminda `transition-all`/`transition: all` 0, `ease-in` 0, >=300ms sure 0, `scale(0)`/`scale-0` 0, transform-origin hatasi 0; `hover:` globals.css:11'de @media (hover:hover) and (pointer:fine) ile korunuyor; tek animasyon Loader2 `animate-spin` ve Switch `transition-colors`/`transition-transform` (varsayilan 150ms). Konsol: /satin-alma/kritik-stok 3 hata (P2 tedarik-console-01), diger 4 rotada 0.",
- "measuredAt": "2026-09-06T00:13:06.183544Z"
+ "measuredAt": "2026-09-06T00:13:06.183544Z",
+ "builderNoteRound9": "Tur 9 düzeltmeleri (builder). Kritik P1 (görev promptu, scorecard dışı — checks/48_reorder_whitelist_gate.sql): packages/db/src/seed/purchasing.ts::seedDemoDrafts, PO-2026-000008 (Ege Ambalaj/Etiket) satırını isAutoApproved=true yaparken reorder_rules kaydına hiç bağlamıyor ve evaluateAutoOrderEligibility/isSupplierWhitelisted'tan geçirmeden bayrağı zorla yazıyordu. Düzeltme: her iki demo PO satırı (Vanilya taslağı + Etiket otomatik) artık gerçek reorder_rules.id ile reorderRuleId taşıyor; isAutoApproved artık yalnızca evaluateAutoOrderEligibility(supplierWhitelisted, ruleWhitelisted, autoOrderMaxAmount, orderAmount) gerçekten eligible=true dönerse yazılıyor (aksi halde seed hata fırlatır — sessizce yanlış veri üretmez). pnpm db:reset + pnpm db:check: I48 dahil 48 kuralın TAMAMI 0 ihlal. Scorecard 'open' bulguları: tedarik-colwidth-lock-01 (P2, kök neden: 3 tabloda thW!=meta.width sütun uyuşmazlığı — genişlikler kap tam eşleşecek şekilde kalibre edildi, probe-tedarik-r10-colwidth.ts ile 3 tabloda da over=0/clipped=0 doğrulandı), tedarik-console-01 (P2, filters/initialSorting hasEvaluation kalıbına bağlandı, risk/suggestedQty konsol hataları gitti), tedarik-kritik-stok-density-01 (P2, onay kutusu+buton DataTable toolbarExtra'ya taşındı, amber şerit KPI hint'ine indirgendi, theadTop 414->312, aboveFold 13->16), tedarik-siparisler-05 (P2, Sparkles ikonu text-muted-foreground) kapatıldı. tedarik-focusring-token-01 (P2) KISMEN kapandı: modül tarafı (approval-queue-list.tsx belge bağlantısı) düzeltildi, kalan tek durak (date-field.tsx takvim tetikleyicisi) paylaşılan bileşen olduğu için module:'shell'e taşınıp AÇIK bırakıldı (kural 2 — mevcut ortak dosya değiştirilemez). pnpm typecheck/lint/test ve pnpm db:reset && pnpm db:check yeşil."
 }

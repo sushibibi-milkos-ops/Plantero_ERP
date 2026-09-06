@@ -25,11 +25,15 @@ const RISK_CLASS: Record<CriticalStockRow['risk'], string> = {
 };
 
 export function CriticalStockTable({
-  rows, onlyCritical, canManageRule, onEditRule, onClearFilter,
+  rows, onlyCritical, canManageRule, onEditRule, onClearFilter, toolbarExtra,
 }: {
   rows: CriticalStockRow[]; onlyCritical: boolean; canManageRule?: boolean; onEditRule?: (row: CriticalStockRow) => void;
   /** "Sadece kritik/uyarı" filtresini kapatır — filtre kaynaklı boş durumun eylemi (Tur 1 P0 tedarik-kritik-stok-02). */
   onClearFilter?: () => void;
+  /** Tur 9 P2 tedarik-kritik-stok-density-01: "Sadece kritik/uyarı" onay kutusu + "Motoru çalıştır"
+   * düğmesi artık ayrı bir satır DEĞİL — DataTable'ın kendi araç çubuğu satırına (`toolbarExtra`)
+   * enjekte ediliyor (replenishment-panel.tsx'ten gelir); ~52px kazandırır (theadTop 414 -> hedef <=324). */
+  toolbarExtra?: React.ReactNode;
 }) {
   // 'unknown' (motor hiç çalışmadı) "kritik/uyarı" DEĞİLDİR — `!== 'none'` filtresi 'unknown'ı da
   // içeri alıp "Sadece kritik/uyarı" açıkken değerlendirilmemiş satırları kritikmiş gibi gösterirdi.
@@ -116,7 +120,10 @@ export function CriticalStockTable({
             },
           ] as ColumnDef<CriticalStockRow, unknown>[])
         : []),
-      { accessorKey: 'leadTimeDays', header: 'Tedarik süresi', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays} gün</span> },
+      // width 110 -> 120 (Tur 9 tedarik-colwidth-lock-01 kalibrasyonu): bu sütunun kendi içeriği
+      // ("NN gün", right-aligned) 110px'te bile organik olarak 120px istiyordu (probe ile ölçüldü) —
+      // aşağıdaki `preferredSupplierName`'den 10px alınıp buraya verildi, toplam kap genişliğinde sabit kaldı.
+      { accessorKey: 'leadTimeDays', header: 'Tedarik süresi', meta: { align: 'right', width: 120, mobile: 'hidden' }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">{row.original.leadTimeDays} gün</span> },
       ...(hasEvaluation
         ? ([
             {
@@ -147,11 +154,20 @@ export function CriticalStockTable({
         // olmadan meta.width'in (190) TAMAMINI (166 = 190 - td dolgusu 24) kırpmadan kullanıyor.
         // width 190 -> 300 (Tur 6 P1 tedarik-kritik-stok-13): 'Risk' sütununün kaldırdığı genişlikle
         // birlikte bu kolon büyütüldü — 36/36 satırda kırpılan tedarikçi adı artık %20'nin altına iner.
-        id: 'preferredSupplierName', accessorFn: (r) => r.preferredSupplierName, header: 'Tercihli tedarikçi', meta: { width: 300, mobile: 'hidden' },
+        // width 300 -> 502 (Tur 9 P2 tedarik-colwidth-lock-01 kök neden): bu tabloda TÜM sütunlar
+        // `meta.width` taşıyor ve toplamları (950px, "Eylemler" 40 dahil) kabın (1152px) altında
+        // kalıyordu — `table-layout:auto` + `<table>`'ın `min-w-full` olması yüzünden tarayıcı
+        // aradaki 202px'i TÜM sütunlara ORANTILI dağıtıyor (ölçüldü: th 300 -> 360, ama iç kutu
+        // hâlâ ESKİ meta.width'e göre hesaplanan 276px'te sabit kalıyordu — 84px'lik fark hem ölü
+        // alan hem kırpma yaratıyordu). Kesin çözüm sütun genişliklerini "kilitli" tutmaktır: bu
+        // sütuna DOĞRUDAN kalan boşluğun tamamı verilip (190+90+110+110+110+502+40 = 1152 = kap)
+        // dağıtılacak boşluk SIFIRA indirildi — th artık tam olarak 502px'te durur, tarayıcı hiçbir
+        // sütunu daha fazla büyütmez (probe-tedarik-r10-colwidth.ts ile doğrulandı).
+        id: 'preferredSupplierName', accessorFn: (r) => r.preferredSupplierName, header: 'Tercihli tedarikçi', meta: { width: 492, mobile: 'hidden' },
         cell: ({ row }) => (
-          // w-[276px] = meta.width(300) - td dolgusu(24) — bkz. yukarıdaki `productName` notu, ölçüm
+          // w-[468px] = meta.width(492) - td dolgusu(24) — bkz. yukarıdaki `productName` notu, ölçüm
           // ile doğrulanan aynı formül (iç kutu td'nin dolgusu KADAR dar seçilirse td tam meta.width'te durur).
-          <span className="inline-block w-[276px] truncate align-bottom" title={row.original.preferredSupplierName ?? undefined}>
+          <span className="inline-block w-[468px] truncate align-bottom" title={row.original.preferredSupplierName ?? undefined}>
             {row.original.preferredSupplierName ?? <span className="text-muted-foreground">—</span>}
           </span>
         ),
@@ -164,9 +180,13 @@ export function CriticalStockTable({
     [hasEvaluation],
   );
 
-  const filters: DataTableFilter[] = [
-    { columnId: 'risk', title: 'Risk', options: [{ value: 'critical', label: 'Kritik' }, { value: 'warning', label: 'Uyarı' }, { value: 'none', label: 'Normal' }, { value: 'unknown', label: 'Değerlendirilmedi' }] },
-  ];
+  // Tur 9 P2 tedarik-console-01 kök neden: 'risk' sütunu yalnızca hasEvaluation=true iken render
+  // ediliyor (yukarıda) ama bu filtre tanımı KOŞULSUZ 'risk' id'sine referans veriyordu — motor hiç
+  // çalışmamışken TanStack Table konsola "Column with id 'risk' does not exist" hatası basıyordu
+  // (dev overlay'de 'Issues' rozeti açılıyordu). Filtre de aynı `hasEvaluation` kalıbına bağlandı.
+  const filters: DataTableFilter[] = hasEvaluation
+    ? [{ columnId: 'risk', title: 'Risk', options: [{ value: 'critical', label: 'Kritik' }, { value: 'warning', label: 'Uyarı' }, { value: 'none', label: 'Normal' }, { value: 'unknown', label: 'Değerlendirilmedi' }] }]
+    : [];
 
   // Tur 4 P1 tedarik-kritik-stok-07 kök neden: DataTable hover'ı yalnızca `clickable`
   // (rowHref||onRowClick) satırlara veriyor (data-table.tsx:256) — bu tablo ikisini de geçmiyordu,
@@ -183,7 +203,11 @@ export function CriticalStockTable({
       getRowId={(r) => r.ruleId}
       searchPlaceholder="Ürün, SKU ara…"
       filters={filters}
-      initialSorting={[{ id: 'suggestedQty', desc: true }]}
+      toolbarExtra={toolbarExtra}
+      // Aynı kök neden (tedarik-console-01): 'suggestedQty' sütunu da yalnızca hasEvaluation=true
+      // iken var — motor çalışmadan varsayılan sıralama 'lastEvaluatedAt' NULL olsa bile mevcut ve
+      // anlamlı bir sütuna (Kullanılabilir) düşürüldü.
+      initialSorting={[hasEvaluation ? { id: 'suggestedQty', desc: true } : { id: 'available', desc: false }]}
       emptyTitle={filterEmptied ? 'Filtreye uyan kural yok' : 'Kritik stok kuralı yok'}
       emptyDescription={filterEmptied ? `${rows.length} kuralın hiçbiri kritik/uyarı değil.` : 'Kural tanımlı ürün bulunamadı.'}
       emptyAction={filterEmptied && onClearFilter ? <Button variant="outline" size="sm" onClick={onClearFilter}>Filtreyi temizle</Button> : undefined}

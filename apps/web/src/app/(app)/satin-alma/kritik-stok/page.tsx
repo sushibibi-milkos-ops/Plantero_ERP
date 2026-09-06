@@ -26,18 +26,28 @@ export default async function CriticalStockPage() {
 
       {/* Motor hiç çalışmamışsa 'Kritik'/'Uyarı' 0 DEĞİL '—' — 36/36 kuralın hiçbiri değerlendirilmemişken
           "0" basmak "risk yok" gibi okunuyordu (Tur 3 P0 tedarik-kritik-stok-06); 'Toplam kural' her
-          zaman gerçek bir sayımdır (motor durumundan bağımsız), o yüzden hep sayı basar. */}
+          zaman gerçek bir sayımdır (motor durumundan bağımsız), o yüzden hep sayı basar.
+          Tur 9 P2 tedarik-kritik-stok-density-01 kök neden: ayrı amber şerit (h38 + 16px boşluk =
+          54px) tabloyu aşağı itiyordu; aynı bilgi artık KPI kartlarının kendi `hint`ine indirgendi —
+          ayrı bir satır/kutu YOK, tablo bir satır daha yukarı çıkar ("Motor hiç çalışmadı" kısa notu
+          ayrıca DataTable'ın araç çubuğunda da tekrarlanır, bkz. replenishment-panel.tsx). */}
       <KpiStripRow>
-        <KpiCard variant="strip" title="Kritik" value={neverEvaluated ? null : critical} format="int" />
-        <KpiCard variant="strip" title="Uyarı" value={neverEvaluated ? null : warning} format="int" />
+        <KpiCard
+          variant="strip"
+          title="Kritik"
+          value={neverEvaluated ? null : critical}
+          format="int"
+          hint={neverEvaluated ? 'Motor henüz çalıştırılmadı' : undefined}
+        />
+        <KpiCard
+          variant="strip"
+          title="Uyarı"
+          value={neverEvaluated ? null : warning}
+          format="int"
+          hint={neverEvaluated ? 'Motor henüz çalıştırılmadı' : undefined}
+        />
         <KpiCard variant="strip" title="Toplam kural" value={rows.length} format="int" />
       </KpiStripRow>
-
-      {neverEvaluated ? (
-        <p className="mb-4 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-[13px] text-foreground/80">
-          Motor henüz çalıştırılmadı — kapsama süresi ve önerilen sipariş miktarları için &quot;Motoru çalıştır&quot;a basın (her gün 06:00&apos;da otomatik de çalışır).
-        </p>
-      ) : null}
 
       <ReplenishmentPanel rows={rows} canRun={userCan(user, 'purchasing.draft')} canManageRule={userCan(user, 'purchasing.approve')} suppliers={suppliers} />
     </>

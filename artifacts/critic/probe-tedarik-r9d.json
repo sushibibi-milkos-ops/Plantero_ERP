@@ -1,10 +1,1 @@
-[
- {
-  "url": "http://localhost:3000/login?next=%2Fsatin-alma%2Fkritik-stok",
-  "failed": "net::ERR_ABORTED"
- },
- {
-  "url": "http://localhost:3000/satin-alma/kritik-stok",
-  "failed": "net::ERR_ABORTED"
- }
-]
+[]

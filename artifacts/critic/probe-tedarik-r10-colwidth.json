@@ -8,7 +8,6 @@
     "clipped": 0,
     "rows": 36,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 166,
     "sample": ""
    },
@@ -19,7 +18,6 @@
     "clipped": 0,
     "rows": 36,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 0,
     "sample": ""
    },
@@ -30,7 +28,6 @@
     "clipped": 0,
     "rows": 36,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 47,
     "sample": ""
    },
@@ -41,7 +38,6 @@
     "clipped": 0,
     "rows": 36,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 86,
     "sample": ""
    },
@@ -52,7 +48,6 @@
     "clipped": 0,
     "rows": 36,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 47,
     "sample": ""
    },
@@ -63,7 +58,6 @@
     "clipped": 0,
     "rows": 36,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 468,
     "sample": ""
    },
@@ -74,53 +68,15 @@
     "clipped": 0,
     "rows": 36,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 24,
     "sample": ""
    }
   ],
-  "overflowNodes": [],
-  "fonts": {
-   "11": 2,
-   "12": 48,
-   "13": 180,
-   "14": 3,
-   "19": 2,
-   "24": 1
-  },
-  "aboveFold": 16,
-  "rowH": [
-   36,
-   36,
-   36,
-   36,
-   36
-  ],
-  "primaryEls": [],
-  "chainTops": [],
-  "iconCount": 81,
-  "colorTones": [],
-  "theadTop": 312,
-  "console": [
-   "error: Failed to load resource: the server responded with a status of 404 (Not Found)"
-  ]
- },
- "onay-kuyrugu": {
-  "cells": [],
-  "overflowNodes": [],
-  "fonts": {
-   "12": 10,
-   "13": 8,
-   "14": 4,
-   "24": 1
-  },
-  "aboveFold": 0,
-  "rowH": [],
-  "primaryEls": [],
-  "chainTops": [],
-  "iconCount": 5,
-  "colorTones": [],
-  "console": []
+  "scroller": {
+   "sw": 1152,
+   "cw": 1152,
+   "over": 0
+  }
  },
  "siparisler": {
   "cells": [
@@ -131,7 +87,6 @@
     "clipped": 0,
     "rows": 16,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 129,
     "sample": ""
    },
@@ -142,7 +97,6 @@
     "clipped": 0,
     "rows": 16,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 335,
     "sample": ""
    },
@@ -153,7 +107,6 @@
     "clipped": 0,
     "rows": 16,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 146,
     "sample": ""
    },
@@ -164,7 +117,6 @@
     "clipped": 0,
     "rows": 16,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 31,
     "sample": ""
    },
@@ -175,7 +127,6 @@
     "clipped": 0,
     "rows": 16,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 74,
     "sample": ""
    },
@@ -186,7 +137,6 @@
     "clipped": 0,
     "rows": 16,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 74,
     "sample": ""
    },
@@ -197,70 +147,15 @@
     "clipped": 0,
     "rows": 16,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 81,
     "sample": ""
    }
   ],
-  "overflowNodes": [],
-  "fonts": {
-   "11": 16,
-   "12": 12,
-   "13": 97,
-   "14": 2,
-   "24": 1
-  },
-  "aboveFold": 16,
-  "rowH": [
-   36,
-   36,
-   36,
-   36,
-   36
-  ],
-  "primaryEls": [],
-  "chainTops": [],
-  "iconCount": 15,
-  "colorTones": [],
-  "theadTop": 300,
-  "console": []
- },
- "po-detay": {
-  "cells": [],
-  "overflowNodes": [],
-  "fonts": {
-   "13": 1,
-   "14": 2,
-   "16": 1
-  },
-  "aboveFold": 0,
-  "rowH": [],
-  "primaryEls": [],
-  "chainTops": [],
-  "iconCount": 2,
-  "colorTones": [],
-  "console": [
-   "error: %o\n\n%s Error: Failed query: select \"id\", \"doc_no\", \"status\", \"partner_id\", \"warehouse_id\", \"order_date\", \"expected_date\", \"currency\", \"exchange_rate\", \"payment_term_days\", \"subtotal\", \"vat_total\", \"gr",
-   "error: Error: Failed query: select \"id\", \"doc_no\", \"status\", \"partner_id\", \"warehouse_id\", \"order_date\", \"expected_date\", \"currency\", \"exchange_rate\", \"payment_term_days\", \"subtotal\", \"vat_total\", \"grand_tot",
-   "error: Error: Failed query: select \"id\", \"doc_no\", \"status\", \"partner_id\", \"warehouse_id\", \"order_date\", \"expected_date\", \"currency\", \"exchange_rate\", \"payment_term_days\", \"subtotal\", \"vat_total\", \"grand_tot"
-  ]
- },
- "yeni": {
-  "cells": [],
-  "overflowNodes": [],
-  "fonts": {
-   "11": 3,
-   "13": 11,
-   "14": 5,
-   "24": 1
-  },
-  "aboveFold": 0,
-  "rowH": [],
-  "primaryEls": [],
-  "chainTops": [],
-  "iconCount": 6,
-  "colorTones": [],
-  "console": []
+  "scroller": {
+   "sw": 1152,
+   "cw": 1152,
+   "over": 0
+  }
  },
  "tedarikciler": {
   "cells": [
@@ -271,7 +166,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 345,
     "sample": ""
    },
@@ -282,7 +176,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 0,
     "sample": ""
    },
@@ -293,7 +186,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 32,
     "sample": ""
    },
@@ -304,7 +196,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 47,
     "sample": ""
    },
@@ -315,7 +206,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 55,
     "sample": ""
    },
@@ -326,7 +216,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 31,
     "sample": ""
    },
@@ -337,7 +226,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 16,
     "sample": ""
    },
@@ -348,7 +236,6 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 8,
     "sample": ""
    },
@@ -359,31 +246,14 @@
     "clipped": 0,
     "rows": 6,
     "maxClip": 0,
-    "innerW": 0,
     "maxInner": 72,
     "sample": ""
    }
   ],
-  "overflowNodes": [],
-  "fonts": {
-   "12": 16,
-   "13": 43,
-   "14": 1,
-   "24": 1
-  },
-  "aboveFold": 6,
-  "rowH": [
-   36,
-   36,
-   36,
-   36,
-   36
-  ],
-  "primaryEls": [],
-  "chainTops": [],
-  "iconCount": 11,
-  "colorTones": [],
-  "theadTop": 196,
-  "console": []
+  "scroller": {
+   "sw": 1152,
+   "cw": 1152,
+   "over": 0
+  }
  }
 }

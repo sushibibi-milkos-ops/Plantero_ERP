@@ -40,8 +40,16 @@ export function OrdersTable({ orders }: { orders: PurchaseOrderRow[] }) {
       // İÇİNDE kırpılır (tam ad `title` özniteliğinde). `inline-block` + `md:` (yalnızca masaüstü):
       // mobil kartta bu hücre `subtitle` rolüyle bir flex satırına gömülür — sabit genişlik orada
       // YOKTUR, `max-w-full truncate` üst bağlamın kendi genişliğine göre küçülür.
-      { accessorKey: 'partnerName', header: 'Tedarikçi', meta: { width: 280, mobile: 'subtitle' }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[280px]" title={row.original.partnerName}>{row.original.partnerName}</span> },
-      { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 160, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="purchase_order" /> },
+      // width 280 -> 362 (Tur 9 P2 tedarik-colwidth-lock-01 kök neden): 7 sütunun tamamı `meta.width`
+      // taşıyor ve toplamları (1060px) kabın (1152px) altında kalıyordu — tarayıcı aradaki 92px'i
+      // sütunlara dağıtıyor (th 280 -> 319) ama iç kutu ESKİ 280'e göre 256px'te sabit kalıp 2/16
+      // satırda kırpıyordu. Boşluğun tamamı bu sütuna verilip (150+362+170+90+130+120+130 = 1152 =
+      // kap) dağıtılacak boşluk sıfırlandı — th artık tam 362px'te sabit durur ('Durum' sütununun
+      // organik ihtiyacı olan 10px aşağıda ona verildi, bkz. o sütunun notu).
+      { accessorKey: 'partnerName', header: 'Tedarikçi', meta: { width: 359, mobile: 'subtitle' }, cell: ({ row }) => <span className="inline-block max-w-full truncate align-bottom md:w-[335px]" title={row.original.partnerName}>{row.original.partnerName}</span> },
+      // width 160 -> 170: rozet metni (StatusBadge, ör. "Kısmen teslim alındı") 160px'te bile organik
+      // olarak 170px istiyordu (probe ile ölçüldü) — yukarıdaki `partnerName`'den 10px alındı.
+      { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 170, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="purchase_order" /> },
       { accessorKey: 'receivedPct', header: 'Alınan', meta: { align: 'right', width: 90 }, cell: ({ row }) => <span className="font-mono text-[13px] tabular-nums text-muted-foreground">%{Math.round(row.original.receivedPct)}</span> },
       // Tur 4 P2 tedarik-siparisler-04 kök neden (devamı): tarih hücreleri orantılı rakamla
       // (fontVariantNumeric:'normal') basılıyordu — sütun ragged hizalanıyordu. `tabular-nums`
