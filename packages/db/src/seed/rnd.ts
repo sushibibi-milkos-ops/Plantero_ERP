@@ -63,6 +63,12 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   const kg = await uomByCode(tx, 'KG');
   const arge = await userByEmail(tx, 'arge@plantero.local');
   const uretim = await userByEmail(tx, 'uretim@plantero.local');
+  if (!arge) throw new Error('seed:rnd — arge@plantero.local kullanıcısı bulunamadı (core seed önce çalışmalı)');
+  // Onay/red kararları `SYSTEM_ACTOR` (userId=null) İLE ATILAMAZ — docs/INVARIANTS.md I49(a): kararlı
+  // (approved/rejected) bir `approvals` satırının `decided_by` alanı dolu olmalı (kararın kim
+  // tarafından verildiğinin izi kaybolmaz). Gerçek akışta bu, oturum açmış onaylayıcının kullanıcı
+  // id'sidir — seed'de de gerçek bir kullanıcıya (Ar-Ge Sorumlusu) atfedilir.
+  const argeActor = { userId: arge, userEmail: 'arge@plantero.local' };
 
   /* ================================================================== */
   /* Proje 1 — Fıstık Bazı (yeni SKU adayı, henüz ürün yok)              */
@@ -85,7 +91,7 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   ]);
 
   const p1Recipe = await createTrialRecipe(tx, {
-    projectId: p1.id, name: 'Fıstık Bazı v1', batchQty: '1', batchUomId: kg.id, expectedYieldPct: '96', overheadPerBatch: '0.35', overheadPerUnit: '0.05',
+    projectId: p1.id, name: 'Fıstık Bazı', batchQty: '1', batchUomId: kg.id, expectedYieldPct: '96', overheadPerBatch: '0.35', overheadPerUnit: '0.05',
     changeNote: 'İlk taslak — badem bazı oranlarından uyarlandı, fıstık maliyeti manuel girildi (henüz alış geçmişi yok).',
     lines: [
       { productId: (await productBySku(tx, '301030000')).id, qty: '0.15', uomId: kg.id, costSource: 'manual', manualUnitCost: '38.0000', scrapPct: '2', note: 'Fıstık için ayrı hammadde tanımlanana kadar geçici — badem hammaddesi üzerinden manuel maliyetlendirildi' },
@@ -109,7 +115,7 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   const p2Cols = new Map((await tx.select().from(rndBoardColumns).where(eq(rndBoardColumns.projectId, p2.id))).map((c) => [c.name, c.id] as const));
 
   const p2Recipe = await createTrialRecipe(tx, {
-    projectId: p2.id, name: 'Şekersiz Protein v1', batchQty: '1', batchUomId: kg.id, expectedYieldPct: '97', overheadPerBatch: '50', overheadPerUnit: '0.5',
+    projectId: p2.id, name: 'Şekersiz Protein', batchQty: '1', batchUomId: kg.id, expectedYieldPct: '97', overheadPerBatch: '50', overheadPerUnit: '0.5',
     changeNote: 'Sukraloz (302010000) çıkarıldı, inülin oranı 0.02→0.04 kg artırıldı (tatlandırma dengesi için).',
     lines: [
       { productId: (await productBySku(tx, '301010000')).id, qty: '0.30', uomId: kg.id, costSource: 'average', scrapPct: '0' },
@@ -123,7 +129,7 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
       { productId: (await productBySku(tx, '401030000')).id, qty: '1', uomId: (await uomByCode(tx, 'ADET')).id, costSource: 'average', scrapPct: '0' },
     ] satisfies TrialLineInput[],
   }, SYSTEM_ACTOR);
-  await submitForApproval(tx, p2Recipe.rollup.version.id, SYSTEM_ACTOR); // onay bekliyor — henüz devredilmedi (kabul: uçtan uca akışın "ortası" da seed'de görünür)
+  await submitForApproval(tx, p2Recipe.rollup.version.id, argeActor); // onay bekliyor — henüz devredilmedi (kabul: uçtan uca akışın "ortası" da seed'de görünür)
 
   await seedCards(tx, p2.id, p2Cols, [
     { column: 'Formülasyon', title: 'Sukraloz yerine inülin dengesi', description: 'v1 formülasyonu tamamlandı, maliyet simülasyonu ile hedefin altında.', assigneeId: arge, checklist: [{ text: 'Tatlandırma dengesi', done: true }, { text: 'Çözünürlük testi', done: true }] },
@@ -153,7 +159,7 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   const adet = await uomByCode(tx, 'ADET');
 
   const p3v1 = await createTrialRecipe(tx, {
-    projectId: p3.id, name: 'Oat Barista v2', batchQty: '1', batchUomId: kg.id, expectedYieldPct: '97', overheadPerBatch: '50', overheadPerUnit: '0.5',
+    projectId: p3.id, name: 'Oat Barista Reçetesi', batchQty: '1', batchUomId: kg.id, expectedYieldPct: '97', overheadPerBatch: '50', overheadPerUnit: '0.5',
     changeNote: 'v1 (aktif BOM v1) ile aynı — karşılaştırma taban çizgisi.',
     lines: [
       { productId: yulaf.id, qty: '0.20', uomId: kg.id, costSource: 'average', scrapPct: '0' },
@@ -177,9 +183,9 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
     ],
   }, SYSTEM_ACTOR);
 
-  const { approvalId } = await submitForApproval(tx, p3v2.version.id, SYSTEM_ACTOR);
-  await approveRecipeRelease(tx, approvalId, SYSTEM_ACTOR);
-  const released = await releaseToBom(tx, p3v2.version.id, { activate: true }, SYSTEM_ACTOR); // KABUL: devir sonrası iş emri açılabilir (aktif BOM)
+  const { approvalId } = await submitForApproval(tx, p3v2.version.id, argeActor);
+  await approveRecipeRelease(tx, approvalId, argeActor); // I49(a): decided_by dolu olmalı — gerçek onaylayıcı (SYSTEM_ACTOR değil)
+  const released = await releaseToBom(tx, p3v2.version.id, { activate: true }, argeActor); // KABUL: devir sonrası iş emri açılabilir (aktif BOM)
   log('rnd', `Oat Barista v2 üretim BOM'una devredildi: ${released.bomCode} (aktif)`);
 
   await seedCards(tx, p3.id, p3Cols, [

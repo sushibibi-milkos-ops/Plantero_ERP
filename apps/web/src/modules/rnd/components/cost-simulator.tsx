@@ -38,7 +38,9 @@ export function CostSimulator({
   canRelease: boolean;
 }) {
   const router = useRouter();
-  const editable = canManage && EDITABLE_STATUSES.has(detail.version.status);
+  // Onaya gönderilmiş (pending) bir versiyon onaylanana/reddedilene kadar KİLİTLİDİR — aksi halde
+  // onaylayan kişi X'i onaylarken arka planda Y'ye değiştirilebilir (bkz. "Onaya gönder" akışı).
+  const editable = canManage && EDITABLE_STATUSES.has(detail.version.status) && !detail.hasPendingApproval;
   const [pending, setPending] = useState(false);
 
   const toLineForm = (l: VersionDetail['lines'][number]): LineForm => ({

@@ -5,7 +5,7 @@ import {
   trialRecipes, trialRecipeVersions, trialRecipeLines, rndProjects, products, purchaseOrders, purchaseOrderLines,
   approvals, boms,
 } from '@plantero/db';
-import { D, toDb } from '../money.js';
+import { D, toDb, formatMoneyTr, formatQtyTr } from '../money.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { writeAudit } from '../audit/index.js';
 import { createBomVersion, activateBom, resolveComponentUnitCost } from '../masterdata/boms.js';
@@ -289,7 +289,7 @@ export async function submitForApproval(tx: DbOrTx, versionId: string, ctx: Acto
       refTable: 'trial_recipe_versions',
       refId: versionId,
       title: `Reçete devri onayı — ${recipe?.name ?? 'Deneme reçetesi'} v${version.version}`,
-      summary: `Birim maliyet ${version.unitCost} ₺ — parti ${version.batchQty}, verim %${version.expectedYieldPct}`,
+      summary: `Birim maliyet ${formatMoneyTr(version.unitCost)} — parti ${formatQtyTr(version.batchQty)}, verim %${formatQtyTr(version.expectedYieldPct)}`,
       payload: { recipeId: version.recipeId, versionId, unitCost: version.unitCost, version: version.version },
       requestedBy: ctx.userId,
     })
