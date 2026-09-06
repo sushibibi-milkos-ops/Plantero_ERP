@@ -1,3 +1,4 @@
+import { Children, cloneElement, isValidElement } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -53,12 +54,27 @@ export function Section({ title, href, children, className }: { title: string; h
  *  üstündeydi — tüm tek-satırlık listelerde (Karantina, SKT riski, Son siparişler, En çok satan 5, Son
  *  iş emirleri...) masaüstü satırı gereksiz yere şişiriyordu. `sm:h-10` (40px) bandın İÇİNDE; mobil
  *  dokunma hedefi (`max-sm:min-h-11`, 44px) DEĞİŞMEDİ. */
+const ROW_BASE = 'flex max-sm:min-h-11 flex-col gap-1 px-4 py-2.5 text-[13px] sm:h-10 sm:flex-row sm:items-center sm:gap-3';
+
+/** Tıklanamayan liste satırı — `RowLink` ile BİREBİR aynı anatomi (yükseklik, dolgu, tipografi), yalnızca
+ *  `<Link>` sarmalayıcısı yok. Kök neden (Tur 5 P1 kokpit-activity-row-anatomy-01): hedef rotası olmayan
+ *  satırlar (ör. "Son aktiviteler" — /ayarlar/audit henüz inşa edilmedi) elle yazılmış, RowLink'ten
+ *  bağımsız bir anatomiyle (35.5px, farklı padding) kopyalanıyordu; aynı ekrandaki tıklanabilir listeler
+ *  (Banka/SKT riski/Geciken alacak, RowLink) 40px'ti — tek bilgi sınıfı (tek satır liste öğesi) iki farklı
+ *  yükseklikte. `Row`, `RowLink`'in TABANINI (ROW_BASE) dışa vererek tek anatominin tıklanan/tıklanmayan
+ *  her iki halde de aynı kalmasını garantiler — hover/active/focus stilleri yalnızca `RowLink`'te kalır
+ *  (tıklanamaz bir satıra "burayı tıklayabilirsin" sinyali vermek yanıltıcı olur). */
+export function Row({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cn(ROW_BASE, className)}>{children}</div>;
+}
+
 export function RowLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
   return (
     <Link
       href={href}
       className={cn(
-        'flex max-sm:min-h-11 flex-col gap-1 px-4 py-2.5 text-[13px] outline-none hover:bg-muted/40 active:bg-muted/60 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:h-10 sm:flex-row sm:items-center sm:gap-3',
+        ROW_BASE,
+        'outline-none hover:bg-muted/40 active:bg-muted/60 focus-visible:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
         className,
       )}
     >
@@ -100,6 +116,33 @@ export function RankBar({ pct, strong = false }: { pct: number; strong?: boolean
 /** İki sütunlu (masaüstü) / tek sütunlu (mobil) pano ızgarası — tüm rol panoları bunu kullanır. */
 export function DashboardGrid({ children, className }: { children: React.ReactNode; className?: string }) {
   return <div className={cn('mt-4 grid gap-4 lg:grid-cols-2 lg:items-start', className)}>{children}</div>;
+}
+
+/**
+ * İÇERİK HACMİNE göre kendiliğinden dengelenen iki kolonlu akış — `DashboardGrid`'in aksine bölümler
+ * DERLEME ZAMANINDA iki sabit `<div>` grubuna atanmaz. Kök neden (Tur 2/4/5 P1 kokpit-col-balance-01 /
+ * kokpit-uretim-col-balance-02 / kokpit-admin-col-balance-03): admin/GM panosunda kolon dağılımı ÜÇ
+ * kez elle yeniden dengelenmişti (920px→155px→13px fark) ve her seferinde bir bölümün satır sayısı
+ * değişince (ör. "Son aktiviteler" 8 satırdan 1 satıra düşünce) denge yeniden bozuldu — statik atama
+ * veri hacminden bağımsız değil. `FlowGrid` bunun yerine tarayıcının CSS çoklu-kolon dengelemesini
+ * kullanır (`columns-2`; `column-fill`in ilk değeri zaten `balance`dır): TARAYICI, çocukların GERÇEK
+ * render yüksekliğini ölçüp iki kolonu olabildiğince eşitler — içerik her değiştiğinde (boş durum,
+ * 1 satır ya da 8 satır) otomatik yeniden dengelenir, elle üçüncü bir düzeltmeye gerek kalmaz.
+ * Çocuklar (yalnızca `Section` örnekleri) `break-inside-avoid-column` alır — bir bölümün ORTASINDAN
+ * kolon kırılmaz, bölüm bütün olarak bir sonraki kolona taşınır. DOM sırası zaten "üstten alta, sonra
+ * sağ kolon" okuma sırasıyla BİREBİR aynı olduğu için (çoklu-kolon akışı önce 1. kolonu doldurur, taşan
+ * içerik 2. kolona geçer) bölümlerin göreli sırası değişmez.
+ * Yalnızca admin/GM panosu (`gm-dashboard.tsx`) kullanır: diğer roller (satış, üretim) `DashboardGrid`'e
+ * CSS Grid'e özgü tam-genişlik/hizalama sınıfları geçiriyor (`lg:col-span-2`, `lg:self-start`) — bunlar
+ * çoklu-kolon akışıyla anlamsız/uyumsuz olduğundan o panolar `DashboardGrid`'de kalır.
+ */
+export function FlowGrid({ children, className }: { children: React.ReactNode; className?: string }) {
+  const kids = Children.map(children, (child) =>
+    isValidElement<{ className?: string }>(child) && child.type === Section
+      ? cloneElement(child, { className: cn('mb-4 break-inside-avoid-column', child.props.className) })
+      : child,
+  );
+  return <div className={cn('mt-4 lg:columns-2 lg:gap-4', className)}>{kids}</div>;
 }
 
 /**

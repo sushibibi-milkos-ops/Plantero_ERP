@@ -15,9 +15,16 @@ export default async function RndProjectsPage() {
 
   return (
     <>
+      {/* "${projects.length} proje" ÖNEKİ KALDIRILDI (kök neden düzeltmesi, Tur 5 P2 arge-projeler-08):
+          DataTable'ın kendi araç çubuğu (varsayılan liste görünümünde) "N kayıt" sayacını zaten
+          kendiliğinden gösteriyor (toolbar.tsx) — aynı sayı iki yerde tekrarlanmasın. line-clamp-1:
+          390px'te açıklama sarmadan tek satırda kalır (kart görünümünde de sayı görünür kalıyor —
+          kartların kendisi sayılabilir). PageHeader (ortak bileşen) DEĞİŞMEDİ. Tam hedef (≤112px)
+          DataTable araç çubuğunun PageHeader ile AYNI satırda birleşmesini gerektirir — ortak (shell)
+          bir PageHeader/DataTable kompozisyon değişikliği ister; bkz. rapor. */}
       <PageHeader
         title="Ar-Ge Projeleri"
-        description={`${projects.length} proje — Trello mantığı kanban board, versiyonlu deneme reçetesi ve canlı maliyet simülasyonu`}
+        description={<span className="line-clamp-1">Trello mantığı kanban board, versiyonlu deneme reçetesi ve canlı maliyet simülasyonu</span>}
         actions={canManage ? <NewProjectDialog productOptions={productOptions} /> : undefined}
       />
       <ProjectList projects={projects} canManage={canManage} productOptions={productOptions} />

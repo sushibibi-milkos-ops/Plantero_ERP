@@ -1,0 +1,5 @@
+page.evaluate: ReferenceError: __name is not defined
+    at eval (eval at evaluate (:290:30), <anonymous>:1:74)
+    at UtilityScript.evaluate (<anonymous>:292:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at main (/home/user/Plantero_ERP/scripts/tmp-probe-empty-state.ts:59:29)

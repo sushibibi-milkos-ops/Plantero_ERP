@@ -116,11 +116,19 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
                 }
               />
             ) : (
+              // Kök neden (Tur 5 P1 kokpit-activity-row-anatomy-01 / P2 kokpit-fin-payments-row-h11-01):
+              // bu satır Tur 4'ün "Mutabakat kuyruğu" düzeltmesinin (kokpit-fin-row-anatomy-01) DIŞINDA
+              // kalmış üçüncü bir kopyaydı — elle yazılmış `li.flex.h-11` (44px, href yok), aynı ekrandaki
+              // "Geciken alacak"/"Mutabakat kuyruğu" (RowLink, 40px, tıklanabilir) ile aynı bilgi sınıfı
+              // olduğu halde ayırt edilemiyordu. Kayda özel bir detay rotası yok — "Mutabakat kuyruğu"
+              // satırlarıyla AYNI desen: kendi bölüm rotasına (`/finans/tahsilat`) bağlanır.
               <ul className="divide-y divide-border/50">
                 {paymentsToday.map((r) => (
-                  <li key={r.id} className="flex h-11 items-center justify-between gap-3 px-4 text-[13px]">
-                    <span className="min-w-0 truncate">{r.partnerName}</span>
-                    <MoneyCell value={r.amount} className="shrink-0" />
+                  <li key={r.id}>
+                    <RowLink href="/finans/tahsilat">
+                      <span className="min-w-0 flex-1 truncate">{r.partnerName}</span>
+                      <MoneyCell value={r.amount} className="shrink-0" />
+                    </RowLink>
                   </li>
                 ))}
               </ul>

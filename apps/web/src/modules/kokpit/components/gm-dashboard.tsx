@@ -13,7 +13,7 @@ import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
 import { formatDateTime, relativeTime } from '@/lib/format';
 import { ChannelBars } from './channel-bars';
-import { Section, RowLink, DashboardGrid, StatStrip, ExpiryBucketStrip, AgingStrip, OverdueTop5List, BreakEvenPanel, TodayRow, ProductionLineRow, BankAccountsList } from './shared';
+import { Section, Row, RowLink, FlowGrid, StatStrip, ExpiryBucketStrip, AgingStrip, OverdueTop5List, BreakEvenPanel, TodayRow, ProductionLineRow, BankAccountsList } from './shared';
 
 export function GmDashboardView({ data, today }: { data: GmDashboard; today: CockpitTodayItem[] }) {
   const { channelSales, bank, lines, criticalStock, expiry, overdue, breakEven, approvals, activity } = data;
@@ -31,183 +31,193 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
         <KpiCard title="Break-even ilerleme" value={breakEven.progressPct} format="pct" href="/finans/break-even" variant="strip" />
       </KpiStripRow>
 
-      <DashboardGrid>
-        <div className="min-w-0 flex flex-col gap-4">
-          <Section title="Günlük kanal satışları" href="/satis/net-ciro">
-            {/* Kök neden (Tur 1 P0 kokpit-kpi-clip-01 + P1 kokpit-nested-card-01 + kokpit-numeric-scale-01):
-                bu iki değer önceden çerçeveli+gölgeli `variant="card"` (22px değer) olarak basılıyordu —
-                zaten çerçeveli Section'ın İÇİNE ikinci bir kutu (kutu içinde kutu) koyuyordu VE sparkline'lı
-                kartta 262px'lik dar alanda değer kutusuna 119px kalıp NumberFlow kırpılıyordu.
-                Kök neden (Tur 2 P2 kokpit-kpi-dupe-01): "Net (bugün)" burada üstteki KPI şeridindeki
-                "Bugünkü net ciro" ile BİREBİR aynı değer+delta çiftini tekrar ediyordu — yalnızca
-                şeritte YER ALMAYAN "Brüt" kalmıştı.
-                Kök neden (Tur 3 P2 kokpit-fold-rows-01): "Brüt" tek başına bile 214px'lik bölümde
-                sparkline'lı 96px'lik bir KPI bloğu (`variant="strip"`, 19px büyük rakam) taşıyordu — 60px
-                yukarıdaki KPI şeridiyle AYNI büyük-rakam kademesini tekrarlıyor ve katlama üstü satır
-                sayısını (hedef ≥15) düşürüyordu. Tek bir ikincil sayı için ayrı bir KPI bloğu yerine bu
-                bölümün KENDİ Banka/Karantina ile AYNI "başlık altı özet satırı" anatomisi (h-11, 13px,
-                muted etiket + MoneyCell) kullanılır — 96px'ten 44px'e iner, sparkline (zaten KPI
-                şeridinde tekrar eden bir görselleştirme değildi ama küçük alanda anlamsızdı) kaldırılır. */}
-            <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
-              <span className="text-muted-foreground">Brüt (bugün)</span>
-              <MoneyCell value={channelSales.grossTotal} className="font-medium" />
+      {/* Kök neden (Tur 5 P1 kokpit-admin-col-balance-03): iki kolon eskiden derleme zamanında sabit
+          iki <div>'e bölünmüş bölüm listesiydi — "Son aktiviteler" 8 satırdan 1 satıra düşünce (ya da
+          gece yarısı "Bugün"/"Son aktiviteler" boş duruma düşünce) sol kolon sağdan 259-307px kısa
+          kalıyordu. `FlowGrid` (bkz. shared.tsx) bölümleri DÜZ bir liste olarak alıp tarayıcının CSS
+          çoklu-kolon dengelemesine bırakır — kolon dipleri içerik hacminden BAĞIMSIZ dengede kalır. */}
+      <FlowGrid>
+        <Section title="Günlük kanal satışları" href="/satis/net-ciro">
+          {/* Kök neden (Tur 1 P0 kokpit-kpi-clip-01 + P1 kokpit-nested-card-01 + kokpit-numeric-scale-01):
+              bu iki değer önceden çerçeveli+gölgeli `variant="card"` (22px değer) olarak basılıyordu —
+              zaten çerçeveli Section'ın İÇİNE ikinci bir kutu (kutu içinde kutu) koyuyordu VE sparkline'lı
+              kartta 262px'lik dar alanda değer kutusuna 119px kalıp NumberFlow kırpılıyordu.
+              Kök neden (Tur 2 P2 kokpit-kpi-dupe-01): "Net (bugün)" burada üstteki KPI şeridindeki
+              "Bugünkü net ciro" ile BİREBİR aynı değer+delta çiftini tekrar ediyordu — yalnızca
+              şeritte YER ALMAYAN "Brüt" kalmıştı.
+              Kök neden (Tur 3 P2 kokpit-fold-rows-01): "Brüt" tek başına bile 214px'lik bölümde
+              sparkline'lı 96px'lik bir KPI bloğu (`variant="strip"`, 19px büyük rakam) taşıyordu — 60px
+              yukarıdaki KPI şeridiyle AYNI büyük-rakam kademesini tekrarlıyor ve katlama üstü satır
+              sayısını (hedef ≥15) düşürüyordu. Tek bir ikincil sayı için ayrı bir KPI bloğu yerine bu
+              bölümün KENDİ Banka/Karantina ile AYNI "başlık altı özet satırı" anatomisi (h-11, 13px,
+              muted etiket + MoneyCell) kullanılır — 96px'ten 44px'e iner, sparkline (zaten KPI
+              şeridinde tekrar eden bir görselleştirme değildi ama küçük alanda anlamsızdı) kaldırılır. */}
+          <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
+            <span className="text-muted-foreground">Brüt (bugün)</span>
+            <MoneyCell value={channelSales.grossTotal} className="font-medium" />
+          </div>
+          {channelSales.rows.length === 0 ? (
+            <EmptyState compact title="Bugün henüz sipariş yok" description="İlk sipariş girildiğinde kanal çubukları burada görünür." />
+          ) : (
+            <div className="p-4">
+              <ChannelBars rows={channelSales.rows.map((r) => ({ name: r.name, net: Number(r.net) }))} />
             </div>
-            {channelSales.rows.length === 0 ? (
-              <EmptyState compact title="Bugün henüz sipariş yok" description="İlk sipariş girildiğinde kanal çubukları burada görünür." />
-            ) : (
-              <div className="p-4">
-                <ChannelBars rows={channelSales.rows.map((r) => ({ name: r.name, net: Number(r.net) }))} />
-              </div>
-            )}
-          </Section>
+          )}
+        </Section>
 
-          <Section title="Break-even'a uzaklık" href="/finans/break-even">
-            <BreakEvenPanel breakEven={breakEven} />
-          </Section>
+        <Section title="Break-even'a uzaklık" href="/finans/break-even">
+          <BreakEvenPanel breakEven={breakEven} />
+        </Section>
 
-          <Section title="Bugün" href="/satis/siparisler">
-            {today.length === 0 ? (
-              <EmptyState
-                compact
-                title="Bugün henüz belge yok"
-                description="Sevkiyat, iş emri, mal kabul veya fatura oluştuğunda burada görünür."
-                action={
-                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
-                    <Link href="/satis/siparisler/yeni"><Plus className="size-3.5" /> Yeni sipariş oluştur</Link>
-                  </Button>
-                }
-              />
-            ) : (
-              <ul className="divide-y divide-border/50">
-                {today.map((t) => (
-                  <li key={`${t.k}-${t.no}`}>
-                    <TodayRow item={t} />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
+        <Section title="Bugün" href="/satis/siparisler">
+          {today.length === 0 ? (
+            <EmptyState
+              compact
+              title="Bugün henüz belge yok"
+              description="Sevkiyat, iş emri, mal kabul veya fatura oluştuğunda burada görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/satis/siparisler/yeni"><Plus className="size-3.5" /> Yeni sipariş oluştur</Link>
+                </Button>
+              }
+            />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {today.map((t) => (
+                <li key={`${t.k}-${t.no}`}>
+                  <TodayRow item={t} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </Section>
 
-          <Section title="Onay kuyruğu" href="/onaylar">
-            {approvals.total === 0 ? (
-              <EmptyState compact title="Onay bekleyen öğe yok" />
-            ) : (
-              <StatStrip
-                items={[
-                  { key: 'purchase', value: approvals.purchaseDrafts, label: 'AI satın alma', href: '/satin-alma/onay-kuyrugu' },
-                  { key: 'recon', value: approvals.reconciliation, label: 'Mutabakat', href: '/muhasebe/mutabakat' },
-                  { key: 'count', value: approvals.countVariance, label: 'Sayım farkı', href: '/depo/sayim' },
-                  { key: 'dunning', value: approvals.dunning, label: 'Hatırlatma', href: '/finans/tahsilat-takibi' },
-                ]}
-              />
-            )}
-          </Section>
+        <Section title="Onay kuyruğu" href="/onaylar">
+          {approvals.total === 0 ? (
+            <EmptyState compact title="Onay bekleyen öğe yok" />
+          ) : (
+            <StatStrip
+              items={[
+                { key: 'purchase', value: approvals.purchaseDrafts, label: 'AI satın alma', href: '/satin-alma/onay-kuyrugu' },
+                { key: 'recon', value: approvals.reconciliation, label: 'Mutabakat', href: '/muhasebe/mutabakat' },
+                { key: 'count', value: approvals.countVariance, label: 'Sayım farkı', href: '/depo/sayim' },
+                { key: 'dunning', value: approvals.dunning, label: 'Hatırlatma', href: '/finans/tahsilat-takibi' },
+              ]}
+            />
+          )}
+        </Section>
 
-          {/* href yok: /ayarlar/audit (Denetim Kaydı) henüz inşa edilmedi (ayarlar modülü kapsamı) —
-              var olmayan bir rotaya "Tümü" bağlantısı vermek yerine burada başlıksız bırakılır. */}
-          <Section title="Son aktiviteler">
-            {activityGroups.length === 0 ? (
-              <EmptyState compact title="Henüz aktivite yok" />
-            ) : (
-              <ul className="divide-y divide-border/50">
-                {activityGroups.map((a) => (
-                  <li key={a.id} className="flex items-center justify-between gap-3 px-4 py-2 text-[13px]">
+        {/* href yok: /ayarlar/audit (Denetim Kaydı) henüz inşa edilmedi (ayarlar modülü kapsamı) —
+            var olmayan bir rotaya "Tümü" bağlantısı vermek yerine burada başlıksız bırakılır. */}
+        <Section title="Son aktiviteler">
+          {activityGroups.length === 0 ? (
+            <EmptyState compact title="Henüz aktivite yok" />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {activityGroups.map((a) => (
+                <li key={a.id}>
+                  {/* Kök neden (Tur 5 P1 kokpit-activity-row-anatomy-01): bu satır elle yazılmış
+                      `<li className="flex items-center justify-between gap-3 px-4 py-2 text-[13px]">`
+                      idi — 35.5px, aynı ekrandaki diğer tek satırlık listeler (Banka/SKT riski/Geciken
+                      alacak, `RowLink`) 40px. Hedef rotası yok (denetim kaydı sayfası henüz inşa
+                      edilmedi) — tıklanabilirmiş gibi göstermemek için `RowLink` değil, onun hover/
+                      active/focus'suz TABANI `Row` (shared.tsx) kullanılır: BİREBİR aynı yükseklik/
+                      dolgu/tipografi, yalnızca `<Link>` sarmalayıcısı yok. */}
+                  <Row>
                     <span className="min-w-0 flex-1 truncate">
                       <span className="text-muted-foreground">{a.userName ?? 'Sistem'}</span>
                       {a.summary ? <span> · {a.summary}</span> : <span> · {a.action} · {a.tableName}</span>}
                       {a.count > 1 ? <span className="text-muted-foreground"> · {a.count} kez</span> : null}
                     </span>
                     <span className="shrink-0 text-[11px] text-muted-foreground" title={formatDateTime(a.at)}>{relativeTime(a.at)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
-        </div>
-
-        <div className="min-w-0 flex flex-col gap-4">
-          <Section title="Banka" href="/muhasebe/banka">
-            <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
-              <span className="text-muted-foreground">Toplam (TRY hesaplar)</span>
-              <MoneyCell value={bank.totalTry} className="font-medium" />
-            </div>
-            {bank.accounts.length === 0 ? (
-              <EmptyState compact title="Banka hesabı yok" />
-            ) : (
-              <BankAccountsList accounts={bank.accounts} href="/muhasebe/banka" />
-            )}
-          </Section>
-
-          <Section title="Üretim hatları" href="/uretim/hatlar">
-            <ul className="divide-y divide-border/50">
-              {lines.map((l) => (
-                <li key={l.lineId}>
-                  <ProductionLineRow line={l} href="/uretim/hatlar" />
+                  </Row>
                 </li>
               ))}
             </ul>
-          </Section>
+          )}
+        </Section>
 
-          <Section title="Kritik stok" href="/satin-alma/kritik-stok">
-            {criticalStock.items.length === 0 ? (
-              <EmptyState
-                compact
-                title="Kritik stok yok"
-                description="Kapsama süresi tedarik süresinin altına düşen kalemler burada listelenir."
-                action={
-                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
-                    <Link href="/satin-alma/siparisler/yeni"><Plus className="size-3.5" /> Satın alma siparişi oluştur</Link>
-                  </Button>
-                }
-              />
-            ) : (
-              <ul className="divide-y divide-border/50">
-                {criticalStock.items.map((it) => (
-                  <li key={it.productId}>
-                    <RowLink href="/satin-alma/kritik-stok">
-                      <span className="min-w-0 flex-1 truncate">{it.name}</span>
-                      <span className="shrink-0 text-xs text-muted-foreground">{it.warehouseCode} · {it.leadTimeDays}g tedarik</span>
-                      <QtyCell value={it.daysOfCover} uom="gün kapsama" className="shrink-0" />
-                    </RowLink>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
+        <Section title="Banka" href="/muhasebe/banka">
+          <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
+            <span className="text-muted-foreground">Toplam (TRY hesaplar)</span>
+            <MoneyCell value={bank.totalTry} className="font-medium" />
+          </div>
+          {bank.accounts.length === 0 ? (
+            <EmptyState compact title="Banka hesabı yok" />
+          ) : (
+            <BankAccountsList accounts={bank.accounts} href="/muhasebe/banka" />
+          )}
+        </Section>
 
-          <Section title="SKT riski" href="/depo/skt">
-            <ExpiryBucketStrip totals={expiry.totals} />
-            {expiry.top5.length === 0 ? (
-              <EmptyState compact title="Yaklaşan SKT yok" />
-            ) : (
-              <ul className="divide-y divide-border/50">
-                {expiry.top5.map((r) => (
-                  <li key={r.quantId}>
-                    {/* Kök neden (Tur 2 P1 kokpit-skt-mobile-card-01): rozet / ürün adı / SKT rozeti üç
-                        AYRI `RowLink` çocuğuydu — mobilde (flex-col) 3 satıra düşüp 84.5px'e çıkıyordu
-                        (hedef ≤72px). LotBadge + ExpiryBadge artık TEK `sm:contents` grubunda (satır 1,
-                        `justify-between`), ürün adı kendi satırında (satır 2) — 2 satırlık anatomi,
-                        "Bugün/OverdueTop5List" ile aynı desen. `sm:order-last` masaüstü sırasını
-                        DEĞİŞTİRMEZ: rozet, ürün adı, SKT (flatten sonrası doğal DOM sırası zaten böyle). */}
-                    <RowLink href={`/depo/lotlar/${r.lotId}`}>
-                      <span className="flex min-w-0 items-center justify-between gap-3 sm:contents">
-                        <LotBadge lotNo={r.lotNo} status="released" />
-                        <ExpiryBadge date={new Date(`${r.expiryDate}T00:00:00Z`)} showDate={false} className="shrink-0 sm:order-last" />
-                      </span>
-                      <span className="min-w-0 flex-1 truncate">{r.productName}</span>
-                    </RowLink>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
+        <Section title="Üretim hatları" href="/uretim/hatlar">
+          <ul className="divide-y divide-border/50">
+            {lines.map((l) => (
+              <li key={l.lineId}>
+                <ProductionLineRow line={l} href="/uretim/hatlar" />
+              </li>
+            ))}
+          </ul>
+        </Section>
 
-          <Section title="Geciken alacak" href="/finans/tahsilat-takibi">
-            <AgingStrip aging={overdue.aging} />
-            {overdue.top5.length === 0 ? <EmptyState compact title="Vadesi geçen alacak yok" /> : <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />}
-          </Section>
-        </div>
-      </DashboardGrid>
+        <Section title="Kritik stok" href="/satin-alma/kritik-stok">
+          {criticalStock.items.length === 0 ? (
+            <EmptyState
+              compact
+              title="Kritik stok yok"
+              description="Kapsama süresi tedarik süresinin altına düşen kalemler burada listelenir."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/satin-alma/siparisler/yeni"><Plus className="size-3.5" /> Satın alma siparişi oluştur</Link>
+                </Button>
+              }
+            />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {criticalStock.items.map((it) => (
+                <li key={it.productId}>
+                  <RowLink href="/satin-alma/kritik-stok">
+                    <span className="min-w-0 flex-1 truncate">{it.name}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{it.warehouseCode} · {it.leadTimeDays}g tedarik</span>
+                    <QtyCell value={it.daysOfCover} uom="gün kapsama" className="shrink-0" />
+                  </RowLink>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Section>
+
+        <Section title="SKT riski" href="/depo/skt">
+          <ExpiryBucketStrip totals={expiry.totals} />
+          {expiry.top5.length === 0 ? (
+            <EmptyState compact title="Yaklaşan SKT yok" />
+          ) : (
+            <ul className="divide-y divide-border/50">
+              {expiry.top5.map((r) => (
+                <li key={r.quantId}>
+                  {/* Kök neden (Tur 2 P1 kokpit-skt-mobile-card-01): rozet / ürün adı / SKT rozeti üç
+                      AYRI `RowLink` çocuğuydu — mobilde (flex-col) 3 satıra düşüp 84.5px'e çıkıyordu
+                      (hedef ≤72px). LotBadge + ExpiryBadge artık TEK `sm:contents` grubunda (satır 1,
+                      `justify-between`), ürün adı kendi satırında (satır 2) — 2 satırlık anatomi,
+                      "Bugün/OverdueTop5List" ile aynı desen. `sm:order-last` masaüstü sırasını
+                      DEĞİŞTİRMEZ: rozet, ürün adı, SKT (flatten sonrası doğal DOM sırası zaten böyle). */}
+                  <RowLink href={`/depo/lotlar/${r.lotId}`}>
+                    <span className="flex min-w-0 items-center justify-between gap-3 sm:contents">
+                      <LotBadge lotNo={r.lotNo} status="released" />
+                      <ExpiryBadge date={new Date(`${r.expiryDate}T00:00:00Z`)} showDate={false} className="shrink-0 sm:order-last" />
+                    </span>
+                    <span className="min-w-0 flex-1 truncate">{r.productName}</span>
+                  </RowLink>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Section>
+
+        <Section title="Geciken alacak" href="/finans/tahsilat-takibi">
+          <AgingStrip aging={overdue.aging} />
+          {overdue.top5.length === 0 ? <EmptyState compact title="Vadesi geçen alacak yok" /> : <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />}
+        </Section>
+      </FlowGrid>
     </>
   );
 }
