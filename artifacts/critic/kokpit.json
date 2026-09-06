@@ -50,7 +50,9 @@
      "text": "'Günlük kanal satışları' bölümünde tek bir sağ hizalı para sütununda iki farklı ondalık dili: özet satırı MoneyCell ile ₺2.678,40 (2 hane), hemen 60px altındaki kanal satırı formatMoney(..., {digits:0}) ile ₺2.678 (0 hane). İkisi de x=815'te bitiyor, ikisi de aynı günün cirosu — ondalık ayracı olan ve olmayan iki sayı üst üste.",
      "measure": "1440x900 /kokpit (admin): 'Günlük kanal satışları' monies = ['₺2.678,40@815','₺2.678 [0dec]@815'] → mixedDecimals=true (artifacts/critic/probe-kokpit-r4/admin-1440.json)",
      "target": "Bir bölümün aynı para sütununda tek ondalık hassasiyeti: mixedDecimals=false. Kanal satırı da 2 haneye çıksın (ya da özet satırı digits:0'a insin) — KPI şeridi (0 hane) ile liste (2 hane) ayrımı KORUNUR, kural yalnızca AYNI sütun içindir.",
-     "file": "apps/web/src/modules/kokpit/components/channel-bars.tsx:39 ve :50 (formatMoney digits:0) ↔ apps/web/src/modules/kokpit/components/gm-dashboard.tsx:53 (MoneyCell, 2 hane)"
+     "file": "apps/web/src/modules/kokpit/components/channel-bars.tsx:39 ve :50 (formatMoney digits:0) ↔ apps/web/src/modules/kokpit/components/gm-dashboard.tsx:53 (MoneyCell, 2 hane)",
+     "fix": "ChannelBars'ın hem tek-kanal (satır 36) hem çok-kanallı (satır 47) dalındaki formatMoney(..., { digits: 0 }) çağrıları digits: 2'ye çıkarıldı — GM'nin 'Brüt (bugün)' özet satırıyla (MoneyCell, 2 ondalık) AYNI sütunda artık tek ondalık dili.",
+     "measureAfter": "1440x900 /kokpit (admin), fresh db:reset sonrası: 'Günlük kanal satışları' monies = ['₺2.678,40@815','₺2.678,40@815'] → mixedDecimals=false (artifacts/critic/measure-kokpit-r4-fix/admin-1440.json)."
     },
     {
      "openedRound": 3,
@@ -342,7 +344,9 @@
      "text": "'Karantina' kartının toplam satırı (₺55.355) ile hemen altındaki dört lot satırı (₺36.400,00 / ₺7.875,00 / ₺5.760,00 / ₺5.320,00) AYNI sağ hizalı sütunda, ama toplam 0 ondalık, kalemler 2 ondalık basıyor. Toplam tam olarak bu dört kalemin toplamı (55.355,00) — yani aynı sayı ailesinde iki farklı hassasiyet, üstelik toplam satırında ondalık ayracı hiç yok.",
      "measure": "1440x900 /kokpit (depo): 'Karantina' monies = ['₺55.355 [0dec]@815','₺36.400,00@815','₺7.875,00@815','₺5.760,00@815','₺5.320,00@815'] → mixedDecimals=true (artifacts/critic/probe-kokpit-r4/depo-1440.json)",
      "target": "mixedDecimals=false: toplam satırı da MoneyCell (2 hane) kullansın — GM kesitindeki 'Brüt (bugün)' ve muhasebe 'Toplam (TRY hesaplar)' toplam satırları zaten 2 hane basıyor, depo tek istisna.",
-     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:30 (formatMoney(..., {digits: 0}))"
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:30 (formatMoney(..., {digits: 0}))",
+     "fix": "depo-dashboard.tsx:30'daki formatMoney(data.quarantine.value, 'TRY', { digits: 0 }) kaldırıldı; MoneyCell(value=data.quarantine.value) (2 ondalık) kullanıldı — GM/muhasebe'nin özet satırlarıyla aynı hassasiyet.",
+     "measureAfter": "1440x900 /kokpit (depo), fresh db:reset sonrası: 'Karantina' monies = ['₺55.355,00@815','₺36.400,00@815','₺7.875,00@815','₺5.760,00@815','₺5.320,00@815'] → mixedDecimals=false (artifacts/critic/measure-kokpit-r4-fix/depo-1440.json)."
     }
    ],
    "closed": [
@@ -520,7 +524,9 @@
      "text": "Muhasebe kesitindeki iki liste (Banka hesapları, Mutabakat kuyruğu) kokpitin ortak `RowLink` satırını kullanmıyor: elle yazılmış `<li className=\"flex h-11 …\">` — 44px yüksek (diğer tüm kokpit listeleri 40px), tıklanamaz (hiçbir hover/focus/aktif geri bildirimi yok), oysa aynı ekranın sağ kolonundaki 'Geciken alacak' satırları tıklanabilir RowLink. Kullanıcı hangi satırın tıklanabilir olduğunu göremiyor.",
      "measure": "1440x900 /kokpit (muhasebe): rowH Banka [44,44,44], Mutabakat kuyruğu [44,44,44] ↔ Geciken alacak [40,41,41]; Banka/Mutabakat li'lerinde href/hover/focus-visible yok (finance-dashboard.tsx:48,82) (artifacts/critic/probe-kokpit-r4/muhasebe-1440.json)",
      "target": "Her iki liste de `RowLink` kullansın: satır yüksekliği 40px (li dış 41px) — ekrandaki tüm tek satırlık liste satırları tek yükseklik; her satır kendi kaydına link (banka hesabı → /muhasebe/banka, mutabakat önerisi → /muhasebe/mutabakat) ve hover/focus-visible geri bildirimi taşısın.",
-     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:48 (Banka hesap satırı), :82 (Mutabakat kuyruğu satırı)"
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:48 (Banka hesap satırı), :82 (Mutabakat kuyruğu satırı)",
+     "fix": "Kök neden: aynı elle-yazılmış <li className=\"flex h-11 …\"> deseni gm-dashboard.tsx'in Banka listesinde de kopyalanmıştı — yeni paylaşılan BankAccountsList bileşeni (shared.tsx) eklenip HER İKİ panoda (GM + muhasebe) kullanıldı; 'Mutabakat kuyruğu' listesi de RowLink'e taşındı. Üç liste de artık RowLink (40px, href, hover/active/focus).",
+     "measureAfter": "1440x900 /kokpit (muhasebe), fresh db:reset sonrası: Banka rowH=[40,41,41], Mutabakat kuyruğu rowH=[40,41,41], Geciken alacak rowH=[40,41,41] — üçü birebir aynı anatomi (artifacts/critic/measure-kokpit-r4-fix/muhasebe-1440.json). Satırlar artık <a href> (RowLink), tıklanabilir."
     },
     {
      "openedRound": 4,
@@ -756,7 +762,9 @@
      "text": "'Son siparişler' 1152px'lik tam genişlik şeritte HER ZAMAN 2 satırlık anatomi basıyor (satır 1: tarih + belge no + rozet, satır 2: partner · kanal + tutar) → 59.5px. Sayfanın en büyük kartı, 10 satır = 595px. Aynı genişlikteki (1152px) depo 'Bugün' listesi tam olarak aynı bilgi sınıfını (tür + belge no + partner + tutar + rozet) TEK satırda, 41px'te ve sabit rozet yuvası sayesinde tutar sütunu ±0px kayma ile veriyor. Satırın ortasında ~700px boş alan var; dikey alanın yarısı boşa gidiyor.",
      "measure": "1440x900 /kokpit (satış): 'Son siparişler' rowH [58.5, 59.5, 59.5] @ bölüm genişliği 1152px; karşılaştırma /kokpit (depo) 'Bugün' rowH [40, 41, 41] @ 1152px (artifacts/critic/probe-kokpit-r4/{satis,depo}-1440.json)",
      "target": "Bölüm konteyneri ≥1024px iken tek satır: rowH ≤ 44px (hedef 40px + 1px hairline), tutar sağ kenarı ±0px (TodayRow'daki sabit genişlikli rozet yuvası deseniyle — @container varyantı zaten Section'da mevcut). Mobil (390px) 2 satırlık anatomi DEĞİŞMEZ.",
-     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:124-136 (RowLink className=\"sm:h-auto sm:flex-col …\") — referans anatomi: shared.tsx TodayRow"
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx:124-136 (RowLink className=\"sm:h-auto sm:flex-col …\") — referans anatomi: shared.tsx TodayRow",
+     "fix": "Son siparişler satırı TodayRow deseninin BİREBİR aynısına taşındı: iki DOM bloğu, Section'ın zaten var olan @container bağlamıyla açılıp kapanıyor. <1024px konteynerde (mobil dahil) eski 2 satırlık anatomi DEĞİŞMEDİ; ≥1024px konteynerde (bu Section'ın lg:col-span-2 tam genişlik şeridi) TEK satır — tarih/belge no/tutar/rozet sabit genişlikli yuvalarda (w-20/w-28/w-28/w-32).",
+     "measureAfter": "1440x900 /kokpit (satis), fresh db:reset sonrası: 'Son siparişler' rowH=[40,41,41] (önceden [58.5,59.5,59.5]), rowRightSpread=0, foldRows=16 (hedef ≥15) (artifacts/critic/measure-kokpit-r4-fix/satis-1440.json)."
     },
     {
      "openedRound": 4,
@@ -946,7 +954,9 @@
      "text": "İki kolonlu pano dengesizleşti: sol kolon (Hat durumu + Fire kırılımı) 755px'te bitiyor, sağ kolon (Son iş emirleri + Son duruşlar) 1021px'te — sol kolonun altında 266px boş alan. Tur 3'te 89px'ti; 'Fire kırılımı' boş duruma düşünce (257px) ve 'Son iş emirleri' 8 satıra çıkınca fark eşiği aştı.",
      "measure": "1440x900 /kokpit (üretim şefi): kolon dipleri 755 / 1021 → 266px (probe-kokpit-r4/uretim_sefi-1440.json). Bölümler: Hat durumu 206px, Fire kırılımı 257px | Son iş emirleri 521px, Son duruşlar 208px.",
      "target": "Kolon dibi farkı ≤200px. Ör. 'Son duruşlar' sol kolona alınsın (755+208=963 vs 797 → 166px) ya da 'Fire kırılımı' boş durumu compact yüksekliği ≤160px'e insin.",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx (DashboardGrid kolon dağılımı)"
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx (DashboardGrid kolon dağılımı)",
+     "fix": "'Son duruşlar' bölümü sağ kolondan (Son iş emirleri'nin altından) tekrar sol kolona (Hat durumu + Fire kırılımı'nın altına) taşındı — kolon dengesi statik bir tasarım kararı değil, o anki içerik yüksekliğine göre; 'Fire kırılımı' boş duruma düşüp 'Son iş emirleri' 8 satıra çıkınca denge yeniden sağa kaymıştı.",
+     "measureAfter": "1440x900 /kokpit (uretim_sefi), fresh db:reset sonrası: sol kolon (Hat durumu+Fire kırılımı+Son duruşlar) 979px'te, sağ kolon (Son iş emirleri) 797px'te bitiyor — fark 182px (hedef ≤200px, önceki 266px) (artifacts/critic/measure-kokpit-r4-fix/uretim_sefi-1440.json)."
     },
     {
      "openedRound": 4,
