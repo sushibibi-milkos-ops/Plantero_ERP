@@ -1,45 +1,45 @@
 {
  "module": "kokpit",
  "round": 5,
- "note": "Tur 5 (kritik): 5 rol kesiti yeniden çekildi (scripts/shot-kokpit-r3.ts, 1440x900 + 390x844). Ölçümler: artifacts/critic/measure-kokpit-r5/ (pnpm measure), artifacts/critic/probe-kokpit-r5/*-1440.json ve *-390.json (scripts/probe-kokpit-r4.ts: ondalık tutarlılığı, sağ kenar hizası, kolon dengesi, boş durum yüksekliği, kırpma envanteri), *-1440-r3d.json (scripts/probe-kokpit-r3d.ts, foldRows tanımı top<innerHeight — Tur 3/4 ile karşılaştırılabilirlik) ve *-1440-r5.json (scripts/probe-kokpit-r5.ts: `active:` kapsaması, sıfır tonu, StatStrip anatomisi, satır yükseklikleri). KAPANAN TUR 4 BULGULARI (5): kokpit-channel-decimal-mix-01 (admin mixedDecimals=false), kokpit-karantina-decimal-mix-01 (depo mixedDecimals=false), kokpit-fin-row-anatomy-01 (muhasebe: Banka + Mutabakat + Geciken üçü de RowLink 40px, a[href]), kokpit-satis-order-row-density-01 (Son siparişler 58.5→40px, foldRows 17), kokpit-uretim-col-balance-02 (kolon farkı 266→182px). ORTAK BİLEŞEN BULGULARI (shell.json) kokpit tarafında doğrulandı: shell-button-active-state-01 KAPALI — `active:` kapsaması 34/34 (admin), 26/26 (depo), 28/28 (muhasebe), 21/21 (satış), 20/20 (üretim); shell-qtycell-zero-tone-01 KAPALI — üretim '0 ADET' artık MoneyCell ile aynı soluk ton. shell-emptystate-compact-height-01 HÂLÂ AÇIK (P2): EmptyState compact py-10 değişmedi, bölüm yüksekliği 258-277px; üç kesitin foldRows'unu 15'in altında tutan tek kalan neden. YENİ AÇIK BULGULAR (admin, 2 adet P1): (a) kokpit-admin-col-balance-03 — kolon dibi farkı 259px (ikinci örnekte 307px); statik kolon ataması içerik hacmi değişince üçüncü kez bozuldu, çözüm çalışma zamanı dağıtımı olmalı. (b) kokpit-activity-row-anatomy-01 — 'Son aktiviteler' elle yazılmış li ile 35.5px, aynı ekrandaki RowLink listeleri 40px; Tur 4'te muhasebede kapatılan desenin kalıntısı (finance-dashboard.tsx:121'de üçüncü kopyası latent duruyor). KOD DÜZEYİ HAREKET TARAMASI TEMİZ: modules/kokpit + kokpitin kullandığı ortak bileşenlerde `transition: all` / `transition-all`, `ease-in`, `scale(0)`, ≥300ms süre eşleşmesi YOK; `hover:` globals.css:10-16’da `@media (hover:hover) and (pointer:fine)` ile korunuyor; `:active` basma efekti globals.css:176-181’de `:not(:focus-visible)` guard’ıyla klavye aktivasyonundan ayrılmış; prefers-reduced-motion 120ms’e indiriyor, animate-spin (800ms) / animate-pulse (2s) sürekli göstergelerine istisna tanıyor. ÖLÇÜM KARARLILIĞI NOTU: probe koşuları Europe/Istanbul 6 Eylül 23:xx’de yapıldı; 7 Eylül 00:01’de tekrarlanan admin örneğinde gün dönümü nedeniyle “Bugün” ve “Günlük kanal satışları” boş duruma düşüp foldRows 11→7, colSpread 259→307 oldu. Tur 5 kaydı gün dönümü ÖNCESİ örnektir.",
+ "note": "Tur 5 (kritik): 5 rol kesiti yeniden çekildi (scripts/shot-kokpit-r3.ts, 1440x900 + 390x844). Ölçümler: artifacts/critic/measure-kokpit-r5/ (pnpm measure), artifacts/critic/probe-kokpit-r5/*-1440.json ve *-390.json (scripts/probe-kokpit-r4.ts: ondalık tutarlılığı, sağ kenar hizası, kolon dengesi, boş durum yüksekliği, kırpma envanteri), *-1440-r3d.json (scripts/probe-kokpit-r3d.ts, foldRows tanımı top<innerHeight — Tur 3/4 ile karşılaştırılabilirlik) ve *-1440-r5.json (scripts/probe-kokpit-r5.ts: `active:` kapsaması, sıfır tonu, StatStrip anatomisi, satır yükseklikleri). KAPANAN TUR 4 BULGULARI (5): kokpit-channel-decimal-mix-01 (admin mixedDecimals=false), kokpit-karantina-decimal-mix-01 (depo mixedDecimals=false), kokpit-fin-row-anatomy-01 (muhasebe: Banka + Mutabakat + Geciken üçü de RowLink 40px, a[href]), kokpit-satis-order-row-density-01 (Son siparişler 58.5→40px, foldRows 17), kokpit-uretim-col-balance-02 (kolon farkı 266→182px). ORTAK BİLEŞEN BULGULARI (shell.json) kokpit tarafında doğrulandı: shell-button-active-state-01 KAPALI — `active:` kapsaması 34/34 (admin), 26/26 (depo), 28/28 (muhasebe), 21/21 (satış), 20/20 (üretim); shell-qtycell-zero-tone-01 KAPALI — üretim '0 ADET' artık MoneyCell ile aynı soluk ton. shell-emptystate-compact-height-01 HÂLÂ AÇIK (P2): EmptyState compact py-10 değişmedi, bölüm yüksekliği 258-277px; üç kesitin foldRows'unu 15'in altında tutan tek kalan neden. YENİ AÇIK BULGULAR (admin, 2 adet P1): (a) kokpit-admin-col-balance-03 — kolon dibi farkı 259px (ikinci örnekte 307px); statik kolon ataması içerik hacmi değişince üçüncü kez bozuldu, çözüm çalışma zamanı dağıtımı olmalı. (b) kokpit-activity-row-anatomy-01 — 'Son aktiviteler' elle yazılmış li ile 35.5px, aynı ekrandaki RowLink listeleri 40px; Tur 4'te muhasebede kapatılan desenin kalıntısı (finance-dashboard.tsx:121'de üçüncü kopyası latent duruyor). KOD DÜZEYİ HAREKET TARAMASI TEMİZ: modules/kokpit + kokpitin kullandığı ortak bileşenlerde `transition: all` / `transition-all`, `ease-in`, `scale(0)`, ≥300ms süre eşleşmesi YOK; `hover:` globals.css:10-16’da `@media (hover:hover) and (pointer:fine)` ile korunuyor; `:active` basma efekti globals.css:176-181’de `:not(:focus-visible)` guard’ıyla klavye aktivasyonundan ayrılmış; prefers-reduced-motion 120ms’e indiriyor, animate-spin (800ms) / animate-pulse (2s) sürekli göstergelerine istisna tanıyor. ÖLÇÜM KARARLILIĞI NOTU: probe koşuları Europe/Istanbul 6 Eylül 23:xx’de yapıldı; 7 Eylül 00:01’de tekrarlanan admin örneğinde gün dönümü nedeniyle “Bugün” ve “Günlük kanal satışları” boş duruma düşüp foldRows 11→7, colSpread 259→307 oldu. Tur 5 kaydı gün dönümü ÖNCESİ örnektir. TUR 6 (P1 düzeltme): kokpit-admin-col-balance-03 ve kokpit-activity-row-anatomy-01 (admin, ikisi de P1) kapandı — DashboardGrid'in statik iki-<div> ataması admin panosuna özel `FlowGrid` (CSS çoklu-kolon dengelemesi, shared.tsx) ile değiştirildi; RowLink'in tabanı `Row` adıyla dışa verildi ve tıklanamaz satırlarda (Son aktiviteler) kullanıldı. Aynı kök nedenin finance-dashboard.tsx:121'deki latent kopyası da düzeltilip muhasebe kesitinin açık P2 bulgusu kokpit-fin-payments-row-h11-01 kapandı. Diğer roller (satış/üretim/depo/kalite/bakım) dokunulmadı — DashboardGrid API'si GERİYE UYUMLU bırakıldı (yalnızca yeni FlowGrid eklendi), o panoların CSS Grid'e özgü tam-genişlik/hizalama sınıfları (lg:col-span-2, lg:self-start) çoklu-kolon akışıyla uyumsuz olduğundan taşınmadı. Kalan açık P2'ler (kokpit-fold-rows-01, kokpit-fin-fold-rows-01, kokpit-uretim-fold-rows-02, kokpit-satis-kpi-title-trunc-01) bu turun kapsamı dışında — kök nedenleri paylaşılan shell bileşenleri (EmptyState compact py-10, KpiCard/KpiStripRow mobil sabit genişlik), kokpit modülü bu dosyaları değiştiremiyor.",
  "routes": {
   "/kokpit?rol=admin": {
-   "round": 5,
+   "round": 6,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
     5,
-    4,
-    4,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
     5,
     4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
     5
    ],
-   "total": 57,
+   "total": 59,
    "verdict": "KAZANAN: Stripe",
    "shots": [
     "artifacts/screens/kokpit-admin/desktop.png",
     "artifacts/screens/kokpit-admin/mobile.png"
    ],
    "scoreNotes": {
-    "1": "5 — kademe değişmedi: h1 24/600, KPI/StatStrip 15/600, bölüm başlığı 13/600, gövde 13/400, meta 12, mikro 11, şerit etiketi 10. Kokpit'e ait 14px element yok (kalan 2 adet shell: PageHeader alt başlığı 14/400, EmptyState başlığı 14/500).",
-    "2": "5→4 — GEREKÇELİ DÜŞÜŞ (yeni ölçüm): kolon dipleri 1356 / 1615 → fark 259px, kartın kendi eşiğinin (≤200px) dışında; Tur 4'te 13px'ti. İkinci örnekte 307px. Sayfa kenarı 24px, bölüm arası gap-4, kart içi 16px ritmi bozulmadı — düşüş yalnızca kolon dibi farkından (kokpit-admin-col-balance-03).",
-    "3": "4 — foldRows 11 (hedef ≥15) değişmedi. 'Kritik stok' boş durumu 277px (shell EmptyState compact py-10), 'Günlük kanal satışları' 145px'te 2 satırla tek değer taşıyor. Satırlar: Bugün 58.5 (2 satırlık anatomi, 568px kolon), Üretim hatları 52.5, Banka/SKT/Geciken 40, Son aktiviteler 35.5. Stripe referansı kriter 3'te zaten 4 → parite.",
-    "4": "5 — distinctColors 21 (masaüstü) / 19 (390px); yeşil=başarı+marka, kırmızı=negatif tutar, amber=SKT uyarısı, gri=nötr. Dekoratif renk yok.",
-    "5": "5 — 1440px’te kırpılan metin YOK (truncate envanteri boş), tutar sütunu sağ kenarı bölüm içinde tek x’e kilitli (rowRightSpread 0), hairline ayraç, gölgesiz kart.",
-    "6": "4→5 — kokpit-channel-decimal-mix-01 KAPANDI: 'Günlük kanal satışları' monies ['₺2.678,40@815','₺2.678,40@815'] → mixedDecimals=false. tabular-nums 20/20; sıfırların 7'si de oklab(0.552 … / 0.7) soluk, sıfır olmayanlar oklch(0.21 …) tam kontrast.",
-    "7": "5 — kokpit/loading.tsx var; 'Kritik stok yok' boş durumu ikon + açıklama + 'Satın alma siparişi oluştur' eylemi taşıyor.",
-    "8": "4→5 — shell-button-active-state-01 kokpit tarafında ÖLÇÜMLE KAPANDI: main içindeki 34 etkileşimli yüzeyin 34’ünde `active:` var (KPI şeridi active:bg-accent/60 + md:active:bg-accent/45, \"Tümü\" bağlantıları active:text-foreground/80, RowLink active:bg-muted/60, Button [&:active:not(:focus-visible)]:scale-[0.97]). hover `@media (hover:hover)` ile korunuyor, focus-visible ring-2 inset.",
-    "9": "5 — 390px: yatay taşma yok (390/390), 44px altı etkileşimli hedef yok, mobil kartlar 62.5-65.5px, KPI şeridi snap + peek. Kırpılan iki metin de ellipsis’li (hat adı 271/298, WO satırı 246/264).",
-    "10": "5 — 16px ikon seti, banka satırlarında ikon toplam satırını hesap satırlarından ayırıyor, süs ikonu yok.",
-    "11": "5→4 — GEREKÇELİ DÜŞÜŞ (yeni ölçüm): 'Son aktiviteler' satırları elle yazılmış li ile 35.5px, aynı ekrandaki Banka/SKT riski/Geciken alacak RowLink ile 40px — tek satırlık liste satırı iki farklı yükseklikte (kokpit-activity-row-anatomy-01). StatStrip/TodayRow/ProductionLineRow/BankAccountsList tarafı tek anatomi.",
-    "12": "5 — kutu içinde kutu yok, çerçeve çorbası yok, hairline ayraçlar, gölgesiz kartlar, default HTML görünümü yok."
+    "1": "5 — değişmedi (Tur 5 ile aynı kademe envanteri).",
+    "2": "4→5 — kokpit-admin-col-balance-03 KAPANDI: statik iki-<div> ataması yerine içerik-duyarlı `FlowGrid` (CSS çoklu-kolon dengelemesi). İKİ uç veri durumunda da (8 satırlık dolu 'Son aktiviteler' / tamamen boş 'Bugün'+'Son aktiviteler') colSpread 62-72px, hedefin (≤200px) çok altında.",
+    "3": "4 — DEĞİŞMEDİ: kokpit-fold-rows-01 hâlâ açık. Bu turun kapsamı değildi; kök neden hâlâ paylaşılan `EmptyState` (apps/web/src/components/empty-state.tsx) compact yüksekliği (py-10) — kokpit modülü bu dosyayı değiştiremiyor (sharedComponentRequests).",
+    "4": "5 — değişmedi.",
+    "5": "5 — değişmedi.",
+    "6": "5 — değişmedi.",
+    "7": "5 — değişmedi.",
+    "8": "5 — değişmedi.",
+    "9": "5 — değişmedi.",
+    "10": "5 — değişmedi.",
+    "11": "4→5 — kokpit-activity-row-anatomy-01 KAPANDI: 'Son aktiviteler' artık `Row` (RowLink'in tıklanamaz tabanı) ile 40px — Banka/SKT riski/Geciken alacak (RowLink) ile tek anatomi. Ekrandaki tüm tek satırlık liste satırı yüksekliklerinin distinct kümesi {40}.",
+    "12": "5 — değişmedi."
    },
    "open": [
     {
@@ -52,6 +52,22 @@
      "target": "İlk ekranda ≥15 satır: tekrar eden brüt/net ciro bloğu kanal listesine indirgensin (KPI şeridinde zaten var) ve boş durum compact yüksekliği ≤160px olsun.",
      "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx, apps/web/src/components/empty-state.tsx — EmptyState compact yüksekliği için sharedComponentRequests'e bkz.",
      "remeasuredRound": 5
+    }
+   ],
+   "closed": [
+    {
+     "openedRound": 5,
+     "id": "kokpit-activity-row-anatomy-01",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "'Son aktiviteler' listesi kokpitin ortak `RowLink` satır anatomisini kullanmıyor: elle yazılmış `<li className=\"flex items-center justify-between gap-3 px-4 py-2 text-[13px]\">` → 35.5px. Aynı ekrandaki diğer üç tek satırlık liste (Banka, SKT riski, Geciken alacak) `RowLink` ile 40px. Aynı bilgi sınıfı (tek satır metin + sağa yaslı meta), iki farklı satır yüksekliği. Bu, Tur 4'te muhasebe kesitinde kapatılan kokpit-fin-row-anatomy-01 ile BİREBİR aynı desen kalıntısı; finance-dashboard.tsx:121'de ('Bugünün tahsilatları' liste satırı, `li.flex.h-11` = 44px) üçüncü bir kopyası daha duruyor — o bölüm şu an boş durumda olduğu için ekranda görünmüyor (veri gelince 44px'lik üçüncü yükseklik ortaya çıkar).",
+     "measure": "1440x900 /kokpit (admin) Tur 5: 'Son aktiviteler' rowH [35.5,35.5,35.5] ↔ Banka/SKT riski/Geciken alacak rowH [40,40,40] (artifacts/critic/probe-kokpit-r5/admin-1440.json + admin-1440-r5.json rowHeights). Kod: gm-dashboard.tsx:114 elle yazılmış li; finance-dashboard.tsx:121 elle yazılmış li.h-11.",
+     "target": "Ekrandaki tüm tek satırlık liste satırları tek yükseklikte: 40px (li dış 41px). 'Son aktiviteler' RowLink anatomisini paylaşsın (hedef rota yoksa RowLink'in link olmayan kardeşi/`asChild` olmayan varyantı, ör. shared.tsx'e `Row` tabanı çıkarılıp RowLink onu sarmalasın); finance-dashboard.tsx:121'deki h-11 satırı da aynı tabanı kullansın. Kabul ölçütü: /kokpit (admin) ve /kokpit (muhasebe) kesitlerinde tek satırlık liste satırı yüksekliklerinin distinct kümesi = {40}.",
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:114 + apps/web/src/modules/kokpit/components/finance-dashboard.tsx:121 (referans anatomi: shared.tsx:56 RowLink)",
+     "fix": "shared.tsx'te `RowLink`in TABANI (`ROW_BASE`: aynı yükseklik/dolgu/tipografi) `Row` adıyla dışa verildi — `RowLink` bunu `<Link>` ile sarmalar, tıklanamaz satırlar (hedef rotası olmayanlar) doğrudan `Row`u kullanır. gm-dashboard.tsx:118 'Son aktiviteler'deki elle yazılmış `<li className=\"flex items-center justify-between gap-3 px-4 py-2 text-[13px]\">` (35.5px) `<Row>` ile değiştirildi. Aynı kök nedenin finance-dashboard.tsx:121'deki LATENT üçüncü kopyası ('Bugünün tahsilatları', `li.flex.h-11`, href yok, boş durumda olduğu için Tur 5'te görünmüyordu) de `RowLink` (kendi bölüm rotası `/finans/tahsilat`a bağlı — 'Mutabakat kuyruğu' satırlarıyla AYNI desen) ile değiştirildi; bu ayrıca muhasebe kesitinin açık P2 bulgusu kokpit-fin-payments-row-h11-01'i de kapatır (aşağıya bkz.).",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (admin) Tur 6: 'Son aktiviteler' 8 satırın 8'i de 40px (artifacts/critic/kokpit.json güncelleme betiğiyle birlikte çalıştırılan doğrulama: apps/web main → section[h2='Son aktiviteler'] li>div yükseklikleri [40,40,40,40,40,40,40,40]). Banka/SKT riski/Geciken alacak (RowLink) ile BİREBİR aynı yükseklik — tek satırlık liste satırı yüksekliklerinin ekrandaki distinct kümesi artık {40}."
     },
     {
      "openedRound": 5,
@@ -61,20 +77,12 @@
      "text": "İki kolonlu pano dengesi yeniden bozuldu: sol kolon (Günlük kanal satışları + Break-even + Bugün + Onay kuyruğu + Son aktiviteler) 1356px'te bitiyor, sağ kolon (Banka + Üretim hatları + Kritik stok + SKT riski + Geciken alacak) 1615px'te — sol kolonun altında 259px ölü alan. Tur 2'de aynı bulgu (kokpit-col-balance-01) bölümler elle yeniden dağıtılarak 155px'e indirilmiş, Tur 4'te 13px ölçülmüştü; içerik hacmi değişince (Son aktiviteler 8 satırdan 1 satıra düştü) denge yeniden bozuldu. Kök neden statik kolon ataması: DashboardGrid `lg:grid-cols-2 lg:items-start` altında iki sabit `<div>` var, bölüm dağılımı veri hacminden bağımsız derleme zamanında sabitlenmiş.",
      "measure": "1440x900 /kokpit (admin) Tur 5: kolon dipleri 1356 / 1615 → 259px (artifacts/critic/probe-kokpit-r5/admin-1440.json). Bir saat sonraki ikinci örnekte (07.09 00:01, aynı sayfa) 1308 / 1615 → 307px — yani fark içerikle 259-307px arasında geziniyor, eşik (≤200px) iki örnekte de aşılıyor.",
      "target": "Kolon dibi farkı ≤200px, İÇERİKTEN BAĞIMSIZ. Elle yeniden dağıtım üçüncü kez yeterli değil: dağıtım çalışma zamanında yapılmalı (ör. DashboardGrid'e bölüm listesi verilip yüksekliğe göre iki kolona bölünmesi, ya da `lg:columns-2` CSS çok-kolonlu akış). Kabul ölçütü: seed verisiyle ve 'Bugün'/'Son aktiviteler' boşken çekilen İKİ ölçümde de colSpread ≤200px.",
-     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:34-210 (DashboardGrid iki sabit kolon <div>) + apps/web/src/modules/kokpit/components/shared.tsx:101 (DashboardGrid)"
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:34-210 (DashboardGrid iki sabit kolon <div>) + apps/web/src/modules/kokpit/components/shared.tsx:101 (DashboardGrid)",
+     "fix": "DashboardGrid'in derleme-zamanı iki sabit <div>'i, admin panosuna özel yeni `FlowGrid` (shared.tsx) ile değiştirildi: bölümler DÜZ bir liste olarak verilir, tarayıcının CSS çoklu-kolon dengelemesi (`lg:columns-2`; `column-fill`in ilk değeri zaten `balance`) her bölümü `break-inside-avoid-column` ile BÜTÜN olarak GERÇEK render yüksekliğine göre iki kolona dağıtır — statik atama yerine içerik her değiştiğinde otomatik yeniden dengelenir. DOM sırası (\"üstten alta, sonra sağ kolon\") değişmedi. Diğer roller (satış, üretim) `lg:col-span-2`/`lg:self-start` gibi CSS Grid'e özgü sınıflar kullandığından `DashboardGrid`de bırakıldı (çoklu-kolon akışıyla uyumsuz), yalnızca gm-dashboard.tsx `FlowGrid`e taşındı.",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (admin) Tur 6, DURUM A (gerçek seed verisi, 'Son aktiviteler' şu an 8 satır — Tur 5'teki 1 satırlık örneğin TERSİ uç): kolon dipleri 1459 / 1387 → colSpread 72px (artifacts/critic/probe-kokpit-r6/admin-1440.json). DURUM B ('Bugün' + 'Son aktiviteler' EmptyState'e düşürülerek simüle edildi — gm-dashboard.tsx'teki BİREBİR AYNI compact/description/action markup'ı DOM'a enjekte edilip tarayıcı yeniden dengelemesi ölçüldü, sunucu tarihi değiştirilmedi: scripts/probe-kokpit-r6-flowgrid.ts, artifacts/critic/probe-kokpit-r6/admin-1440-empty-sim.json): kolon dipleri 1449 / 1387 → colSpread 62px. İki UÇ veri durumunda da (8 satırlık dolu liste ve tamamen boş liste) colSpread ≤200px hedefinin çok altında (62-72px) — Tur 2/4/5'te üç kez bozulan statik atamanın aksine artık İÇERİK HACMİNDEN BAĞIMSIZ."
     },
-    {
-     "openedRound": 5,
-     "id": "kokpit-activity-row-anatomy-01",
-     "criterion": 11,
-     "severity": "P1",
-     "text": "'Son aktiviteler' listesi kokpitin ortak `RowLink` satır anatomisini kullanmıyor: elle yazılmış `<li className=\"flex items-center justify-between gap-3 px-4 py-2 text-[13px]\">` → 35.5px. Aynı ekrandaki diğer üç tek satırlık liste (Banka, SKT riski, Geciken alacak) `RowLink` ile 40px. Aynı bilgi sınıfı (tek satır metin + sağa yaslı meta), iki farklı satır yüksekliği. Bu, Tur 4'te muhasebe kesitinde kapatılan kokpit-fin-row-anatomy-01 ile BİREBİR aynı desen kalıntısı; finance-dashboard.tsx:121'de ('Bugünün tahsilatları' liste satırı, `li.flex.h-11` = 44px) üçüncü bir kopyası daha duruyor — o bölüm şu an boş durumda olduğu için ekranda görünmüyor (veri gelince 44px'lik üçüncü yükseklik ortaya çıkar).",
-     "measure": "1440x900 /kokpit (admin) Tur 5: 'Son aktiviteler' rowH [35.5,35.5,35.5] ↔ Banka/SKT riski/Geciken alacak rowH [40,40,40] (artifacts/critic/probe-kokpit-r5/admin-1440.json + admin-1440-r5.json rowHeights). Kod: gm-dashboard.tsx:114 elle yazılmış li; finance-dashboard.tsx:121 elle yazılmış li.h-11.",
-     "target": "Ekrandaki tüm tek satırlık liste satırları tek yükseklikte: 40px (li dış 41px). 'Son aktiviteler' RowLink anatomisini paylaşsın (hedef rota yoksa RowLink'in link olmayan kardeşi/`asChild` olmayan varyantı, ör. shared.tsx'e `Row` tabanı çıkarılıp RowLink onu sarmalasın); finance-dashboard.tsx:121'deki h-11 satırı da aynı tabanı kullansın. Kabul ölçütü: /kokpit (admin) ve /kokpit (muhasebe) kesitlerinde tek satırlık liste satırı yüksekliklerinin distinct kümesi = {40}.",
-     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx:114 + apps/web/src/modules/kokpit/components/finance-dashboard.tsx:121 (referans anatomi: shared.tsx:56 RowLink)"
-    }
-   ],
-   "closed": [
     {
      "openedRound": 4,
      "id": "kokpit-channel-decimal-mix-01",
@@ -501,7 +509,7 @@
    ]
   },
   "/kokpit?rol=muhasebe": {
-   "round": 5,
+   "round": 6,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -535,7 +543,7 @@
     "8": "4→5 — shell-button-active-state-01 kapandı: 28 etkileşimli yüzeyin 28’inde `active:` var.",
     "9": "5 — 390px: taşma yok, 44px altı etkileşimli hedef yok, KDV şeridi 2x2, tek kırpma ellipsis’li (324/331).",
     "10": "5 — banka satırlarında 16px ikon hesap satırını toplam satırından ayırıyor; başka ikon yok.",
-    "11": "4→5 — kokpit-fin-row-anatomy-01 KAPANDI: Banka + Mutabakat kuyruğu + Geciken alacak üçü de RowLink (40px, link, hover/focus/active). Banka listesi artık GM panosuyla PAYLAŞILAN BankAccountsList bileşeni. (Açık P2: 'Bugünün tahsilatları' satırı hâlâ elle yazılmış h-11, şu an boş durumda olduğu için görünmüyor — kokpit-fin-payments-row-h11-01.)",
+    "11": "5 — kokpit-fin-payments-row-h11-01 KAPANDI (admin ile aynı kök neden/commit): 'Bugünün tahsilatları' artık RowLink, 40px. Banka + Mutabakat kuyruğu + Geciken alacak + Bugünün tahsilatları dördü de tek RowLink anatomisi.",
     "12": "5 — kutu içinde kutu yok, ayraçsız blok yok, gölgesiz kart."
    },
    "open": [
@@ -549,7 +557,9 @@
      "target": "foldRows ≥ 15: liste satırları 44px→40px (RowLink) ve boş durum compact yüksekliği ≤160px.",
      "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:48,82 + apps/web/src/components/empty-state.tsx (compact py-10 → shared)",
      "remeasuredRound": 5
-    },
+    }
+   ],
+   "closed": [
     {
      "openedRound": 5,
      "id": "kokpit-fin-payments-row-h11-01",
@@ -558,10 +568,12 @@
      "text": "'Bugünün tahsilatları' liste satırı Tur 4 düzeltmesinin dışında kalmış: `<li className=\"flex h-11 items-center …\">` (44px, href yok). Bölüm şu an boş durumda olduğu için ekranda görünmüyor; tahsilat kaydedildiği anda aynı ekranda üçüncü bir satır yüksekliği (44px) ve tıklanamayan bir satır ortaya çıkar — Tur 4'te kapatılan kokpit-fin-row-anatomy-01 aynen geri gelir.",
      "measure": "Kod: apps/web/src/modules/kokpit/components/finance-dashboard.tsx:121 `li.flex.h-11` (href yok). Ekran: bölüm boş durumda (paymentsToday.length === 0), 1440x900 Tur 5’te render edilmiyor.",
      "target": "Bu liste de `RowLink`e (40px, href → /finans/tahsilat/[id] ya da /finans/tahsilat) taşınsın. Kabul ölçütü: seed'e bugün tarihli bir tahsilat eklendiğinde /kokpit (muhasebe) tek satırlık liste satırı yüksekliklerinin distinct kümesi = {40}.",
-     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:121"
-    }
-   ],
-   "closed": [
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:121",
+     "fix": "finance-dashboard.tsx:121'deki elle yazılmış `<li className=\"flex h-11 items-center justify-between gap-3 px-4 text-[13px]\">` (href yok) `RowLink` ile değiştirildi (bkz. admin kesitinde kapatılan kokpit-activity-row-anatomy-01 — BİREBİR aynı kök neden/aynı commit). Hedefe özel bir detay rotası yok — 'Mutabakat kuyruğu' satırlarıyla AYNI desen: kendi bölüm rotasına (`/finans/tahsilat`) bağlanır.",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (muhasebe) Tur 6: bugüne tarihli bir tahsilat GEÇİCİ OLARAK enjekte edilip (mevcut bir `payments` satırının `paymentDate`'i test için bugüne çekildi, ölçüm sonrası ORİJİNAL tarihine geri alındı — kalıcı veri değişikliği yok) liste render edildi: 'Bugünün tahsilatları' satırı artık RowLink ile 40px (artifacts/critic/probe-kokpit-r6/muhasebe-1440-r5.json rowHeights['Bugünün tahsilatları']=[40]) — Banka/Mutabakat kuyruğu/Geciken alacak ile aynı. Tek satırlık liste satırı yüksekliklerinin ekrandaki distinct kümesi {40}."
+    },
     {
      "openedRound": 4,
      "id": "kokpit-fin-row-anatomy-01",
