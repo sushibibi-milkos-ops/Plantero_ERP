@@ -216,9 +216,9 @@ export function CostSimulator({
   const dirty = editable && form.formState.isDirty;
 
   return (
-    // space-y-4 (mobil) / md:space-y-6: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
+    // space-y-3 (mobil) / md:space-y-6: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
     // hedef maliyete kadarki bütçeyi sıkmak için küçük bir kazanım (8pt ölçeğinde kalır).
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-3 md:space-y-6">
       {/* flex-nowrap + overflow-x-auto: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
           önceki `flex-wrap` v1/Taslak rozetini Kaydet/Onaya gönder'den AYRI bir SATIRA düşürüyordu
           (dar genişlikte sığmadığı için), hedef maliyet panelinin üstündeki bütçeyi ~35px fazladan
@@ -239,13 +239,15 @@ export function CostSimulator({
             araç çubuğu satırı ortadan kalktı, hedef maliyet paneline kadar TEK bir 44px satır kaldı.
             Seçili versiyonun metni ("v1 · Taslak") masaüstündeki h2+rozet ikilisinin yerini alır —
             aynı bilgi iki kez gösterilmez. */}
-        <div className="flex min-w-0 flex-1 shrink-0 items-center gap-1.5 md:hidden">
+        {/* w-24/w-28 SABİT (flex-1 DEĞİL): satır dar olduğunda flex-shrink bu seçicileri kullanılamaz
+            genişliğe (ör. 18px) sıkıştırmasın — satırın kendi `overflow-x-auto`'su zaten güvenlik ağı. */}
+        <div className="flex shrink-0 items-center gap-1.5 md:hidden">
           {recipeGroups.length > 1 ? (
             <select
               aria-label="Reçete"
               value={selectedRecipeId ?? ''}
               onChange={(e) => onSelectRecipe(e.target.value)}
-              className="h-11 max-w-24 shrink-0 rounded-md border border-input bg-transparent px-2 text-[13px]"
+              className="h-11 w-24 shrink-0 rounded-md border border-input bg-transparent px-2 text-[13px]"
             >
               {recipeGroups.map((g) => (<option key={g.id} value={g.id}>{g.name}</option>))}
             </select>
@@ -255,7 +257,7 @@ export function CostSimulator({
               aria-label="Versiyon"
               value={selectedVersionId ?? ''}
               onChange={(e) => onSelectVersion(e.target.value)}
-              className="h-11 min-w-0 flex-1 rounded-md border border-input bg-transparent px-2 text-[13px]"
+              className="h-11 w-28 shrink-0 rounded-md border border-input bg-transparent px-2 text-[13px]"
             >
               {versions.map((v) => {
                 const s = TRIAL_STATUS_LABELS[v.status] ?? { label: v.status, tone: 'muted' as const };
@@ -272,22 +274,26 @@ export function CostSimulator({
             </>
           ) : null}
         </div>
+        {/* sr-only md:not-sr-only: mobilde ikon-yalnız (yeni birleşik satırda "Onaya gönder" metni
+            genişliği taşmaya + yatay kaydırmayla gizli birincil eyleme yol açıyordu), md+ üstünde
+            metin geri döner — aynı buton, aynı tıklanabilir alan, yalnızca etiket görünürlüğü
+            değişir (erişilebilirlik ağacında her zaman VAR, ekran okuyucu her koşulda okur). */}
         <div className="flex shrink-0 flex-nowrap items-center gap-2">
           {editable ? (
             // h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi — sayfadaki diğer TÜM kontrollerle
             // aynı desen (Tur 4 P1 arge-recete-20; önceden yalnız bu iki başlık şeridi butonu atlanmıştı).
-            <Button size="sm" variant="outline" onClick={save} disabled={pending} className="h-11 md:h-8">
-              {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />} Kaydet
+            <Button size="sm" variant="outline" onClick={save} disabled={pending} className="h-11 min-w-11 md:h-8 md:min-w-0">
+              {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />} <span className="sr-only md:not-sr-only">Kaydet</span>
             </Button>
           ) : null}
           {editable && !detail.hasPendingApproval ? (
-            <Button size="sm" onClick={submitApproval} disabled={pending} className="h-11 md:h-8">
-              <Send className="size-4" /> Onaya gönder
+            <Button size="sm" onClick={submitApproval} disabled={pending} className="h-11 min-w-11 md:h-8 md:min-w-0">
+              <Send className="size-4" /> <span className="sr-only md:not-sr-only">Onaya gönder</span>
             </Button>
           ) : null}
           {canRelease && detail.version.status === 'approved' ? (
-            <Button size="sm" onClick={release} disabled={pending} className="bg-primary">
-              <Rocket className="size-4" /> Üretim BOM&apos;una devret
+            <Button size="sm" onClick={release} disabled={pending} className="h-11 min-w-11 bg-primary md:h-8 md:min-w-0">
+              <Rocket className="size-4" /> <span className="sr-only md:not-sr-only">Üretim BOM&apos;una devret</span>
             </Button>
           ) : null}
         </div>

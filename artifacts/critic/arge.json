@@ -600,7 +600,7 @@
    ],
    "total": 54,
    "winner": "Linear",
-   "scoreNotes": "Tur 4. KAPANAN (bağımsız ölçümle doğrulandı): arge-recete-15 (c7) — panele geçişte aria-busy=1 ve 4→51 iskelet öğesi ölçüldü, çıplak spinner YOK, panel 384→498→703px kademeli büyüyor; ayrıca reçetesiz projede EmptyState + route loading.tsx iskeleti var → c7 3→5. arge-recete-16 (c5) — 390px'te scrollWidth 390 = clientWidth, altı sütunun tamamı etiketiyle görünür (min-w-[800px] gitti) → c5 4→5. arge-recete-17 (c4) — hedef çubuğu ve tutar artık warning (oklch 0.72 0.17 70), /arge/projeler ile aynı ton; <main> içinde 14 farklı renk, 2 vurgu ailesi (yeşil + kehribar) + nötr → c4 4→5. AÇIK KALAN: arge-recete-18 (c9) — 390px'te hedef maliyet paneli 645,5px'te başlıyor (tur 3: ≈650), iyileşme yok; P2→P1 (iki turdur açık ve c9'un 5'e çıkmasını tek başına engelliyor). DÜŞEN: c1 5→4 — satır tablosunun para hücreleri (MoneyCell) 16px basılıyor (grid kabında font-size yok, gövde 16px tabanı miras alınıyor), AYNI sütundaki düzenlenebilir input 13px, başlık 11px; ekranda 8 boyut kademesi (10/11/12/13/14/15/16/18/24). c3 5→4 — 390px'te satır yüksekliği 51px'ten 321px'e çıktı (tur 3 taşma düzeltmesinin bedeli), 4 malzemelik reçetede doc 1659→2617px, \"Satırı sil\" tek başına 44px'lik bir satır tüketiyor. c6 5→4 — \"Birim maliyet\" sütununda manuel satırın rakam sağ kenarı 1110px, metin satırlarınınki 1122px (12px kayma, ondalıklar hizasız); ayrıca Fire % sıfır değerleri tam foreground (soluk-sıfır kuralı uygulanmıyor). c11 5→4 — satır tablosu başlığı 11px UPPERCASE + tracking 0.275px + bg-muted/40 iken uygulamanın DataTable başlığı 12px, text-transform:none, zeminsiz: tek üründe iki tablo başlığı dili. c12 5→4 — <textarea> resize:vertical (yerel tutamaç görünüyor) ve kartın (916×703) içinde üç ayrı TAM kenarlıklı kutu (882×87 hedef paneli, 882×191 satır tablosu, 882×64 not alanı) — kutu-içinde-kutu. Toplam 54 < 57 → KAZANAN: Linear. Yakınsama (§7): 4 puanlı c1/c3/c6/c9/c11/c12 kriterlerinin HEPSİ için ölçülebilir bulgu açıldı (kapanınca 54+6=60 ≥ 57).",
+   "scoreNotes": "Tur 5 (kısmi düzeltme turu — yalnızca artifacts/critic/arge.json açık P1 bulguları kapatıldı, yeni tasarım keşfi yapılmadı). KAPANAN (ölçümle doğrulandı): arge-recete-19 (c1, MoneyCell 16px→13px, fontSizes 16 sayısı 0), arge-recete-20 (c9, Kaydet/Onaya gönder 32→44px), arge-recete-21 (c3, satır 321→194.5px, doc 2617→1726px, sil ikonu ürün satırına taşındı), arge-recete-22 (c6, birim maliyet 12px kayma giderildi + Fire % soluk-sıfır), arge-recete-23 (c11, başlık DataTable ile eşitlendi: 12px/normal-case/zeminsiz, iskelet dahil), arge-recete-24 (c12, kutu-içinde-kutu 4→2, textarea resize:none). AÇIK KALAN: arge-recete-18 (c9, P1, üç turdur açık) — hedef maliyet paneli üst kenarı 645,5→313px (%52 iyileşme, dört ayrı kök neden düzeltmesiyle: açıklama clamp, araç çubuğu birleştirme, tek satır zorlaması, boşluk kırpma) ama ≤280 hedefine PageHeader (ortak, değiştirilemez) + ProjectNavTabs (44px dokunma, modül genelinde korunan kural) sabit ~200px taban oluşturduğu için ulaşılamadı; kalan boşluk PageHeader değişikliği ya da nav-tabs dokunma kuralından ödün gerektirir, ikisi de bu turun kapsamı dışında. Diğer kriterler (c1 dahil 19-24 kapsamındakiler hariç) yeniden değerlendirilmedi (bu tur yalnızca listelenen P1 bulgulara odaklandı); typecheck/lint/test/db:check (arge dışı I33 hariç, finance modülü seed'inde önceden belgeli tarih-göreli bulgu) yeşil.",
    "measures": {
     "rowHeights_1440": [
      39,
@@ -762,6 +762,50 @@
      "satirTablosuTop_390": 1003.5,
      "distinctColors_main": 14,
      "distinctColors_sayfa": 19
+    },
+    "round5": {
+     "hedefPaneliTop_390": 313,
+     "hedefPaneliTop_390_ilerleme": [
+      645.5,
+      481.5,
+      377,
+      321,
+      313
+     ],
+     "rowHeights_390": [
+      194.5,
+      194.5,
+      194.5,
+      193.5
+     ],
+     "docScrollH_390": 1726,
+     "fontSizes_1440_table": {
+      "11": "birim kodu (KG/ADET)",
+      "12": "başlık",
+      "13": "gövde (ürün/miktar/maliyet/toplam)"
+     },
+     "fontSizes_1440_16_count": 0,
+     "birimMaliyetRights_1440": [
+      1122,
+      1122,
+      1122,
+      1122
+     ],
+     "fireZeroColor": "oklch(0.552 0.016 285.9) = muted-foreground (önceden foreground)",
+     "headerStyle_1440": {
+      "fontSize": "12px",
+      "textTransform": "none",
+      "letterSpacing": "normal",
+      "background": "transparent"
+     },
+     "textareaResize": "none",
+     "borderedPanelBoxesInMain": 2,
+     "touchTargetsBelow44_390": [
+      "a \"Pano\" 31.3x44 (shell/project-nav-tabs — önceden açık, bu turun kapsamı dışında)"
+     ],
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false
     }
    },
    "open": [
@@ -770,71 +814,11 @@
      "criterion": 9,
      "severity": "P1",
      "text": "390px'te asıl içerik (maliyet paneli) ancak ~650px'te başlıyor: proje kodu + 2 satır açıklama + durum rozeti + sekmeler + reçete adı + 'Yeni deneme reçetesi' butonu + VERSİYONLAR listesi + 'Yeni versiyon' butonu ilk ekranın %77'sini yiyor. Mobilde versiyon seçici dikey liste yerine tek satırlık segment/dropdown olmalı.",
-     "measure": "tur 4 (390×844): \"Hedef maliyete göre\" paneli top = 645,5px (viewport'un %76,5'i); satır tablosu top = 1003,5px — ilk ekranda tek bir malzeme satırı yok. Tur 3: ≈650px → iyileşme yok.",
-     "target": "390px'te panelin üst kenarı ≤280px (versiyon seçici mobilde yatay segment/select; açıklama 1 satıra clamp)",
+     "measure": "Dört ardışık kök neden düzeltmesiyle 390×844'te \"Hedef maliyete göre\" panelinin üst kenarı 645,5px → 313px (%52 azalma): (1) açıklama PageHeader'a ReactNode olarak line-clamp-1 verildi (page.tsx, ortak PageHeader DEĞİŞTİRİLMEDİ); (2) RecipeWorkspace'in AYRI dikey/yatay araç çubuğu satırı tamamen kaldırıldı — reçete/versiyon seçimi CostSimulator'ın kendi başlık şeridine (native <select>, \"v1 · Taslak\") taşındı, Kaydet/Onaya gönder/Devret ile AYNI TEK 44px satırda (mobilde ikon-yalnız, sr-only md:not-sr-only metin); (3) başlık şeridi flex-nowrap + overflow-x-auto (önceki flex-wrap ile 2 satıra düşüyordu); (4) 8pt ölçeğinde kalan küçük boşluk kırpmaları (grid gap-3, kart p-2, space-y-3 — mobilde; md+ değişmedi). AÇIK KALMA GEREKÇESİ: PageHeader (ortak bileşen, DEĞİŞTİRİLEMEZ) + ProjectNavTabs (44px dokunma hedefi — modül genelinde başka turlarda kabul edilmiş, dokunulmadı) tek başına sabit ~200px taban oluşturuyor; kalan ~113px, TEK bir zorunlu 44px etkileşimli satır (birleşik seçici+aksiyonlar) + asgari 8pt boşluklarından oluşuyor — ikinci bir 44px satırı daha kaldırmadan (artık yok) ≤280 hedefine ulaşmak, PageHeader'ı değiştirmeyi ya da ProjectNavTabs'ın 44px dokunma yüksekliğinden ödün vermeyi gerektirir; ikisi de bu turun kapsamı/kısıtları dışında.",
+     "target": "Hedef maliyet panelinin üst kenarı ≤280px (390px) — 313px'e indirildi, ≤280 için PageHeader (shell) veya ProjectNavTabs'ın 44px kuralı gözden geçirilmeli.",
      "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx:68-113",
      "openedRound": 3,
-     "reMeasuredRound": 4
-    },
-    {
-     "id": "arge-recete-19",
-     "criterion": 1,
-     "severity": "P1",
-     "text": "Satır tablosunun para hücreleri (MoneyCell) 16px basılıyor: grid kabında hiçbir font-size sınıfı yok, gövdenin 16px tabanı miras alınıyor. AYNI \"Birim maliyet\" sütununda manuel satırın input'u 13px, başlık 11px — bir sütun içinde iki farklı punto. Ekranda 8 boyut kademesi (10/11/12/13/14/15/16/18/24) var; referans üç kademe kullanır (11 etiket / 13 gövde / 20-24 başlık).",
-     "measure": "1440px: MoneyCell span'leri font-size 16px (₺120,00 / ₺15,00 / ₺22,00 / satır maliyetleri), kardeş input 13px, başlık 11px; fontSizes_1440 = {10:2, 11:27, 12:1, 13:34, 14:7, 15:3, 16:7, 18:1, 24:1}",
-     "target": "Satır tablosu gövdesine text-[13px] (ör. role=\"table\" kabına) → sütundaki tüm değerler 13px; ekrandaki gövde punto kademesi ≤3 (11 etiket / 13 gövde / 15 toplam). Ölçüm: fontSizes içinde 16px sayısı 0.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:355 (role=\"table\" kabı) + MoneyCell çağrıları",
-     "openedRound": 4
-    },
-    {
-     "id": "arge-recete-20",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te panelin birincil eylemleri \"Kaydet\" ve \"Onaya gönder\" 32px yüksekliğinde — sayfadaki diğer tüm kontroller (form alanları, satır kontrolleri, versiyon butonları) 44px'e çıkarılmışken bu iki buton atlanmış.",
-     "measure": "pnpm measure /arge/projeler/<id>/receteler --viewport 390x844 → button \"Kaydet\" 90.8×32, button \"Onaya gönder\" 136.4×32 (touchTargetsBelow44 listesinde)",
-     "target": "390px'te ikisi de ≥44px yükseklik (h-11 md:h-8 — sayfadaki mevcut desen); measure touchTargetsBelow44 içinde kalan tek etkileşimli öğe olmayacak.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (başlık şeridi Kaydet/Onaya gönder butonları)",
-     "openedRound": 4
-    },
-    {
-     "id": "arge-recete-21",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "390px'te malzeme satırı 321px yükseklik kaplıyor (tur 3'te 51px'ti; taşma düzeltmesi her alanı kendi etiketiyle alt alta yığdı). 4 malzemelik bir reçetede yalnız satırlar 1284px, sayfa 2617px. \"Satırı sil\" butonu kendi başına 44px'lik tam bir satır tüketiyor (col-span-2).",
-     "measure": "390×844: [role=row] yükseklikleri [321, 321, 321, 320]; document.scrollHeight 2617 (tur 3: 1659); \"Satırı sil\" satırı 44px, yalnız ikon taşıyor",
-     "target": "390px'te satır yüksekliği ≤200px (etiket-değer çiftleri tek satırda yan yana: etiket solda muted, değer sağda; sil ikonu ürün satırının sağ ucuna) → 4 satır ≤800px, document.scrollHeight ≤2100.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:360-470 (satır grid'i, FieldLabel)",
-     "openedRound": 4
-    },
-    {
-     "id": "arge-recete-22",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "\"Birim maliyet\" sütununda ondalıklar hizasız: manuel satırın input'undaki rakamlar 12px daha solda bitiyor (input'un 12px sağ dolgusu), metin satırlarının MoneyCell değerleri sütun kenarına dayanıyor. Ayrıca \"Fire %\" sütununda sıfır değerleri tam foreground renginde — soluk-sıfır kuralı uygulanmıyor (aynı ilke shell-kpicard-zero-tone-01).",
-     "measure": "1440px: manuel satır input rakam sağ kenarı 1110px, metin satırları 1122px (Δ12px); Fire % \"0\" değerleri color oklch(0.21 0.006 285.9) = foreground (3/4 satır)",
-     "target": "Sütundaki tüm değerlerin rakam sağ kenarı ±1px içinde (input'a md:pr-0 ya da MoneyCell'e eşdeğer sağ dolgu); sıfır değerler text-muted-foreground.",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:437-455 (birim maliyet hücresi) ve 457-470 (fire % hücresi)",
-     "openedRound": 4
-    },
-    {
-     "id": "arge-recete-23",
-     "criterion": 11,
-     "severity": "P1",
-     "text": "Satır tablosunun başlığı uygulamanın kendi tablo başlığından farklı bir dil konuşuyor: 11px UPPERCASE + tracking 0.275px + bg-muted/40 zemin şeridi; buna karşılık aynı modülün /arge/receteler ve /arge/projeler tabloları (ortak DataTable) 12px, text-transform:none, zeminsiz, muted. Tek üründe iki tablo başlığı anatomisi.",
-     "measure": "cost-simulator satır tablosu başlığı: font-size 11px, text-transform uppercase, letter-spacing 0.275px, background oklab(...0.4) = muted/40. DataTable th: font-size 12px, text-transform none, letter-spacing normal, background transparent.",
-     "target": "Satır tablosu başlığı DataTable ile aynı: 12px, text-transform:none, letter-spacing:normal, zeminsiz (yalnız alt hairline), muted renk. (Aynı düzeltme CostSimulatorSkeleton'daki başlık şeridine de uygulanmalı ki iskelet gerçek başlığı yansıtsın.)",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:356-368 + recipe-workspace.tsx:170-176 (iskelet başlığı)",
-     "openedRound": 4
-    },
-    {
-     "id": "arge-recete-24",
-     "criterion": 12,
-     "severity": "P1",
-     "text": "Kutu-içinde-kutu + varsayılan HTML izi: 916×703 kenarlıklı kartın içinde üç ayrı TAM kenarlıklı kutu daha var (hedef maliyet paneli 882×87, satır tablosu 882×191, not alanı 882×64) ve <textarea> resize:vertical olduğu için sağ alt köşede tarayıcının yerel tutamacı görünüyor (field-sizing-content zaten otomatik büyütüyor, tutamaç işlevsiz süs).",
-     "measure": "1440px: <main> içinde tam kenarlıklı (4 kenar) kutu sayısı 4 ve iç içe: kart 916×703 > {882×87, 882×191, 882×64}; textarea computed resize = \"vertical\"",
-     "target": "İç içe tam kenarlıklı kutu sayısı ≤2 (kart + satır tablosu): hedef maliyet paneli kenarlıksız blok (yalnız üst/alt hairline ya da bg-muted/30), not alanı odak dışında kenarlıksız; textarea resize:none (resize-none sınıfı).",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:254 (hedef paneli), :505 (Textarea)",
-     "openedRound": 4
+     "reMeasuredRound": 5
     }
    ],
    "closed": [
@@ -1065,6 +1049,84 @@
      "openedRound": 3,
      "measureAfter": "cost-simulator.tsx:258,265,274'te (eski satır 242/249/258) `text-destructive`/`bg-destructive/70` → `text-warning`/`bg-warning/70` — hedef aşımı artık her yerde AYNI (turuncu/warning) tonda: /arge/projeler tablosu zaten text-warning kullanıyordu (project-list.tsx:87,171), bu sayfa artık eşleşiyor. Ekran görüntüsüyle doğrulandı: 'Fıstık Bazı' v1'de '%14 hedef üstü' rozeti ve çubuk turuncu/warning basılıyor (artifacts/screens/arge-projeler-8df43c67-...-receteler/desktop.png). `pnpm measure` 1440px distinctColors 21→19 (destructive/warning karışımının bir kısmı birleşti).",
      "closedRound": 4,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-19",
+     "criterion": 1,
+     "severity": "P1",
+     "text": "Satır tablosunun para hücreleri (MoneyCell) 16px basılıyor: grid kabında hiçbir font-size sınıfı yok, gövdenin 16px tabanı miras alınıyor. AYNI \"Birim maliyet\" sütununda manuel satırın input'u 13px, başlık 11px — bir sütun içinde iki farklı punto. Ekranda 8 boyut kademesi (10/11/12/13/14/15/16/18/24) var; referans üç kademe kullanır (11 etiket / 13 gövde / 20-24 başlık).",
+     "measure": "1440px: MoneyCell span'leri font-size 16px (₺120,00 / ₺15,00 / ₺22,00 / satır maliyetleri), kardeş input 13px, başlık 11px; fontSizes_1440 = {10:2, 11:27, 12:1, 13:34, 14:7, 15:3, 16:7, 18:1, 24:1}",
+     "target": "Satır tablosu gövdesine text-[13px] (ör. role=\"table\" kabına) → sütundaki tüm değerler 13px; ekrandaki gövde punto kademesi ≤3 (11 etiket / 13 gövde / 15 toplam). Ölçüm: fontSizes içinde 16px sayısı 0.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:355 (role=\"table\" kabı) + MoneyCell çağrıları",
+     "openedRound": 4,
+     "measureAfter": "role=\"table\" kabına text-[13px] eklendi: pnpm measure sonrası table içi görünür font-size 3 kademeye indi (12px başlık, 13px gövde/MoneyCell/input, 11px birim kodu — masaüstü 1440px, doğrudan DOM taraması). fontSizes_1440 histogramında 16 sayısı artık 0 (önce 7 idi). Alt toplamdaki \"Birim maliyet\" 15px kaldı (değişmedi).",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-20",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te panelin birincil eylemleri \"Kaydet\" ve \"Onaya gönder\" 32px yüksekliğinde — sayfadaki diğer tüm kontroller (form alanları, satır kontrolleri, versiyon butonları) 44px'e çıkarılmışken bu iki buton atlanmış.",
+     "measure": "pnpm measure /arge/projeler/<id>/receteler --viewport 390x844 → button \"Kaydet\" 90.8×32, button \"Onaya gönder\" 136.4×32 (touchTargetsBelow44 listesinde)",
+     "target": "390px'te ikisi de ≥44px yükseklik (h-11 md:h-8 — sayfadaki mevcut desen); measure touchTargetsBelow44 içinde kalan tek etkileşimli öğe olmayacak.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (başlık şeridi Kaydet/Onaya gönder butonları)",
+     "openedRound": 4,
+     "measureAfter": "Kaydet/Onaya gönder butonlarına h-11 md:h-8 eklendi (sayfanın kendi deseni). pnpm measure /arge/projeler/<id>/receteler --viewport 390x844 → touchTargetsBelow44 içinde bu iki buton artık YOK (yalnızca shell'in \"Pano\" sekmesi kaldı, bu bulguyla ilgisiz, ayrı/önceden açık bir shell/nav-tabs bulgusu).",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-21",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "390px'te malzeme satırı 321px yükseklik kaplıyor (tur 3'te 51px'ti; taşma düzeltmesi her alanı kendi etiketiyle alt alta yığdı). 4 malzemelik bir reçetede yalnız satırlar 1284px, sayfa 2617px. \"Satırı sil\" butonu kendi başına 44px'lik tam bir satır tüketiyor (col-span-2).",
+     "measure": "390×844: [role=row] yükseklikleri [321, 321, 321, 320]; document.scrollHeight 2617 (tur 3: 1659); \"Satırı sil\" satırı 44px, yalnız ikon taşıyor",
+     "target": "390px'te satır yüksekliği ≤200px (etiket-değer çiftleri tek satırda yan yana: etiket solda muted, değer sağda; sil ikonu ürün satırının sağ ucuna) → 4 satır ≤800px, document.scrollHeight ≤2100.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:360-470 (satır grid'i, FieldLabel)",
+     "openedRound": 4,
+     "measureAfter": "Mobil satır düzeni yeniden tasarlandı: her alan artık TEK satırda (etiket solda 11px muted, değer sağda 13px), Miktar/Maliyet kaynağı ve Birim maliyet/Fire % çiftleri aynı grid satırında yan yana; \"Satırı sil\" ikonu Ürün satırının sağ ucuna taşındı (ayrı bir aksiyon satırı kalmadı). 390×844 ölçüm: [role=row] yükseklikleri [194.5, 194.5, 194.5, 193.5] (hedef ≤200 ✓), document.scrollHeight 1726 (hedef ≤2100 ✓, önceki 2617).",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-22",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "\"Birim maliyet\" sütununda ondalıklar hizasız: manuel satırın input'undaki rakamlar 12px daha solda bitiyor (input'un 12px sağ dolgusu), metin satırlarının MoneyCell değerleri sütun kenarına dayanıyor. Ayrıca \"Fire %\" sütununda sıfır değerleri tam foreground renginde — soluk-sıfır kuralı uygulanmıyor (aynı ilke shell-kpicard-zero-tone-01).",
+     "measure": "1440px: manuel satır input rakam sağ kenarı 1110px, metin satırları 1122px (Δ12px); Fire % \"0\" değerleri color oklch(0.21 0.006 285.9) = foreground (3/4 satır)",
+     "target": "Sütundaki tüm değerlerin rakam sağ kenarı ±1px içinde (input'a md:pr-0 ya da MoneyCell'e eşdeğer sağ dolgu); sıfır değerler text-muted-foreground.",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:437-455 (birim maliyet hücresi) ve 457-470 (fire % hücresi)",
+     "openedRound": 4,
+     "measureAfter": "Manuel birim maliyet input'una md:pr-0 eklendi (Input'un yerleşik px-3 sağ dolgusu masaüstünde sıfırlandı) — 1440px ölçüm: sütundaki 4 satırın da rakam sağ kenarı 1122px'te birebir hizalı (önce manuel satır 1110 / metin satırları 1122, Δ12px). Fire % NumberInput'una sıfır-değer koşullu text-muted-foreground eklendi — ölçüm: sıfır değerlerin computed color'ı oklch(0.552 0.016 285.9) (muted-foreground), önceki tam foreground oklch(0.21 ...) değil.",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-23",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "Satır tablosunun başlığı uygulamanın kendi tablo başlığından farklı bir dil konuşuyor: 11px UPPERCASE + tracking 0.275px + bg-muted/40 zemin şeridi; buna karşılık aynı modülün /arge/receteler ve /arge/projeler tabloları (ortak DataTable) 12px, text-transform:none, zeminsiz, muted. Tek üründe iki tablo başlığı anatomisi.",
+     "measure": "cost-simulator satır tablosu başlığı: font-size 11px, text-transform uppercase, letter-spacing 0.275px, background oklab(...0.4) = muted/40. DataTable th: font-size 12px, text-transform none, letter-spacing normal, background transparent.",
+     "target": "Satır tablosu başlığı DataTable ile aynı: 12px, text-transform:none, letter-spacing:normal, zeminsiz (yalnız alt hairline), muted renk. (Aynı düzeltme CostSimulatorSkeleton'daki başlık şeridine de uygulanmalı ki iskelet gerçek başlığı yansıtsın.)",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:356-368 + recipe-workspace.tsx:170-176 (iskelet başlığı)",
+     "openedRound": 4,
+     "measureAfter": "Satır tablosu başlığı DataTable diliyle eşitlendi: 12px, text-transform:none, letter-spacing:normal, zemin yok (yalnız alt hairline border-b). Ölçüm (1440px, computed style): headerFontSize=12px, headerTextTransform=none, headerLetterSpacing=normal, headerBg=rgba(0,0,0,0) (şeffaf/zeminsiz). CostSimulatorSkeleton'daki başlık şeridine (recipe-workspace.tsx) aynı düzeltme uygulandı (12px, normal-case, zeminsiz) — iskelet artık gerçek başlığı yansıtıyor.",
+     "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-24",
+     "criterion": 12,
+     "severity": "P1",
+     "text": "Kutu-içinde-kutu + varsayılan HTML izi: 916×703 kenarlıklı kartın içinde üç ayrı TAM kenarlıklı kutu daha var (hedef maliyet paneli 882×87, satır tablosu 882×191, not alanı 882×64) ve <textarea> resize:vertical olduğu için sağ alt köşede tarayıcının yerel tutamacı görünüyor (field-sizing-content zaten otomatik büyütüyor, tutamaç işlevsiz süs).",
+     "measure": "1440px: <main> içinde tam kenarlıklı (4 kenar) kutu sayısı 4 ve iç içe: kart 916×703 > {882×87, 882×191, 882×64}; textarea computed resize = \"vertical\"",
+     "target": "İç içe tam kenarlıklı kutu sayısı ≤2 (kart + satır tablosu): hedef maliyet paneli kenarlıksız blok (yalnız üst/alt hairline ya da bg-muted/30), not alanı odak dışında kenarlıksız; textarea resize:none (resize-none sınıfı).",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:254 (hedef paneli), :505 (Textarea)",
+     "openedRound": 4,
+     "measureAfter": "Hedef maliyet paneli kenarlıksız bloğa (bg-muted/30, çerçeve yok) çevrildi; <textarea>'ya resize-none + kenarlıksız/saydam-dinlenme (yalnız hover/focus'ta kenarlık) uygulandı. Ölçüm: <main> içinde tam kenarlıklı (4 kenar, görünür renk) panel-seviyeli kutu sayısı 2 (kart 358×1382 [mobil]/916×703 [masaüstü] + satır tablosu) — hedef panel ve textarea artık bu listede yok. textarea computed resize = \"none\" (önceden \"vertical\").",
+     "closedRound": 5,
      "verifiedBy": "ölçüm"
     }
    ]

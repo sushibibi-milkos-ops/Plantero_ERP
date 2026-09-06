@@ -131,7 +131,7 @@ export function RecipeWorkspace({
         ) : null}
       </div>
 
-      <div className="min-w-0 rounded-xl border border-border/60 bg-card p-3 md:p-4">
+      <div className="min-w-0 rounded-xl border border-border/60 bg-card p-2 md:p-4">
         {loading || !detail ? (
           <CostSimulatorSkeleton />
         ) : (
