@@ -1,0 +1,156 @@
+{
+ "/bakim/makineler": {
+  "h1": {
+   "text": "Makineler",
+   "left": 264,
+   "top": 72,
+   "size": "24px"
+  },
+  "mainLeft": 240,
+  "innerLeft": 264,
+  "zeros": [
+   {
+    "t": "0",
+    "color": "oklch(0.21 0.006 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num inline-flex items-baseline justify-end whitesp"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.552 0.016 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num text-muted-foreground"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.21 0.006 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num inline-flex items-baseline justify-end whitesp"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.552 0.016 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num text-muted-foreground"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.21 0.006 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num inline-flex items-baseline justify-end whitesp"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.552 0.016 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num text-muted-foreground"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.21 0.006 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num inline-flex items-baseline justify-end whitesp"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.552 0.016 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num text-muted-foreground"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.21 0.006 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num inline-flex items-baseline justify-end whitesp"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.552 0.016 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num text-muted-foreground"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.21 0.006 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num inline-flex items-baseline justify-end whitesp"
+   },
+   {
+    "t": "0",
+    "color": "oklch(0.552 0.016 285.9)",
+    "tabular": "tabular-nums",
+    "tag": "span",
+    "cls": "num text-muted-foreground"
+   }
+  ],
+  "deltas": []
+ },
+ "/bakim/planlar": {
+  "h1": {
+   "text": "Bakım Planları",
+   "left": 264,
+   "top": 72,
+   "size": "24px"
+  },
+  "mainLeft": 240,
+  "innerLeft": 264,
+  "zeros": [],
+  "deltas": []
+ },
+ "/bakim/is-emirleri": {
+  "h1": {
+   "text": "Bakım İş Emirleri",
+   "left": 264,
+   "top": 72,
+   "size": "24px"
+  },
+  "mainLeft": 240,
+  "innerLeft": 264,
+  "zeros": [],
+  "deltas": []
+ },
+ "/bakim/is-emirleri/yeni": {
+  "h1": {
+   "text": "Arıza Bildir",
+   "left": 552,
+   "top": 72,
+   "size": "24px"
+  },
+  "mainLeft": 240,
+  "innerLeft": 264,
+  "zeros": [],
+  "deltas": []
+ },
+ "/bakim/oee": {
+  "h1": {
+   "text": "OEE",
+   "left": 264,
+   "top": 72,
+   "size": "24px"
+  },
+  "mainLeft": 240,
+  "innerLeft": 264,
+  "zeros": [],
+  "deltas": [
+   {
+    "t": "—önceki dönem",
+    "cls": "flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs mt-1"
+   },
+   {
+    "t": "önceki dönem",
+    "cls": "whitespace-nowrap text-muted-foreground"
+   }
+  ]
+ }
+}

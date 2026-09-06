@@ -1,0 +1,133 @@
+{
+ "/bakim/makineler/c362ef28-6a1a-4b51-8155-da47aa0ed935": {
+  "viewportWidth": 390,
+  "beyondViewport": [
+   {
+    "t": "Duruşlar (0)",
+    "left": 406,
+    "right": 504,
+    "w": 98,
+    "cls": "relative inline-flex h-11 flex-1 items-center justify-center gap-1.5 r"
+   },
+   {
+    "t": "OEE trendi",
+    "left": 528,
+    "right": 616,
+    "w": 88,
+    "cls": "relative inline-flex h-11 flex-1 items-center justify-center gap-1.5 r"
+   },
+   {
+    "t": "Fotoğraflar (0)",
+    "left": 640,
+    "right": 755,
+    "w": 115,
+    "cls": "relative inline-flex h-11 flex-1 items-center justify-center gap-1.5 r"
+   },
+   {
+    "t": "Son iş emirleri",
+    "left": 16,
+    "right": 596,
+    "w": 580,
+    "cls": "mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold"
+   },
+   {
+    "t": "Haftalık bıçak/hazne temizliği — Ön ezme (ez",
+    "left": 16,
+    "right": 494,
+    "w": 478,
+    "cls": "min-w-0 truncate"
+   },
+   {
+    "t": "SPAN",
+    "left": 511,
+    "right": 517,
+    "w": 6,
+    "cls": "size-1.5 rounded-full bg-success"
+   },
+   {
+    "t": "Son duruşlar",
+    "left": 16,
+    "right": 596,
+    "w": 580,
+    "cls": "mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold"
+   },
+   {
+    "t": "Duruş kaydı yok.",
+    "left": 16,
+    "right": 596,
+    "w": 580,
+    "cls": "text-[13px] text-muted-foreground"
+   },
+   {
+    "t": "Bakım planları",
+    "left": 16,
+    "right": 596,
+    "w": 580,
+    "cls": "mb-2 border-t border-border/60 pt-3 text-[13px] font-semibold"
+   },
+   {
+    "t": "13.09.2026",
+    "left": 533,
+    "right": 596,
+    "w": 63,
+    "cls": "shrink-0 text-[11px] text-muted-foreground tabular-nums"
+   }
+  ],
+  "clippingAncestors": [],
+  "mainOverflowX": "visible",
+  "mainSw": 596,
+  "mainCw": 390
+ },
+ "/bakim/is-emirleri/230ae50c-1eca-4080-bbdd-8e38dea7d963": {
+  "viewportWidth": 390,
+  "beyondViewport": [],
+  "clippingAncestors": [],
+  "mainOverflowX": "visible",
+  "mainSw": 390,
+  "mainCw": 390
+ },
+ "/bakim/makineler": {
+  "viewportWidth": 390,
+  "beyondViewport": [],
+  "clippingAncestors": [
+   {
+    "tag": "div",
+    "cls": "truncate text-[22px] leading-none font-semibold tracking-tight tabular",
+    "sw": 38,
+    "cw": 27,
+    "t": ""
+   },
+   {
+    "tag": "div",
+    "cls": "truncate text-[22px] leading-none font-semibold tracking-tight tabular",
+    "sw": 25,
+    "cw": 14,
+    "t": ""
+   },
+   {
+    "tag": "div",
+    "cls": "truncate text-[22px] leading-none font-semibold tracking-tight tabular",
+    "sw": 25,
+    "cw": 14,
+    "t": ""
+   },
+   {
+    "tag": "div",
+    "cls": "truncate text-[22px] leading-none font-semibold tracking-tight tabular",
+    "sw": 25,
+    "cw": 14,
+    "t": ""
+   },
+   {
+    "tag": "span",
+    "cls": "min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap",
+    "sw": 369,
+    "cw": 320,
+    "t": "Emniyet bandı kapatma (paketleme, Beta-P"
+   }
+  ],
+  "mainOverflowX": "visible",
+  "mainSw": 390,
+  "mainCw": 390
+ }
+}
