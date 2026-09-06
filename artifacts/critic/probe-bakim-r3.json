@@ -1,0 +1,1193 @@
+{
+ "/bakim/makineler @1440x900": {
+  "overflows": [],
+  "contentBottom": 1720,
+  "emptyBelow": 0,
+  "table": {
+   "top": 352,
+   "w": 1152,
+   "sw": 1152,
+   "holderCw": 1152,
+   "holderSw": 1152,
+   "headers": [
+    {
+     "t": "Kod",
+     "w": 90,
+     "right": 354,
+     "clipped": false
+    },
+    {
+     "t": "Makine",
+     "w": 490,
+     "right": 844,
+     "clipped": false
+    },
+    {
+     "t": "Hat",
+     "w": 90,
+     "right": 934,
+     "clipped": false
+    },
+    {
+     "t": "Durum",
+     "w": 120,
+     "right": 1054,
+     "clipped": false
+    },
+    {
+     "t": "Sonraki bakım",
+     "w": 140,
+     "right": 1194,
+     "clipped": false
+    },
+    {
+     "t": "Çalışma saati",
+     "w": 116,
+     "right": 1310,
+     "clipped": false
+    },
+    {
+     "t": "Açık iş emri",
+     "w": 106,
+     "right": 1416,
+     "clipped": false
+    }
+   ]
+  },
+  "rowCount": 36,
+  "rowsAboveFold": 13,
+  "kpi": [
+   {
+    "h": 136,
+    "w": 279,
+    "top": 152,
+    "text": "Toplam makine"
+   },
+   {
+    "h": 136,
+    "w": 279,
+    "top": 152,
+    "text": "Çalışıyor"
+   },
+   {
+    "h": 136,
+    "w": 279,
+    "top": 152,
+    "text": "Arızalı"
+   },
+   {
+    "h": 136,
+    "w": 279,
+    "top": 152,
+    "text": "Vadesi geçen bakım"
+   }
+  ],
+  "toolbarTop": 308,
+  "longDecimals": [
+   {
+    "text": "13.09.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.10.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.10.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "13.09.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.10.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.12.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "13.09.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.10.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.10.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "13.09.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "07.09.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   }
+  ],
+  "small": [
+   {
+    "t": "Plantero",
+    "w": 89.2,
+    "h": 25.4,
+    "tag": "a"
+   },
+   {
+    "t": "Kokpit",
+    "w": 223,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ana Veri",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Depo",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Üretim",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satış & CRM",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satın Alma",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kalite",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Muhasebe",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Finans",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "İhracat",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Makineler",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Planlar",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Ar-Ge",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ayarlar",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 37.5,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "Makineler",
+    "w": 61.2,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "Ara veya git…⌘K",
+    "w": 256,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 32,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Tema",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "SY",
+    "w": 28,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Tabloda ara",
+    "w": 256,
+    "h": 32,
+    "tag": "input"
+   },
+   {
+    "t": "Durum",
+    "w": 83.6,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Sütunlar",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kod",
+    "w": 50.5,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Makine",
+    "w": 69.8,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Hat",
+    "w": 47.8,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Durum",
+    "w": 66.4,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Sonraki bakım",
+    "w": 109.3,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Çalışma saati",
+    "w": 92,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Açık iş emri",
+    "w": 82.4,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "MK-001Ön ezme (ezme makine",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-002Püre makinesi (ball ",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-003HomogenizerHomojeniz",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-004Balans tankı (paslan",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-005Sıvı dolum makinesi ",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-006Sıvı dolum makinesi ",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-007Etiketleme makinesi ",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-008Folyo kapatma / emni",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-009Kodlama / tarih atma",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-010İmalat kazanı (büyük",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-011Silindirik toz mikse",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-012Dolum teknesiTekneHA",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-013Toz karıştırıcı (pro",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-014Dikey toz dolum maki",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-015Emniyet bandı kapatm",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-016Silindirik toz mikse",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-017Elevatör 100 kgTaşıy",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-018Stick dolum makinesi",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-019Helezonlu götürücü (",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-020Shrink ambalaj makin",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-021Kuruyemiş kavurma ma",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-022Fermantasyon tankı 1",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-023Metal dedektörü (30×",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-024Elek (tane boyut ana",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-025Nem tayin cihazı (Pr",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-026Hava kompresörü (pis",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-027Sterilizasyon ünites",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-028Basınçlı yıkama maki",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-029Zemin temizleme maki",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-030Akülü istif makinesi",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-031Transpalet (manuel)T",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-032Transpalet (manuel t",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-033Kantar (elektronik)T",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-034Elektronik teraziTar",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-035Hassas teraziLaborat",
+    "w": 1152,
+    "h": 37,
+    "tag": "tr"
+   },
+   {
+    "t": "MK-036Paslanmaz çelik çalı",
+    "w": 1152,
+    "h": 36.5,
+    "tag": "tr"
+   }
+  ],
+  "cards": [],
+  "clippedTexts": []
+ },
+ "/bakim/is-emirleri @1440x900": {
+  "overflows": [],
+  "contentBottom": 454,
+  "emptyBelow": 446,
+  "table": {
+   "top": 0,
+   "w": 0,
+   "sw": 0,
+   "holderCw": 0,
+   "holderSw": 0,
+   "headers": [
+    {
+     "t": "No",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Başlık",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Makine",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Tür",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Öncelik",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Durum",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Eylemler",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    }
+   ]
+  },
+  "rowCount": 6,
+  "rowsAboveFold": 6,
+  "kpi": [],
+  "toolbarTop": 155,
+  "longDecimals": [],
+  "small": [
+   {
+    "t": "Plantero",
+    "w": 89.2,
+    "h": 25.4,
+    "tag": "a"
+   },
+   {
+    "t": "Kokpit",
+    "w": 223,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ana Veri",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Depo",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Üretim",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satış & CRM",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satın Alma",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kalite",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Muhasebe",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Finans",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "İhracat",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Makineler",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Planlar",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Ar-Ge",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ayarlar",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 37.5,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 61.2,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "Ara veya git…⌘K",
+    "w": 256,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 32,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Tema",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "SY",
+    "w": 28,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Arıza bildir",
+    "w": 119.8,
+    "h": 36,
+    "tag": "a"
+   },
+   {
+    "t": "İş emirlerinde ara",
+    "w": 256,
+    "h": 32,
+    "tag": "input"
+   },
+   {
+    "t": "Durum",
+    "w": 83.6,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Tür",
+    "w": 62.7,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Öncelik",
+    "w": 88.8,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kanban görünümü",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Liste görünümü",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "No",
+    "w": 44.3,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Başlık",
+    "w": 61.9,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Makine",
+    "w": 69.8,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Tür",
+    "w": 47.1,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Öncelik",
+    "w": 71.2,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Durum",
+    "w": 66.4,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "",
+    "w": 25.3,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "MO-2026-000006Mikser motor",
+    "w": 1152,
+    "h": 36,
+    "tag": "tr"
+   },
+   {
+    "t": "Satır eylemleri",
+    "w": 24,
+    "h": 24,
+    "tag": "button"
+   },
+   {
+    "t": "MO-2026-000002Gramaj sapma",
+    "w": 1152,
+    "h": 36,
+    "tag": "tr"
+   },
+   {
+    "t": "MO-2026-000001Dolum başlığ",
+    "w": 1152,
+    "h": 36,
+    "tag": "tr"
+   },
+   {
+    "t": "MO-2026-000003Haftalık bıç",
+    "w": 1152,
+    "h": 36,
+    "tag": "tr"
+   },
+   {
+    "t": "MO-2026-000005Haftalık sti",
+    "w": 1152,
+    "h": 36,
+    "tag": "tr"
+   },
+   {
+    "t": "MO-2026-000004Günlük hassa",
+    "w": 1152,
+    "h": 36,
+    "tag": "tr"
+   }
+  ],
+  "cards": [],
+  "clippedTexts": []
+ },
+ "/bakim/oee @1440x900": {
+  "overflows": [],
+  "contentBottom": 639,
+  "emptyBelow": 262,
+  "kpi": [
+   {
+    "h": 80,
+    "w": 230,
+    "top": 200,
+    "text": "OEE (ortalama)—önceki dönem"
+   },
+   {
+    "h": 80,
+    "w": 231,
+    "top": 200,
+    "text": "Kullanılabilirlik"
+   },
+   {
+    "h": 80,
+    "w": 231,
+    "top": 200,
+    "text": "Performans"
+   },
+   {
+    "h": 80,
+    "w": 231,
+    "top": 200,
+    "text": "Kalite"
+   },
+   {
+    "h": 80,
+    "w": 231,
+    "top": 200,
+    "text": "Toplam duruş"
+   }
+  ],
+  "toolbarTop": null,
+  "longDecimals": [],
+  "small": [
+   {
+    "t": "Plantero",
+    "w": 89.2,
+    "h": 25.4,
+    "tag": "a"
+   },
+   {
+    "t": "Kokpit",
+    "w": 223,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ana Veri",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Depo",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Üretim",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satış & CRM",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satın Alma",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kalite",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Muhasebe",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Finans",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "İhracat",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Makineler",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Planlar",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Ar-Ge",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ayarlar",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 37.5,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 25.7,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "Ara veya git…⌘K",
+    "w": 256,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 32,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Tema",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "SY",
+    "w": 28,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Tüm hatlar",
+    "w": 90,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "HAT1",
+    "w": 57.7,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "HAT2",
+    "w": 60.3,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "HAT3",
+    "w": 60.4,
+    "h": 32,
+    "tag": "a"
+   }
+  ],
+  "cards": [
+   16.5,
+   16.5,
+   16.5,
+   16.5
+  ],
+  "clippedTexts": [
+   {
+    "t": "",
+    "sw": 56,
+    "cw": 47
+   },
+   {
+    "t": "",
+    "sw": 68,
+    "cw": 59
+   },
+   {
+    "t": "",
+    "sw": 56,
+    "cw": 47
+   },
+   {
+    "t": "",
+    "sw": 56,
+    "cw": 47
+   }
+  ]
+ }
+}

@@ -1,0 +1,688 @@
+{
+ "/bakim/is-emirleri/230ae50c-1eca-4080-bbdd-8e38dea7d963 @1440x900": {
+  "overflows": [],
+  "contentBottom": 827,
+  "emptyBelow": 74,
+  "kpi": [],
+  "toolbarTop": null,
+  "longDecimals": [
+   {
+    "text": "06.09.2026 17:55",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "5.0000 kW",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "0.0000 sa",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.09.2026 17:55",
+    "tabular": "tabular-nums",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   }
+  ],
+  "small": [
+   {
+    "t": "Plantero",
+    "w": 89.2,
+    "h": 25.4,
+    "tag": "a"
+   },
+   {
+    "t": "Kokpit",
+    "w": 223,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ana Veri",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Depo",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Üretim",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satış & CRM",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satın Alma",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kalite",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Muhasebe",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Finans",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "İhracat",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Makineler",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Planlar",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Ar-Ge",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ayarlar",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 37.5,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 60.4,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "Detay",
+    "w": 36.2,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "Ara veya git…⌘K",
+    "w": 256,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 32,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Tema",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "SY",
+    "w": 28,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "MK-011 — Silindirik toz mi",
+    "w": 229.7,
+    "h": 35.5,
+    "tag": "a"
+   },
+   {
+    "t": "Boş alanları göster (16)",
+    "w": 129.5,
+    "h": 18,
+    "tag": "button"
+   },
+   {
+    "t": "İşleme al",
+    "w": 107,
+    "h": 36,
+    "tag": "button"
+   },
+   {
+    "t": "Tamamla",
+    "w": 110.4,
+    "h": 36,
+    "tag": "button"
+   },
+   {
+    "t": "İptal et",
+    "w": 93.5,
+    "h": 36,
+    "tag": "button"
+   }
+  ],
+  "cards": [],
+  "clippedTexts": []
+ },
+ "/bakim/makineler/c362ef28-6a1a-4b51-8155-da47aa0ed935 @1440x900": {
+  "overflows": [
+   {
+    "tag": "span",
+    "cls": "min-w-0 truncate",
+    "sw": 478,
+    "cw": 181,
+    "ox": "hidden",
+    "text": "Haftalık bıçak/hazne temizliği — Ön ezme (ezme mak"
+   }
+  ],
+  "contentBottom": 790,
+  "emptyBelow": 111,
+  "kpi": [],
+  "toolbarTop": null,
+  "longDecimals": [
+   {
+    "text": "13.09.2026",
+    "tabular": "tabular-nums",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "08.08.2026",
+    "tabular": "normal",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.09.2026",
+    "tabular": "normal",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   }
+  ],
+  "small": [
+   {
+    "t": "Plantero",
+    "w": 89.2,
+    "h": 25.4,
+    "tag": "a"
+   },
+   {
+    "t": "Kokpit",
+    "w": 223,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ana Veri",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Depo",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Üretim",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satış & CRM",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satın Alma",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kalite",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Muhasebe",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Finans",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "İhracat",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Makineler",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Planlar",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Ar-Ge",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ayarlar",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 37.5,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "Makineler",
+    "w": 60.2,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "Detay",
+    "w": 36.2,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "Ara veya git…⌘K",
+    "w": 256,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 32,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Tema",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "SY",
+    "w": 28,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "ÖzelliklerBakım planları (",
+    "w": 742,
+    "h": 36,
+    "tag": "div"
+   },
+   {
+    "t": "Özellikler",
+    "w": 80.1,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım planları (1)",
+    "w": 131.6,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "İş emirleri (1)",
+    "w": 103.6,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Duruşlar (0)",
+    "w": 97.9,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "OEE trendi",
+    "w": 88.1,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Fotoğraflar (0)",
+    "w": 114.6,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Boş alanları göster (4)",
+    "w": 124.9,
+    "h": 18,
+    "tag": "button"
+   }
+  ],
+  "cards": [
+   44,
+   44
+  ],
+  "clippedTexts": [
+   {
+    "t": "Haftalık bıçak/hazne temizliği — Ön ezme",
+    "sw": 478,
+    "cw": 181
+   }
+  ]
+ },
+ "/bakim/is-emirleri/yeni @1440x900": {
+  "overflows": [],
+  "contentBottom": 337,
+  "emptyBelow": 563,
+  "kpi": [],
+  "toolbarTop": 152,
+  "longDecimals": [],
+  "small": [
+   {
+    "t": "Plantero",
+    "w": 89.2,
+    "h": 25.4,
+    "tag": "a"
+   },
+   {
+    "t": "Kokpit",
+    "w": 223,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ana Veri",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Depo",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Üretim",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satış & CRM",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satın Alma",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kalite",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Muhasebe",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Finans",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "İhracat",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Makineler",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Planlar",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Ar-Ge",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ayarlar",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 37.5,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 60.4,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "Yeni",
+    "w": 26.7,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "Ara veya git…⌘K",
+    "w": 256,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 32,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Tema",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "SY",
+    "w": 28,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "",
+    "w": 576,
+    "h": 36,
+    "tag": "input"
+   },
+   {
+    "t": "Makine ara ve seç…",
+    "w": 576,
+    "h": 36,
+    "tag": "button"
+   },
+   {
+    "t": "Vazgeç",
+    "w": 81.7,
+    "h": 36,
+    "tag": "button"
+   },
+   {
+    "t": "Arızayı bildir",
+    "w": 115.2,
+    "h": 36,
+    "tag": "button"
+   }
+  ],
+  "cards": [],
+  "clippedTexts": []
+ }
+}

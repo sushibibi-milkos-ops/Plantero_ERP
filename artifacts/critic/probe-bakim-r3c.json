@@ -1,0 +1,458 @@
+{
+ "/bakim/makineler @390x844": {
+  "overflows": [
+   {
+    "tag": "span",
+    "cls": "min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap",
+    "sw": 369,
+    "cw": 320,
+    "ox": "hidden",
+    "text": "Emniyet bandı kapatma (paketleme, Beta-Pak dolum v"
+   },
+   {
+    "tag": "div",
+    "cls": "",
+    "sw": 369,
+    "cw": 320,
+    "ox": "visible",
+    "text": "Emniyet bandı kapatma (paketleme, Beta-Pak dolum v"
+   },
+   {
+    "tag": "div",
+    "cls": "",
+    "sw": 369,
+    "cw": 320,
+    "ox": "visible",
+    "text": "Emniyet bandı kapatma (paketleme, Beta-Pak dolum v"
+   }
+  ],
+  "contentBottom": 3593,
+  "emptyBelow": 0,
+  "table": {
+   "top": 0,
+   "w": 0,
+   "sw": 0,
+   "holderCw": 0,
+   "holderSw": 0,
+   "headers": [
+    {
+     "t": "Kod",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Makine",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Hat",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Durum",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Sonraki bakım",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Çalışma saati",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Açık iş emri",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    }
+   ]
+  },
+  "rowCount": 36,
+  "rowsAboveFold": 36,
+  "kpi": [
+   {
+    "h": 136,
+    "w": 173,
+    "top": 136,
+    "text": "Toplam makine"
+   },
+   {
+    "h": 136,
+    "w": 173,
+    "top": 136,
+    "text": "Çalışıyor"
+   },
+   {
+    "h": 141,
+    "w": 173,
+    "top": 284,
+    "text": "Arızalı"
+   },
+   {
+    "h": 141,
+    "w": 173,
+    "top": 284,
+    "text": "Vadesi geçen bakım"
+   }
+  ],
+  "toolbarTop": 445,
+  "longDecimals": [],
+  "small": [
+   {
+    "t": "Makineler",
+    "w": 61.2,
+    "h": 19.5,
+    "tag": "span"
+   }
+  ],
+  "cards": [
+   76.7,
+   76.7,
+   76.7,
+   76.7,
+   76.7,
+   76.7
+  ],
+  "clippedTexts": [
+   {
+    "t": "Emniyet bandı kapatma (paketleme, Beta-P",
+    "sw": 369,
+    "cw": 320
+   }
+  ]
+ },
+ "/bakim/is-emirleri @390x844": {
+  "overflows": [],
+  "contentBottom": 717,
+  "emptyBelow": 127,
+  "table": {
+   "top": 0,
+   "w": 0,
+   "sw": 0,
+   "holderCw": 0,
+   "holderSw": 0,
+   "headers": [
+    {
+     "t": "No",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Başlık",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Makine",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Tür",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Öncelik",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Durum",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Eylemler",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    }
+   ]
+  },
+  "rowCount": 6,
+  "rowsAboveFold": 6,
+  "kpi": [],
+  "toolbarTop": 192,
+  "longDecimals": [],
+  "small": [
+   {
+    "t": "İş Emirleri",
+    "w": 61.2,
+    "h": 19.5,
+    "tag": "span"
+   }
+  ],
+  "cards": [
+   62,
+   64.5,
+   64.5,
+   62,
+   62,
+   62
+  ],
+  "clippedTexts": []
+ },
+ "/bakim/oee @390x844": {
+  "overflows": [
+   {
+    "tag": "div",
+    "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1 snap-x snap-man",
+    "sw": 792,
+    "cw": 358,
+    "ox": "auto",
+    "text": "OEE (ortalama)—önceki dönemKullanılabilirlikPerfor"
+   }
+  ],
+  "contentBottom": 941,
+  "emptyBelow": 0,
+  "kpi": [
+   {
+    "h": 72,
+    "w": 152,
+    "top": 196,
+    "text": "OEE (ortalama)—önceki dönem"
+   },
+   {
+    "h": 72,
+    "w": 152,
+    "top": 196,
+    "text": "Kullanılabilirlik"
+   },
+   {
+    "h": 72,
+    "w": 152,
+    "top": 196,
+    "text": "Performans"
+   },
+   {
+    "h": 72,
+    "w": 152,
+    "top": 196,
+    "text": "Kalite"
+   },
+   {
+    "h": 72,
+    "w": 152,
+    "top": 196,
+    "text": "Toplam duruş"
+   }
+  ],
+  "toolbarTop": null,
+  "longDecimals": [
+   {
+    "text": "21.08.2026",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   }
+  ],
+  "small": [
+   {
+    "t": "OEE",
+    "w": 25.7,
+    "h": 19.5,
+    "tag": "span"
+   }
+  ],
+  "cards": [
+   16.5,
+   16.5,
+   16.5,
+   16.5
+  ],
+  "clippedTexts": [
+   {
+    "t": "",
+    "sw": 56,
+    "cw": 47
+   },
+   {
+    "t": "",
+    "sw": 68,
+    "cw": 59
+   },
+   {
+    "t": "",
+    "sw": 56,
+    "cw": 47
+   },
+   {
+    "t": "",
+    "sw": 56,
+    "cw": 47
+   }
+  ]
+ },
+ "/bakim/is-emirleri/230ae50c-1eca-4080-bbdd-8e38dea7d963 @390x844": {
+  "overflows": [
+   {
+    "tag": "div",
+    "cls": "mx-auto w-full max-w-[1400px]",
+    "sw": 374,
+    "cw": 358,
+    "ox": "visible",
+    "text": "Bakım İş EmriMO-2026-000006Mikser motorunda anorma"
+   },
+   {
+    "tag": "div",
+    "cls": "space-y-6",
+    "sw": 374,
+    "cw": 358,
+    "ox": "visible",
+    "text": "İş emriMakineMK-011 — Silindirik toz mikser 200 kg"
+   }
+  ],
+  "contentBottom": 1076,
+  "emptyBelow": 0,
+  "kpi": [],
+  "toolbarTop": null,
+  "longDecimals": [
+   {
+    "text": "06.09.2026 17:55",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "5.0000 kW",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "0.0000 sa",
+    "tabular": "normal",
+    "color": "oklch(0.21 0.006 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.09.2026 17:55",
+    "tabular": "tabular-nums",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   }
+  ],
+  "small": [
+   {
+    "t": "Detay",
+    "w": 36.2,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "MK-011 — Silindirik toz mi",
+    "w": 138.6,
+    "h": 35.5,
+    "tag": "a"
+   }
+  ],
+  "cards": [],
+  "clippedTexts": []
+ },
+ "/bakim/makineler/c362ef28-6a1a-4b51-8155-da47aa0ed935 @390x844": {
+  "overflows": [
+   {
+    "tag": "div",
+    "cls": "mx-auto w-full max-w-[1400px]",
+    "sw": 580,
+    "cw": 358,
+    "ox": "visible",
+    "text": "MakineMK-001Ön ezme (ezme makinesi, parçalama hazn"
+   },
+   {
+    "tag": "div",
+    "cls": "group/tabs flex data-[orientation=horizontal]:flex-col gap-4",
+    "sw": 580,
+    "cw": 358,
+    "ox": "visible",
+    "text": "ÖzelliklerBakım planları (1)İş emirleri (1)Duruşla"
+   },
+   {
+    "tag": "div",
+    "cls": "group/tabs-list relative inline-flex max-w-full items-center overflow-x-auto rounded-lg p-",
+    "sw": 742,
+    "cw": 358,
+    "ox": "auto",
+    "text": "ÖzelliklerBakım planları (1)İş emirleri (1)Duruşla"
+   },
+   {
+    "tag": "div",
+    "cls": "flex-1 outline-none space-y-8",
+    "sw": 580,
+    "cw": 358,
+    "ox": "visible",
+    "text": "GenelHatHAT1 — Bazlar, Barista & KremalarDepoTIREG"
+   },
+   {
+    "tag": "div",
+    "cls": "grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3",
+    "sw": 580,
+    "cw": 358,
+    "ox": "visible",
+    "text": "Son iş emirleriHaftalık bıçak/hazne temizliği — Ön"
+   }
+  ],
+  "contentBottom": 1078,
+  "emptyBelow": 0,
+  "kpi": [],
+  "toolbarTop": null,
+  "longDecimals": [
+   {
+    "text": "13.09.2026",
+    "tabular": "tabular-nums",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "08.08.2026",
+    "tabular": "normal",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   },
+   {
+    "text": "06.09.2026",
+    "tabular": "normal",
+    "color": "oklch(0.552 0.016 285.9)",
+    "decimals": 4
+   }
+  ],
+  "small": [
+   {
+    "t": "Detay",
+    "w": 36.2,
+    "h": 19.5,
+    "tag": "span"
+   }
+  ],
+  "cards": [
+   44,
+   44
+  ],
+  "clippedTexts": []
+ }
+}

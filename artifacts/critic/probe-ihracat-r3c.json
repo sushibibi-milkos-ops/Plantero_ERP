@@ -1,0 +1,4638 @@
+{
+ "shipmentId": "48144485-e36a-46b6-badd-cab84fae240e",
+ "listDesk": {
+  "page": {
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "overflowX": false,
+   "scrollers": [],
+   "touchBelow44": [
+    {
+     "sel": "a",
+     "t": "Plantero",
+     "w": 89.2,
+     "h": 25.4
+    },
+    {
+     "sel": "a",
+     "t": "Kokpit",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Bildirimler",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ana Veri",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Depo",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Üretim",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satış & CRM",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satın Alma",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Kalite",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Muhasebe",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Finans",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "İhracat",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "a",
+     "t": "Sevkiyatlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Belgeler",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Kurlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "GTİP",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "button",
+     "t": "Bakım",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ar-Ge",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ayarlar",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=breadcrumb-link]",
+     "t": "İhracat",
+     "w": 42.5,
+     "h": 19.5
+    },
+    {
+     "sel": "button",
+     "t": "Ara veya git…⌘K",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=button]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "SY",
+     "w": 28,
+     "h": 28
+    },
+    {
+     "sel": "a[data-slot=button]",
+     "t": "Yeni sevkiyat",
+     "w": 136.1,
+     "h": 36
+    },
+    {
+     "sel": "input[data-slot=input]",
+     "t": "",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "Durum",
+     "w": 83.6,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Sevkiyat no",
+     "w": 94.6,
+     "h": 28
+    }
+   ],
+   "touchCount": 39,
+   "fontSizes": {
+    "24px": 1,
+    "14px": 1,
+    "12px": 15,
+    "13px": 27
+   },
+   "colorCount": 3,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 20,
+    "oklch(0.552 0.016 285.9)": 23,
+    "oklab(0.552 0.00438335 -0.0153879 / 0.7)": 1
+   }
+  },
+  "tables": [
+   {
+    "i": 0,
+    "rows": 3,
+    "heights": [
+     36,
+     36,
+     36
+    ],
+    "tableScrollW": 1152,
+    "tableClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClientW": 1152,
+    "cols": [
+     {
+      "head": "Sevkiyat no",
+      "transform": "none",
+      "fs": "12px",
+      "w": 157.8,
+      "dash": 0,
+      "distinct": 3,
+      "sample": [
+       "EXP-2026-000001",
+       "EXP-2026-000002",
+       "EXP-2026-000003"
+      ]
+     },
+     {
+      "head": "Müşteri",
+      "transform": "none",
+      "fs": "12px",
+      "w": 189.9,
+      "dash": 0,
+      "distinct": 1,
+      "sample": [
+       "BioGrün Handels GmbH"
+      ]
+     },
+     {
+      "head": "Durum",
+      "transform": "none",
+      "fs": "12px",
+      "w": 140,
+      "dash": 0,
+      "distinct": 3,
+      "sample": [
+       "Kapalı",
+       "Gümrükte",
+       "Taslak"
+      ]
+     },
+     {
+      "head": "Ülke",
+      "transform": "none",
+      "fs": "12px",
+      "w": 65.4,
+      "dash": 0,
+      "distinct": 2,
+      "sample": [
+       "DE",
+       "NL"
+      ]
+     },
+     {
+      "head": "Rejim",
+      "transform": "none",
+      "fs": "12px",
+      "w": 76.3,
+      "dash": 0,
+      "distinct": 2,
+      "sample": [
+       "ETGB",
+       "Standart"
+      ]
+     },
+     {
+      "head": "Belgeler",
+      "transform": "none",
+      "fs": "12px",
+      "w": 87.2,
+      "dash": 0,
+      "distinct": 3,
+      "sample": [
+       "9/11",
+       "2/8",
+       "6/11"
+      ]
+     },
+     {
+      "head": "Tutar (döviz)",
+      "transform": "none",
+      "fs": "12px",
+      "w": 120,
+      "dash": 0,
+      "distinct": 3,
+      "sample": [
+       "€270,00",
+       "€16.800,00",
+       "€0,00"
+      ]
+     },
+     {
+      "head": "ETD",
+      "transform": "none",
+      "fs": "12px",
+      "w": 96,
+      "dash": 2,
+      "distinct": 2,
+      "sample": [
+       "—",
+       "09.09.2026"
+      ]
+     },
+     {
+      "head": "Oluşturma",
+      "transform": "none",
+      "fs": "12px",
+      "w": 99.5,
+      "dash": 0,
+      "distinct": 1,
+      "sample": [
+       "06.09.2026"
+      ]
+     },
+     {
+      "head": "Tutar (₺)",
+      "transform": "none",
+      "fs": "12px",
+      "w": 120,
+      "dash": 0,
+      "distinct": 3,
+      "sample": [
+       "₺10.044,00",
+       "₺624.960,00",
+       "₺2.678,40"
+      ]
+     }
+    ]
+   }
+  ],
+  "headings": [
+   {
+    "tag": "H1",
+    "t": "İhracat Sevkiyatları",
+    "fs": "24px",
+    "fw": "600",
+    "ls": "-0.6px"
+   },
+   {
+    "tag": "H2",
+    "t": "Komut menüsü",
+    "fs": "18px",
+    "fw": "600",
+    "ls": "normal"
+   }
+  ],
+  "nums": [
+   {
+    "t": "€270,00",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "06.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺10.044,00",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "€16.800,00",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "09.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "06.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺624.960,00",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "€0,00",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+   },
+   {
+    "t": "06.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺2.678,40",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   }
+  ]
+ },
+ "listMob": {
+  "page": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "overflowX": false,
+   "scrollers": [
+    {
+     "sel": "div.relative.mb-6.scrollbar-thin",
+     "sw": 632,
+     "cw": 358,
+     "text": "Açık sevkiyatAçık sevkiyat tutarıGümrükteBelgesi eksik"
+    }
+   ],
+   "touchBelow44": [],
+   "touchCount": 0,
+   "fontSizes": {
+    "20px": 1,
+    "14px": 4,
+    "12px": 11,
+    "13px": 3
+   },
+   "colorCount": 3,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 7,
+    "oklch(0.552 0.016 285.9)": 8,
+    "oklab(0.552 0.00438335 -0.0153879 / 0.4)": 4
+   }
+  },
+  "cards": [
+   {
+    "count": 3,
+    "heights": [
+     63.5,
+     63.5,
+     63.5
+    ],
+    "samples": [
+     "EXP-2026-000001KapalıBioGrün Handels GmbH · 06.09.2026₺10.044,00",
+     "EXP-2026-000002GümrükteBioGrün Handels GmbH · 09.09.2026 · 06.09.2026₺624.960,00",
+     "EXP-2026-000003TaslakBioGrün Handels GmbH · 06.09.2026₺2.678,40"
+    ]
+   }
+  ]
+ },
+ "detayDesk": {
+  "base": {
+   "page": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "overflowX": false,
+    "scrollers": [],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "Plantero",
+      "w": 89.2,
+      "h": 25.4
+     },
+     {
+      "sel": "a",
+      "t": "Kokpit",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Bildirimler",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ana Veri",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Depo",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Üretim",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satış & CRM",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satın Alma",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Kalite",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Muhasebe",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Finans",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "İhracat",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "a",
+      "t": "Sevkiyatlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Belgeler",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Kurlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "GTİP",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "button",
+      "t": "Bakım",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ar-Ge",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ayarlar",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "İhracat",
+      "w": 42.5,
+      "h": 19.5
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "Sevkiyatlar",
+      "w": 67.5,
+      "h": 19.5
+     },
+     {
+      "sel": "button",
+      "t": "Ara veya git…⌘K",
+      "w": 256,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=button]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=dropdown-menu-trigger]",
+      "t": "SY",
+      "w": 28,
+      "h": 28
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Gümrük bilgisini güncelle",
+      "w": 218.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Yüklendi işaretle",
+      "w": 158.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "İptal et",
+      "w": 93.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Düzenle",
+      "w": 84.7,
+      "h": 28
+     }
+    ],
+    "touchCount": 41,
+    "fontSizes": {
+     "12px": 24,
+     "24px": 1,
+     "14px": 3,
+     "16px": 1,
+     "11px": 15,
+     "13px": 32
+    },
+    "colorCount": 7,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 42,
+     "oklch(0.21 0.006 285.9)": 27,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3,
+     "oklch(0.6 0.16 152)": 1
+    }
+   },
+   "tables": [
+    {
+     "i": 0,
+     "rows": 1,
+     "heights": [
+      36,
+      36,
+      36
+     ],
+     "tableScrollW": 1152,
+     "tableClientW": 1152,
+     "wrapScrollW": 1152,
+     "wrapClientW": 1152,
+     "cols": [
+      {
+       "head": "Ürün",
+       "transform": "none",
+       "fs": "12px",
+       "w": 562,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "Badem İçeceği 1 Litrelik UHT"
+       ]
+      },
+      {
+       "head": "SKU",
+       "transform": "none",
+       "fs": "12px",
+       "w": 120,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "190010099"
+       ]
+      },
+      {
+       "head": "Miktar",
+       "transform": "none",
+       "fs": "12px",
+       "w": 110,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "40 ADET"
+       ]
+      },
+      {
+       "head": "Sevk edilen",
+       "transform": "none",
+       "fs": "12px",
+       "w": 110,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "40"
+       ]
+      },
+      {
+       "head": "Birim fiyat",
+       "transform": "none",
+       "fs": "12px",
+       "w": 120,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "€420,00"
+       ]
+      },
+      {
+       "head": "Tutar",
+       "transform": "none",
+       "fs": "12px",
+       "w": 130,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "€16.800,00"
+       ]
+      }
+     ]
+    }
+   ],
+   "headings": [
+    {
+     "tag": "H1",
+     "t": "EXP-2026-000002",
+     "fs": "24px",
+     "fw": "600",
+     "ls": "-0.6px"
+    },
+    {
+     "tag": "H3",
+     "t": "Lojistik",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Proforma & gümrük",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Bağlı irsaliye",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H2",
+     "t": "Komut menüsü",
+     "fs": "18px",
+     "fw": "600",
+     "ls": "normal"
+    }
+   ],
+   "nums": [
+    {
+     "t": "₺624.960,00",
+     "fs": "16px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺16.800,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺624.960,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "09.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€16.800,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€420,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€16.800,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    }
+   ]
+  },
+  "tabs": [
+   "Sipariş satırları",
+   "Çeki listesi",
+   "Belgeler",
+   "Fatura & kur"
+  ],
+  "Sipariş satırları": {
+   "page": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "overflowX": false,
+    "scrollers": [],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "Plantero",
+      "w": 89.2,
+      "h": 25.4
+     },
+     {
+      "sel": "a",
+      "t": "Kokpit",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Bildirimler",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ana Veri",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Depo",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Üretim",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satış & CRM",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satın Alma",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Kalite",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Muhasebe",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Finans",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "İhracat",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "a",
+      "t": "Sevkiyatlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Belgeler",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Kurlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "GTİP",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "button",
+      "t": "Bakım",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ar-Ge",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ayarlar",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "İhracat",
+      "w": 42.5,
+      "h": 19.5
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "Sevkiyatlar",
+      "w": 67.5,
+      "h": 19.5
+     },
+     {
+      "sel": "button",
+      "t": "Ara veya git…⌘K",
+      "w": 256,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=button]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=dropdown-menu-trigger]",
+      "t": "SY",
+      "w": 28,
+      "h": 28
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Gümrük bilgisini güncelle",
+      "w": 218.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Yüklendi işaretle",
+      "w": 158.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "İptal et",
+      "w": 93.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Düzenle",
+      "w": 84.7,
+      "h": 28
+     }
+    ],
+    "touchCount": 41,
+    "fontSizes": {
+     "12px": 24,
+     "24px": 1,
+     "14px": 3,
+     "16px": 1,
+     "11px": 15,
+     "13px": 32
+    },
+    "colorCount": 7,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 42,
+     "oklch(0.21 0.006 285.9)": 27,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3,
+     "oklch(0.6 0.16 152)": 1
+    }
+   },
+   "tables": [
+    {
+     "i": 0,
+     "rows": 1,
+     "heights": [
+      36,
+      36,
+      36
+     ],
+     "tableScrollW": 1152,
+     "tableClientW": 1152,
+     "wrapScrollW": 1152,
+     "wrapClientW": 1152,
+     "cols": [
+      {
+       "head": "Ürün",
+       "transform": "none",
+       "fs": "12px",
+       "w": 562,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "Badem İçeceği 1 Litrelik UHT"
+       ]
+      },
+      {
+       "head": "SKU",
+       "transform": "none",
+       "fs": "12px",
+       "w": 120,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "190010099"
+       ]
+      },
+      {
+       "head": "Miktar",
+       "transform": "none",
+       "fs": "12px",
+       "w": 110,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "40 ADET"
+       ]
+      },
+      {
+       "head": "Sevk edilen",
+       "transform": "none",
+       "fs": "12px",
+       "w": 110,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "40"
+       ]
+      },
+      {
+       "head": "Birim fiyat",
+       "transform": "none",
+       "fs": "12px",
+       "w": 120,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "€420,00"
+       ]
+      },
+      {
+       "head": "Tutar",
+       "transform": "none",
+       "fs": "12px",
+       "w": 130,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "€16.800,00"
+       ]
+      }
+     ]
+    }
+   ],
+   "headings": [
+    {
+     "tag": "H1",
+     "t": "EXP-2026-000002",
+     "fs": "24px",
+     "fw": "600",
+     "ls": "-0.6px"
+    },
+    {
+     "tag": "H3",
+     "t": "Lojistik",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Proforma & gümrük",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Bağlı irsaliye",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H2",
+     "t": "Komut menüsü",
+     "fs": "18px",
+     "fw": "600",
+     "ls": "normal"
+    }
+   ],
+   "nums": [
+    {
+     "t": "₺624.960,00",
+     "fs": "16px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺16.800,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺624.960,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "09.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€16.800,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€420,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€16.800,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    }
+   ]
+  },
+  "Çeki listesi": {
+   "page": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "overflowX": false,
+    "scrollers": [],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "Plantero",
+      "w": 89.2,
+      "h": 25.4
+     },
+     {
+      "sel": "a",
+      "t": "Kokpit",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Bildirimler",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ana Veri",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Depo",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Üretim",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satış & CRM",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satın Alma",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Kalite",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Muhasebe",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Finans",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "İhracat",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "a",
+      "t": "Sevkiyatlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Belgeler",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Kurlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "GTİP",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "button",
+      "t": "Bakım",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ar-Ge",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ayarlar",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "İhracat",
+      "w": 42.5,
+      "h": 19.5
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "Sevkiyatlar",
+      "w": 67.5,
+      "h": 19.5
+     },
+     {
+      "sel": "button",
+      "t": "Ara veya git…⌘K",
+      "w": 256,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=button]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=dropdown-menu-trigger]",
+      "t": "SY",
+      "w": 28,
+      "h": 28
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Gümrük bilgisini güncelle",
+      "w": 218.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Yüklendi işaretle",
+      "w": 158.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "İptal et",
+      "w": 93.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Düzenle",
+      "w": 84.7,
+      "h": 28
+     }
+    ],
+    "touchCount": 44,
+    "fontSizes": {
+     "12px": 27,
+     "24px": 1,
+     "14px": 3,
+     "16px": 1,
+     "11px": 15,
+     "13px": 33
+    },
+    "colorCount": 6,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 48,
+     "oklch(0.21 0.006 285.9)": 26,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3
+    }
+   },
+   "tables": [
+    {
+     "i": 0,
+     "rows": 1,
+     "heights": [
+      36,
+      36,
+      36
+     ],
+     "tableScrollW": 1152,
+     "tableClientW": 1152,
+     "wrapScrollW": 1152,
+     "wrapClientW": 1152,
+     "cols": [
+      {
+       "head": "Kap no",
+       "transform": "none",
+       "fs": "12px",
+       "w": 80.2,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "#1"
+       ]
+      },
+      {
+       "head": "Ürün",
+       "transform": "none",
+       "fs": "12px",
+       "w": 421.8,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "Badem İçeceği 1 Litrelik UHT"
+       ]
+      },
+      {
+       "head": "SKU",
+       "transform": "none",
+       "fs": "12px",
+       "w": 120,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "190010099"
+       ]
+      },
+      {
+       "head": "Lot",
+       "transform": "none",
+       "fs": "12px",
+       "w": 150,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "PL-260822-H1-05"
+       ]
+      },
+      {
+       "head": "Miktar",
+       "transform": "none",
+       "fs": "12px",
+       "w": 100,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "40"
+       ]
+      },
+      {
+       "head": "GTİP",
+       "transform": "none",
+       "fs": "12px",
+       "w": 100,
+       "dash": 0,
+       "distinct": 1,
+       "sample": [
+        "2202.99"
+       ]
+      },
+      {
+       "head": "Net kg",
+       "transform": "none",
+       "fs": "12px",
+       "w": 90,
+       "dash": 1,
+       "distinct": 1,
+       "sample": [
+        "—"
+       ]
+      },
+      {
+       "head": "Brüt kg",
+       "transform": "none",
+       "fs": "12px",
+       "w": 90,
+       "dash": 1,
+       "distinct": 1,
+       "sample": [
+        "—"
+       ]
+      }
+     ]
+    }
+   ],
+   "headings": [
+    {
+     "tag": "H1",
+     "t": "EXP-2026-000002",
+     "fs": "24px",
+     "fw": "600",
+     "ls": "-0.6px"
+    },
+    {
+     "tag": "H3",
+     "t": "Lojistik",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Proforma & gümrük",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Bağlı irsaliye",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H2",
+     "t": "Komut menüsü",
+     "fs": "18px",
+     "fw": "600",
+     "ls": "normal"
+    }
+   ],
+   "nums": [
+    {
+     "t": "₺624.960,00",
+     "fs": "16px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺16.800,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺624.960,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "09.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€16.800,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "2202.99",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.552 0.016 285.9)"
+    }
+   ]
+  },
+  "Belgeler": {
+   "page": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "overflowX": false,
+    "scrollers": [],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "Plantero",
+      "w": 89.2,
+      "h": 25.4
+     },
+     {
+      "sel": "a",
+      "t": "Kokpit",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Bildirimler",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ana Veri",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Depo",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Üretim",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satış & CRM",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satın Alma",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Kalite",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Muhasebe",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Finans",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "İhracat",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "a",
+      "t": "Sevkiyatlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Belgeler",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Kurlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "GTİP",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "button",
+      "t": "Bakım",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ar-Ge",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ayarlar",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "İhracat",
+      "w": 42.5,
+      "h": 19.5
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "Sevkiyatlar",
+      "w": 67.5,
+      "h": 19.5
+     },
+     {
+      "sel": "button",
+      "t": "Ara veya git…⌘K",
+      "w": 256,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=button]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=dropdown-menu-trigger]",
+      "t": "SY",
+      "w": 28,
+      "h": 28
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Gümrük bilgisini güncelle",
+      "w": 218.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Yüklendi işaretle",
+      "w": 158.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "İptal et",
+      "w": 93.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Düzenle",
+      "w": 84.7,
+      "h": 28
+     }
+    ],
+    "touchCount": 40,
+    "fontSizes": {
+     "12px": 21,
+     "24px": 1,
+     "14px": 3,
+     "16px": 1,
+     "11px": 15,
+     "13px": 35
+    },
+    "colorCount": 6,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 39,
+     "oklch(0.21 0.006 285.9)": 31,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3
+    }
+   },
+   "tables": [
+    {
+     "i": 0,
+     "rows": 8,
+     "heights": [
+      36,
+      36,
+      36
+     ],
+     "tableScrollW": 1152,
+     "tableClientW": 1152,
+     "wrapScrollW": 1152,
+     "wrapClientW": 1152,
+     "cols": [
+      {
+       "head": "Belge",
+       "transform": "none",
+       "fs": "12px",
+       "w": 982,
+       "dash": 0,
+       "distinct": 8,
+       "sample": [
+        "Proforma fatura",
+        "Ticari fatura",
+        "Çeki listesi (packing list)"
+       ]
+      },
+      {
+       "head": "Durum",
+       "transform": "none",
+       "fs": "12px",
+       "w": 130,
+       "dash": 0,
+       "distinct": 4,
+       "sample": [
+        "Gönderildi",
+        "Gerekli",
+        "Hazır"
+       ]
+      },
+      {
+       "head": "Eylemler",
+       "transform": "none",
+       "fs": "12px",
+       "w": 40,
+       "dash": 8,
+       "distinct": 0,
+       "sample": []
+      }
+     ]
+    }
+   ],
+   "headings": [
+    {
+     "tag": "H1",
+     "t": "EXP-2026-000002",
+     "fs": "24px",
+     "fw": "600",
+     "ls": "-0.6px"
+    },
+    {
+     "tag": "H3",
+     "t": "Lojistik",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Proforma & gümrük",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Bağlı irsaliye",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H2",
+     "t": "Komut menüsü",
+     "fs": "18px",
+     "fw": "600",
+     "ls": "normal"
+    }
+   ],
+   "nums": [
+    {
+     "t": "₺624.960,00",
+     "fs": "16px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺16.800,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺624.960,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "09.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€16.800,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    }
+   ]
+  },
+  "Fatura & kur": {
+   "page": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "overflowX": false,
+    "scrollers": [],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "Plantero",
+      "w": 89.2,
+      "h": 25.4
+     },
+     {
+      "sel": "a",
+      "t": "Kokpit",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Bildirimler",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ana Veri",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Depo",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Üretim",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satış & CRM",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Satın Alma",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Kalite",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Muhasebe",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Finans",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "İhracat",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "a",
+      "t": "Sevkiyatlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Belgeler",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "Kurlar",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "a",
+      "t": "GTİP",
+      "w": 197,
+      "h": 28
+     },
+     {
+      "sel": "button",
+      "t": "Bakım",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ar-Ge",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button",
+      "t": "Ayarlar",
+      "w": 223,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "İhracat",
+      "w": 42.5,
+      "h": 19.5
+     },
+     {
+      "sel": "a[data-slot=breadcrumb-link]",
+      "t": "Sevkiyatlar",
+      "w": 67.5,
+      "h": 19.5
+     },
+     {
+      "sel": "button",
+      "t": "Ara veya git…⌘K",
+      "w": 256,
+      "h": 32
+     },
+     {
+      "sel": "a[data-slot=button]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=tooltip-trigger]",
+      "t": "",
+      "w": 32,
+      "h": 32
+     },
+     {
+      "sel": "button[data-slot=dropdown-menu-trigger]",
+      "t": "SY",
+      "w": 28,
+      "h": 28
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Gümrük bilgisini güncelle",
+      "w": 218.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Yüklendi işaretle",
+      "w": 158.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "İptal et",
+      "w": 93.5,
+      "h": 36
+     },
+     {
+      "sel": "button[data-slot=button]",
+      "t": "Düzenle",
+      "w": 84.7,
+      "h": 28
+     }
+    ],
+    "touchCount": 35,
+    "fontSizes": {
+     "12px": 22,
+     "24px": 1,
+     "14px": 4,
+     "16px": 1,
+     "11px": 15,
+     "13px": 34
+    },
+    "colorCount": 6,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 41,
+     "oklch(0.21 0.006 285.9)": 30,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3
+    }
+   },
+   "tables": [],
+   "headings": [
+    {
+     "tag": "H1",
+     "t": "EXP-2026-000002",
+     "fs": "24px",
+     "fw": "600",
+     "ls": "-0.6px"
+    },
+    {
+     "tag": "H3",
+     "t": "Lojistik",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Proforma & gümrük",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "İhracat faturası",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Kur bilgisi",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H3",
+     "t": "Bağlı irsaliye",
+     "fs": "13px",
+     "fw": "600",
+     "ls": "normal"
+    },
+    {
+     "tag": "H2",
+     "t": "Komut menüsü",
+     "fs": "18px",
+     "fw": "600",
+     "ls": "normal"
+    }
+   ],
+   "nums": [
+    {
+     "t": "₺624.960,00",
+     "fs": "16px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺16.800,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "11px",
+     "fvn": "normal",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "₺624.960,00",
+     "fs": "11px",
+     "fvn": "tabular-nums",
+     "ta": "left",
+     "color": "oklch(0.552 0.016 285.9)"
+    },
+    {
+     "t": "09.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "€16.800,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "06.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "₺37,2000",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "01.09.2026",
+     "fs": "13px",
+     "fvn": "normal",
+     "ta": "start",
+     "color": "oklch(0.21 0.006 285.9)"
+    },
+    {
+     "t": "₺624.960,00",
+     "fs": "13px",
+     "fvn": "tabular-nums",
+     "ta": "right",
+     "color": "oklch(0.21 0.006 285.9)"
+    }
+   ]
+  }
+ },
+ "detayMob": {
+  "base": {
+   "page": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflowX": false,
+    "scrollers": [
+     {
+      "sel": "div.relative.scrollbar-thin.scroll-fade-x",
+      "sw": 1293,
+      "cw": 366,
+      "text": "İrsaliyeSevk edildiDN-2026-00002806.09.2026BioGrün Handels G"
+     },
+     {
+      "sel": "div.group/tabs-list.relative.inline-flex",
+      "sw": 407,
+      "cw": 358,
+      "text": "Sipariş satırlarıÇeki listesiBelgelerFatura & kur"
+     }
+    ],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "DN-2026-000028",
+      "w": 109.2,
+      "h": 19.5
+     }
+    ],
+    "touchCount": 1,
+    "fontSizes": {
+     "12px": 20,
+     "20px": 1,
+     "14px": 4,
+     "16px": 1,
+     "11px": 15,
+     "13px": 28
+    },
+    "colorCount": 7,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 37,
+     "oklch(0.21 0.006 285.9)": 25,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3,
+     "oklab(0.552 0.00438335 -0.0153879 / 0.4)": 1
+    }
+   }
+  },
+  "Sipariş satırları": {
+   "page": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflowX": false,
+    "scrollers": [
+     {
+      "sel": "div.relative.scrollbar-thin.scroll-fade-x",
+      "sw": 1293,
+      "cw": 366,
+      "text": "İrsaliyeSevk edildiDN-2026-00002806.09.2026BioGrün Handels G"
+     },
+     {
+      "sel": "div.group/tabs-list.relative.inline-flex",
+      "sw": 407,
+      "cw": 358,
+      "text": "Sipariş satırlarıÇeki listesiBelgelerFatura & kur"
+     }
+    ],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "DN-2026-000028",
+      "w": 109.2,
+      "h": 19.5
+     }
+    ],
+    "touchCount": 1,
+    "fontSizes": {
+     "12px": 20,
+     "20px": 1,
+     "14px": 4,
+     "16px": 1,
+     "11px": 15,
+     "13px": 28
+    },
+    "colorCount": 7,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 37,
+     "oklch(0.21 0.006 285.9)": 25,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3,
+     "oklab(0.552 0.00438335 -0.0153879 / 0.4)": 1
+    }
+   },
+   "cards": [],
+   "tables": []
+  },
+  "Çeki listesi": {
+   "page": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflowX": false,
+    "scrollers": [
+     {
+      "sel": "div.relative.scrollbar-thin.scroll-fade-x",
+      "sw": 1293,
+      "cw": 366,
+      "text": "İrsaliyeSevk edildiDN-2026-00002806.09.2026BioGrün Handels G"
+     },
+     {
+      "sel": "div.group/tabs-list.relative.inline-flex",
+      "sw": 407,
+      "cw": 358,
+      "text": "Sipariş satırlarıÇeki listesiBelgelerFatura & kur"
+     }
+    ],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "DN-2026-000028",
+      "w": 109.2,
+      "h": 19.5
+     }
+    ],
+    "touchCount": 1,
+    "fontSizes": {
+     "12px": 20,
+     "20px": 1,
+     "14px": 4,
+     "16px": 1,
+     "11px": 15,
+     "13px": 28
+    },
+    "colorCount": 7,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 36,
+     "oklch(0.21 0.006 285.9)": 26,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3,
+     "oklab(0.552 0.00438335 -0.0153879 / 0.4)": 1
+    }
+   },
+   "cards": [],
+   "tables": []
+  },
+  "Belgeler": {
+   "page": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflowX": false,
+    "scrollers": [
+     {
+      "sel": "div.relative.scrollbar-thin.scroll-fade-x",
+      "sw": 1293,
+      "cw": 366,
+      "text": "İrsaliyeSevk edildiDN-2026-00002806.09.2026BioGrün Handels G"
+     },
+     {
+      "sel": "div.group/tabs-list.relative.inline-flex",
+      "sw": 407,
+      "cw": 358,
+      "text": "Sipariş satırlarıÇeki listesiBelgelerFatura & kur"
+     }
+    ],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "DN-2026-000028",
+      "w": 109.2,
+      "h": 19.5
+     }
+    ],
+    "touchCount": 1,
+    "fontSizes": {
+     "12px": 25,
+     "20px": 1,
+     "14px": 11,
+     "16px": 1,
+     "11px": 15,
+     "13px": 27
+    },
+    "colorCount": 6,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 43,
+     "oklch(0.21 0.006 285.9)": 31,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3
+    }
+   },
+   "cards": [
+    {
+     "count": 8,
+     "heights": [
+      60,
+      60,
+      60
+     ],
+     "samples": [
+      "Proforma faturaGönderildiPROFORMA · Belge no PF-EXP-2026-000002",
+      "Ticari faturaGerekliINVOICE",
+      "Çeki listesi (packing list)HazırPACKING_LIST"
+     ]
+    }
+   ],
+   "tables": []
+  },
+  "Fatura & kur": {
+   "page": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflowX": false,
+    "scrollers": [
+     {
+      "sel": "div.relative.scrollbar-thin.scroll-fade-x",
+      "sw": 1293,
+      "cw": 366,
+      "text": "İrsaliyeSevk edildiDN-2026-00002806.09.2026BioGrün Handels G"
+     },
+     {
+      "sel": "div.group/tabs-list.relative.inline-flex",
+      "sw": 407,
+      "cw": 358,
+      "text": "Sipariş satırlarıÇeki listesiBelgelerFatura & kur"
+     }
+    ],
+    "touchBelow44": [
+     {
+      "sel": "a",
+      "t": "DN-2026-000028",
+      "w": 109.2,
+      "h": 19.5
+     }
+    ],
+    "touchCount": 1,
+    "fontSizes": {
+     "12px": 22,
+     "20px": 1,
+     "14px": 4,
+     "16px": 1,
+     "11px": 15,
+     "13px": 34
+    },
+    "colorCount": 6,
+    "colors": {
+     "oklch(0.552 0.016 285.9)": 41,
+     "oklch(0.21 0.006 285.9)": 30,
+     "oklch(0.55 0.16 152)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.8)": 1,
+     "oklch(0.5 0.14 70)": 1,
+     "oklab(0.21 0.00164376 -0.00577045 / 0.6)": 3
+    }
+   },
+   "cards": [],
+   "tables": []
+  }
+ },
+ "yeniDesk": {
+  "page": {
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "overflowX": false,
+   "scrollers": [],
+   "touchBelow44": [
+    {
+     "sel": "a",
+     "t": "Plantero",
+     "w": 89.2,
+     "h": 25.4
+    },
+    {
+     "sel": "a",
+     "t": "Kokpit",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Bildirimler",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ana Veri",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Depo",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Üretim",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satış & CRM",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satın Alma",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Kalite",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Muhasebe",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Finans",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "İhracat",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "a",
+     "t": "Sevkiyatlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Belgeler",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Kurlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "GTİP",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "button",
+     "t": "Bakım",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ar-Ge",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ayarlar",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=breadcrumb-link]",
+     "t": "İhracat",
+     "w": 42.5,
+     "h": 19.5
+    },
+    {
+     "sel": "a[data-slot=breadcrumb-link]",
+     "t": "Sevkiyatlar",
+     "w": 67.5,
+     "h": 19.5
+    },
+    {
+     "sel": "button",
+     "t": "Ara veya git…⌘K",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=button]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "SY",
+     "w": 28,
+     "h": 28
+    },
+    {
+     "sel": "button[data-slot=popover-trigger]",
+     "t": "Sipariş seçin",
+     "w": 768,
+     "h": 36
+    },
+    {
+     "sel": "button[data-slot=form-control]",
+     "t": "FOB",
+     "w": 378,
+     "h": 36
+    },
+    {
+     "sel": "select",
+     "t": "EXWFCACPTCIPDAPDPUDDPFASFOBC",
+     "w": 1,
+     "h": 1
+    },
+    {
+     "sel": "input[data-slot=form-control]",
+     "t": "",
+     "w": 378,
+     "h": 36
+    }
+   ],
+   "touchCount": 41,
+   "fontSizes": {
+    "24px": 1,
+    "14px": 3,
+    "13px": 15
+   },
+   "colorCount": 3,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 12,
+    "oklch(0.552 0.016 285.9)": 6,
+    "oklch(0.985 0.01 152)": 1
+   }
+  },
+  "tables": [],
+  "headings": [
+   {
+    "tag": "H1",
+    "t": "Yeni İhracat Sevkiyatı",
+    "fs": "24px",
+    "fw": "600",
+    "ls": "-0.6px"
+   },
+   {
+    "tag": "H2",
+    "t": "Teslim şekli ve lojistik",
+    "fs": "13px",
+    "fw": "600",
+    "ls": "normal"
+   },
+   {
+    "tag": "H2",
+    "t": "Komut menüsü",
+    "fs": "18px",
+    "fw": "600",
+    "ls": "normal"
+   }
+  ],
+  "nums": [],
+  "fields": [
+   {
+    "sel": "div",
+    "t": "İhracat siparişi*Sipariş seç",
+    "x": 264,
+    "right": 1032,
+    "w": 768,
+    "h": 61.5
+   },
+   {
+    "sel": "button[popover-trigger]",
+    "t": "Sipariş seçin",
+    "x": 264,
+    "right": 1032,
+    "w": 768,
+    "h": 36
+   },
+   {
+    "sel": "div",
+    "t": "Teslim şekli ve lojistikInco",
+    "x": 264,
+    "right": 1032,
+    "w": 768,
+    "h": 408
+   },
+   {
+    "sel": "button[form-control]",
+    "t": "FOB",
+    "x": 264,
+    "right": 642,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "input[form-control]",
+    "t": "Ör. İzmir FOB",
+    "x": 654,
+    "right": 1032,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "input[form-control]",
+    "t": "DE",
+    "x": 264,
+    "right": 642,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "button[form-control]",
+    "t": "Karayolu",
+    "x": 654,
+    "right": 1032,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "input[form-control]",
+    "t": "portOfLoading",
+    "x": 264,
+    "right": 642,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "input[form-control]",
+    "t": "portOfDischarge",
+    "x": 654,
+    "right": 1032,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "input[form-control]",
+    "t": "carrier",
+    "x": 264,
+    "right": 642,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "button[form-control]",
+    "t": "Otomatik (tutara göre)",
+    "x": 654,
+    "right": 1032,
+    "w": 378,
+    "h": 36
+   },
+   {
+    "sel": "input[form-control]",
+    "t": "note",
+    "x": 264,
+    "right": 1032,
+    "w": 768,
+    "h": 36
+   },
+   {
+    "sel": "div",
+    "t": "VazgeçSevkiyat oluştur",
+    "x": 264,
+    "right": 1416,
+    "w": 1152,
+    "h": 53
+   },
+   {
+    "sel": "button[button]",
+    "t": "Sevkiyat oluştur",
+    "x": 1276.6,
+    "right": 1416,
+    "w": 139.4,
+    "h": 36
+   }
+  ]
+ },
+ "yeniMob": {
+  "page": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "overflowX": false,
+   "scrollers": [],
+   "touchBelow44": [
+    {
+     "sel": "select",
+     "t": "EXWFCACPTCIPDAPDPUDDPFASFOBC",
+     "w": 1,
+     "h": 1
+    },
+    {
+     "sel": "select",
+     "t": "KarayoluDeniz yoluHava yoluK",
+     "w": 1,
+     "h": 1
+    },
+    {
+     "sel": "select",
+     "t": "Otomatik (tutara göre)ETGB (",
+     "w": 1,
+     "h": 1
+    }
+   ],
+   "touchCount": 3,
+   "fontSizes": {
+    "20px": 1,
+    "14px": 3,
+    "13px": 15
+   },
+   "colorCount": 3,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 12,
+    "oklch(0.552 0.016 285.9)": 6,
+    "oklch(0.985 0.01 152)": 1
+   }
+  }
+ },
+ "belgelerDesk": {
+  "page": {
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "overflowX": false,
+   "scrollers": [],
+   "touchBelow44": [
+    {
+     "sel": "a",
+     "t": "Plantero",
+     "w": 89.2,
+     "h": 25.4
+    },
+    {
+     "sel": "a",
+     "t": "Kokpit",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Bildirimler",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ana Veri",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Depo",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Üretim",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satış & CRM",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satın Alma",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Kalite",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Muhasebe",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Finans",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "İhracat",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "a",
+     "t": "Sevkiyatlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Belgeler",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Kurlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "GTİP",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "button",
+     "t": "Bakım",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ar-Ge",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ayarlar",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=breadcrumb-link]",
+     "t": "İhracat",
+     "w": 42.5,
+     "h": 19.5
+    },
+    {
+     "sel": "button",
+     "t": "Ara veya git…⌘K",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=button]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "SY",
+     "w": 28,
+     "h": 28
+    },
+    {
+     "sel": "input[data-slot=input]",
+     "t": "",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "Durum",
+     "w": 83.6,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Belge",
+     "w": 60.4,
+     "h": 28
+    },
+    {
+     "sel": "button",
+     "t": "Sevkiyat",
+     "w": 77,
+     "h": 28
+    }
+   ],
+   "touchCount": 33,
+   "fontSizes": {
+    "24px": 1,
+    "14px": 1,
+    "12px": 10,
+    "13px": 90
+   },
+   "colorCount": 2,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 91,
+    "oklch(0.552 0.016 285.9)": 11
+   }
+  },
+  "tables": [
+   {
+    "i": 0,
+    "rows": 30,
+    "heights": [
+     36,
+     36,
+     36
+    ],
+    "tableScrollW": 1152,
+    "tableClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClientW": 1152,
+    "cols": [
+     {
+      "head": "Belge",
+      "transform": "none",
+      "fs": "12px",
+      "w": 402.5,
+      "dash": 0,
+      "distinct": 12,
+      "sample": [
+       "ATR dolaşım belgesi",
+       "EUR.1 dolaşım sertifikası",
+       "Sağlık sertifikası"
+      ]
+     },
+     {
+      "head": "Sevkiyat",
+      "transform": "none",
+      "fs": "12px",
+      "w": 263,
+      "dash": 0,
+      "distinct": 3,
+      "sample": [
+       "EXP-2026-000001",
+       "EXP-2026-000002",
+       "EXP-2026-000003"
+      ]
+     },
+     {
+      "head": "Müşteri",
+      "transform": "none",
+      "fs": "12px",
+      "w": 316.4,
+      "dash": 0,
+      "distinct": 1,
+      "sample": [
+       "BioGrün Handels GmbH"
+      ]
+     },
+     {
+      "head": "Durum",
+      "transform": "none",
+      "fs": "12px",
+      "w": 130,
+      "dash": 0,
+      "distinct": 5,
+      "sample": [
+       "Gerekmiyor",
+       "Gerekli",
+       "Gönderildi"
+      ]
+     },
+     {
+      "head": "Eylemler",
+      "transform": "none",
+      "fs": "12px",
+      "w": 40,
+      "dash": 30,
+      "distinct": 0,
+      "sample": []
+     }
+    ]
+   }
+  ],
+  "headings": [
+   {
+    "tag": "H1",
+    "t": "İhracat Belgeleri",
+    "fs": "24px",
+    "fw": "600",
+    "ls": "-0.6px"
+   },
+   {
+    "tag": "H2",
+    "t": "Komut menüsü",
+    "fs": "18px",
+    "fw": "600",
+    "ls": "normal"
+   }
+  ],
+  "nums": []
+ },
+ "belgelerMob": {
+  "page": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "overflowX": false,
+   "scrollers": [
+    {
+     "sel": "div.relative.mb-6.scrollbar-thin",
+     "sw": 632,
+     "cw": 358,
+     "text": "Toplam belgeBekleyenVadesi geçmişSorumlusuz"
+    }
+   ],
+   "touchBelow44": [],
+   "touchCount": 0,
+   "fontSizes": {
+    "20px": 1,
+    "14px": 31,
+    "12px": 34
+   },
+   "colorCount": 2,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 31,
+    "oklch(0.552 0.016 285.9)": 35
+   }
+  },
+  "cards": [
+   {
+    "count": 30,
+    "heights": [
+     60,
+     60,
+     60
+    ],
+    "samples": [
+     "ATR dolaşım belgesiGerekmiyorEXP-2026-000001",
+     "EUR.1 dolaşım sertifikasıGerekmiyorEXP-2026-000001",
+     "Sağlık sertifikasıGerekliEXP-2026-000001"
+    ]
+   }
+  ]
+ },
+ "kurlarDesk": {
+  "page": {
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "overflowX": false,
+   "scrollers": [],
+   "touchBelow44": [
+    {
+     "sel": "a",
+     "t": "Plantero",
+     "w": 89.2,
+     "h": 25.4
+    },
+    {
+     "sel": "a",
+     "t": "Kokpit",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Bildirimler",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ana Veri",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Depo",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Üretim",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satış & CRM",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satın Alma",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Kalite",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Muhasebe",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Finans",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "İhracat",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "a",
+     "t": "Sevkiyatlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Belgeler",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Kurlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "GTİP",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "button",
+     "t": "Bakım",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ar-Ge",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ayarlar",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=breadcrumb-link]",
+     "t": "İhracat",
+     "w": 42.5,
+     "h": 19.5
+    },
+    {
+     "sel": "button",
+     "t": "Ara veya git…⌘K",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=button]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "SY",
+     "w": 28,
+     "h": 28
+    },
+    {
+     "sel": "button[data-slot=button]",
+     "t": "Bugünü çek",
+     "w": 129.4,
+     "h": 36
+    },
+    {
+     "sel": "input[data-slot=input]",
+     "t": "",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "Para birimi",
+     "w": 108,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Tarih",
+     "w": 56.8,
+     "h": 28
+    }
+   ],
+   "touchCount": 39,
+   "fontSizes": {
+    "24px": 1,
+    "14px": 1,
+    "12px": 14,
+    "11px": 22,
+    "13px": 125
+   },
+   "colorCount": 4,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 122,
+    "oklch(0.552 0.016 285.9)": 39,
+    "oklch(0.6 0.12 300)": 1,
+    "oklch(0.6 0.15 250)": 1
+   }
+  },
+  "tables": [
+   {
+    "i": 0,
+    "rows": 25,
+    "heights": [
+     36,
+     36,
+     36
+    ],
+    "tableScrollW": 1152,
+    "tableClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClientW": 1152,
+    "cols": [
+     {
+      "head": "Tarih",
+      "transform": "none",
+      "fs": "12px",
+      "w": 207.7,
+      "dash": 0,
+      "distinct": 13,
+      "sample": [
+       "06.09.2026",
+       "05.09.2026",
+       "04.09.2026"
+      ]
+     },
+     {
+      "head": "Para birimi",
+      "transform": "none",
+      "fs": "12px",
+      "w": 226.6,
+      "dash": 0,
+      "distinct": 2,
+      "sample": [
+       "EUR",
+       "USD"
+      ]
+     },
+     {
+      "head": "Alış",
+      "transform": "none",
+      "fs": "12px",
+      "w": 226.6,
+      "dash": 0,
+      "distinct": 23,
+      "sample": [
+       "₺37,2000",
+       "₺33,8448",
+       "₺38,5000"
+      ]
+     },
+     {
+      "head": "Satış",
+      "transform": "none",
+      "fs": "12px",
+      "w": 226.6,
+      "dash": 0,
+      "distinct": 23,
+      "sample": [
+       "₺37,4000",
+       "₺33,9937",
+       "₺38,7000"
+      ]
+     },
+     {
+      "head": "Kaynak",
+      "transform": "none",
+      "fs": "12px",
+      "w": 264.4,
+      "dash": 0,
+      "distinct": 2,
+      "sample": [
+       "TCMB",
+       "TCMB-SEED"
+      ]
+     }
+    ]
+   }
+  ],
+  "headings": [
+   {
+    "tag": "H1",
+    "t": "İhracat Kurları",
+    "fs": "24px",
+    "fw": "600",
+    "ls": "-0.6px"
+   },
+   {
+    "tag": "H2",
+    "t": "Komut menüsü",
+    "fs": "18px",
+    "fw": "600",
+    "ls": "normal"
+   }
+  ],
+  "nums": [
+   {
+    "t": "Alış ₺33,8448",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "left",
+    "color": "oklch(0.552 0.016 285.9)"
+   },
+   {
+    "t": "Alış ₺37,2000",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "left",
+    "color": "oklch(0.552 0.016 285.9)"
+   },
+   {
+    "t": "14.06",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "20.06",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "26.06",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "02.07",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "08.07",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "14.07",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "20.07",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "26.07",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "01.08",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "07.08",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "13.08",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "19.08",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "25.08",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "31.08",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "06.09",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺30,0",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺33,0",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺36,0",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺39,0",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺42,0",
+    "fs": "11px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "06.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,2000",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,4000",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "06.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺33,8448",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺33,9937",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "05.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺38,5000",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺38,7000",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "05.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺34,5075",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺34,6593",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "04.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,6445",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,8468",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "04.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺34,2547",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺34,4054",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "03.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,4855",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,6870",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "03.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺34,1092",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺34,2592",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "02.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,2101",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,4102",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "02.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺33,8569",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺34,0059",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "01.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,2000",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺37,4000",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "01.09.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺33,4982",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺33,6456",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "31.08.2026",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺36,6190",
+    "fs": "13px",
+    "fvn": "tabular-nums",
+    "ta": "right",
+    "color": "oklch(0.21 0.006 285.9)"
+   }
+  ],
+  "kpi": [],
+  "axis": [
+   "14.06",
+   "20.06",
+   "26.06",
+   "02.07",
+   "08.07",
+   "14.07",
+   "20.07",
+   "26.07",
+   "01.08",
+   "07.08",
+   "13.08",
+   "19.08",
+   "25.08",
+   "31.08",
+   "06.09",
+   "₺30,0",
+   "₺33,0",
+   "₺36,0",
+   "₺39,0",
+   "₺42,0"
+  ]
+ },
+ "kurlarMob": {
+  "page": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "overflowX": false,
+   "scrollers": [],
+   "touchBelow44": [],
+   "touchCount": 0,
+   "fontSizes": {
+    "20px": 1,
+    "14px": 26,
+    "12px": 82,
+    "11px": 12,
+    "13px": 25
+   },
+   "colorCount": 5,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 61,
+    "oklch(0.552 0.016 285.9)": 58,
+    "oklch(0.6 0.12 300)": 1,
+    "oklch(0.6 0.15 250)": 1,
+    "oklab(0.552 0.00438335 -0.0153879 / 0.4)": 25
+   }
+  },
+  "cards": [
+   {
+    "count": 2,
+    "heights": [
+     18,
+     18,
+     18
+    ],
+    "samples": [
+     "EUR",
+     "USD"
+    ]
+   },
+   {
+    "count": 25,
+    "heights": [
+     63.5,
+     63.5,
+     63.5
+    ],
+    "samples": [
+     "EUR06.09.2026 · TCMB₺37,4000",
+     "USD06.09.2026 · TCMB-SEED₺33,9937",
+     "EUR05.09.2026 · TCMB₺38,7000"
+    ]
+   }
+  ]
+ },
+ "gtipDesk": {
+  "page": {
+   "scrollWidth": 1440,
+   "clientWidth": 1440,
+   "overflowX": false,
+   "scrollers": [
+    {
+     "sel": "div.scrollbar-thin.scroll-fade-x.max-h-[calc(100dvh-16rem)]",
+     "sw": 1184,
+     "cw": 1152,
+     "text": "SKUÜrünKategoriTipGTİP110010001BADEM BAZIMamul ÜrünlerMamulE"
+    }
+   ],
+   "touchBelow44": [
+    {
+     "sel": "a",
+     "t": "Plantero",
+     "w": 89.2,
+     "h": 25.4
+    },
+    {
+     "sel": "a",
+     "t": "Kokpit",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Bildirimler",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ana Veri",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Depo",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Üretim",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satış & CRM",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Satın Alma",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Kalite",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Muhasebe",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Finans",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "İhracat",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "a",
+     "t": "Sevkiyatlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Belgeler",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "Kurlar",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "a",
+     "t": "GTİP",
+     "w": 197,
+     "h": 28
+    },
+    {
+     "sel": "button",
+     "t": "Bakım",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ar-Ge",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "Ayarlar",
+     "w": 223,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=breadcrumb-link]",
+     "t": "İhracat",
+     "w": 42.5,
+     "h": 19.5
+    },
+    {
+     "sel": "button",
+     "t": "Ara veya git…⌘K",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "a[data-slot=button]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=tooltip-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "SY",
+     "w": 28,
+     "h": 28
+    },
+    {
+     "sel": "input[data-slot=input]",
+     "t": "",
+     "w": 256,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "Eşleme",
+     "w": 86.9,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "Tip",
+     "w": 61.8,
+     "h": 32
+    },
+    {
+     "sel": "button[data-slot=dropdown-menu-trigger]",
+     "t": "",
+     "w": 32,
+     "h": 32
+    },
+    {
+     "sel": "button",
+     "t": "SKU",
+     "w": 52.9,
+     "h": 28
+    }
+   ],
+   "touchCount": 73,
+   "fontSizes": {
+    "24px": 1,
+    "14px": 1,
+    "12px": 18,
+    "11px": 1,
+    "13px": 200
+   },
+   "colorCount": 2,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 162,
+    "oklch(0.552 0.016 285.9)": 59
+   }
+  },
+  "tables": [
+   {
+    "i": 0,
+    "rows": 39,
+    "heights": [
+     36.5,
+     37,
+     37
+    ],
+    "tableScrollW": 1184,
+    "tableClientW": 1184,
+    "wrapScrollW": 1184,
+    "wrapClientW": 1152,
+    "cols": [
+     {
+      "head": "SKU",
+      "transform": "none",
+      "fs": "12px",
+      "w": 130,
+      "dash": 0,
+      "distinct": 39,
+      "sample": [
+       "110010001",
+       "110010002",
+       "110010003"
+      ]
+     },
+     {
+      "head": "Ürün",
+      "transform": "none",
+      "fs": "12px",
+      "w": 376.8,
+      "dash": 0,
+      "distinct": 39,
+      "sample": [
+       "BADEM BAZI",
+       "2x Badem Bazı",
+       "3x Badem Bazı"
+      ]
+     },
+     {
+      "head": "Kategori",
+      "transform": "none",
+      "fs": "12px",
+      "w": 160,
+      "dash": 0,
+      "distinct": 2,
+      "sample": [
+       "Mamul Ürünler",
+       "Hammaddeler"
+      ]
+     },
+     {
+      "head": "Tip",
+      "transform": "none",
+      "fs": "12px",
+      "w": 110,
+      "dash": 0,
+      "distinct": 2,
+      "sample": [
+       "Mamul",
+       "Hammadde"
+      ]
+     },
+     {
+      "head": "GTİP",
+      "transform": "none",
+      "fs": "12px",
+      "w": 407.6,
+      "dash": 0,
+      "distinct": 2,
+      "sample": [
+       "Eşlenmedi",
+       "0901.21Kavrulmuş kahve (kafeinsiz olmayan)"
+      ]
+     }
+    ]
+   }
+  ],
+  "headings": [
+   {
+    "tag": "H1",
+    "t": "GTİP Eşlemesi",
+    "fs": "24px",
+    "fw": "600",
+    "ls": "-0.6px"
+   },
+   {
+    "tag": "H2",
+    "t": "Komut menüsü",
+    "fs": "18px",
+    "fw": "600",
+    "ls": "normal"
+   }
+  ],
+  "nums": [
+   {
+    "t": "0901.21",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "2008.19",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "2106.10",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "2202.99",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "%100 Oat Spredable",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "start",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "0901.21",
+    "fs": "13px",
+    "fvn": "normal",
+    "ta": "center",
+    "color": "oklch(0.21 0.006 285.9)"
+   }
+  ]
+ },
+ "gtipMob": {
+  "page": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "overflowX": false,
+   "scrollers": [
+    {
+     "sel": "div.relative.mb-6.scrollbar-thin",
+     "sw": 632,
+     "cw": 358,
+     "text": "GTİP koduSatılabilir ürünEşlenmişEşlenmemişGTİP atanmalı"
+    }
+   ],
+   "touchBelow44": [],
+   "touchCount": 0,
+   "fontSizes": {
+    "20px": 1,
+    "14px": 40,
+    "12px": 51,
+    "11px": 1,
+    "13px": 44
+   },
+   "colorCount": 2,
+   "colors": {
+    "oklch(0.21 0.006 285.9)": 45,
+    "oklch(0.552 0.016 285.9)": 92
+   }
+  },
+  "cards": [
+   {
+    "count": 39,
+    "heights": [
+     60,
+     60,
+     60
+    ],
+    "samples": [
+     "BADEM BAZIEşlenmedi110010001",
+     "2x Badem BazıEşlenmedi110010002",
+     "3x Badem BazıEşlenmedi110010003"
+    ]
+   }
+  ]
+ }
+}

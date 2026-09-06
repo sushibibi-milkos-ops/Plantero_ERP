@@ -1,0 +1,326 @@
+{
+ "/bakim/is-emirleri @1440x900 [click button[aria-label=\"Kanban görünümü\"]]": {
+  "overflows": [
+   {
+    "tag": "div",
+    "cls": "scrollbar-thin scroll-fade-x flex snap-x snap-mandatory items-start gap-3 overflow-x-auto ",
+    "sw": 1488,
+    "cw": 1152,
+    "ox": "auto",
+    "text": "Bildirildi1MO-2026-000006Mikser motorunda anormal "
+   },
+   {
+    "tag": "div",
+    "cls": "truncate text-[13px] font-medium",
+    "sw": 483,
+    "cw": 244,
+    "ox": "hidden",
+    "text": "Haftalık bıçak/hazne temizliği — Ön ezme (ezme mak"
+   },
+   {
+    "tag": "div",
+    "cls": "truncate text-[13px] font-medium",
+    "sw": 365,
+    "cw": 244,
+    "ox": "hidden",
+    "text": "Haftalık stick nozul temizliği — Stick dolum makin"
+   },
+   {
+    "tag": "div",
+    "cls": "truncate text-[13px] font-medium",
+    "sw": 319,
+    "cw": 244,
+    "ox": "hidden",
+    "text": "Günlük hassasiyet testi — Metal dedektörü (30×25)"
+   }
+  ],
+  "contentBottom": 897,
+  "emptyBelow": 4,
+  "table": {
+   "top": 0,
+   "w": 0,
+   "sw": 0,
+   "holderCw": 0,
+   "holderSw": 0,
+   "headers": [
+    {
+     "t": "No",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Başlık",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Makine",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Tür",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Öncelik",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Durum",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    },
+    {
+     "t": "Eylemler",
+     "w": 0,
+     "right": 0,
+     "clipped": false
+    }
+   ]
+  },
+  "rowCount": 6,
+  "rowsAboveFold": 6,
+  "kpi": [],
+  "toolbarTop": 155,
+  "longDecimals": [],
+  "small": [
+   {
+    "t": "Plantero",
+    "w": 89.2,
+    "h": 25.4,
+    "tag": "a"
+   },
+   {
+    "t": "Kokpit",
+    "w": 223,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ana Veri",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Depo",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Üretim",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satış & CRM",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Satın Alma",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kalite",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Muhasebe",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Finans",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "İhracat",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Makineler",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Planlar",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "OEE",
+    "w": 197,
+    "h": 28,
+    "tag": "a"
+   },
+   {
+    "t": "Ar-Ge",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Ayarlar",
+    "w": 223,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kenar çubuğunu daralt",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bakım",
+    "w": 37.5,
+    "h": 19.5,
+    "tag": "a"
+   },
+   {
+    "t": "İş Emirleri",
+    "w": 61.2,
+    "h": 19.5,
+    "tag": "span"
+   },
+   {
+    "t": "Ara veya git…⌘K",
+    "w": 256,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Bildirimler",
+    "w": 32,
+    "h": 32,
+    "tag": "a"
+   },
+   {
+    "t": "Tema",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "SY",
+    "w": 28,
+    "h": 28,
+    "tag": "button"
+   },
+   {
+    "t": "Arıza bildir",
+    "w": 119.8,
+    "h": 36,
+    "tag": "a"
+   },
+   {
+    "t": "İş emirlerinde ara",
+    "w": 256,
+    "h": 32,
+    "tag": "input"
+   },
+   {
+    "t": "Durum",
+    "w": 83.6,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Tür",
+    "w": 62.7,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Öncelik",
+    "w": 88.8,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Kanban görünümü",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "Liste görünümü",
+    "w": 32,
+    "h": 32,
+    "tag": "button"
+   },
+   {
+    "t": "",
+    "w": 24,
+    "h": 24,
+    "tag": "button"
+   }
+  ],
+  "cards": [],
+  "clippedTexts": [
+   {
+    "t": "Haftalık bıçak/hazne temizliği — Ön ezme",
+    "sw": 483,
+    "cw": 244
+   },
+   {
+    "t": "Haftalık stick nozul temizliği — Stick d",
+    "sw": 365,
+    "cw": 244
+   },
+   {
+    "t": "Günlük hassasiyet testi — Metal dedektör",
+    "sw": 319,
+    "cw": 244
+   }
+  ]
+ }
+}

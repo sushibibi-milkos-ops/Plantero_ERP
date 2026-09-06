@@ -1,0 +1,193 @@
+{
+ "gtip": {
+  "wrapScrollW": 1184,
+  "wrapClientW": 1152,
+  "overflowX": "auto",
+  "tableW": 1184,
+  "tableRight": 1448,
+  "containerRight": 1416,
+  "mappedRowText": "160020001Plantero COSTA RICA KAHVEMamul ÜrünlerMamul0901.21Kavrulmuş kahve (kafeinsiz olmayan)",
+  "gtipCellW": 408,
+  "trigW": 384,
+  "trigMinW": "144px",
+  "trigScrollW": 382,
+  "lastCellRight": 1448,
+  "clippedPx": 32
+ },
+ "belgelerMobCards": [
+  {
+   "title": "Kokpit",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Bildirimler",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Ana Veri",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Depo",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Üretim",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Satış & CRM",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Satın Alma",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Kalite",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Muhasebe",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Finans",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "İhracat",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Bakım",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Ar-Ge",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Ayarlar",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "",
+   "sub": "",
+   "mono": "",
+   "h": 0
+  },
+  {
+   "title": "Detay",
+   "sub": "",
+   "mono": "",
+   "h": 20
+  },
+  {
+   "title": "Proforma fatura",
+   "sub": "",
+   "mono": "PROFORMA",
+   "h": 60
+  },
+  {
+   "title": "Ticari fatura",
+   "sub": "",
+   "mono": "INVOICE",
+   "h": 60
+  },
+  {
+   "title": "Çeki listesi (packing list)",
+   "sub": "",
+   "mono": "PACKING_LIST",
+   "h": 60
+  },
+  {
+   "title": "Menşe şahadetnamesi",
+   "sub": "",
+   "mono": "ORIGIN",
+   "h": 60
+  },
+  {
+   "title": "Sağlık sertifikası",
+   "sub": "",
+   "mono": "HEALTH",
+   "h": 60
+  },
+  {
+   "title": "Konşimento (B/L)",
+   "sub": "",
+   "mono": "BL",
+   "h": 60
+  },
+  {
+   "title": "ETGB (mikro ihracat beyanı)",
+   "sub": "Gerekmiyor",
+   "mono": "ETGB",
+   "h": 60
+  },
+  {
+   "title": "Nakliye sigortası",
+   "sub": "",
+   "mono": "INSURANCE",
+   "h": 60
+  }
+ ]
+}
