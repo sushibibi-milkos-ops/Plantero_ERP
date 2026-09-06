@@ -170,18 +170,6 @@
      "fix": "Üç satır ikonu da (CalendarClock, CheckSquare, Factory) kaldırıldı — importlar temizlendi. LotBadge/StatusBadge zaten satırı görsel olarak işaretlediğinden ek bir süs ikonu ayırt edici bilgi taşımıyordu; bölüm başlıklarına da ikon eklenmedi (gerekli değildi, 'ikon çorbası' riskini artırmamak için).",
      "measureAfter": "Statik doğrulama: grep 'CalendarClock|CheckSquare|<Factory' apps/web/src/app/(app)/kokpit/page.tsx → yalnızca yorum satırlarında eşleşme, kod içinde hiç kullanım yok. pnpm shot masaüstü+mobil ekran görüntüsünde satır başı ikon yok (LotBadge/StatusBadge/başlık metni kaldı).",
      "closedRound": 13
-    }
-   ],
-   "open": [
-    {
-     "id": "shell-button-active-state-01",
-     "criterion": 8,
-     "severity": "P2",
-     "openedRound": 3,
-     "text": "[kokpit Tur 3 tespiti — ortak bileşen] Uygulamada hiçbir etkileşimli yüzeyde `active:` (basılı) durumu yok: Button varyantlarının hepsinde hover + focus-visible var, `active:` yok; kokpit RowLink de aynı. Puan kartı kriter 8 ölçütü \"buton active scale(0.97)\" karşılanmadığı için kokpitin BEŞ rol kesitinde de kriter 8 en fazla 4 alabiliyor. Tek yerde düzeltilirse beş rota birden +1 alır.",
-     "measure": "grep -n \"active:\" apps/web/src/components/ui/button.tsx → 0 eşleşme; apps/web/src/modules/kokpit/components/shared.tsx (RowLink) → 0 eşleşme. Button taban sınıfı: transition-[color,background-color,border-color,box-shadow,transform] duration-150 (transform zaten geçiş listesinde ama hiçbir kural transformu değiştirmiyor).",
-     "target": "Button taban sınıfına `active:scale-[0.97]` (ya da eşdeğer basılı geri bildirim) ve satır/kart bağlantılarına basılı arka plan (`active:bg-muted/60`) eklensin; ölçüt: pointerdown sırasında butonun transform matrisi ya da arka plan rengi değişsin, hover/focus davranışı bozulmasın.",
-     "file": "apps/web/src/components/ui/button.tsx:13, apps/web/src/modules/kokpit/components/shared.tsx:44"
     },
     {
      "id": "shell-kpicard-zero-tone-01",
@@ -191,7 +179,43 @@
      "text": "[kokpit Tur 3 tespiti — ortak bileşen] Soluk-sıfır kuralı yalnızca kokpit StatStripinde uygulanıyor (shared.tsx:151 `zero && text-muted-foreground/70`); KpiCard ve QtyCell sıfırı tam kontrastla basıyor. Tek ekranda aynı \"0\" iki farklı tonda görünüyor: admin \"Kritik stok kalemi 0\" (19px tam kontrast) vs SKT şeridi \"0\" (15px soluk); muhasebe \"KDV ödenecek ₺0\" vs aging şeridi \"₺0\"; üretim \"Geciken iş emri 0\" + \"Fire oranı %0\" + iki satırda \"0 ADET\".",
      "measure": "1440x900: KpiCard değer düğümünde sıfır için özel ton yok (kpi-card.tsx:152/169 — `text-[19px]`/`text-[22px] font-semibold tabular-nums`, koşullu renk yok); StatStrip aynı değeri `text-muted-foreground/70` ile basıyor. Etkilenen sıfır sayısı: admin 1, depo 1, muhasebe 1, üretim 4.",
      "target": "Sıfır değerler tüm sayı bileşenlerinde (KpiCard, QtyCell, MoneyCell, StatStrip) aynı soluk tonu alsın — ölçüt: aynı ekrandaki iki sıfır değerin computed color değeri birebir aynı.",
-     "file": "apps/web/src/components/kpi-card.tsx:152,169, apps/web/src/components/qty-cell.tsx, apps/web/src/modules/kokpit/components/shared.tsx:151"
+     "file": "apps/web/src/components/kpi-card.tsx:152,169, apps/web/src/components/qty-cell.tsx, apps/web/src/modules/kokpit/components/shared.tsx:151",
+     "measureAfter": "1440x900 /kokpit (5 rol): KpiCard sıfır değerleri artık muted — 'Kritik stok kalemi 0', 'Geciken iş emri 0', 'Fire oranı (7g) %0', 'KDV ödenecek ₺0' → oklch(0.552 0.016 285.9); dolu değerler oklch(0.21 0.006 285.9). Kök neden kpi-card.tsx'te `isZero → text-muted-foreground` ile kapatılmış.",
+     "closedRound": 4,
+     "verifiedBy": "ölçüm (number-flow-react computed color, scripts/probe p3)"
+    }
+   ],
+   "open": [
+    {
+     "id": "shell-button-active-state-01",
+     "criterion": 8,
+     "severity": "P1",
+     "openedRound": 3,
+     "text": "[kokpit Tur 3 tespiti — ortak bileşen] Uygulamada hiçbir etkileşimli yüzeyde `active:` (basılı) durumu yok: Button varyantlarının hepsinde hover + focus-visible var, `active:` yok; kokpit RowLink de aynı. Puan kartı kriter 8 ölçütü \"buton active scale(0.97)\" karşılanmadığı için kokpitin BEŞ rol kesitinde de kriter 8 en fazla 4 alabiliyor. Tek yerde düzeltilirse beş rota birden +1 alır.",
+     "measure": "1440x900 /kokpit: `active:` sınıfı taşıyan etkileşimli yüzey 0/38 (admin), 0/37 (depo), 0/28 (muhasebe), 0/21 (satış), 0/20 (üretim). Uygulamanın KENDİSİNDE bu dil zaten var: operator-work-order.tsx:187, operator-pin-login.tsx:54,110, work-order-queue.tsx:31, project-list.tsx:150, board-card.tsx:37, data-table/mobile-cards.tsx:223 → active:scale-[0.97…0.99] / active:bg-accent/50. Eksik olan yalnızca ortak Button ve kokpit RowLink.",
+     "target": "Basılı durum her etkileşimli yüzeyde: ui/button.tsx varyantına `active:scale-[0.97]` (transition-transform duration-150 zaten var), kokpit RowLink'e `active:bg-muted/60`. Ölçüt: `active:` taşıyan yüzey oranı = 1.0 (buton + satır bağlantıları).",
+     "file": "apps/web/src/components/ui/button.tsx + apps/web/src/modules/kokpit/components/shared.tsx (RowLink)",
+     "severityNote": "Tur 4'te P2→P1: bu bulgu kokpitin BEŞ rotasında da kriter 8'i 4'te tutuyor ve /kokpit (üretim şefi) rotasının toplamını referansın (Linear 57) altında bırakan dört kriterden biri (DESIGN-SCORECARD §7 yakınsama zorunluluğu)."
+    },
+    {
+     "openedRound": 4,
+     "id": "shell-qtycell-zero-tone-01",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "[kokpit Tur 4 tespiti — ortak bileşen] Soluk-sıfır kuralı QtyCell'de YOK: MoneyCell (getMoneyTone → text-muted-foreground/70), KpiCard (isZero → text-muted-foreground) ve kokpit StatStrip sıfırı soluk basarken QtyCell sıfırı dolu değerle BİREBİR aynı renkte basıyor. /kokpit (üretim şefi) 'Son iş emirleri' listesinde 8 satırın 2'sinde '0 ADET' tam kontrastta ve '196 ADET' kadar göze çarpıyor — henüz hiç üretilmemiş iş emri, bitmiş iş emriyle aynı görsel ağırlıkta. Aynı ekranda iki sıfır dili.",
+     "measure": "1440x900 /kokpit (üretim şefi): '0 ADET' × 2 → color oklch(0.21 0.006 285.9); '196 ADET' → oklch(0.21 0.006 285.9) (aynı). Karşılaştırma: aynı sayfa ailesinde MoneyCell '€0,00' → oklab(0.552 0.00438 -0.01539 / 0.7), KpiCard '0' → oklch(0.552 0.016 285.9).",
+     "target": "QtyCell value=0 iken sayı `text-muted-foreground/70` (MoneyCell ile BİREBİR aynı ton formülü); ekranda tam kontrastlı sıfır miktar sayısı 0. Birim eki (ADET/KG) zaten muted, değişmez.",
+     "file": "apps/web/src/components/qty-cell.tsx (formatQty çıktısına ton uygulanmıyor)"
+    },
+    {
+     "openedRound": 4,
+     "id": "shell-emptystate-compact-height-01",
+     "criterion": 3,
+     "severity": "P2",
+     "text": "[kokpit Tur 3+4 tespiti — ortak bileşen] `EmptyState compact` sabit `py-10` (40px üst + 40px alt) taşıyor; kart içi boş durum 257-277px yer kaplıyor ve kokpitin katlama üstü satır sayısını düşürüyor: /kokpit (admin) 'Kritik stok' 277px → foldRows 11, /kokpit (muhasebe) 'Bugünün tahsilatları' 257px → foldRows 12, /kokpit (üretim şefi) 'Fire kırılımı' 257px → foldRows 13 (hedef ≥15). Aynı bileşen üç modülün kriter 3 puanını aynı kök nedenle 4'te tutuyor.",
+     "measure": "1440x900: EmptyState compact yüksekliği 257-277px (ikon 36 + başlık 20 + açıklama ≤2 satır + eylem 36 + 2×40px py-10). foldRows: admin 11, muhasebe 12, üretim 13.",
+     "target": "EmptyState compact yüksekliği ≤160px (py-10 → py-6, ikon size-9 → size-8); foldRows ≥15.",
+     "file": "apps/web/src/components/empty-state.tsx:23 (compact ? 'gap-2 px-4 py-10' : …)"
     }
    ]
   },
