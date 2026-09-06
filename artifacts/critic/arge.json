@@ -86,16 +86,6 @@
    },
    "open": [
     {
-     "id": "arge-projeler-07",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "Liste/kart görünüm seçici butonları 390px'te 32×32px — tur 2'de eklendi, dokunma hedefi eşiğinin altında. Aynı depoda kabul edilen desen `size-11 md:size-8` (bkz. board-column.tsx sürükle tutamağı).",
-     "measure": "390px measure çıktısı touchTargetsBelow44: 'Liste görünümü' 32×32, 'Kart görünümü' 32×32 (2 hedef)",
-     "target": "390px'te her iki buton ≥44×44 (`size-11 md:size-8`, ikon 16px kalır); measure touchTargetsBelow44 listesinde görünüm seçici KALMASIN",
-     "file": "apps/web/src/modules/rnd/components/project-list.tsx",
-     "openedRound": 2
-    },
-    {
      "id": "arge-projeler-08",
      "criterion": 2,
      "severity": "P2",
@@ -190,6 +180,19 @@
      "closedRound": 2,
      "verifiedBy": "ölçüm",
      "verifiedByCriticRound": 2
+    },
+    {
+     "id": "arge-projeler-07",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "Liste/kart görünüm seçici butonları 390px'te 32×32px — tur 2'de eklendi, dokunma hedefi eşiğinin altında. Aynı depoda kabul edilen desen `size-11 md:size-8` (bkz. board-column.tsx sürükle tutamağı).",
+     "measure": "390px measure çıktısı touchTargetsBelow44: 'Liste görünümü' 32×32, 'Kart görünümü' 32×32 (2 hedef)",
+     "target": "390px'te her iki buton ≥44×44 (`size-11 md:size-8`, ikon 16px kalır); measure touchTargetsBelow44 listesinde görünüm seçici KALMASIN",
+     "file": "apps/web/src/modules/rnd/components/project-list.tsx",
+     "openedRound": 2,
+     "measureAfter": "390px: 'Liste görünümü'/'Kart görünümü' size-11 md:size-8 ile 44×44 (mobil) — pnpm measure /arge/projeler --viewport 390x844 çıktısında touchTargetsBelow44 listesinde görünüm seçici artık YOK (yalnızca shell breadcrumb'ı kaldı, bulguyla ilgisiz).",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
     }
    ]
   },
@@ -295,68 +298,7 @@
     "distinctColors": 18,
     "mininavCount": 6
    },
-   "open": [
-    {
-     "id": "arge-board-09",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te board kapsayıcısı viewport'u taşıyor: `h-[calc(100dvh-19rem)] min-h-[520px]` mobil başlık yığınını (316px) ve sabit alt sekme çubuğunu (64px) hesaba katmıyor → kapsayıcı alt kenarı 856px (viewport 844), her kolonun '+ Kart ekle' butonu (top 799) alt sekme çubuğunun (top 787) ALTINDA kalıyor ve ilk boyamada görünmüyor; üstelik sayfa 140px ek dikey kaydırma kazanıyor (iç yatay + iç dikey + sayfa = 3 kaydırma ekseni).",
-     "measure": "390×844: scroller top 316 / h 540 / bottom 856; bottomNavTop 787; 'Kart ekle' top 799 → addBtnHiddenUnderNav=true; document.scrollHeight 984",
-     "target": "390×844'te scroller alt kenarı ≤787 (alt sekme çubuğunun üstü) ve document.scrollHeight ≤ 844: yükseklik sabit `19rem` yerine ölçülen başlık yüksekliğinden türetilsin (ör. kapsayıcıya `flex-1 min-h-0` + sayfa `h-dvh` düzeni) ve mobilde `min-h-[520px]` kaldırılsın",
-     "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-board-10",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te 10 etkileşimli hedef 44px altında: her kolondaki 'Kart ekle' 230×36 (6 adet), 'Kolon ekle' 256×40, proje sekmeleri 'Pano' 31×36 ve 'Deneme Reçeteleri' 117×36. Tur 1'de aynı kriter için sürükle tutamağı `size-11 md:size-6` ile düzeltildi; aynı desen bu kontrollere uygulanmadı.",
-     "measure": "390px measure çıktısı touchTargetsBelow44 = 10 (Kart ekle ×6 h36, Kolon ekle h40, 2 sekme h36)",
-     "target": "390px'te tümü ≥44px yükseklik (`h-11 md:h-9`); measure touchTargetsBelow44 = 0",
-     "file": "apps/web/src/modules/rnd/components/board-column.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-board-11",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "'+ Kart ekle' kolonun en dibine sabitlendiği için son karttan 278–450px aşağıda duruyor; aradaki 498px'lik gövdenin büyük kısmı boş. Trello/Linear'da ekleme affordance'ı son kartın hemen altındadır — şu haliyle kolon başına ~400px ölü alan ve kopuk bir eylem.",
-     "measure": "1440×900: kolon gövdesi 498px, kart yığını 48/64/68/113/212px, son kart ile buton arası 278/386/430/434/450px",
-     "target": "Buton kart yığınının hemen altında (son kart ile arası ≤12px), kolon gövdesi kalan alanı bırakma bölgesi olarak korusun",
-     "file": "apps/web/src/modules/rnd/components/board-column.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-board-12",
-     "criterion": 3,
-     "severity": "P2",
-     "text": "390px'te ilk ekranda HİÇ kart görünmüyor: başlık yığını 316px, ardından gelen ilk kolon ('Fikir') boş ve 540px'lik alanı tamamen kaplıyor. Mini-nav var ama varsayılan giriş noktası boş kolon.",
-     "measure": "390×844: headerToBoard=316px, firstColumnCards=0, kolon genişliği 256px",
-     "target": "390px'te ilk ekranda ≥1 kart görünsün (mobilde kart taşıyan ilk kolona konumlan ya da başlık yığınını ≤220px'e indir)",
-     "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-board-13",
-     "criterion": 7,
-     "severity": "P2",
-     "text": "Boş kolonun 498px'lik bırakma alanı tamamen boş — ne 'Kart yok' metni ne de bir bırakma ipucu var; sürükle-bırak bu ekranın birincil etkileşimi olduğu halde hedef alan görsel olarak sessiz.",
-     "measure": "'Fikir' kolonu: bodyH 498px, kart 0, içeride metin/ikon düğümü yok",
-     "target": "Boş kolon gövdesinde 11px muted 'Kart yok — sürükleyip bırakın' metni + kesikli bırakma çerçevesi",
-     "file": "apps/web/src/modules/rnd/components/board-column.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-board-14",
-     "criterion": 5,
-     "severity": "P2",
-     "text": "Kolon mini-nav'ı her kolonun adını ve kart sayısını tekrar ediyor; aynı ad+sayı 12px aşağıdaki kolon başlığında zaten var (6 kolon × 2 kez). Atlama affordance'ı gerekli ama bilgi ikilemesi Linear'ın 'tek yerde söyle' ilkesine aykırı.",
-     "measure": "mininavCount=6, her biri 'Ad N'; kolon başlıkları da 'Ad N' — 1440px'te 12 aynı etiket",
-     "target": "Mini-nav yalnız kolon adı (sayacı kaldır) ya da yalnız taşan/görünmeyen kolonları göstersin; ekranda aynı ad+sayı çifti 1 kez",
-     "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
-     "openedRound": 2
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "arge-board-01",
@@ -469,6 +411,84 @@
      "closedRound": 2,
      "verifiedBy": "ölçüm",
      "verifiedByCriticRound": 2
+    },
+    {
+     "id": "arge-board-09",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te board kapsayıcısı viewport'u taşıyor: `h-[calc(100dvh-19rem)] min-h-[520px]` mobil başlık yığınını (316px) ve sabit alt sekme çubuğunu (64px) hesaba katmıyor → kapsayıcı alt kenarı 856px (viewport 844), her kolonun '+ Kart ekle' butonu (top 799) alt sekme çubuğunun (top 787) ALTINDA kalıyor ve ilk boyamada görünmüyor; üstelik sayfa 140px ek dikey kaydırma kazanıyor (iç yatay + iç dikey + sayfa = 3 kaydırma ekseni).",
+     "measure": "390×844: scroller top 316 / h 540 / bottom 856; bottomNavTop 787; 'Kart ekle' top 799 → addBtnHiddenUnderNav=true; document.scrollHeight 984",
+     "target": "390×844'te scroller alt kenarı ≤787 (alt sekme çubuğunun üstü) ve document.scrollHeight ≤ 844: yükseklik sabit `19rem` yerine ölçülen başlık yüksekliğinden türetilsin (ör. kapsayıcıya `flex-1 min-h-0` + sayfa `h-dvh` düzeni) ve mobilde `min-h-[520px]` kaldırılsın",
+     "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
+     "openedRound": 2,
+     "measureAfter": "390×844 (proje fe7c28be, Formülasyon kolonuna otomatik kaydırılmış hâlde) ölçüldü: scrollerTop 324 / scrollerH 388 / scrollerBottom 712 (bottomNavTop 787'nin ALTINDA), addBtnTop 393 (addBtnHiddenUnderNav=false), document.scrollHeight 844 = viewportH 844 (sayfa dikey kaydırması YOK). Kök neden: reserve `19rem`→ mobilde `28.5rem` (üst yığın + kabuğun `pb-32`si), `min-h-[520px]` yalnızca `md:` altında; masaüstü `md:h-[calc(100dvh-19rem)] md:min-h-[520px]` ile değişmedi (columnHeights_1440 hâlâ 588×6).",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-board-10",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te 10 etkileşimli hedef 44px altında: her kolondaki 'Kart ekle' 230×36 (6 adet), 'Kolon ekle' 256×40, proje sekmeleri 'Pano' 31×36 ve 'Deneme Reçeteleri' 117×36. Tur 1'de aynı kriter için sürükle tutamağı `size-11 md:size-6` ile düzeltildi; aynı desen bu kontrollere uygulanmadı.",
+     "measure": "390px measure çıktısı touchTargetsBelow44 = 10 (Kart ekle ×6 h36, Kolon ekle h40, 2 sekme h36)",
+     "target": "390px'te tümü ≥44px yükseklik (`h-11 md:h-9`); measure touchTargetsBelow44 = 0",
+     "file": "apps/web/src/modules/rnd/components/board-column.tsx",
+     "openedRound": 2,
+     "measureAfter": "390px: 'Kart ekle' ×6 → 44px (h-11 md:h-9), 'Kolon ekle' → 44px (h-11 md:h-10), sekme 'Pano' ve 'Deneme Reçeteleri' → 44px (h-11 md:h-9). pnpm measure --viewport 390x844 çıktısında touchTargetsBelow44 = yalnızca shell breadcrumb metni (bulgu kapsamı dışı); board'a özgü 10 hedefin tamamı ≥44px.",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-board-11",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "'+ Kart ekle' kolonun en dibine sabitlendiği için son karttan 278–450px aşağıda duruyor; aradaki 498px'lik gövdenin büyük kısmı boş. Trello/Linear'da ekleme affordance'ı son kartın hemen altındadır — şu haliyle kolon başına ~400px ölü alan ve kopuk bir eylem.",
+     "measure": "1440×900: kolon gövdesi 498px, kart yığını 48/64/68/113/212px, son kart ile buton arası 278/386/430/434/450px",
+     "target": "Buton kart yığınının hemen altında (son kart ile arası ≤12px), kolon gövdesi kalan alanı bırakma bölgesi olarak korusun",
+     "file": "apps/web/src/modules/rnd/components/board-column.tsx",
+     "openedRound": 2,
+     "measureAfter": "1440×900: kolon gövde yüksekliği değişmedi (588×6) ama son kart ile 'Kart ekle' arası artık 8px (önceki 278–450px) — 'Kart ekle' artık kart yığınının hemen ardında (footer'dan gövdenin akışına taşındı), kalan alan flex-1 dolgu olarak bırakma bölgesi. 390px'te de aynı desen (gapLastCardToAddBtn=8).",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-board-12",
+     "criterion": 3,
+     "severity": "P2",
+     "text": "390px'te ilk ekranda HİÇ kart görünmüyor: başlık yığını 316px, ardından gelen ilk kolon ('Fikir') boş ve 540px'lik alanı tamamen kaplıyor. Mini-nav var ama varsayılan giriş noktası boş kolon.",
+     "measure": "390×844: headerToBoard=316px, firstColumnCards=0, kolon genişliği 256px",
+     "target": "390px'te ilk ekranda ≥1 kart görünsün (mobilde kart taşıyan ilk kolona konumlan ya da başlık yığınını ≤220px'e indir)",
+     "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
+     "openedRound": 2,
+     "measureAfter": "390×844, proje fe7c28be (ilk kolon 'Fikir' 0 kart): mount'ta kart taşıyan ilk kolona ('Formülasyon', 2 kart) otomatik yatay kaydırma eklendi — ilk boyamada 2 kart tam görünür (screenshot + visibleCardsInViewport≥1 doğrulandı), 'Fikir' mini-nav pilinden hâlâ erişilebilir.",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-board-13",
+     "criterion": 7,
+     "severity": "P2",
+     "text": "Boş kolonun 498px'lik bırakma alanı tamamen boş — ne 'Kart yok' metni ne de bir bırakma ipucu var; sürükle-bırak bu ekranın birincil etkileşimi olduğu halde hedef alan görsel olarak sessiz.",
+     "measure": "'Fikir' kolonu: bodyH 498px, kart 0, içeride metin/ikon düğümü yok",
+     "target": "Boş kolon gövdesinde 11px muted 'Kart yok — sürükleyip bırakın' metni + kesikli bırakma çerçevesi",
+     "file": "apps/web/src/modules/rnd/components/board-column.tsx",
+     "openedRound": 2,
+     "measureAfter": "'Fikir' (0 kart) kolonunun gövdesi artık 'Kart yok — sürükleyip bırakın' (11px muted, kesikli çerçeve) metni taşıyor — DOM metni doğrulandı (Playwright textContent probe).",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-board-14",
+     "criterion": 5,
+     "severity": "P2",
+     "text": "Kolon mini-nav'ı her kolonun adını ve kart sayısını tekrar ediyor; aynı ad+sayı 12px aşağıdaki kolon başlığında zaten var (6 kolon × 2 kez). Atlama affordance'ı gerekli ama bilgi ikilemesi Linear'ın 'tek yerde söyle' ilkesine aykırı.",
+     "measure": "mininavCount=6, her biri 'Ad N'; kolon başlıkları da 'Ad N' — 1440px'te 12 aynı etiket",
+     "target": "Mini-nav yalnız kolon adı (sayacı kaldır) ya da yalnız taşan/görünmeyen kolonları göstersin; ekranda aynı ad+sayı çifti 1 kez",
+     "file": "apps/web/src/modules/rnd/components/kanban-board.tsx",
+     "openedRound": 2,
+     "measureAfter": "Mini-nav pilleri artık yalnızca kolon adı taşıyor (sayaç kaldırıldı) — kart sayısı yalnız kolon başlığında bir kez görünüyor; screenshot ile doğrulandı (Fikir/Formülasyon/Pilot Üretim/Duyusal Test/Raf Ömrü/Onay, sayaçsız).",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
     }
    ]
   },
@@ -565,68 +585,7 @@
     },
     "distinctColors": 21
    },
-   "open": [
-    {
-     "id": "arge-recete-09",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te maliyet simülasyonunun TÜM kontrolleri 32px yüksekliğinde: `inputClassName=\"h-8 md:h-8\"` (Parti miktarı, Verim %, Genel gider, satır Miktar/Fire %/Birim maliyet), `SelectTrigger size=\"sm\"`, Combobox `h-8 md:h-8`, versiyon listesi butonları ve 'Yeni versiyon'. Tur 1'de satır yüksekliğini 49→39px indirmek için h-8'e geçildi ama mobil kırılım eklenmedi; deponun kendi deseni `size-11 md:size-6`.",
-     "measure": "390px: benzersiz kontrol yüksekliği kümesi = [32]; salt-okunur görünümde 16, düzenlenebilir v1'de 40 kontrol <44px",
-     "target": "Tüm form/tablo kontrolleri `h-11 md:h-8` (390px'te ≥44px, masaüstünde 32px kalır → satır 39px korunur); 390px'te controlsBelow44 = 0",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-recete-10",
-     "criterion": 8,
-     "severity": "P1",
-     "text": "Tur 1'in 'çerçeve çorbası' düzeltmesi affordance'ı yalnızca hover'a bağladı: tablo kontrolleri dinlenmede `border-transparent bg-transparent`, görünürlük yalnız `hover:border-input`. Tailwind v4'te hover varyantı `@media (hover:hover)` ile korunduğu için dokunmatikte (390px, `matchMedia('(hover:hover)').matches === false`) HİÇBİR kontrolün kenarlığı/dolgusu görünmüyor — 6 satır × 4 kontrol düzenlenebilir olduğu belli olmuyor.",
-     "measure": "390px v1 (düzenlenebilir): tbody kontrollerinin hepsi border-top '1px rgba(0, 0, 0, 0)', background 'rgba(0, 0, 0, 0)', box-shadow saydam; hoverMedia=false",
-     "target": "Dinlenme affordance'ı hover'dan bağımsız olsun: `@media (hover: none)` altında kontrollere görünür taban (ör. `border-input/50` ya da `bg-muted/40`); 390px'te tbody kontrollerinin görünür kenarlık/dolgu sayısı = kontrol sayısı",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-recete-11",
-     "criterion": 4,
-     "severity": "P1",
-     "text": "'v1'e göre fark: -₺0,63' KIRMIZI basılıyor. Çağrı yeri sarmalayıcıya `text-success` veriyor (maliyetin düşmesi iyi haber) ama içteki `MoneyCell signed` kendi `text-destructive` sınıfını uyguluyor ve kazanıyor. Aynı sayı üzerinde çelişen iki renk kuralı var; ekranda anlam TERS okunuyor — Ar-Ge'nin hedefi maliyeti düşürmekken düşüş 'hata' rengiyle gösteriliyor.",
-     "measure": "Sarmalayıcı span color = oklch(0.6 0.16 152) (success); render edilen sayının color = oklch(0.577 0.245 27.3) (destructive)",
-     "target": "Negatif fark success, pozitif fark warning renginde RENDER EDİLSİN: `signed` yerine işaret + renk çağrı yerinde belirlensin (MoneyCell'e ton prop'u ya da düz `formatMoney`); render edilen sayının computed color'ı sarmalayıcının tonuyla aynı olsun",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-recete-12",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "Miktar sütununda BİRİM hiç gösterilmiyor. Satırın `uomId`'si formda tutuluyor ama hiçbir yerde render edilmiyor: 'Kavanoz 500ml → 1' (ADET) ile 'Yulaf → 0,2' (KG) ekranda aynı görünüyor. Gıda üretiminde reçete satırı birimsiz okunamaz; Stripe/Linear çıtası 'birim tutarlı' diyor.",
-     "measure": "Miktar sütunu değerleri ['0,2','0,015','0,0015','1','1','1']; tabloda uom taşıyan hiçbir düğüm yok (qtyUnitShown=false)",
-     "target": "Her satırda miktarın yanında ürünün birim kodu (11px muted, ör. '0,2 KG') ya da ayrı bir 'Birim' sütunu; birimsiz miktar hücresi 0",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-recete-13",
-     "criterion": 6,
-     "severity": "P2",
-     "text": "Miktar sütunu sağa yaslı ve tabular-nums ama ondalık hane sayısı satırdan satıra değişiyor (0,2 / 0,015 / 0,0015 / 1) → basamaklar hizalanmıyor, en küçük değer (0,0015) en geniş görünüyor. Tur 1'de 'gereksiz sıfırları kırp' hedefi bu yan etkiyi getirdi.",
-     "measure": "Miktar hücreleri: '0,2','0,015','0,0015','1','1','1' — ondalık ayırıcı konumu 4 farklı x'te",
-     "target": "Ondalık ayırıcıya hizala (ör. `text-align: right` yerine tabular hizalı sabit ondalık ya da ondalık hizalama) — sütundaki tüm ondalık ayırıcılar aynı x'te",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
-     "openedRound": 2
-    },
-    {
-     "id": "arge-recete-14",
-     "criterion": 3,
-     "severity": "P2",
-     "text": "Devredilmiş/salt-okunur versiyonda (sayfanın varsayılan açılışı) satır yüksekliği 43px — ürün adı + SKU iki satıra yığıldığı için. Düzenlenebilir görünümde 39px; aynı tablo iki farklı ritimde.",
-     "measure": "rowHeights salt-okunur v2 = [43×6]; düzenlenebilir v1 = [39×6]; hedef ≤40",
-     "target": "Salt-okunur satır da ≤40px (SKU'yu ada aynı satırda muted olarak ekle) — iki görünümde satır yüksekliği farkı ≤2px",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
-     "openedRound": 2
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "arge-recete-01",
@@ -739,6 +698,84 @@
      "closedRound": 2,
      "verifiedBy": "ölçüm",
      "verifiedByCriticRound": 2
+    },
+    {
+     "id": "arge-recete-09",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te maliyet simülasyonunun TÜM kontrolleri 32px yüksekliğinde: `inputClassName=\"h-8 md:h-8\"` (Parti miktarı, Verim %, Genel gider, satır Miktar/Fire %/Birim maliyet), `SelectTrigger size=\"sm\"`, Combobox `h-8 md:h-8`, versiyon listesi butonları ve 'Yeni versiyon'. Tur 1'de satır yüksekliğini 49→39px indirmek için h-8'e geçildi ama mobil kırılım eklenmedi; deponun kendi deseni `size-11 md:size-6`.",
+     "measure": "390px: benzersiz kontrol yüksekliği kümesi = [32]; salt-okunur görünümde 16, düzenlenebilir v1'de 40 kontrol <44px",
+     "target": "Tüm form/tablo kontrolleri `h-11 md:h-8` (390px'te ≥44px, masaüstünde 32px kalır → satır 39px korunur); 390px'te controlsBelow44 = 0",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+     "openedRound": 2,
+     "measureAfter": "390px, proje fe7c28be v1 (düzenlenebilir): tbody örneklem 8 kontrolün (Ürün combobox + Miktar/Fire%/Birim maliyet input'ları) tamamı h=44 (h-11 md:h-8); Parti miktarı/Verim %/Genel gider/Birim select'i de h-11 md:h-8 ve data-[size=sm]:h-11 md:data-[size=sm]:h-8. pnpm measure --viewport 390x844 çıktısında cost-simulator'a ait hiçbir kontrol touchTargetsBelow44'te yok (yalnızca shell breadcrumb metni kaldı).",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-10",
+     "criterion": 8,
+     "severity": "P1",
+     "text": "Tur 1'in 'çerçeve çorbası' düzeltmesi affordance'ı yalnızca hover'a bağladı: tablo kontrolleri dinlenmede `border-transparent bg-transparent`, görünürlük yalnız `hover:border-input`. Tailwind v4'te hover varyantı `@media (hover:hover)` ile korunduğu için dokunmatikte (390px, `matchMedia('(hover:hover)').matches === false`) HİÇBİR kontrolün kenarlığı/dolgusu görünmüyor — 6 satır × 4 kontrol düzenlenebilir olduğu belli olmuyor.",
+     "measure": "390px v1 (düzenlenebilir): tbody kontrollerinin hepsi border-top '1px rgba(0, 0, 0, 0)', background 'rgba(0, 0, 0, 0)', box-shadow saydam; hoverMedia=false",
+     "target": "Dinlenme affordance'ı hover'dan bağımsız olsun: `@media (hover: none)` altında kontrollere görünür taban (ör. `border-input/50` ya da `bg-muted/40`); 390px'te tbody kontrollerinin görünür kenarlık/dolgu sayısı = kontrol sayısı",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+     "openedRound": 2,
+     "measureAfter": "390px emülasyonu (hasTouch=true) altında matchMedia('(hover: hover)').matches=false doğrulandı; tbody örneklem 8 kontrolün TAMAMI dinlenmede görünür kenarlık taşıyor (computed borderTopColor ≠ saydam, ör. oklab(0.9 … / 0.5)) — `[@media(hover:none)]:border-input/50` ile taban affordance hover'dan bağımsız.",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-11",
+     "criterion": 4,
+     "severity": "P1",
+     "text": "'v1'e göre fark: -₺0,63' KIRMIZI basılıyor. Çağrı yeri sarmalayıcıya `text-success` veriyor (maliyetin düşmesi iyi haber) ama içteki `MoneyCell signed` kendi `text-destructive` sınıfını uyguluyor ve kazanıyor. Aynı sayı üzerinde çelişen iki renk kuralı var; ekranda anlam TERS okunuyor — Ar-Ge'nin hedefi maliyeti düşürmekken düşüş 'hata' rengiyle gösteriliyor.",
+     "measure": "Sarmalayıcı span color = oklch(0.6 0.16 152) (success); render edilen sayının color = oklch(0.577 0.245 27.3) (destructive)",
+     "target": "Negatif fark success, pozitif fark warning renginde RENDER EDİLSİN: `signed` yerine işaret + renk çağrı yerinde belirlensin (MoneyCell'e ton prop'u ya da düz `formatMoney`); render edilen sayının computed color'ı sarmalayıcının tonuyla aynı olsun",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+     "openedRound": 2,
+     "measureAfter": "v2 (Oat Barista v2) sayfasında 'v1'e göre fark: −₺0,63' — DOM probe: sarmalayıcı span computed color = oklch(0.6 0.16 152) (success), içteki MoneyCell sayısının computed color'ı da oklch(0.6 0.16 152) — AYNI. `signed` kaldırıldı, MoneyCell'e abs() değer + `text-inherit` veriliyor, işaret/ton çağrı yerinde belirleniyor.",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-12",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "Miktar sütununda BİRİM hiç gösterilmiyor. Satırın `uomId`'si formda tutuluyor ama hiçbir yerde render edilmiyor: 'Kavanoz 500ml → 1' (ADET) ile 'Yulaf → 0,2' (KG) ekranda aynı görünüyor. Gıda üretiminde reçete satırı birimsiz okunamaz; Stripe/Linear çıtası 'birim tutarlı' diyor.",
+     "measure": "Miktar sütunu değerleri ['0,2','0,015','0,0015','1','1','1']; tabloda uom taşıyan hiçbir düğüm yok (qtyUnitShown=false)",
+     "target": "Her satırda miktarın yanında ürünün birim kodu (11px muted, ör. '0,2 KG') ya da ayrı bir 'Birim' sütunu; birimsiz miktar hücresi 0",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+     "openedRound": 2,
+     "measureAfter": "Miktar sütunu DOM probe: 6 satırın tamamında birim kodu span'ı dolu — ['KG','KG','KG','ADET','ADET','ADET'] — birimsiz miktar hücresi sayısı 0.",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-13",
+     "criterion": 6,
+     "severity": "P2",
+     "text": "Miktar sütunu sağa yaslı ve tabular-nums ama ondalık hane sayısı satırdan satıra değişiyor (0,2 / 0,015 / 0,0015 / 1) → basamaklar hizalanmıyor, en küçük değer (0,0015) en geniş görünüyor. Tur 1'de 'gereksiz sıfırları kırp' hedefi bu yan etkiyi getirdi.",
+     "measure": "Miktar hücreleri: '0,2','0,015','0,0015','1','1','1' — ondalık ayırıcı konumu 4 farklı x'te",
+     "target": "Ondalık ayırıcıya hizala (ör. `text-align: right` yerine tabular hizalı sabit ondalık ya da ondalık hizalama) — sütundaki tüm ondalık ayırıcılar aynı x'te",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+     "openedRound": 2,
+     "measureAfter": "Miktar input değerleri (value probe): ['0,2000','0,0150','0,0015','1,0000','1,0000','1,0000'] — minDigits=maxDigits=4 ile tüm satırlar aynı basamak sayısında, ondalık ayırıcı sağa hizalı sütunda aynı x'te.",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-14",
+     "criterion": 3,
+     "severity": "P2",
+     "text": "Devredilmiş/salt-okunur versiyonda (sayfanın varsayılan açılışı) satır yüksekliği 43px — ürün adı + SKU iki satıra yığıldığı için. Düzenlenebilir görünümde 39px; aynı tablo iki farklı ritimde.",
+     "measure": "rowHeights salt-okunur v2 = [43×6]; düzenlenebilir v1 = [39×6]; hedef ≤40",
+     "target": "Salt-okunur satır da ≤40px (SKU'yu ada aynı satırda muted olarak ekle) — iki görünümde satır yüksekliği farkı ≤2px",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx",
+     "openedRound": 2,
+     "measureAfter": "Satır yükseklikleri: salt-okunur (v2) [39,39,39,39,39,38.5], düzenlenebilir (v1) [39,39,39,39,39,38.5] — aynı, fark 0px (hedef ≤2px). Ürün adı+SKU tek satıra alındı (flex items-baseline gap-1.5).",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
     }
    ]
   },
@@ -806,16 +843,6 @@
      "target": "Başlık ile filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1
-    },
-    {
-     "id": "arge-receteler-03",
-     "criterion": 7,
-     "severity": "P2",
-     "text": "DataTable boş durumu ('Henüz deneme reçetesi yok') yalnız başlık+açıklama; eylem yok — kullanıcı buradan reçete oluşturamıyor, /arge/projeler'de EmptyState eylemi varken tutarsız.",
-     "measure": "all-recipes-table.tsx: emptyTitle/emptyDescription geçiliyor, emptyAction/action prop'u yok",
-     "target": "Boş duruma 'Ar-Ge projelerine git' bağlantısı ya da proje seçtiren eylem eklensin (EmptyState action dolu)",
-     "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx",
-     "openedRound": 2
     }
    ],
    "closed": [
@@ -832,6 +859,19 @@
      "closedRound": 2,
      "verifiedBy": "ölçüm",
      "verifiedByCriticRound": 2
+    },
+    {
+     "id": "arge-receteler-03",
+     "criterion": 7,
+     "severity": "P2",
+     "text": "DataTable boş durumu ('Henüz deneme reçetesi yok') yalnız başlık+açıklama; eylem yok — kullanıcı buradan reçete oluşturamıyor, /arge/projeler'de EmptyState eylemi varken tutarsız.",
+     "measure": "all-recipes-table.tsx: emptyTitle/emptyDescription geçiliyor, emptyAction/action prop'u yok",
+     "target": "Boş duruma 'Ar-Ge projelerine git' bağlantısı ya da proje seçtiren eylem eklensin (EmptyState action dolu)",
+     "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx",
+     "openedRound": 2,
+     "measureAfter": "all-recipes-table.tsx: `emptyAction={<Button asChild ...><Link href=\"/arge/projeler\">Ar-Ge projelerine git</Link></Button>}` bağlandı — DataTable kaynak kodu (`action={filtered ? undefined : emptyAction}`, data-table.tsx:273) filtresiz boş durumda bu action'ı render ediyor; typecheck/lint temiz. Seed'te 3 kayıt olduğundan boş durum çalışma zamanında tetiklenemedi, doğrulama kaynak kodu okumasıyla yapıldı.",
+     "closedRound": 2,
+     "verifiedBy": "ölçüm"
     }
    ]
   }

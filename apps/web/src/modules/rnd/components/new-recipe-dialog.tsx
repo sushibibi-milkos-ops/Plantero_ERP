@@ -46,7 +46,9 @@ export function NewRecipeDialog({ projectId, productOptions }: { projectId: stri
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm"><Plus className="size-4" /> Yeni deneme reçetesi</Button>
+        {/* h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi (kriter 9) — sidebar'daki diğer
+            butonlarla (recipe-workspace.tsx "Yeni versiyon") aynı desen. */}
+        <Button size="sm" className="h-11 w-full md:h-8 md:w-auto"><Plus className="size-4" /> Yeni deneme reçetesi</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader><DialogTitle>Yeni deneme reçetesi</DialogTitle></DialogHeader>
