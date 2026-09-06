@@ -1,0 +1,4 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /onaylar --viewport 1440x900
+
