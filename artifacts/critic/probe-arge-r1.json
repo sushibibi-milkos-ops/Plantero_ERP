@@ -1,0 +1,216 @@
+{
+ "1440x900": {
+  "tableInputs": [
+   {
+    "value": "0.1500",
+    "w": 80,
+    "h": 36,
+    "clipped": false,
+    "scrollW": 78,
+    "clientW": 78
+   },
+   {
+    "value": "38.0000",
+    "w": 96,
+    "h": 36,
+    "clipped": false,
+    "scrollW": 94,
+    "clientW": 94
+   },
+   {
+    "value": "2.0000",
+    "w": 64,
+    "h": 36,
+    "clipped": true,
+    "scrollW": 73,
+    "clientW": 62
+   },
+   {
+    "value": "0.0200",
+    "w": 80,
+    "h": 36,
+    "clipped": false,
+    "scrollW": 78,
+    "clientW": 78
+   },
+   {
+    "value": "0.0000",
+    "w": 64,
+    "h": 36,
+    "clipped": true,
+    "scrollW": 73,
+    "clientW": 62
+   },
+   {
+    "value": "0.0020",
+    "w": 80,
+    "h": 36,
+    "clipped": false,
+    "scrollW": 78,
+    "clientW": 78
+   },
+   {
+    "value": "0.0000",
+    "w": 64,
+    "h": 36,
+    "clipped": true,
+    "scrollW": 73,
+    "clientW": 62
+   },
+   {
+    "value": "1.0000",
+    "w": 80,
+    "h": 36,
+    "clipped": false,
+    "scrollW": 78,
+    "clientW": 78
+   },
+   {
+    "value": "0.0000",
+    "w": 64,
+    "h": 36,
+    "clipped": true,
+    "scrollW": 73,
+    "clientW": 62
+   }
+  ],
+  "tableWrap": {
+   "scrollW": 880,
+   "clientW": 880
+  },
+  "rowHeights": [
+   49,
+   49,
+   49,
+   49
+  ],
+  "aktifBadge": [
+   {
+    "w": 55,
+    "h": 20,
+    "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full border font-medium whitespace-nowrap h-5 px-2 text-[11px] bg-primary/10 text-primary border-transparent"
+   }
+  ],
+  "borderedControls": 17,
+  "bars": [
+   {
+    "w": 856,
+    "h": 8,
+    "bg": "oklch(0.577 0.245 27.3)"
+   }
+  ],
+  "breadcrumb": [
+   "Ar-Ge",
+   "Projeler",
+   "Detay",
+   "receteler"
+  ]
+ },
+ "390x844": {
+  "tableInputs": [
+   {
+    "value": "0.1500",
+    "w": 45,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 43
+   },
+   {
+    "value": "38.0000",
+    "w": 52,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 78,
+    "clientW": 50
+   },
+   {
+    "value": "2.0000",
+    "w": 26,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 24
+   },
+   {
+    "value": "0.0200",
+    "w": 45,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 43
+   },
+   {
+    "value": "0.0000",
+    "w": 26,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 24
+   },
+   {
+    "value": "0.0020",
+    "w": 45,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 43
+   },
+   {
+    "value": "0.0000",
+    "w": 26,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 24
+   },
+   {
+    "value": "1.0000",
+    "w": 45,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 43
+   },
+   {
+    "value": "0.0000",
+    "w": 26,
+    "h": 32,
+    "clipped": true,
+    "scrollW": 70,
+    "clientW": 24
+   }
+  ],
+  "tableWrap": {
+   "scrollW": 567,
+   "clientW": 322
+  },
+  "rowHeights": [
+   49,
+   49,
+   49,
+   49
+  ],
+  "aktifBadge": [
+   {
+    "w": 358,
+    "h": 20,
+    "cls": "inline-flex shrink-0 items-center gap-1.5 rounded-full border font-medium whitespace-nowrap h-5 px-2 text-[11px] bg-primary/10 text-primary border-transparent"
+   }
+  ],
+  "borderedControls": 17,
+  "bars": [
+   {
+    "w": 298,
+    "h": 8,
+    "bg": "oklch(0.577 0.245 27.3)"
+   }
+  ],
+  "breadcrumb": [
+   "Ar-Ge",
+   "Projeler",
+   "Detay",
+   "receteler"
+  ]
+ }
+}

@@ -195,14 +195,18 @@ export function RolePermissionMatrix({ role, matrix }: { role: RoleOverview; mat
                     }
                     const checked = selected.has(cell.code);
                     return (
-                      <td key={a} className="h-10 px-2 text-center align-middle">
-                        <Checkbox
-                          checked={checked}
-                          disabled={!editable}
-                          onCheckedChange={() => toggle(cell.code)}
-                          aria-label={`${MODULE_LABELS[m] ?? m} — ${ACTION_LABELS[a] ?? a} (${cell.code})`}
-                          className="mx-auto size-5 md:size-4"
-                        />
+                      <td key={a} className="h-10 p-0 text-center align-middle">
+                        {/* <label>, checkbox'ı sarmalayarak dokunma hedefini tüm hücreye (≥44px yükseklik
+                            mobilde) genişletir — görsel yoğunluk (20px kutu) değişmeden. */}
+                        <label className={cn('grid h-11 w-full place-items-center md:h-10', editable && 'cursor-pointer')}>
+                          <Checkbox
+                            checked={checked}
+                            disabled={!editable}
+                            onCheckedChange={() => toggle(cell.code)}
+                            aria-label={`${MODULE_LABELS[m] ?? m} — ${ACTION_LABELS[a] ?? a} (${cell.code})`}
+                            className="size-5 md:size-4"
+                          />
+                        </label>
                       </td>
                     );
                   })}
