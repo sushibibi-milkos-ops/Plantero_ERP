@@ -114,24 +114,38 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
             <ul className="divide-y divide-border/50">
               {data.recentOrders.map((o) => (
                 <li key={o.id}>
-                  {/* Kök neden (Tur 3 P1 kokpit-numcol-ragged-03): `sm:contents` masaüstünde tarih, no,
-                      partner, tutar, rozeti TEK satıra düzleştiriyordu — rozet tutardan SONRA
-                      (`order-last`) geldiği için tutarın sağ kenarı rozet uzunluğuna göre ("Taslak" 60px
-                      vs "Sipariş onaylı" 110px) 36px'e kadar kayıyordu. Diğer satırlarla (TodayRow,
-                      Son iş emirleri) AYNI kök-neden düzeltmesi: satır HER ZAMAN 2 satır — rozet artık
-                      satır 1'de (tarih+no ile, ondan sonra hizalanacak başka öğe yok), tutar satır 2'de
-                      partnerle YALNIZ (sağ kenarı her zaman satırın sağ kenarı, ±0px). */}
-                  <RowLink href={`/satis/siparisler/${o.id}`} className="sm:h-auto sm:flex-col sm:items-stretch sm:gap-0.5 sm:py-2">
-                    <div className="flex min-w-0 items-center justify-between gap-3">
-                      <span className="flex min-w-0 items-center gap-2">
-                        <span className="shrink-0 text-xs text-muted-foreground sm:w-20">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
-                        <span className="truncate font-mono text-xs sm:w-28 sm:shrink-0">{o.docNo}</span>
-                      </span>
-                      <span className="shrink-0"><StatusBadge status={o.status} kind="sales_order" /></span>
+                  {/* Kök neden (Tur 4 P1 kokpit-satis-order-row-density-01, Tur 3'ün kokpit-numcol-ragged-03
+                      düzeltmesinin üzerine): `sm:` bir VIEWPORT eşiğidir — bu Section (`lg:col-span-2`)
+                      her zaman ≥1024px viewport'ta render edildiği için `sm:h-auto` (640px eşiği) satırı
+                      1152px'lik tam genişlik şeritte de KALICI OLARAK 2 satırlık anatomiye kilitliyordu;
+                      aynı genişlikteki (1152px) depo "Bugün" listesi (`TodayRow`, `@container` ile
+                      KONTEYNERİN kendi genişliğini sorgular) aynı bilgi sınıfını tek satırda basıyordu.
+                      Düzeltme `TodayRow` ile BİREBİR aynı desen: iki blok DOM'da yan yana durur, `@container`
+                      (Section'da tanımlı) ile açılıp kapanır. Dar konteyner (<1024px, yalnızca tek kolonlu
+                      mobil/tablet düzende): eski 2 satırlık anatomi DEĞİŞMEDİ. Geniş konteyner (≥1024px):
+                      TEK satır, tutar VE rozet SABİT genişlikli yuvalarda (`w-28`/`w-32`, sağa yaslı) —
+                      tutarın sağ kenarı artık rozetin GERÇEK metin genişliğine değil sabit yuva genişliğine
+                      bağlı, satırdan satıra kaymaz (±0px). */}
+                  <RowLink href={`/satis/siparisler/${o.id}`} className="px-0 py-0 sm:h-auto sm:flex-col sm:items-stretch sm:gap-0 sm:px-0 sm:py-0">
+                    <div className="flex flex-col gap-0.5 px-4 py-2.5 @min-[1024px]:hidden sm:py-2">
+                      <div className="flex min-w-0 items-center justify-between gap-3">
+                        <span className="flex min-w-0 items-center gap-2">
+                          <span className="shrink-0 text-xs text-muted-foreground">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
+                          <span className="truncate font-mono text-xs">{o.docNo}</span>
+                        </span>
+                        <span className="shrink-0"><StatusBadge status={o.status} kind="sales_order" /></span>
+                      </div>
+                      <div className="flex min-w-0 items-center justify-between gap-3">
+                        <span className="min-w-0 flex-1 truncate">{o.partnerName} <span className="text-muted-foreground">· {o.channelName}</span></span>
+                        <MoneyCell value={o.netRevenue} className="shrink-0" />
+                      </div>
                     </div>
-                    <div className="flex min-w-0 items-center justify-between gap-3">
+                    <div className="hidden h-10 min-w-0 items-center gap-3 px-4 @min-[1024px]:flex">
+                      <span className="w-20 shrink-0 text-xs text-muted-foreground">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
+                      <span className="w-28 shrink-0 truncate font-mono text-xs">{o.docNo}</span>
                       <span className="min-w-0 flex-1 truncate">{o.partnerName} <span className="text-muted-foreground">· {o.channelName}</span></span>
-                      <MoneyCell value={o.netRevenue} className="shrink-0" />
+                      <MoneyCell value={o.netRevenue} className="w-28 shrink-0" />
+                      <span className="flex w-32 shrink-0 justify-end"><StatusBadge status={o.status} kind="sales_order" /></span>
                     </div>
                   </RowLink>
                 </li>

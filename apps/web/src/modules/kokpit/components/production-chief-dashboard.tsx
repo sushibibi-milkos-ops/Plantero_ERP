@@ -70,11 +70,38 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
               />
             )}
           </Section>
+
+          {/* Kök neden (Tur 4 P1 kokpit-uretim-col-balance-02, Tur 2'nin kokpit-uretim-col-balance-01
+              düzeltmesinin üzerine): "Son duruşlar" Tur 2'de buradan sağ kolona ("Son iş emirleri"nin
+              altına) taşınmıştı çünkü o zaman sol kolon (695px) sağın (405px) neredeyse iki katıydı.
+              Ama "Fire kırılımı" boş duruma düşüp (257px) ve "Son iş emirleri" 8 satıra çıkınca denge
+              TERSİNE döndü: sol kolon 755px'te bitip sağ kolon (Son iş emirleri 521px + Son duruşlar
+              208px) 1021px'te bitiyordu — 266px fark (hedef ≤200px). "Son duruşlar" (208px) şimdi TEKRAR
+              sol kolona alınır: sol 755+208=963px, sağ (yalnızca Son iş emirleri) ~797px — fark ~166px,
+              hedefin içinde. Kolon dengesi statik değil: hangi bölümün hangi kolonda durması gerektiği
+              içeriğin (boş durum mu, kaç satır) o anki yüksekliğine bağlı — bu yer değişimi kalıcı bir
+              tasarım kararı değil, mevcut veri dağılımı için en dengeli yerleşim. */}
+          <Section title="Son duruşlar" href="/uretim/hatlar">
+            {data.recentDowntimes.length === 0 ? (
+              <EmptyState compact title="Kayıtlı duruş yok" />
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {data.recentDowntimes.map((d) => (
+                  <li key={d.id} className="flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]">
+                    <span className="min-w-0 flex-1 truncate">
+                      <span className="font-medium">{d.lineName}</span>
+                      <span className="text-muted-foreground"> · {DOWNTIME_REASON_LABEL[d.reason] ?? d.reason}</span>
+                    </span>
+                    <span className="shrink-0 text-xs text-muted-foreground">
+                      {d.ongoing ? <StatusBadge status="in_progress" label="Devam ediyor" tone="warning" /> : `${d.minutes} dk`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
         </div>
 
-        {/* Kök neden (Tur 2 P1 kokpit-uretim-col-balance-01): "Son duruşlar" sol kolonda üçüncü bölüm
-            olunca sol kolon (695px) sağ kolonun (405px) neredeyse iki katına çıkıyordu. Artık sağ
-            kolonda "Son iş emirleri"nin altında — iki kolon farkı ~155px'e iner (hedef ≤200px). */}
         <div className="min-w-0 flex flex-col gap-4">
           <Section title="Son iş emirleri" href="/uretim/is-emirleri">
             {data.recentWorkOrders.length === 0 ? (
@@ -116,26 +143,6 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
                         <QtyCell value={w.producedQty} uom={w.uomCode} className="shrink-0" />
                       </div>
                     </RowLink>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
-
-          <Section title="Son duruşlar" href="/uretim/hatlar">
-            {data.recentDowntimes.length === 0 ? (
-              <EmptyState compact title="Kayıtlı duruş yok" />
-            ) : (
-              <ul className="divide-y divide-border/50">
-                {data.recentDowntimes.map((d) => (
-                  <li key={d.id} className="flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]">
-                    <span className="min-w-0 flex-1 truncate">
-                      <span className="font-medium">{d.lineName}</span>
-                      <span className="text-muted-foreground"> · {DOWNTIME_REASON_LABEL[d.reason] ?? d.reason}</span>
-                    </span>
-                    <span className="shrink-0 text-xs text-muted-foreground">
-                      {d.ongoing ? <StatusBadge status="in_progress" label="Devam ediyor" tone="warning" /> : `${d.minutes} dk`}
-                    </span>
                   </li>
                 ))}
               </ul>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Wallet, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { GmDashboard } from '@plantero/core/cockpit/kpis';
 import { groupConsecutiveActivity } from '@plantero/core/cockpit/kpis';
 import type { CockpitTodayItem } from '../queries';
@@ -13,7 +13,7 @@ import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
 import { formatDateTime, relativeTime } from '@/lib/format';
 import { ChannelBars } from './channel-bars';
-import { Section, RowLink, DashboardGrid, StatStrip, ExpiryBucketStrip, AgingStrip, OverdueTop5List, BreakEvenPanel, TodayRow, ProductionLineRow } from './shared';
+import { Section, RowLink, DashboardGrid, StatStrip, ExpiryBucketStrip, AgingStrip, OverdueTop5List, BreakEvenPanel, TodayRow, ProductionLineRow, BankAccountsList } from './shared';
 
 export function GmDashboardView({ data, today }: { data: GmDashboard; today: CockpitTodayItem[] }) {
   const { channelSales, bank, lines, criticalStock, expiry, overdue, breakEven, approvals, activity } = data;
@@ -134,17 +134,7 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
             {bank.accounts.length === 0 ? (
               <EmptyState compact title="Banka hesabı yok" />
             ) : (
-              <ul className="divide-y divide-border/50">
-                {bank.accounts.map((a) => (
-                  <li key={a.id} className="flex h-11 items-center justify-between gap-3 px-4 text-[13px]">
-                    <span className="flex min-w-0 items-center gap-2">
-                      <Wallet className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
-                      <span className="min-w-0 truncate">{a.bankName} · {a.code}</span>
-                    </span>
-                    <MoneyCell value={a.statementBalance} currency={a.currency} className="shrink-0" />
-                  </li>
-                ))}
-              </ul>
+              <BankAccountsList accounts={bank.accounts} href="/muhasebe/banka" />
             )}
           </Section>
 

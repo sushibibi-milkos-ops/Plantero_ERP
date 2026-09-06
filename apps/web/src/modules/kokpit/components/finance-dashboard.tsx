@@ -5,10 +5,10 @@ import { KpiStripRow } from '@/components/kpi-strip';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
-import { Wallet, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { formatMoney } from '@/lib/format';
 import type { CockpitReceipt } from '../queries';
-import { Section, DashboardGrid, StatStrip, AgingStrip, OverdueTop5List, BreakEvenPanel } from './shared';
+import { Section, DashboardGrid, StatStrip, AgingStrip, OverdueTop5List, BreakEvenPanel, BankAccountsList, RowLink } from './shared';
 
 function periodLabel(period: string): string {
   const [y, m] = period.split('-');
@@ -43,17 +43,7 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
             {bank.accounts.length === 0 ? (
               <EmptyState compact title="Banka hesabı yok" />
             ) : (
-              <ul className="divide-y divide-border/50">
-                {bank.accounts.map((a) => (
-                  <li key={a.id} className="flex h-11 items-center justify-between gap-3 px-4 text-[13px]">
-                    <span className="flex min-w-0 items-center gap-2">
-                      <Wallet className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
-                      <span className="min-w-0 truncate">{a.bankName} · {a.code}</span>
-                    </span>
-                    <MoneyCell value={a.statementBalance} currency={a.currency} className="shrink-0" />
-                  </li>
-                ))}
-              </ul>
+              <BankAccountsList accounts={bank.accounts} href="/muhasebe/banka" />
             )}
           </Section>
 
@@ -74,14 +64,21 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
           </Section>
 
           <Section title="Mutabakat kuyruğu" href="/muhasebe/mutabakat">
+            {/* Kök neden (Tur 4 P1 kokpit-fin-row-anatomy-01): bu satır elle yazılmış `<li className=
+                "flex h-11 …">` idi — href taşımıyordu (tıklanamaz) ve 44px, aynı viewport'un sağ
+                kolonundaki "Geciken alacak" (`RowLink`, 40px, tıklanabilir) ile aynı bilgi sınıfı
+                olduğu halde görsel/etkileşim olarak ayırt edilemiyordu. `RowLink`'e taşındı: satır
+                40px, kendi kaydına link, hover/active/focus dili diğer tüm listelerle birebir. */}
             {reconciliationQueueItems.length === 0 ? (
               <EmptyState compact title="Onay bekleyen öneri yok" />
             ) : (
               <ul className="divide-y divide-border/50">
                 {reconciliationQueueItems.map((r) => (
-                  <li key={r.id} className="flex h-11 items-center justify-between gap-3 px-4 text-[13px]">
-                    <span className="min-w-0 flex-1 truncate">{r.partnerName ?? r.counterpartyName ?? r.description}</span>
-                    <MoneyCell value={r.amount} className="shrink-0" />
+                  <li key={r.id}>
+                    <RowLink href="/muhasebe/mutabakat">
+                      <span className="min-w-0 flex-1 truncate">{r.partnerName ?? r.counterpartyName ?? r.description}</span>
+                      <MoneyCell value={r.amount} className="shrink-0" />
+                    </RowLink>
                   </li>
                 ))}
               </ul>

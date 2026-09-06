@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatMoney } from '@/lib/format';
 import { MoneyCell } from '@/components/money-cell';
@@ -187,6 +187,38 @@ export function StatStrip({ items, className, divider = true }: { items: StatStr
         );
       })}
     </div>
+  );
+}
+
+/**
+ * Banka hesapları listesi — GM ve muhasebe panosu aynı `BankAccountCard[]` listesini render eder.
+ * Kök neden (Tur 4 P1 kokpit-fin-row-anatomy-01): bu satır iki panoda AYRI AYRI elle yazılmış
+ * `<li className="flex h-11 …">` idi — 44px (kokpitteki diğer TÜM tek satırlık listeler `RowLink`
+ * ile 40px) VE href taşımıyordu (tıklanamaz, hover/focus/active geri bildirimi yok) — aynı bilgi
+ * sınıfı taşıyan "Geciken alacak" (`OverdueTop5List`, `RowLink`) yanında görsel ve etkileşim olarak
+ * ayırt edilemiyordu. Artık `RowLink` — tek anatomi, tek kod, iki pano paylaşıyor.
+ */
+export function BankAccountsList({
+  accounts,
+  href,
+}: {
+  accounts: { id: string; bankName: string; code: string; currency: string; statementBalance: string }[];
+  href: string;
+}) {
+  return (
+    <ul className="divide-y divide-border/50">
+      {accounts.map((a) => (
+        <li key={a.id}>
+          <RowLink href={href}>
+            <span className="flex min-w-0 flex-1 items-center gap-2">
+              <Wallet className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
+              <span className="min-w-0 truncate">{a.bankName} · {a.code}</span>
+            </span>
+            <MoneyCell value={a.statementBalance} currency={a.currency} className="shrink-0" />
+          </RowLink>
+        </li>
+      ))}
+    </ul>
   );
 }
 

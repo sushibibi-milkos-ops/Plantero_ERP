@@ -5,7 +5,6 @@ import { LotBadge } from '@/components/lot-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
-import { formatMoney } from '@/lib/format';
 import type { CockpitTodayItem } from '../queries';
 import { Section, RowLink, ExpiryBucketStrip, TodayRow } from './shared';
 
@@ -25,9 +24,14 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2 lg:items-start">
         <Section title="Karantina" href="/depo/lotlar">
+          {/* Kök neden (Tur 4 P1 kokpit-karantina-decimal-mix-01): bu toplam satırı `formatMoney(...,
+              { digits: 0 })` ile 0 ondalık basıyordu — AYNI sağ hizalı sütunda hemen altındaki 4 lot
+              satırı `MoneyCell` ile 2 ondalık basıyordu (₺55.355 ↔ ₺36.400,00). GM'nin "Brüt (bugün)"
+              ve muhasebe'nin "Toplam (TRY hesaplar)" özet satırları zaten `MoneyCell` (2 ondalık)
+              kullanıyor — depo tek istisnaydı. `MoneyCell`'e geçilerek tek ondalık hassasiyetine iner. */}
           <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
             <span className="text-muted-foreground">{data.quarantine.count} lot bekliyor</span>
-            <span className="num font-medium tabular-nums">{formatMoney(data.quarantine.value, 'TRY', { digits: 0 })}</span>
+            <MoneyCell value={data.quarantine.value} className="font-medium" />
           </div>
           {data.quarantine.top5.length === 0 ? (
             <EmptyState compact title="Karantinada lot yok" />

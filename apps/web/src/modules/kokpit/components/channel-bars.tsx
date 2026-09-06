@@ -17,6 +17,13 @@ import { RankBar } from './shared';
  * görünümde bazen 0 genişlikte boyandığı bir kare yakalanıyordu (grafik alanı boş, yalnızca eksen
  * etiketi görünüyordu); bu sayfadaki "Satış hunisi" da zaten aynı düz-çubuk deseniyle çizilir —
  * tek ölçülü sıralama çubukları için kütüphaneye hiç gerek yok, disposisyon senkron ve garantili.
+ *
+ * Kök neden (Tur 4 P1 kokpit-channel-decimal-mix-01): bu satırlar `formatMoney(..., { digits: 0 })`
+ * ile 0 ondalık basıyordu — AYNI sağ hizalı sütunda (GM'de "Brüt (bugün)" özet satırı, `MoneyCell`
+ * ile 2 ondalık) hemen üstünde/altında iki farklı ondalık dili oluşuyordu (₺2.678,40 ↔ ₺2.678).
+ * Kural yalnızca AYNI sütun içindir — KPI şeridindeki (0 ondalık) büyük rakamla bu listenin (2
+ * ondalık) arasındaki kademe ayrımı KORUNUR, çünkü onlar ayrı sütunlar/bileşenlerdir. Her iki dal da
+ * `digits: 2` kullanır.
  */
 export function ChannelBars({ rows }: { rows: { name: string; net: number }[] }) {
   if (!rows.length) return null;
@@ -33,7 +40,7 @@ export function ChannelBars({ rows }: { rows: { name: string; net: number }[] })
             çok-kanallı halde AYNI etiket 12px (bkz. aşağıdaki liste `text-xs`); tek satırlık gövde
             metni için `text-[13px]` (kokpit'in genel gövde kademesi) kullanılır. */}
         <span className="text-[13px] text-muted-foreground">{only.name}</span>
-        <span className="num text-[15px] font-semibold tabular-nums">{formatMoney(only.net, 'TRY', { digits: 0 })}</span>
+        <span className="num text-[15px] font-semibold tabular-nums">{formatMoney(only.net, 'TRY', { digits: 2 })}</span>
       </div>
     );
   }
@@ -44,7 +51,7 @@ export function ChannelBars({ rows }: { rows: { name: string; net: number }[] })
         <li key={r.name} className="flex items-center gap-3">
           <span className="w-24 shrink-0 truncate text-xs text-muted-foreground">{r.name}</span>
           <RankBar pct={(r.net / max) * 100} strong={i === 0} />
-          <span className="num w-24 shrink-0 text-right text-xs tabular-nums">{formatMoney(r.net, 'TRY', { digits: 0 })}</span>
+          <span className="num w-24 shrink-0 text-right text-xs tabular-nums">{formatMoney(r.net, 'TRY', { digits: 2 })}</span>
         </li>
       ))}
     </ul>
