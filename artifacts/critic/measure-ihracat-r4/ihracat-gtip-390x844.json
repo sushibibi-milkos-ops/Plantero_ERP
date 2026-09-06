@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /ihracat/gtip --viewport 390x844
+
+{"route":"/ihracat/gtip","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":39,"heights":[60,60,60]},"fontSizes":{"10":5,"11":2,"12":51,"13":46,"14":41,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"GTİP\"","w":29.7,"h":19.5}],"distinctColors":13,"h1":{"size":20,"weight":600},"images":0}
