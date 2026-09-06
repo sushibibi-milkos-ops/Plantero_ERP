@@ -22,7 +22,12 @@ export async function computeLineOeeForDay(tx: DbOrTx, lineId: string, day: stri
   const [line] = await tx.select().from(productionLines).where(eq(productionLines.id, lineId)).limit(1);
   const plannedMinutes = line?.shiftMinutes ?? 480;
 
-  const dayDowntimes = await tx.select({ minutes: downtimes.minutes }).from(downtimes).where(and(eq(downtimes.lineId, lineId), gte(downtimes.startedAt, new Date(`${day}T00:00:00Z`)), lte(downtimes.startedAt, new Date(`${day}T23:59:59Z`))));
+  // Kök neden (Tur 5 P1): `day` Europe/Istanbul iş günü (businessDate, UTC+3, DST yok) — ham
+  // `${day}T00:00:00Z`/`23:59:59Z` UTC sınırıyla filtrelemek sabit 3 saatlik kaymaya yol açıyordu:
+  // UTC 21:00–23:59 (Istanbul 00:00–02:59) arasında başlayan duruşlar "bugünün" Istanbul gününe hiç
+  // düşmüyordu. Ofset açıkça `+03:00` verilerek Istanbul gün sınırının GERÇEK UTC karşılığı hesaplanır
+  // (Türkiye 2016'dan beri sabit UTC+3, DST yok — offset sabit kalabilir).
+  const dayDowntimes = await tx.select({ minutes: downtimes.minutes }).from(downtimes).where(and(eq(downtimes.lineId, lineId), gte(downtimes.startedAt, new Date(`${day}T00:00:00+03:00`)), lte(downtimes.startedAt, new Date(`${day}T23:59:59.999+03:00`))));
   const downtimeMinutes = dayDowntimes.reduce((a, d) => a + (d.minutes ?? 0), 0);
   const runMinutes = Math.max(0, plannedMinutes - downtimeMinutes);
 

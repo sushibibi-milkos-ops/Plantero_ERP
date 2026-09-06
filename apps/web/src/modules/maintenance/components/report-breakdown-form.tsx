@@ -111,7 +111,12 @@ export function ReportBreakdownForm({ machines }: { machines: MachineFormOption[
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto max-w-xl space-y-5 pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0">
+      {/* Kök neden (Tur 5 P1 bakim-yeni-04): `mx-auto` masaüstünde de aktifti — form kendi `max-w-xl`
+          kutusunu SAYFANIN ORTASINA değil ana sütunun ortasına alıyordu, bu da h1'in (264px) 274px
+          sağına düşüyordu (modülün diğer route'larında içerik de h1 gibi 264px'ten başlar). `lg:mx-0`
+          masaüstünde ortalamayı iptal eder — form artık ana sütunun (dolayısıyla h1'in) sol kenarına
+          yaslanır; telefon/tablet (`<lg`) davranışı DEĞİŞMEDİ (tek sütun, ortalı kalır). */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto max-w-xl space-y-5 pb-[calc(9rem+env(safe-area-inset-bottom))] lg:mx-0 md:pb-0">
         {!scanned ? (
           <div className="space-y-3">
             <div className="relative">

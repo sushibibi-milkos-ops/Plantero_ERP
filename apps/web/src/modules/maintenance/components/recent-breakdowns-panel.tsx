@@ -5,10 +5,11 @@ import { relativeTime } from '@/lib/format';
 import type { RecentBreakdownRow } from '../queries';
 
 /**
- * "Arıza Bildir" formunun yanında masaüstü yan panel (bakim-yeni-02): son bildirilen 5 arıza.
- * Sahadaki telefon akışını değiştirmez — yalnızca `lg:` üzerinde görünür (report-breakdown-form.tsx
- * zaten tek sütun/telefon odaklı kalır), geniş ekranda boş kalan alanı dolu bir bağlamla doldurur.
- */
+ * "Arıza Bildir" formunun altında kısa bağlam paneli: son bildirilen arızalar (Tur 5 bakim-yeni-02/05
+ * kök neden düzeltmesi — eskiden `lg:` sağ ray içinde ayrı bir sütundu; bir sütunun boyu diğerini
+ * ekranda GERDİĞİ için ana sütunda 592px ölü alan bırakıyordu, ayrıca yanına 36 makinelik iç
+ * kaydırmalı bir dolgu paneli daha eklenmişti. Artık tüm viewport'larda tek sütunda, formun ALTINDA;
+ * grid stretch'i yok, sayfa gerçek içerikle biter). */
 export function RecentBreakdownsPanel({ items }: { items: RecentBreakdownRow[] }) {
   return (
     <div className="rounded-xl border border-border/70 bg-card p-4">

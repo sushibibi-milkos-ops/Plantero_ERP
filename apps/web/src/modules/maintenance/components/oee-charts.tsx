@@ -1,10 +1,34 @@
 'use client';
 
+import { useState } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatDate, formatPct } from '@/lib/format';
 import { niceTicks } from '@/modules/finance/components/cashflow-chart';
 import type { OeeTrendPoint, DowntimeParetoRow } from '../queries';
 import { DOWNTIME_REASON_LABELS } from '../labels';
+
+/**
+ * Kök neden (Tur 5 P1 bakim-oee-07): mobil (390px) görünümde "OEE trendi" grafiğinin tooltip'i
+ * sayfa açılışında, hiçbir dokunuş/işaretçi olayı olmadan görünür geliyordu (3/3 tekrar, aynı
+ * içerik — Recharts'ın dahili "aktif" durumu gerçek bir etkileşim olmadan `true` başlıyor).
+ * Recharts v3'te `Tooltip`'e `active={false}` verilirse dahili durumdan BAĞIMSIZ olarak her zaman
+ * gizli kalır (bkz. `TooltipBoundingBox`: `visibility: active && hasPayload ? 'visible' : 'hidden'`);
+ * `active` prop'u HİÇ verilmezse (undefined değil, prop'un kendisi yok) Recharts kendi fare/dokunma
+ * durumunu kullanır. Bu yüzden gerçek bir işaretçi/dokunma olayı gelene kadar `active:false` GEÇİLİR,
+ * ilk gerçek etkileşimden sonra prop tamamen kaldırılıp normal hover davranışına dönülür.
+ */
+function useTooltipGate() {
+  const [interacted, setInteracted] = useState(false);
+  const gateProps = interacted ? {} : { active: false as const };
+  const handlers = interacted
+    ? {}
+    : {
+        onMouseMove: () => setInteracted(true),
+        onTouchStart: () => setInteracted(true),
+        onPointerDown: () => setInteracted(true),
+      };
+  return { gateProps, handlers };
+}
 
 // Aynı renk sözleşmesi: apps/web/src/modules/finance/components/cashflow-chart.tsx. Tek eksen (0-100%)
 // üzerinde 4 seri (OEE/Kullanılabilirlik/Performans/Kalite) — hepsi aynı ölçekte (%) olduğundan
@@ -54,10 +78,11 @@ function TrendTooltip({ active, payload, label }: { active?: boolean; payload?: 
 export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
   const points = data.map((d) => ({ day: d.day, oee: Number(d.oeePct), availability: Number(d.availabilityPct), performance: Number(d.performancePct), quality: Number(d.qualityPct) }));
   const ticks = niceTicks(points.flatMap((p) => [p.oee, p.availability, p.performance, p.quality]), 5);
+  const { gateProps, handlers } = useTooltipGate();
 
   return (
     <ResponsiveContainer width="100%" height={280}>
-      <AreaChart data={points} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+      <AreaChart data={points} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} {...handlers}>
         <defs>
           <linearGradient id="fill-oee" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor={OEE_COLOR} stopOpacity={0.16} />
@@ -67,7 +92,7 @@ export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
         <CartesianGrid stroke="var(--border)" vertical={false} />
         <XAxis dataKey="day" tickFormatter={dayTick} tick={xTick} axisLine={false} tickLine={false} minTickGap={28} />
         <YAxis tickFormatter={(v: number) => `%${v}`} tick={xTick} axisLine={false} tickLine={false} width={40} ticks={ticks} domain={[ticks[0]!, ticks[ticks.length - 1]!]} />
-        <Tooltip content={<TrendTooltip />} isAnimationActive={false} allowEscapeViewBox={{ x: false, y: false }} wrapperStyle={{ outline: 'none' }} />
+        <Tooltip {...gateProps} content={<TrendTooltip />} isAnimationActive={false} allowEscapeViewBox={{ x: false, y: false }} wrapperStyle={{ outline: 'none' }} />
         <Legend
           iconType="plainline"
           wrapperStyle={{ fontSize: 11, color: 'var(--muted-foreground)' }}
@@ -94,13 +119,14 @@ function ParetoTooltip({ active, payload }: { active?: boolean; payload?: Array<
 
 export function DowntimeParetoChart({ data }: { data: DowntimeParetoRow[] }) {
   const points = data.slice(0, 8).map((d) => ({ reasonLabel: DOWNTIME_REASON_LABELS[d.reason] ?? d.reason, minutes: d.minutes }));
+  const { gateProps, handlers } = useTooltipGate();
   return (
     <ResponsiveContainer width="100%" height={240}>
-      <BarChart data={points} layout="vertical" margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+      <BarChart data={points} layout="vertical" margin={{ top: 4, right: 16, left: 0, bottom: 0 }} {...handlers}>
         <CartesianGrid stroke="var(--border)" horizontal={false} />
         <XAxis type="number" tick={xTick} axisLine={false} tickLine={false} />
         <YAxis type="category" dataKey="reasonLabel" tick={xTick} axisLine={false} tickLine={false} width={110} />
-        <Tooltip content={<ParetoTooltip />} cursor={{ fill: 'var(--muted)', opacity: 0.4 }} isAnimationActive={false} />
+        <Tooltip {...gateProps} content={<ParetoTooltip />} cursor={{ fill: 'var(--muted)', opacity: 0.4 }} isAnimationActive={false} />
         <Bar dataKey="minutes" name="Duruş (dk)" fill={PARETO_COLOR} radius={[0, 4, 4, 0]} isAnimationActive={false} maxBarSize={22} />
       </BarChart>
     </ResponsiveContainer>

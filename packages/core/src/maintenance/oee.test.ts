@@ -32,10 +32,20 @@ describe('maintenance/oee', () => {
       const before = await recomputeOeeForDay(tx, day);
       const beforeAvail = D(before.find((r) => r.lineId === b.line.id)!.availabilityPct);
 
-      const startedAt = new Date(Date.now() - 60 * 60_000); // 1 saat önce başlamış gibi (aynı iş günü)
+      // Kök neden (Tur 5 P1): `Date.now() - 1h` gerçek duvar saati Europe/Istanbul gece yarısına
+      // yakınken (00:00-01:00 arası) bir önceki iş gününe düşebiliyor VE `completeOrder`'ın
+      // varsayılan `asOf` (`new Date()`, gerçek "şimdi") duruşun bitişini `startedAt`'tan ÖNCEYE
+      // düşürüp negatif/sıfır dakika üretebiliyordu — test gerçek duvar saatine bağımlı, flaky
+      // hâle geliyordu. Artık hem başlangıç hem bitiş `day` iş gününün İÇİNE, birbirine göre sabit
+      // bir sırayla (10:00 → 11:00, gerçek "şimdi"den bağımsız) yerleştiriliyor: test hangi saatte
+      // çalışırsa çalışsın her zaman aynı iş gününde, her zaman 60 dakikalık bir duruş üretir
+      // (computeLineOeeForDay artık `day`'i Europe/Istanbul takvim gününe göre doğru pencereliyor —
+      // bkz. production/yield.ts).
+      const startedAt = new Date(`${day}T10:00:00+03:00`);
+      const completedAt = new Date(`${day}T11:00:00+03:00`);
       const order = await reportBreakdown(tx, { machineId: b.machine.id, title: 'Bant kopması' }, ctx);
       await tx.update(downtimes).set({ startedAt }).where(eq(downtimes.maintenanceOrderId, order.id));
-      await completeOrder(tx, order.id, {}, ctx);
+      await completeOrder(tx, order.id, { asOf: completedAt }, ctx);
 
       const after = await recomputeOeeForDay(tx, day);
       const afterAvail = D(after.find((r) => r.lineId === b.line.id)!.availabilityPct);

@@ -16,7 +16,7 @@ export const dynamic = 'force-dynamic';
 export default async function OeePage({ searchParams }: { searchParams: Promise<{ lineId?: string }> }) {
   await requirePermission('maintenance.view');
   const sp = await searchParams;
-  const { lines, trend, pareto, kpis, machines } = await getOeeDashboard({ lineId: sp.lineId, days: 30 });
+  const { lines, trend, pareto, kpis, machines, lineBreakdown } = await getOeeDashboard({ lineId: sp.lineId, days: 30 });
 
   return (
     <>
@@ -65,7 +65,11 @@ export default async function OeePage({ searchParams }: { searchParams: Promise<
         <div className="rounded-xl border border-border/70 bg-card p-4 lg:col-span-2">
           <h2 className="mb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">OEE trendi</h2>
           {trend.length === 0 ? (
-            <EmptyState compact title="OEE verisi yok" description="Worker `oee-daily` her gece 23:30'da hesaplar." />
+            // Kök neden (Tur 5 P1 bakim-oee-08): açıklama kullanıcıya worker'ın iç adını
+            // (`oee-daily`) ve çalışma saatini gösteriyordu — son kullanıcı için anlamsız bir
+            // altyapı detayı. Artık kullanıcı diliyle: veri henüz oluşmadıysa ne zaman oluşacağını
+            // söyler, isim/tablo/worker geçmez.
+            <EmptyState compact title="OEE verisi yok" description="Bu dönem için henüz hesaplanmış OEE kaydı yok; veriler gece otomatik güncellenir." />
           ) : (
             <OeeTrendChart data={trend} />
           )}
@@ -80,15 +84,52 @@ export default async function OeePage({ searchParams }: { searchParams: Promise<
         </div>
       </div>
 
-      {/* Kök neden (Tur 4 P2 bakim-oee-02): sayfa iki grafikten sonra 262px boş bırakıyordu; makine
-          bazlı kırılım yoktu. Aynı `oee_records` sorgusundan türeyen tablo — en düşük OEE'li makine
-          en üstte (dikkat gerektiren ekipman önce). */}
-      <div className="mt-4 overflow-x-auto rounded-xl border border-border/70 bg-card p-4">
-        <h2 className="mb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Makine bazlı OEE</h2>
-        <p className="mb-3 text-xs text-muted-foreground">Son 30 gün ortalaması — en düşük OEE önce.</p>
-        {machines.length === 0 ? (
-          <EmptyState compact title="Makine bazlı OEE verisi yok" description="oee_records tablosunda machine_id dolu kayıt bulunmuyor." />
-        ) : (
+      {/* Kök neden (Tur 5 P1 bakim-oee-09, Tur 4'ün "makine bazlı OEE" düzeltmesinin YERİNE): eski
+          kart `oee_records.machine_id` dolu satırlara bağlıydı — ama `oee-daily` worker'ı ve seed
+          BUNU HİÇBİR ZAMAN üretmiyor (bkz. `maintenance/oee.ts` üstündeki not), yani kart canlı
+          veriyle DAİMA boştu: 1152×250px'lik sıfır-bilgi bir "veri yok" kartı ilk ekranın alt
+          yarısını kaplıyordu (Tur 5 ölçüm: oee_records 90 kayıt, machine_id dolu 0). Aynı `records`
+          sorgusu HAT bazında (`lineId`, inner join ile garantili) HER ZAMAN dolu — bilgi taşımayan
+          kart yerine hat bazlı kırılım tablosu kondu; kart yalnızca gerçekten veri varken render
+          edilir (trend boşsa bu da boştur, o durumda hiç render edilmez — sıfır-bilgi kart yok). */}
+      {lineBreakdown.length > 0 ? (
+        <div className="mt-4 overflow-x-auto rounded-xl border border-border/70 bg-card p-4">
+          <h2 className="mb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Hat bazlı OEE</h2>
+          <p className="mb-3 text-xs text-muted-foreground">Son 30 gün ortalaması — en düşük OEE önce.</p>
+          <table className="w-full min-w-max text-[13px]">
+            <thead>
+              <tr className="text-[11px] text-muted-foreground uppercase">
+                <th className="px-2 py-1.5 text-left font-medium whitespace-nowrap">Hat</th>
+                <th className="px-2 py-1.5 text-right font-medium whitespace-nowrap">OEE</th>
+                <th className="px-2 py-1.5 text-right font-medium whitespace-nowrap">Kullanılabilirlik</th>
+                <th className="px-2 py-1.5 text-right font-medium whitespace-nowrap">Performans</th>
+                <th className="px-2 py-1.5 text-right font-medium whitespace-nowrap">Kalite</th>
+                <th className="px-2 py-1.5 text-right font-medium whitespace-nowrap">Duruş</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lineBreakdown.map((l) => (
+                <tr key={l.lineId} className="h-9 border-t border-border/40 hover:bg-muted/30">
+                  <td className="px-2 whitespace-nowrap"><span className="font-mono text-[12px] text-muted-foreground">{l.lineCode}</span> {l.lineName}</td>
+                  <td className={cn('num px-2 text-right tabular-nums', Number(l.oeePct) < 60 && 'font-medium text-destructive')}>{formatPct(l.oeePct)}</td>
+                  <td className="num px-2 text-right tabular-nums text-muted-foreground">{formatPct(l.availabilityPct)}</td>
+                  <td className="num px-2 text-right tabular-nums text-muted-foreground">{formatPct(l.performancePct)}</td>
+                  <td className="num px-2 text-right tabular-nums text-muted-foreground">{formatPct(l.qualityPct)}</td>
+                  <td className="num px-2 text-right tabular-nums text-muted-foreground">{formatQty(l.downtimeMinutes, 'dk')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
+      {/* Makine bazlı satır yalnızca (ileride) `oee_records.machine_id` dolu geldiğinde anlamlı —
+          bugün hiçbir zaman dolu gelmediği için (bilinen kapsam sınırı) sıfır-bilgi kart göstermek
+          yerine tamamen atlanır (bakim-oee-09). */}
+      {machines.length > 0 ? (
+        <div className="mt-4 overflow-x-auto rounded-xl border border-border/70 bg-card p-4">
+          <h2 className="mb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Makine bazlı OEE</h2>
+          <p className="mb-3 text-xs text-muted-foreground">Son 30 gün ortalaması — en düşük OEE önce.</p>
           <table className="w-full min-w-max text-[13px]">
             <thead>
               <tr className="text-[11px] text-muted-foreground uppercase">
@@ -113,8 +154,8 @@ export default async function OeePage({ searchParams }: { searchParams: Promise<
               ))}
             </tbody>
           </table>
-        )}
-      </div>
+        </div>
+      ) : null}
     </>
   );
 }
