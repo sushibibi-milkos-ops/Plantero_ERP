@@ -66,7 +66,19 @@ const FILES = await checkFiles();
 // yazıyor, `stock_counts.status`'e hiç dokunmuyor — reddedilen bir sayım farkı sonsuza dek 'review'de kilitli kalıyor
 // (approve dalı `approveCount()` çağırıp count'u ilerletiyor, reject dalının simetriği yok; `cancelCount` diye bir
 // fonksiyon da yok). Fresh seed'de 0 ihlal (seed hiç count_variance onayı üretmiyor — eşik altı tek sayım fark).
-const RULE_COUNT = 50;
+// I51 (veri-critic, veri bütünlüğü turu — YENİ, P1, KIRMIZI, kök neden, CANLI DOĞRULANDI): bakım
+// (maintenance) modülünün `parts_cost`/`labor_cost` alanları (`packages/core/src/maintenance/
+// orders.ts`) gerçek, kapanmış (`status='done'`) iş emirlerinde pozitif tutar taşıyor
+// (MO-2026-000001: 630,00 TL, MO-2026-000002: 200,00 TL) ama HİÇBİR `postJournalEntry` çağrısı
+// yok — `journal_entries.ref_type` kümesinde 'maintenance_order' hiç yok, `730`/`770.10` hesabına
+// dokunan tek satır yok — `document_type` enum'u bu bağ için özel olarak `'maintenance_order'`
+// içerdiği halde (schema/documents.ts) hiç kullanılmıyor. Bu yüzden aşağıdaki "0 ihlal" testi
+// BİLİNÇLİ OLARAK KIRMIZI bırakıldı (I18/I21/I48/I49'un aynı disiplini) — kod düzeltilmeden testi
+// yeşile zorlamak yanlış olurdu. Düzeltme önerisi checks/51_maintenance_cost_not_posted.sql üst
+// yorumunda. I52 (aynı tur, YENİ, P2, saf regresyon güvenlik ağı — fresh seed'de 0 ihlal): ihracat
+// packing list (export_packages) satırlarının lot/miktar zinciri bağlı delivery_lines'la birebir
+// örtüşmesini doğrular (bkz. checks/52_export_package_lot_integrity.sql üst yorumu).
+const RULE_COUNT = 52;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
