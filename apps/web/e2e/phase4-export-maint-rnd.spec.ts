@@ -978,12 +978,25 @@ test.describe('Akış: Ar-Ge board + reçete + BOM devri (phase4)', () => {
     // (packages/core/src/rnd/costFormula.ts: Σqty×(1+fire%)×maliyet ÷ (parti×verim) + genel gider)
     // SQL/JS ile önceden bağımsız hesaplayabilmek için (satırın "ortalama maliyet" kademesi ürün
     // geçmişine bağlı, deterministik değil).
-    const row = page.locator('table tbody tr').first();
-    await row.locator('td').nth(2).getByRole('combobox').click();
+    // Kök neden (canlıda yakalandı, bu turda — P0, iki ayrı gate.sh koşusunda BİREBİR tekrarlandı):
+    // önceki sürüm `page.locator('table tbody tr')` ile gerçek bir `<table>` DOM'u arıyordu — bu,
+    // `cost-simulator.tsx`'in Tur 3'te (P1 criterion-5/9, bkz. o dosyada satır ~337 yorumu) 390px'te
+    // 478px yatay taşmayı düzeltmek için `<table>`'ı TAMAMEN kaldırıp `role="table"`/`role="rowgroup"`/
+    // `role="row"`/`role="cell"` taşıyan bir CSS Grid'e geçirmesinden BERİ bu seçiciyle HİÇ eşleşmiyor
+    // (sayfada artık gerçek bir `<table>` etiketi yok). `playwright.config.ts`'te `actionTimeout`
+    // ayarlanmamış (varsayılan 0 = sınırsız) olduğundan `row.locator('td')...click()` bu boş seçiciyi
+    // SESSİZCE sonsuza dek bekliyor (trace.zip'te `waiting for locator(...)` sonrası hiç `resolved`
+    // logu yok), sonunda testin KENDİ `test.setTimeout(150_000)`'ı devreye girip sayfayı/tarayıcıyı
+    // zorla kapatıyor — ortaya çıkan hata ("Target page, context or browser has been closed") yanıltıcı,
+    // gerçek neden bu. Bu bir uygulama bulgusu DEĞİL — Tur 3'teki mobil taşma düzeltmesi kasıtlı ve
+    // belgeli; kırık yalnızca bu testin ESKİ `<table>` varsayımında. ARIA rol tabanlı locator'larla
+    // (`role="table"` → `role="rowgroup"` → `role="row"` → `role="cell"`) gerçek DOM'a göre düzeltilir.
+    const row = page.getByRole('table', { name: 'Reçete satırları' }).getByRole('rowgroup').getByRole('row').first();
+    await row.getByRole('cell').nth(2).getByRole('combobox').click();
     await page.getByRole('option', { name: 'Manuel' }).click();
-    const unitCostInput = row.locator('td').nth(3).locator('input');
+    const unitCostInput = row.getByRole('cell').nth(3).locator('input');
     await unitCostInput.fill('50');
-    const qtyInput = row.locator('td').nth(1).locator('input');
+    const qtyInput = row.getByRole('cell').nth(1).locator('input');
     await qtyInput.fill('3');
     await qtyInput.blur();
 
