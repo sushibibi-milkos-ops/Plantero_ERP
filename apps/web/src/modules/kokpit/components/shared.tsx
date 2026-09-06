@@ -302,7 +302,14 @@ export function BreakEvenPanel({ breakEven }: { breakEven: { targetRevenue: stri
  * boyutunu taşır — geçiş belirsizliğe (hangi kural kazanacağına dair CSS kaynak-sırası varsayımına)
  * bağlı değildir. */
 export function TodayRow({ item }: { item: CockpitTodayItem }) {
-  const money = item.amount !== undefined ? <MoneyCell value={item.amount} /> : <QtyCell value={item.qty ?? '0'} uom={item.uom} />;
+  // Kök neden (Tur 3 P1 kokpit-numcol-ragged-02, ikinci katman): geniş-konteyner bloğunda tutarı SABİT
+  // genişlikli bir `<span className="w-24">` İÇİNE koymak tek başına YETMİYORDU — `MoneyCell` kendisi
+  // `inline-block` (içeriği kadar dar) olduğundan, sarmalayıcının genişliği sabit olsa bile MoneyCell
+  // kendi içeriği kadar dar kalıp sarmalayıcının SOL kenarına yaslanıyordu (`text-right` yalnızca KENDİ
+  // kutusu içindeki metni hizalar, kutuyu değil) — sağ kenar yine tutar basamak sayısına göre kayıyordu.
+  // Genişlik doğrudan hücrenin KENDİSİNE verilir (aracı `<span>` yok) — artık kutu gerçekten sabit ve
+  // `text-right`/`justify-end` o kutunun İÇİNDE doğru kenara hizalar.
+  const money = (w?: string) => (item.amount !== undefined ? <MoneyCell value={item.amount} className={w} /> : <QtyCell value={item.qty ?? '0'} uom={item.uom} className={w} />);
   return (
     <RowLink href={item.href} className="px-0 py-0 sm:h-auto sm:flex-col sm:items-stretch sm:gap-0 sm:px-0 sm:py-0">
       {/* Dar konteyner + mobil: 2 satır. */}
@@ -318,7 +325,7 @@ export function TodayRow({ item }: { item: CockpitTodayItem }) {
         </div>
         <div className="flex min-w-0 items-center justify-between gap-3">
           <span className="min-w-0 flex-1 truncate">{item.partner}</span>
-          <span className="shrink-0">{money}</span>
+          <span className="shrink-0">{money()}</span>
         </div>
       </div>
       {/* Geniş konteyner (depo'nun col-span-2 "Bugün" şeridi): tek satır, tutar/rozet sabit yuvalarda. */}
@@ -328,7 +335,7 @@ export function TodayRow({ item }: { item: CockpitTodayItem }) {
           <span className="w-32 shrink-0 truncate font-mono text-xs">{item.no}</span>
         </span>
         <span className="min-w-0 flex-1 truncate">{item.partner}</span>
-        <span className="w-24 shrink-0">{money}</span>
+        {money('w-24 shrink-0')}
         <span className="flex w-32 shrink-0 justify-end">
           <StatusBadge status={item.status} kind={item.k} />
         </span>

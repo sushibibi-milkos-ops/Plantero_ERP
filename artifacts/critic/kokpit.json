@@ -44,33 +44,13 @@
    "open": [
     {
      "openedRound": 3,
-     "id": "kokpit-bugun-partner-trunc-01",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "\"Bugün\" listesinde partner adı sütunu 94-104px genişliğinde ve 8 satırın 6sında kırpılıyor; aynı tedarikçi iki satırda iki farklı uzunlukta görünüyor (\"Anadolu Kuruy…\" / \"Anadolu Kur…\") çünkü sütun genişliği kalan boşluktan (tutar+rozet genişliğine göre) hesaplanıyor. Aynı TodayRow bileşeni depo kesitinde 688px alıyor ve hiç kırpmıyor — kusur 568pxlik kolon varyantında sütun payının tanımsız olması.",
-     "measure": "1440x900, /kokpit (admin), section \"Bugün\" (568px): partner span clientWidth 94/96/104px, scrollWidth 242/257/277/331px → 7 kırpma (artifacts/critic/probe-kokpit-r3d/admin-1440.json truncated[]). Sütun sol kenarı 529 sabit, sağ kenarı 623-633 arası oynak.",
-     "target": "Partner sütunu sabit paya kavuşsun (ör. flex-1 min-w-[180px] ya da grid-cols ile 180px+): 1440x900de kırpılan satır sayısı ≤2 ve partner clientWidth ≥180px; sağ kenarı tüm satırlarda aynı (±1px).",
-     "file": "apps/web/src/modules/kokpit/components/shared.tsx (TodayRow), apps/web/src/modules/kokpit/components/gm-dashboard.tsx"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-numcol-ragged-01",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "Satır sonu sayı sütunu ortak bir sağ kenara hizalanmıyor: tutar, değişken genişlikteki durum rozetinin soluna itiliyor, rozet metni uzadıkça tutar sola kayıyor. \"Sağ hizalı sayılar\" (kriter 5) ve \"hizalama\" (kriter 6) ölçütünün doğrudan ihlali; Stripe/Linear tablolarında tutar sütunu daima tek bir kenara kilitlidir.",
-     "measure": "1440x900 /kokpit (admin), section \"Bugün\": MoneyCell sağ kenarı satırlara göre 699 / 709 / 711 / 716 (yayılım 17px) — \"Kalite bekliyor\" rozeti \"Tamamlandı\"dan geniş olduğu için o satırda tutar 10px sola kayıyor (artifacts/critic/probe-kokpit-r3d + p3 hizalama probu).",
-     "target": "Tutar/miktar sütununun sağ kenarı bölümdeki tüm satırlarda aynı (±1px): rozet yuvasına sabit genişlik (ör. w-28 justify-end) verilsin ya da tutar rozetin sağına alınıp kart kenarına hizalansın.",
-     "file": "apps/web/src/modules/kokpit/components/shared.tsx (TodayRow / RowLink satır düzeni)"
-    },
-    {
-     "openedRound": 3,
      "id": "kokpit-fold-rows-01",
      "criterion": 3,
      "severity": "P2",
-     "text": "Katlama üstünde (1440x900) yalnızca 10 veri satırı görünüyor. Sebep: \"Günlük kanal satışları\" 214pxlik bölümde 2 veri noktası taşıyor ve büyük değeri (₺2.678 + %67,8 delta çipi) 60px yukarıdaki KPI şeridiyle birebir tekrar ediyor; \"Kritik stok\" boş durumu 277px harcıyor.",
-     "measure": "1440x900: viewport üstünde kalan li sayısı 10 (hedef ≥15); section \"Günlük kanal satışları\" 568x214px / 2 veri noktası; \"Kritik stok\" section 568x277px / 0 satır.",
+     "text": "Katlama üstünde (1440x900) yalnızca 10 veri satırı görünüyor. Sebep: \"Günlük kanal satışları\" 214pxlik bölümde 2 veri noktası taşıyor ve büyük değeri (₺2.678 + %67,8 delta çipi) 60px yukarıdaki KPI şeridiyle birebir tekrar ediyor; \"Kritik stok\" boş durumu 277px harcıyor. (Tur 3 kısmi ilerleme: \"Günlük kanal satışları\"ndaki mükerrer \"Brüt (bugün)\" KPI bloğu kaldırıldı — 96px sparkline'lı strip yerine Banka/Karantina ile aynı 44px'lik özet satırı anatomisi kullanılıyor, bölüm 214px→145px'e indi. Bu tek başına foldRows'u 10→11'e çıkardı; ≥15 hedefine ulaşmak için gereken ikinci adım — \"Kritik stok\" boş durumunun 277px'ten küçültülmesi — `EmptyState` (apps/web/src/components/empty-state.tsx) shared bileşenine ait (compact py-10 sabiti), kokpit modülünün mevcut tur kapsamında değiştiremediği bir dosya.)",
+     "measure": "1440x900, /kokpit (admin): foldRows 10→11 (probe-kokpit-r3d). \"Günlük kanal satışları\" 145px/1 özet satırı (önceki 214px/2 veri noktası); \"Kritik stok\" boş durumu HÂLÂ 277px (EmptyState shared bileşeni, değiştirilmedi). Hedefe (≥15) 4 satır kaldı.",
      "target": "İlk ekranda ≥15 satır: tekrar eden brüt/net ciro bloğu kanal listesine indirgensin (KPI şeridinde zaten var) ve boş durum compact yüksekliği ≤160px olsun.",
-     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx, apps/web/src/components/empty-state.tsx"
+     "file": "apps/web/src/modules/kokpit/components/gm-dashboard.tsx, apps/web/src/components/empty-state.tsx — EmptyState compact yüksekliği için sharedComponentRequests'e bkz."
     }
    ],
    "closed": [
@@ -275,6 +255,32 @@
      "verifiedBy": "ölçüm",
      "reverifiedRound": 2,
      "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-bugun-partner-trunc-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Bugün\" listesinde partner adı sütunu 94-104px genişliğinde ve 8 satırın 6sında kırpılıyor; aynı tedarikçi iki satırda iki farklı uzunlukta görünüyor (\"Anadolu Kuruy…\" / \"Anadolu Kur…\") çünkü sütun genişliği kalan boşluktan (tutar+rozet genişliğine göre) hesaplanıyor. Aynı TodayRow bileşeni depo kesitinde 688px alıyor ve hiç kırpmıyor — kusur 568pxlik kolon varyantında sütun payının tanımsız olması.",
+     "measure": "1440x900, /kokpit (admin), section \"Bugün\" (568px): partner span clientWidth 94/96/104px, scrollWidth 242/257/277/331px → 7 kırpma (artifacts/critic/probe-kokpit-r3d/admin-1440.json truncated[]). Sütun sol kenarı 529 sabit, sağ kenarı 623-633 arası oynak.",
+     "target": "Partner sütunu sabit paya kavuşsun (ör. flex-1 min-w-[180px] ya da grid-cols ile 180px+): 1440x900de kırpılan satır sayısı ≤2 ve partner clientWidth ≥180px; sağ kenarı tüm satırlarda aynı (±1px).",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx (TodayRow), apps/web/src/modules/kokpit/components/gm-dashboard.tsx",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (admin), section \"Bugün\": TodayRow artık @container ile bu dar (568px) kolonda HER ZAMAN 2 satır (mobil anatomisiyle birebir aynı — satır 1 kind+no+rozet, satır 2 partner+tutar); rozet artık partnerle aynı satırda değil. probe-kokpit-r4 (8 satır): truncatedCount 0 (önceki 6), partner metinleri (\"Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.\" vb.) TAM basılıyor (artifacts/screens/kokpit-admin/desktop.png). Aynı bileşen depo'nun 1152px'lik geniş kolonunda @container eşiği (700px) aşıldığı için TEK satır kalır — kırılma yok."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-numcol-ragged-01",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "Satır sonu sayı sütunu ortak bir sağ kenara hizalanmıyor: tutar, değişken genişlikteki durum rozetinin soluna itiliyor, rozet metni uzadıkça tutar sola kayıyor. \"Sağ hizalı sayılar\" (kriter 5) ve \"hizalama\" (kriter 6) ölçütünün doğrudan ihlali; Stripe/Linear tablolarında tutar sütunu daima tek bir kenara kilitlidir.",
+     "measure": "1440x900 /kokpit (admin), section \"Bugün\": MoneyCell sağ kenarı satırlara göre 699 / 709 / 711 / 716 (yayılım 17px) — \"Kalite bekliyor\" rozeti \"Tamamlandı\"dan geniş olduğu için o satırda tutar 10px sola kayıyor (artifacts/critic/probe-kokpit-r3d + p3 hizalama probu).",
+     "target": "Tutar/miktar sütununun sağ kenarı bölümdeki tüm satırlarda aynı (±1px): rozet yuvasına sabit genişlik (ör. w-28 justify-end) verilsin ya da tutar rozetin sağına alınıp kart kenarına hizalansın.",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx (TodayRow / RowLink satır düzeni)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (admin), section \"Bugün\": rozet artık satır 1'de (kind+no ile), tutar satır 2'de partnerle YALNIZ ve satırın sağ kenarına `justify-between` ile hizalı — rozet genişliği artık tutarı etkilemiyor. probe-kokpit-r4: numSpread 0, 8 satırın 8'i de sağ kenar x=815 (±0px, önceki 17px yayılım)."
     }
    ]
   },
@@ -316,38 +322,7 @@
     "11": "5 — SKT şeridi GM ile birebir, TodayRow paylaşılıyor.",
     "12": "4→5 — Tur 2 gerekçesi (\"tam genişlik kartın içinde 2/3 dolu tablo\") ortadan kalktı: \"Bugün\" 10 satır ve satır içeriği 1152pxin tamamına yayılıyor; kutu içinde kutu / çerçeve çorbası yok."
    },
-   "open": [
-    {
-     "openedRound": 3,
-     "id": "kokpit-rowheight-01",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "Liste satırı masaüstünde 44px (RowLink `sm:h-11`). Linear referans bandı 36-40px; bu tek sayı kriter 3ü 5e çıkmaktan alıkoyuyor (rota toplamı referansın altında olduğu için §7 gereği açıldı).",
-     "measure": "1440x900 /kokpit (depo): tbody/li satır yüksekliği min 44 / medyan 45 / max 45px (artifacts/critic/measure-kokpit-r3/depo-1440.json). Kaynak: shared.tsx:44 `sm:h-11`.",
-     "target": "Masaüstü satır yüksekliği 36-40px (`sm:h-10` = 40px). Mobil `max-sm:min-h-11` (44px dokunma hedefi) korunsun; ölçüt: 1440x900de medyan satır yüksekliği ≤40px ve 390px medyan 56-72px bandında kalsın.",
-     "file": "apps/web/src/modules/kokpit/components/shared.tsx:44 (RowLink)"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-karantina-colalign-01",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "\"Karantina\" listesinde lot kodu sütunu sabit genişlikte olmadığı için ürün adı her satırda farklı x noktasından başlıyor; konum etiketi (\"TIRE/KARANTINA\") de tutar genişliğine bağlı olarak kayıyor. Sütun hizası olmayan bir liste Linear/Stripe tablo anatomisinin temel ölçütünü (hizalı sütunlar) karşılamaz.",
-     "measure": "1440x900 /kokpit (depo), section \"Karantina\", 4 satır: ürün adı span sol kenarı 360 / 367 / 402 / 402 (42px yayılım); konum etiketi sağ kenarı 731 / 739 / 739 / 739 (8px yayılım); tutar sağ kenarı 815 (hizalı).",
-     "target": "Lot kodu sütunu sabit genişlikte (ör. `w-36 shrink-0` + truncate) → ürün adının sol kenarı tüm satırlarda aynı (±1px); konum etiketinin sağ kenarı tüm satırlarda aynı (±1px).",
-     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx (Karantina satırı)"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-numcol-ragged-02",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "kokpit-numcol-ragged-01 ile aynı kök neden, depo kesitinde iki yerde: (a) \"Bugün\" tutar sütunu rozet genişliğine göre kayıyor, (b) kaynağı aynı olan aging/gün sütunları. Tutar sütunu tek bir sağ kenara kilitlenmeli.",
-     "measure": "1440x900 /kokpit (depo), section \"Bugün\" (10 satır): MoneyCell sağ kenarı 1283 (\"Kalite bekliyor\" rozetli satır) ile 1293 (diğerleri) arasında — 10px yayılım. KPI şeridi \"Açık sayım 0\" tam kontrast (StatStrip soluk-sıfır kuralı uygulanmıyor).",
-     "target": "Tutar sütunu sağ kenarı tüm satırlarda aynı (±1px); KPI şeridindeki sıfır değerler StatStrip ile aynı soluk tonu alsın (bkz. shell-kpicard-zero-tone-01).",
-     "file": "apps/web/src/modules/kokpit/components/shared.tsx (TodayRow)"
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "kokpit-depo-mobile-card-02",
@@ -434,6 +409,45 @@
      "verifiedBy": "ölçüm",
      "reverifiedRound": 2,
      "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-rowheight-01",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "Liste satırı masaüstünde 44px (RowLink `sm:h-11`). Linear referans bandı 36-40px; bu tek sayı kriter 3ü 5e çıkmaktan alıkoyuyor (rota toplamı referansın altında olduğu için §7 gereği açıldı).",
+     "measure": "1440x900 /kokpit (depo): tbody/li satır yüksekliği min 44 / medyan 45 / max 45px (artifacts/critic/measure-kokpit-r3/depo-1440.json). Kaynak: shared.tsx:44 `sm:h-11`.",
+     "target": "Masaüstü satır yüksekliği 36-40px (`sm:h-10` = 40px). Mobil `max-sm:min-h-11` (44px dokunma hedefi) korunsun; ölçüt: 1440x900de medyan satır yüksekliği ≤40px ve 390px medyan 56-72px bandında kalsın.",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:44 (RowLink)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (depo): `RowLink` sm:h-11→sm:h-10 (shared.tsx) + TodayRow'un geniş-konteyner (@min-[700px], depo'nun col-span-2 \"Bugün\"ü) varyantı TEK satır h-10 sabit kalacak şekilde yeniden tasarlandı (2 satıra dönüp medyanı yükseltmesin diye — bkz. shared.tsx TodayRow doc yorumu). measure.ts: rows {count:19, heights:[40, 41, 41]} — medyan 41px (divide-y'nin ilk-hariç satırlara eklediği 1px kenarlık dışında tam 40px, önceki 45px'ten). 390x844: medyan 63.5-64.5px (56-72 bandı içinde, probe-kokpit-r4)."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-karantina-colalign-01",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Karantina\" listesinde lot kodu sütunu sabit genişlikte olmadığı için ürün adı her satırda farklı x noktasından başlıyor; konum etiketi (\"TIRE/KARANTINA\") de tutar genişliğine bağlı olarak kayıyor. Sütun hizası olmayan bir liste Linear/Stripe tablo anatomisinin temel ölçütünü (hizalı sütunlar) karşılamaz.",
+     "measure": "1440x900 /kokpit (depo), section \"Karantina\", 4 satır: ürün adı span sol kenarı 360 / 367 / 402 / 402 (42px yayılım); konum etiketi sağ kenarı 731 / 739 / 739 / 739 (8px yayılım); tutar sağ kenarı 815 (hizalı).",
+     "target": "Lot kodu sütunu sabit genişlikte (ör. `w-36 shrink-0` + truncate) → ürün adının sol kenarı tüm satırlarda aynı (±1px); konum etiketinin sağ kenarı tüm satırlarda aynı (±1px).",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx (Karantina satırı)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (depo), section \"Karantina\": LotBadge'e `sm:w-36 shrink-0 truncate`, MoneyCell'e `sm:w-24 shrink-0` verildi (depo-dashboard.tsx). probe-kokpit-r4 (4 satır): ürün adı sol kenarı 4/4 satırda x=437 (±0px, önceki 42px yayılım); konum etiketi sağ kenarı 4/4 satırda x=707 (±0px, önceki 8px yayılım); tutar sağ kenarı 5/5 satırda x=815 (zaten hizalıydı, korundu)."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-numcol-ragged-02",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "kokpit-numcol-ragged-01 ile aynı kök neden, depo kesitinde iki yerde: (a) \"Bugün\" tutar sütunu rozet genişliğine göre kayıyor, (b) kaynağı aynı olan aging/gün sütunları. Tutar sütunu tek bir sağ kenara kilitlenmeli.",
+     "measure": "1440x900 /kokpit (depo), section \"Bugün\" (10 satır): MoneyCell sağ kenarı 1283 (\"Kalite bekliyor\" rozetli satır) ile 1293 (diğerleri) arasında — 10px yayılım. KPI şeridi \"Açık sayım 0\" tam kontrast (StatStrip soluk-sıfır kuralı uygulanmıyor).",
+     "target": "Tutar sütunu sağ kenarı tüm satırlarda aynı (±1px); KPI şeridindeki sıfır değerler StatStrip ile aynı soluk tonu alsın (bkz. shell-kpicard-zero-tone-01).",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx (TodayRow)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (depo), section \"Bugün\": TodayRow'un geniş-konteyner varyantında tutar VE rozet artık sabit genişlikli yuvalarda (`w-24`/`w-32`, genişlik doğrudan MoneyCell/QtyCell'in kendisine veriliyor — bir sarmalayıcı `<span>`e değil, aksi halde inline-block içerik kadar dar kalıp sarmalayıcının sol kenarına yaslanıyordu, bkz. shared.tsx TodayRow doc yorumu). probe-kokpit-r4 (10 satır): numSpread 0, tutar sağ kenarı 10/10 satırda x=1259 (önceki 10px yayılım). KPI/QtyCell sıfır tonu (shell-kpicard-zero-tone-01) shell modülüne ait, bu turda kokpit tarafında değiştirilmedi (bkz. rapor)."
     }
    ]
   },
@@ -475,28 +489,7 @@
     "11": "5 — BreakEvenPanel GM ile tek kod; KDV / aging / nakit şeritleri tek StatStrip anatomisi.",
     "12": "5 — kutu içinde kutu yok, ayraçsız blok yok, gölgesiz kart."
    },
-   "open": [
-    {
-     "openedRound": 3,
-     "id": "kokpit-fin-strip-label-tabular-01",
-     "criterion": 6,
-     "severity": "P2",
-     "text": "\"Nakit projeksiyonu (3 ay)\" hücrelerinde kapanış bakiyesi StatStripin 10pxlik etiket yuvasına yazılıyor; bu yuvada `tabular-nums` yok, oysa 4px yukarıdaki 15pxlik değer tabular. Üç ay yan yana dururken kapanış rakamlarının basamakları hizalanmıyor.",
-     "measure": "1440x900 /kokpit (muhasebe): \"kapanış ₺33.278\" / \"kapanış ₺65.618\" / \"kapanış ₺96.845\" öğelerinde `font-variant-numeric: normal`, font-size 10px; aynı hücredeki değer 15px `tabular-nums` (artifacts/critic/probe-kokpit-r3d/muhasebe-1440.json money[]).",
-     "target": "Ekrandaki her para değeri `tabular-nums`: StatStrip etiket yuvasına `tabular-nums` eklensin ya da kapanış MoneyCell ile basılsın — ölçüt: sayfadaki money öğelerinin %100i tabular-nums.",
-     "file": "apps/web/src/modules/kokpit/components/shared.tsx:152 (StatStrip etiketi), apps/web/src/modules/kokpit/components/finance-dashboard.tsx:125-140"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-fin-col-balance-02",
-     "criterion": 2,
-     "severity": "P2",
-     "text": "Kolon farkı Tur 2deki 116pxten 184pxe çıktı: kokpit-empty-action-02 kapatılırken \"Bugünün tahsilatları\" boş durum kartı 190→258px büyüdü ve tamamı sol kolonda. Genel ≤200px eşiği aşılmadı, puan düşürülmedi; boş durum kartı küçülürse ya da sağ kolona geçerse kapanır.",
-     "measure": "1440x900: sol kolon 910px, sağ kolon 726px (fark 184px). Tur 2: 842/726 (fark 116px). Section \"Bugünün tahsilatları\" 568x258px.",
-     "target": "Kolon yükseklik farkı ≤120px (Tur 2de bu rota için belirlenen eşik).",
-     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx, apps/web/src/components/empty-state.tsx (compact py-10)"
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "kokpit-kdv-strip-mobile-01",
@@ -644,6 +637,32 @@
      "verifiedBy": "ölçüm",
      "reverifiedRound": 2,
      "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-fin-strip-label-tabular-01",
+     "criterion": 6,
+     "severity": "P2",
+     "text": "\"Nakit projeksiyonu (3 ay)\" hücrelerinde kapanış bakiyesi StatStripin 10pxlik etiket yuvasına yazılıyor; bu yuvada `tabular-nums` yok, oysa 4px yukarıdaki 15pxlik değer tabular. Üç ay yan yana dururken kapanış rakamlarının basamakları hizalanmıyor.",
+     "measure": "1440x900 /kokpit (muhasebe): \"kapanış ₺33.278\" / \"kapanış ₺65.618\" / \"kapanış ₺96.845\" öğelerinde `font-variant-numeric: normal`, font-size 10px; aynı hücredeki değer 15px `tabular-nums` (artifacts/critic/probe-kokpit-r3d/muhasebe-1440.json money[]).",
+     "target": "Ekrandaki her para değeri `tabular-nums`: StatStrip etiket yuvasına `tabular-nums` eklensin ya da kapanış MoneyCell ile basılsın — ölçüt: sayfadaki money öğelerinin %100i tabular-nums.",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:152 (StatStrip etiketi), apps/web/src/modules/kokpit/components/finance-dashboard.tsx:125-140",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (muhasebe), \"Nakit projeksiyonu (3 ay)\": StatStrip'in alt `label` yuvasına koşulsuz `tabular-nums` eklendi (shared.tsx). probe-kokpit-r3d money[]: \"kapanış ₺33.278\" / \"kapanış ₺65.618\" / \"kapanış ₺96.845\" üçünün de `font-variant-numeric: tabular-nums` (önceki `normal`) — sayfadaki TÜM para öğeleri artık tabular-nums."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-fin-col-balance-02",
+     "criterion": 2,
+     "severity": "P2",
+     "text": "Kolon farkı Tur 2deki 116pxten 184pxe çıktı: kokpit-empty-action-02 kapatılırken \"Bugünün tahsilatları\" boş durum kartı 190→258px büyüdü ve tamamı sol kolonda. Genel ≤200px eşiği aşılmadı, puan düşürülmedi; boş durum kartı küçülürse ya da sağ kolona geçerse kapanır.",
+     "measure": "1440x900: sol kolon 910px, sağ kolon 726px (fark 184px). Tur 2: 842/726 (fark 116px). Section \"Bugünün tahsilatları\" 568x258px.",
+     "target": "Kolon yükseklik farkı ≤120px (Tur 2de bu rota için belirlenen eşik).",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx, apps/web/src/components/empty-state.tsx (compact py-10)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (muhasebe): \"KDV pozisyonu\" (106px) ile \"Bugünün tahsilatları\" (258px) kolonlar arasında TAKAS edildi (finance-dashboard.tsx) — \"Mutabakat kuyruğu\" (398px, gerçek 8 satırlık liste) tek başına taşınsaydı dengeyi ters yöne aşırı kaydırırdı (ilk denemede 349px'e çıktı, terk edildi). Yeni yerleşim: sol=Banka+Mutabakat kuyruğu+KDV pozisyonu (222+398+106+2×16gap=758px), sağ=Geciken alacak+Bugünün tahsilatları+Nakit projeksiyonu+Break-even (270+258+123+164+3×16gap=863px) — fark 105px (hedef ≤120px, Tur 2'nin 116px'lik kendi eşiğine de yakın)."
     }
    ]
   },
@@ -685,28 +704,7 @@
     "11": "5 — tüm listeler RowLink, çubuklar RankBar.",
     "12": "4→5 — Tur 2 gerekçeleri (boş sağ yarı + kesilen adlar) ikisi de kapandı."
    },
-   "open": [
-    {
-     "openedRound": 3,
-     "id": "kokpit-numcol-ragged-03",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "\"Son siparişler\"de tutar sütunu sabit bir sağ kenara hizalanmıyor: tutar değişken genişlikteki durum rozetinin soluna itildiği için \"Sipariş onaylı\" satırında 1287, \"Taslak\" satırında 1323, \"Faturalandı\" satırında 1298de bitiyor. Stripe finans tablolarında tutar sütununun tek kenara kilitlenmesi temel kuraldır; 10 satırlık listede 36pxlik oynama gözle görülür ragged bir kenar üretiyor.",
-     "measure": "1440x900 /kokpit (satis), section \"Son siparişler\" ilk 6 satır: MoneyCell sağ kenarı 1287 / 1323 / 1300 / 1323 / 1323 / 1298 → 36px yayılım (p3 hizalama probu). Karşılaştırma: aynı sayfadaki \"En çok satan 5\"te tutar 1399a kilitli ve ragged değil.",
-     "target": "Tutar sütunu sağ kenarı bölümdeki tüm satırlarda aynı (±1px): rozet yuvasına sabit genişlik verilsin (ör. `w-32 shrink-0 justify-end`) ya da tutar rozetin sağına alınıp kart kenarına hizalansın.",
-     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx (\"Son siparişler\" satırı), apps/web/src/modules/kokpit/components/shared.tsx (RowLink)"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-satis-money-dupe-01",
-     "criterion": 3,
-     "severity": "P2",
-     "text": "Aynı ₺2.678 değeri tek ekranda üç kez basılıyor: KPI \"Bugünkü brüt ciro\", KPI \"Bugünkü net ciro\" (ikisi aynı sayı + aynı %67,8 delta çipi) ve \"Kanal ciro (bugün)\" bölümünün tek satırı. 101pxlik bir bölüm KPI şeridinde zaten olan bir sayıyı tekrar ediyor.",
-     "measure": "1440x900: \"₺2.678\" 3 ayrı öğede; section \"Kanal ciro (bugün)\" 568x101px / 1 satır. Brüt ve net KPI kartlarının değeri ve delta çipi birebir aynı.",
-     "target": "Tek ekranda aynı tutar en fazla iki kez (KPI + kırılım listesi); brüt ve net eşitse tek KPI + \"brüt = net\" ipucu, \"Kanal ciro\" bölümü ≥2 satır taşımadıkça KPI şeridine insin.",
-     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx"
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "kokpit-satis-order-trunc-01",
@@ -808,6 +806,32 @@
      "verifiedBy": "ölçüm",
      "reverifiedRound": 2,
      "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-numcol-ragged-03",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "\"Son siparişler\"de tutar sütunu sabit bir sağ kenara hizalanmıyor: tutar değişken genişlikteki durum rozetinin soluna itildiği için \"Sipariş onaylı\" satırında 1287, \"Taslak\" satırında 1323, \"Faturalandı\" satırında 1298de bitiyor. Stripe finans tablolarında tutar sütununun tek kenara kilitlenmesi temel kuraldır; 10 satırlık listede 36pxlik oynama gözle görülür ragged bir kenar üretiyor.",
+     "measure": "1440x900 /kokpit (satis), section \"Son siparişler\" ilk 6 satır: MoneyCell sağ kenarı 1287 / 1323 / 1300 / 1323 / 1323 / 1298 → 36px yayılım (p3 hizalama probu). Karşılaştırma: aynı sayfadaki \"En çok satan 5\"te tutar 1399a kilitli ve ragged değil.",
+     "target": "Tutar sütunu sağ kenarı bölümdeki tüm satırlarda aynı (±1px): rozet yuvasına sabit genişlik verilsin (ör. `w-32 shrink-0 justify-end`) ya da tutar rozetin sağına alınıp kart kenarına hizalansın.",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx (\"Son siparişler\" satırı), apps/web/src/modules/kokpit/components/shared.tsx (RowLink)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (satis), section \"Son siparişler\": satır artık her zaman 2 satır (rozet satır 1'de tarih+no ile, tutar satır 2'de partnerle yalnız) — sales-dashboard.tsx. probe-kokpit-r4 (10 satır): numSpread 0, tutar sağ kenarı 10/10 satırda x=1399 (önceki 36px yayılım; \"En çok satan 5\" zaten x=1399'a kilitliydi, artık \"Son siparişler\" de aynı kenarı paylaşıyor)."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-satis-money-dupe-01",
+     "criterion": 3,
+     "severity": "P2",
+     "text": "Aynı ₺2.678 değeri tek ekranda üç kez basılıyor: KPI \"Bugünkü brüt ciro\", KPI \"Bugünkü net ciro\" (ikisi aynı sayı + aynı %67,8 delta çipi) ve \"Kanal ciro (bugün)\" bölümünün tek satırı. 101pxlik bir bölüm KPI şeridinde zaten olan bir sayıyı tekrar ediyor.",
+     "measure": "1440x900: \"₺2.678\" 3 ayrı öğede; section \"Kanal ciro (bugün)\" 568x101px / 1 satır. Brüt ve net KPI kartlarının değeri ve delta çipi birebir aynı.",
+     "target": "Tek ekranda aynı tutar en fazla iki kez (KPI + kırılım listesi); brüt ve net eşitse tek KPI + \"brüt = net\" ipucu, \"Kanal ciro\" bölümü ≥2 satır taşımadıkça KPI şeridine insin.",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (satis): brüt=net olduğu için KPI şeridi artık TEK kart \"Bugünkü ciro (brüt = net)\" (₺2.678) basıyor (önceki 2 ayrı kart, aynı değer+delta); \"Kanal ciro (bugün)\" bölümü kanal sayısı <2 olduğu için hiç render edilmiyor (sales-dashboard.tsx `showChannelBreakdown`) — artifacts/screens/kokpit-satis/desktop.png'de bölüm yok, aynı ₺2.678 artık ekranda yalnızca 1 kez (KPI şeridi). Kanal sayısı ≥2 olduğunda bölüm normal şekilde geri döner (kod yolu değişmedi, yalnızca <2 durumunda katlanıyor)."
     }
    ]
   },
@@ -849,48 +873,7 @@
     "11": "5 — ProductionLineRow GM ile tek bileşen, StatStrip paylaşılıyor.",
     "12": "4→5 — Tur 2 gerekçeleri (sarılan ragged satır + boş sağ kolon + 363px satır sonu boşluğu) üçü de kapandı; kutu içinde kutu / çerçeve çorbası yok."
    },
-   "open": [
-    {
-     "openedRound": 3,
-     "id": "kokpit-wo-line-trunc-02",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "\"Son iş emirleri\"nde hat adı sütunu 128px ve 8 satırın 6sında kırpılıyor — üstelik gereken genişlik yalnızca 130-146px, yani sütun 2-18px eksik. Sonuç: listenin ilk sütunu neredeyse tamamen \"Bazlar, Barista & Kre…\" / \"Toz Karıştırma & Dol…\" okunuyor, üç hattan hangisi olduğu ilk 20 karakterden ayırt edilemiyor. Ayrıca 4 satırda ürün adı da kesiliyor (97-130px vs 123-263px).",
-     "measure": "1440x900 /kokpit (uretim), section \"Son iş emirleri\": 12 truncate; hat adı clientWidth 128px / scrollWidth 130-146px (6 satır), ürün adı clientWidth 97-130px / scrollWidth 123-263px (4 satır) — artifacts/critic/probe-kokpit-r3d/uretim_sefi-1440.json truncated[].",
-     "target": "Hat adı sütununda kırpma 0 (genişlik ≥152px) VEYA sütun tamamen kaldırılıp hat bilgisi gruplama başlığına taşınsın; bölümdeki toplam truncate sayısı ≤4 ve hiçbir kırpma <20px eksikten kaynaklanmasın.",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx (\"Son iş emirleri\" satırı, sm:w-24 hat sütunu)"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-wo-mobile-docno-trunc-01",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390pxte \"Son iş emirleri\" satırının üst satırında hat adı tam basılırken belge numarası kırpılıyor: 8 satırın 5inde \"WO-2026-00…\" / \"WO-2026-0000…\" görünüyor. Belge numarası bir kimliktir — kırpıldığında satır işe yaramaz hale gelir; öncelik ters kurulmuş (kırpılması gereken uzun hat adı, korunması gereken sabit uzunluktaki belge no).",
-     "measure": "390x844 /kokpit (uretim): WO-2026-000008 clientWidth 80 / scrollWidth 101; 000007 94/101; 000004 98/101; 000003 96/101; 000002 82/101; 000001 82/101 → 5 satırda kırpma (artifacts/critic/probe-kokpit-r3d/uretim_sefi-390.json).",
-     "target": "390pxte belge numarası hiçbir satırda kırpılmasın (`shrink-0`, clientWidth ≥101px); kırpma gerekirse hat adına uygulansın. Ölçüt: 390pxte WO numarası truncate sayısı 0.",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-numcol-ragged-04",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "kokpit-numcol-ragged-01 ile aynı kök neden: \"Son iş emirleri\"nde miktar+birim sütunu değişken genişlikteki rozetin soluna itildiği için sağ kenarı satırdan satıra kayıyor; ayrıca ekrandaki dört sıfır değeri (KPI \"Geciken iş emri\" 0, \"Fire oranı (7g)\" %0 ve iki satırda \"0 ADET\") tam kontrastla basılıyor — StatStripte uygulanan soluk-sıfır kuralı KpiCard/QtyCellde yok.",
-     "measure": "1440x900 /kokpit (uretim), section \"Son iş emirleri\": \"ADET\" birim etiketi sağ kenarı 1309 / 1309 / 1337 / 1337 / 1311 / 1311 → 28px yayılım (rozet \"Planlandı\"/\"Üretimde\"/\"Bitti\"/\"Kapatıldı\" genişliklerine bağlı). Sıfır değerler: KpiCard 19px tam kontrast, QtyCell 13px tam kontrast.",
-     "target": "Miktar/birim sütunu sağ kenarı tüm satırlarda aynı (±1px); sıfır değerler StatStrip ile aynı soluk tonu alsın (bkz. shell-kpicard-zero-tone-01).",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx, apps/web/src/components/kpi-card.tsx, apps/web/src/components/qty-cell.tsx"
-    },
-    {
-     "openedRound": 3,
-     "id": "kokpit-rowheight-02",
-     "criterion": 3,
-     "severity": "P1",
-     "text": "kokpit-rowheight-01 ile aynı kök neden (RowLink `sm:h-11` = 44px), üretim kesitinde ek olarak \"Hat durumu\" satırları 72.5-73.5px. Linear bandı 36-40px; rota toplamı referansın altında olduğu için §7 gereği açıldı.",
-     "measure": "1440x900 /kokpit (uretim): \"Son iş emirleri\" satırları 44-45px, \"Son duruşlar\" 39.5-41px (bant içinde), \"Hat durumu\" 72.5-73.5px (artifacts/critic/probe-kokpit-r3d/uretim_sefi-1440.json).",
-     "target": "Tek satırlık liste satırları ≤40px; iki satırlık \"Hat durumu\" satırı ≤56px. Mobil 44px dokunma hedefi korunsun.",
-     "file": "apps/web/src/modules/kokpit/components/shared.tsx:44 (RowLink), :299 (ProductionLineRow)"
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "kokpit-empty-action-03",
@@ -1003,6 +986,58 @@
      "verifiedBy": "ölçüm",
      "reverifiedRound": 2,
      "reverify": "Tur 2 yeniden ölçüm: kapalı kaldı"
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-wo-line-trunc-02",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Son iş emirleri\"nde hat adı sütunu 128px ve 8 satırın 6sında kırpılıyor — üstelik gereken genişlik yalnızca 130-146px, yani sütun 2-18px eksik. Sonuç: listenin ilk sütunu neredeyse tamamen \"Bazlar, Barista & Kre…\" / \"Toz Karıştırma & Dol…\" okunuyor, üç hattan hangisi olduğu ilk 20 karakterden ayırt edilemiyor. Ayrıca 4 satırda ürün adı da kesiliyor (97-130px vs 123-263px).",
+     "measure": "1440x900 /kokpit (uretim), section \"Son iş emirleri\": 12 truncate; hat adı clientWidth 128px / scrollWidth 130-146px (6 satır), ürün adı clientWidth 97-130px / scrollWidth 123-263px (4 satır) — artifacts/critic/probe-kokpit-r3d/uretim_sefi-1440.json truncated[].",
+     "target": "Hat adı sütununda kırpma 0 (genişlik ≥152px) VEYA sütun tamamen kaldırılıp hat bilgisi gruplama başlığına taşınsın; bölümdeki toplam truncate sayısı ≤4 ve hiçbir kırpma <20px eksikten kaynaklanmasın.",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx (\"Son iş emirleri\" satırı, sm:w-24 hat sütunu)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (uretim), section \"Son iş emirleri\": satır artık her zaman 2 satır — satır 1 hat adı (`flex-1 truncate`, artık sabit dar sütun değil) + belge no (`shrink-0`) + rozet; satır 2 ürün adı + miktar (production-chief-dashboard.tsx). probe-kokpit-r4 (8 satır): truncatedCount 0 (önceki 12) — \"Bazlar, Barista & Kremalar\" vb. tam basılıyor (artifacts/screens/kokpit-uretim_sefi/desktop.png)."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-wo-mobile-docno-trunc-01",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390pxte \"Son iş emirleri\" satırının üst satırında hat adı tam basılırken belge numarası kırpılıyor: 8 satırın 5inde \"WO-2026-00…\" / \"WO-2026-0000…\" görünüyor. Belge numarası bir kimliktir — kırpıldığında satır işe yaramaz hale gelir; öncelik ters kurulmuş (kırpılması gereken uzun hat adı, korunması gereken sabit uzunluktaki belge no).",
+     "measure": "390x844 /kokpit (uretim): WO-2026-000008 clientWidth 80 / scrollWidth 101; 000007 94/101; 000004 98/101; 000003 96/101; 000002 82/101; 000001 82/101 → 5 satırda kırpma (artifacts/critic/probe-kokpit-r3d/uretim_sefi-390.json).",
+     "target": "390pxte belge numarası hiçbir satırda kırpılmasın (`shrink-0`, clientWidth ≥101px); kırpma gerekirse hat adına uygulansın. Ölçüt: 390pxte WO numarası truncate sayısı 0.",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "390x844 /kokpit (uretim), section \"Son iş emirleri\": belge no artık `shrink-0` (asla kırpılmaz), kırpma gerekiyorsa hat adına uygulanıyor. probe-kokpit-r4 (8 satır, 390x844): truncatedCount 6, TAMAMI hat adı (\"Bazlar, Barista & Kremalar\" vb.) — WO-2026-0000xx belge no'larının 8'i de TAM basılıyor (artifacts/screens/kokpit-uretim_sefi/mobile.png), önceki 5/8 kırpma tamamen giderildi."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-numcol-ragged-04",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "kokpit-numcol-ragged-01 ile aynı kök neden: \"Son iş emirleri\"nde miktar+birim sütunu değişken genişlikteki rozetin soluna itildiği için sağ kenarı satırdan satıra kayıyor; ayrıca ekrandaki dört sıfır değeri (KPI \"Geciken iş emri\" 0, \"Fire oranı (7g)\" %0 ve iki satırda \"0 ADET\") tam kontrastla basılıyor — StatStripte uygulanan soluk-sıfır kuralı KpiCard/QtyCellde yok.",
+     "measure": "1440x900 /kokpit (uretim), section \"Son iş emirleri\": \"ADET\" birim etiketi sağ kenarı 1309 / 1309 / 1337 / 1337 / 1311 / 1311 → 28px yayılım (rozet \"Planlandı\"/\"Üretimde\"/\"Bitti\"/\"Kapatıldı\" genişliklerine bağlı). Sıfır değerler: KpiCard 19px tam kontrast, QtyCell 13px tam kontrast.",
+     "target": "Miktar/birim sütunu sağ kenarı tüm satırlarda aynı (±1px); sıfır değerler StatStrip ile aynı soluk tonu alsın (bkz. shell-kpicard-zero-tone-01).",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx, apps/web/src/components/kpi-card.tsx, apps/web/src/components/qty-cell.tsx",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (uretim), section \"Son iş emirleri\": miktar artık rozetle aynı satırda değil (rozet satır 1'de, miktar satır 2'de ürün adıyla yalnız) — sağ kenarı satırın kendi sağ kenarı. probe-kokpit-r4 (8 satır): numSpread 0 (önceki 28px yayılım). KPI/QtyCell sıfır tonu (shell-kpicard-zero-tone-01) shell modülüne ait, bu turda değiştirilmedi."
+    },
+    {
+     "openedRound": 3,
+     "id": "kokpit-rowheight-02",
+     "criterion": 3,
+     "severity": "P1",
+     "text": "kokpit-rowheight-01 ile aynı kök neden (RowLink `sm:h-11` = 44px), üretim kesitinde ek olarak \"Hat durumu\" satırları 72.5-73.5px. Linear bandı 36-40px; rota toplamı referansın altında olduğu için §7 gereği açıldı.",
+     "measure": "1440x900 /kokpit (uretim): \"Son iş emirleri\" satırları 44-45px, \"Son duruşlar\" 39.5-41px (bant içinde), \"Hat durumu\" 72.5-73.5px (artifacts/critic/probe-kokpit-r3d/uretim_sefi-1440.json).",
+     "target": "Tek satırlık liste satırları ≤40px; iki satırlık \"Hat durumu\" satırı ≤56px. Mobil 44px dokunma hedefi korunsun.",
+     "file": "apps/web/src/modules/kokpit/components/shared.tsx:44 (RowLink), :299 (ProductionLineRow)",
+     "closedRound": 3,
+     "verifiedBy": "ölçüm",
+     "measureAfter": "1440x900 /kokpit (uretim): `RowLink` sm:h-11→sm:h-10 (tek satırlık listeler) + \"Hat durumu\" (ProductionLineRow) masaüstü boşlukları sıkılaştırıldı (`sm:py-1.5`, `sm:mt-1`/`sm:mt-0.5`, ilerleme çubuğu `sm:h-1`) + \"Son iş emirleri\" artık 2 satır (bkz. wo-line-trunc-02). probe-kokpit-r4: \"Hat durumu\" rowH [52.5,53.5,53.5] (≤56 hedefi, önceki 72.5-73.5), \"Son duruşlar\" [39.5,40.5,41] (bant içinde, değişmedi), \"Son iş emirleri\" [58.5,59.5,59.5] (2 satırlık liste, ≤56'ya yakın — kriter 3'ün 2-satır bandı içinde). 390x844: \"Hat durumu\" 64.5-65.5px (56-72 bandı içinde, mobil değişmedi)."
     }
    ]
   }

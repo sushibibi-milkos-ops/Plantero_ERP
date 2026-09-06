@@ -57,6 +57,52 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
             )}
           </Section>
 
+          <Section title="KDV pozisyonu" href="/muhasebe/kdv">
+            {!vat ? (
+              <EmptyState compact title="Henüz KDV dönemi hesaplanmadı" />
+            ) : (
+              <StatStrip
+                divider
+                items={[
+                  { key: 'period', value: periodLabel(vat.period), label: 'Dönem', valueClassName: 'text-[13px]' },
+                  { key: 'payable', value: formatMoney(vat.payable, 'TRY', { digits: 0 }), label: 'Ödenecek' },
+                  { key: 'output', value: formatMoney(vat.outputVat, 'TRY', { digits: 0 }), label: 'Hesaplanan (391)' },
+                  { key: 'input', value: formatMoney(vat.inputVat, 'TRY', { digits: 0 }), label: 'İndirilecek (191)' },
+                ]}
+              />
+            )}
+          </Section>
+
+          <Section title="Mutabakat kuyruğu" href="/muhasebe/mutabakat">
+            {reconciliationQueueItems.length === 0 ? (
+              <EmptyState compact title="Onay bekleyen öneri yok" />
+            ) : (
+              <ul className="divide-y divide-border/50">
+                {reconciliationQueueItems.map((r) => (
+                  <li key={r.id} className="flex h-11 items-center justify-between gap-3 px-4 text-[13px]">
+                    <span className="min-w-0 flex-1 truncate">{r.partnerName ?? r.counterpartyName ?? r.description}</span>
+                    <MoneyCell value={r.amount} className="shrink-0" />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
+        </div>
+
+        <div className="min-w-0 flex flex-col gap-4">
+          <Section title="Geciken alacak" href="/finans/tahsilat-takibi">
+            <AgingStrip aging={overdue.aging} />
+            {overdue.top5.length === 0 ? <EmptyState compact title="Vadesi geçen alacak yok" /> : <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />}
+          </Section>
+
+          {/* Kök neden (Tur 3 P2 kokpit-fin-col-balance-02): "Bugünün tahsilatları" boş durumuna
+              (Tur 2 kokpit-empty-action-02) açıklama+eylem eklenince kart 190→258px büyüdü ve sol
+              kolonu (Banka+Mutabakat kuyruğu+KDV) sağdan 184px öne geçirdi (eşik bu rota için 120px —
+              Tur 2'de belirlendi). "Mutabakat kuyruğu" (8 satıra kadar gerçek liste, ~400px) tek başına
+              taşınsaydı dengeyi ters yöne aşırı kaydırırdı (denendi, terk edildi) — bunun yerine küçük
+              "KDV pozisyonu" (106px) sağdan sola, "Bugünün tahsilatları" (258px) soldan sağa TAKAS
+              edildi: sol artık Banka+Mutabakat kuyruğu+KDV (~758px), sağ Geciken alacak+Bugünün
+              tahsilatları+Nakit+Break-even (~863px) — fark ~105px, hedef ≤120px. */}
           <Section title="Bugünün tahsilatları" href="/finans/tahsilat">
             {paymentsToday.length === 0 ? (
               // Kök neden (Tur 2 P1 kokpit-empty-action-02): boş durum yalnızca ikon+başlık taşıyordu —
@@ -81,49 +127,6 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
                   </li>
                 ))}
               </ul>
-            )}
-          </Section>
-        </div>
-
-        <div className="min-w-0 flex flex-col gap-4">
-          <Section title="Geciken alacak" href="/finans/tahsilat-takibi">
-            <AgingStrip aging={overdue.aging} />
-            {overdue.top5.length === 0 ? <EmptyState compact title="Vadesi geçen alacak yok" /> : <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />}
-          </Section>
-
-          {/* Kök neden (Tur 3 P2 kokpit-fin-col-balance-02): "Bugünün tahsilatları" boş durumuna
-              (Tur 2 kokpit-empty-action-02) açıklama+eylem eklenince kart 190→258px büyüdü ve sol
-              kolonu sağdan 184px öne geçirdi (eşik bu rota için 120px — Tur 2'de belirlendi). "Mutabakat
-              kuyruğu" (kendi başına küçük bir bölüm — ya kısa bir liste ya da tek satırlık boş durum)
-              sağ kolona taşındı; toplam bölüm SAYISI/İÇERİĞİ değişmedi, yalnızca yerleşimi. */}
-          <Section title="Mutabakat kuyruğu" href="/muhasebe/mutabakat">
-            {reconciliationQueueItems.length === 0 ? (
-              <EmptyState compact title="Onay bekleyen öneri yok" />
-            ) : (
-              <ul className="divide-y divide-border/50">
-                {reconciliationQueueItems.map((r) => (
-                  <li key={r.id} className="flex h-11 items-center justify-between gap-3 px-4 text-[13px]">
-                    <span className="min-w-0 flex-1 truncate">{r.partnerName ?? r.counterpartyName ?? r.description}</span>
-                    <MoneyCell value={r.amount} className="shrink-0" />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
-
-          <Section title="KDV pozisyonu" href="/muhasebe/kdv">
-            {!vat ? (
-              <EmptyState compact title="Henüz KDV dönemi hesaplanmadı" />
-            ) : (
-              <StatStrip
-                divider
-                items={[
-                  { key: 'period', value: periodLabel(vat.period), label: 'Dönem', valueClassName: 'text-[13px]' },
-                  { key: 'payable', value: formatMoney(vat.payable, 'TRY', { digits: 0 }), label: 'Ödenecek' },
-                  { key: 'output', value: formatMoney(vat.outputVat, 'TRY', { digits: 0 }), label: 'Hesaplanan (391)' },
-                  { key: 'input', value: formatMoney(vat.inputVat, 'TRY', { digits: 0 }), label: 'İndirilecek (191)' },
-                ]}
-              />
             )}
           </Section>
 
