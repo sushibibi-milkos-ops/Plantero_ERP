@@ -8,7 +8,20 @@
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [5, 5, 4, 5, 5, 4, 4, 5, 5, 5, 5, 5],
+      "scores": [
+        5,
+        5,
+        4,
+        5,
+        5,
+        4,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
       "total": 57,
       "verdict": "Plantero",
       "scoreNotes": "Kriter 3: satır 37px / 13px / mobil kart 77px ve ilk ekranda 13 satır (<15) → 4. Kriter 6: Linear referansı zaten 4; 'Çalışma saati' sıfırları tam kontrast, 'Açık iş emri' sıfırları muted → tutarsız, 4. Kriter 7: loading.tsx KPI iskeleti 104px vs gerçek 136px → 4. Toplam referansa eşit ve hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
@@ -60,31 +73,24 @@
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [5, 5, 5, 5, 3, 5, 4, 5, 5, 5, 5, 4],
+      "scores": [
+        5,
+        5,
+        5,
+        5,
+        3,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        4
+      ],
       "total": 56,
       "verdict": "Linear",
       "scoreNotes": "Kriter 5: tablo kaydırma kabı 1386px, kap 1152px — 'Sorumlu' sütunu ve satır eylemleri yatay kaydırmadan görünmüyor → 3. Kriter 12: kesik sütun + yatay kaydırma çubuğu eski ERP grid'i izlenimi → 4. Kriter 7: iskelet 6 satır, gerçek 12 → 4.",
       "open": [
-        {
-          "id": "bakim-planlar-01",
-          "criterion": 5,
-          "severity": "P1",
-          "text": "Tablo 1440px masaüstünde kendi kabına sığmıyor: 'Sorumlu' sütunu ve satır eylem menüsü ekran dışında. Kök neden: 'machine' sütununda ne meta.width ne flex var; uzun makine adları sütunu şişiriyor, sabit genişlikli 5 sütun (110+120+130+140+100=600px) kalan alanı bırakmıyor.",
-          "measure": "tablo kabı scrollWidth 1386 > clientWidth 1152 @1440x900 (fazlalık 234px)",
-          "target": "scrollWidth ≤ clientWidth (1152) @1440x900 — 'machine' sütununa meta.width ≈ 240 + truncate, 'name' sütunu flex",
-          "file": "apps/web/src/modules/maintenance/components/plans-table.tsx",
-          "openedRound": 1
-        },
-        {
-          "id": "bakim-planlar-02",
-          "criterion": 12,
-          "severity": "P2",
-          "text": "Yukarıdaki taşmanın görsel sonucu: sağ kenarda kelime ortasından kesilmiş sütun başlığı ('Sorum…') ve yatay kaydırma çubuğu — kurumsal grid görüntüsü. bakim-planlar-01 kapanınca kapanır.",
-          "measure": "sağ kenarda kesik başlık + yatay scrollbar @1440x900",
-          "target": "kesik sütun yok, yatay kaydırma çubuğu yok",
-          "file": "apps/web/src/modules/maintenance/components/plans-table.tsx",
-          "openedRound": 1
-        },
         {
           "id": "bakim-planlar-03",
           "criterion": 7,
@@ -96,47 +102,59 @@
           "openedRound": 1
         }
       ],
-      "closed": []
+      "closed": [
+        {
+          "id": "bakim-planlar-01",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Tablo 1440px masaüstünde kendi kabına sığmıyor: 'Sorumlu' sütunu ve satır eylem menüsü ekran dışında. Kök neden: 'machine' sütununda ne meta.width ne flex var; uzun makine adları sütunu şişiriyor, sabit genişlikli 5 sütun (110+120+130+140+100=600px) kalan alanı bırakmıyor.",
+          "measure": "tablo kabı scrollWidth 1386 > clientWidth 1152 @1440x900 (fazlalık 234px)",
+          "target": "scrollWidth ≤ clientWidth (1152) @1440x900 — 'machine' sütununa meta.width ≈ 240 + truncate, 'name' sütunu flex",
+          "file": "apps/web/src/modules/maintenance/components/plans-table.tsx",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "tablo kabı scrollWidth 1152 = clientWidth 1152 @1440x900 (fazlalık 0px) — pnpm measure /bakim/planlar --viewport 1440x900",
+          "fixNote": "plans-table.tsx 'machine' sütununa meta.width:200 + whitespace-normal/line-clamp-1 (basit overflow-hidden 'auto' tablo düzeninde min-content genişliğini alt tarafa indiremiyordu — kelime kırılması + tek satır kırpma ile min-content daraltıldı, ölçüldü: 471px → 200px), 'name' sütunu flex:true."
+        },
+        {
+          "id": "bakim-planlar-02",
+          "criterion": 12,
+          "severity": "P2",
+          "text": "Yukarıdaki taşmanın görsel sonucu: sağ kenarda kelime ortasından kesilmiş sütun başlığı ('Sorum…') ve yatay kaydırma çubuğu — kurumsal grid görüntüsü. bakim-planlar-01 kapanınca kapanır.",
+          "measure": "sağ kenarda kesik başlık + yatay scrollbar @1440x900",
+          "target": "kesik sütun yok, yatay kaydırma çubuğu yok",
+          "file": "apps/web/src/modules/maintenance/components/plans-table.tsx",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "sağ kenarda kesik başlık yok (Sorumlu/Durum tam görünür), yatay kaydırma çubuğu yok — bkz. artifacts/screens/bakim-planlar/desktop.png",
+          "fixNote": "bakim-planlar-01 kök nedeniyle birlikte kapandı (aynı dosya, aynı düzeltme)."
+        }
+      ]
     },
     "/bakim/is-emirleri": {
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [5, 4, 2, 4, 3, 5, 4, 3, 5, 5, 3, 4],
+      "scores": [
+        5,
+        4,
+        2,
+        4,
+        3,
+        5,
+        4,
+        3,
+        5,
+        5,
+        3,
+        4
+      ],
       "total": 47,
       "verdict": "Linear",
       "scoreNotes": "Modülün en zayıf ekranı. Kriter 3: masaüstü varsayılanı kanban; 1440×900'de tek kart görünüyor, tbody satır sayısı 0 → 2. Kriter 11: masaüstü kanbanda arama ve 3 filtre hiç yok, mobilde/listede var → 3. Kriter 8: kanban kartı klavyeyle erişilemeyen div → 3. Kriter 5: board kabı 1488 > 1152, 5. sütun kesik → 3. Mobil liste (kriter 9) tersine çok iyi: 60-64px kart, taşma yok, 44px altı hedef yok → 5.",
       "open": [
-        {
-          "id": "bakim-isemirleri-01",
-          "criterion": 11,
-          "severity": "P1",
-          "text": "Masaüstü kanban görünümünde arama kutusu ve Durum/Tür/Öncelik filtreleri hiç render edilmiyor — bunlar yalnızca DataTable (liste/mobil) içinde var. Aynı route, viewport'a göre farklı yetenek sunuyor; başlık altındaki araç çubuğunda sadece görünüm seçici duruyor.",
-          "measure": "kanban görünümü: arama input 0 adet, filtre düğmesi 0 adet; liste/mobil görünüm: 1 arama + 3 filtre",
-          "target": "kanban görünümünde de arama + 3 filtre görünür; başlık | filtreler | görünüm seçici tek satırda (Linear header deseni)",
-          "file": "apps/web/src/modules/maintenance/components/orders-view.tsx",
-          "openedRound": 1
-        },
-        {
-          "id": "bakim-isemirleri-02",
-          "criterion": 3,
-          "severity": "P1",
-          "text": "Masaüstü varsayılan görünüm kanban: 1440×900 ekranda 6 kaydın yalnızca 1'i görünüyor, 4 sütun boş başlıktan ibaret, board altında ~600px ölü alan. Liste görünümü tercih olarak saklanmıyor (useState) — her gezinmede kanbana dönüyor.",
-          "measure": "tbody satır sayısı 0; ilk ekranda görünen kayıt 1/6; fontSizes toplam metin öğesi 72 (kıyas: /bakim/makineler 367) @1440x900",
-          "target": "ilk ekranda ≥ 6 kayıt (mevcut veri seti kadar) — varsayılan liste görünümü ya da görünüm tercihinin URL/localStorage'da saklanması",
-          "file": "apps/web/src/modules/maintenance/components/orders-view.tsx",
-          "openedRound": 1
-        },
-        {
-          "id": "bakim-isemirleri-03",
-          "criterion": 8,
-          "severity": "P1",
-          "text": "Kanban kartı tıklanabilir bir `div onClick` — tabIndex/role yok, klavyeyle sekmelenemiyor, focus halkası yok, Enter çalışmıyor. Linear referansı klavye odaklıdır; aynı modülün DataTable satırları rowHref ile erişilebilirken board kartı erişilemiyor.",
-          "measure": "orders-board.tsx:25 `<div onClick=…>` — tabindex yok, role yok, :focus-visible stili yok",
-          "target": "kart bir `<Link>` (ya da role=\"link\" + tabIndex={0} + Enter/Space) ve 2px focus-visible halkası taşır",
-          "file": "apps/web/src/modules/maintenance/components/orders-board.tsx:25",
-          "openedRound": 1
-        },
         {
           "id": "bakim-isemirleri-04",
           "criterion": 5,
@@ -188,28 +206,74 @@
           "openedRound": 1
         }
       ],
-      "closed": []
+      "closed": [
+        {
+          "id": "bakim-isemirleri-01",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Masaüstü kanban görünümünde arama kutusu ve Durum/Tür/Öncelik filtreleri hiç render edilmiyor — bunlar yalnızca DataTable (liste/mobil) içinde var. Aynı route, viewport'a göre farklı yetenek sunuyor; başlık altındaki araç çubuğunda sadece görünüm seçici duruyor.",
+          "measure": "kanban görünümü: arama input 0 adet, filtre düğmesi 0 adet; liste/mobil görünüm: 1 arama + 3 filtre",
+          "target": "kanban görünümünde de arama + 3 filtre görünür; başlık | filtreler | görünüm seçici tek satırda (Linear header deseni)",
+          "file": "apps/web/src/modules/maintenance/components/orders-view.tsx",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "kanban görünümünde 1 arama + 3 filtre (Durum/Tür/Öncelik) — probe: searchCount=1, filterCount(gerçek, sütun başlıklarıyla karışmayan)=3; liste/mobil görünümde de aynı 1 arama + 3 filtre (tek ortak araç çubuğu)",
+          "fixNote": "Arama/filtre durumu orders-view.tsx üst seviyeye taşındı (yerel React state), her iki alt bileşene (OrdersBoard/OrdersTable) önceden filtrelenmiş dizi geçiliyor; OrdersTable kendi iç arama/filtresini searchable=false filters=[] ile kapatıyor (tek gerçek kaynak, çift toolbar yok)."
+        },
+        {
+          "id": "bakim-isemirleri-02",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Masaüstü varsayılan görünüm kanban: 1440×900 ekranda 6 kaydın yalnızca 1'i görünüyor, 4 sütun boş başlıktan ibaret, board altında ~600px ölü alan. Liste görünümü tercih olarak saklanmıyor (useState) — her gezinmede kanbana dönüyor.",
+          "measure": "tbody satır sayısı 0; ilk ekranda görünen kayıt 1/6; fontSizes toplam metin öğesi 72 (kıyas: /bakim/makineler 367) @1440x900",
+          "target": "ilk ekranda ≥ 6 kayıt (mevcut veri seti kadar) — varsayılan liste görünümü ya da görünüm tercihinin URL/localStorage'da saklanması",
+          "file": "apps/web/src/modules/maintenance/components/orders-view.tsx",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "ilk ekranda 6/6 kayıt görünür (varsayılan görünüm artık liste) — bkz. artifacts/screens/bakim-is-emirleri/desktop.png; görünüm tercihi localStorage (plantero.bakim.is-emirleri.view) ile kalıcı",
+          "fixNote": "orders-view.tsx varsayılan view state'i 'kanban' → 'list'; kullanıcı kanbanı seçerse tercih localStorage'da saklanır (sayfa yenilemede/geziniminde sıfırlanmaz)."
+        },
+        {
+          "id": "bakim-isemirleri-03",
+          "criterion": 8,
+          "severity": "P1",
+          "text": "Kanban kartı tıklanabilir bir `div onClick` — tabIndex/role yok, klavyeyle sekmelenemiyor, focus halkası yok, Enter çalışmıyor. Linear referansı klavye odaklıdır; aynı modülün DataTable satırları rowHref ile erişilebilirken board kartı erişilemiyor.",
+          "measure": "orders-board.tsx:25 `<div onClick=…>` — tabindex yok, role yok, :focus-visible stili yok",
+          "target": "kart bir `<Link>` (ya da role=\"link\" + tabIndex={0} + Enter/Space) ve 2px focus-visible halkası taşır",
+          "file": "apps/web/src/modules/maintenance/components/orders-board.tsx:25",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "kart artık role=\"link\" tabIndex={0}; Playwright ile focus()+Enter → router.push ile detay sayfasına gider (tam sayfa yenileme yok); dropdown menüsünde Enter'a basmak kartı AÇMIYOR (e.target===e.currentTarget koruması, ayrı doğrulandı) — bkz. probe sonucu 'URL after Enter on card' ve 'URL after menu item Enter'",
+          "fixNote": "orders-board.tsx Card bileşeni: role=\"link\" + tabIndex={0} + Enter/Space aktivasyonu (yalnızca event.target===event.currentTarget iken — iç içe dropdown menüsünden kabaran sentetik keydown ile çakışmayı önler) + focus-visible:ring-2 halkası."
+        }
+      ]
     },
     "/bakim/is-emirleri/[id]": {
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [5, 5, 4, 3, 4, 5, 4, 5, 4, 5, 4, 4],
+      "scores": [
+        5,
+        5,
+        4,
+        3,
+        4,
+        5,
+        4,
+        5,
+        4,
+        5,
+        4,
+        4
+      ],
       "total": 52,
       "verdict": "Linear",
       "sampleId": "d417cce0-a933-42c0-91cf-ec76891f4fea (MO-2026-000006, reported)",
       "scoreNotes": "Kriter 4: eylem çubuğunda üç ayrı renk token'ı (primary yeşil dolu + success yeşil çerçeveli + destructive kırmızı ghost) yan yana; ayrıca durum ve öncelik rozetleri aynı amber tonda → 3. Kriter 3/5/11/12: tek satırlık bilgi için tam genişlik çerçeveli kutular, yerel StatCell kopyası, ekranın alt yarısı boş → 4.",
       "open": [
-        {
-          "id": "bakim-isemirleri-detay-01",
-          "criterion": 4,
-          "severity": "P1",
-          "text": "Eylem çubuğunda üç farklı renk: 'İşleme al' primary yeşil dolu, 'Tamamla' border-success/40 + text-success (ikinci bir yeşil), 'İptal et' text-destructive ghost. Tek ekranda iki farklı yeşil buton, hangisinin birincil eylem olduğunu belirsizleştiriyor.",
-          "measure": "eylem çubuğunda 3 farklı renk token'ı (primary, success, destructive); iki buton yeşil",
-          "target": "1 primary + nötr outline; success rengi butonlarda kullanılmaz, destructive yalnızca onay diyaloğunun içinde",
-          "file": "apps/web/src/modules/maintenance/components/order-detail.tsx (Tamamla: border-success/40 text-success; İptal et: text-destructive)",
-          "openedRound": 1
-        },
         {
           "id": "bakim-isemirleri-detay-02",
           "criterion": 4,
@@ -281,28 +345,46 @@
           "openedRound": 1
         }
       ],
-      "closed": []
+      "closed": [
+        {
+          "id": "bakim-isemirleri-detay-01",
+          "criterion": 4,
+          "severity": "P1",
+          "text": "Eylem çubuğunda üç farklı renk: 'İşleme al' primary yeşil dolu, 'Tamamla' border-success/40 + text-success (ikinci bir yeşil), 'İptal et' text-destructive ghost. Tek ekranda iki farklı yeşil buton, hangisinin birincil eylem olduğunu belirsizleştiriyor.",
+          "measure": "eylem çubuğunda 3 farklı renk token'ı (primary, success, destructive); iki buton yeşil",
+          "target": "1 primary + nötr outline; success rengi butonlarda kullanılmaz, destructive yalnızca onay diyaloğunun içinde",
+          "file": "apps/web/src/modules/maintenance/components/order-detail.tsx (Tamamla: border-success/40 text-success; İptal et: text-destructive)",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "eylem çubuğunda 1 primary (İşleme al, yeşil) + 2 nötr ikincil (Tamamla: outline, İptal et: ghost) — kırmızı yalnızca 'İptal et' onay diyaloğunun İÇİNDEKİ onay butonunda (ConfirmDialog destructive) — bkz. artifacts/screens/bakim-is-emirleri-d763ad09.../desktop.png",
+          "fixNote": "order-detail.tsx: 'Tamamla' düğmesindeki border-success/40 text-success sınıfları kaldırıldı (düz variant=\"outline\"); 'İptal et' tetikleyicisindeki text-destructive sınıfları kaldırıldı (düz variant=\"ghost\")."
+        }
+      ]
     },
     "/bakim/makineler/[id]": {
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [4, 5, 4, 5, 4, 5, 5, 3, 5, 5, 4, 4],
+      "scores": [
+        4,
+        5,
+        4,
+        5,
+        4,
+        5,
+        5,
+        3,
+        5,
+        5,
+        4,
+        4
+      ],
       "total": 53,
       "verdict": "Linear",
       "sampleId": "0c0682dc-f807-42b5-96cd-cb85fa51025e (MK-001)",
       "scoreNotes": "Kriter 8: sekme içi iş emri tablosunda `window.location.href` ile tam sayfa yeniden yükleme (uygulamada tek örnek) ve satırların klavyeyle erişilememesi → 3. Kriter 1/12: makine notu 'rapor: 28.93.17' etiketsiz çıplak satır olarak basılıyor → 4. Kriter 7: her sekmede özenli EmptyState var → 5.",
       "open": [
-        {
-          "id": "bakim-makine-detay-01",
-          "criterion": 8,
-          "severity": "P1",
-          "text": "'İş emirleri' sekmesindeki tablo satırı tıklanınca `window.location.href` ile tam sayfa yeniden yükleme yapılıyor (beyaz flaş, istemci durumu kayboluyor); satır ayrıca klavyeyle odaklanamıyor ve focus halkası yok. Uygulamadaki tek `window.location` kullanımı.",
-          "measure": "machine-detail.tsx:90 `onClick={() => { window.location.href = … }}`; satırda tabindex/role/href yok",
-          "target": "`router.push` (ya da hücreyi saran `<Link>`) + tabIndex/role + 2px focus-visible halkası; tam sayfa yeniden yükleme yok",
-          "file": "apps/web/src/modules/maintenance/components/machine-detail.tsx:90",
-          "openedRound": 1
-        },
         {
           "id": "bakim-makine-detay-02",
           "criterion": 1,
@@ -354,27 +436,45 @@
           "openedRound": 1
         }
       ],
-      "closed": []
+      "closed": [
+        {
+          "id": "bakim-makine-detay-01",
+          "criterion": 8,
+          "severity": "P1",
+          "text": "'İş emirleri' sekmesindeki tablo satırı tıklanınca `window.location.href` ile tam sayfa yeniden yükleme yapılıyor (beyaz flaş, istemci durumu kayboluyor); satır ayrıca klavyeyle odaklanamıyor ve focus halkası yok. Uygulamadaki tek `window.location` kullanımı.",
+          "measure": "machine-detail.tsx:90 `onClick={() => { window.location.href = … }}`; satırda tabindex/role/href yok",
+          "target": "`router.push` (ya da hücreyi saran `<Link>`) + tabIndex/role + 2px focus-visible halkası; tam sayfa yeniden yükleme yok",
+          "file": "apps/web/src/modules/maintenance/components/machine-detail.tsx:90",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "window.location kullanımı sıfır (grep: 0/0, yalnızca error.tsx/global-error.tsx'teki reload() çağrıları kaldı — gezinme değil); satır artık tabIndex={0} + Enter ile router.push, focus-visible halkası var — Playwright: satıra focus()+Enter → client-side navigasyon (tam sayfa yenileme yok)",
+          "fixNote": "machine-detail.tsx 'İş emirleri' sekmesi TableRow: window.location.href yerine useRouter().push; tabIndex + onKeyDown(Enter) + focus-visible:outline-2 (DataTable rowHref ile aynı desen)."
+        }
+      ]
     },
     "/bakim/is-emirleri/yeni": {
       "round": 1,
       "reference": "linear",
       "referenceTotal": 57,
-      "scores": [5, 5, 4, 5, 5, 5, 5, 5, 3, 5, 5, 5],
+      "scores": [
+        5,
+        5,
+        4,
+        5,
+        5,
+        5,
+        5,
+        5,
+        3,
+        5,
+        5,
+        5
+      ],
       "total": 57,
       "verdict": "Linear",
       "scoreNotes": "Toplam referansa eşit ama kriter 9 = 3 (mobil dokunma hedefleri) olduğu için kazanma kuralı sağlanmıyor. Bu ekran modülün en iyi tasarlanmışı: QR-önce akış, ilerleyici açığa çıkarma, mobilde 44px+ form alanları, temiz renk disiplini. Tek engel: fotoğraf silme (24px) ve makine değiştirme (36px) düğmeleri. Ölçüm 2. adımda (makine tarandı + 2 fotoğraf) alındı: scripts/probe-bakim-r1b.ts, artifacts/critic/bakim-yeni-step2-390.png.",
       "open": [
-        {
-          "id": "bakim-yeni-01",
-          "criterion": 9,
-          "severity": "P1",
-          "text": "Sahada telefonla kullanılan birincil ekranda iki dokunma hedefi 44px altında: 'Fotoğrafı kaldır' 24×24px (fotoğraf küçük resminin köşesinde) ve 'Makineyi değiştir' 36×36px. 390×844'te ölçüldü.",
-          "measure": "390x844: button[Fotoğrafı kaldır] 24×24; button[Makineyi değiştir] 36×36",
-          "target": "her ikisi ≥44×44px (görsel boyut küçük kalabilir; dokunma alanı ::before/-m-2 p-2 ile büyütülür)",
-          "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx (size-6 silme düğmesi; size=\"icon\" X düğmesi)",
-          "openedRound": 1
-        },
         {
           "id": "bakim-yeni-02",
           "criterion": 3,
@@ -386,27 +486,45 @@
           "openedRound": 1
         }
       ],
-      "closed": []
+      "closed": [
+        {
+          "id": "bakim-yeni-01",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Sahada telefonla kullanılan birincil ekranda iki dokunma hedefi 44px altında: 'Fotoğrafı kaldır' 24×24px (fotoğraf küçük resminin köşesinde) ve 'Makineyi değiştir' 36×36px. 390×844'te ölçüldü.",
+          "measure": "390x844: button[Fotoğrafı kaldır] 24×24; button[Makineyi değiştir] 36×36",
+          "target": "her ikisi ≥44×44px (görsel boyut küçük kalabilir; dokunma alanı ::before/-m-2 p-2 ile büyütülür)",
+          "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx (size-6 silme düğmesi; size=\"icon\" X düğmesi)",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "390x844'te 44px altı etkileşimli eleman: 0 (scripts/probe-bakim-r1b.ts çıktısı: small=[]); 1440x900'de yalnızca genel masaüstü butonları (Vazgeç/Arızayı bildir, 44px altı olması bu ekranda beklenen — yalnızca 390 hedefti) kaldı",
+          "fixNote": "report-breakdown-form.tsx: 'Makineyi değiştir' className=\"size-11\" (gerçek 44×44 kutu, ikon 16px sabit kaldı); 'Fotoğrafı kaldır' dış <button> size-11 (44×44, görünmez dokunma kutusu), görsel siyah rozet (24×24, size-6) iç <span>'e taşındı — ::before hit-slop denemesi ölçüm aracının (getBoundingClientRect) pseudo-elemanı SAYMADIĞI için terk edildi, gerçek eleman boyutu büyütüldü."
+        }
+      ]
     },
     "/bakim/oee": {
       "round": 1,
       "reference": "stripe",
       "referenceTotal": 56,
-      "scores": [5, 5, 4, 3, 5, 5, 5, 4, 4, 5, 5, 5],
+      "scores": [
+        5,
+        5,
+        4,
+        3,
+        5,
+        5,
+        5,
+        4,
+        4,
+        5,
+        5,
+        5
+      ],
       "total": 55,
       "verdict": "Stripe",
       "scoreNotes": "KPI şeridi (dikey ayraçlı, tabular-nums, %tr biçimi) Stripe çıtasında. Kriter 4: tek eksende 4 doygun seri rengi ve 'Kalite' serisinin --chart-4 = oklch(0.65 0.2 20) ile destructive kırmızıyla aynı hue ailesinde olması → ekranın baskın öğesi kırmızı testere dişi, başlık metrik OEE eksende görünmez → 3. Kriter 3/8/9 → 4 (Stripe referansı 4/4/4 ile eşit).",
       "open": [
-        {
-          "id": "bakim-oee-01",
-          "criterion": 4,
-          "severity": "P1",
-          "text": "OEE trend grafiğinde 4 seri eşit ağırlıkta, 4 doygun tonda çiziliyor. 'Kalite' serisi --chart-4 = oklch(0.65 0.2 20) — uygulamanın destructive/hata kırmızısıyla aynı hue ailesi; aynı sayfada kırmızı 'Arızalı' anlamı taşıdığı için semantik çakışma var. Başlık metrik OEE (--chart-1, yeşil) eksen üzerinde görünmez kalıyor.",
-          "measure": "tek kartta 4 farklı çizgi rengi (chart-1/2/3/4); chart-4 hue 20 ≈ destructive hue 27",
-          "target": "OEE vurgulu (strokeWidth 2 + dolgu), diğer 3 bileşen serisi tek nötr tonda ya da toplam ≤2 ek hue; kırmızı yalnızca hata/uyarı anlamına ayrılır",
-          "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx (QUALITY_COLOR / seri vurgusu)",
-          "openedRound": 1
-        },
         {
           "id": "bakim-oee-02",
           "criterion": 3,
@@ -438,7 +556,23 @@
           "openedRound": 1
         }
       ],
-      "closed": []
+      "closed": [
+        {
+          "id": "bakim-oee-01",
+          "criterion": 4,
+          "severity": "P1",
+          "text": "OEE trend grafiğinde 4 seri eşit ağırlıkta, 4 doygun tonda çiziliyor. 'Kalite' serisi --chart-4 = oklch(0.65 0.2 20) — uygulamanın destructive/hata kırmızısıyla aynı hue ailesi; aynı sayfada kırmızı 'Arızalı' anlamı taşıdığı için semantik çakışma var. Başlık metrik OEE (--chart-1, yeşil) eksen üzerinde görünmez kalıyor.",
+          "measure": "tek kartta 4 farklı çizgi rengi (chart-1/2/3/4); chart-4 hue 20 ≈ destructive hue 27",
+          "target": "OEE vurgulu (strokeWidth 2 + dolgu), diğer 3 bileşen serisi tek nötr tonda ya da toplam ≤2 ek hue; kırmızı yalnızca hata/uyarı anlamına ayrılır",
+          "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx (QUALITY_COLOR / seri vurgusu)",
+          "openedRound": 1,
+          "closedRound": 2,
+          "verifiedBy": "ölçüm (pnpm measure / pnpm shot, Tur 2)",
+          "measureAfter": "OEE serisi tek vurgulu seri (chart-1, strokeWidth 2 + dolgu); Kullanılabilirlik/Performans/Kalite ÜÇÜ de nötr --muted-foreground tonunda (düz/kesik/noktalı çizgi desenleriyle ayrılıyor) — kartta artık 2 renk (1 vurgu + 1 nötr), kırmızı/chart-4 tamamen kaldırıldı — bkz. artifacts/screens/bakim-oee/desktop.png",
+          "fixNote": "oee-charts.tsx: AVAILABILITY_COLOR/PERFORMANCE_COLOR/QUALITY_COLOR tek COMPONENT_COLOR (--muted-foreground) ile değiştirildi; performans strokeDasharray=\"4 3\", kalite strokeDasharray=\"1 3\" ile görsel ayrım korundu."
+        }
+      ]
     }
-  }
+  },
+  "builderRound2Note": "Tur 2 (modul-builder) — bu turda YALNIZCA görev promptunda listelenen P1 bulgular kapatıldı: bakim-planlar-01/02, bakim-isemirleri-01/02/03, bakim-isemirleri-detay-01, bakim-makine-detay-01, bakim-yeni-01, bakim-oee-01 (hepsi 'closed', measureAfter ile). Kalan P2'ler bilinçli olarak AÇIK bırakıldı (kapsam dışı, bir sonraki tura). Ayrıca puan kartında hiç yer almayan 2 kritik veri/muhasebe bulgusu (I51 — bakım iş emri maliyeti (parts_cost+labor_cost) hiçbir muhasebe fişine yansımıyordu) kapatıldı: packages/core/src/maintenance/orders.ts completeOrder() artık aynı transaction'da postJournalEntry(ledger:'both', refType:'maintenance_order', 730 borç / 100 alacak) çağırıyor; packages/core/src/accounting/mapping.ts ACCOUNT_CATALOG'a '730 Genel Üretim Giderleri' eklendi (yalnızca test/seed kurulumunun garanti ürettiği hesap kümesine, tam seed zaten üretiyordu). Kanıt: fresh `pnpm db:reset && pnpm db:check` → I51 GEÇTİ (0 ihlal, önceden 2); MO-2026-000001 (630,00 TL) + MO-2026-000002 (200,00 TL) için VUK+UFRS fişleri (JE-2026-000653..656) 730/100 hesaplarına doğru işlendi (psql ile doğrulandı). packages/core/src/maintenance/orders.test.ts 'a 2 yeni birim testi eklendi. Skor/verdict alanları kritik'in yetkisinde — bu turda değiştirilmedi; kritik bir sonraki turda yeniden ölçüp günceller."
 }
