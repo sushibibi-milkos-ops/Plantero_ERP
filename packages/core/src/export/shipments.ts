@@ -150,7 +150,17 @@ export async function createFromOrder(tx: DbOrTx, input: CreateShipmentInput, ct
   const regime = resolveRegime(input.regime ?? 'etgb', check);
 
   const docNo = await nextDocNo(tx, 'EXP', new Date(order.orderDate));
-  const exchangeRate = D(order.exchangeRate);
+  // Tur 6 P1 kök neden düzeltmesi (bkz. `resolveBuyingRate`/`syncAmountTry` yorumu): `order.exchangeRate`
+  // zaten `sales/orders.ts::createSalesDoc`'ta AYNI sorgu örüntüsüyle (`getExchangeRate`, 'buying',
+  // orderDate'e en yakın ÖNCEKİ gün) çözülmüştür, ama o satırın GERÇEK `rate_date`'i siparişte
+  // saklanmaz — eskiden burada doğrudan `order.orderDate` yazılıyordu (TCMB o gün yayın yapmamışsa
+  // sevkiyat, hiç var olmayan bir kur gününe işaret ediyordu). `resolveBuyingRate` aynı sorguyu tekrar
+  // çalıştırıp (`order.exchangeRate` ile normalde birebir aynı katsayıyı döner) GERÇEK `rate_date`'i de
+  // verir; kur bulunamazsa (uç durum: sipariş oluşturulduktan sonra ilgili gün silindiyse) sipariş
+  // değerlerine güvenli şekilde düşülür.
+  const resolvedAtOrder = order.currency === 'TRY' ? null : await resolveBuyingRate(tx, order.currency, order.orderDate);
+  const exchangeRate = resolvedAtOrder?.rate ?? D(order.exchangeRate);
+  const exchangeRateDate = resolvedAtOrder?.rateDate ?? order.orderDate;
   const amountTry = round4(D(order.grandTotal).mul(exchangeRate));
 
   const [shipment] = await tx
@@ -159,7 +169,7 @@ export async function createFromOrder(tx: DbOrTx, input: CreateShipmentInput, ct
       docNo, status: 'draft', regime, partnerId: order.partnerId, salesOrderId: order.id,
       incoterm: input.incoterm ?? (order.incoterm as (typeof exportShipments.$inferSelect)['incoterm']) ?? 'FOB',
       incotermPlace: input.incotermPlace ?? null, currency: order.currency,
-      exchangeRate: toDbRate(exchangeRate), exchangeRateDate: order.orderDate, amountTry: toDb(amountTry),
+      exchangeRate: toDbRate(exchangeRate), exchangeRateDate, amountTry: toDb(amountTry),
       destinationCountry: input.destinationCountry ?? partner.country, portOfLoading: input.portOfLoading ?? null,
       portOfDischarge: input.portOfDischarge ?? null, transportMode: input.transportMode ?? null, carrier: input.carrier ?? null,
       ownerId: input.ownerId ?? ctx.userId ?? null, note: input.note ?? null, createdBy: ctx.userId ?? null,
