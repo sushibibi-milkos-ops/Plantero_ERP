@@ -115,8 +115,16 @@ export function ReportBreakdownForm({ machines }: { machines: MachineFormOption[
           kutusunu SAYFANIN ORTASINA değil ana sütunun ortasına alıyordu, bu da h1'in (264px) 274px
           sağına düşüyordu (modülün diğer route'larında içerik de h1 gibi 264px'ten başlar). `lg:mx-0`
           masaüstünde ortalamayı iptal eder — form artık ana sütunun (dolayısıyla h1'in) sol kenarına
-          yaslanır; telefon/tablet (`<lg`) davranışı DEĞİŞMEDİ (tek sütun, ortalı kalır). */}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto max-w-xl space-y-5 pb-[calc(9rem+env(safe-area-inset-bottom))] lg:mx-0 md:pb-0">
+          yaslanır; telefon/tablet (`<lg`) davranışı DEĞİŞMEDİ (tek sütun, ortalı kalır).
+
+          Kök neden (Tur 6 P1 bakim-yeni-04): form ayrıca kendi `pb-[9rem]`ini (144px) taşıyordu —
+          `FormActions` zaten `sticky bottom-16` (akışta kendi yerini kaplıyor, app-shell'in alt
+          gezinmesinin 64px üstünde asılı durmuyor) ve app-shell'in `<main>`i zaten `pb-32` (128px,
+          FormActions'ın sticky payı + MobileNav yüksekliği için) bırakıyor. İki payın üst üste
+          binmesi son alandan sonra 338px ölü kaydırma ve eylem çubuğunun ekranın ortasında asılı
+          kalmasına yol açıyordu. Form artık yalnızca gerçek donanım güvenli alanını (çentik/ev
+          çubuğu) bırakır — düzen boşluğu tamamen app-shell'e/FormActions'a devredilir. */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto max-w-xl space-y-5 pb-[env(safe-area-inset-bottom)] lg:mx-0">
         {!scanned ? (
           <div className="space-y-3">
             <div className="relative">

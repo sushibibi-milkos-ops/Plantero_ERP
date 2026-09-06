@@ -93,9 +93,16 @@ export default async function OeePage({ searchParams }: { searchParams: Promise<
           kart yerine hat bazlı kırılım tablosu kondu; kart yalnızca gerçekten veri varken render
           edilir (trend boşsa bu da boştur, o durumda hiç render edilmez — sıfır-bilgi kart yok). */}
       {lineBreakdown.length > 0 ? (
-        <div className="mt-4 overflow-x-auto rounded-xl border border-border/70 bg-card p-4">
+        <div className="mt-4 rounded-xl border border-border/70 bg-card p-4">
           <h2 className="mb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Hat bazlı OEE</h2>
           <p className="mb-3 text-xs text-muted-foreground">Son 30 gün ortalaması — en düşük OEE önce.</p>
+          {/* Kök neden (Tur 6 P1 bakim-oee-11): kaydırma kabı (`overflow-x-auto`) uygulamanın kendi
+              taşma göstergesi olmadan çıplaktı — 390px'te 6 sütun kabına sığmıyordu (scrollWidth 620 >
+              clientWidth 356) ve kullanıcının kaydırılabilir olduğuna dair hiçbir ipucu yoktu, kart
+              kenarında yarım glif kalıyordu. `scrollbar-thin scroll-fade-x` diğer tüm modüllerdeki
+              taşan tablo/pano deseniyle (kanban-board, data-table, document-chain) aynı: kenarlarda
+              ince soldurma + kaydırma çubuğu — kesik kenar artık örtük değil, işaretli. */}
+          <div className="scrollbar-thin scroll-fade-x overflow-x-auto">
           <table className="w-full min-w-max text-[13px]">
             <thead>
               <tr className="text-[11px] text-muted-foreground uppercase">
@@ -120,6 +127,7 @@ export default async function OeePage({ searchParams }: { searchParams: Promise<
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       ) : null}
 

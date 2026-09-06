@@ -16,10 +16,19 @@ import { DOWNTIME_REASON_LABELS } from '../labels';
  * `active` prop'u HİÇ verilmezse (undefined değil, prop'un kendisi yok) Recharts kendi fare/dokunma
  * durumunu kullanır. Bu yüzden gerçek bir işaretçi/dokunma olayı gelene kadar `active:false` GEÇİLİR,
  * ilk gerçek etkileşimden sonra prop tamamen kaldırılıp normal hover davranışına dönülür.
+ *
+ * Kök neden (Tur 6 P1 bakim-oee-10): yukarıdaki kapı yalnızca `<Tooltip>`'i kapatıyordu — Recharts'ın
+ * kendi "aktif" durumu (hâlâ etkileşimsiz açılışta `true` başlıyor) `<Area>`/`<Line>`'ın VARSAYILAN
+ * `activeDot`'unu tetiklemeye devam ediyordu (`.recharts-active-dot` @390px: 4, seri sayısı kadar —
+ * tooltip metni görünmese bile 4 nokta basılı duruyordu). Aynı "prop hiç verilmezse Recharts kendi
+ * durumunu kullanır" kuralı `activeDot` için de geçerli: `activeDot={false}` HER ZAMAN gizler
+ * (etkileşimden bağımsız), prop yokken normal hover'a döner. `areaGateProps` bu ikinci kapıyı taşır
+ * ve her `<Area>`'ya ayrıca uygulanır.
  */
 function useTooltipGate() {
   const [interacted, setInteracted] = useState(false);
   const gateProps = interacted ? {} : { active: false as const };
+  const areaGateProps = interacted ? {} : { activeDot: false as const };
   const handlers = interacted
     ? {}
     : {
@@ -27,7 +36,7 @@ function useTooltipGate() {
         onTouchStart: () => setInteracted(true),
         onPointerDown: () => setInteracted(true),
       };
-  return { gateProps, handlers };
+  return { gateProps, areaGateProps, handlers };
 }
 
 // Aynı renk sözleşmesi: apps/web/src/modules/finance/components/cashflow-chart.tsx. Tek eksen (0-100%)
@@ -78,7 +87,7 @@ function TrendTooltip({ active, payload, label }: { active?: boolean; payload?: 
 export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
   const points = data.map((d) => ({ day: d.day, oee: Number(d.oeePct), availability: Number(d.availabilityPct), performance: Number(d.performancePct), quality: Number(d.qualityPct) }));
   const ticks = niceTicks(points.flatMap((p) => [p.oee, p.availability, p.performance, p.quality]), 5);
-  const { gateProps, handlers } = useTooltipGate();
+  const { gateProps, areaGateProps, handlers } = useTooltipGate();
 
   return (
     <ResponsiveContainer width="100%" height={280}>
@@ -98,10 +107,10 @@ export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
           wrapperStyle={{ fontSize: 11, color: 'var(--muted-foreground)' }}
           formatter={(value: string) => <span style={{ color: 'var(--muted-foreground)' }}>{value}</span>}
         />
-        <Area type="monotone" dataKey="oee" name="OEE" stroke={OEE_COLOR} strokeWidth={2} fill="url(#fill-oee)" isAnimationActive={false} />
-        <Area type="monotone" dataKey="availability" name="Kullanılabilirlik" stroke={COMPONENT_COLOR_AVAILABILITY} strokeWidth={1} fill="none" isAnimationActive={false} />
-        <Area type="monotone" dataKey="performance" name="Performans" stroke={COMPONENT_COLOR_PERFORMANCE} strokeWidth={1} strokeDasharray="4 3" fill="none" isAnimationActive={false} />
-        <Area type="monotone" dataKey="quality" name="Kalite" stroke={COMPONENT_COLOR_QUALITY} strokeWidth={1} strokeDasharray="1 3" fill="none" isAnimationActive={false} />
+        <Area type="monotone" dataKey="oee" name="OEE" stroke={OEE_COLOR} strokeWidth={2} fill="url(#fill-oee)" isAnimationActive={false} {...areaGateProps} />
+        <Area type="monotone" dataKey="availability" name="Kullanılabilirlik" stroke={COMPONENT_COLOR_AVAILABILITY} strokeWidth={1} fill="none" isAnimationActive={false} {...areaGateProps} />
+        <Area type="monotone" dataKey="performance" name="Performans" stroke={COMPONENT_COLOR_PERFORMANCE} strokeWidth={1} strokeDasharray="4 3" fill="none" isAnimationActive={false} {...areaGateProps} />
+        <Area type="monotone" dataKey="quality" name="Kalite" stroke={COMPONENT_COLOR_QUALITY} strokeWidth={1} strokeDasharray="1 3" fill="none" isAnimationActive={false} {...areaGateProps} />
       </AreaChart>
     </ResponsiveContainer>
   );
