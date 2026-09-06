@@ -1,0 +1,116 @@
+{
+ "as": "uretim_sefi",
+ "vp": "1440x900",
+ "sections": [
+  {
+   "title": "Hat durumu",
+   "top": 276,
+   "bottom": 482,
+   "h": 206,
+   "w": 568,
+   "left": 264,
+   "rowCount": 3,
+   "rowH": [
+    52.5,
+    53.5,
+    53.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Fire kırılımı (7 gün)",
+   "top": 498,
+   "bottom": 755,
+   "h": 258,
+   "w": 568,
+   "left": 264,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Son iş emirleri",
+   "top": 276,
+   "bottom": 797,
+   "h": 521,
+   "w": 568,
+   "left": 848,
+   "rowCount": 8,
+   "rowH": [
+    58.5,
+    59.5,
+    59.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Son duruşlar",
+   "top": 813,
+   "bottom": 1021,
+   "h": 208,
+   "w": 568,
+   "left": 848,
+   "rowCount": 4,
+   "rowH": [
+    39.5,
+    40.5,
+    41
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 264,
+   "bottom": 755,
+   "last": "Fire kırılımı (7 gün)"
+  },
+  {
+   "left": 848,
+   "bottom": 1021,
+   "last": "Son duruşlar"
+  }
+ ],
+ "colSpread": 266,
+ "kpi": [
+  {
+   "label": "Hat durumuTümü Bazlar, Baris",
+   "w": 568,
+   "left": 264
+  },
+  {
+   "label": "Son iş emirleriTümü Bazlar, ",
+   "w": 568,
+   "left": 848
+  }
+ ],
+ "truncated": [],
+ "foldRows": 12,
+ "allZeros": [],
+ "pageH": 1061,
+ "vpH": 900
+}

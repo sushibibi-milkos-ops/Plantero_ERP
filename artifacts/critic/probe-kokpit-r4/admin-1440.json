@@ -1,0 +1,341 @@
+{
+ "as": "admin",
+ "vp": "1440x900",
+ "sections": [
+  {
+   "title": "Günlük kanal satışları",
+   "top": 276,
+   "bottom": 421,
+   "h": 145,
+   "w": 568,
+   "left": 264,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": true,
+   "monies": [
+    "₺2.678,40@815",
+    "₺2.678 [0dec]@815"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 437,
+   "bottom": 600,
+   "h": 164,
+   "w": 568,
+   "left": 264,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [
+    "₺1.560.717,48@815",
+    "₺3.881,19@815"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Bugün",
+   "top": 616,
+   "bottom": 1137,
+   "h": 521,
+   "w": 568,
+   "left": 264,
+   "rowCount": 8,
+   "rowH": [
+    58.5,
+    59.5,
+    59.5
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺3.850,00@815",
+    "₺7.875,00@815",
+    "₺4.590,00@815",
+    "₺10.920,00@815",
+    "₺6.500,00@815",
+    "₺13.800,00@815"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    815,
+    815,
+    815,
+    815,
+    815,
+    815
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Onay kuyruğu",
+   "top": 1153,
+   "bottom": 1259,
+   "h": 106,
+   "w": 568,
+   "left": 264,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    },
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    },
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Son aktiviteler",
+   "top": 1275,
+   "bottom": 1612,
+   "h": 337,
+   "w": 568,
+   "left": 264,
+   "rowCount": 8,
+   "rowH": [
+    35.5,
+    36.5,
+    36.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Banka",
+   "top": 276,
+   "bottom": 498,
+   "h": 222,
+   "w": 568,
+   "left": 848,
+   "rowCount": 3,
+   "rowH": [
+    44,
+    44,
+    44
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "-₺254.348,50@1399",
+    "₺1.250,00@1399",
+    "€0,00@1399",
+    "-₺255.598,50@1399"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    1399,
+    1399,
+    1399
+   ],
+   "zeros": [
+    {
+     "text": "€0,00",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Üretim hatları",
+   "top": 514,
+   "bottom": 720,
+   "h": 206,
+   "w": 568,
+   "left": 848,
+   "rowCount": 3,
+   "rowH": [
+    52.5,
+    53.5,
+    53.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Kritik stok",
+   "top": 736,
+   "bottom": 1013,
+   "h": 277,
+   "w": 568,
+   "left": 848,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "SKT riski",
+   "top": 1029,
+   "bottom": 1339,
+   "h": 311,
+   "w": 568,
+   "left": 848,
+   "rowCount": 5,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 1355,
+   "bottom": 1625,
+   "h": 270,
+   "w": 568,
+   "left": 848,
+   "rowCount": 4,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "mixedDecimals": true,
+   "monies": [
+    "₺7.109 [0dec]@981.5",
+    "₺1.100 [0dec]@1123",
+    "₺0 [0dec]@1264.5",
+    "₺0 [0dec]@1407",
+    "₺3.800,00@1399",
+    "₺3.282,50@1399",
+    "₺1.100,00@1399",
+    "₺27,00@1399"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    1399,
+    1399,
+    1399,
+    1399
+   ],
+   "zeros": [
+    {
+     "text": "₺0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    },
+    {
+     "text": "₺0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 264,
+   "bottom": 1612,
+   "last": "Son aktiviteler"
+  },
+  {
+   "left": 848,
+   "bottom": 1625,
+   "last": "Geciken alacak"
+  }
+ ],
+ "colSpread": 13,
+ "kpi": [
+  {
+   "label": "Günlük kanal satışlarıTümü B",
+   "w": 568,
+   "left": 264
+  },
+  {
+   "label": "BankaTümü Toplam (TRY hesapl",
+   "w": 568,
+   "left": 848
+  }
+ ],
+ "truncated": [],
+ "foldRows": 10,
+ "allZeros": [
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Onay kuyruğu"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Onay kuyruğu"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Onay kuyruğu"
+  },
+  {
+   "text": "€0,00",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Banka"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "SKT riski"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Geciken alacak"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Geciken alacak"
+  }
+ ],
+ "pageH": 1665,
+ "vpH": 900
+}
