@@ -122,6 +122,38 @@ describe('finance/payments', () => {
     });
   });
 
+  it('I13 (veri-critic tur 4 regresyonu, PAY-2026-000018 canlı örneği): kısmen tahsis edilmiş/avans EUR tahsilatta kur farkı yalnızca FİİLEN TAHSİS EDİLEN tutar üzerinden hesaplanır, tahsissiz (avans) kısım hiç kur farkı üretmez', async () => {
+    await withRollback(async (tx) => {
+      const b: Base = await seedBase(tx);
+      await ensureJournals(tx);
+      const probe = await balanceProbe(tx);
+
+      await seedEurRate(tx, '37.200000');
+      // Küçük bir faturaya karşı devasa bir avans tahsilatı — canlıda yakalanan PAY-2026-000018/INV-2026-000019 oranıyla birebir.
+      const invoice = await makeInvoice(tx, { partnerId: b.customer.id, kind: 'sales', currency: 'EUR', exchangeRate: '37.2', grandTotal: '1000' });
+
+      await seedEurRate(tx, '38.500000');
+      const { payment, allocations } = await recordPayment(tx, {
+        direction: 'inbound', partnerId: b.customer.id, paymentDate: today(), currency: 'EUR', amount: d(10000000),
+        allocations: [{ invoiceId: invoice.id, amount: d(1000) }],
+      }, ctx);
+
+      // Yalnızca tahsis edilen 1.000 EUR × (38,50 − 37,20) = 1.300,0000 — kalan 9.999.000 EUR (avans)
+      // hiçbir kur farkına dahil edilmez. Eski/hatalı beklenti (tüm tutar × fark = 13.000.000) DEĞİL.
+      expect(payment.fxDifference).toBe('1300.0000');
+      expect(payment.unallocatedAmount).toBe('9999000.0000');
+      expect(allocations).toHaveLength(1);
+      expect(allocations[0]!.amount).toBe('1000.0000');
+
+      const [updated] = await tx.select().from(invoices).where(eq(invoices.id, invoice.id));
+      expect(updated!.status).toBe('paid');
+      expect(updated!.residual).toBe('0.0000');
+
+      // 646 (kambiyo karı) yalnızca 1.300 TL taşımalı, avans kısmından etkilenmemeli.
+      expect((await probe.bal('646', 'VUK')).toFixed(4)).toBe('-1300.0000');
+    });
+  });
+
   it('EUR tahsilat: kur payment < invoice ⇒ aleyhte kur farkı (656 borçlanır)', async () => {
     await withRollback(async (tx) => {
       const b: Base = await seedBase(tx);
