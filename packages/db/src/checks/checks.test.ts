@@ -109,7 +109,23 @@ const FILES = await checkFiles();
 // üst yorumu). Düzeltme önerisi: generateProforma (ve fatura öncesi diğer durum geçişleri) her
 // çağrıldığında exchangeRate'i taze TCMB kuruyla yeniden çözüp amountTry = round4(proformaAmount ×
 // exchangeRate) olarak yeniden yazmalı.
-const RULE_COUNT = 55;
+// I56 (veri-critic, Tur 6 — YENİ, P1, CANLI DOĞRULANDI, rollback'li transaction): İhracat sevkiyatı
+// ↔ fatura belge bağının simetrisi. `export/shipments.ts::linkInvoice` (a) hiçbir `assertStatus`
+// koruması taşımıyor — 'draft'/'packing'/'customs' dahil HER durumdaki bir sevkiyata fatura
+// bağlanabiliyor (UI yalnızca 'shipped'/'delivered'de düğmeyi gösteriyor, bu istemci tarafı bir
+// kısıt, core'da karşılığı yok); (b) `s.invoiceId` zaten doluyken hiç kontrol etmeden ÜZERİNE
+// YAZIYOR — eski faturanın `exportShipmentId`'sini temizlemiyor (I44'ün `cancelShipment`e kurduğu
+// simetrik temizleme örüntüsü burada yok). Canlı egzersiz: fresh seed'deki EXP-2026-000004
+// (status='packing', invoiceId=NULL) üzerinde linkInvoice(INV-2026-000019) çağrıldı → durum HÂLÂ
+// 'packing' iken başarıyla bağlandı; aynı salesOrderId'ye ikinci bir fatura (partial invoicing
+// senaryosu) eklenip linkInvoice tekrar çağrıldı → shipment.invoiceId yeni faturaya geçti AMA ilk
+// faturanın exportShipmentId'si hâlâ aynı sevkiyatı gösteriyor (temizlenmedi) — iki fatura da aynı
+// sevkiyata işaret ediyor, document_links'te de iki (eski+yeni) satır kaldı. Test verisi rollback ile
+// geri alındı, fresh seed'de 0 ihlal (saf regresyon güvenlik ağı — bkz.
+// checks/56_export_invoice_link_symmetry.sql üst yorumu). Düzeltme önerisi: linkInvoice'a
+// assertStatus(['shipped','delivered']) ekle; s.invoiceId doluyken farklı bir fatura ile çağrılırsa
+// önce eski faturanın exportShipmentId'sini null'a çek (ya da ikinci çağrıyı reddet).
+const RULE_COUNT = 56;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
