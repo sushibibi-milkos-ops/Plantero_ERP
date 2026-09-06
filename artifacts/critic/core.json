@@ -197,6 +197,22 @@
       "fix": "packages/db/src/checks/47_production_lot_qty_balance.sql eklendi: production kökenli her lot için (`stock_lots.origin_work_order_id IS NOT NULL`) dengeyi TEK kanonik kaynaktan (`stock_moves`+`stock_quants`, hiçbir denormalize ara tabloya dokunmadan) yeniden kuruyor — Σ(production/byproduct/count_gain/return_in/recall_return girişleri) = Σ(consumption/delivery/count_loss/return_out çıkışları) + Σ(scrap YALNIZCA kaynağı gerçek/stoklu bir lokasyon iken — usage IN internal/quarantine/rejected/transit) + eldeki. `recordScrap()`'ın virtual→virtual WIP fire hareketleri (kaynak usage='production' — SANAL, ledger.ts VIRTUAL_USAGES, `enforceDirection` bunu direction:'wip' işaretler, hiçbir zaman stock_quants'a dokunmaz) bilerek dışlandı — apps/web/src/modules/quality/queries.ts::getTraceForLot'un Tur 8'de düzelttiği formülün birebir SQL karşılığı. checks.test.ts RULE_COUNT 46→47'ye güncellendi, docs/INVARIANTS.md'ye I47 satırı eklendi. `recordScrap()`'ın `work_order_scraps.lot_id`'yi hiç doldurmaması ayrı, dormant bir P2 veri-eksikliği olarak notlandı (bugün hiçbir invariantı kırmıyor, kapsam dışı bırakıldı — gelecek turda `packages/core/src/production/finish.ts::recordScrap`'e `lotId` eklenmesi önerilir).",
       "measureAfter": "pnpm db:reset && pnpm db:check → 47/47 kural 0 ihlal (I47 dahil, fresh seed — PL-260816-H1-01/PL-260823-H2-01 dahil). Aynı canlı egzersiz (71c471a6-… lotuna rollback'li transaction içinde fazladan 10 birimlik fantom 'production' hareketi) tekrarlandı: I47 ANINDA 1 ihlal verdi (production_lot_qty_balance_mismatch, expected=67.0000, actual=57.0000, diff=-10.0000) — aynı anda I5/I6/I8/I22 hâlâ 0 satır döndürdü (bu regresyonu I47 dışında hiçbir kural yakalamıyor, tam olarak beklenen kapsam ayrımı). Transaction ROLLBACK edildi, pnpm db:check ardından yeniden 47/47 0 ihlal doğrulandı (kalıcı veri değişmedi). pnpm --filter @plantero/db exec vitest run src/checks/checks.test.ts → 49/49 test GEÇTİ (RULE_COUNT=47). pnpm --filter @plantero/db exec vitest run (tüm paket) → 3 dosya / 57 test GEÇTİ. pnpm typecheck, pnpm lint, pnpm test (tüm monorepo) temiz.",
       "verifiedBy": "pnpm db:check — I47 0 ihlal (fresh seed) + canlı egzersiz (rollback'li fantom stock_moves) I47'nin yakaladığını, I5/I6/I8/I22'nin yakalamadığını kanıtladı"
+    },
+    {
+      "id": "core-fx-single-alloc-formula-01",
+      "module": "core",
+      "severity": "P0",
+      "rule": "I13",
+      "file": "packages/db/src/checks/13_fx.sql",
+      "route": "/muhasebe/tahsilat",
+      "status": "closed",
+      "closedRound": 24,
+      "description": "checks/13_fx.sql'deki I13(b) formülü dövizli bir tahsilatın TAM tutarını (p.amount) tek bir faturaya ALLOCATE EDİLMİŞ gibi varsayıyordu; kısmen tahsis edilmiş/avans bir tahsilatta (canlı örnek: PAY-2026-000018, 10.000.000 EUR'un yalnızca 1.000'i INV-2026-000019'a gitti) beklenen kur farkını (13.000.000) gerçekte doğru olan (1.300, yalnızca allocate edilen 1.000 EUR üzerinden) ile karşılaştırıp yanlışlıkla ihlal veriyordu.",
+      "failure_scenario": "Kısmi tahsis + avans (canlı: PAY-2026-000018, EUR amount=10.000.000, kur=38,50, yalnızca INV-2026-000019'a amount=1.000 tahsis edildi, kur=37,20): eski formül p.amount(10.000.000)×(38,50−37,20)=13.000.000,0000 bekliyordu; gerçek/doğru fxDifference=1.000×(38,50−37,20)=1.300,0000 (recordPayment'ın kendi hesabı) → I13 sahte İHLAL (diff=−12.998.700,0000). Gerçek servis kodu (packages/core/src/finance/payments.ts::recordPayment, satır ~190-194) baştan beri doğruydu — bu kontrolün kendi formül eksikliğiydi (SQL'in 'tek tahsis = tüm tutar o faturaya gitti' varsayımı avans/kısmi tahsilatta çöküyordu).",
+      "measureBefore": "pnpm db:check → I13 İHLAL 1 (payment_fx_difference_mismatch, id=PAY-2026-000018, expected=13.000.000,0000, actual=1.300,0000, diff=−12.998.700,0000) — canlı olarak, konteyneri eşzamanlı kullanan başka bir oturumun gerçek /muhasebe akışından oluşturduğu veriyle yakalandı (bkz. docs/INVARIANTS.md I13 satırı ve checks/13_fx.sql üst yorumu).",
+      "fix": "single_alloc CTE'si artık payment_allocations.amount (fiilen o faturaya tahsis edilen döviz tutarı, MIN(amount) tek satır garantisiyle) taşıyor; I13(b) formülü p.amount yerine single_alloc.alloc_amount kullanıyor. Tam tahsis edilmiş ödemelerde (allocated_amount = amount) davranış DEĞİŞMEDİ (regresyon yok), yalnızca kısmi/avans tahsilatta artık doğru kıyaslanıyor. Kök neden dosyası bu SQL'in kendisiydi (packages/core/src/finance/payments.ts değişmedi, zaten doğruydu). Regresyon güvenlik ağı: packages/core/src/finance/payments.test.ts'e PAY-2026-000018 ile birebir aynı oranda (10.000.000 EUR tahsilat, yalnızca 1.000 EUR tek faturaya tahsis) yeni bir vitest testi eklendi — fxDifference'ın yalnızca tahsis edilen 1.000 EUR üzerinden (1.300,0000) hesaplandığını, avans kısmının (9.999.000 EUR) hiçbir kur farkına dahil edilmediğini ve 646 hesabının yalnızca 1.300 TL taşıdığını doğruluyor.",
+      "measureAfter": "pnpm db:reset && pnpm db:check → I13 GEÇTİ, 0 ihlal (tam tahsis edilmiş 13 payments satırı dahil, 54/54 kural arasında I13 GEÇTİ; toplamda yalnızca I33 İHLAL — bakım/maintenance modülünün seed'inde saat sınırı kaynaklı, bu bulgunun kapsamı dışında, ayrıca bkz. 'issues'). packages/core/src/finance/payments.test.ts: yeni 'PAY-2026-000018 canlı örneği' testi dahil 15/15 test GEÇTİ; pnpm --filter @plantero/core exec vitest run → 54 dosya / 329 test GEÇTİ (tam paket, regresyon yok); pnpm typecheck ve pnpm --filter @plantero/core lint / pnpm --filter @plantero/db lint temiz.",
+      "verifiedBy": "pnpm db:reset && pnpm db:check (SQL ölçüm — I13), packages/core/src/finance/payments.test.ts (yeni regresyon testi, PAY-2026-000018 canlı oranıyla birebir), pnpm shot /muhasebe/tahsilatlar (ekran görüntüsüyle görsel doğrulama)"
     }
   ],
   "open": [],
@@ -255,6 +271,11 @@
       "id": "core-lot-fwd-wip-scrap-blindspot-01",
       "closedRound": 24,
       "verifiedBy": "pnpm db:check — I47 0 ihlal (fresh seed) + canlı egzersiz (rollback'li fantom stock_moves) I47'nin yakaladığını, I5/I6/I8/I22'nin yakalamadığını kanıtladı"
+    },
+    {
+      "id": "core-fx-single-alloc-formula-01",
+      "closedRound": 24,
+      "verifiedBy": "pnpm db:reset && pnpm db:check — I13 0 ihlal (canlı PAY-2026-000018 örneğiyle kanıtlanmış formül düzeltmesi) + payments.test.ts yeni regresyon testi"
     }
   ]
 }
