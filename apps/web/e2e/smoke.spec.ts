@@ -29,7 +29,8 @@ test.describe('Kabuk: giriş → kokpit → çıkış', () => {
     // Selamlama (saate göre "Günaydın/İyi günler/…") Tur 13'ten beri h1'de değil, üst satırda (eyebrow); h1 "Kokpit".
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Kokpit');
     await expect(page.getByText(/^(Günaydın|İyi günler|İyi akşamlar|İyi geceler)/)).toBeVisible();
-    await expect(page.getByText('Bugünkü ciro')).toBeVisible();
+    // Kokpit rol bazlı KPI panosuna dönüştü (docs/modules/kokpit.md): admin GM panosunda kart başlığı "Bugünkü net ciro".
+    await expect(page.getByText('Bugünkü net ciro')).toBeVisible();
     // Kenar çubuğu ana menü grupları
     const nav = page.getByRole('navigation', { name: 'Ana menü' });
     await expect(nav).toBeVisible();
