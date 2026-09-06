@@ -20,6 +20,22 @@ function toPlain(v: NumberLike, dp?: number): string {
   return dp === undefined ? d.toFixed() : d.toFixed(dp, Decimal.ROUND_HALF_UP);
 }
 
+export type MoneyTone = 'negative' | 'zero' | 'neutral';
+
+/** Bir tutarın işaret durumu — `MoneyCell` ve `KpiCard` (format='money') arasında TEK kaynak.
+ *  Kök neden (P1 shell-kpicard-neg-money-color-01, kriter 4/11): aynı tutar tek ekranda iki farklı
+ *  renkte basılıyordu — KpiCard negatif kuralını hiç taşımıyordu, MoneyCell kendi string kontrolünü
+ *  yapıyordu. Artık ikisi de bu tek yardımcıyı çağırır: negatif bakiye ya HER YERDE kırmızıdır ya
+ *  hiçbir yerde. Decimal ile karar verilir (float/parse hatası yok); "-0"/"-0,00" gibi negatif
+ *  işaretli sıfırlar 'zero' sayılır (MoneyCell'in önceki davranışıyla birebir aynı: zero her zaman
+ *  soluk nötr basılır, kırmızı asla değil). */
+export function getMoneyTone(v: NumberLike): MoneyTone {
+  if (v === null || v === undefined || v === '') return 'zero';
+  const d = new Decimal(typeof v === 'number' ? v : v.toString());
+  if (!d.isFinite() || d.isZero()) return 'zero';
+  return d.isNegative() ? 'negative' : 'neutral';
+}
+
 /** ₺1.234,56 — para birimi sembolü Intl'den (TRY → ₺, EUR → €, USD → $)
  *  `compact`: Intl'in `style:'currency'+notation:'compact'` ikilisi ICU sürümüne göre sembolü
  *  sona düşürebiliyordu ("16 B ₺") — sayfadaki her yerdeki sembol-önde biçimle ("₺98.193")

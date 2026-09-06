@@ -5,6 +5,7 @@ import NumberFlow, { type Format as NumberFlowFormat } from '@number-flow/react'
 import Link from 'next/link';
 import { ArrowUpRight, ArrowDownRight, Minus, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getMoneyTone } from '@/lib/format';
 import { Sparkline } from './sparkline';
 
 export type KpiFormat = 'money' | 'qty' | 'int' | 'pct';
@@ -89,6 +90,13 @@ export function KpiCard({
   // /finans/tahsilat-takibi'de "61-90 gün: ₺0" tıpkı dolu bir tutar gibi göze çarpıyordu).
   // Tek yerde (ortak bileşen) soluklaştırılır — tüm modüllere yayılır.
   const isZero = num === 0;
+  // Kök neden (P1 shell-kpicard-neg-money-color-01, kriter 4/11): aynı tutar tek ekranda iki farklı
+  // renkte basılıyordu — KPI şeridinde nötr, hemen altındaki MoneyCell'de kırmızı (ör. /kokpit
+  // "Banka toplamı −₺254.348" vs "Toplam (TRY hesaplar) −₺254.348,50"). Negatiflik kuralı artık
+  // MoneyCell ile PAYLAŞILAN `getMoneyTone` yardımcısından gelir — tek kaynak, iki bileşen; negatif
+  // bakiye ya her yerde kırmızıdır ya hiçbir yerde. Yalnızca `format='money'` için (int/qty/pct
+  // negatifi ayrı bir anlam taşımaz, bu bulgu yalnızca para tutarlarını kapsıyordu).
+  const isNegativeMoney = format === 'money' && getMoneyTone(value) === 'negative';
   const valueNode =
     displayValue === null ? (
       <span className="text-muted-foreground/60">—</span>
@@ -98,7 +106,7 @@ export function KpiCard({
         locales="tr-TR"
         format={nfFormat}
         suffix={suffix ? ` ${suffix}` : undefined}
-        className={isZero ? 'text-muted-foreground' : undefined}
+        className={isNegativeMoney ? 'text-destructive' : isZero ? 'text-muted-foreground' : undefined}
       />
     );
   const deltaNode =

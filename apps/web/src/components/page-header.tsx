@@ -32,7 +32,16 @@ export function PageHeader({
               aynı kalır, yalnızca sarmalayıcı etiket değişti. */}
           {description ? <div className="mt-1 text-sm text-muted-foreground">{description}</div> : null}
         </div>
-        {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2 [&>*]:flex-1 sm:[&>*]:flex-none">{actions}</div> : null}
+        {/* Kök neden (P1 shell-pageheader-actions-badge-01, kriter 9): `[&>*]:flex-1` actions'ın
+            DOĞRUDAN her çocuğuna uygulanıyordu — bir buton/link tek eylemse mobilde tam genişlik
+            (dokunması kolay birincil CTA) istenir, ama actions tek başına bir <StatusBadge/> (rozet)
+            taşıdığında (ör. /arge/projeler/[id]/board) aynı kural rozeti 358px'e geriyordu; rozet
+            kendi içerik genişliğini korumalı. Yalnızca gerçek interaktif kökler (button/a — Button/
+            Button asChild+Link/Dialog+Trigger'ların gerçek DOM köküdür) flex-1 alır; rozet, span
+            sarmalayıcı (Tooltip), veya çok-butonlu bir <div> sarmalayıcı (DeliveryActions vb.) kendi
+            doğal genişliğinde kalır — bu sarmalayıcılar zaten kendi içindeki butonları tek tek
+            stretch etmiyordu, bu yüzden görsel olarak değişmez. */}
+        {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2 [&>a]:flex-1 [&>button]:flex-1 sm:[&>a]:flex-none sm:[&>button]:flex-none">{actions}</div> : null}
       </div>
       {children ? <div className="mt-4">{children}</div> : null}
     </div>

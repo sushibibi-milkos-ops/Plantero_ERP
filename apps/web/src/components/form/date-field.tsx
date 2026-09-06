@@ -107,7 +107,10 @@ export function DateInput({
             onClick={() => onChange(null)}
             // size-11 md:size-6: görsel ikon küçük kalır ama mobil dokunma hedefi gerçek 44×44 —
             // switch.tsx'teki aynı desen (kök yalnızca hit-area, ikon kendi boyutunda ortalanır).
-            className="grid size-11 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground md:size-6"
+            // outline-none focus-visible:ring-*: kök neden (P2 shell-datefield-focus-01, kriter 8) —
+            // aynı formdaki diğer tüm duraklar 3px ring alırken bu ikisi UA `outline: auto 1px`'e
+            // düşüyordu.
+            className="grid size-11 place-items-center rounded text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 md:size-6"
             aria-label="Tarihi temizle"
             disabled={disabled}
           >
@@ -121,7 +124,8 @@ export function DateInput({
               // size-11 md:size-9: metin alanı gibi (h-11 md:h-9) 390px'te GERÇEK 44px dokunma hedefi —
               // önceki "size-9 md:size-7" mobilde hâlâ 36px'te kalıyordu (Tur 5 P1 bulgusu: mal-kabul/yeni
               // takvim tetikleyicisi 36x36px ölçüldü).
-              className="grid size-11 place-items-center rounded text-muted-foreground hover:bg-muted hover:text-foreground md:size-9"
+              // outline-none focus-visible:ring-*: kök neden (P2 shell-datefield-focus-01, kriter 8).
+              className="grid size-11 place-items-center rounded text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 md:size-9"
               aria-label="Takvim"
               disabled={disabled}
             >
