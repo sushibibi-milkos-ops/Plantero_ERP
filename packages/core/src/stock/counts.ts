@@ -158,6 +158,29 @@ export async function approveCount(tx: DbOrTx, countId: string, ctx: ActorCtx): 
   return { status: 'pending_approval', approvalId: approval!.id, count: { ...count, approvalId: approval!.id } };
 }
 
+/**
+ * İptal — kaydedilmemiş (henüz `postCount` çağrılmamış) bir sayımı kalıcı olarak 'cancelled' durumuna
+ * taşır. Tur 10 P1 bulgusu (bildirimler): GM, `count_variance` onay kuyruğu kalemini reddettiğinde
+ * `approvals.status` 'rejected' oluyordu ama `stock_counts.status` 'review'de asılı kalıyordu — ne
+ * ilerletilebiliyor (approveCount tekrar çağrılırsa COUNT_APPROVAL_REJECTED fırlatıyordu) ne
+ * kapatılabiliyordu. `approvals/dispatch.ts::rejectQueueItem` artık bu fonksiyonu çağırıyor; sayım
+ * `cancelled` (enum'da zaten vardı) durumuna geçer, `document_links`/belge listesi doğru statüyü görür.
+ * Zaten 'cancelled' ise idempotent olarak aynı satırı döner (çift tıklama/çift red güvenli).
+ */
+export async function cancelCount(tx: DbOrTx, countId: string, ctx: ActorCtx, reason?: string | null): Promise<typeof stockCounts.$inferSelect> {
+  const [count] = await tx.select().from(stockCounts).where(eq(stockCounts.id, countId)).for('update');
+  if (!count) throw new NotFoundError('Sayım', countId);
+  if (count.status === 'cancelled') return count;
+  if (count.status === 'posted') throw new DomainError('COUNT_ALREADY_POSTED', `Sayım ${count.docNo} zaten kaydedildi, iptal edilemez (durum: ${count.status})`, { status: count.status });
+  const [updated] = await tx
+    .update(stockCounts)
+    .set({ status: 'cancelled', note: reason ? `${count.note ? `${count.note}\n` : ''}İptal: ${reason}` : count.note, updatedBy: ctx.userId ?? null })
+    .where(eq(stockCounts.id, countId))
+    .returning();
+  await indexDocument(tx, { type: 'stock_count', recordId: countId, docNo: count.docNo, status: 'cancelled', origin: 'manual', title: `Sayım ${count.docNo}` });
+  return updated!;
+}
+
 /** Onaylı sayımı kaydeder: fark satırları için `count_gain`/`count_loss` hareketleri. */
 export async function postCount(tx: DbOrTx, countId: string, ctx: ActorCtx): Promise<CountWithLines> {
   const [count] = await tx.select().from(stockCounts).where(eq(stockCounts.id, countId)).for('update');

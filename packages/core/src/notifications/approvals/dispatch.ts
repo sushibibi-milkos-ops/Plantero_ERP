@@ -3,7 +3,7 @@ import { approvals, dunningActions, purchaseOrders, type DbOrTx } from '@planter
 import { NotFoundError, DomainError } from '../../auth/errors.js';
 import { writeAudit } from '../../audit/index.js';
 import { approvePurchaseOrder, rejectPurchaseOrder } from '../../purchasing/orders.js';
-import { approveCount } from '../../stock/counts.js';
+import { approveCount, cancelCount } from '../../stock/counts.js';
 import { approveDunningDraft } from '../../finance/dunning.js';
 import { approveReconciliationMatch, rejectReconciliationMatch, listPendingMatches } from '../../accounting/reconciliation.js';
 import type { ActorCtx } from '../../types.js';
@@ -145,7 +145,13 @@ export async function rejectQueueItem(tx: DbOrTx, kind: string, id: string, reas
       return;
     }
     case 'count_variance': {
+      const a = await loadApproval(tx, id);
       await tx.update(approvals).set({ status: 'rejected', decidedBy: ctx.userId, decidedAt: new Date(), decisionNote: reason }).where(eq(approvals.id, id));
+      // approve dalıyla simetrik: approveCount() sayımı sonlandırdığı gibi, red de sayımı terminal bir
+      // duruma taşımalı — aksi halde approvals 'rejected' iken stock_counts 'review'de asılı kalır ve
+      // approveCount tekrar çağrıldığında COUNT_APPROVAL_REJECTED fırlatıp belgeyi kalıcı olarak kilitler
+      // (Tur 10 P1 bulgusu). `cancelCount` sayımı 'cancelled' yapar (enum'da vardı, hiçbir yol ulaşmıyordu).
+      await cancelCount(tx, a.refId, ctx, reason);
       await writeAudit(tx, { action: 'reject', tableName: 'approvals', recordId: id, summary: `Sayım farkı onayı reddedildi${reason ? `: ${reason}` : ''}` }, ctx);
       return;
     }
