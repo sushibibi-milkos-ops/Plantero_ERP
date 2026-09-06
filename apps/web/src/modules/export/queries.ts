@@ -109,7 +109,25 @@ export async function getShipmentDetail(id: string) {
     .where(eq(exportDocuments.shipmentId, id))
     .orderBy(asc(exportDocuments.sequence));
 
-  const chain = await getChain(db, 'export_shipment', id);
+  const chainRaw = await getChain(db, 'export_shipment', id);
+
+  // Tur 6 P0 shell-documentchain-currency-01 kök neden düzeltmesi: `document_index` (core, dondurulmuş
+  // şema) para birimi taşımaz — `getChain()` her düğümün `amount`ini KAYNAK belgenin KENDİ para
+  // biriminde döndürür (ör. ihracat siparişi/faturası EUR) ama hangi para birimi olduğunu söylemez.
+  // DocumentChain bileşeni artık opsiyonel bir `currency` alanı okuyor (document-chain.tsx); burada,
+  // bu SAYFADA ZATEN yüklü olan kaynak kayıtların (`order`, `invoice`, `otherInvoices`) `currency`
+  // sütunundan bir arama tablosu kurup zincir düğümlerine eşliyoruz — document_index/getChain'e YENİ
+  // bir sorgu eklemeden, şema değişikliği gerekmeden. Yalnızca bu sayfanın döndürdüğü belge türleri
+  // (sales_order, invoice) için para birimi biliniyor; eşleşmeyen düğümler (delivery — zaten tutar
+  // taşımaz) `currency` almaz, DocumentChain bunlar için mevcut TRY varsayılanına düşer (davranış
+  // değişmez).
+  const currencyByKey = new Map<string, string>();
+  if (order) currencyByKey.set(`sales_order:${order.id}`, order.currency);
+  if (invoice) currencyByKey.set(`invoice:${invoice.id}`, invoice.currency);
+  for (const inv of otherInvoices) currencyByKey.set(`invoice:${inv.id}`, inv.currency);
+  const withCurrency = <T extends { type: string; id: string }>(nodes: T[]): Array<T & { currency: string | undefined }> =>
+    nodes.map((n) => ({ ...n, currency: currencyByKey.get(`${n.type}:${n.id}`) }));
+  const chain = { ...chainRaw, upstream: withCurrency(chainRaw.upstream), downstream: withCurrency(chainRaw.downstream) };
 
   return {
     shipment, partner: partner ?? null, order: order ?? null, orderLines, delivery: delivery ?? null, invoice: invoice ?? null,

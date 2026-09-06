@@ -17,6 +17,15 @@ export type ChainNode = {
   date?: Date | string | null;
   amount?: string | number | null;
   partnerName?: string | null;
+  // Tur 6 P0 shell-documentchain-currency-01 kök neden: `document_index` (core, dondurulmuş şema)
+  // para birimi taşımaz — `amount` her zaman KAYNAK belgenin KENDİ para biriminde saklanır (ör.
+  // ihracat siparişi/faturası EUR). ChainCard eskiden `formatMoney` varsayılanı TRY'ye sessizce
+  // düşüyordu, bu yüzden aynı sayfada aynı sayı iki para biriminde okunuyordu (ör. '€270,00'luk bir
+  // fatura zincirde '₺270,00' basılıyordu — 37 kat fark). Alan opsiyonel: yalnızca çağıran, ZATEN
+  // kendi sayfasında yüklü olan kaynak kaydın `currency`sini biliyorsa doldurur (ör. ihracat sevkiyatı
+  // detayı — apps/web/src/modules/export/queries.ts); doldurmayan mevcut çağıranlar (satış/muhasebe/
+  // satın alma — hepsi yalnızca TRY) `formatMoney` varsayılanıyla (TRY) davranışsız kalır.
+  currency?: string | null;
 };
 
 // SSR sırasında useLayoutEffect konsola uyarı basar (DOM yok) — istemci tarafında boyamadan ÖNCE
@@ -88,7 +97,7 @@ function ChainCard({ node, current }: { node: ChainNode; current: boolean }) {
       <div className="code truncate text-[13px] font-medium">{node.docNo}</div>
       <div className="flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
         <span>{node.date ? formatDate(node.date) : ''}</span>
-        {node.amount !== null && node.amount !== undefined ? <span className="num">{formatMoney(node.amount)}</span> : null}
+        {node.amount !== null && node.amount !== undefined ? <span className="num">{formatMoney(node.amount, node.currency ?? 'TRY')}</span> : null}
       </div>
       {node.partnerName ? <div className="truncate text-[11px] text-muted-foreground">{node.partnerName}</div> : null}
     </Link>

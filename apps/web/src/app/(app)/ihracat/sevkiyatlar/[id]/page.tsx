@@ -74,7 +74,7 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
         <div className="mb-6">
           <DocumentChain
             upstream={chain.upstream}
-            current={{ type: 'export_shipment', id: shipment.id, docNo: shipment.docNo, status: shipment.status, date: shipment.proformaDate ? new Date(shipment.proformaDate) : shipment.createdAt, amount: shipment.amountTry, partnerName: partner?.name ?? null }}
+            current={{ type: 'export_shipment', id: shipment.id, docNo: shipment.docNo, status: shipment.status, date: shipment.proformaDate ? new Date(shipment.proformaDate) : shipment.createdAt, amount: shipment.amountTry, currency: 'TRY', partnerName: partner?.name ?? null }}
             downstream={chain.downstream}
           />
         </div>
