@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { journals, salesChannels, exchangeRates, exportShipments, exportDocuments, invoices, salesOrders, products, deliveryLines, type Tx } from '@plantero/db';
 import { withRollback, seedBase, ctx, d, today, type Base } from '../__tests__/helpers.js';
-import { createSalesDoc, confirmOrder } from '../sales/orders.js';
+import { createSalesDoc, confirmOrder, updateLines } from '../sales/orders.js';
 import { createInvoiceFromDelivery } from '../sales/invoicing.js';
 import { createLot, postStockMove } from '../stock/ledger.js';
 import { reserveFefo, confirmPick, shipDelivery } from '../stock/deliveries.js';
@@ -227,6 +227,34 @@ describe('export/shipments — sipariş → sevkiyat → proforma → çeki list
       await linkDelivery(tx, shipment.id, delivery.id, ctx);
       await advanceToCustoms(tx, shipment.id, { etgbNo: 'ETGB-X' }, ctx).catch(() => null); // packing'e geçmeden customs denenirse INVALID_SHIPMENT_STATUS
       await expect(markShipped(tx, shipment.id, ctx)).rejects.toThrow();
+    });
+  });
+
+  it('I55: generateProforma amountTry/exchangeRate senkronunu satırlar proforma öncesi değişse de tazeler (Tur 5 P1 regresyon testi)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const channel = await seedExportFixtures(tx, b); // exchangeRates: EUR buying=37.200000 (bugün)
+      await stockFinished(tx, b, `PL-I55-${b.s}`, '100');
+      const { order } = await createSalesDoc(tx, {
+        docType: 'order', partnerId: b.customer.id, channelId: channel.id, warehouseId: b.wh.id, orderDate: today(), currency: 'EUR', incoterm: 'FOB',
+        lines: [{ productId: b.finished.id, qty: d(10), unitPrice: d(20) }],
+      }, ctx);
+      expect(order.grandTotal).toBe('200.0000');
+
+      const shipment = await createFromOrder(tx, { salesOrderId: order.id, destinationCountry: 'DE' }, ctx);
+      expect(shipment.amountTry).toBe('7440.0000'); // 200 EUR × 37,20
+
+      // Sipariş hâlâ 'draft' — satır miktarı proforma ÖNCESİ 10 katına çıkarılır (kök nedendeki canlı
+      // egzersizin aynısı): grandTotal 200 → 2.000 EUR. Eski kod bunu proformaAmount'a yansıtıyordu
+      // ama amountTry'ı eski (küçük) kurla dondurmuş halde bırakıyordu.
+      await updateLines(tx, order.id, [{ productId: b.finished.id, qty: d(100), unitPrice: d(20) }], ctx);
+      const [orderAfter] = await tx.select().from(salesOrders).where(eq(salesOrders.id, order.id));
+      expect(orderAfter!.grandTotal).toBe('2000.0000');
+
+      const proforma = await generateProforma(tx, shipment.id, ctx);
+      expect(proforma.proformaAmount).toBe('2000.0000');
+      expect(proforma.amountTry).toBe('74400.0000'); // 2.000 × 37,20 — kök neden düzeltmesi: artık DONMUYOR
+      expect(proforma.exchangeRate).toBe('37.200000');
     });
   });
 

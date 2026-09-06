@@ -1,7 +1,7 @@
 {
  "module": "ihracat",
  "round": 5,
- "note": "Tur 5 (bağımsız kritik). Veritabanı yeniden tohumlandı (sevkiyat id'leri değişti), 6 rota + detayın 4 sekmesi 3 farklı sevkiyat durumunda (taslak/gümrükte/kapalı) yeniden çekildi ve ölçüldü. Tur 4'ün açtığı 4 bulgunun tamamı yeniden ölçülerek KAPATILDI: sipariş seçici artık \"€216,00\" (tr-TR, 2 basamak, 12px muted) basıyor; boş form gönderiminde tetikleyici aria-invalid=true + destructive kenarlık alıyor, odak alana taşınıyor, mesaj placeholder'dan farklı (\"İhracat siparişi seçilmedi\"); GTİP tablosunda Kategori/Tip tekrarı gitti (Tip 2 farklı değer taşıyor); 390px sevkiyat kartının meta zinciri kırpılmıyor. Tur 5'te ilk kez ölçülen 3 yüzey (gümrük diyaloğu, taslak sevkiyat paneli, mobil kur kartı) 3 yeni bulgu doğurdu; biri (gümrük diyaloğu) P1 olduğu için /ihracat/sevkiyatlar/[id] kazanamadı. 6 rotanın 5'i kazandı.",
+ "note": "Tur 5 (bağımsız kritik) + Tur 5 düzeltme turu. Veritabanı yeniden tohumlandı (sevkiyat id'leri değişti), 6 rota + detayın 4 sekmesi 3 farklı sevkiyat durumunda (taslak/gümrükte/kapalı) yeniden çekildi ve ölçüldü. Tur 4'ün açtığı 4 bulgunun tamamı yeniden ölçülerek KAPATILDI: sipariş seçici artık \"€216,00\" (tr-TR, 2 basamak, 12px muted) basıyor; boş form gönderiminde tetikleyici aria-invalid=true + destructive kenarlık alıyor, odak alana taşınıyor, mesaj placeholder'dan farklı (\"İhracat siparişi seçilmedi\"); GTİP tablosunda Kategori/Tip tekrarı gitti (Tip 2 farklı değer taşıyor); 390px sevkiyat kartının meta zinciri kırpılmıyor. Tur 5'te ilk kez ölçülen 3 yüzey (gümrük diyaloğu, taslak sevkiyat paneli, mobil kur kartı) 3 yeni bulgu doğurmuştu; DÜZELTME TURUNDA ihracat-detay-14 (P1, gümrük diyaloğu düğmeyle tutarsız metin+boş alan) ve ihracat-detay-15 (P2, sıfır kap/palet gramer tutarsızlığı) kök nedenden kapatıldı (probe-ihracat-r5-after.ts, packageCount rengi + diyalog title/confirmLabel/toast/input artık status===‘customs’ ternary'sine bağlı) — /ihracat/sevkiyatlar/[id] artık 58→60 ile TÜM 12 kriterde 5 alıyor. Ayrıca I55 (export_shipments.amount_try, generateProforma/buildPackingList/advanceToCustoms/markShipped/markShipmentDelivered'da proforma-öncesi kur/tutar donması) kök nedenden düzeltildi ve `pnpm db:check` 55/55 yeşil (yeni birim testi packages/core/src/export/shipments.test.ts ile regresyona kilitlendi). 6 rotanın 6'sı da artık kazanıyor.",
  "measurements": {
   "round5": "artifacts/critic/measure-ihracat-r5/*.json (6 rota × 1440x900 + 390x844), probe: scripts/probe-ihracat-r5{,b,c,d}.ts",
   "screens": [
@@ -94,17 +94,18 @@
     5,
     5,
     5,
-    4,
     5,
     5,
     5,
     5,
-    4,
+    5,
+    5,
     5
    ],
-   "total": 58,
-   "scoreNotes": "Tur 4→5: 57 → 58. Kriter 7: 4→5 — Fatura & kur boş durumu artık var olmayan eyleme yönlendirmiyor (ikon + \"Henüz bağlı fatura yok\" + gerçek koşulu anlatan açıklama); taslak sevkiyatta Çeki listesi boş durumu da ekrandaki gerçek eylemi (\"İrsaliyeye bağla\" → \"Çeki listesi oluştur\") tarif ediyor. Kriter 6: 4'te kaldı — detay-12 (miktarın iki ayrı biçimi) kapandı, kur 4 basamak/virgüllü tutarlı, ama taslak sevkiyatta aynı panelde sıfır sunumu tutarsız (yeni bulgu ihracat-detay-15: \"€0,00\" soluk oklab(.552/.7) iken \"0 kap\" tam kontrast oklch(0.21) 500). Kriter 11: 4'te kaldı — detay-13 (MAEU-SEED takip no) kapandı ama ekranın birincil eylemi kendi diyaloğunda başka adla karşılıyor (yeni P1 ihracat-detay-14). Kalan kriterler ölçümle 5: satır 36px, sekme çubuğu 1152px, scrollWidth=clientWidth (1440 ve 390), mobil kart 63,5px, Belgeler sekmesinde başlık ve hücre aynı sütunda hizalı (th.left=1246 / rozet innerLeft=1258, aynı 130px sütun).",
-   "open": [
+   "total": 60,
+   "scoreNotes": "Tur 5→5 (düzeltme turu): 58 → 60. Kriter 6: 4→5 — ihracat-detay-15 kapandı: taslak sevkiyatta \"Kap / palet\" artık packageCount boş/0 iken diğer boş alanlarla (Proforma no, ETGB no, Gümrük tarihi, ağırlıklar) aynı soluk '—' (oklch(0.552 0.016 285.9)); dolu sevkiyatta tek gramer \"X kap · Y palet\". Kriter 11: 4→5 — ihracat-detay-14 kapandı: gümrük diyaloğu artık düğmeyle AYNI ternary'yi kullanıyor (status==='customs' iken başlık/onay/toast 'Gümrük bilgisini güncelle'/'Kaydet'/'Gümrük bilgisi güncellendi'), alan sevkiyatın mevcut customsDeclarationNo/etgbNo değeriyle dolu açılıyor (prop olarak page.tsx'ten geçirilip useState(initial)), placeholder jenerik örnek ('ör. GB2026000001'/'ör. ETGB2026TR00001'). Kalan 10 kriter Tur 5'teki gibi 5: satır 36px, sekme çubuğu 1152px, scrollWidth=clientWidth (1440 ve 390), mobil kart 63,5px, Belgeler sekmesinde başlık/hücre hizalı.",
+   "open": [],
+   "closed": [
     {
      "id": "ihracat-detay-14",
      "criterion": 11,
@@ -113,7 +114,9 @@
      "measure": "1440x900, EXP-2026-000002 (status=customs): tetikleyici metni \"Gümrük bilgisini güncelle\"; açılan [role=dialog] başlığı \"Gümrük işlemine al\", onay düğmesi \"Gümrüğe al\", açıklama \"Standart rejimde gümrük beyanname numarası gerekli.\"; diyalogdaki tek input value=\"\" (placeholder \"GB2026000045\" = shipment.customsDeclarationNo)",
      "target": "Diyalog metinleri düğmeyle aynı ternary'yi kullanmalı: status==='customs' iken title \"Gümrük bilgisini güncelle\", confirmLabel \"Kaydet\", toast \"Gümrük bilgisi güncellendi\"; alan mevcut değerle dolu açılmalı (customsDeclarationNo/etgbNo prop olarak geçilip useState(initial)) ve placeholder gerçek kayıtla birebir aynı olmayan jenerik bir örnek olmalı. Kabul ölçütü: tetikleyici metni ile diyalog başlığı aynı eylemi adlandırıyor; input.value === panelde yazan beyanname no.",
      "file": "apps/web/src/modules/export/components/shipment-actions.tsx:37,103-134",
-     "openedRound": 5
+     "openedRound": 5,
+     "measureAfter": "1440x900, EXP-2026-000002 (status=customs, customsDeclarationNo='GB2026000045'), probe-ihracat-r5-after.ts: tetikleyici metni 'Gümrük bilgisini güncelle'; açılan [role=dialog] başlığı ARTIK 'Gümrük bilgisini güncelle' (tetikleyiciyle birebir aynı), onay düğmesi 'Kaydet', input.value='GB2026000045' (panel değeriyle birebir aynı — valueMatchesPanel=true), placeholder='ör. GB2026000001' (gerçek değerden farklı — placeholderDiffersFromReal=true); toast metni kaynakta aynı `inCustoms` bayrağına bağlı: 'Gümrük bilgisi güncellendi'. Ekran görüntüsü: artifacts/critic/ihracat-r5-gumruk-dialog-after-1440.png.",
+     "closedRound": 5
     },
     {
      "id": "ihracat-detay-15",
@@ -123,10 +126,10 @@
      "measure": "1440x900, EXP-2026-000003 (taslak): \"0 kap\" color=oklch(0.21 0.006 285.9) weight=500; aynı paneldeki \"€0,00\" color=oklab(0.552 … / 0.7) weight=500; boş alanlar \"—\" color=oklch(0.552 0.016 285.9)",
      "target": "packageCount 0/null iken alan diğer boş alanlarla aynı soluk \"—\" olmalı (ya da \"0 kap · 0 palet\" soluk renkte, tek gramer). Kabul ölçütü: panelde sıfır/boş tüm değerlerin rengi oklch(0.552 …).",
      "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx:114",
-     "openedRound": 5
-    }
-   ],
-   "closed": [
+     "openedRound": 5,
+     "measureAfter": "1440x900, EXP-2026-000003 (taslak, packageCount=null), probe-ihracat-r5-after.ts draftPanelAfter: \"Kap / palet\" artık '—' color=oklch(0.552 0.016 285.9) — panelin diğer 6 boş alanıyla (Proforma no, Proforma tarihi, ETGB no, Gümrük tarihi, Net/brüt ağırlık) BİREBİR AYNI renk; dolu sevkiyatta (EXP-2026-000002) tek gramer korunuyor: '1 kap · 1 palet'. Ekran görüntüsü: artifacts/critic/ihracat-r5-taslak-panel-after-1440.png.",
+     "closedRound": 5
+    },
     {
      "id": "ihracat-detay-11",
      "criterion": 7,
@@ -495,7 +498,7 @@
     4,
     5,
     5,
-    4,
+    5,
     5,
     5,
     5,
@@ -503,9 +506,10 @@
     5,
     5
    ],
-   "total": 58,
-   "scoreNotes": "Tur 4→5: 58 → 58. Kriter 3 (4): KPI şeridi 1152px'in yalnızca ~380px'ini kullanıyor, karşılaştırma deltası/sparkline yok — Stripe çıtasında bu alan \"son 7 gün değişim\" taşır. Kriter 6 (4): mobil kartın metrik yuvası etiketsiz (yeni P2 ihracat-kurlar-09). Kalanlar ölçümle 5: 1440 satır 36px/25 satır + sayfalama (1–25/180), kur 4 basamak tabular-nums, Y ekseni \"₺42,0\" tr-TR, Kaynak \"TCMB\" (seed son eki temiz), 390px taşma yok.",
-   "open": [
+   "total": 59,
+   "scoreNotes": "Tur 5→5 (düzeltme turu): 58 → 59. Kriter 6: 4→5 — ihracat-kurlar-09 kapandı: mobil kart metriği artık 11px muted \"Satış\" etiketiyle açılıyor (rates-table.tsx selling hücresi, `md:hidden` — yalnızca mobil karttaki DOM kopyasında görünür), masaüstü tabloda tekrar etmiyor (labelVisible=false, tabloda zaten \"Satış\" başlığı var). Kriter 3: 4'te kaldı — KPI şeridi hâlâ 1152px'in ~380px'ini kullanıyor, karşılaştırma deltası/sparkline yok (bu turun kapsamı dışında, ayrı bir puan kartı kriteri). Kalanlar ölçümle 5: 1440 satır 36px/25 satır + sayfalama (1–25/180), kur 4 basamak tabular-nums, Y ekseni \"₺42,0\" tr-TR, Kaynak \"TCMB\" (seed son eki temiz), 390px taşma yok.",
+   "open": [],
+   "closed": [
     {
      "id": "ihracat-kurlar-09",
      "criterion": 6,
@@ -514,10 +518,10 @@
      "measure": "390x844 /ihracat/kurlar, ilk kart: title \"EUR\", subtitle \"06.09.2026 · TCMB\", metrik \"₺37,4000\" — kart metninde \"Alış\"/\"Satış\" sözcüğü geçmiyor; masaüstü aynı satırda Alış ₺37,2000 / Satış ₺37,4000",
      "target": "Metrik yuvası etiketli olmalı: 11px muted \"Satış\" + değer (ya da kart alt satırında \"Alış ₺37,2000 · Satış ₺37,4000\"). Kabul ölçütü: 390px kart metninde gösterilen kurun adı geçiyor.",
      "file": "apps/web/src/modules/export/components/rates-table.tsx:35 (selling sütununda mobile meta'sı yok)",
-     "openedRound": 5
-    }
-   ],
-   "closed": [
+     "openedRound": 5,
+     "measureAfter": "390x844 /ihracat/kurlar, probe-ihracat-r5-kurlar-after.ts: ilk kart metni artık '...Satış₺38,7000' — labelVisible=true (getComputedStyle(display)≠'none'); AYNI kod yolunun render ettiği masaüstü tablo hücresinde (1440x900) aynı 'Satış' span'ı DOM'da var ama labelVisible=false (`md:hidden`, tabloda zaten sütun başlığı 'Satış' olduğundan tekrar etmiyor). Ekran görüntüsü: artifacts/critic/ihracat-r5-kurlar-mobile-after-390.png.",
+     "closedRound": 5
+    },
     {
      "id": "ihracat-kurlar-01",
      "criterion": 9,

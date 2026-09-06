@@ -19,6 +19,7 @@ type Candidate = { id: string; docNo: string; label?: string };
 
 export function ShipmentActions({
   shipmentId, status, regime, deliveryId, invoiceId, deliveryCandidates, invoiceCandidates,
+  customsDeclarationNo: initialCustomsDeclarationNo, etgbNo: initialEtgbNo,
 }: {
   shipmentId: string;
   status: string;
@@ -27,6 +28,8 @@ export function ShipmentActions({
   invoiceId: string | null;
   deliveryCandidates: Candidate[];
   invoiceCandidates: Candidate[];
+  customsDeclarationNo?: string | null;
+  etgbNo?: string | null;
 }) {
   const router = useRouter();
   const [linkDeliveryOpen, setLinkDeliveryOpen] = useState(false);
@@ -35,9 +38,15 @@ export function ShipmentActions({
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState('');
   const [selectedInvoice, setSelectedInvoice] = useState('');
-  const [customsDeclarationNo, setCustomsDeclarationNo] = useState('');
-  const [etgbNo, setEtgbNo] = useState('');
+  // Tur 5 P1 ihracat-detay-14 kök neden düzeltmesi: alan eskiden boş açılıyordu (useState('')) ve
+  // placeholder'ı ("GB2026000045") sevkiyatın GERÇEK beyanname numarasıyla birebir aynıydı — kullanıcı
+  // alanı dolu sanıp onaylıyordu ama gönderilen değer null'du. Şimdi mevcut değerle dolu açılıyor.
+  const [customsDeclarationNo, setCustomsDeclarationNo] = useState(initialCustomsDeclarationNo ?? '');
+  const [etgbNo, setEtgbNo] = useState(initialEtgbNo ?? '');
   const [reason, setReason] = useState('');
+  // Diyalog düğmeyle AYNI ternary'yi kullanır: durum zaten 'customs' ise bu bir GÜNCELLEME, ilk kez
+  // gümrüğe alma değil — başlık/onay/toast metinleri de düğmenin metniyle tutarlı olmalı.
+  const inCustoms = status === 'customs';
 
   function refresh() {
     router.refresh();
@@ -105,12 +114,12 @@ export function ShipmentActions({
           <ConfirmDialog
             open={customsOpen}
             onOpenChange={setCustomsOpen}
-            title="Gümrük işlemine al"
+            title={inCustoms ? 'Gümrük bilgisini güncelle' : 'Gümrüğe al'}
             description={regime === 'etgb' ? 'ETGB rejiminde ETGB numarası gerekli.' : 'Standart rejimde gümrük beyanname numarası gerekli.'}
-            confirmLabel="Gümrüğe al"
+            confirmLabel={inCustoms ? 'Kaydet' : 'Gümrüğe al'}
             onConfirm={async () => {
               const res = await advanceToCustomsAction({ id: shipmentId, customsDeclarationNo: customsDeclarationNo || null, etgbNo: etgbNo || null });
-              if (res.ok) { toast.success('Gümrük işlemine alındı'); refresh(); }
+              if (res.ok) { toast.success(inCustoms ? 'Gümrük bilgisi güncellendi' : 'Gümrük işlemine alındı'); refresh(); }
               return res.ok ? undefined : { ok: false, error: res.error };
             }}
           >
@@ -118,18 +127,27 @@ export function ShipmentActions({
               {regime === 'etgb' ? (
                 <div className="space-y-1.5">
                   <Label className="text-[13px]">ETGB no</Label>
-                  <Input value={etgbNo} onChange={(e) => setEtgbNo(e.target.value)} placeholder="ETGB2026DE00123" />
+                  <Input value={etgbNo} onChange={(e) => setEtgbNo(e.target.value)} placeholder="ör. ETGB2026TR00001" />
                 </div>
               ) : (
                 <div className="space-y-1.5">
                   <Label className="text-[13px]">Gümrük beyanname no</Label>
-                  <Input value={customsDeclarationNo} onChange={(e) => setCustomsDeclarationNo(e.target.value)} placeholder="GB2026000045" />
+                  <Input value={customsDeclarationNo} onChange={(e) => setCustomsDeclarationNo(e.target.value)} placeholder="ör. GB2026000001" />
                 </div>
               )}
             </div>
           </ConfirmDialog>
-          <Button variant="outline" onClick={() => setCustomsOpen(true)}>
-            <ShipWheel className="size-4" /> {status === 'customs' ? 'Gümrük bilgisini güncelle' : 'Gümrüğe al'}
+          <Button
+            variant="outline"
+            onClick={() => {
+              // Diyalog her açılışta sevkiyatın GÜNCEL kayıtlı değeriyle dolu açılır — kullanıcı
+              // mevcut beyanname/ETGB no'yu görür, boş alanı dolu sanıp yanlış onaylamaz.
+              setCustomsDeclarationNo(initialCustomsDeclarationNo ?? '');
+              setEtgbNo(initialEtgbNo ?? '');
+              setCustomsOpen(true);
+            }}
+          >
+            <ShipWheel className="size-4" /> {inCustoms ? 'Gümrük bilgisini güncelle' : 'Gümrüğe al'}
           </Button>
         </>
       )}

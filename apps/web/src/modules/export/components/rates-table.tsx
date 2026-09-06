@@ -32,7 +32,25 @@ export function RatesTable({ rows }: { rows: RateRow[] }) {
       { id: 'rateDate', accessorFn: (r) => r.rateDate, header: 'Tarih', meta: { width: 110, mobile: 'subtitle' }, cell: ({ getValue }) => formatDate(getValue<string>()) },
       { id: 'currency', accessorFn: (r) => r.currency, header: 'Para birimi', meta: { width: 120, mobile: 'title' }, cell: ({ getValue }) => <span className="font-medium">{CURRENCY_LABEL[getValue<string>()] ?? getValue<string>()}</span> },
       { id: 'buying', accessorFn: (r) => r.buying, header: 'Alış', meta: { align: 'right', width: 120, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono tabular-nums">{formatRate(getValue<string>())}</span> },
-      { id: 'selling', accessorFn: (r) => r.selling, header: 'Satış', meta: { align: 'right', width: 120 }, cell: ({ getValue }) => <span className="font-mono tabular-nums">{formatRate(getValue<string>())}</span> },
+      {
+        id: 'selling',
+        accessorFn: (r) => r.selling,
+        header: 'Satış',
+        meta: { align: 'right', width: 120 },
+        // Tur 5 P2 ihracat-kurlar-09 kök neden düzeltmesi: masaüstünde "Alış" ayrı bir sütunda
+        // mobile:'hidden' olduğundan mobil kartın metrik yuvasında yalnızca bu (satış) kuru kalıyor
+        // ama etiketsiz — iki kur birbirine %0,5 yakın olduğundan kullanıcı hangisine baktığını
+        // ayırt edemiyordu. Etiket YALNIZCA mobil kartta görünür (`md:hidden`): masaüstü <table> ve
+        // mobil <ul> aynı hücre render fonksiyonunu paylaşıyor (data-table.tsx `hidden md:block` /
+        // `md:hidden` ile aynı DOM'u iki katmanda tutuyor) — masaüstünde zaten "Satış" başlığı var,
+        // etiket orada `md:hidden` ile hiç görünmez; kartta ise görünür.
+        cell: ({ getValue }) => (
+          <span className="font-mono tabular-nums">
+            <span className="mr-1 text-[11px] font-sans text-muted-foreground md:hidden">Satış</span>
+            {formatRate(getValue<string>())}
+          </span>
+        ),
+      },
       { id: 'source', accessorFn: (r) => r.source, header: 'Kaynak', meta: { width: 140, mobile: 'meta' }, cell: ({ getValue }) => <span className="text-muted-foreground">{sourceLabel(getValue<string>())}</span> },
     ],
     [],

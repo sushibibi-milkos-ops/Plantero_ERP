@@ -60,7 +60,7 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
         eyebrow="İhracat sevkiyatı"
         title={<span className="font-mono">{shipment.docNo}</span>}
         description={`${partner?.name ?? 'Cari yok'} · ${shipment.destinationCountry}${order ? ` · ${order.docNo}` : ''}`}
-        actions={canManage ? <ShipmentActions shipmentId={shipment.id} status={shipment.status} regime={shipment.regime} deliveryId={shipment.deliveryId} invoiceId={shipment.invoiceId} deliveryCandidates={deliveryCandidates} invoiceCandidates={invoiceCandidates} /> : undefined}
+        actions={canManage ? <ShipmentActions shipmentId={shipment.id} status={shipment.status} regime={shipment.regime} deliveryId={shipment.deliveryId} invoiceId={shipment.invoiceId} deliveryCandidates={deliveryCandidates} invoiceCandidates={invoiceCandidates} customsDeclarationNo={shipment.customsDeclarationNo} etgbNo={shipment.etgbNo} /> : undefined}
       >
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <StatusBadge status={shipment.status} kind="export" size="md" />
@@ -111,7 +111,18 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
             </div>
             <div>
               <div className="text-xs text-muted-foreground">Kap / palet</div>
-              <div className="text-[13px] font-medium">{shipment.packageCount ?? 0} kap{shipment.palletCount ? ` · ${shipment.palletCount} palet` : ''}</div>
+              {/* Tur 5 P2 ihracat-detay-15 kök neden düzeltmesi: aynı panelde boş alanlar ve sıfır tutar
+                  soluk '—'/'€0,00' iken kap sayısı 0 olduğunda tam kontrastta '0 kap' basılıyordu — dolu
+                  sevkiyattaki '1 kap · 1 palet' ile de farklı gramer taşıyordu (palet 0 iken ikinci parça
+                  hiç yok). packageCount boş/0 iken diğer boş alanlarla aynı soluk '—'; doluysa tek gramer:
+                  her zaman "X kap · Y palet" (palet de en az kap kadar 0 gösterilir). */}
+              <div className="text-[13px] font-medium">
+                {!shipment.packageCount ? (
+                  <span className="font-normal text-muted-foreground">—</span>
+                ) : (
+                  `${shipment.packageCount} kap · ${shipment.palletCount ?? 0} palet`
+                )}
+              </div>
             </div>
             <div>
               <div className="text-xs text-muted-foreground">Net / brüt ağırlık</div>

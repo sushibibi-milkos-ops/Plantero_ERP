@@ -11,6 +11,7 @@ import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { ensureDocumentSet, updateExportDocument } from './documents.js';
 import { checkEtgbLimit, resolveRegime } from './etgb.js';
+import { getExchangeRate } from '../sales/pricing.js';
 import type { ActorCtx, DocumentOrigin } from '../types.js';
 
 /**
@@ -46,6 +47,38 @@ async function reindex(tx: DbOrTx, s: typeof exportShipments.$inferSelect): Prom
     type: 'export_shipment', recordId: s.id, docNo: s.docNo, partnerId: s.partnerId, status: s.status,
     origin: 'chain', title: `İhracat sevkiyatı ${s.docNo}`, amount: s.amountTry, docDate: s.proformaDate ? new Date(s.proformaDate) : new Date(),
   });
+}
+
+/**
+ * I55 — fatura bağlanmadan önceki HER durum geçişinde `amountTry`/`exchangeRate` senkronunu tazeler.
+ * Referans tutar `proformaAmount` (>0 ise) yoksa bağlı siparişin GÜNCEL `grandTotal`'ı; kur, I20'nin
+ * `exchange_rates` sorgu örüntüsüyle (`sales/pricing.ts::getExchangeRate`, 'buying' — dövizli satışta
+ * şirketin bankaya sattığı kur, `accounting/fx.ts` ile aynı kural) proforma tarihine (yoksa bugüne) en
+ * yakın günden yeniden çözülür; kur bulunamazsa (TCMB verisi yoksa) mevcut kur korunur, sessizce eski
+ * kalmaz — yalnızca referans tutar × kur her zaman tutarlı yazılır (`checks/55_export_shipment_amount_try.sql`).
+ * Fatura bağlıysa (`invoiceId` dolu) DOKUNULMAZ: o andan sonra `amountTry`/`exchangeRate` yalnızca
+ * `linkInvoice`'ın faturadan kopyaladığı değerlerle izlenir (I55-b) — asıl kaynak artık `invoices`'tır.
+ */
+async function syncAmountTry(tx: DbOrTx, s: typeof exportShipments.$inferSelect): Promise<typeof exportShipments.$inferSelect> {
+  if (s.invoiceId) return s;
+  let referenceAmount = D(s.proformaAmount);
+  if (referenceAmount.lte(0)) {
+    if (!s.salesOrderId) return s;
+    const [order] = await tx.select({ grandTotal: salesOrders.grandTotal }).from(salesOrders).where(eq(salesOrders.id, s.salesOrderId)).limit(1);
+    if (!order) return s;
+    referenceAmount = D(order.grandTotal);
+  }
+  const effectiveDate = s.proformaDate ?? businessDate(new Date());
+  const resolved = s.currency === 'TRY' ? D(1) : await getExchangeRate(tx, s.currency, effectiveDate, 'buying');
+  const exchangeRate = resolved ?? D(s.exchangeRate);
+  const amountTry = round4(referenceAmount.mul(exchangeRate));
+  if (exchangeRate.eq(D(s.exchangeRate)) && amountTry.eq(D(s.amountTry))) return s;
+  const [updated] = await tx
+    .update(exportShipments)
+    .set({ exchangeRate: toDbRate(exchangeRate), exchangeRateDate: effectiveDate, amountTry: toDb(amountTry) })
+    .where(eq(exportShipments.id, s.id))
+    .returning();
+  return updated!;
 }
 
 /** Sevkiyatın EUR karşılığı — yalnızca EUR siparişlerinde güvenilir; başka dövizde ETGB kontrolü atlanır (null → limit aşılmamış varsayılır, çağıran `regime` ile ezebilir). */
@@ -163,12 +196,15 @@ export async function generateProforma(tx: DbOrTx, shipmentId: string, ctx: Acto
 
   const proformaNo = s.proformaNo ?? `PF-${s.docNo}`;
   const proformaDate = businessDate(new Date());
-  const [updated] = await tx
+  const [updated0] = await tx
     .update(exportShipments)
     .set({ status: 'proforma_sent', proformaNo, proformaDate, proformaAmount: order.grandTotal, updatedBy: ctx.userId ?? null })
     .where(eq(exportShipments.id, shipmentId))
     .returning();
-  await reindex(tx, updated!);
+  // I55: proformaAmount siparişin GÜNCEL toplamına çekildi — amountTry/exchangeRate'i de aynı anda
+  // taze kurla yeniden yaz (kök neden: bu ikisi eskiden burada hiç senkronlanmıyordu).
+  const updated = await syncAmountTry(tx, updated0!);
+  await reindex(tx, updated);
 
   const doc = await findDoc(tx, shipmentId, 'PROFORMA');
   if (doc && doc.status !== 'not_required') {
@@ -246,7 +282,7 @@ export async function buildPackingList(tx: DbOrTx, shipmentId: string, ctx: Acto
   const check = checkEtgbLimit({ netWeightKg: netTotal, amountEur });
   const nextRegime = resolveRegime(s.regime, check);
 
-  const [updated] = await tx
+  const [updated0] = await tx
     .update(exportShipments)
     .set({
       status: 'packing', regime: nextRegime, packageCount: built.length, palletCount: Math.ceil(built.length / 24) || null,
@@ -258,8 +294,10 @@ export async function buildPackingList(tx: DbOrTx, shipmentId: string, ctx: Acto
   if (nextRegime !== s.regime) await ensureDocumentSet(tx, shipmentId, nextRegime, ctx);
   const doc = await findDoc(tx, shipmentId, 'PACKING_LIST');
   if (doc && doc.status !== 'not_required') await updateExportDocument(tx, doc.id, { status: 'ready', issuedAt: businessDate(new Date()) }, ctx);
-  await reindex(tx, updated!);
-  return { shipment: updated!, packages: built };
+  // I55: çeki listesi kurulana kadar sipariş hâlâ teorik olarak değişmiş olabilir — amountTry'ı taze kurla senkronla.
+  const updated = await syncAmountTry(tx, updated0!);
+  await reindex(tx, updated);
+  return { shipment: updated, packages: built };
 }
 
 async function orderGrandTotal(tx: DbOrTx, orderId: string): Promise<Decimal | null> {
@@ -279,7 +317,7 @@ export async function advanceToCustoms(tx: DbOrTx, shipmentId: string, input: Cu
   if (s.regime === 'etgb' && !input.etgbNo && !s.etgbNo) {
     throw new ValidationError('ETGB rejiminde ETGB no gerekli');
   }
-  const [updated] = await tx
+  const [updated0] = await tx
     .update(exportShipments)
     .set({
       status: 'customs', customsDeclarationNo: input.customsDeclarationNo ?? s.customsDeclarationNo,
@@ -290,8 +328,10 @@ export async function advanceToCustoms(tx: DbOrTx, shipmentId: string, input: Cu
     .returning();
   const doc = await findDoc(tx, shipmentId, s.regime === 'etgb' ? 'ETGB' : 'ATR');
   if (doc && doc.status !== 'not_required') await updateExportDocument(tx, doc.id, { status: 'received', docNo: input.etgbNo ?? input.customsDeclarationNo ?? doc.docNo, issuedAt: businessDate(new Date()) }, ctx);
-  await reindex(tx, updated!);
-  return updated!;
+  // I55: gümrüğe geçişte de fatura henüz kesilmemiştir — amountTry/exchangeRate taze senkronlanır.
+  const updated = await syncAmountTry(tx, updated0!);
+  await reindex(tx, updated);
+  return updated;
 }
 
 /** Yüklendi — bağlı irsaliye zaten sevk edilmiş (`shipped`/`delivered`) olmalı (asıl stok hareketi orada işlenir). */
@@ -304,18 +344,20 @@ export async function markShipped(tx: DbOrTx, shipmentId: string, ctx: ActorCtx)
       throw new DomainError('DELIVERY_NOT_SHIPPED', 'Bağlı irsaliye henüz sevk edilmedi — önce depo tarafında sevk edin');
     }
   }
-  const [updated] = await tx.update(exportShipments).set({ status: 'shipped', updatedBy: ctx.userId ?? null }).where(eq(exportShipments.id, shipmentId)).returning();
-  await reindex(tx, updated!);
-  return updated!;
+  const [updated0] = await tx.update(exportShipments).set({ status: 'shipped', updatedBy: ctx.userId ?? null }).where(eq(exportShipments.id, shipmentId)).returning();
+  const updated = await syncAmountTry(tx, updated0!);
+  await reindex(tx, updated);
+  return updated;
 }
 
 /** Teslim edildi (alıcıya). */
 export async function markShipmentDelivered(tx: DbOrTx, shipmentId: string, ctx: ActorCtx): Promise<typeof exportShipments.$inferSelect> {
   const s = await getShipmentOrThrow(tx, shipmentId);
   assertStatus(s, ['shipped']);
-  const [updated] = await tx.update(exportShipments).set({ status: 'delivered', updatedBy: ctx.userId ?? null }).where(eq(exportShipments.id, shipmentId)).returning();
-  await reindex(tx, updated!);
-  return updated!;
+  const [updated0] = await tx.update(exportShipments).set({ status: 'delivered', updatedBy: ctx.userId ?? null }).where(eq(exportShipments.id, shipmentId)).returning();
+  const updated = await syncAmountTry(tx, updated0!);
+  await reindex(tx, updated);
+  return updated;
 }
 
 /**
