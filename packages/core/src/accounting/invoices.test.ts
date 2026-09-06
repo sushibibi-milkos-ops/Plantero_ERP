@@ -1,13 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { eq, and } from 'drizzle-orm';
-import { journals, invoices, invoiceLines, stockMoves, type Tx } from '@plantero/db';
+import { journals, salesChannels, invoices, invoiceLines, deliveryLines, stockMoves, type Tx } from '@plantero/db';
 import { createExpensePurchaseInvoice, createCreditNote, cancelInvoice, getAging } from './invoices.js';
 import { postJournalEntry, getPartnerBalance } from './journal.js';
 import { createAndReceive } from '../stock/receipts.js';
-import { getOnHand } from '../stock/ledger.js';
+import { createLot, postStockMove, getOnHand } from '../stock/ledger.js';
+import { reserveFefo, confirmPick, shipDelivery } from '../stock/deliveries.js';
+import { createSalesDoc, confirmOrder } from '../sales/orders.js';
+import { createInvoiceFromDelivery } from '../sales/invoicing.js';
 import { nextDocNo } from '../sequences.js';
 import { D, toDb, round4 } from '../money.js';
-import { withRollback, seedBase, ctx, d, expectReject, balanceProbe, type Base } from '../__tests__/helpers.js';
+import { withRollback, seedBase, ctx, d, today, expectReject, balanceProbe, type Base } from '../__tests__/helpers.js';
 
 async function ensureJournals(tx: Tx) {
   for (const j of [
@@ -158,6 +161,71 @@ describe('accounting/invoices — gider faturası, iade, iptal, yaşlandırma', 
       const { payable } = await getPartnerBalance(tx, b.supplier.id);
       expect(payable.toFixed(4)).toBe('0.0000');
       expect((await probe.bal('191', 'VUK')).toFixed(4)).toBe('0.0000');
+    });
+  });
+
+  it('P2 regresyon (Tur 11, I50): createCreditNote (satış, gerçekten sevk edilmiş) gerçek bir return_in fiziksel iadesi üretir; stok geri döner, COGS (621) net sıfırlanır', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await ensureJournals(tx);
+      const probe = await balanceProbe(tx);
+
+      // Sipariş → sevkiyat → fatura ile GERÇEK bir mamul satışı (deliveryLineId dolu satır).
+      const lot = await createLot(tx, { productId: b.finished.id, lotNo: 'PL-CN-1', origin: 'production', unitCost: d(40), status: 'released' }, ctx);
+      await postStockMove(tx, {
+        kind: 'production', productId: b.finished.id, lotId: lot.id, fromLocationId: b.loc.prod.id, toLocationId: b.loc.mamul.id,
+        qty: d(30), uomId: b.kg.id, unitCost: d(40), refType: 'work_order', refId: '00000000-0000-4000-8000-000000000098',
+      }, ctx);
+
+      const [channel] = await tx.insert(salesChannels).values({ code: `CH-CN-${b.s}`, name: `Kanal ${b.s}`, kind: 'wholesale' }).returning();
+      const { order } = await createSalesDoc(tx, {
+        docType: 'order', partnerId: b.customer.id, channelId: channel!.id, warehouseId: b.wh.id, orderDate: today(), currency: 'TRY',
+        lines: [{ productId: b.finished.id, qty: d(20), unitPrice: d(100) }],
+      }, ctx);
+      const { delivery } = await confirmOrder(tx, order.id, ctx);
+      await reserveFefo(tx, delivery.id, ctx);
+      const [dLine] = await tx.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, delivery.id));
+      await confirmPick(tx, { deliveryId: delivery.id, lineId: dLine!.id, scannedLotId: dLine!.lotId }, ctx);
+      await shipDelivery(tx, delivery.id, ctx);
+      const { invoice: source } = await createInvoiceFromDelivery(tx, delivery.id, ctx);
+      expect(source.status).toBe('posted');
+      expect((await getOnHand(tx, { productId: b.finished.id, warehouseId: b.wh.id })).qty.toFixed(4)).toBe('10.0000');
+      expect((await probe.bal('621', 'VUK')).toFixed(4)).toBe('800.0000'); // 20 × 40 COGS
+
+      const { invoice: note } = await createCreditNote(tx, { invoiceId: source.id, reason: 'Müşteri iadesi' }, ctx);
+      expect(note.kind).toBe('sales_return');
+      expect(note.status).toBe('posted');
+
+      // KRİTİK KANIT: mal fiziksel olarak GERİ GELDİ — return_in hareketi üretildi, stok eski haline döndü.
+      expect((await getOnHand(tx, { productId: b.finished.id, warehouseId: b.wh.id })).qty.toFixed(4)).toBe('30.0000');
+      const returnMoves = await tx.select().from(stockMoves).where(and(eq(stockMoves.productId, b.finished.id), eq(stockMoves.kind, 'return_in')));
+      expect(returnMoves).toHaveLength(1);
+      expect(D(returnMoves[0]!.qty).toFixed(4)).toBe('20.0000');
+      expect(returnMoves[0]!.lotId).toBe(lot.id);
+      expect(returnMoves[0]!.refType).toBe('invoice');
+      expect(returnMoves[0]!.refId).toBe(note.id);
+
+      // return_in kendi fişini atar (INV borç / 621 alacak) — delivery'nin attığı COGS'u tam netler.
+      expect((await probe.bal('621', 'VUK')).toFixed(4)).toBe('0.0000');
+
+      // Muhasebe (610/391/120) da doğru tersine çevrildi — bu servisin zaten bilinen davranışı.
+      expect((await probe.bal('610', 'VUK')).toFixed(4)).toBe('2000.0000');
+      expect((await probe.bal('120', 'VUK')).toFixed(4)).toBe('0.0000');
+    });
+  });
+
+  it('createCreditNote (satış, teslimatsız — createInvoiceFromOrder): fiziksel mal sevk edilmediğinden return_in ÜRETİLMEZ', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      await ensureJournals(tx);
+      // makeRealSalesInvoice hiç deliveryLineId taşımaz — teslimatsız (hizmet/manuel) satış senaryosunun testteki sadeleşmiş hali.
+      const source = await makeRealSalesInvoice(tx, b, { subtotal: '300', vat: '3' });
+
+      const { invoice: note } = await createCreditNote(tx, { invoiceId: source.id, reason: 'Fiyat düzeltmesi' }, ctx);
+      expect(note.kind).toBe('sales_return');
+
+      const returnMoves = await tx.select().from(stockMoves).where(eq(stockMoves.refId, note.id));
+      expect(returnMoves).toHaveLength(0);
     });
   });
 

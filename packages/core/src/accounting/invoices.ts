@@ -9,7 +9,7 @@ import { nextDocNo } from '../sequences.js';
 import { linkDocuments, indexDocument } from '../documents/chain.js';
 import { postJournalEntry, reverseJournalEntry, type JournalLineInput } from '../accounting/journal.js';
 import { postStockMove } from '../stock/ledger.js';
-import { getSuppliersLocation } from '../stock/locations.js';
+import { getSuppliersLocation, getCustomersLocation } from '../stock/locations.js';
 import { writeAudit } from '../audit/index.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import type { ActorCtx } from '../types.js';
@@ -161,8 +161,17 @@ export type CreateCreditNoteInput = {
  * tüketilmiş/sevk edilmişse) `postStockMove` `INSUFFICIENT_STOCK` ile reddeder (bilinçli: kısmi
  * iade bu servisin kapsamında değil, tam iade fiziksel karşılığı olmadan asla kabul edilmez).
  * Gider faturası kaynaklı (7XX hesap) satırlarda stok/lot yok; eski davranış (hesabı aynen tersine
- * çevir) değişmeden korunur. Satış tarafının fiziksel iadesi (`return_in`) bu servisin kapsamı
- * DIŞINDADIR — bilinen sınır, rapora ayrıca not edilir.
+ * çevir) değişmeden korunur.
+ *
+ * Satış tarafının fiziksel iadesi (Tur 11 kök neden düzeltmesi — I50, alış tarafının I25 düzeltmesinin
+ * birebir simetriği): kaynak satış faturasının `deliveryLineId` dolu satırları (gerçekten sevk edilmiş —
+ * `createInvoiceFromDelivery`'den gelir) için o sevkiyat satırının ürettiği TÜM `stock_moves(kind:'delivery')`
+ * hareketleri bulunur, her biri KENDİ lot/lokasyon/miktarıyla `postStockMove(kind:'return_in',
+ * fromLocationId:<müşteri sanal>, toLocationId:<hareketin orijinal sevk lokasyonu>)` ile geri sarılır —
+ * `accounting/mapping.ts`'teki `return_in` eşlemesi (envanter borç / 621 COGS alacak) bu hareketin KENDİ
+ * fişini otomatik atar; GRNI'deki gibi ek bir manuel muhasebe satırına gerek yoktur (satış tarafında ara
+ * hesap yok). `deliveryLineId` boş satırlar (`createInvoiceFromOrder`'dan gelen teslimatsız satış — hizmet/
+ * doğrudan hammadde, hiç fiziksel sevkiyat yok) atlanır: iade edilecek fiziksel mal hiç sevk edilmemiştir.
  */
 export async function createCreditNote(tx: DbOrTx, input: CreateCreditNoteInput, ctx: ActorCtx): Promise<AccountingInvoiceResult> {
   const [source] = await tx.select().from(invoices).where(eq(invoices.id, input.invoiceId)).limit(1);
@@ -227,6 +236,31 @@ export async function createCreditNote(tx: DbOrTx, input: CreateCreditNoteInput,
     if (!D(source.subtotal).isZero()) lines.push({ accountCode: '610', debit: D(source.subtotal), description: `İade faturası ${docNo}: ${input.reason}` });
     if (!D(source.vatTotal).isZero()) lines.push({ accountCode: '391', debit: D(source.vatTotal), description: `İade faturası ${docNo} KDV` });
     lines.push({ accountCode: '120', credit: D(source.grandTotalTry), partnerId: partner.id, description: `İade faturası ${docNo}: ${partner.name}` });
+
+    // Fiziksel iade (P2/I50 kök neden düzeltmesi — bkz. yukarıdaki fonksiyon başı yorumu): yalnızca
+    // GERÇEKTEN sevk edilmiş satırlar (deliveryLineId dolu) için kaynak sevkiyat hareketlerini bul ve
+    // aynı miktar/lot ile `return_in` üret. Teslimatsız satış satırlarında (deliveryLineId null) hiç
+    // fiziksel mal hareket etmediğinden atlanır.
+    const shippedLines = srcLines.filter((l) => l.deliveryLineId && D(l.qty).gt(0));
+    if (shippedLines.length) {
+      const customersLoc = await getCustomersLocation(tx);
+      for (const l of shippedLines) {
+        if (!l.productId) continue;
+        const originMoves = await tx
+          .select()
+          .from(stockMoves)
+          .where(and(eq(stockMoves.refType, 'delivery'), eq(stockMoves.refLineId, l.deliveryLineId!), eq(stockMoves.kind, 'delivery')));
+        if (!originMoves.length) throw new ValidationError(`${docNo}: kaynak sevkiyat satırının stok hareketi bulunamadı; fiziksel iade işlenemedi`, { invoiceLineId: l.id });
+
+        for (const om of originMoves) {
+          await postStockMove(tx, {
+            kind: 'return_in', productId: l.productId, lotId: om.lotId, fromLocationId: customersLoc.id, toLocationId: om.fromLocationId,
+            qty: D(om.qty), uomId: om.uomId, refType: 'invoice', refId: note!.id, refLineId: noteLineIdBySourceLineId.get(l.id) ?? l.id, refNo: docNo, partnerId: partner.id,
+            movedAt: new Date(invoiceDate), origin: 'chain', note: `İade faturası ${docNo}: ${input.reason}`,
+          }, ctx);
+        }
+      }
+    }
   } else {
     lines.push({ accountCode: '320', debit: D(source.grandTotal), partnerId: partner.id, description: `İade faturası ${docNo}: ${partner.name}` });
 
