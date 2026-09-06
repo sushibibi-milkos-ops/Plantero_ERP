@@ -52,8 +52,15 @@ const FILES = await checkFiles();
 // lotlarının ikisi de bunu canlı olarak kanıtlıyor) bu join'ler production kökenli lotlar için sessizce
 // boş dönüyor ve I6 gerçek fiziksel dengeyi hiç test etmeden yeşile düşüyordu. I47 aynı dengeyi TEK
 // kanonik kaynaktan (`stock_moves` + `stock_quants`, hiçbir ara tabloya dokunmadan) production kökenli
-// lotlar için yeniden kurar — bkz. checks/47_production_lot_qty_balance.sql üst yorumu.
-const RULE_COUNT = 47;
+// lotlar için yeniden kurar — bkz. checks/47_production_lot_qty_balance.sql üst yorumu. I48 (veri-critic
+// Tur 9, YENİ, P1, KIRMIZI — I21'in Tur 3'teki muamelesiyle aynı disiplin, bkz. docs/INVARIANTS.md):
+// satın alma beyaz liste kapısının KENDİSİ (I42 yalnızca tutar sınırını doğruluyordu) — fresh seed'deki
+// `packages/db/src/seed/purchasing.ts::seedDemoDrafts`in ürettiği `PO-2026-000008` (Ege Ambalaj/Etiket)
+// gerçek whitelist değerlendirmesinden hiç geçmeden `isAutoApproved:true` + boş `reorderRuleId` ile
+// üretiliyor; bu yüzden aşağıdaki "0 ihlal" testi BİLİNÇLİ OLARAK KIRMIZI bırakıldı — kod düzeltilmeden
+// (seed gerçek bir reorder_rule id'si vermeden) testi yeşile zorlamak yanlış olurdu. Düzeltme önerisi
+// checks/48_reorder_whitelist_gate.sql üst yorumunda.
+const RULE_COUNT = 48;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
