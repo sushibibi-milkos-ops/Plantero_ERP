@@ -5,10 +5,10 @@ import {
   trialRecipes, trialRecipeVersions, trialRecipeLines, rndProjects, products, purchaseOrders, purchaseOrderLines,
   approvals, boms,
 } from '@plantero/db';
-import { D, ZERO, toDb } from '../money.js';
+import { D, toDb } from '../money.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { writeAudit } from '../audit/index.js';
-import { createBomVersion, activateBom } from '../masterdata/boms.js';
+import { createBomVersion, activateBom, resolveComponentUnitCost } from '../masterdata/boms.js';
 import type { ActorCtx } from '../types.js';
 import { computeTrialCost, type CostSource, type TrialCostComputation } from './costFormula.js';
 
@@ -38,11 +38,21 @@ export type TrialLineInput = {
 /* Canlı maliyet kaynağı çözümü                                          */
 /* ==================================================================== */
 
-export type ResolvedCost = { unitCost: Decimal; resolvedSource: 'average' | 'last_purchase' | 'manual' | 'standard_cost_fallback' | 'none' };
+export type ResolvedCost = { unitCost: Decimal; resolvedSource: 'last_purchase' | 'manual' | 'lot_avg' | 'average_cost' | 'supplier_price' | 'standard_cost' | 'none' };
 
-/** `costSource` seçicisine göre birim maliyeti çözer: ortalama = `products.averageCost`, son alış =
- *  en güncel `purchase_order_lines.unitPrice`, manuel = kullanıcı girdisi. Veri yoksa ortalamaya, o da
- *  yoksa standart maliyete düşer (asla sessizce 0'a düşmez — `resolvedSource` gerçek kaynağı taşır). */
+/**
+ * `costSource` seçicisine göre birim maliyeti çözer:
+ * - `manual`: kullanıcı girdisi, olduğu gibi.
+ * - `last_purchase`: en güncel `purchase_order_lines.unitPrice`; alış geçmişi yoksa ortalamaya düşer.
+ * - `average`: `masterdata/boms.ts`teki `resolveComponentUnitCost` İLE AYNI kademeli çözüm — eldeki
+ *   stok lot ortalaması → `products.averageCost` (yalnızca lotsuz/`cost_method='average'` üründe
+ *   dolu olur) → tercih edilen tedarikçi fiyatı → `standardCost`. Lotlu hammaddelerde (Plantero'daki
+ *   çoğu hammadde `costMethod='lot'`dur) `averageCost` HİÇBİR ZAMAN güncellenmez (bkz. `stock/ledger.ts`
+ *   kural 5) — doğrudan `products.averageCost` okumak bu ürünlerde daima 0 verirdi; BOM'un zaten
+ *   kullandığı, test edilmiş kademeyi burada TEKRAR YAZMAK yerine ÇAĞIRMAK, Ar-Ge simülasyonunun
+ *   BOM'a devrolduğunda maliyetin aniden değişmemesini de garanti eder.
+ * Hiçbir kaynak veri bulamazsa sessizce 0'a düşmez — `resolvedSource='none'` UI'da açıkça gösterilir.
+ */
 export async function resolveLineUnitCost(tx: DbOrTx, productId: string, costSource: CostSource, manualUnitCost?: string | null): Promise<ResolvedCost> {
   if (costSource === 'manual') return { unitCost: D(manualUnitCost ?? '0'), resolvedSource: 'manual' };
 
@@ -55,14 +65,11 @@ export async function resolveLineUnitCost(tx: DbOrTx, productId: string, costSou
       .orderBy(desc(purchaseOrders.orderDate))
       .limit(1);
     if (rows[0]) return { unitCost: D(rows[0].unitPrice), resolvedSource: 'last_purchase' };
-    // Alış geçmişi yok — ortalamaya düş (aşağıda devam)
+    // Alış geçmişi yok — ortalama kademesine düş (aşağıda devam)
   }
 
-  const [p] = await tx.select({ averageCost: products.averageCost, standardCost: products.standardCost }).from(products).where(eq(products.id, productId)).limit(1);
-  if (!p) throw new NotFoundError('Ürün', productId);
-  if (!D(p.averageCost).isZero()) return { unitCost: D(p.averageCost), resolvedSource: 'average' };
-  if (!D(p.standardCost).isZero()) return { unitCost: D(p.standardCost), resolvedSource: 'standard_cost_fallback' };
-  return { unitCost: ZERO, resolvedSource: 'none' };
+  const resolved = await resolveComponentUnitCost(tx, productId);
+  return { unitCost: resolved.unitCost, resolvedSource: resolved.source };
 }
 
 /* ==================================================================== */

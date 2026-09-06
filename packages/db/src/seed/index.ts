@@ -16,6 +16,7 @@ import { seedExport } from './export.js';
 import { seedQuality } from './quality.js';
 import { seedNotifications } from './notifications.js';
 import { seedMaintenance } from './maintenance.js';
+import { seedRnd } from './rnd.js';
 import { seedFinanceProjections } from './finance-projections.js';
 
 /**
@@ -69,6 +70,13 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   // SONRA. Stok/satın alma belgesi üretmez (PO'suz mal kabul riski yok) ama modül sözleşmesi gereği
   // (yeni seed'ler son güvenlik ağının ÖNÜNE eklenir) yine de `purchasing-backfill`'den önce çalışır.
   { name: 'maintenance', run: seedMaintenance },
+  // `rnd`: Ar-Ge projeleri/board/deneme reçeteleri — yalnızca `masterdata` (ürünler, BOM servisleri)
+  // ve `core` (kullanıcılar) verisine bağımlı, stok/satın alma belgesi üretmez (PO'suz mal kabul
+  // riski yok); "Oat Barista v2" projesinin `releaseToBom` ile ürettiği YENİ BOM versiyonu istisna —
+  // `production`'ın seed ettiği iş emirleri zaten kendi BOM'larını (v1) kullanıyor, bu yüzden sıra
+  // esnektir. Modül sözleşmesi gereği (yeni seed'ler son güvenlik ağının ÖNÜNE eklenir) yine de
+  // `purchasing-backfill`'den önce çalışır.
+  { name: 'rnd', run: seedRnd },
   { name: 'purchasing-backfill', run: seedPurchasingBackfill },
   // `finance-projections`: EN SONDA — 36 aylık nakit akışı projeksiyonunu (3 senaryo) kalıcı hale
   // getirir ve bütçe/nakit akışı "gerçekleşen" alanlarını muhasebeden (TÜM yukarıdaki adımların

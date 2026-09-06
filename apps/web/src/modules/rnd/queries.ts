@@ -1,12 +1,13 @@
 import 'server-only';
 import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
+import type { trialRecipeLines } from '@plantero/db';
 import { getVersionRollup, type CostSource } from '@plantero/core/rnd/trials';
 import { listCardActivity, ATTACHMENT_MARKER } from '@plantero/core/rnd/board';
 import { D, toDb } from '@plantero/core/money';
 
 const {
-  rndProjects, rndBoardColumns, rndCards, trialRecipes, trialRecipeVersions, trialRecipeLines,
+  rndProjects, rndBoardColumns, rndCards, trialRecipes, trialRecipeVersions,
   products, uoms, users, approvals, boms,
 } = schema;
 
