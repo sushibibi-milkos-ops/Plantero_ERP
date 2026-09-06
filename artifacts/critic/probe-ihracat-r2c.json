@@ -1,0 +1,24 @@
+{
+ "detay": {
+  "h": 42,
+  "html": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\">Proforma fatura</div><div class=\"max-w-[45%] shrink-0 overflow-hidden text-[11px] leading-4\"><span data-status=\"sent\" class=\"inline-flex shrink-0 items-center gap-1.5 rounded-full border font-medium whitespace-nowrap h-5 px-2 text-[11px] bg-info/10 text-info border-transparent\"><span aria-hidden=\"true\" class=\"size-1.5 rounded-full bg-info\"></span>Gönderildi</span></div><button data-slot=\"dropdown-menu-trigger\" data-variant=\"ghost\" data-size=\"icon-xs\" class=\"inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium whitespace-nowrap outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 disabled:opacity-50 rounded-md [&amp;_svg:not([class*='size-'])]:size-3 text-muted-foreground data-[state=open]:bg-muted size-11 md:size-6 -my-3 md:my-0 opacity-100 transition-opacity duration-150 data-[state=open]:opacity-100 md:opacity-0 md:group-hover/row:opacity-100 md:group-focus-within/row:opacity-100 md:focus-visible:opacity-100 md:[@media(hover:none)]:opacity-100\" aria-label=\"Satır eylemleri\" type=\"button\" id=\"radix-_r_1e_\" aria-haspopup=\"menu\" aria-expanded=\"false\" data-state=\"closed\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle><circle cx=\"5\" cy=\"12\" r=\"1\"></circle></svg></button></div>",
+  "btns": [
+   {
+    "t": "Satır eylemleri",
+    "w": 44,
+    "h": 44
+   }
+  ]
+ },
+ "dash": {
+  "h": 60,
+  "html": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\">Proforma fatura</div><div class=\"max-w-[45%] shrink-0 overflow-hidden text-[11px] leading-4\"><span data-status=\"sent\" class=\"inline-flex shrink-0 items-center gap-1.5 rounded-full border font-medium whitespace-nowrap h-5 px-2 text-[11px] bg-info/10 text-info border-transparent\"><span aria-hidden=\"true\" class=\"size-1.5 rounded-full bg-info\"></span>Gönderildi</span></div><button data-slot=\"dropdown-menu-trigger\" data-variant=\"ghost\" data-size=\"icon-xs\" class=\"inline-flex shrink-0 items-center justify-center gap-2 text-sm font-medium whitespace-nowrap outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 disabled:opacity-50 rounded-md [&amp;_svg:not([class*='size-'])]:size-3 text-muted-foreground data-[state=open]:bg-muted size-11 md:size-6 -my-3 md:my-0 opacity-100 transition-opacity duration-150 data-[state=open]:opacity-100 md:opacity-0 md:group-hover/row:opacity-100 md:group-focus-within/row:opacity-100 md:focus-visible:opacity-100 md:[@media(hover:none)]:opacity-100\" aria-label=\"Satır eylemleri\" type=\"button\" id=\"radix-_r_2c_\" aria-haspopup=\"menu\" aria-expanded=\"false\" data-state=\"closed\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle><circle cx=\"5\" cy=\"12\" r=\"1\"></circle></svg></button></div><div class=\"mt-0.5 flex items-baseline justify-between gap-2\"><div class=\"mobile-card-subtitle-row flex min-w-0 flex-1 items-baseline text-xs text-muted-foreground\"><span class=\"min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap\">EXP-2026-000001</span></div></div>",
+  "btns": [
+   {
+    "t": "Satır eylemleri",
+    "w": 44,
+    "h": 44
+   }
+  ]
+ }
+}

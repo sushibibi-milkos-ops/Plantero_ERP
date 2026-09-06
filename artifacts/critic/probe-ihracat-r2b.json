@@ -1,0 +1,147 @@
+{
+ "kurlarKpi": {
+  "out": [],
+  "stripKids": null,
+  "vals": [
+   {
+    "t": "—",
+    "fs": "19px",
+    "fw": "600",
+    "color": "oklab(0.552 0.00438335 -0.0153879 / 0.6)",
+    "fvn": "tabular-nums",
+    "y": 182
+   },
+   {
+    "t": "₺36.0",
+    "fs": "11px",
+    "fw": "400",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": 376
+   },
+   {
+    "t": "₺39.0",
+    "fs": "11px",
+    "fw": "400",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": 325
+   },
+   {
+    "t": "₺42.0",
+    "fs": "11px",
+    "fw": "400",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": 274
+   },
+   {
+    "t": "₺30.0",
+    "fs": "11px",
+    "fw": "400",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": -20000
+   }
+  ]
+ },
+ "belgelerKpi": {
+  "out": [],
+  "stripKids": null,
+  "vals": []
+ },
+ "gtipKpi": {
+  "out": [],
+  "stripKids": null,
+  "vals": [
+   {
+    "t": "0901.21",
+    "fs": "13px",
+    "fw": "500",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": 267
+   },
+   {
+    "t": "2008.19",
+    "fs": "13px",
+    "fw": "500",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": 267
+   },
+   {
+    "t": "2106.10",
+    "fs": "13px",
+    "fw": "500",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": 267
+   },
+   {
+    "t": "2202.99",
+    "fs": "13px",
+    "fw": "500",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "normal",
+    "y": 267
+   }
+  ]
+ },
+ "listSep": [
+  {
+   "text": "\" · \"",
+   "sepLeft": 161.4,
+   "sepRight": 168.3,
+   "prevRight": null,
+   "gapBefore": null
+  },
+  {
+   "text": "\" · \"",
+   "sepLeft": 138.3,
+   "sepRight": 145.1,
+   "prevRight": null,
+   "gapBefore": null
+  },
+  {
+   "text": "\" · \"",
+   "sepLeft": 210.8,
+   "sepRight": 221,
+   "prevRight": 210.8,
+   "gapBefore": 0
+  },
+  {
+   "text": "\" · \"",
+   "sepLeft": 161.4,
+   "sepRight": 168.3,
+   "prevRight": null,
+   "gapBefore": null
+  }
+ ],
+ "faturaKur": {
+  "text": "İhracat faturasıHenüz bağlı fatura yokSevkiyat sipariş/irsaliye üzerinden faturalandıktan sonra üstteki “Faturaya bağla” eylemiyle bağlanır.Kur bilgisiPara birimiEURKur (TCMB)₺37,2000Kur tarihi01.09.2026TL karşılığı₺624.960,00Kur farkı (lehte/aleyhte) faturanın kur tarihi ile tahsilat kuru arasındaki farktan tahsilat kaydında otomatik üretilir (646/656) — bkz. fatura detayındaki yevmiye fişi.",
+  "html": "<div class=\"grid grid-cols-1 gap-4 lg:grid-cols-2\"><div class=\"rounded-lg border border-border/60 p-4\"><h3 class=\"mb-3 text-[13px] font-semibold\">İhracat faturası</h3><div class=\"flex flex-col items-center justify-center text-center gap-2 px-4 py-10\"><div class=\"grid place-items-center rounded-full bg-muted text-muted-foreground size-9\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-inbox size-4\" aria-hidden=\"true\"><polyline points=\"22 12 16 12 14 15 10 15 8 12 2 12\"></polyline><path d=\"M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z\"></path></svg></div><div class=\"space-y-1\"><div class=\"font-medium text-sm\">Henüz bağlı fatura yok</div><div class=\"mx-auto max-w-sm text-[13px] text-muted-foreground\">Sevkiyat sipariş/irsaliye üzerinden faturalandıktan sonra üstteki “Faturaya bağla” eylemiyle bağlanır.</div></div></div></div><div class=\"rounded-lg border border-border/60 p-4\"><h3 class=\"mb-3 text-[13px] font-semibold\">Kur bilgisi</h3><div class=\"grid grid-cols-2 gap-3 text-[13px]\"><div><div class=\"text-xs text-muted-foreground\">Para birimi</div><div class=\"font-medium\">EUR</div></div><div><div class=\"text-xs text-muted-foreground\">Kur (TCMB)</div><div class=\"font-mono tabular-nums\">₺37,2000</div></div><div><div class=\"text-xs text-muted-foreground\">Kur tarihi</div><"
+ },
+ "detayBelgelerCards": [
+  {
+   "h": 42,
+   "t": "Proforma faturaGönderildi",
+   "html": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\">Proforma fatura</div><div class=\"max-w-[45%] shrink-0 overflow-hidden text-[11px] leading-4\"><span data-status=\"sent\" class"
+  },
+  {
+   "h": 42,
+   "t": "Ticari faturaGerekli",
+   "html": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\">Ticari fatura</div><div class=\"max-w-[45%] shrink-0 overflow-hidden text-[11px] leading-4\"><span data-status=\"required\" cla"
+  },
+  {
+   "h": 42,
+   "t": "Çeki listesi (packing list)Hazır",
+   "html": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\">Çeki listesi (packing list)</div><div class=\"max-w-[45%] shrink-0 overflow-hidden text-[11px] leading-4\"><span data-status="
+  },
+  {
+   "h": 42,
+   "t": "Sağlık sertifikasıGerekli",
+   "html": "<div class=\"flex items-center gap-1.5\"><div class=\"min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&amp;&gt;*]:min-w-0 [&amp;&gt;*]:max-w-full [&amp;&gt;*]:truncate\">Sağlık sertifikası</div><div class=\"max-w-[45%] shrink-0 overflow-hidden text-[11px] leading-4\"><span data-status=\"required"
+  }
+ ]
+}

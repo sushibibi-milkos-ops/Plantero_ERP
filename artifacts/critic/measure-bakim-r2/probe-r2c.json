@@ -1,0 +1,124 @@
+[
+ {
+  "route": "/bakim/is-emirleri",
+  "viewport": "1440x900",
+  "visibleTables": 1,
+  "table": {
+   "width": 1417,
+   "holderClient": 1152,
+   "holderScroll": 1417,
+   "cols": [
+    {
+     "t": "No",
+     "w": 133,
+     "right": 397,
+     "offscreen": false
+    },
+    {
+     "t": "Başlık",
+     "w": 502,
+     "right": 899,
+     "offscreen": false
+    },
+    {
+     "t": "Makine",
+     "w": 349,
+     "right": 1248,
+     "offscreen": false
+    },
+    {
+     "t": "Tür",
+     "w": 103,
+     "right": 1351,
+     "offscreen": false
+    },
+    {
+     "t": "Öncelik",
+     "w": 110,
+     "right": 1461,
+     "offscreen": true
+    },
+    {
+     "t": "Durum",
+     "w": 130,
+     "right": 1591,
+     "offscreen": true
+    },
+    {
+     "t": "(boş)",
+     "w": 49,
+     "right": 1641,
+     "offscreen": true
+    },
+    {
+     "t": "Eylemler",
+     "w": 40,
+     "right": 1681,
+     "offscreen": true
+    }
+   ]
+  },
+  "zeroByCol": {}
+ },
+ {
+  "route": "/bakim/makineler",
+  "viewport": "1440x900",
+  "visibleTables": 1,
+  "table": {
+   "width": 1152,
+   "holderClient": 1152,
+   "holderScroll": 1152,
+   "cols": [
+    {
+     "t": "Kod",
+     "w": 90,
+     "right": 354,
+     "offscreen": false
+    },
+    {
+     "t": "Makine",
+     "w": 490,
+     "right": 844,
+     "offscreen": false
+    },
+    {
+     "t": "Hat",
+     "w": 90,
+     "right": 934,
+     "offscreen": false
+    },
+    {
+     "t": "Durum",
+     "w": 120,
+     "right": 1054,
+     "offscreen": false
+    },
+    {
+     "t": "Sonraki bakım",
+     "w": 140,
+     "right": 1194,
+     "offscreen": false
+    },
+    {
+     "t": "Çalışma saati",
+     "w": 116,
+     "right": 1310,
+     "offscreen": false
+    },
+    {
+     "t": "Açık iş emri",
+     "w": 106,
+     "right": 1416,
+     "offscreen": false
+    }
+   ]
+  },
+  "zeroByCol": {
+   "6": {
+    "text": "0",
+    "color": "oklch(0.552 0.016 285.9)",
+    "fontSize": "13px"
+   }
+  }
+ }
+]

@@ -1,0 +1,66 @@
+{
+ "panel": [
+  {
+   "t": "—",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "font-normal text-muted-foreground",
+   "ctx": "—"
+  },
+  {
+   "t": "—",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "font-normal text-muted-foreground",
+   "ctx": "— / —"
+  },
+  {
+   "t": "—",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "font-normal text-muted-foreground",
+   "ctx": "— / —"
+  }
+ ],
+ "ceki": [
+  {
+   "t": "#1",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "h-9 px-3 align-middle text-[13px] whitespace-nowra"
+  },
+  {
+   "t": "Badem İçeceği 1 Litrelik UHT",
+   "color": "oklch(0.21 0.006 285.9)",
+   "cls": "h-9 px-3 align-middle text-[13px] whitespace-nowra"
+  },
+  {
+   "t": "190010099",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "h-9 px-3 align-middle whitespace-nowrap font-mono "
+  },
+  {
+   "t": "PL-260822-H1-05",
+   "color": "oklch(0.21 0.006 285.9)",
+   "cls": "h-9 px-3 align-middle text-[13px] whitespace-nowra"
+  },
+  {
+   "t": "40",
+   "color": "oklch(0.21 0.006 285.9)",
+   "cls": "h-9 px-3 align-middle text-[13px] whitespace-nowra"
+  },
+  {
+   "t": "—",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "h-9 px-3 align-middle text-[13px] whitespace-nowra"
+  },
+  {
+   "t": "0",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "h-9 px-3 align-middle text-[13px] whitespace-nowra"
+  },
+  {
+   "t": "0",
+   "color": "oklch(0.552 0.016 285.9)",
+   "cls": "h-9 px-3 align-middle text-[13px] whitespace-nowra"
+  }
+ ],
+ "muted": "oklch(0.552 0.016 285.9)",
+ "fg": "oklch(0.21 0.006 285.9)"
+}
