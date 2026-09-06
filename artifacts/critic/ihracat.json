@@ -1,0 +1,280 @@
+{
+  "module": "ihracat",
+  "round": 1,
+  "note": "Tur 1: ihracat.json ilk kez oluşturuldu. 6 rota (1440x900 + 390x844) `pnpm shot` ile görüntülendi, `pnpm measure` ve `scripts/probe-ihracat-r1.ts` (iç tablo scrollWidth/clientWidth, sütun genişlikleri, th textTransform, sütun bazlı '—' oranı, select dokunma hedefleri, sekme içi tablolar) ile ölçüldü. Detay sekmeleri (Çeki listesi, Belgeler, Fatura & kur) probe betiğiyle tıklanıp ayrı ekran görüntüsü alındı: artifacts/screens/ihracat-probe-r1/. Referans puanları docs/DESIGN-SCORECARD.md'den sabit alındı (Linear 57 veri ekranları, Stripe 56 finans ekranı /ihracat/kurlar). Kod düzeyi tarama (transition:all, ease-in, scale(0), >300ms, hover gating) TEMİZ — hover globals.css'te @custom-variant ile (hover:hover)+(pointer:fine) altında; recharts animasyonları kapalı. Ortak bileşen (DataTable/KpiCard/PageHeader/EmptyState/StatusBadge/mobile-cards) kaynaklı yeni bulgu açılmadı; aşağıdaki bulguların tamamı modül dosyalarında kök nedenlidir.",
+  "measurements": "artifacts/critic/measure-ihracat-r1/, artifacts/critic/probe-ihracat-r1.json",
+  "routes": {
+    "/ihracat/sevkiyatlar": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [5, 5, 4, 5, 4, 5, 5, 5, 4, 5, 5, 5],
+      "total": 57,
+      "scoreNotes": "Tur 1 taban ölçümü. Kriter 3 ve 9: mobil kartın metrik yuvası parayı değil oluşturma tarihini gösteriyor (ihracat-sevk-02). Kriter 5: DataTable içi 19px yatay kırpma (ihracat-sevk-01). Diğer kriterler: h1 24px/600, gövde 13px (49 düğüm), satır yüksekliği 3/3 satırda 36px, sayfa yatay taşması yok, €0,00 muted, KPI şeridi dikey ayraçlı — Linear/Stripe çıtasında.",
+      "open": [
+        {
+          "id": "ihracat-sevk-01",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Sevkiyat listesi tablosu kendi kapsayıcısını taşırıyor: 'Oluşturma' sütunu sağ kenara 0px boşlukla dayanıyor ve sütun sınırı havada kesiliyor. Sabit meta.width toplamı (140+70+90+90+130+130+100+110=860) + 2 otomatik sütun 1152px'lik kapsayıcıya sığmıyor.",
+          "measure": "1440x900: table scrollWidth 1171 > container clientWidth 1152 (19px gizli içerik) — probe-ihracat-r1.json listDesk",
+          "target": "scrollWidth ≤ clientWidth (≤1152) ve son sütun ile kenar arası ≥12px",
+          "file": "apps/web/src/modules/export/components/shipments-table.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-sevk-02",
+          "criterion": 3,
+          "criterionAlso": [9],
+          "severity": "P1",
+          "text": "Mobil kartın sağ metrik yuvası sevkiyatın parasal değeri yerine oluşturma tarihini gösteriyor; ₺ tutar 390px'te hiç görünmüyor. Kök neden: mobile-cards.tsx metriği `rest`in SON elemanından alıyor, sütun sırasında son sütun createdAt.",
+          "measure": "390x844: 3/3 kartta metrik yuvası '06.09.2026'; ₺10.044,00 / ₺624.960,00 / ₺2.678,40 kartlarda yok",
+          "target": "metrik yuvası = Tutar (₺) — createdAt ve etd sütunlarına meta.mobile:'meta' ver (boş meta düşürülür), amountTry `rest`in sonuncusu olsun",
+          "file": "apps/web/src/modules/export/components/shipments-table.tsx",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/ihracat/sevkiyatlar/[id]": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "probeId": "f6379b30-7400-4cec-bbaf-b51e9ac74c87 (EXP-2026-000002, gümrükte, standart rejim — 4 sekmenin tamamı dolu)",
+      "scores": [5, 5, 5, 5, 4, 4, 5, 5, 4, 5, 4, 5],
+      "total": 56,
+      "scoreNotes": "Kriter 5: ham tablolar tam çerçeveli kutuda + mobil kırpma (ihracat-detay-05, -01). Kriter 6: kur 6 ondalık ham basılıyor, sıfır ağırlıklar tam kontrast (ihracat-detay-03, -04). Kriter 9: Çeki listesi sekmesi 390px'te 134px kırpılıyor (ihracat-detay-01). Kriter 11: aynı ekranda iki tablo başlık stili (ihracat-detay-02). Kriter 3 = 5: tabloların 1 satır olması veri kaynaklı, tasarım kusuru değil; Belgeler sekmesindeki boş sütunlar documents-table.tsx kök nedeniyle /ihracat/belgeler kartında (ihracat-belgeler-01) tutuluyor, tekrar açılmadı.",
+      "open": [
+        {
+          "id": "ihracat-detay-01",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "'Çeki listesi' sekmesindeki 7 sütunlu ham tablo 390px'te kırpılıyor: 'Brüt kg' sütunu görünmüyor, ürün adı 3 satıra sarıyor. Aynı sayfadaki 'Belgeler' sekmesi (DataTable) mobilde karta dönüşüyor — desen mevcut ama burada kullanılmamış.",
+          "measure": "390x844: iç tablo scrollWidth 490 > clientWidth 356 (134px kırpma) — probe-ihracat-r1.json tabs_mobile",
+          "target": "390px'te kırpma 0: DataTable mobil kart görünümü (components/data-table/mobile-cards.tsx) ya da ≤4 sütun",
+          "file": "apps/web/src/modules/export/components/packing-list-table.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-detay-02",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Tek ekranda iki farklı tablo başlık tipografisi: 'Sipariş satırları' ve 'Çeki listesi' sekmelerinin başlıkları UPPERCASE, hemen yanındaki 'Belgeler' sekmesinin DataTable başlıkları cümle düzeni. Sekme değiştirince başlık stili değişiyor.",
+          "measure": "probe: th textTransform — Sipariş satırları/Çeki listesi 'uppercase' 12px, Belgeler 'none' 12px",
+          "target": "tek stil — DataTable ile aynı (textTransform:none, 12px, text-muted-foreground)",
+          "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx (sipariş satırları thead), apps/web/src/modules/export/components/packing-list-table.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-detay-03",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "'Fatura & kur' sekmesinde kur veritabanı ham hâliyle basılıyor: 6 ondalık, nokta ayraçlı, tr-TR biçimlendirmesi yok. Aynı kuru /ihracat/kurlar ₺37,2000 olarak gösteriyor — iki ekranda iki farklı rakam sunumu.",
+          "measure": "390x844 ve 1440x900: 'Kur (TCMB)' = 37.200000; /ihracat/kurlar aynı gün EUR satış = ₺37,4000 (4 ondalık, tr-TR)",
+          "target": "4 ondalık + tr-TR ayraç + tabular-nums (₺37,2000) — lib/format.ts'e formatRate ekleyip iki yerde de kullan",
+          "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx (invoice.exchangeRate, shipment.exchangeRate)",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-detay-04",
+          "criterion": 6,
+          "severity": "P1",
+          "text": "Sıfır değerler aynı sayfada tutarsız: 'Proforma & gümrük' panelinde 'Net / brüt ağırlık: 0 kg / 0 kg' tam kontrast font-medium; 'Çeki listesi' sekmesinde aynı sıfırlar text-muted-foreground. Kök neden: numeric '0.0000' string'i truthy olduğu için '—' dalına düşmüyor.",
+          "measure": "1440x900: '0 kg / 0 kg' text-[13px] font-medium foreground; çeki listesi Net kg/Brüt kg hücreleri text-muted-foreground",
+          "target": "sıfır değerler muted ya da '—' — tek kural, iki panelde aynı (D(v).isZero() kontrolü)",
+          "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-detay-05",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "Ham tablolar tam 1px çerçeveli kutu içinde (`rounded-lg border border-border/60`), aynı sayfadaki DataTable ise kutusuz + satır altı hairline. Sekmeler arası geçişte tablo anatomisi değişiyor; 'kutu içinde kutu' ERP kokusu.",
+          "measure": "1440x900: Sipariş satırları ve Çeki listesi tabloları 1px kapalı çerçeve; Belgeler sekmesi DataTable çerçevesiz",
+          "target": "kapalı kutu çerçevesini kaldır, yalnızca `border-b border-border/60` satır ayracı bırak (DataTable ile aynı)",
+          "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx, apps/web/src/modules/export/components/packing-list-table.tsx",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/ihracat/sevkiyatlar/yeni": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [5, 5, 4, 5, 4, 4, 3, 4, 5, 5, 5, 5],
+      "total": 54,
+      "scoreNotes": "Kriter 7 = 3: rota kanonik seed verisiyle YALNIZCA boş durumu gösterebiliyor ve o boş durumun eylemi yok (ihracat-yeni-01, -02). Kriter 3/5/6/8 = 4: oluşturma formu hiç render olmadığı için yoğunluk, tablo/kart anatomisi, rakam sunumu ve etkileşim geri bildirimi ÖLÇÜLEMİYOR — puanlar ihracat-yeni-01 kapanıp form görülebilir olduğunda yeniden puanlanacak; bu kriterler için uydurma nit AÇILMADI (kök neden tek: yeni-01).",
+      "open": [
+        {
+          "id": "ihracat-yeni-01",
+          "criterion": 7,
+          "criterionAlso": [3, 5, 6, 8],
+          "severity": "P0",
+          "text": "Modülün birincil CTA'sı çıkmaz sokak: /ihracat/sevkiyatlar sayfasındaki 'Yeni sevkiyat' düğmesi kanonik seed verisiyle HER ZAMAN boş duruma çıkıyor, sevkiyat oluşturma formu (ShipmentCreateForm) hiçbir koşulda render olmuyor. Seed 3 ihracat siparişi üretiyor ve üçünü de anında bir sevkiyata bağlıyor; listEligibleExportOrders daima 0 satır dönüyor.",
+          "measure": "SELECT count(*) FROM sales_orders WHERE doc_type='order' AND is_export AND export_shipment_id IS NULL → 0 (toplam 3 ihracat siparişinin 3'ü bağlı)",
+          "target": "kanonik seed en az 1 bağlanmamış ihracat siparişi bıraksın → /ihracat/sevkiyatlar/yeni formu render olsun ve puanlanabilsin",
+          "file": "packages/db/src/seed/export.ts (backfillClosedShipment / seedCustomsShipment), apps/web/src/modules/export/components/shipment-create-form.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-yeni-02",
+          "criterion": 7,
+          "severity": "P1",
+          "text": "Boş durumda eylem yok: EmptyState `action` prop'unu destekliyor ama geçilmemiş. Ekranda tek bir tıklanabilir öğe bulunmuyor; kullanıcı 'ihracat siparişini oluştur' denilen yere nasıl gideceğini kendisi bulmak zorunda.",
+          "measure": "1440x900: sayfa gövdesinde 0 adet interaktif öğe (buton/link); EmptyState çağrısında action yok (shipment-create-form.tsx:71-77)",
+          "target": "action={<Button asChild variant=\"outline\"><Link href=\"/satis/siparisler/yeni\">İhracat siparişi oluştur</Link></Button>}",
+          "file": "apps/web/src/modules/export/components/shipment-create-form.tsx",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/ihracat/belgeler": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [5, 5, 4, 5, 5, 5, 5, 5, 4, 5, 5, 5],
+      "total": 58,
+      "scoreNotes": "Toplam referansın üstünde (58 > 57) ama iki açık P1 nedeniyle kazanmıyor. Kriter 3: tablo genişliğinin %35'i tamamen '—' (ihracat-belgeler-01). Kriter 9: mobil kart metrik yuvası 30/30 kartta '—' (ihracat-belgeler-02). Güçlü yanlar: 30 satır ilk ekranda, 36px satır, 13px gövde (202 düğüm), sayfa taşması yok, 4 durum tonu da anlam taşıyor, satır hover + rowActions çalışıyor.",
+      "open": [
+        {
+          "id": "ihracat-belgeler-01",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "Üç sütun neredeyse tamamen boş: 'Vade' ve 'Sorumlu' sütunlarının %100'ü, 'Belge no' sütununun %87'si '—'. Bu üç sütun tablo genişliğinin üçte birinden fazlasını hiç bilgi taşımadan tüketiyor.",
+          "measure": "1440x900, 30 satır: Vade 30/30 '—', Sorumlu 30/30 '—', Belge no 26/30 '—'; sütun genişlikleri 100+140+163 = 403px / 1152px = %35",
+          "target": "varsayılan görünümde hiçbir sütunun boş oranı >%80 olmasın — Vade/Sorumlu'yu sütun görünürlüğü menüsünde varsayılan kapalı yap ya da 'Sorumlu' hücresini '—' yerine satır içi 'Ata' eylemine çevir",
+          "file": "apps/web/src/modules/export/components/documents-table.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-belgeler-02",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Mobil kartların sağ metrik yuvasında 30/30 kartta anlamsız bir '—' asılı duruyor. Kök neden: mobile-cards.tsx metriği `rest`in son elemanından alıyor; docNo ve responsibleName mobile:'hidden' olduğu için `rest` = [dueDate] kalıyor ve Vade tüm satırlarda boş.",
+          "measure": "390x844: 30/30 kartta metrik yuvası '—' (mobile.png, kart sağ alt köşe)",
+          "target": "dueDate sütununa meta.mobile:'meta' ver (boş meta hücreleri düşürülür) → metrik yuvası boş kalsın ya da anlamlı bir alan gelsin",
+          "file": "apps/web/src/modules/export/components/documents-table.tsx",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/ihracat/kurlar": {
+      "round": 1,
+      "reference": "stripe",
+      "referenceTotal": 56,
+      "scores": [5, 5, 4, 4, 4, 5, 5, 4, 3, 5, 4, 5],
+      "total": 53,
+      "scoreNotes": "Modülün en zayıf ekranı. Kriter 9 = 3 (tek başına kazanmayı engelliyor): mobilde tablo kırpılıyor ve satır yükseklikleri düzensiz. Kriter 3: 60 satır tek seferde, sayfalama yok. Kriter 4: grafikte veri taşımayan GBP serisi + durum rozetiyle çakışan turuncu. Kriter 5/11: ham <table>, modülün DataTable deseninden sapıyor. Kriter 8: tıklanamayan satırda hover vaadi. Güçlü yanlar: Stripe tarzı KPI şeridi (alış ipucu ile), 4 ondalık tabular-nums, ince çizgi grafik, yatay-only grid, nokta yok, animasyon kapalı.",
+      "open": [
+        {
+          "id": "ihracat-kurlar-01",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Kur tablosu 390px'te kırpılıyor: 'Kaynak' sütunu 'TC/SE' diye iki satıra sarıp kenardan kesiliyor, sarma yüzünden satır yükseklikleri 40px ile 60px arasında zıplıyor. Modülün diğer listeleri mobilde karta dönüşürken bu tablo ham hâlde kalıyor.",
+          "measure": "390x844: iç tablo scrollWidth 403 > clientWidth 356 (47px kırpma); satır yükseklikleri [40, 60, 60] (min/medyan/maks)",
+          "target": "390px'te kırpma 0 ve tek satır yüksekliği (56-72px kart görünümü ya da ≤4 sütun)",
+          "file": "apps/web/src/app/(app)/ihracat/kurlar/page.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-kurlar-02",
+          "criterion": 11,
+          "criterionAlso": [5],
+          "severity": "P1",
+          "text": "Ham <table> modülün deseninden sapıyor: aynı modüldeki /ihracat/sevkiyatlar, /ihracat/belgeler ve /ihracat/gtip DataTable kullanıyor (arama, filtre, sıralama, sütun görünürlüğü, kayıt sayacı, mobil kart); burada hiçbiri yok ve başlıklar UPPERCASE.",
+          "measure": "probe: kurlar th textTransform 'uppercase' 12px; sevkiyatlar/belgeler/gtip DataTable th 'none' 12px. Kurlar sayfasında arama/filtre/sıralama kontrolü: 0",
+          "target": "DataTable'a geçir (en azından th stilini eşitle: textTransform none)",
+          "file": "apps/web/src/app/(app)/ihracat/kurlar/page.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-kurlar-03",
+          "criterion": 3,
+          "severity": "P1",
+          "text": "60 kur satırı tek seferde dökülüyor, sayfalama ya da aralık seçici yok; sayfa masaüstünde 3078 CSS px uzunluğa çıkıyor ve tablo ekranın dibinde biterken hiçbir yön göstergesi bulunmuyor.",
+          "measure": "1440x900: tbody 60 satır, sayfa yüksekliği 3078 CSS px (6156px @2x), sayfalama kontrolü yok; sorgu listRecentRates(90) → slice(0,60)",
+          "target": "DataTable sayfalaması (25 satır/sayfa) ya da 'Son 30/60/90 gün' aralık seçici — ilk ekranda ≤25 satır",
+          "file": "apps/web/src/app/(app)/ihracat/kurlar/page.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-kurlar-04",
+          "criterion": 4,
+          "severity": "P1",
+          "text": "Grafikte veri taşımayan GBP serisi koşulsuz render ediliyor: efsanede GBP için pembe bir çizgi göstergesi var ama tek bir veri noktası yok (ölü mürekkep). Ayrıca EUR serisinin turuncusu, aynı modülde 'Gerekli'/'Gümrükte' uyarı rozetlerinin tonuyla aynı — renk anlam taşımıyor.",
+          "measure": "rate-chart.tsx:56 GBP <Line> koşulsuz; exchange_rates'te GBP satır sayısı 0 → efsanede 3 giriş, grafikte 2 çizgi. Grafik ton sayısı 3 (chart-2/3/4)",
+          "target": "yalnızca en az 1 noktası olan seri (ve efsane girdisi) render edilsin; kalan seriler durum renkleriyle (amber/yeşil/mavi rozetler) çakışmayan bir ramp'tan seçilsin",
+          "file": "apps/web/src/modules/export/components/rate-chart.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-kurlar-05",
+          "criterion": 8,
+          "severity": "P1",
+          "text": "Tıklanamayan tablo satırlarında hover arka planı var: satır `hover:bg-muted/40` ile aydınlanıyor ama href, onClick ya da cursor-pointer yok — etkileşim vaat edip karşılamıyor.",
+          "measure": "kurlar/page.tsx tbody tr: className 'hover:bg-muted/40', href/onClick yok, computed cursor 'auto'",
+          "target": "ya satır tıklanabilir olsun (kur detayına/güne git) ya da hover arka planı kaldırılsın",
+          "file": "apps/web/src/app/(app)/ihracat/kurlar/page.tsx",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    },
+    "/ihracat/gtip": {
+      "round": 1,
+      "reference": "linear",
+      "referenceTotal": 57,
+      "scores": [5, 5, 4, 5, 4, 5, 5, 5, 4, 5, 4, 4],
+      "total": 55,
+      "scoreNotes": "Kriter 12 ve 5: tek sütunda 39 çerçeveli select kutusu — çerçeve çorbası (ihracat-gtip-01). Kriter 9: mobilde 39 select 36px yükseklikte, dokunma hedeğinin altında (ihracat-gtip-02). Kriter 11: aynı ekranda iki tablo başlık stili (ihracat-gtip-03). Kriter 3: üst tabloda 'Açıklama' sütunu genişliğin %74'ünü alıyor (ihracat-gtip-04). Güçlü yanlar: 43 satır ilk ekranda, satır yüksekliği 36,5-40,5px, 13px gövde (230 düğüm), sayfa taşması yok.",
+      "open": [
+        {
+          "id": "ihracat-gtip-01",
+          "criterion": 12,
+          "criterionAlso": [5],
+          "severity": "P1",
+          "text": "GTİP sütununda satır başına bir tane 1px çerçeveli select kutusu var; 39 satırda 39 kutu alt alta dizilince tablo 'form ızgarası'na dönüşüyor — Linear'ın sessiz satırı yerine klasik ERP çerçeve çorbası.",
+          "measure": "1440x900: 39 görünür [data-slot=select-trigger], her biri 236x36px, borderWidth 1px, borderColor oklch(0.9 0.004 286.3)",
+          "target": "varsayılan hâlde `border-transparent bg-transparent`; çerçeve yalnızca hover/focus-visible/açık durumda görünsün (eşlenmemişler için tek fark: metin muted)",
+          "file": "apps/web/src/modules/export/components/gtip-mapping-table.tsx (SelectTrigger className)",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-gtip-02",
+          "criterion": 9,
+          "severity": "P1",
+          "text": "Mobilde GTİP seçicileri dokunma hedefinin altında: kart başına 144x36px'lik bir tetikleyici; bu ekranın tek birincil eylemi bu ve 44px kuralını sağlamıyor.",
+          "measure": "390x844: pnpm measure touchTargetsBelow44 = 40 kayıt, 39'u 'button[data-slot=select-trigger] \"Eşlenmedi\"' 144x36",
+          "target": "mobilde ≥44px yükseklik (h-11) — masaüstünde h-9 kalabilir",
+          "file": "apps/web/src/modules/export/components/gtip-mapping-table.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-gtip-03",
+          "criterion": 11,
+          "severity": "P1",
+          "text": "Tek ekranda iki tablo başlık stili: üstteki GTİP kod tablosu ham <table> + UPPERCASE başlık, alttaki ürün tablosu DataTable + cümle düzeni başlık. İki tablo 40px arayla yan yana duruyor, fark doğrudan görülüyor.",
+          "measure": "probe: üst tablo th textTransform 'uppercase' 12px (GTİP/AÇIKLAMA/BİRİM); alt tablo th 'none' 12px (SKU/Ürün/Kategori/Tip/GTİP)",
+          "target": "tek stil — DataTable ile aynı (textTransform:none, 12px, muted)",
+          "file": "apps/web/src/app/(app)/ihracat/gtip/page.tsx",
+          "openedRound": 1
+        },
+        {
+          "id": "ihracat-gtip-04",
+          "criterion": 3,
+          "criterionAlso": [5],
+          "severity": "P1",
+          "text": "Üstteki 4 satırlık GTİP kod tablosunda 'Açıklama' sütunu genişliğin dörtte üçünü alıyor; en uzun açıklama 47 karakter, geri kalan yaklaşık 500px boş kalıyor ve 'Birim' sütunu sağ kenarda yalnız duruyor.",
+          "measure": "1440x900: sütun genişlikleri GTİP 175px, Açıklama 847px (1150px'in %74'ü), Birim 128px; 4 satır",
+          "target": "açıklama sütunu ≤%50 (≤575px) — ya da 4 kodu tablo yerine tek satırlık etiket/kart şeridi olarak göster",
+          "file": "apps/web/src/app/(app)/ihracat/gtip/page.tsx",
+          "openedRound": 1
+        }
+      ],
+      "closed": []
+    }
+  }
+}

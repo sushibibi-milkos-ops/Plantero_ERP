@@ -1,0 +1,5 @@
+
+> plantero-erp@ measure /home/user/Plantero_ERP
+> tsx scripts/measure.ts /ihracat/sevkiyatlar/f6379b30-7400-4cec-bbaf-b51e9ac74c87 --as admin --viewport 390x844
+
+{"route":"/ihracat/sevkiyatlar/f6379b30-7400-4cec-bbaf-b51e9ac74c87","viewport":"390x844","scrollWidth":390,"clientWidth":390,"overflowX":false,"rows":{"count":1,"heights":[114.5,114.5,114.5]},"fontSizes":{"10":5,"11":17,"12":25,"13":33,"14":7,"16":1,"18":1,"20":1},"touchTargetsBelow44":[{"selector":"span[data-slot=\"breadcrumb-page\"] \"Detay\"","w":36.2,"h":19.5},{"selector":"button[data-slot=\"button\"] \"Düzenle\"","w":84.7,"h":28},{"selector":"a \"DN-2026-000028\"","w":109.2,"h":19.5}],"distinctColors":21,"h1":{"size":20,"weight":600},"images":0}

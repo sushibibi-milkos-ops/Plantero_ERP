@@ -1,0 +1,739 @@
+{
+ "listDesk": {
+  "t": [
+   {
+    "tableW": 1171,
+    "scrollW": 1171,
+    "clientW": 1152,
+    "clipped": 19,
+    "rows": 3,
+    "heads": [
+     {
+      "text": "Sevkiyat no",
+      "w": 141,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Müşteri",
+      "w": 170,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Durum",
+      "w": 140,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Ülke",
+      "w": 70,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Rejim",
+      "w": 90,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Belgeler",
+      "w": 90,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Tutar (₺)",
+      "w": 130,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Tutar (döviz)",
+      "w": 130,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "ETD",
+      "w": 100,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Oluşturma",
+      "w": 110,
+      "transform": "none",
+      "fs": "12px"
+     }
+    ],
+    "dashCounts": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0
+    ]
+   }
+  ],
+  "cardW": {
+   "sw": 1171,
+   "cw": 1152
+  }
+ },
+ "kurlarDesk": [
+  {
+   "tableW": 1150,
+   "scrollW": 1150,
+   "clientW": 1150,
+   "clipped": 0,
+   "rows": 60,
+   "heads": [
+    {
+     "text": "Tarih",
+     "w": 236,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Para birimi",
+     "w": 236,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Alış",
+     "w": 214,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Satış",
+     "w": 214,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Kaynak",
+     "w": 250,
+     "transform": "uppercase",
+     "fs": "12px"
+    }
+   ],
+   "dashCounts": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "kurlarMob": [
+  {
+   "tableW": 403,
+   "scrollW": 403,
+   "clientW": 356,
+   "clipped": 47,
+   "rows": 60,
+   "heads": [
+    {
+     "text": "Tarih",
+     "w": 95,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Para birimi",
+     "w": 60,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Alış",
+     "w": 86,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Satış",
+     "w": 86,
+     "transform": "uppercase",
+     "fs": "12px"
+    },
+    {
+     "text": "Kaynak",
+     "w": 74,
+     "transform": "uppercase",
+     "fs": "12px"
+    }
+   ],
+   "dashCounts": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "gtipDesk": {
+  "t": [
+   {
+    "tableW": 1150,
+    "scrollW": 1150,
+    "clientW": 1150,
+    "clipped": 0,
+    "rows": 4,
+    "heads": [
+     {
+      "text": "GTİP",
+      "w": 175,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Açıklama",
+      "w": 847,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Birim",
+      "w": 128,
+      "transform": "uppercase",
+      "fs": "12px"
+     }
+    ],
+    "dashCounts": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "tableW": 1152,
+    "scrollW": 1152,
+    "clientW": 1152,
+    "clipped": 0,
+    "rows": 39,
+    "heads": [
+     {
+      "text": "SKU",
+      "w": 130,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Ürün",
+      "w": 492,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Kategori",
+      "w": 160,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Tip",
+      "w": 110,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "GTİP",
+      "w": 260,
+      "transform": "none",
+      "fs": "12px"
+     }
+    ],
+    "dashCounts": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  "selectCount": 78,
+  "sel": [
+   {
+    "w": 236,
+    "h": 36,
+    "border": "oklch(0.9 0.004 286.3)",
+    "bw": "1px"
+   },
+   {
+    "w": 236,
+    "h": 36,
+    "border": "oklch(0.9 0.004 286.3)",
+    "bw": "1px"
+   }
+  ]
+ },
+ "belgelerDesk": [
+  {
+   "tableW": 1152,
+   "scrollW": 1152,
+   "clientW": 1152,
+   "clipped": 0,
+   "rows": 30,
+   "heads": [
+    {
+     "text": "Belge",
+     "w": 237,
+     "transform": "none",
+     "fs": "12px"
+    },
+    {
+     "text": "Sevkiyat",
+     "w": 155,
+     "transform": "none",
+     "fs": "12px"
+    },
+    {
+     "text": "Müşteri",
+     "w": 187,
+     "transform": "none",
+     "fs": "12px"
+    },
+    {
+     "text": "Durum",
+     "w": 130,
+     "transform": "none",
+     "fs": "12px"
+    },
+    {
+     "text": "Belge no",
+     "w": 163,
+     "transform": "none",
+     "fs": "12px"
+    },
+    {
+     "text": "Vade",
+     "w": 100,
+     "transform": "none",
+     "fs": "12px"
+    },
+    {
+     "text": "Sorumlu",
+     "w": 140,
+     "transform": "none",
+     "fs": "12px"
+    },
+    {
+     "text": "Eylemler",
+     "w": 40,
+     "transform": "none",
+     "fs": "12px"
+    }
+   ],
+   "dashCounts": [
+    0,
+    0,
+    0,
+    0,
+    26,
+    30,
+    30,
+    0
+   ]
+  }
+ ],
+ "tabs_desktop": {
+  "Çeki listesi": [
+   {
+    "tableW": 1150,
+    "scrollW": 1150,
+    "clientW": 1150,
+    "clipped": 0,
+    "rows": 1,
+    "heads": [
+     {
+      "text": "Kap no",
+      "w": 121,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Ürün",
+      "w": 348,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Lot",
+      "w": 221,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Miktar",
+      "w": 121,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "GTİP",
+      "w": 89,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Net kg",
+      "w": 118,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Brüt kg",
+      "w": 132,
+      "transform": "uppercase",
+      "fs": "12px"
+     }
+    ],
+    "dashCounts": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ]
+   }
+  ],
+  "Belgeler": [
+   {
+    "tableW": 1152,
+    "scrollW": 1152,
+    "clientW": 1152,
+    "clipped": 0,
+    "rows": 8,
+    "heads": [
+     {
+      "text": "Belge",
+      "w": 579,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Durum",
+      "w": 130,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Belge no",
+      "w": 163,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Vade",
+      "w": 100,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Sorumlu",
+      "w": 140,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Eylemler",
+      "w": 40,
+      "transform": "none",
+      "fs": "12px"
+     }
+    ],
+    "dashCounts": [
+     0,
+     0,
+     7,
+     8,
+     8,
+     0
+    ]
+   }
+  ],
+  "Fatura & kur": []
+ },
+ "tabs_mobile": {
+  "Çeki listesi": [
+   {
+    "tableW": 490,
+    "scrollW": 490,
+    "clientW": 356,
+    "clipped": 134,
+    "rows": 1,
+    "heads": [
+     {
+      "text": "Kap no",
+      "w": 48,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Ürün",
+      "w": 89,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Lot",
+      "w": 128,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Miktar",
+      "w": 70,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "GTİP",
+      "w": 51,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Net kg",
+      "w": 48,
+      "transform": "uppercase",
+      "fs": "12px"
+     },
+     {
+      "text": "Brüt kg",
+      "w": 56,
+      "transform": "uppercase",
+      "fs": "12px"
+     }
+    ],
+    "dashCounts": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ]
+   }
+  ],
+  "Belgeler": [
+   {
+    "tableW": 0,
+    "scrollW": 0,
+    "clientW": 0,
+    "clipped": 0,
+    "rows": 8,
+    "heads": [
+     {
+      "text": "Belge",
+      "w": 0,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Durum",
+      "w": 0,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Belge no",
+      "w": 0,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Vade",
+      "w": 0,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Sorumlu",
+      "w": 0,
+      "transform": "none",
+      "fs": "12px"
+     },
+     {
+      "text": "Eylemler",
+      "w": 0,
+      "transform": "none",
+      "fs": "12px"
+     }
+    ],
+    "dashCounts": [
+     0,
+     0,
+     7,
+     8,
+     8,
+     0
+    ]
+   }
+  ],
+  "Fatura & kur": []
+ },
+ "focus": [
+  {
+   "tag": "a",
+   "label": "Plantero",
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+  },
+  {
+   "tag": "a",
+   "label": "Kokpit",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Bildirimler",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Ana Veri",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Depo",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Üretim",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Satış & CRM",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Satın Alma",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Kalite",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Muhasebe",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Finans",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "İhracat",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "a",
+   "label": "Sevkiyatlar",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "a",
+   "label": "Belgeler",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "a",
+   "label": "Kurlar",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "a",
+   "label": "GTİP",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Bakım",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Ar-Ge",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Ayarlar",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Kenar çubuğunu daralt",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "a",
+   "label": "İhracat",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "button",
+   "label": "Ara (⌘K)",
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "none"
+  },
+  {
+   "tag": "a",
+   "label": "Bildirimler",
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+  },
+  {
+   "tag": "button",
+   "label": "Tema",
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+  }
+ ]
+}
