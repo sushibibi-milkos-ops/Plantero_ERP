@@ -1,0 +1,140 @@
+{
+ "as": "depo",
+ "vp": "1440x900",
+ "sections": [
+  {
+   "title": "Karantina",
+   "top": 276,
+   "bottom": 529,
+   "h": 253,
+   "w": 568,
+   "left": 264,
+   "rowCount": 4,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺55.355,00@815",
+    "₺36.400,00@815",
+    "₺7.875,00@815",
+    "₺5.760,00@815",
+    "₺5.320,00@815"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    815,
+    815,
+    815,
+    815
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "SKT riski",
+   "top": 276,
+   "bottom": 587,
+   "h": 311,
+   "w": 568,
+   "left": 848,
+   "rowCount": 5,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Bugün",
+   "top": 603,
+   "bottom": 1058,
+   "h": 455,
+   "w": 1152,
+   "left": 264,
+   "rowCount": 10,
+   "rowH": [
+    40,
+    41,
+    41
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "₺3.850,00@1259",
+    "₺7.875,00@1259",
+    "₺4.590,00@1259",
+    "₺10.920,00@1259",
+    "₺6.500,00@1259",
+    "₺13.800,00@1259"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    1259,
+    1259,
+    1259,
+    1259,
+    1259,
+    1259
+   ],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 264,
+   "bottom": 1058,
+   "last": "Bugün"
+  },
+  {
+   "left": 848,
+   "bottom": 587,
+   "last": "SKT riski"
+  }
+ ],
+ "colSpread": 471,
+ "kpi": [
+  {
+   "label": "KarantinaTümü 4 lot bekliyor",
+   "w": 568,
+   "left": 264
+  },
+  {
+   "label": "SKT riskiTümü 1Süresi geçti5",
+   "w": 568,
+   "left": 848
+  },
+  {
+   "label": "BugünTümü Mal kabulGR-2026-0",
+   "w": 1152,
+   "left": 264
+  }
+ ],
+ "truncated": [],
+ "foldRows": 15,
+ "allZeros": [
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "SKT riski"
+  }
+ ],
+ "pageH": 1098,
+ "vpH": 900
+}
