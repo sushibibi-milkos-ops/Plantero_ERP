@@ -567,9 +567,12 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
 
     // `FormDate` (`date-field.tsx`) gerçek bir `<FormField>` bağlamında render edilir (K-A11Y
     // istisnası — bkz. `record-payment-form.tsx`), bu yüzden `getByLabel` doğrudan çalışır; alan
-    // yazılabilir gg.aa.yyyy metin kutusudur (ISO DEĞİL).
-    await page.getByLabel('Tarih').fill(paymentDateTr);
-    await page.getByLabel('Tarih').press('Tab');
+    // yazılabilir gg.aa.yyyy metin kutusudur (ISO DEĞİL). `getByLabel('Tarih')` (alt-dize) ayrıca
+    // "Tarihi temizle" düğmesinin `aria-label`'ını da yakalıyordu (strict-mode ihlali, canlıda
+    // yakalandı) — `role='textbox'` ile tekil giriş kutusu hedeflenir.
+    const tarihInput = page.getByRole('textbox', { name: 'Tarih *' });
+    await tarihInput.fill(paymentDateTr);
+    await tarihInput.press('Tab');
 
     await page.getByLabel('Para birimi').click();
     await page.getByRole('option', { name: /EUR/ }).click();
