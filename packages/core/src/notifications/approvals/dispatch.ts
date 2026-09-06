@@ -6,6 +6,7 @@ import { approvePurchaseOrder, rejectPurchaseOrder } from '../../purchasing/orde
 import { approveCount, cancelCount } from '../../stock/counts.js';
 import { approveDunningDraft } from '../../finance/dunning.js';
 import { approveReconciliationMatch, rejectReconciliationMatch, listPendingMatches } from '../../accounting/reconciliation.js';
+import { approveRecipeRelease, rejectRecipeRelease } from '../../rnd/trials.js';
 import type { ActorCtx } from '../../types.js';
 
 /**
@@ -13,9 +14,11 @@ import type { ActorCtx } from '../../types.js';
  * Mutabakat önerileri (`reconciliation_matches`, `status='suggested'`) ayrı bir tablodadır (muhasebe
  * modülü `approvals` kuyruğunu kullanmıyor) — burada senkron bir "kind: reconciliation" satırına
  * dönüştürülür; onay/red kendi core fonksiyonlarına (`accounting/reconciliation.ts`) yönlendirilir.
- * `recipe_release` (Ar-Ge) ve `price_change` (Satış) haritada TANIMLIDIR ama bugün hiçbir modül bu
- * türde `approvals` satırı üretmiyor (arge/sales modüllerinin henüz onay akışı yok) — kuyrukta
- * göründükleri an (ilgili modül eklendiğinde) otomatik çalışırlar; şimdilik daima boş listelenirler.
+ * `recipe_release` (Ar-Ge, `id` = `approvals.id`, `refId` = `trial_recipe_versions.id`) artık
+ * `rnd/trials.ts`e yönlendirir — onay yalnızca versiyon durumunu `approved` yapar, gerçek devir
+ * ("Üretim BOM'una devret") ayrı bir tek-tık aksiyondur (`releaseToBom`, `/arge/projeler/[id]/receteler`).
+ * `price_change` (Satış) haritada TANIMLIDIR ama bugün Satış modülü bu türde `approvals` satırı
+ * üretmiyor — kuyrukta göründüğü an (ileride eklendiğinde) otomatik çalışır; şimdilik boş listelenir.
  */
 
 export type ApprovalKind = 'purchase_draft' | 'count_variance' | 'dunning_message' | 'reconciliation' | 'recipe_release' | 'price_change';
@@ -131,6 +134,10 @@ export async function approveQueueItem(tx: DbOrTx, kind: string, id: string, ctx
       await approveReconciliationMatch(tx, id, ctx);
       return;
     }
+    case 'recipe_release': {
+      await approveRecipeRelease(tx, id, ctx);
+      return;
+    }
     default:
       throw new DomainError('APPROVAL_KIND_UNSUPPORTED', `${kind} türü onay merkezinde henüz desteklenmiyor`, { kind });
   }
@@ -164,6 +171,10 @@ export async function rejectQueueItem(tx: DbOrTx, kind: string, id: string, reas
     }
     case 'reconciliation': {
       await rejectReconciliationMatch(tx, id, reason, ctx);
+      return;
+    }
+    case 'recipe_release': {
+      await rejectRecipeRelease(tx, id, reason, ctx);
       return;
     }
     default:

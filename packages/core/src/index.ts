@@ -50,3 +50,4 @@ export * from './finance/forecast.js';
 export * from './export/etgb.js';
 export * from './export/documents.js';
 export * from './export/shipments.js';
+export * from './cockpit/kpis.js';

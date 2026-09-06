@@ -119,9 +119,15 @@ export const ROLE_PRESETS: Record<RoleCode, readonly string[]> = {
     ...views('masterdata', 'stock', 'quality', 'accounting', 'production'),
     'masterdata.manage', 'accounting.invoice',
   ],
+  // cockpit.view (depo/uretim_sefi/kalite/bakim, dördü de): docs/modules/kokpit.md bu 4 rol için
+  // AÇIKÇA kendi kart setini ister ("depo/üretim şefi/.../kalite/bakım rolleri için kendi kart
+  // setleri") — kokpit modülü inşa edilene kadar bu 4 rolde `cockpit.view` hiç yoktu (yalnızca
+  // admin/genel_mudur/muhasebe/finans/satis'te), yani /kokpit'e bu rollerle hiç girilemiyordu.
+  // Modül sözleşmesinin istediği ekranı ERİŞİLEBİLİR kılmak için eklendi — packages/db/src/seed/core.ts
+  // `ROLE_PRESETS` ile BİREBİR aynı kalmalı (bkz. o dosyadaki not: "iki dosya birlikte güncellenmeli").
   depo: [
     ...byModule('stock'),
-    ...views('masterdata', 'sales', 'purchasing', 'production', 'quality'),
+    ...views('masterdata', 'sales', 'purchasing', 'production', 'quality', 'cockpit'),
   ],
   uretim_operatoru: [
     'production.view', 'production.operate',
@@ -130,17 +136,17 @@ export const ROLE_PRESETS: Record<RoleCode, readonly string[]> = {
   uretim_sefi: [
     ...byModule('production'),
     'stock.view', 'stock.transfer', 'stock.count',
-    ...views('masterdata', 'quality', 'maintenance', 'purchasing', 'sales', 'rnd'),
+    ...views('masterdata', 'quality', 'maintenance', 'purchasing', 'sales', 'rnd', 'cockpit'),
     'maintenance.report', 'quality.inspect',
   ],
   kalite: [
     ...byModule('quality'),
-    ...views('masterdata', 'stock', 'production', 'purchasing', 'rnd'),
+    ...views('masterdata', 'stock', 'production', 'purchasing', 'rnd', 'cockpit'),
     'stock.transfer',
   ],
   bakim: [
     ...byModule('maintenance'),
-    ...views('production', 'masterdata', 'stock'),
+    ...views('production', 'masterdata', 'stock', 'cockpit'),
   ],
   arge: [
     ...byModule('rnd'),

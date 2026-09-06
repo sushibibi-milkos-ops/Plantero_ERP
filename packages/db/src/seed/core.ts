@@ -100,16 +100,18 @@ const ROLE_PRESETS: Record<string, string[]> = {
   finans: [...byModule('finance'), ...views('accounting', 'sales', 'purchasing', 'masterdata', 'cockpit', 'export'), 'accounting.reconcile'],
   satis: [...byModule('sales'), ...views('masterdata', 'stock', 'accounting', 'finance', 'export', 'cockpit'), 'accounting.invoice', 'finance.dunning'],
   satin_alma: [...byModule('purchasing'), ...views('masterdata', 'stock', 'quality', 'accounting', 'production'), 'masterdata.manage', 'accounting.invoice'],
-  depo: [...byModule('stock'), ...views('masterdata', 'sales', 'purchasing', 'production', 'quality')],
+  // cockpit.view eklendi (kokpit modülü, docs/modules/kokpit.md) — bkz. packages/core/src/auth/rbac.ts
+  // aynı satırdaki not; iki dosya birebir aynı kalmalı.
+  depo: [...byModule('stock'), ...views('masterdata', 'sales', 'purchasing', 'production', 'quality', 'cockpit')],
   uretim_operatoru: ['production.view', 'production.operate', 'stock.view', 'maintenance.report', 'masterdata.view', 'quality.view'],
   uretim_sefi: [
     ...byModule('production'),
     'stock.view', 'stock.transfer', 'stock.count',
-    ...views('masterdata', 'quality', 'maintenance', 'purchasing', 'sales', 'rnd'),
+    ...views('masterdata', 'quality', 'maintenance', 'purchasing', 'sales', 'rnd', 'cockpit'),
     'maintenance.report', 'quality.inspect',
   ],
-  kalite: [...byModule('quality'), ...views('masterdata', 'stock', 'production', 'purchasing', 'rnd'), 'stock.transfer'],
-  bakim: [...byModule('maintenance'), ...views('production', 'masterdata', 'stock')],
+  kalite: [...byModule('quality'), ...views('masterdata', 'stock', 'production', 'purchasing', 'rnd', 'cockpit'), 'stock.transfer'],
+  bakim: [...byModule('maintenance'), ...views('production', 'masterdata', 'stock', 'cockpit')],
   arge: [...byModule('rnd'), ...views('masterdata', 'production', 'quality', 'stock'), 'masterdata.manage'],
   ihracat: [...byModule('export'), ...views('sales', 'stock', 'masterdata', 'accounting', 'finance'), 'sales.quote', 'sales.order', 'accounting.invoice'],
 };
