@@ -16,7 +16,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import { StatusBadge } from '@/components/status-badge';
 import { DetailFieldGroupsGrid } from '@/components/detail-field-groups-grid';
 import type { DetailFieldGroup } from '@/components/detail-fields';
-import { formatDate, formatDateTime } from '@/lib/format';
+import { formatDate, formatDateTime, relativeTime } from '@/lib/format';
 import { startOrderAction, markWaitingPartsAction, updateChecklistAction, completeOrderAction, cancelOrderAction } from '../actions';
 import type { MaintenanceOrderDetail } from '../queries';
 import { DOWNTIME_REASON_LABELS, MACHINE_CATEGORY_LABELS } from '../labels';
@@ -24,7 +24,7 @@ import { OrderTimeline } from './order-timeline';
 
 export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrderDetail; canExecute: boolean }) {
   const router = useRouter();
-  const { order, machine, lineCode, lineName, plan, assigneeName, reportedByName, photos, downtime, workOrderDocNo, events } = detail;
+  const { order, machine, lineCode, lineName, machineResponsibleName, nextPlan, relatedOrders, plan, assigneeName, reportedByName, photos, downtime, workOrderDocNo, events } = detail;
   const [pending, setPending] = useState(false);
   const [checklist, setChecklist] = useState(order.checklistResults ?? []);
   const [completeOpen, setCompleteOpen] = useState(false);
@@ -104,6 +104,8 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
         { label: 'Kapasite', value: machine.capacityPerHour, node: machine.capacityPerHour ? `${machine.capacityPerHour} ${machine.capacityUnit ?? ''}` : null },
         { label: 'Güç', value: machine.powerKw, node: machine.powerKw ? `${machine.powerKw} kW` : null },
         { label: 'Çalışma saati', value: machine.runtimeHours, node: `${machine.runtimeHours} sa` },
+        { label: 'Makine sorumlusu', value: machineResponsibleName, node: machineResponsibleName },
+        { label: 'Sonraki planlı bakım', value: nextPlan, node: nextPlan ? <span>{nextPlan.name}{nextPlan.nextDueAt ? ` — ${formatDate(nextPlan.nextDueAt)}` : ''}</span> : null },
       ],
     },
     {
@@ -120,7 +122,7 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <DetailFieldGroupsGrid groups={groups} />
 
       {order.description ? (
@@ -161,6 +163,27 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
       ) : null}
 
       <OrderTimeline events={events} />
+
+      <div>
+        <h2 className="mb-3 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">Bu makinenin diğer iş emirleri</h2>
+        {relatedOrders.length === 0 ? (
+          <p className="text-[13px] text-muted-foreground">{machine.code} için başka iş emri yok — bu ilk kayıt.</p>
+        ) : (
+          <ul className="divide-y divide-border/50">
+            {relatedOrders.map((o) => (
+              <li key={o.id}>
+                <Link href={`/bakim/is-emirleri/${o.id}`} className="flex min-h-11 items-center justify-between gap-2 py-1.5 text-[13px] hover:text-primary">
+                  <span className="min-w-0 truncate">{o.title}</span>
+                  <span className="flex shrink-0 items-center gap-2">
+                    <StatusBadge status={o.status} kind="maintenance" />
+                    <span className="text-[11px] text-muted-foreground">{relativeTime(o.reportedAt)}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {canExecute && isOpen ? (
         <div className="sticky bottom-16 -mx-4 z-20 flex flex-wrap items-center gap-2 border-t border-border bg-background px-4 py-3 shadow-[0_-1px_2px_rgb(0_0_0/0.04)] md:static md:mx-0 md:z-auto md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none">

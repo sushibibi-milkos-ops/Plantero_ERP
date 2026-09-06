@@ -1,5 +1,5 @@
 import 'server-only';
-import { and, asc, desc, eq, gte, inArray, lte } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, lte, ne } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
 import { D, round2, sum } from '@plantero/core';
 import { businessDate, addDays } from '@plantero/core/dates';
@@ -210,6 +210,9 @@ export type MaintenanceOrderDetail = {
   order: typeof maintenanceOrders.$inferSelect;
   machine: typeof machines.$inferSelect;
   lineCode: string | null; lineName: string | null;
+  machineResponsibleName: string | null;
+  nextPlan: { name: string; nextDueAt: string | null } | null;
+  relatedOrders: Array<{ id: string; docNo: string; title: string; status: string; reportedAt: Date }>;
   plan: typeof maintenancePlans.$inferSelect | null;
   assigneeName: string | null; reportedByName: string | null;
   photos: Array<typeof attachments.$inferSelect>;
@@ -221,10 +224,11 @@ export type MaintenanceOrderDetail = {
 export async function getMaintenanceOrderDetail(id: string): Promise<MaintenanceOrderDetail | null> {
   const assignee = { id: users.id, fullName: users.fullName };
   const [row] = await db
-    .select({ o: maintenanceOrders, machine: machines, lineCode: productionLines.code, lineName: productionLines.name })
+    .select({ o: maintenanceOrders, machine: machines, lineCode: productionLines.code, lineName: productionLines.name, machineResponsibleName: users.fullName })
     .from(maintenanceOrders)
     .innerJoin(machines, eq(machines.id, maintenanceOrders.machineId))
     .leftJoin(productionLines, eq(productionLines.id, machines.lineId))
+    .leftJoin(users, eq(users.id, machines.responsibleId))
     .where(eq(maintenanceOrders.id, id))
     .limit(1);
   if (!row) return null;
@@ -235,10 +239,28 @@ export async function getMaintenanceOrderDetail(id: string): Promise<Maintenance
   const photos = await db.select().from(attachments).where(and(eq(attachments.tableName, 'maintenance_orders'), eq(attachments.recordId, id))).orderBy(asc(attachments.createdAt));
   const [downtime] = await db.select().from(downtimes).where(eq(downtimes.maintenanceOrderId, id)).orderBy(desc(downtimes.startedAt)).limit(1);
   const [wo] = row.o.workOrderId ? await db.select({ docNo: workOrders.docNo }).from(workOrders).where(eq(workOrders.id, row.o.workOrderId)).limit(1) : [];
+  // Kriter 3 (Tur 2 P1 bakim-isemirleri-detay-04) yardımcı içerik: sparse (yeni bildirilmiş, tanı/
+  // maliyet/kontrol listesi/fotoğrafsız) bir arıza iş emrinde ekranın yarısı boş kalmasın diye bu
+  // makinenin bir sonraki planlı bakımı da gösterilir — teknisyen için doğrudan faydalı bağlam.
+  const [nextPlanRow] = await db
+    .select({ name: maintenancePlans.name, nextDueAt: maintenancePlans.nextDueAt })
+    .from(maintenancePlans)
+    .where(and(eq(maintenancePlans.machineId, row.o.machineId), eq(maintenancePlans.isActive, true)))
+    .orderBy(asc(maintenancePlans.nextDueAt))
+    .limit(1);
   const events = await getMaintenanceOrderEvents(id);
+  // Kriter 3 (Tur 2 P1 bakim-isemirleri-detay-04) yardımcı içerik: aynı makinenin diğer iş emirleri —
+  // "bu tekrarlayan bir arıza mı?" sorusuna sekme değiştirmeden yanıt verir.
+  const relatedOrderRows = await db
+    .select({ id: maintenanceOrders.id, docNo: maintenanceOrders.docNo, title: maintenanceOrders.title, status: maintenanceOrders.status, reportedAt: maintenanceOrders.reportedAt })
+    .from(maintenanceOrders)
+    .where(and(eq(maintenanceOrders.machineId, row.o.machineId), ne(maintenanceOrders.id, id)))
+    .orderBy(desc(maintenanceOrders.reportedAt))
+    .limit(5);
 
   return {
-    order: row.o, machine: row.machine, lineCode: row.lineCode, lineName: row.lineName, plan: plan ?? null,
+    order: row.o, machine: row.machine, lineCode: row.lineCode, lineName: row.lineName,
+    machineResponsibleName: row.machineResponsibleName, nextPlan: nextPlanRow ?? null, relatedOrders: relatedOrderRows, plan: plan ?? null,
     assigneeName: assigneeRow?.fullName ?? null, reportedByName: reporterRow?.fullName ?? null,
     photos, downtime: downtime ?? null, workOrderDocNo: wo?.docNo ?? null, events,
   };
