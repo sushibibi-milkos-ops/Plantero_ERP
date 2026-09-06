@@ -101,17 +101,54 @@ export type StatStripItem = {
   valueClassName?: string;
 };
 
+/** Sayısal (veya para biçimli metin) bir değerin sıfır olup olmadığını belirler — MoneyCell'in
+ *  kendi kuralıyla (`getMoneyTone`) AYNI sinyali taşır (Tur 2 P2 kokpit-statstrip-zero-01): StatStrip
+ *  hücreleri önceden sıfırı da tam kontrastla basıyordu ("Onay kuyruğu"nda 0/12/0/0 dördü aynı renk),
+ *  oysa MoneyCell zaten sıfırı soluk gösteriyordu — aynı ekranda iki farklı sıfır dili. `value` bir
+ *  ham sayı (ör. onay sayacı) ya da `formatMoney` çıktısı bir metin (ör. "₺0,00") olabilir; metin
+ *  kolonu (ör. "Ağustos 2026" dönem etiketi) yanlışlıkla sıfır sanılmasın diye yalnızca rakam+virgül+
+ *  eksi karakterleri süzülüp sayısallaştırılır (binlik nokta ayracı elenir).
+ */
+function isZeroValue(value: React.ReactNode): boolean {
+  if (typeof value === 'number') return value === 0;
+  if (typeof value === 'string') {
+    const cleaned = value.replace(/[^\d,-]/g, '');
+    if (!cleaned) return false;
+    const n = Number(cleaned.replace(',', '.'));
+    return Number.isFinite(n) && n === 0;
+  }
+  return false;
+}
+
+/** 4+ öğeli şeritlerde <640px'te tek satıra sığdırmak yerine 2x2'ye kırılır (Tur 2 P1
+ *  kokpit-kdv-strip-mobile-01): "KDV pozisyonu" gibi 4 hücreli şeritler 390px'te hücre başına ~85px'e
+ *  düşünce etiketlerin yarısı kırpılıyor ve tek satırlık değerler (ör. "Ağustos 2026") ikinci satıra
+ *  sarıp hücreyi yükseltiyordu. `sm:` üstünde masaüstündeki tek satırlık `items.length` kolonuna geri
+ *  döner (CSS değişkeni `--strip-cols` ile — dinamik kolon sayısı Tailwind'in derleme zamanı sınıf
+ *  taramasıyla ifade edilemediği için). 3 ve altı öğede mobilde de zaten sıkışmıyor, kırılım gerekmiyor.
+ */
 export function StatStrip({ items, className, divider = true }: { items: StatStripItem[]; className?: string; divider?: boolean }) {
+  const wraps = items.length >= 4;
   return (
     <div
-      className={cn('grid', divider && 'divide-x divide-border/60', className)}
-      style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
+      className={cn(
+        'grid',
+        wraps ? 'grid-cols-2 sm:[grid-template-columns:var(--strip-cols)]' : '',
+        divider && (wraps ? 'divide-x divide-y divide-border/60 sm:divide-y-0' : 'divide-x divide-border/60'),
+        className,
+      )}
+      style={
+        wraps
+          ? ({ '--strip-cols': `repeat(${items.length}, minmax(0, 1fr))` } as React.CSSProperties)
+          : { gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }
+      }
     >
       {items.map((it) => {
+        const zero = it.valueClassName === undefined && isZeroValue(it.value);
         const inner = (
           <>
             {it.top ? <div className="truncate text-[10px] text-muted-foreground">{it.top}</div> : null}
-            <div className={cn('text-[15px] font-semibold tabular-nums', it.top && 'mt-0.5', it.valueClassName)}>{it.value}</div>
+            <div className={cn('text-[15px] font-semibold tabular-nums', it.top && 'mt-0.5', zero && 'text-muted-foreground/70', it.valueClassName)}>{it.value}</div>
             <div className="mt-0.5 truncate text-[10px] text-muted-foreground">{it.label}</div>
           </>
         );
@@ -191,13 +228,16 @@ export function BreakEvenPanel({ breakEven }: { breakEven: { targetRevenue: stri
   const pct = Number(breakEven.progressPct);
   return (
     <div className="p-4">
-      <div className="flex items-baseline justify-between text-sm">
+      {/* Kök neden (Tur 2 P2 kokpit-14px-tier-01): bu iki satır `text-sm` (14px) taşıyordu — ekrandaki
+          TÜM diğer liste satırları 13px, 1px'lik fark hiçbir anlam taşımadan ayrı bir kademe açıyordu.
+          `text-[13px]` ile tek gövde kademesine iner. */}
+      <div className="flex items-baseline justify-between text-[13px]">
         <span className="text-muted-foreground">Bu ay gereken (KDV hariç)</span>
-        <MoneyCell value={breakEven.targetRevenue} className="text-sm font-medium" />
+        <MoneyCell value={breakEven.targetRevenue} className="text-[13px] font-medium" />
       </div>
-      <div className="mt-1 flex items-baseline justify-between text-sm">
+      <div className="mt-1 flex items-baseline justify-between text-[13px]">
         <span className="text-muted-foreground">Gerçekleşen net ciro</span>
-        <MoneyCell value={breakEven.actualNetRevenue} className="text-sm font-medium" />
+        <MoneyCell value={breakEven.actualNetRevenue} className="text-[13px] font-medium" />
       </div>
       <div className="mt-3">
         <ProgressBar pct={pct} tone={pct >= 100 ? 'success' : 'primary'} />
@@ -267,13 +307,17 @@ export function ProductionLineRow({ line, href }: {
       {line.current && pct > 0 ? (
         <>
           <div className="mt-1.5"><ProgressBar pct={pct} /></div>
-          <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
+          {/* Kök neden (Tur 2 P1 kokpit-line-row-collision-01): `justify-between`'de `gap` tanımlı
+              değildi — 390px'te kısılan belge no/ürün adı metni ile sağdaki yüzde/sayı arasında 0px
+              boşluk kalıp tek bozuk dizge gibi okunuyordu. `gap-3` en az 12px'i garantiler; flex öğesi
+              gerekirse bu payı bırakacak kadar daha fazla küçülür (taşma değil). */}
+          <div className="mt-1 flex justify-between gap-3 text-[11px] text-muted-foreground">
             <span className="min-w-0 truncate font-mono">{line.current.docNo} · {line.current.productName}</span>
             <span className="shrink-0 tabular-nums">%{pct}</span>
           </div>
         </>
       ) : line.current ? (
-        <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
+        <div className="mt-1 flex justify-between gap-3 text-[11px] text-muted-foreground">
           <span className="min-w-0 truncate font-mono">{line.current.docNo} · {line.current.productName}</span>
           <span className="shrink-0">{line.openCount} açık iş emri</span>
         </div>

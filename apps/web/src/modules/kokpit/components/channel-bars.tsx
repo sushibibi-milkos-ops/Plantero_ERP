@@ -29,7 +29,10 @@ export function ChannelBars({ rows }: { rows: { name: string; net: number }[] })
     const only = sorted[0]!;
     return (
       <div className="flex items-baseline justify-between">
-        <span className="text-sm text-muted-foreground">{only.name}</span>
+        {/* Kök neden (Tur 2 P2 kokpit-14px-tier-01): tek-kanal etiketi `text-sm` (14px) taşıyordu —
+            çok-kanallı halde AYNI etiket 12px (bkz. aşağıdaki liste `text-xs`); tek satırlık gövde
+            metni için `text-[13px]` (kokpit'in genel gövde kademesi) kullanılır. */}
+        <span className="text-[13px] text-muted-foreground">{only.name}</span>
         <span className="num text-[15px] font-semibold tabular-nums">{formatMoney(only.net, 'TRY', { digits: 0 })}</span>
       </div>
     );

@@ -43,9 +43,12 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
                 blok içi StatStrip 15px). Sparkline'ın kendi min-genişlik koruması artık kpi-card.tsx'te
                 (container query) — dar hücrede otomatik gizlenir, kırpma bir daha oluşamaz. */}
             <div className="border-b border-border/60 p-2 sm:p-4">
+              {/* Kök neden (Tur 2 P2 kokpit-kpi-dupe-01): "Net (bugün)" burada üstteki KPI şeridindeki
+                  "Bugünkü net ciro" ile BİREBİR aynı değer+delta çiftini tekrar ediyordu (130px altında,
+                  görsel olarak da yakın) — aynı ölçü ekranda iki kez. Yalnızca şeritte YER ALMAYAN "Brüt"
+                  burada kalır; net ciro zaten üstteki KPI şeridinde bir kez gösteriliyor. */}
               <KpiStripRow className="mb-0!">
                 <KpiCard title="Brüt (bugün)" value={channelSales.grossTotal} format="money" fractionDigits={0} delta={channelSales.grossDeltaPct} deltaLabel="dünden" sparkline={channelSales.trend7d.map((t) => Number(t.net))} variant="strip" />
-                <KpiCard title="Net (bugün)" value={channelSales.netTotal} format="money" fractionDigits={0} delta={channelSales.netDeltaPct} deltaLabel="dünden" variant="strip" />
               </KpiStripRow>
             </div>
             {channelSales.rows.length === 0 ? (
@@ -191,12 +194,18 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
               <ul className="divide-y divide-border/50">
                 {expiry.top5.map((r) => (
                   <li key={r.quantId}>
+                    {/* Kök neden (Tur 2 P1 kokpit-skt-mobile-card-01): rozet / ürün adı / SKT rozeti üç
+                        AYRI `RowLink` çocuğuydu — mobilde (flex-col) 3 satıra düşüp 84.5px'e çıkıyordu
+                        (hedef ≤72px). LotBadge + ExpiryBadge artık TEK `sm:contents` grubunda (satır 1,
+                        `justify-between`), ürün adı kendi satırında (satır 2) — 2 satırlık anatomi,
+                        "Bugün/OverdueTop5List" ile aynı desen. `sm:order-last` masaüstü sırasını
+                        DEĞİŞTİRMEZ: rozet, ürün adı, SKT (flatten sonrası doğal DOM sırası zaten böyle). */}
                     <RowLink href={`/depo/lotlar/${r.lotId}`}>
-                      <span className="flex min-w-0 items-center gap-2 sm:contents">
+                      <span className="flex min-w-0 items-center justify-between gap-3 sm:contents">
                         <LotBadge lotNo={r.lotNo} status="released" />
+                        <ExpiryBadge date={new Date(`${r.expiryDate}T00:00:00Z`)} showDate={false} className="shrink-0 sm:order-last" />
                       </span>
                       <span className="min-w-0 flex-1 truncate">{r.productName}</span>
-                      <ExpiryBadge date={new Date(`${r.expiryDate}T00:00:00Z`)} showDate={false} className="shrink-0" />
                     </RowLink>
                   </li>
                 ))}
