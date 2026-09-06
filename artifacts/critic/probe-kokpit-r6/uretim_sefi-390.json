@@ -1,0 +1,154 @@
+{
+ "as": "uretim_sefi",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Hat durumu",
+   "top": 256,
+   "bottom": 498,
+   "h": 242,
+   "w": 358,
+   "left": 16,
+   "rowCount": 3,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Fire kırılımı (7 gün)",
+   "top": 514,
+   "bottom": 803,
+   "h": 289,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Son duruşlar",
+   "top": 819,
+   "bottom": 1026,
+   "h": 208,
+   "w": 358,
+   "left": 16,
+   "rowCount": 4,
+   "rowH": [
+    39.5,
+    40.5,
+    41
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Son iş emirleri",
+   "top": 1042,
+   "bottom": 1611,
+   "h": 569,
+   "w": 358,
+   "left": 16,
+   "rowCount": 8,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 16,
+   "bottom": 1611,
+   "last": "Son iş emirleri"
+  }
+ ],
+ "colSpread": 0,
+ "kpi": [
+  {
+   "label": "Hat durumuTümü Bazlar, Baris",
+   "w": 358,
+   "left": 16
+  },
+  {
+   "label": "Son iş emirleriTümü Bazlar, ",
+   "w": 358,
+   "left": 16
+  }
+ ],
+ "truncated": [
+  {
+   "text": "WO-2026-000007 · Strawberry Protein Mixi",
+   "clientW": 246,
+   "scrollW": 264,
+   "section": "Hat durumu"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 125,
+   "scrollW": 146,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Toz Karıştırma & Dolum",
+   "clientW": 125,
+   "scrollW": 132,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Saşe / Stick Toz Dolum",
+   "clientW": 127,
+   "scrollW": 130,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Toz Karıştırma & Dolum",
+   "clientW": 127,
+   "scrollW": 132,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 127,
+   "scrollW": 146,
+   "section": "Son iş emirleri"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 127,
+   "scrollW": 146,
+   "section": "Son iş emirleri"
+  }
+ ],
+ "foldRows": 3,
+ "allZeros": [],
+ "pageH": 1739,
+ "vpH": 844
+}

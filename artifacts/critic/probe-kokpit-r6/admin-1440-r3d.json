@@ -53,9 +53,9 @@
   {
    "title": "Son aktiviteler",
    "top": 858,
-   "h": 373,
+   "h": 168,
    "w": 568,
-   "rowCount": 8,
+   "rowCount": 3,
    "rowH": [
     40,
     41,
@@ -67,7 +67,7 @@
   },
   {
    "title": "Banka",
-   "top": 1247,
+   "top": 1042,
    "h": 212,
    "w": 568,
    "rowCount": 3,
@@ -261,6 +261,6 @@
   "Sayfa ara veya hızlı eylem çal"
  ],
  "foldRows": 5,
- "pageH": 1499,
+ "pageH": 1427,
  "vpH": 900
 }

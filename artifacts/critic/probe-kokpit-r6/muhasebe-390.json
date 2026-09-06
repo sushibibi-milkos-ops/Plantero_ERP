@@ -1,32 +1,32 @@
 {
  "as": "muhasebe",
- "vp": "1440x900",
+ "vp": "390x844",
  "sections": [
   {
    "title": "Banka",
-   "top": 276,
-   "bottom": 488,
-   "h": 212,
-   "w": 568,
-   "left": 264,
+   "top": 256,
+   "bottom": 537,
+   "h": 281,
+   "w": 358,
+   "left": 16,
    "rowCount": 3,
    "rowH": [
-    40,
-    41,
-    41
+    63,
+    64,
+    64
    ],
    "mixedDecimals": false,
    "monies": [
-    "-₺254.348,50@815",
-    "₺1.250,00@815",
-    "€0,00@815",
-    "-₺255.598,50@815"
+    "-₺254.348,50@357",
+    "₺1.250,00@357",
+    "€0,00@357",
+    "-₺255.598,50@357"
    ],
    "rowRightSpread": 0,
    "rowRights": [
-    815,
-    815,
-    815
+    357,
+    357,
+    357
    ],
    "zeros": [
     {
@@ -39,18 +39,18 @@
   },
   {
    "title": "KDV pozisyonu",
-   "top": 504,
-   "bottom": 610,
-   "h": 106,
-   "w": 568,
-   "left": 264,
+   "top": 553,
+   "bottom": 720,
+   "h": 167,
+   "w": 358,
+   "left": 16,
    "rowCount": 0,
    "rowH": null,
    "mixedDecimals": false,
    "monies": [
-    "₺0 [0dec]@539",
-    "₺443 [0dec]@680.5",
-    "₺35.080 [0dec]@823"
+    "₺0 [0dec]@364",
+    "₺443 [0dec]@186",
+    "₺35.080 [0dec]@365"
    ],
    "rowRightSpread": 0,
    "rowRights": [],
@@ -65,38 +65,38 @@
   },
   {
    "title": "Mutabakat kuyruğu",
-   "top": 626,
-   "bottom": 999,
-   "h": 373,
-   "w": 568,
-   "left": 264,
+   "top": 736,
+   "bottom": 1293,
+   "h": 557,
+   "w": 358,
+   "left": 16,
    "rowCount": 8,
    "rowH": [
-    40,
-    41,
-    41
+    63,
+    64,
+    64
    ],
    "mixedDecimals": false,
    "monies": [
-    "₺3.800,00@815",
-    "₺3.800,00@815",
-    "₺3.800,00@815",
-    "-₺54.900,00@815",
-    "₺5.000,00@815",
-    "₺5.000,00@815",
-    "₺5.000,00@815",
-    "-₺450,75@815"
+    "₺3.800,00@357",
+    "₺3.800,00@357",
+    "₺3.800,00@357",
+    "-₺54.900,00@357",
+    "₺5.000,00@357",
+    "₺5.000,00@357",
+    "₺5.000,00@357",
+    "-₺450,75@357"
    ],
    "rowRightSpread": 0,
    "rowRights": [
-    815,
-    815,
-    815,
-    815,
-    815,
-    815,
-    815,
-    815
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357,
+    357
    ],
    "zeros": [],
    "empty": false,
@@ -104,34 +104,34 @@
   },
   {
    "title": "Geciken alacak",
-   "top": 276,
-   "bottom": 546,
-   "h": 270,
-   "w": 568,
-   "left": 848,
+   "top": 1309,
+   "bottom": 1732,
+   "h": 423,
+   "w": 358,
+   "left": 16,
    "rowCount": 4,
    "rowH": [
-    40,
-    41,
-    41
+    63,
+    64,
+    64
    ],
    "mixedDecimals": true,
    "monies": [
-    "₺7.109 [0dec]@981.5",
-    "₺1.100 [0dec]@1123",
-    "₺0 [0dec]@1264.5",
-    "₺0 [0dec]@1407",
-    "₺3.800,00@1399",
-    "₺3.282,50@1399",
-    "₺1.100,00@1399",
-    "₺27,00@1399"
+    "₺7.109 [0dec]@186",
+    "₺1.100 [0dec]@364",
+    "₺0 [0dec]@186",
+    "₺0 [0dec]@365",
+    "₺3.800,00@357",
+    "₺3.282,50@357",
+    "₺1.100,00@357",
+    "₺27,00@357"
    ],
    "rowRightSpread": 0,
    "rowRights": [
-    1399,
-    1399,
-    1399,
-    1399
+    357,
+    357,
+    357,
+    357
    ],
    "zeros": [
     {
@@ -148,11 +148,11 @@
   },
   {
    "title": "Bugünün tahsilatları",
-   "top": 562,
-   "bottom": 819,
-   "h": 258,
-   "w": 568,
-   "left": 848,
+   "top": 1748,
+   "bottom": 2018,
+   "h": 270,
+   "w": 358,
+   "left": 16,
    "rowCount": 0,
    "rowH": null,
    "mixedDecimals": false,
@@ -165,18 +165,18 @@
   },
   {
    "title": "Nakit projeksiyonu (3 ay)",
-   "top": 835,
-   "bottom": 958,
+   "top": 2034,
+   "bottom": 2156,
    "h": 123,
-   "w": 568,
-   "left": 848,
+   "w": 358,
+   "left": 16,
    "rowCount": 0,
    "rowH": null,
    "mixedDecimals": false,
    "monies": [
-    "₺33.278 [0dec]@1028.7",
-    "₺32.340 [0dec]@1217.3",
-    "₺31.227 [0dec]@1407"
+    "₺33.278 [0dec]@126.7",
+    "₺32.340 [0dec]@245.3",
+    "₺31.227 [0dec]@365"
    ],
    "rowRightSpread": 0,
    "rowRights": [],
@@ -186,17 +186,17 @@
   },
   {
    "title": "Break-even'a uzaklık",
-   "top": 974,
-   "bottom": 1137,
+   "top": 2172,
+   "bottom": 2336,
    "h": 164,
-   "w": 568,
-   "left": 848,
+   "w": 358,
+   "left": 16,
    "rowCount": 0,
    "rowH": null,
    "mixedDecimals": false,
    "monies": [
-    "₺1.560.717,48@1399",
-    "₺3.881,19@1399"
+    "₺1.560.717,48@357",
+    "₺3.881,19@357"
    ],
    "rowRightSpread": 0,
    "rowRights": [],
@@ -207,31 +207,33 @@
  ],
  "columns": [
   {
-   "left": 264,
-   "bottom": 999,
-   "last": "Mutabakat kuyruğu"
-  },
-  {
-   "left": 848,
-   "bottom": 1137,
+   "left": 16,
+   "bottom": 2336,
    "last": "Break-even'a uzaklık"
   }
  ],
- "colSpread": 138,
+ "colSpread": 0,
  "kpi": [
   {
    "label": "BankaTümü Toplam (TRY hesapl",
-   "w": 568,
-   "left": 264
+   "w": 358,
+   "left": 16
   },
   {
    "label": "Geciken alacakTümü ₺7.1090-3",
-   "w": 568,
-   "left": 848
+   "w": 358,
+   "left": 16
   }
  ],
- "truncated": [],
- "foldRows": 12,
+ "truncated": [
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü",
+   "clientW": 324,
+   "scrollW": 331,
+   "section": "Mutabakat kuyruğu"
+  }
+ ],
+ "foldRows": 3,
  "allZeros": [
   {
    "text": "€0,00",
@@ -254,6 +256,6 @@
    "section": "Geciken alacak"
   }
  ],
- "pageH": 1177,
- "vpH": 900
+ "pageH": 2464,
+ "vpH": 844
 }

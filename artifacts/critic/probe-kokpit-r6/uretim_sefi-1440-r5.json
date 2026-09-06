@@ -1,0 +1,68 @@
+{
+ "as": "uretim_sefi",
+ "vp": "1440x900",
+ "interactive": 20,
+ "withActive": 20,
+ "globalActiveRule": false,
+ "zeroTones": [],
+ "nonZeroColors": [],
+ "qty": [
+  {
+   "text": "0ADET",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+  },
+  {
+   "text": "0ADET",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+  },
+  {
+   "text": "39ADET",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "76ADET",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "196ADET",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "47ADET",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "57ADET",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "text": "98ADET",
+   "color": "oklch(0.21 0.006 285.9)"
+  }
+ ],
+ "strips": [],
+ "empties": [
+  {
+   "section": "Fire kırılımı (7 gün)",
+   "h": 212,
+   "sectionH": 258
+  }
+ ],
+ "rowHeights": {
+  "Hat durumu": [
+   52.5,
+   52.5,
+   52.5
+  ],
+  "Son iş emirleri": [
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5,
+   58.5
+  ]
+ }
+}

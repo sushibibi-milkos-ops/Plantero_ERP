@@ -1,0 +1,345 @@
+{
+ "as": "admin",
+ "vp": "390x844",
+ "sections": [
+  {
+   "title": "Günlük kanal satışları",
+   "top": 256,
+   "bottom": 401,
+   "h": 145,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [
+    "₺2.772,00@357",
+    "₺2.772,00@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Break-even'a uzaklık",
+   "top": 417,
+   "bottom": 580,
+   "h": 164,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [
+    "₺1.560.717,48@357",
+    "₺3.881,19@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Bugün",
+   "top": 596,
+   "bottom": 705,
+   "h": 109,
+   "w": 358,
+   "left": 16,
+   "rowCount": 1,
+   "rowH": [
+    62.5,
+    62.5,
+    62.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Onay kuyruğu",
+   "top": 721,
+   "bottom": 888,
+   "h": 167,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    },
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    },
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Son aktiviteler",
+   "top": 904,
+   "bottom": 1437,
+   "h": 533,
+   "w": 358,
+   "left": 16,
+   "rowCount": 8,
+   "rowH": [
+    60,
+    61,
+    61
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Banka",
+   "top": 1453,
+   "bottom": 1734,
+   "h": 281,
+   "w": 358,
+   "left": 16,
+   "rowCount": 3,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "mixedDecimals": false,
+   "monies": [
+    "-₺254.348,50@357",
+    "₺1.250,00@357",
+    "€0,00@357",
+    "-₺255.598,50@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357
+   ],
+   "zeros": [
+    {
+     "text": "€0,00",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Üretim hatları",
+   "top": 1750,
+   "bottom": 1991,
+   "h": 242,
+   "w": 358,
+   "left": 16,
+   "rowCount": 3,
+   "rowH": [
+    64.5,
+    65.5,
+    65.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Kritik stok",
+   "top": 2007,
+   "bottom": 2296,
+   "h": 289,
+   "w": 358,
+   "left": 16,
+   "rowCount": 0,
+   "rowH": null,
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "SKT riski",
+   "top": 2312,
+   "bottom": 2802,
+   "h": 490,
+   "w": 358,
+   "left": 16,
+   "rowCount": 5,
+   "rowH": [
+    63.5,
+    64.5,
+    64.5
+   ],
+   "mixedDecimals": false,
+   "monies": [],
+   "rowRightSpread": 0,
+   "rowRights": [],
+   "zeros": [
+    {
+     "text": "0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  },
+  {
+   "title": "Geciken alacak",
+   "top": 2818,
+   "bottom": 3241,
+   "h": 423,
+   "w": 358,
+   "left": 16,
+   "rowCount": 4,
+   "rowH": [
+    63,
+    64,
+    64
+   ],
+   "mixedDecimals": true,
+   "monies": [
+    "₺7.109 [0dec]@186",
+    "₺1.100 [0dec]@364",
+    "₺0 [0dec]@186",
+    "₺0 [0dec]@365",
+    "₺3.800,00@357",
+    "₺3.282,50@357",
+    "₺1.100,00@357",
+    "₺27,00@357"
+   ],
+   "rowRightSpread": 0,
+   "rowRights": [
+    357,
+    357,
+    357,
+    357
+   ],
+   "zeros": [
+    {
+     "text": "₺0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    },
+    {
+     "text": "₺0",
+     "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)"
+    }
+   ],
+   "empty": false,
+   "emptyH": 0
+  }
+ ],
+ "columns": [
+  {
+   "left": 16,
+   "bottom": 3241,
+   "last": "Geciken alacak"
+  }
+ ],
+ "colSpread": 0,
+ "kpi": [
+  {
+   "label": "0AI satın alma",
+   "w": 178,
+   "left": 17
+  },
+  {
+   "label": "12Mutabakat",
+   "w": 178,
+   "left": 195
+  },
+  {
+   "label": "0Sayım farkı",
+   "w": 178,
+   "left": 17
+  },
+  {
+   "label": "0Hatırlatma",
+   "w": 178,
+   "left": 195
+  }
+ ],
+ "truncated": [
+  {
+   "text": "Toz Karıştırma & Dolum · Strawberry Prot",
+   "clientW": 271,
+   "scrollW": 298,
+   "section": "Bugün"
+  },
+  {
+   "text": "WO-2026-000007 · Strawberry Protein Mixi",
+   "clientW": 246,
+   "scrollW": 264,
+   "section": "Üretim hatları"
+  }
+ ],
+ "foldRows": 1,
+ "allZeros": [
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Onay kuyruğu"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Onay kuyruğu"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Onay kuyruğu"
+  },
+  {
+   "text": "€0,00",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Banka"
+  },
+  {
+   "text": "0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "SKT riski"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Geciken alacak"
+  },
+  {
+   "text": "₺0",
+   "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+   "section": "Geciken alacak"
+  }
+ ],
+ "pageH": 3385,
+ "vpH": 844
+}
