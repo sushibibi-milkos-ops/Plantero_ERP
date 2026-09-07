@@ -1,0 +1,76 @@
+{
+ "as": "depo",
+ "vp": "1440x900",
+ "bySection": {
+  "Karantina": {
+   "heights": [
+    41,
+    40
+   ],
+   "lines": [
+    2
+   ],
+   "n": 4
+  },
+  "SKT riski": {
+   "heights": [
+    41,
+    40
+   ],
+   "lines": [
+    2
+   ],
+   "n": 5
+  },
+  "Bugün": {
+   "heights": [
+    41,
+    40
+   ],
+   "lines": [
+    2
+   ],
+   "n": 10
+  }
+ },
+ "dupes": [],
+ "colBottoms": [
+  {
+   "left": 264,
+   "bottom": 529
+  },
+  {
+   "left": 848,
+   "bottom": 587
+  }
+ ],
+ "colSpread": 58,
+ "rightSpread": {
+  "Karantina": 0,
+  "SKT riski": 0,
+  "Bugün": 0
+ },
+ "secs": [
+  {
+   "t": "Karantina",
+   "top": 276,
+   "bottom": 529,
+   "left": 264,
+   "w": 568
+  },
+  {
+   "t": "SKT riski",
+   "top": 276,
+   "bottom": 587,
+   "left": 848,
+   "w": 568
+  },
+  {
+   "t": "Bugün",
+   "top": 603,
+   "bottom": 1058,
+   "left": 264,
+   "w": 1152
+  }
+ ]
+}
