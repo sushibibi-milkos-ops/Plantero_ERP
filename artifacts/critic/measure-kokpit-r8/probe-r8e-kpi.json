@@ -1,0 +1,133 @@
+{
+ "admin": {
+  "rowClass": "group relative block text-left h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2 md:h-20 md:w-auto",
+  "rowLeft": 264,
+  "rowRight": 551,
+  "rowW": 287,
+  "display": "block",
+  "cols": "none",
+  "items": [
+   {
+    "t": "Bugünkü net ciro",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "%379,5dünden",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   }
+  ],
+  "contentRight": 535
+ },
+ "depo": {
+  "rowClass": "group relative block text-left h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2 md:h-20 md:w-auto",
+  "rowLeft": 264,
+  "rowRight": 551,
+  "rowW": 287,
+  "display": "block",
+  "cols": "none",
+  "items": [
+   {
+    "t": "Mal kabul bekleyen",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   }
+  ],
+  "contentRight": 535
+ },
+ "muhasebe": {
+  "rowClass": "group relative block text-left h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2 md:h-20 md:w-auto",
+  "rowLeft": 264,
+  "rowRight": 494,
+  "rowW": 230,
+  "display": "block",
+  "cols": "none",
+  "items": [
+   {
+    "t": "Banka toplamı",
+    "left": 280,
+    "right": 478,
+    "w": 198,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "",
+    "left": 280,
+    "right": 478,
+    "w": 198,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "",
+    "left": 280,
+    "right": 478,
+    "w": 198,
+    "borderLeft": "0px"
+   }
+  ],
+  "contentRight": 478
+ },
+ "satis": {
+  "err": "kpi label bulunamadı"
+ },
+ "uretim_sefi": {
+  "rowClass": "group relative block text-left h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2 md:h-20 md:w-auto",
+  "rowLeft": 264,
+  "rowRight": 551,
+  "rowW": 287,
+  "display": "block",
+  "cols": "none",
+  "items": [
+   {
+    "t": "Açık iş emri",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   },
+   {
+    "t": "",
+    "left": 280,
+    "right": 535,
+    "w": 255,
+    "borderLeft": "0px"
+   }
+  ],
+  "contentRight": 535
+ }
+}

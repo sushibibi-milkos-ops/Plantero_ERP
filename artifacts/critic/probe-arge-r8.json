@@ -1,0 +1,700 @@
+{
+ "projeler_1440": {
+  "firstRowTop_viewport": 238,
+  "firstRowTop_mainOffset": 190,
+  "rowHeight": 36,
+  "th": [
+   {
+    "t": "Kod",
+    "right": 380.4,
+    "align": "left"
+   },
+   {
+    "t": "Proje",
+    "right": 776,
+    "align": "left"
+   },
+   {
+    "t": "Durum",
+    "right": 896,
+    "align": "left"
+   },
+   {
+    "t": "Ürün / SKU",
+    "right": 1046,
+    "align": "left"
+   },
+   {
+    "t": "Birim maliyet",
+    "right": 1176,
+    "align": "right"
+   },
+   {
+    "t": "Sahibi",
+    "right": 1306,
+    "align": "left"
+   },
+   {
+    "t": "Lansman",
+    "right": 1416,
+    "align": "right"
+   }
+  ],
+  "tdRights": [
+   [
+    380.4,
+    776,
+    896,
+    1046,
+    1176,
+    1306,
+    1416
+   ],
+   [
+    380.4,
+    776,
+    896,
+    1046,
+    1176,
+    1306,
+    1416
+   ],
+   [
+    380.4,
+    776,
+    896,
+    1046,
+    1176,
+    1306,
+    1416
+   ]
+  ],
+  "birimMaliyet": [
+   {
+    "t": "₺31,92",
+    "color": "oklch(0.72 0.17 70)"
+   },
+   {
+    "t": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺103,41",
+    "color": "oklch(0.72 0.17 70)"
+   }
+  ]
+ },
+ "receteler_1440": {
+  "firstRowTop_viewport": 208,
+  "firstRowTop_mainOffset": 160,
+  "th": [
+   {
+    "t": "Reçete",
+    "right": 707.8
+   },
+   {
+    "t": "Proje",
+    "right": 831.2
+   },
+   {
+    "t": "Versiyon",
+    "right": 921.3
+   },
+   {
+    "t": "Durum",
+    "right": 1051.3
+   },
+   {
+    "t": "Birim maliyet",
+    "right": 1171.3
+   },
+   {
+    "t": "Versiyonlar",
+    "right": 1276
+   },
+   {
+    "t": "Devrolmuş BOM",
+    "right": 1416
+   }
+  ],
+  "rows": [
+   [
+    {
+     "t": "Şekersiz Protein",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 707.8
+    },
+    {
+     "t": "Şekersiz Protein",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 831.2
+    },
+    {
+     "t": "v1",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 921.3
+    },
+    {
+     "t": "Test/Onayda",
+     "color": "oklch(0.5 0.14 70)",
+     "right": 1051.3
+    },
+    {
+     "t": "₺166,17",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 1171.3
+    },
+    {
+     "t": "1",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 1276
+    },
+    {
+     "t": "—",
+     "color": "oklch(0.552 0.016 285.9)",
+     "right": 1416
+    }
+   ],
+   [
+    {
+     "t": "Oat Barista Reçetesi",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 707.8
+    },
+    {
+     "t": "Oat Barista v2",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 831.2
+    },
+    {
+     "t": "v2",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 921.3
+    },
+    {
+     "t": "Devredildi",
+     "color": "oklch(0.55 0.16 152)",
+     "right": 1051.3
+    },
+    {
+     "t": "₺103,41",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 1171.3
+    },
+    {
+     "t": "2",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 1276
+    },
+    {
+     "t": "BOM-120040001-v2",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 1416
+    }
+   ],
+   [
+    {
+     "t": "Fıstık Bazı",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 707.8
+    },
+    {
+     "t": "Fıstık Bazı",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 831.2
+    },
+    {
+     "t": "v1",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 921.3
+    },
+    {
+     "t": "Taslak",
+     "color": "oklch(0.552 0.016 285.9)",
+     "right": 1051.3
+    },
+    {
+     "t": "₺31,92",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 1171.3
+    },
+    {
+     "t": "1",
+     "color": "oklch(0.21 0.006 285.9)",
+     "right": 1276
+    },
+    {
+     "t": "—",
+     "color": "oklch(0.552 0.016 285.9)",
+     "right": 1416
+    }
+   ]
+  ]
+ },
+ "precete_1440": {
+  "cardClass": "min-w-0 rounded-xl border border-border/60 bg-card p-1.5 md:p-4",
+  "cardRect": {
+   "w": 916,
+   "h": 634
+  },
+  "tableClass": "text-[13px]",
+  "headerCells": [
+   {
+    "t": "Ürün",
+    "left": 517,
+    "right": 755,
+    "w": 238,
+    "align": "left"
+   },
+   {
+    "t": "Miktar",
+    "left": 763,
+    "right": 907,
+    "w": 144,
+    "align": "right"
+   },
+   {
+    "t": "Maliyet kaynağı",
+    "left": 915,
+    "right": 1043,
+    "w": 128,
+    "align": "left"
+   },
+   {
+    "t": "Birim maliyet",
+    "left": 1051,
+    "right": 1163,
+    "w": 112,
+    "align": "right"
+   },
+   {
+    "t": "Fire %",
+    "left": 1171,
+    "right": 1235,
+    "w": 64,
+    "align": "right"
+   },
+   {
+    "t": "Satır maliyeti",
+    "left": 1243,
+    "right": 1355,
+    "w": 112,
+    "align": "right"
+   }
+  ],
+  "bodyRows": [
+   {
+    "h": 39,
+    "cells": [
+     {
+      "t": "Yulaf3010600000,2 KG · O",
+      "right": 755,
+      "textRight": 0,
+      "align": "start"
+     },
+     {
+      "t": "MiktarKG",
+      "right": 907,
+      "textRight": 899,
+      "align": "right"
+     },
+     {
+      "t": "KaynakOrtalama maliyet",
+      "right": 1043,
+      "textRight": 1035,
+      "align": "start"
+     },
+     {
+      "t": "B. maliyet₺40,00",
+      "right": 1163,
+      "textRight": 1155,
+      "align": "right"
+     },
+     {
+      "t": "Fire %",
+      "right": 1235,
+      "textRight": 1227,
+      "align": "right"
+     },
+     {
+      "t": "₺8,00",
+      "right": 1355,
+      "textRight": 1347,
+      "align": "right"
+     }
+    ]
+   },
+   {
+    "h": 39,
+    "cells": [
+     {
+      "t": "Hurma Şurubu3020300000,0",
+      "right": 755,
+      "textRight": 0,
+      "align": "start"
+     },
+     {
+      "t": "MiktarKG",
+      "right": 907,
+      "textRight": 899,
+      "align": "right"
+     },
+     {
+      "t": "KaynakOrtalama maliyet",
+      "right": 1043,
+      "textRight": 1035,
+      "align": "start"
+     },
+     {
+      "t": "B. maliyet₺120,00",
+      "right": 1163,
+      "textRight": 1155,
+      "align": "right"
+     },
+     {
+      "t": "Fire %",
+      "right": 1235,
+      "textRight": 1227,
+      "align": "right"
+     },
+     {
+      "t": "₺1,80",
+      "right": 1355,
+      "textRight": 1347,
+      "align": "right"
+     }
+    ]
+   },
+   {
+    "h": 39,
+    "cells": [
+     {
+      "t": "Deniz Tuzu3070200000,001",
+      "right": 755,
+      "textRight": 0,
+      "align": "start"
+     },
+     {
+      "t": "MiktarKG",
+      "right": 907,
+      "textRight": 899,
+      "align": "right"
+     },
+     {
+      "t": "KaynakOrtalama maliyet",
+      "right": 1043,
+      "textRight": 1035,
+      "align": "start"
+     },
+     {
+      "t": "B. maliyet₺15,00",
+      "right": 1163,
+      "textRight": 1155,
+      "align": "right"
+     },
+     {
+      "t": "Fire %",
+      "right": 1235,
+      "textRight": 1227,
+      "align": "right"
+     },
+     {
+      "t": "₺0,02",
+      "right": 1355,
+      "textRight": 1347,
+      "align": "right"
+     }
+    ]
+   },
+   {
+    "h": 39,
+    "cells": [
+     {
+      "t": "Kavanoz 500ml4010100001 ",
+      "right": 755,
+      "textRight": 0,
+      "align": "start"
+     },
+     {
+      "t": "MiktarADET",
+      "right": 907,
+      "textRight": 899,
+      "align": "right"
+     },
+     {
+      "t": "KaynakOrtalama maliyet",
+      "right": 1043,
+      "textRight": 1035,
+      "align": "start"
+     },
+     {
+      "t": "B. maliyet₺22,00",
+      "right": 1163,
+      "textRight": 1155,
+      "align": "right"
+     },
+     {
+      "t": "Fire %",
+      "right": 1235,
+      "textRight": 1227,
+      "align": "right"
+     },
+     {
+      "t": "₺22,00",
+      "right": 1355,
+      "textRight": 1347,
+      "align": "right"
+     }
+    ]
+   },
+   {
+    "h": 39,
+    "cells": [
+     {
+      "t": "Kapak4010200001 ADET · O",
+      "right": 755,
+      "textRight": 0,
+      "align": "start"
+     },
+     {
+      "t": "MiktarADET",
+      "right": 907,
+      "textRight": 899,
+      "align": "right"
+     },
+     {
+      "t": "KaynakOrtalama maliyet",
+      "right": 1043,
+      "textRight": 1035,
+      "align": "start"
+     },
+     {
+      "t": "B. maliyet₺10,00",
+      "right": 1163,
+      "textRight": 1155,
+      "align": "right"
+     },
+     {
+      "t": "Fire %",
+      "right": 1235,
+      "textRight": 1227,
+      "align": "right"
+     },
+     {
+      "t": "₺10,00",
+      "right": 1355,
+      "textRight": 1347,
+      "align": "right"
+     }
+    ]
+   },
+   {
+    "h": 38,
+    "cells": [
+     {
+      "t": "Etiket4010300001 ADET · ",
+      "right": 755,
+      "textRight": 0,
+      "align": "start"
+     },
+     {
+      "t": "MiktarADET",
+      "right": 907,
+      "textRight": 899,
+      "align": "right"
+     },
+     {
+      "t": "KaynakOrtalama maliyet",
+      "right": 1043,
+      "textRight": 1035,
+      "align": "start"
+     },
+     {
+      "t": "B. maliyet₺8,00",
+      "right": 1163,
+      "textRight": 1155,
+      "align": "right"
+     },
+     {
+      "t": "Fire %",
+      "right": 1235,
+      "textRight": 1227,
+      "align": "right"
+     },
+     {
+      "t": "₺8,00",
+      "right": 1355,
+      "textRight": 1347,
+      "align": "right"
+     }
+    ]
+   }
+  ],
+  "nameSpans": [
+   {
+    "t": "Yulaf",
+    "cw": 153,
+    "sw": 153
+   },
+   {
+    "t": "Ortalama maliyet",
+    "cw": 112,
+    "sw": 112
+   },
+   {
+    "t": "Hurma Şurubu",
+    "cw": 153,
+    "sw": 153
+   },
+   {
+    "t": "Ortalama maliyet",
+    "cw": 112,
+    "sw": 112
+   },
+   {
+    "t": "Deniz Tuzu",
+    "cw": 153,
+    "sw": 153
+   },
+   {
+    "t": "Ortalama maliyet",
+    "cw": 112,
+    "sw": 112
+   },
+   {
+    "t": "Kavanoz 500ml",
+    "cw": 153,
+    "sw": 153
+   },
+   {
+    "t": "Ortalama maliyet",
+    "cw": 112,
+    "sw": 112
+   },
+   {
+    "t": "Kapak",
+    "cw": 153,
+    "sw": 153
+   },
+   {
+    "t": "Ortalama maliyet",
+    "cw": 112,
+    "sw": 112
+   },
+   {
+    "t": "Etiket",
+    "cw": 153,
+    "sw": 153
+   },
+   {
+    "t": "Ortalama maliyet",
+    "cw": 112,
+    "sw": 112
+   }
+  ],
+  "borderedBoxCount": 5,
+  "borderedBoxes": [
+   {
+    "tag": "DIV",
+    "cls": "flex items-center gap-2 rounded-lg border border-primary/30 ",
+    "w": 882,
+    "h": 38
+   },
+   {
+    "tag": "INPUT",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 139,
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "cls": "flex items-center justify-between gap-2 rounded-md border bo",
+    "w": 174,
+    "h": 32
+   },
+   {
+    "tag": "INPUT",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 157,
+    "h": 32
+   },
+   {
+    "tag": "INPUT",
+    "cls": "w-full min-w-0 rounded-md border border-input bg-transparent",
+    "w": 106,
+    "h": 32
+   }
+  ],
+  "docScrollH": 900,
+  "innerH": 900
+ },
+ "precete_390": {
+  "selectTrigger": {
+   "w": 160,
+   "h": 44,
+   "text": "v2 · Devredildi",
+   "spanCw": 88,
+   "spanSw": 88
+  },
+  "rows": [],
+  "docScrollW": 390,
+  "docClientW": 390,
+  "docScrollH": 1171,
+  "nativeSelects": 0
+ },
+ "board_1440": {
+  "scrollers": [
+   {
+    "cls": "scrollbar-thin scroll-fade-x flex h-[calc(100dvh-28.5rem)] min-h-[320px] snap-x snap-manda",
+    "sw": 1864,
+    "cw": 1152,
+    "maskImage": "none"
+   }
+  ],
+  "columnCount": 0,
+  "colRects": [
+   {
+    "w": 256,
+    "right": 252
+   },
+   {
+    "w": 230,
+    "right": 239
+   },
+   {
+    "w": 256,
+    "right": 520
+   },
+   {
+    "w": 230,
+    "right": 507
+   },
+   {
+    "w": 256,
+    "right": 788
+   },
+   {
+    "w": 230,
+    "right": 775
+   },
+   {
+    "w": 256,
+    "right": 1056
+   },
+   {
+    "w": 230,
+    "right": 1043
+   },
+   {
+    "w": 256,
+    "right": 1324
+   },
+   {
+    "w": 230,
+    "right": 1311
+   }
+  ],
+  "docScrollW": 1440,
+  "docClientW": 1440
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "emptyState": {
+  "txt": "Deneme ReçeteleriDurum0 kayıtReçeteProjeVersiyonDurumBirim maliyetVersiyonlarDevrolmuş BOMEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgs": 13,
+  "btns": [
+   "Durum",
+   "Reçete",
+   "Proje",
+   "Versiyon",
+   "Durum",
+   "Birim maliyet",
+   "Versiyonlar",
+   "Devrolmuş BOM"
+  ]
+ },
+ "focus": {
+  "activeTag": "TR",
+  "tabIndex": 0,
+  "outline": "oklch(0.55 0.16 152) solid 2px",
+  "outlineWidth": "2px",
+  "boxShadow": "none"
+ },
+ "hover": {
+  "bgBefore": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "bgAfter": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "changed": false
+ },
+ "buttonFocus": {
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "outlineWidth": "0px"
+ },
+ "loading": {
+  "skeletons": 0,
+  "ariaBusy": 0,
+  "url": "/arge/projeler"
+ }
+}
