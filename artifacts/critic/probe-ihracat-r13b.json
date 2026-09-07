@@ -1,0 +1,96 @@
+{
+ "focus:sevkiyatlar": [
+  {
+   "tag": "A",
+   "txt": "Yeni sevkiyat",
+   "inMain": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412",
+   "border": "oklab(0.75083 -0.0639824 0.0322602)"
+  }
+ ],
+ "focus:belgeler": [
+  {
+   "tag": "INPUT",
+   "txt": "",
+   "inMain": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412",
+   "border": "oklch(0.9 0.004 286.3)"
+  }
+ ],
+ "focus:kurlar": [
+  {
+   "tag": "BUTTON",
+   "txt": "Bugünü çek",
+   "inMain": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412",
+   "border": "oklab(0.75083 -0.0639824 0.0322602)"
+  }
+ ],
+ "focus:gtip": [
+  {
+   "tag": "INPUT",
+   "txt": "",
+   "inMain": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412",
+   "border": "oklch(0.9 0.004 286.3)"
+  }
+ ],
+ "focus:yeni": [],
+ "focus:detay": [],
+ "empty:sevkiyatlar": {
+  "rows": 0,
+  "tail": "İhracat Sevkiyatları\n3 sevkiyat · 1 gümrükte\nYeni sevkiyat\nAçık sevkiyat\nAçık sevkiyat tutarı\nGümrükte\nBelgesi eksik\nDurum\n0 kayıt\nSevkiyat no\n\t\nMüşteri\n\t\nDurum\n\t\nÜlke\n\t\nRejim\n\t\nBelgeler\n\t\nTutar (döviz)\n\t\nETD\n\t\nOluşturma\n\t\nTutar (₺)\nEşleşen kayıt yok\nArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgCount": 17,
+  "lastButtons": [
+   "Tutar (döviz)",
+   "ETD",
+   "Oluşturma",
+   "Tutar (₺)"
+  ]
+ },
+ "empty:belgeler": {
+  "rows": 0,
+  "tail": "İhracat Belgeleri\nTüm sevkiyatların proforma/fatura/çeki listesi/sertifika takibi tek panoda.\nToplam belge\nBekleyen\nVadesi geçmiş\nSorumlusuz\nDurum\n0 kayıt\nBelge\n\t\nSevkiyat\n\t\nMüşteri\n\t\nDurum\n\t\nEylemler\nEşleşen kayıt yok\nArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgCount": 10,
+  "lastButtons": [
+   "Belge",
+   "Sevkiyat",
+   "Müşteri",
+   "Durum"
+  ]
+ },
+ "empty:kurlar": {
+  "rows": 0,
+  "tail": "İhracat Kurları\nTCMB, son güncelleme 07.09.2026\nBugünü çek\nUSD satış\nAlış ₺34,0738\nEUR satış\nAlış ₺37,2000\nEURUSD\n12.06\n18.06\n24.06\n30.06\n06.07\n11.07\n16.07\n21.07\n27.07\n02.08\n08.08\n14.08\n20.08\n26.08\n01.09\n07.09\n₺30,0\n₺33,0\n₺36,0\n₺39,0\n₺42,0\nPara birimi\n0 kayıt\nTarih\n\t\nPara birimi\n\t\nAlış\n\t\nSatış\n\t\nGünlük değişim\n\t\nKaynak\nEşleşen kayıt yok\nArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgCount": 16,
+  "lastButtons": [
+   "Alış",
+   "Satış",
+   "Günlük değişim",
+   "Kaynak"
+  ]
+ },
+ "empty:gtip": {
+  "rows": 0,
+  "tail": "bilir ürün\nEşlenmiş\nEşlenmemiş\nGTİP atanmalı\n0901.21\nKG\n\nKavrulmuş kahve (kafeinsiz olmayan)\n\n2008.19\nKG\n\nDiğer kabuklu meyveler, karışımlar dahil (ezme/spread)\n\n2106.10\nKG\n\nProtein konsantreleri ve dokulandırılmış proteinli maddeler\n\n2202.99\nLT\n\nBitkisel içecekler (badem/yulaf/kaju sütü vb.)\n\nEşleme\nTip\n0 kayıt\nSKU\n\t\nÜrün\n\t\nTip\n\t\nGTİP\nEşleşen kayıt yok\nArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgCount": 11,
+  "lastButtons": [
+   "SKU",
+   "Ürün",
+   "Tip",
+   "GTİP"
+  ]
+ },
+ "touch390": {
+  "sevkiyatlar": [],
+  "belgeler": [],
+  "kurlar": [],
+  "gtip": [],
+  "yeni": [],
+  "detay": []
+ }
+}

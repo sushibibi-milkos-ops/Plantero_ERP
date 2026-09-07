@@ -1,11 +1,11 @@
 {
   "module": "bakim",
-  "round": 12,
-  "note": "Tur 12: 7 rotanın tamamı yeniden çekildi (pnpm shot) ve ölçüldü (artifacts/critic/measure-bakim-r12/*.json, scripts/probe-bakim-r12{,b,c,d,f,g,h,i,j,k}.ts). KAPANDI: bakim-isemirleri-detay-13 (P1, k5) — 6/6 iş emrinde \"Olay geçmişi\" yaşam döngüsü sırasına monoton (rank dizileri [0,2,3] / [1,2,3] / [0]) ve betik art arda iki kez çalıştırıldığında DOM sırası birebir aynı (deterministik). AÇIK KALDI: bakim-oee-04 (P2, k9, ortak kpi-strip.tsx) — @390 KpiStripRow scrollWidth 792 > clientWidth 358, 5 karttan 2'si tam görünür; aynı bileşen /bakim/makineler'de 632 > 358 (4 karttan 2'si). YENİ: bakim-oee-05 (P2, k6) — \"Hat bazlı OEE\" tablosunda 4 yüzde sütunundan 3'ü satırdan satıra farklı ondalık basıyor. YENİ: bakim-isemirleri-detay-14 (P2, k4) — kapanmış iş emrinin geçmişindeki \"Yapılıyor\" noktası sonsuz nabız atıyor. YANLIŞ ALARM (bulgu AÇILMADI): getComputedStyle ile okunan box-shadow Playwright'ta bayat gelebiliyor; birincil buton/arama kutusu/filtre düğmesinin odak halkası odaklı-odaksız ekran görüntüsü farkıyla doğrulandı (3px ring-ring/50 görünür) → k8 5 kalır. Kod taraması TEMİZ: 7 rotanın tamamında hesaplanmış stilde transition-property:all / ≥300ms süre / ease-in ihlali 0 (probe-bakim-r12i.ts); kaynakta transition-all / scale(0) / origin-* yok; `hover:` globals.css:10-16'da @media (hover:hover) and (pointer:fine) ile korunuyor. VERİ NOTU (tasarım bulgusu DEĞİL): \"Tamamlandı\" iş emirlerinde checklist_results maddeleri hâlâ done:false — ekran veriyi doğru basıyor, çelişki seed tarafında.",
-  "measuredAt": "2026-09-07T09:07:30.295Z",
+  "round": 13,
+  "note": "Tur 13: 7 rotanın tamamı yeniden çekildi (pnpm shot) ve ölçüldü (artifacts/critic/measure-bakim-r13/*.json, scripts/probe-bakim-r13{,b}.ts). Tur 12'den bu yana bakim kapsamını etkileyen tek kod değişikliği apps/web/src/components/data-table/mobile-cards.tsx (shell aksiyon oluğu). KAPANDI (dolaylı, shell shell-mobile-card-action-gutter-01 düzeltmesiyle): /bakim/is-emirleri @390 mobil kart rozet sağ kenarları [313,313,313,313,313,313] (Tur 12: [313,363,363,363,363,363]) → k5 4→5, toplam 59→60. AÇIK KALDI: bakim-oee-04 (P2, k9, ortak kpi-strip.tsx) — @390 KpiStripRow scrollWidth 792 > clientWidth 358 (5 karttan 2 tam görünür); /bakim/makineler'de 632 > 358 (4 karttan 2). bakim-oee-05 (P2, k6) — \"Hat bazlı OEE\" tablosunda ondalık kümeleri OEE {1,2}, Kullanılabilirlik {0,2}, Performans {1,2}, Kalite {2}; 4 yüzde sütununun 3'ü karışık. bakim-isemirleri-detay-14 (P2, k4) — kapanmış (done) iş emrinin geçmişinde \"Yapılıyor\" noktası hâlâ nabız atıyor (main içinde animationName=\"pulse\", 2s, 1 öğe; açık iş emrinde 0). Kod taraması TEMİZ: 7 rotanın tamamında hesaplanmış stilde transition-property:all / ≥300ms süre / ease-in ihlali 0; kaynakta transition-all / scale(0) / origin-* yok; `hover:` globals.css:10-16'da @media (hover:hover) and (pointer:fine) ile korunuyor. Boş durum 3 listede de doğrulandı (ikon + \"Eşleşen kayıt yok\" + \"Arama ya da filtreleri değiştirmeyi deneyin.\"). Satır hover rgba(0,0,0,0) → oklab(.955 …/0.5); satır focus-visible outline-2 -outline-offset-2 outline-ring. VERİ NOTU (tasarım bulgusu DEĞİL): /bakim/makineler \"Çalışma saati\" 36/36 satırda 0 sa; /bakim/oee KPI \"önceki dönem\" deltası \"— —\" (önceki 30 günlük pencerede oee_records yok); iş emri olay damgalarının tamamı 12:42 iken başlangıç 12:48 / bitiş 14:12 — ekran veriyi doğru basıyor, çelişki seed tarafında. KAPSAM NOTU: /operator bakim modülünün rota listesinde değil (uretim kapsamı), 1024×768 çekimi bu turda yapılmadı.",
+  "measuredAt": "2026-09-07T10:04:07.239Z",
   "routes": {
     "/bakim/makineler": {
-      "round": 12,
+      "round": 13,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -24,7 +24,7 @@
       ],
       "total": 59,
       "verdict": "Plantero",
-      "scoreNotes": "Tur 12 delta 0. Yeniden ölçüm (measure-bakim-r12/makineler-{1440,390}.json): satır 36,5–37px × 36 @13px, mobil kart 63,5px × 36, scrollWidth 1440=1440 / 390=390 (overflowX false), fontSizes {13:238, 11:110, 12:12}, distinctColors 17/15, h1 24px/600 (mobil 20px/600). 390px'te 44px altı tek öğe breadcrumb \"Makineler\" (span, aria-current) — dokunma hedefi değil. Boş durum doğrulandı (probe-bakim-r12k.ts: ikon + \"Eşleşen kayıt yok\" + \"Arama ya da filtreleri değiştirmeyi deneyin.\"). k9 4 kalır: bakim-oee-04 kapsamında ortak KpiStripRow @390 scrollWidth 632 > clientWidth 358 (4 karttan 2'si tam görünür). Toplam 59 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+      "scoreNotes": "Tur 13 delta 0 (59). Yeniden ölçüm (measure-bakim-r13/makineler-{1440,390}.json): satır 36,5–37px × 36 @13px, mobil kart 63,5px × 36, scrollWidth 1440=1440 / 390=390 (overflowX false), fontSizes {13:238, 11:110, 12:12}, distinctColors 17/15, h1 24px/600 (mobil 20px/600). 390px'te 44px altı tek öğe breadcrumb \"Makineler\" (span, aria-current) — dokunma hedefi değil. Boş durum doğrulandı (probe-bakim-r13b.ts). k9 4 kalır: bakim-oee-04 kapsamında ortak KpiStripRow @390 scrollWidth 632 > clientWidth 358 (4 karttan 2'si tam görünür, probe-bakim-r13.ts). Toplam 59 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
       "open": [],
       "closed": [
         {
@@ -128,7 +128,7 @@
       ]
     },
     "/bakim/planlar": {
-      "round": 12,
+      "round": 13,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -147,7 +147,7 @@
       ],
       "total": 60,
       "verdict": "Plantero",
-      "scoreNotes": "Tur 12 delta 0. Yeniden ölçüm: satır 36px × 12 @13px, mobil kart 63,5px × 12, scrollWidth 1440=1440 / 390=390 (overflowX false), fontSizes {13:94, 12:21, 11:14}, distinctColors 17/15, h1 24px/600 (mobil 20px/600), 390px'te 44px altı gerçek dokunma hedefi yok. Mobil kartların tamamında satır aksiyonu (…) render edildiği için rozet sütunu tırtıklı değil (is-emirleri'ndeki shell bulgusunun etkisi bu rotada yok). Boş durum doğrulandı. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
+      "scoreNotes": "Tur 13 delta 0 (60). Yeniden ölçüm: satır 36px × 12 @13px, mobil kart 63,5px × 12, scrollWidth 1440=1440 / 390=390 (overflowX false), fontSizes {13:94, 12:21, 11:14}, distinctColors 17/15, h1 24px/600 (mobil 20px/600), 390px'te 44px altı gerçek dokunma hedefi yok. Boş durum doğrulandı. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
       "open": [],
       "closed": [
         {
@@ -195,7 +195,7 @@
       ]
     },
     "/bakim/is-emirleri": {
-      "round": 12,
+      "round": 13,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -203,7 +203,7 @@
         5,
         5,
         5,
-        4,
+        5,
         5,
         5,
         5,
@@ -212,9 +212,9 @@
         5,
         5
       ],
-      "total": 59,
+      "total": 60,
       "verdict": "Plantero",
-      "scoreNotes": "Tur 12 delta 0. k5 4 kalır: mobil kart rozet sütunu hâlâ tırtıklı — satır aksiyonu YALNIZCA açık iş emrinde (MO-2026-000006) render edildiğinden o kartta rozet sağ kenarı diğer 5 karttan ~50px içeride (artifacts/screens/bakim-is-emirleri/mobile.png). Kök neden ORTAK bileşen (components/data-table/mobile-cards.tsx) → shell-mobile-card-action-gutter-01 (P2, shell.json Tur 25'te AÇIK); DESIGN-SCORECARD kural 5 gereği bu modülde bulgu açılmadı. Ölçümler: masaüstü satır 36px × 6, mobil kart 62–64,5px, scrollWidth 1440=1440 / 390=390 (overflowX false), h1 24px/600 (mobil 20px/600), distinctColors 25/23. Etkileşim doğrulandı: satır hover arka planı değişiyor, satır focus-visible 2px solid ring (outline-offset −2px), birincil buton / arama kutusu / filtre düğmesi odakta 3px ring-ring/50 (probe-bakim-r12h.ts odaklı-odaksız kırpma farkı) → k8 5. Boş durum: ikon + başlık + ipucu. Toplam 59 ≥ 57, açık P0/P1 yok → KAZANAN: Plantero.",
+      "scoreNotes": "Tur 13 delta (+1): k5 4→5. Gerekçe: shell-mobile-card-action-gutter-01 düzeltmesi (mobile-cards.tsx, commit 27f3d9a) yürürlükte — @390 mobil kart rozet sağ kenarları 6/6 kartta 313px (Tur 12: 5 kart 363, 1 kart 313); menüsüz kartlar gerçek butonla aynı kutuda görünmez yer tutucu alıyor, rozet sütunu artık tırtıklı değil (scripts/probe-bakim-r13.ts). Ölçümler: masaüstü satır 36px × 6, mobil kart 62–64,5px × 6, scrollWidth 1440=1440 / 390=390 (overflowX false), h1 24px/600 (mobil 20px/600), distinctColors 25/23. Etkileşim: satır hover rgba(0,0,0,0) → oklab(0.955 …/0.5), satır focus-visible outline-2 -outline-offset-2 outline-ring (probe-bakim-r13b.ts). Boş durum doğrulandı. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
       "open": [],
       "closed": [
         {
@@ -374,7 +374,7 @@
       ]
     },
     "/bakim/is-emirleri/[id]": {
-      "round": 12,
+      "round": 13,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -394,17 +394,18 @@
       "total": 60,
       "verdict": "Plantero",
       "sampleId": "4a9cca52-d4ec-4d48-ae31-4e8912f03da6 (MO-2026-000005)",
-      "scoreNotes": "Tur 12 delta (+1): k5 4→5. Gerekçe: bakim-isemirleri-detay-13 (P1) kapandı — scripts/probe-bakim-r12.ts ile 6/6 iş emrinde zaman çizgisi yaşam döngüsü sırasına monoton ve iki geçişte birebir aynı (deterministik); queries.ts getMaintenanceOrderEvents artık asc(at) + durum-rank CASE + asc(id) üçlü anahtarıyla sıralıyor. Yeni P2 (detay-14, nabız) kazanmayı engellemez ve k4'ün ölçüm maddelerini (nötr zemin, tek vurgu, durum renkleri anlam taşır, ≤4 ton) ihlal etmediği için k4 5 kalır — hareket kanalı kriter metninde ayrı bir alt ölçüm değil, bu yüzden puan düşürülmedi, bulgu listelendi. Ölçümler: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 20/19, fontSizes {13:44, 12:20, 11:12}, h1 24px/600 (mobil 20px/600). 390px'te 44px altı ölçülen öğeler gerçek dokunma hedefi DEĞİL: breadcrumb \"Detay\" (span, aria-current), disabled kontrol listesi kutuları (16px, salt okunur) ve satır içi \"Haftalık stick nozul temizliği\" bağlantısı (display:inline, 35,5px). Odak halkası doğrulandı (probe-bakim-r12h.ts: odaklı/odaksız kırpma bayt farkı) → k8 5. Toplam 60 ≥ 57, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+      "scoreNotes": "Tur 13 delta 0 (60). Kayıt: MO-2026-000001 / e310fac1-bb23-458d-8834-fc4cfbee0b9b (db:reset sonrası yeni id). Ölçümler: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 19/18, fontSizes {13:47, 12:24, 11:18}, h1 24px/600 (mobil 20px/600); 390px'te 44px altı tek öğe breadcrumb \"Detay\" (span). Zaman çizgisi sırası Bildirildi → Yapılıyor → Tamamlandı (monoton, Tur 12'de kapatılan detay-13 regresyona girmedi). AÇIK P2 detay-14 yeniden ölçüldü ve değişmedi: done iş emrinde animationName=\"pulse\" (2s) olan 1 öğe, açık (reported) iş emrinde 0 — kaynak order-timeline.tsx:19+:47 PULSE_STATUSES koşulu hâlâ olayın son olay / güncel durum olmasına bakmıyor. P2 kazanmayı engellemez → KAZANAN: Plantero.",
       "open": [
         {
           "id": "bakim-isemirleri-detay-14",
           "criterion": 4,
           "severity": "P2",
           "text": "Kapanmış (status=done) iş emrinin \"Olay geçmişi\" listesinde geçmişte kalmış \"Yapılıyor\" olayının noktası sonsuz nabız atıyor. Nabız hareketi \"şu anda sürüyor\" anlamı taşır; kapanmış bir kaydın ortasındaki tarihli olayda bu anlam yanlış ve sayfada duran tek sürekli hareket olduğu için gözü sürekli oraya çekiyor.",
-          "measure": "scripts/probe-bakim-r12i.ts (/bakim/is-emirleri/4a9cca52-…, 1440x900): main içinde animationName!==\"none\" olan tek öğe SPAN.absolute…size-2.5 → animationName \"pulse\", animationDuration 2s. Kayıt durumu \"Tamamlandı\" ve nabız atan olay listenin SON olayı değil (sıra: Planlandı → Yapılıyor → Tamamlandı). 6 iş emrinin 5'i done → 5/6 detay sayfasında aynı durum.",
+          "measure": "Tur 13 yeniden ölçüm (scripts/probe-bakim-r13.ts, 1440x900): MO-2026-000001 (status=done) detayında main içinde animationName!==\"none\" olan 1 öğe → SPAN.absolute…size-2.5 ring-4 ring-background bg-primary motion-safe:animate-pulse, animationName \"pulse\", 2s; olay sırası Bildirildi → Yapılıyor → Tamamlandı, nabız atan olay SON olay değil. Açık iş emrinde (MO-2026-000006, reported) animasyonlu öğe 0. Değişmedi.",
           "target": "order-timeline.tsx: nabız yalnızca olay hem listenin SONUNCUSU hem de iş emrinin güncel durumu in_progress iken uygulansın (ör. `pulse && isLast && currentStatus === \"in_progress\"`). Kabul: probe ile 5 \"Tamamlandı\" iş emrinin detayında animationName!==\"none\" öğe sayısı 0; \"Yapılıyor\" durumundaki bir iş emrinde 1.",
           "file": "apps/web/src/modules/maintenance/components/order-timeline.tsx:19 (PULSE_STATUSES) + :47",
-          "openedRound": 12
+          "openedRound": 12,
+          "lastMeasuredRound": 13
         }
       ],
       "closed": [
@@ -609,7 +610,7 @@
       ]
     },
     "/bakim/makineler/[id]": {
-      "round": 12,
+      "round": 13,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -629,7 +630,7 @@
       "total": 60,
       "verdict": "Plantero",
       "sampleId": "daa41905-b9ad-4454-8e79-ea1448c88af3 (MK-001)",
-      "scoreNotes": "Tur 12 delta 0 (MK-001 / daa41905-b9ad-4454-8e79-ea1448c88af3). Yeniden ölçüm: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 19/18, h1 24px/600 (mobil 20px/600), fontSizes {13:37, 14:8, 12:9, 11:9}, \"Son iş emirleri\" satırı 44px. Sekme şeridi mobilde yatay kaydırma + kenar soldurma; 390px'te 44px altı tek öğe breadcrumb \"Detay\" (span). Bu rotada KPI şeridi yok → k9 5. Boş bölüm metinleri yerinde (\"Duruş kaydı yok.\"), boş alanlar \"Boş alanları göster (4)\" ile varsayılan gizli. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
+      "scoreNotes": "Tur 13 delta 0 (60). Kayıt: MK-001 / e9446ff8-da45-418f-be58-5905fd4546c1 (db:reset sonrası yeni id). Ölçümler: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 19/18, h1 24px/600 (mobil 20px/600), fontSizes {13:37, 14:8, 12:9, 11:9}, \"Son iş emirleri\" satırı 44px. Sekme şeridi mobilde yatay kaydırma + kenar soldurma; 390px'te 44px altı tek öğe breadcrumb \"Detay\" (span). Bu rotada KPI şeridi yok → k9 5. Boş bölüm metinleri yerinde (\"Duruş kaydı yok.\"), boş alanlar \"Boş alanları göster (4)\" ile varsayılan gizli. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
       "open": [],
       "closed": [
         {
@@ -761,7 +762,7 @@
       ]
     },
     "/bakim/is-emirleri/yeni": {
-      "round": 12,
+      "round": 13,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -780,7 +781,7 @@
       ],
       "total": 60,
       "verdict": "Plantero",
-      "scoreNotes": "Tur 12 delta 0. Yeniden ölçüm: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 16/15, h1 24px/600 (mobil 20px/600), fontSizes {13:30, 14:4, 11:3}. 390px'te 44px altı iki ölçüm de gerçek dokunma hedefi DEĞİL: breadcrumb \"Yeni\" (span) ve Radix Select'in görsel dışı yerel <select>'i (1×1px, position:absolute, aria-hidden=\"true\", tabIndex=−1). Görünen form kontrollerinin hiçbiri 44px altında değil (probe-bakim-r12.ts formControls=[]). QR alanı otomatik odaklı ve odak halkası görünür. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
+      "scoreNotes": "Tur 13 delta 0 (60). Ölçümler: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 16/15, h1 24px/600 (mobil 20px/600), fontSizes {13:30, 14:4, 11:3}. 390px'te 44px altı iki ölçüm de gerçek dokunma hedefi DEĞİL: breadcrumb \"Yeni\" (span) ve Radix Select'in görsel dışı yerel <select>'i (1×1px, aria-hidden, tabIndex=−1). Görünen form kontrollerinin tamamı ≥36px (masaüstü) ve mobilde tek kolon + yapışkan eylem şeridi. QR alanı otomatik odaklı ve odak halkası görünür. Toplam 60 ≥ 57 → KAZANAN: Plantero.",
       "open": [],
       "closed": [
         {
@@ -871,7 +872,7 @@
       ]
     },
     "/bakim/oee": {
-      "round": 12,
+      "round": 13,
       "reference": "stripe",
       "referenceTotal": 56,
       "scores": [
@@ -890,27 +891,29 @@
       ],
       "total": 58,
       "verdict": "Plantero",
-      "scoreNotes": "Tur 12 delta (−1): k6 5→4. Gerekçe: YENİ bakim-oee-05 (P2) — kriter 6'nın \"birim/para tutarlı ondalık\" alt ölçümü doğrudan ihlal ediliyor; \"Hat bazlı OEE\" tablosunda 4 yüzde sütunundan 3'ü karışık ondalık basıyor (OEE {1,2}, Kullanılabilirlik {0,2}, Performans {1,2}) ve sağa hizalı tabular-nums sütunda virgül hizası kayıyor. Kriterin diğer alt ölçümleri geçiyor (tabular-nums var, sağ hizalı, birimli, sıfırlar sönük), bu yüzden 4 — 3 değil. k9 4 kalır: bakim-oee-04 yeniden ölçüldü, değişmedi (scrollWidth 792 > clientWidth 358, 5 karttan 2 tam görünür) + \"Hat bazlı OEE\" tablosu @390 yatay kaydırıyor (588 > 324, bilinçli scrollbar-thin scroll-fade-x deseni). Değişmeyen ölçümler: masaüstü scrollWidth 1440=1440, mobil 390=390 (overflowX false), tablo satırı 36px × 3, distinctColors 17/15, h1 24px/600 (mobil 20px/600), fontSizes {13:43, 11:38, 12:11}. Toplam 58 ≥ 56, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
+      "scoreNotes": "Tur 13 delta 0 (58). İki açık P2 yeniden ölçüldü, ikisi de DEĞİŞMEDİ: (a) bakim-oee-05 → k6 4 kalır, decimalsPerCol OEE {1,2} · Kullanılabilirlik {0,2} · Performans {1,2} · Kalite {2}; satırlar HAT3 %0,14/%100/%0,14/%3,33 · HAT2 %0,24/%99,48/%0,26/%6,63 · HAT1 %1,2/%99,38/%1,2/%9,97 (probe-bakim-r13.ts). (b) bakim-oee-04 → k9 4 kalır, @390 KpiStripRow scrollWidth 792 > clientWidth 358, 5 karttan 2 tam görünür. Değişmeyen ölçümler: masaüstü scrollWidth 1440=1440, mobil 390=390 (overflowX false), hat tablosu satırı 36px × 3, distinctColors 17/15, h1 24px/600 (mobil 20px/600). YANLIŞ ALARM (bulgu AÇILMADI): OEE trend grafiğinde \"Kalite\" ve \"Performans\" çizgileri gözle benzer görünüyor ama ölçümde ayrışıyorlar — dash 1px,3px vs 4px,3px ve alfa 0.4 vs 0.62 (oeeChartLines) → k5 5 kalır. Toplam 58 ≥ 56 (Stripe), hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero.",
       "open": [
         {
           "id": "bakim-oee-04",
           "criterion": 9,
           "severity": "P2",
           "text": "Mobilde 5 kartlık KPI şeridinde ilk ekranda yalnızca 2 kart tam görünüyor; 3. kart (\"Performans\") etiket ortasından kesik.",
-          "measure": "Tur 12 yeniden ölçüm (scripts/probe-bakim-r12.ts, 390x844): KpiStripRow scrollWidth 792 > clientWidth 358, 5 karttan tam görünen 2 — Tur 9/10/11 ile birebir aynı, değişmedi. Aynı bileşen /bakim/makineler @390'da scrollWidth 632 > clientWidth 358 (4 kart, tam görünen 2).",
+          "measure": "Tur 13 yeniden ölçüm (scripts/probe-bakim-r13.ts, 390x844): KpiStripRow scrollWidth 792 > clientWidth 358, 5 karttan tam görünen 2 — Tur 9/10/11/12 ile birebir aynı, değişmedi. Aynı bileşen /bakim/makineler @390'da scrollWidth 632 > clientWidth 358 (4 kart, tam görünen 2).",
           "target": "mobilde ya 2 sütunlu ızgara (2×2+1) ya da ilk ekranda en az 3 kartın tamamı görünsün",
           "file": "apps/web/src/components/kpi-strip.tsx (ortak bileşen — kök neden shell'e ait; burada yalnızca etkisi izleniyor)",
-          "openedRound": 3
+          "openedRound": 3,
+          "lastMeasuredRound": 13
         },
         {
           "id": "bakim-oee-05",
           "criterion": 6,
           "severity": "P2",
           "text": "\"Hat bazlı OEE\" tablosunda yüzde sütunları satırdan satıra farklı sayıda ondalık basıyor. Sağa hizalı tabular-nums bir sütunda ondalık virgülü hizası kayıyor: OEE sütunu %0,14 / %0,24 / %1,2, Kullanılabilirlik %100 / %99,48 / %99,38, Performans %0,14 / %0,26 / %1,2. Kök neden hücrelerin `formatPct(v)` çağırması; formatPct varsayılanı minimumFractionDigits 0 / maximumFractionDigits 2 (lib/format.ts:89-97) — \"en fazla 2\" olduğu için basamak sayısı değere göre 0–2 arasında salınıyor.",
-          "measure": "scripts/probe-bakim-r12b.ts (/bakim/oee, 1440x900): sütun bazında ondalık basamak kümesi → OEE {1,2}, Kullanılabilirlik {0,2}, Performans {1,2}, Kalite {2}. 4 yüzde sütununun 3'ü karışık. Satırlar: HAT3 %0,14/%100/%0,14/%3,33 · HAT2 %0,24/%99,48/%0,26/%6,63 · HAT1 %1,2/%99,38/%1,2/%9,97.",
+          "measure": "Tur 13 yeniden ölçüm (scripts/probe-bakim-r13.ts, 1440x900): decimalsPerCol → OEE {1,2}, Kullanılabilirlik {0,2}, Performans {1,2}, Kalite {2}. 4 yüzde sütununun 3'ü karışık — değişmedi. Kaynak doğrulandı: oee/page.tsx hat tablosunda 4 yüzde hücresi de formatPct() kullanıyor.",
           "target": "Sabit ondalıklı yerel bir biçimlendirici (ör. Intl.NumberFormat(\"tr-TR\",{style:\"percent\",minimumFractionDigits:2,maximumFractionDigits:2})) — ortak lib/format.ts DEĞİŞTİRİLMEDEN, /ihracat/kurlar'daki formatDailyChangePct deseniyle aynı. Kabul: probe-bakim-r12b.ts çıktısında 4 yüzde sütununun her birinde decimalsPerCol tek elemanlı olsun.",
           "file": "apps/web/src/app/(app)/bakim/oee/page.tsx:121-124 (hat tablosu) ve :158-159 (makine tablosu); biçimlendirici apps/web/src/lib/format.ts:89 formatPct",
-          "openedRound": 12
+          "openedRound": 12,
+          "lastMeasuredRound": 13
         }
       ],
       "closed": [

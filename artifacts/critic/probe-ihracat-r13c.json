@@ -1,0 +1,152 @@
+{
+ "kurlar": [
+  {
+   "tag": "BUTTON",
+   "label": "Bugünü çek",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "svg",
+   "label": "12.0618.0624.0630.0606.071",
+   "fv": true,
+   "outline": "5px/auto/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "none",
+   "border": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "tag": "INPUT",
+   "label": "Para birimi, kaynak ara…",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.9 0.004 286.3)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Para birimi",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Tarih",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.92 0.004 286.3)"
+  }
+ ],
+ "gtip": [
+  {
+   "tag": "INPUT",
+   "label": "SKU veya ürün adı ara…",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.9 0.004 286.3)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Eşleme",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Tip",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "SKU",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Ürün",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.92 0.004 286.3)"
+  }
+ ],
+ "detay": [
+  {
+   "tag": "BUTTON",
+   "label": "Gümrük bilgisini güncelle",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Yüklendi işaretle",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "İptal et",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "A",
+   "label": "İrsaliyeSevk edildiDN-2026",
+   "fv": true,
+   "outline": "1px/auto/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "none",
+   "border": "oklab(0.92 0.00112267 -0.00383922 / 0.7)"
+  },
+  {
+   "tag": "A",
+   "label": "SiparişSipariş onaylıSO-20",
+   "fv": true,
+   "outline": "1px/auto/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "none",
+   "border": "oklab(0.92 0.00112267 -0.00383922 / 0.7)"
+  },
+  {
+   "tag": "A",
+   "label": "İhracat sevkiyatıGümrükteE",
+   "fv": true,
+   "outline": "1px/auto/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "none",
+   "border": "oklab(0.21 0.00164376 -0.00577045 / 0.15)"
+  }
+ ]
+}

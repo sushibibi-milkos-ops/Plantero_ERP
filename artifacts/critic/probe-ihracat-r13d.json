@@ -1,0 +1,92 @@
+{
+ "390": {
+  "links": [
+   {
+    "href": "/depo/sevkiyat/e62f054d-d455-4191-977a-7",
+    "txt": "İrsaliyeSevk edildiDN-2026-000",
+    "w": 304.2,
+    "h": 124.5,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": "oklch(0.552 0.016 285.9)",
+    "innerDeco": "none"
+   },
+   {
+    "href": "/muhasebe/faturalar/24a1cc61-9be2-4f4b-a",
+    "txt": "FaturaKesildiINV-2026-00001215",
+    "w": 304.2,
+    "h": 124.5,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": "oklch(0.552 0.016 285.9)",
+    "innerDeco": "none"
+   },
+   {
+    "href": "/muhasebe/faturalar/24a1cc61-9be2-4f4b-a",
+    "txt": "INV-2026-000012",
+    "w": 137,
+    "h": 19.5,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": null,
+    "innerDeco": null
+   },
+   {
+    "href": "/depo/sevkiyat/e62f054d-d455-4191-977a-7",
+    "txt": "DN-2026-000020Sevk edildi",
+    "w": 332,
+    "h": 44,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": "oklch(0.55 0.16 152)",
+    "innerDeco": "underline"
+   }
+  ],
+  "bodyColor": "oklch(0.21 0.006 285.9)"
+ },
+ "1440": {
+  "links": [
+   {
+    "href": "/depo/sevkiyat/e62f054d-d455-4191-977a-7",
+    "txt": "İrsaliyeSevk edildiDN-2026-000",
+    "w": 176,
+    "h": 124.5,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": "oklch(0.552 0.016 285.9)",
+    "innerDeco": "none"
+   },
+   {
+    "href": "/muhasebe/faturalar/24a1cc61-9be2-4f4b-a",
+    "txt": "FaturaKesildiINV-2026-00001215",
+    "w": 176,
+    "h": 124.5,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": "oklch(0.552 0.016 285.9)",
+    "innerDeco": "none"
+   },
+   {
+    "href": "/muhasebe/faturalar/24a1cc61-9be2-4f4b-a",
+    "txt": "INV-2026-000012",
+    "w": 137,
+    "h": 19.5,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": null,
+    "innerDeco": null
+   },
+   {
+    "href": "/depo/sevkiyat/e62f054d-d455-4191-977a-7",
+    "txt": "DN-2026-000020Sevk edildi",
+    "w": 1126,
+    "h": 44,
+    "color": "oklch(0.21 0.006 285.9)",
+    "deco": "none",
+    "innerColor": "oklch(0.55 0.16 152)",
+    "innerDeco": "underline"
+   }
+  ],
+  "bodyColor": "oklch(0.21 0.006 285.9)"
+ }
+}

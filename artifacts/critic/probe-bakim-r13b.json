@@ -1,0 +1,82 @@
+{
+  "bos_makineler": {
+    "rows": 0,
+    "hasEmptyText": true,
+    "snippet": [
+      "Eşleşen kayıt yok",
+      "Arama ya da filtreleri değiştirmeyi deneyin."
+    ],
+    "svgs": 13
+  },
+  "bos_planlar": {
+    "rows": 0,
+    "hasEmptyText": true,
+    "snippet": [
+      "Eşleşen kayıt yok",
+      "Arama ya da filtreleri değiştirmeyi deneyin."
+    ],
+    "svgs": 14
+  },
+  "bos_isemirleri": {
+    "rows": 0,
+    "hasEmptyText": true,
+    "snippet": [
+      "Eşleşen kayıt yok",
+      "Arama ya da filtreleri değiştirmeyi deneyin."
+    ],
+    "svgs": 26
+  },
+  "rowHoverFocus": {
+    "before": "rgba(0, 0, 0, 0)"
+  },
+  "rowHoverAfter": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "focusRing": {
+    "tag": "A",
+    "label": "Plantero",
+    "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+    "outlineWidth": "0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0"
+  },
+  "mobilKartLinkBoyut": [
+    {
+      "tag": "LI",
+      "w": 358,
+      "h": 62
+    },
+    {
+      "tag": "LI",
+      "w": 358,
+      "h": 64.5
+    },
+    {
+      "tag": "LI",
+      "w": 358,
+      "h": 64.5
+    },
+    {
+      "tag": "LI",
+      "w": 358,
+      "h": 62
+    },
+    {
+      "tag": "LI",
+      "w": 358,
+      "h": 62
+    },
+    {
+      "tag": "LI",
+      "w": 358,
+      "h": 62
+    },
+    {
+      "tag": "LI",
+      "w": 0,
+      "h": 0
+    },
+    {
+      "tag": "LI",
+      "w": 0,
+      "h": 0
+    }
+  ]
+}
