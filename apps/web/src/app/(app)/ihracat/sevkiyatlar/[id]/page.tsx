@@ -234,10 +234,20 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
       {delivery ? (
         <div className="mt-6 rounded-lg border border-border/60 p-4">
           <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-semibold"><Package className="size-3.5 text-muted-foreground" /> Bağlı irsaliye</h3>
-          <div className="flex items-center justify-between text-[13px]">
-            <Link href={`/depo/sevkiyat/${delivery.id}`} className="font-mono hover:underline">{delivery.docNo}</Link>
+          {/* Tur 11 P1 ihracat-detay-22 kök neden düzeltmesi: sevkiyatı kaynak irsaliyeye bağlayan TEK
+              bağlantı 390px'te 109x20px'e sıkışıyordu (dikey dolgu yok, min-height yok) ve dokunmatikte
+              bağlantı olduğuna dair hiçbir işaret taşımıyordu (renk gövde metniyle aynı, tek işaret
+              hover:underline — globals.css:10'daki @custom-variant hover, (hover:hover) and (pointer:fine)
+              altında olduğu için dokunmatikte hiç tetiklenmiyor). Link artık satırın tamamını kaplıyor
+              (min-h-11 ile ≥44px dokunma hedefi) ve doküman no kalıcı olarak text-primary + alt çizgi ile
+              işaretli — hover'a bağlı tek işaret bırakılmadı. */}
+          <Link
+            href={`/depo/sevkiyat/${delivery.id}`}
+            className="-mx-1 flex min-h-11 items-center justify-between gap-2 rounded-md px-1 font-mono text-[13px] hover:bg-accent/40"
+          >
+            <span className="text-primary underline decoration-border underline-offset-2">{delivery.docNo}</span>
             <StatusBadge status={delivery.status} kind="delivery" />
-          </div>
+          </Link>
         </div>
       ) : null}
     </>

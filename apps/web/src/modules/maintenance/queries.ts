@@ -1,5 +1,5 @@
 import 'server-only';
-import { and, asc, desc, eq, gte, inArray, lte, ne } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, lte, ne, sql } from 'drizzle-orm';
 import { db, schema } from '@plantero/db';
 import { D, round2, sum } from '@plantero/core';
 import { businessDate, addDays } from '@plantero/core/dates';
@@ -278,14 +278,31 @@ export type MaintenanceOrderEvent = { id: string; at: Date; action: string; summ
  * güncellemeleri de 'update' yazıyor ama `before`/`after` alanlarını HİÇ doldurmuyor (yalnızca
  * `summary`); durum geçişleri ise her zaman `after` içinde bir `status` alanı taşıyor — bu filtre
  * checklist tıklamalarının zaman çizelgesini spamlamasını engeller.
+ *
+ * Kök neden düzeltmesi (Tur 11 P1 bakim-isemirleri-detay-13): seed tüm durum geçişlerini TEK
+ * transaction'da yazdığından `audit_log.at` aynı iş emri için birebir aynı zaman damgasını
+ * taşıyabiliyor (mikrosaniye çakışması). Yalnızca `orderBy(asc(at))` bu durumda satır sırasını
+ * Postgres'in fiziksel/heap sırasına bırakıyor — deterministik değil ve nedensel sırayla
+ * (bildirildi→planlandı→işleme alındı→...) örtüşmeyebiliyor. Çözüm: yaşam döngüsü durumuna göre
+ * ikincil, `id`'ye göre üçüncül deterministik sıralama anahtarı eklemek — "before"/"after" şeması
+ * değişmiyor, yeni tablo/kolon gerekmiyor.
  */
+const MAINTENANCE_STATUS_RANK = sql<number>`case ${auditLog.after}->>'status'
+  when 'reported' then 0
+  when 'planned' then 1
+  when 'in_progress' then 2
+  when 'waiting_parts' then 3
+  when 'done' then 4
+  when 'cancelled' then 5
+  else 6 end`;
+
 export async function getMaintenanceOrderEvents(orderId: string): Promise<MaintenanceOrderEvent[]> {
   const rows = await db
     .select({ id: auditLog.id, at: auditLog.at, action: auditLog.action, summary: auditLog.summary, after: auditLog.after, userName: users.fullName, userEmail: auditLog.userEmail })
     .from(auditLog)
     .leftJoin(users, eq(users.id, auditLog.userId))
     .where(and(eq(auditLog.tableName, 'maintenance_orders'), eq(auditLog.recordId, orderId)))
-    .orderBy(asc(auditLog.at));
+    .orderBy(asc(auditLog.at), asc(MAINTENANCE_STATUS_RANK), asc(auditLog.id));
 
   return rows
     .filter((r) => r.after && typeof r.after === 'object' && 'status' in (r.after as Record<string, unknown>))
