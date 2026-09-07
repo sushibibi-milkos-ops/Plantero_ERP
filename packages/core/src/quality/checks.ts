@@ -200,6 +200,25 @@ export type DecideInput = {
 export type DecideResult = { check: typeof qcChecks.$inferSelect; lot: typeof stockLots.$inferSelect; moveIds: string[] };
 
 /**
+ * I61 kök neden düzeltmesi (Tur 12, P0, veri-critic — CANLI OLARAK KANITLANDI): `recordResults()`
+ * kritik (`qc_template_items.is_critical=true`) bir kalem başarısız olduğunda `anyCritical=true`
+ * DÖNDÜRÜYORDU ama `decide()` bu bilgiyi hiçbir yere yazmıyor/okumuyordu — karar TAMAMEN UI'dan gelen
+ * `input.decision`e güveniyordu. `qc_checks`e kalıcı bir `any_critical_fail` alanı eklemek EN doğru
+ * çözüm olurdu ama şema dondurulmuş (`schemaRequests`e yazıldı) — bu yüzden burada `qc_check_results`
+ * (zaten kalıcı, `recordResults` tarafından yazılan) `qc_template_items.is_critical` ile CANLI olarak
+ * (karar anında, en güncel haliyle) yeniden birleştirilip okunur; `decide()` içindeki tek gerçek kaynak
+ * budur — dondurulmuş bir bayrağa değil, aynı `recordResults`in yazdığı satırlara bakar.
+ */
+export async function checkHasCriticalFail(tx: DbOrTx, checkId: string): Promise<boolean> {
+  const rows = await tx
+    .select({ isPassed: qcCheckResults.isPassed, isCritical: qcTemplateItems.isCritical })
+    .from(qcCheckResults)
+    .innerJoin(qcTemplateItems, eq(qcTemplateItems.id, qcCheckResults.templateItemId))
+    .where(and(eq(qcCheckResults.checkId, checkId), eq(qcCheckResults.isPassed, false), eq(qcTemplateItems.isCritical, true)));
+  return rows.length > 0;
+}
+
+/**
  * Kalite kararı — lotun karantina→serbest/red hareketini `postStockMove` ile üretir ve `qc_checks`
  * kaydını kapatır. Lotun eldeki fiziksel miktarı `stock_quants`tan okunur (tek satır beklenir —
  * kalite kararı verilecek bir lot normalde tek bir karantina lokasyonunda durur).
@@ -209,6 +228,16 @@ export async function decide(tx: DbOrTx, checkId: string, input: DecideInput, ct
   if (!check) throw new NotFoundError('Kalite kontrolü', checkId);
   if (check.result !== 'pending') throw new DomainError('QC_ALREADY_DECIDED', `${check.docNo} zaten karara bağlanmış (${check.result})`, { checkId });
   if (!check.lotId) throw new DomainError('QC_NO_LOT', `${check.docNo} bir lota bağlı değil — karar verilemez`, { checkId });
+
+  // I61 (P0) — kritik bir kalem BAŞARISIZ iken 'released' kararı sessizce kabul edilemez. İstisna/
+  // waiver ayrı, yetkilendirilmiş bir alan/aksiyon gerektirir (bugün yok) — burada sert engel.
+  if (input.decision === 'released' && (await checkHasCriticalFail(tx, checkId))) {
+    throw new DomainError(
+      'QC_CRITICAL_FAIL_BLOCKED',
+      `${check.docNo}: kritik bir kalite kalemi spesifikasyon dışı (başarısız) — bu lot serbest bırakılamaz. Önce reddedin ya da kritik kalemi gözden geçirin.`,
+      { checkId, lotId: check.lotId },
+    );
+  }
 
   const [lot] = await tx.select().from(stockLots).where(eq(stockLots.id, check.lotId)).for('update');
   if (!lot) throw new NotFoundError('Lot', check.lotId);

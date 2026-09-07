@@ -4,9 +4,11 @@ import { schema } from '@plantero/db';
 import { seedBase, withRollback, expectReject, ctx, d } from '../__tests__/helpers.js';
 import { createLot, postStockMove } from '../stock/ledger.js';
 import { createAndReceive } from '../stock/receipts.js';
-import { createIncomingCheck, recordResults, decide } from './checks.js';
+import { createIncomingCheck, recordResults, decide, checkHasCriticalFail } from './checks.js';
+import { createTemplate, updateTemplate } from './templates.js';
+import type { DomainError } from '../auth/errors.js';
 
-const { stockQuants, qcChecks, receipts } = schema;
+const { stockQuants, qcChecks, qcTemplateItems, receipts } = schema;
 
 async function makeQuarantineLot(tx: Parameters<typeof createLot>[0], base: Awaited<ReturnType<typeof seedBase>>, qty = 50) {
   const lot = await createLot(tx, { productId: base.raw.id, lotNo: `L-${base.s}-${Math.random().toString(36).slice(2, 6)}`, origin: 'receipt', unitCost: d(100), status: 'quarantine' }, ctx);
@@ -130,6 +132,112 @@ describe('quality/checks decide()', () => {
       await decide(tx, checkRows[1]!.id, { decision: 'released', releaseToLocationId: base.loc.hamR01.id }, ctx);
       const [doneReceipt] = await tx.select().from(receipts).where(eq(receipts.id, receipt.id));
       expect(doneReceipt?.status).toBe('done');
+    });
+  });
+});
+
+/**
+ * I61 (Tur 12, P0, veri-critic) regresyon testi — CANLI OLARAK KANITLANMIŞ açığın kalıcı testi:
+ * `decide()` artık kritik bir kalem BAŞARISIZ iken 'released' kararını `QC_CRITICAL_FAIL_BLOCKED`
+ * ile reddediyor; `checkHasCriticalFail` bu kararı `qc_check_results`/`qc_template_items`ten
+ * CANLI (dondurulmuş bir bayrağa değil) okuyor.
+ */
+describe('quality/checks — I61 kritik başarısızlıkta serbest bırakma engeli', () => {
+  it('kritik kalem başarısız (spesifikasyon dışı) iken decide(released) reddedilir; lot pending kalır', async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx);
+      const tpl = await createTemplate(tx, {
+        code: `AFLA-${base.s}`, name: 'Aflatoksin taraması', items: [
+          { name: 'Aflatoksin', kind: 'numeric', minValue: '0', maxValue: '5', isCritical: true },
+        ],
+      }, ctx);
+      const [item] = await tx.select().from(qcTemplateItems).where(eq(qcTemplateItems.templateId, tpl.id));
+      const lot = await createLot(tx, { productId: base.raw.id, lotNo: `L-${base.s}`, origin: 'receipt', unitCost: d(100), status: 'quarantine' }, ctx);
+      await postStockMove(tx, {
+        kind: 'receipt', productId: base.raw.id, lotId: lot.id, fromLocationId: base.loc.sup.id, toLocationId: base.loc.kar.id,
+        qty: d(20), uomId: base.kg.id, unitCost: d(100), refType: 'receipt', refId: lot.id, refNo: lot.lotNo,
+      }, ctx);
+      const check = await createIncomingCheck(tx, { productId: base.raw.id, lotId: lot.id, supplierId: base.supplier.id, templateId: tpl.id, kind: 'incoming' }, ctx);
+      // Aflatoksin 40, limit 5 — kritik kalem başarısız
+      const rr = await recordResults(tx, check.id, [{ templateItemId: item!.id, name: 'Aflatoksin', kind: 'numeric', valueNumeric: d(40) }], ctx);
+      expect(rr.allPassed).toBe(false);
+      expect(rr.anyCritical).toBe(true);
+      expect(await checkHasCriticalFail(tx, check.id)).toBe(true);
+
+      const err = await expectReject(tx, (sp) => decide(sp, check.id, { decision: 'released', releaseToLocationId: base.loc.hamR01.id }, ctx));
+      expect((err as DomainError).code).toBe('QC_CRITICAL_FAIL_BLOCKED');
+
+      // Engellenen karar hiçbir iz bırakmadı: check hâlâ pending, lot hâlâ quarantine, stok taşınmadı
+      const [afterCheck] = await tx.select().from(qcChecks).where(eq(qcChecks.id, check.id)).limit(1);
+      expect(afterCheck?.result).toBe('pending');
+      const [q] = await tx.select().from(stockQuants).where(eq(stockQuants.locationId, base.loc.hamR01.id));
+      expect(q === undefined || q.qty === '0.0000').toBe(true);
+
+      // reddetme yolu hâlâ çalışır — yalnızca 'released' engellenir
+      const res = await decide(tx, check.id, { decision: 'rejected', rejectToLocationId: base.loc.red.id, note: 'Aflatoksin limit aşımı' }, ctx);
+      expect(res.lot.status).toBe('rejected');
+      expect(res.check.result).toBe('failed');
+    });
+  });
+
+  it('kritik olmayan bir kalem başarısızken serbest bırakma engellenmez (yalnızca kritik kalemler bloklar)', async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx);
+      const tpl = await createTemplate(tx, {
+        code: `NEM-${base.s}`, name: 'Nem taraması', items: [
+          { name: 'Nem %', kind: 'numeric', minValue: '0', maxValue: '10', isCritical: false },
+        ],
+      }, ctx);
+      const [item] = await tx.select().from(qcTemplateItems).where(eq(qcTemplateItems.templateId, tpl.id));
+      const lot = await createLot(tx, { productId: base.raw.id, lotNo: `L-${base.s}`, origin: 'receipt', unitCost: d(100), status: 'quarantine' }, ctx);
+      await postStockMove(tx, {
+        kind: 'receipt', productId: base.raw.id, lotId: lot.id, fromLocationId: base.loc.sup.id, toLocationId: base.loc.kar.id,
+        qty: d(20), uomId: base.kg.id, unitCost: d(100), refType: 'receipt', refId: lot.id, refNo: lot.lotNo,
+      }, ctx);
+      const check = await createIncomingCheck(tx, { productId: base.raw.id, lotId: lot.id, supplierId: base.supplier.id, templateId: tpl.id, kind: 'incoming' }, ctx);
+      await recordResults(tx, check.id, [{ templateItemId: item!.id, name: 'Nem %', kind: 'numeric', valueNumeric: d(15) }], ctx);
+      expect(await checkHasCriticalFail(tx, check.id)).toBe(false);
+      const res = await decide(tx, check.id, { decision: 'released', releaseToLocationId: base.loc.hamR01.id }, ctx);
+      expect(res.lot.status).toBe('released');
+    });
+  });
+});
+
+/**
+ * I62 (Tur 12, P2, veri-critic) regresyon testi — kök neden düzeltmesi `templates.ts::updateTemplate`.
+ * CANLI OLARAK KANITLANDI: kayıtlı sonucu olan bir kaleme sahip şablon güncellenmeye çalışıldığında
+ * önceden ham bir Postgres FK ihlali hatasıyla çöküyordu (kalemler her güncellemede silinip yeni
+ * id'lerle yeniden yazılıyor); artık anlaşılır bir `DomainError('QC_TEMPLATE_ITEM_IN_USE', ...)` ile
+ * reddediliyor — bu da I62'nin tarif ettiği "sessiz drift"i kökten imkânsız kılıyor (kullanılan bir
+ * kalemin min/max'ı artık hiçbir şekilde değiştirilemiyor).
+ */
+describe('quality/templates — I62 kayıtlı sonucu olan şablon kalemi düzenlenemez', () => {
+  it('sonuç kaydedilmiş kaleme sahip şablon güncellemesi QC_TEMPLATE_ITEM_IN_USE ile reddedilir, ham FK hatası sızmaz', async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx);
+      const tpl = await createTemplate(tx, {
+        code: `TPL-${base.s}`, name: 'Test şablonu', items: [{ name: 'Aflatoksin', kind: 'numeric', minValue: '0', maxValue: '5', isCritical: true }],
+      }, ctx);
+      const [item] = await tx.select().from(qcTemplateItems).where(eq(qcTemplateItems.templateId, tpl.id));
+      const lot = await createLot(tx, { productId: base.raw.id, lotNo: `L-${base.s}`, origin: 'receipt', unitCost: d(100), status: 'quarantine' }, ctx);
+      await postStockMove(tx, {
+        kind: 'receipt', productId: base.raw.id, lotId: lot.id, fromLocationId: base.loc.sup.id, toLocationId: base.loc.kar.id,
+        qty: d(10), uomId: base.kg.id, unitCost: d(100), refType: 'receipt', refId: lot.id, refNo: lot.lotNo,
+      }, ctx);
+      const check = await createIncomingCheck(tx, { productId: base.raw.id, lotId: lot.id, supplierId: base.supplier.id, templateId: tpl.id, kind: 'incoming' }, ctx);
+      await recordResults(tx, check.id, [{ templateItemId: item!.id, name: 'Aflatoksin', kind: 'numeric', valueNumeric: d(2) }], ctx);
+
+      const err = await expectReject(tx, (sp) => updateTemplate(sp, tpl.id, {
+        code: tpl.code, name: tpl.name, items: [{ name: 'Aflatoksin', kind: 'numeric', minValue: '0', maxValue: '1', isCritical: true }],
+      }, ctx));
+      expect((err as DomainError).code).toBe('QC_TEMPLATE_ITEM_IN_USE');
+
+      // Kullanılmayan bir şablon hâlâ normal şekilde güncellenebilir (regresyon değil)
+      const tpl2 = await createTemplate(tx, {
+        code: `TPL2-${base.s}`, name: 'Kullanılmamış şablon', items: [{ name: 'Renk', kind: 'text' }],
+      }, ctx);
+      const updated = await updateTemplate(tx, tpl2.id, { code: tpl2.code, name: 'Kullanılmamış şablon (v2)', items: [{ name: 'Renk', kind: 'text' }] }, ctx);
+      expect(updated.name).toBe('Kullanılmamış şablon (v2)');
     });
   });
 });

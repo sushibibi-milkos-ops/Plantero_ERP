@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { CheckCircle2, XCircle, ClipboardCheck } from 'lucide-react';
+import { CheckCircle2, XCircle, ClipboardCheck, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Form, FormText, FormCheckbox, FieldLabel } from '@/components/form/fields';
 import { FormQty } from '@/components/form/money-qty';
@@ -47,6 +47,13 @@ export function CheckDetail({ detail, releaseLocations, rejectLocations }: { det
   const hasResults = results.length > 0;
 
   const resultsByItem = new Map(results.map((r) => [r.templateItemId ?? r.id, r]));
+  // I61 (Tur 12, P0, veri-critic — canlı kanıtlandı) kök neden düzeltmesi: `decide()` artık kritik
+  // başarısızlıkta 'released' kararını sunucu tarafında sert olarak reddediyor
+  // (`DomainError('QC_CRITICAL_FAIL_BLOCKED', ...)`); burada AYNI kuralı istemci tarafında da
+  // uygulayıp "Serbest Bırak" düğmesini önceden devre dışı bırakıyoruz — kullanıcı hatalı bir tıklamayı
+  // hiç deneyemez, sunucu hatası (toast) yerine net bir uyarı görür.
+  const isCriticalById = new Map((template?.items ?? []).map((ti) => [ti.id, ti.isCritical]));
+  const anyCriticalFail = results.some((r) => r.isPassed === false && r.templateItemId && isCriticalById.get(r.templateItemId));
   // Tur 1 P1 kalite-kontroller-id-01: okuma listesindeki sayısal sonuç, şablon kaleminin birimiyle
   // birlikte `formatQty` ile basılsın — ham `qc_check_results.value_numeric` (numeric(18,4)) DB
   // string'i ("14.2000") değil.
@@ -227,13 +234,19 @@ export function CheckDetail({ detail, releaseLocations, rejectLocations }: { det
         <div className="rounded-xl border border-border/60 p-4">
           <h2 className="mb-4 text-sm font-medium">Karar</h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="space-y-3 rounded-lg border border-success/30 bg-success/[0.03] p-3">
+            <div className={`space-y-3 rounded-lg border p-3 ${anyCriticalFail ? 'border-destructive/30 bg-destructive/[0.03]' : 'border-success/30 bg-success/[0.03]'}`}>
               <FieldLabel htmlFor="release-loc">Serbest bırakma lokasyonu</FieldLabel>
-              <Select value={releaseLocationId} onValueChange={setReleaseLocationId}>
+              <Select value={releaseLocationId} onValueChange={setReleaseLocationId} disabled={anyCriticalFail}>
                 <SelectTrigger id="release-loc" className="w-full data-[size=default]:h-11 md:data-[size=default]:h-9"><SelectValue placeholder="Lokasyon seçin" /></SelectTrigger>
                 <SelectContent>{releaseLocations.map((l) => <SelectItem key={l.id} value={l.id}>{l.code} — {l.name}</SelectItem>)}</SelectContent>
               </Select>
-              <Button type="button" className="w-full" disabled={decisionBusy !== null || !releaseLocationId} onClick={() => decide('released')}>
+              {anyCriticalFail ? (
+                <p className="flex items-start gap-1.5 text-[13px] text-destructive">
+                  <ShieldAlert className="mt-0.5 size-3.5 shrink-0" />
+                  Kritik bir kalite kalemi spesifikasyon dışı — bu lot serbest bırakılamaz, yalnızca reddedilebilir.
+                </p>
+              ) : null}
+              <Button type="button" className="w-full" disabled={decisionBusy !== null || !releaseLocationId || anyCriticalFail} onClick={() => decide('released')}>
                 {decisionBusy === 'released' ? '…' : <><CheckCircle2 className="size-4" /> Serbest Bırak</>}
               </Button>
             </div>
