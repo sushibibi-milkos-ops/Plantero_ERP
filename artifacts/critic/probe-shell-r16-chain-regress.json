@@ -1,0 +1,32 @@
+{
+  "/satis/siparisler/7b2b1226-6d75-495f-9df1-33099a7a8753": [],
+  "/muhasebe/faturalar/2b2f74d4-2c97-458c-822b-6da32cbe3e97": [
+    {
+      "x": 264,
+      "label": "Satın alma siparişi",
+      "docNo": "PO-2026-000016"
+    },
+    {
+      "x": 472,
+      "label": "Mal kabul",
+      "docNo": "GR-2026-000014"
+    },
+    {
+      "x": 680,
+      "label": "Fatura",
+      "docNo": "PINV-2026-000017"
+    }
+  ],
+  "/depo/sevkiyat/67828f57-bc05-45df-8186-545ad982e4b5": [
+    {
+      "x": 264,
+      "label": "Sipariş",
+      "docNo": "SO-2026-000032"
+    },
+    {
+      "x": 472,
+      "label": "İrsaliye",
+      "docNo": "DN-2026-000029"
+    }
+  ]
+}

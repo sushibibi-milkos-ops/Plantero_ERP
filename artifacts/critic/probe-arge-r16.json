@@ -1,0 +1,585 @@
+{
+ "projeler_1440": {
+  "h1Offset": 24,
+  "theadOffset": 154,
+  "firstRowViewport": 238,
+  "firstRowOffsetInMain": 190,
+  "rowHeight": 36,
+  "money": [
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   }
+  ],
+  "hedefKelimesi": false,
+  "filledAccentButtons": [
+   {
+    "t": "Yeni proje",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 114,
+    "h": 36
+   }
+  ]
+ },
+ "projeler_1440_hoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+ "projeler_1440_empty": {
+  "text": "Ar-Ge ProjeleriTrello mantığı kanban board, versiyonlu deneme reçetesi ve canlı maliyet simülasyonu Yeni projeDurum0 kayıtKodProjeDurumÜrün / SKUBirim maliyetSahibiLansmanEşleşen kayıt yokArama ya da filtreleri değiştirm",
+  "svg": 16
+ },
+ "projeler_1440_focus_BUTTON": {
+  "tag": "BUTTON",
+  "t": "Sahibi",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "outlineOffset": "0px",
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0"
+ },
+ "projeler_390": {
+  "h1Offset": 16,
+  "theadOffset": -48,
+  "firstRowViewport": 0,
+  "firstRowOffsetInMain": -48,
+  "rowHeight": 0,
+  "money": [
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   }
+  ],
+  "hedefKelimesi": false,
+  "filledAccentButtons": [
+   {
+    "t": "Yeni proje",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 358,
+    "h": 44
+   }
+  ]
+ },
+ "receteler_1440": {
+  "h1Offset": 24,
+  "theadOffset": 124,
+  "firstRowViewport": 208,
+  "firstRowOffsetInMain": 160,
+  "rowHeight": 36,
+  "money": [
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   }
+  ],
+  "hedefKelimesi": false,
+  "filledAccentButtons": []
+ },
+ "receteler_1440_hoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+ "receteler_1440_empty": {
+  "text": "Deneme ReçeteleriDurum0 kayıtReçeteProjeVersiyonDurumBirim maliyetVersiyonlarDevrolmuş BOMEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svg": 13
+ },
+ "receteler_1440_focus_BUTTON": {
+  "tag": "BUTTON",
+  "t": "Devrolmuş BOM",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "outlineOffset": "0px",
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0"
+ },
+ "receteler_1440_focus_TR": {
+  "tag": "TR",
+  "t": "Oat Barista Reçetesi",
+  "outline": "oklch(0.55 0.16 152) solid 2px",
+  "outlineOffset": "-2px",
+  "boxShadow": "none"
+ },
+ "receteler_390": {
+  "h1Offset": 16,
+  "theadOffset": -48,
+  "firstRowViewport": 0,
+  "firstRowOffsetInMain": -48,
+  "rowHeight": 0,
+  "money": [
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": null
+   }
+  ],
+  "hedefKelimesi": false,
+  "filledAccentButtons": []
+ },
+ "precete_1440": {
+  "filledAccentCount": 2,
+  "filled": [
+   {
+    "t": "Yeni deneme reçetesi",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 186,
+    "h": 32
+   },
+   {
+    "t": "Onaya gönder",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 136,
+    "h": 32
+   }
+  ],
+  "gaps": [
+   {
+    "value": "0,35",
+    "prefRight": 1310.9,
+    "digitX": 1359,
+    "gap": 48.1
+   },
+   {
+    "value": "38,00",
+    "prefRight": 1076.7,
+    "digitX": 1119.4,
+    "gap": 42.7
+   }
+  ],
+  "readonlyMoney": [
+   {
+    "t": "₺31,92",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺28,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺5,81",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺120,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺2,40",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺15,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺0,03",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺22,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺22,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺30,24",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺31,92",
+    "fvn": "tabular-nums",
+    "align": "right"
+   }
+  ],
+  "fireVisible": [
+   {
+    "t": "%14",
+    "w": 25,
+    "h": 14
+   },
+   {
+    "t": "Verim %",
+    "w": 44,
+    "h": 17
+   },
+   {
+    "t": "Fire %",
+    "w": 64,
+    "h": 18
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   }
+  ],
+  "srFire": [
+   "Fire %",
+   "Fire %",
+   "Fire %",
+   "Fire %"
+  ],
+  "hedefText": true
+ },
+ "precete_390": {
+  "filledAccentCount": 1,
+  "filled": [
+   {
+    "t": "Onaya gönder",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 44,
+    "h": 44
+   }
+  ],
+  "gaps": [
+   {
+    "value": "0,35",
+    "prefRight": 218.7,
+    "digitX": 327,
+    "gap": 108.3
+   },
+   {
+    "value": "38,00",
+    "prefRight": 250.7,
+    "digitX": 269.4,
+    "gap": 18.7
+   }
+  ],
+  "readonlyMoney": [
+   {
+    "t": "₺31,92",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺28,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺5,81",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺2,40",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺120,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺0,03",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺15,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺22,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺22,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺30,24",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺31,92",
+    "fvn": "tabular-nums",
+    "align": "right"
+   }
+  ],
+  "fireVisible": [
+   {
+    "t": "%14",
+    "w": 25,
+    "h": 14
+   },
+   {
+    "t": "Verim %",
+    "w": 44,
+    "h": 14
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Fire %",
+    "w": 1,
+    "h": 1
+   }
+  ],
+  "srFire": [
+   "Fire %",
+   "Fire %",
+   "Fire %",
+   "Fire %"
+  ],
+  "hedefText": true
+ },
+ "board_1440": {
+  "scrollers": [
+   {
+    "sel": "scrollbar-thin scroll-fade-x flex h-[cal",
+    "sw": 1864,
+    "cw": 1152
+   }
+  ],
+  "filledAccent": []
+ },
+ "board_390": {
+  "scrollers": [
+   {
+    "sel": "scrollbar-thin mb-2 flex items-center ga",
+    "sw": 454,
+    "cw": 358
+   },
+   {
+    "sel": "scrollbar-thin scroll-fade-x flex h-[cal",
+    "sw": 1864,
+    "cw": 358
+   }
+  ],
+  "filledAccent": []
+ }
+}

@@ -1,0 +1,167 @@
+{
+  "empty": {
+    "sevkiyatlar": {
+      "rows": 0,
+      "tailText": [
+        "\t",
+        "Oluşturma",
+        "\t",
+        "Tutar (₺)",
+        "Eşleşen kayıt yok",
+        "Arama ya da filtreleri değiştirmeyi deneyin."
+      ],
+      "svgBelow300": 11
+    },
+    "belgeler": {
+      "rows": 0,
+      "tailText": [
+        "\t",
+        "Durum",
+        "\t",
+        "Eylemler",
+        "Eşleşen kayıt yok",
+        "Arama ya da filtreleri değiştirmeyi deneyin."
+      ],
+      "svgBelow300": 5
+    },
+    "kurlar": {
+      "rows": 0,
+      "tailText": [
+        "\t",
+        "Günlük değişim",
+        "\t",
+        "Kaynak",
+        "Eşleşen kayıt yok",
+        "Arama ya da filtreleri değiştirmeyi deneyin."
+      ],
+      "svgBelow300": 13
+    },
+    "gtip": {
+      "rows": 0,
+      "tailText": [
+        "\t",
+        "Tip",
+        "\t",
+        "GTİP",
+        "Eşleşen kayıt yok",
+        "Arama ya da filtreleri değiştirmeyi deneyin."
+      ],
+      "svgBelow300": 10
+    }
+  },
+  "focus": [
+    {
+      "tag": "A",
+      "label": "Plantero",
+      "visible": true,
+      "outline": "0px none",
+      "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "A",
+      "label": "Kokpit",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Bildirimler",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Ana Veri",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Depo",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Üretim",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Satış & CRM",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Satın Alma",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Kalite",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Muhasebe",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "Finans",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "BUTTON",
+      "label": "İhracat",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "A",
+      "label": "Sevkiyatlar",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    },
+    {
+      "tag": "A",
+      "label": "Belgeler",
+      "visible": true,
+      "outline": "1px auto",
+      "ring": "none",
+      "border": "oklch(0.92 0.004 286.3)"
+    }
+  ],
+  "closedFaturaTouch": []
+}
