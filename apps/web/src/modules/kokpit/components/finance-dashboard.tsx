@@ -89,7 +89,16 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
                 "flex h-11 …">` idi — href taşımıyordu (tıklanamaz) ve 44px, aynı viewport'un sağ
                 kolonundaki "Geciken alacak" (`RowLink`, 40px, tıklanabilir) ile aynı bilgi sınıfı
                 olduğu halde görsel/etkileşim olarak ayırt edilemiyordu. `RowLink`'e taşındı: satır
-                40px, kendi kaydına link, hover/active/focus dili diğer tüm listelerle birebir. */}
+                40px, kendi kaydına link, hover/active/focus dili diğer tüm listelerle birebir.
+                Kök neden (Tur 7 P1 kokpit-fin-recon-discriminator-05): satır yalnızca ad+tutar
+                taşıyordu — 8 kaydın 3'ü aynı karşı taraf+tutar olduğunda (ör. üç "Trendyol Pazaryeri
+                ₺5.000,00") satırlar birbirinden AYIRT EDİLEMİYORDU, oysa satırın arkasındaki karara
+                (öneriyi onayla/reddet) asıl yön veren AI güven skoru (0,15-0,90 arası) hiç
+                gösterilmiyordu. Sıralama artık DB'de güven DESC (kpis.ts) — en güvenilir öneri
+                başta; satıra da üçüncü alan olarak güven yüzdesi eklendi (muhasebe modülündeki
+                `reconciliation-history-table.tsx`/`approval-queue.tsx` ile AYNI biçim:
+                `%{Math.round(confidence*100)}`, tabular-nums, muted). Satır yüksekliği (RowLink, 40px)
+                DEĞİŞMEDİ — üçüncü alan mevcut `shrink-0` grubuna eklendi, satır hâlâ tek satır. */}
             {reconciliationQueueItems.length === 0 ? (
               // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
               <EmptyState
@@ -108,6 +117,7 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
                   <li key={r.id}>
                     <RowLink href="/muhasebe/mutabakat">
                       <span className="min-w-0 flex-1 truncate">{r.partnerName ?? r.counterpartyName ?? r.description}</span>
+                      <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">%{Math.round(Number(r.confidence) * 100)}</span>
                       <MoneyCell value={r.amount} className="shrink-0" />
                     </RowLink>
                   </li>

@@ -469,7 +469,11 @@ export async function getFinanceCards(tx: DbOrTx): Promise<FinanceCards> {
       .innerJoin(bankTransactions, eq(bankTransactions.id, reconciliationMatches.bankTransactionId))
       .leftJoin(partners, eq(partners.id, reconciliationMatches.partnerId))
       .where(eq(reconciliationMatches.status, 'suggested'))
-      .orderBy(desc(bankTransactions.txDate))
+      // Kök neden (Tur 7 P1 kokpit-fin-recon-discriminator-05): sıralama yalnızca işlem tarihine
+      // göreydi ve kuyruktaki kayıtların tümü aynı gün olduğunda (2026-09-06) sıra fiilen rastgele
+      // kalıyordu — %90 güvenli bir öneri ile %15 güvenli bir öneri ekranda aynı ağırlıkta
+      // görünüyordu. En güvenilir öneri (kullanıcının onaylaması en olası olan) artık listenin başında.
+      .orderBy(desc(reconciliationMatches.confidence), desc(bankTransactions.txDate))
       .limit(8),
     getOverdueReceivablesSummary(tx),
     tx.select().from(vatPeriods).orderBy(desc(vatPeriods.period)).limit(1),

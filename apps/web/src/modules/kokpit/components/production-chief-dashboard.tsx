@@ -7,7 +7,7 @@ import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
-import { Section, RowLink, DashboardGrid, ProductionLineRow, StatStrip } from './shared';
+import { Section, Row, RowLink, DashboardGrid, ProductionLineRow, StatStrip } from './shared';
 
 const SCRAP_REASON_LABEL: Record<string, string> = {
   spill: 'Döküm/sızma', burnt: 'Yanma', contamination: 'Kontaminasyon', packaging: 'Ambalaj', startup: 'Başlangıç fire', other: 'Diğer',
