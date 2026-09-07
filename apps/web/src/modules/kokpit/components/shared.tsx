@@ -209,7 +209,11 @@ export function StatStrip({ items, className, divider = true }: { items: StatStr
         const zero = it.valueClassName === undefined && isZeroValue(it.value);
         const inner = (
           <>
-            {it.top ? <div className="truncate text-[10px] text-muted-foreground">{it.top}</div> : null}
+            {/* tabular-nums (Tur 9 P2 kokpit-meta-tabular-08, kriter 6): `top` yuvası rakam taşıyan
+                dönem etiketleri de basar (ör. finance-dashboard.tsx "Nakit projeksiyonu" → "Eylül
+                2026") — altındaki `label` yuvası aynı sınıf sorunu için Tur 3'te düzeltilmişti
+                (yukarıdaki yorum), `top` gözden kaçmıştı. Rakam içermeyen üst etiketlerde etkisiz. */}
+            {it.top ? <div className="truncate text-[10px] text-muted-foreground tabular-nums">{it.top}</div> : null}
             <div className={cn('text-[15px] font-semibold tabular-nums', it.top && 'mt-0.5', zero && 'text-muted-foreground/70', it.valueClassName)}>{it.value}</div>
             {/* Kök neden (Tur 3 P2 kokpit-fin-strip-label-tabular-01): alttaki `label` yuvası düz metin
                 ("0-30 gün") taşıyabildiği gibi Nakit projeksiyonu'nda para metni de taşıyor
@@ -308,7 +312,9 @@ export function OverdueTop5List({ items, href }: { items: { id: string; partnerN
           <RowLink href={href}>
             <span className="min-w-0 flex-1 truncate">{inv.partnerName}</span>
             <span className="flex shrink-0 items-center justify-between gap-3 sm:contents">
-              <span className="text-xs text-muted-foreground">{inv.daysOverdue} gün</span>
+              {/* tabular-nums (Tur 9 P2 kokpit-meta-tabular-08, kriter 6): gecikme günü de diğer
+                  rakam taşıyan metinler gibi eş genişlikli basılmalı. */}
+              <span className="text-xs text-muted-foreground tabular-nums">{inv.daysOverdue} gün</span>
               <MoneyCell value={inv.residual} />
             </span>
           </RowLink>

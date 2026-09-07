@@ -126,7 +126,9 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
                         <span className="font-medium">{d.lineName}</span>
                         <span className="text-muted-foreground"> · {DOWNTIME_REASON_LABEL[d.reason] ?? d.reason}</span>
                       </span>
-                      <span className="shrink-0 text-xs text-muted-foreground">
+                      {/* tabular-nums (Tur 9 P2 kokpit-meta-tabular-08, kriter 6): duruş süresi
+                          (dk) de diğer rakamlar gibi eş genişlikli basılmalı. */}
+                      <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                         {d.ongoing ? <StatusBadge status="in_progress" label="Devam ediyor" tone="warning" /> : `${d.minutes} dk`}
                       </span>
                     </Row>

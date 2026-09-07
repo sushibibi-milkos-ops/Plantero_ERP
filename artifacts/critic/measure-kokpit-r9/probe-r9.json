@@ -66,11 +66,9 @@
         "rowCount": 8,
         "hMin": 40,
         "hMax": 41,
-        "dupes": [
-          "Satış Sorumlusu · satis@plantero.local giriş yaptı2 dakika önce"
-        ],
-        "distinctTexts": 7,
-        "rightSpread": null
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": 0
       },
       {
         "title": "Banka",
@@ -152,27 +150,20 @@
     ],
     "numCount": 28,
     "numNonTab": 0,
-    "digitLeaves": 74,
-    "digitNonTab": 18,
+    "digitLeaves": 79,
+    "digitNonTab": 11,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Genel Müdür",
       "%0,2 tamamlandı",
       "23 gün kaldı · günlük ₺67.689 gerekiyor",
-      "2 dakika önce",
-      "2 dakika önce",
-      "2 dakika önce",
-      "2 dakika önce",
-      "2 dakika önce",
-      "· 2 kez",
-      "2 dakika önce",
-      "2 dakika önce",
-      "· 3 kez",
-      "2 dakika önce",
-      "1 açık iş emri",
-      "16 gün",
-      "3 gün",
-      "37 gün",
-      "2 gün"
+      "· 7 kez",
+      "· Ar-Ge reçetesi üretim BOM'una devredil",
+      "· Reçete versiyonu onaya gönderildi: v2",
+      "· Reçete versiyonu onaya gönderildi: v1",
+      "· Arıza bildirildi MO-2026-000006: Silin",
+      "· İş emri MO-2026-000005 tamamlandı (0 d",
+      "· İş emri MO-2026-000005 işleme alındı",
+      "1 açık iş emri"
     ],
     "touchSmall": [
       {
@@ -246,12 +237,12 @@
         "h": 40
       },
       {
-        "t": "OP-304030000-A3 günAlkalize Ka",
+        "t": "OP-302020000-A3 günstevya",
         "w": 566,
         "h": 40
       },
       {
-        "t": "OP-302020000-A3 günstevya",
+        "t": "OP-304030000-A3 günAlkalize Ka",
         "w": 566,
         "h": 40
       },
@@ -375,7 +366,7 @@
         "hMax": 61,
         "dupes": [],
         "distinctTexts": 8,
-        "rightSpread": null
+        "rightSpread": 0
       },
       {
         "title": "Banka",
@@ -461,27 +452,20 @@
     ],
     "numCount": 28,
     "numNonTab": 0,
-    "digitLeaves": 74,
-    "digitNonTab": 18,
+    "digitLeaves": 79,
+    "digitNonTab": 11,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Genel Müdür",
       "%0,2 tamamlandı",
       "23 gün kaldı · günlük ₺67.689 gerekiyor",
       "· 7 kez",
-      "2 dakika önce",
-      "2 dakika önce",
-      "2 dakika önce",
-      "2 dakika önce",
-      "· 2 kez",
-      "2 dakika önce",
-      "3 dakika önce",
-      "· 3 kez",
-      "3 dakika önce",
-      "1 açık iş emri",
-      "16 gün",
-      "3 gün",
-      "37 gün",
-      "2 gün"
+      "· Ar-Ge reçetesi üretim BOM'una devredil",
+      "· Reçete versiyonu onaya gönderildi: v2",
+      "· Reçete versiyonu onaya gönderildi: v1",
+      "· Arıza bildirildi MO-2026-000006: Silin",
+      "· İş emri MO-2026-000005 tamamlandı (0 d",
+      "· İş emri MO-2026-000005 işleme alındı",
+      "1 açık iş emri"
     ],
     "touchSmall": [],
     "empties": [
@@ -865,17 +849,10 @@
     "numCount": 18,
     "numNonTab": 0,
     "digitLeaves": 57,
-    "digitNonTab": 11,
+    "digitNonTab": 4,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Muhasebe / ",
-      "16 gün",
-      "3 gün",
-      "37 gün",
-      "2 gün",
       "Nakit projeksiyonu (3 ay)",
-      "Eylül 2026",
-      "Ekim 2026",
-      "Kasım 2026",
       "%0,2 tamamlandı",
       "23 gün kaldı · günlük ₺67.689 gerekiyor"
     ],
@@ -1117,17 +1094,10 @@
     "numCount": 18,
     "numNonTab": 0,
     "digitLeaves": 57,
-    "digitNonTab": 11,
+    "digitNonTab": 4,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Muhasebe / ",
-      "16 gün",
-      "3 gün",
-      "37 gün",
-      "2 gün",
       "Nakit projeksiyonu (3 ay)",
-      "Eylül 2026",
-      "Ekim 2026",
-      "Kasım 2026",
       "%0,2 tamamlandı",
       "23 gün kaldı · günlük ₺67.689 gerekiyor"
     ],
@@ -1201,26 +1171,11 @@
     "numCount": 30,
     "numNonTab": 0,
     "digitLeaves": 47,
-    "digitNonTab": 18,
+    "digitNonTab": 3,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Satış özeti",
       "En çok satan 5 (son 30 gün)",
-      "1",
-      "2",
-      "3",
-      "Badem İçeceği 1 Litrelik UHT",
-      "4",
-      "5",
-      "07.09.2026",
-      "06.09.2026",
-      "02.09.2026",
-      "01.09.2026",
-      "01.09.2026",
-      "01.09.2026",
-      "31.08.2026",
-      "30.08.2026",
-      "29.08.2026",
-      "29.08.2026"
+      "Badem İçeceği 1 Litrelik UHT"
     ],
     "touchSmall": [
       {
@@ -1373,26 +1328,11 @@
     "numCount": 30,
     "numNonTab": 0,
     "digitLeaves": 47,
-    "digitNonTab": 18,
+    "digitNonTab": 3,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Satış özeti",
       "En çok satan 5 (son 30 gün)",
-      "1",
-      "2",
-      "3",
-      "Badem İçeceği 1 Litrelik UHT",
-      "4",
-      "5",
-      "07.09.2026",
-      "06.09.2026",
-      "02.09.2026",
-      "01.09.2026",
-      "01.09.2026",
-      "01.09.2026",
-      "31.08.2026",
-      "30.08.2026",
-      "29.08.2026",
-      "29.08.2026"
+      "Badem İçeceği 1 Litrelik UHT"
     ],
     "touchSmall": [],
     "empties": []
@@ -1440,7 +1380,7 @@
         "hMax": 41,
         "dupes": [],
         "distinctTexts": 4,
-        "rightSpread": null
+        "rightSpread": 0
       },
       {
         "title": "Son iş emirleri",
@@ -1471,16 +1411,13 @@
     "numCount": 8,
     "numNonTab": 0,
     "digitLeaves": 18,
-    "digitNonTab": 9,
+    "digitNonTab": 6,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Üretim şefi",
       "Fire oranı (7g)",
       "1 açık iş emri",
       "Fire kırılımı (7 gün)",
       "Son 7 günde fire kaydı yok",
-      "45 dk",
-      "90 dk",
-      "30 dk",
       "%100 Oat Spredable"
     ],
     "touchSmall": [
@@ -1568,7 +1505,7 @@
         "hMax": 64.5,
         "dupes": [],
         "distinctTexts": 4,
-        "rightSpread": null
+        "rightSpread": 0
       },
       {
         "title": "Son iş emirleri",
@@ -1603,16 +1540,13 @@
     "numCount": 8,
     "numNonTab": 0,
     "digitLeaves": 18,
-    "digitNonTab": 9,
+    "digitNonTab": 6,
     "digitNonTabSample": [
       "7 Eylül 2026 · Tire tesisi · Üretim şefi",
       "Fire oranı (7g)",
       "1 açık iş emri",
       "Fire kırılımı (7 gün)",
       "Son 7 günde fire kaydı yok",
-      "45 dk",
-      "90 dk",
-      "30 dk",
       "%100 Oat Spredable"
     ],
     "touchSmall": [],

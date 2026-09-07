@@ -75,7 +75,9 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
               <StatStrip
                 divider
                 items={[
-                  { key: 'period', value: periodLabel(vat.period), label: 'Dönem', valueClassName: 'text-[13px]' },
+                  // tabular-nums (Tur 9 P2 kokpit-meta-tabular-08, kriter 6): dönem etiketi de yıl
+                  // rakamını taşıyor, diğer StatStrip değerleriyle aynı rakam davranışını izlemeli.
+                  { key: 'period', value: periodLabel(vat.period), label: 'Dönem', valueClassName: 'text-[13px] tabular-nums' },
                   { key: 'payable', value: formatMoney(vat.payable, 'TRY', { digits: 0 }), label: 'Ödenecek' },
                   { key: 'output', value: formatMoney(vat.outputVat, 'TRY', { digits: 0 }), label: 'Hesaplanan (391)' },
                   { key: 'input', value: formatMoney(vat.inputVat, 'TRY', { digits: 0 }), label: 'İndirilecek (191)' },

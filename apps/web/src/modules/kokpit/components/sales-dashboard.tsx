@@ -125,7 +125,9 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
                       satıra kırılır (ad tam görünür), masaüstünde `sm:contents` ile tek satıra döner. */}
                   <RowLink href={`/ana-veri/urunler/${p.productId}`}>
                     <span className="flex min-w-0 items-center gap-2 sm:contents">
-                      <span className="w-4 shrink-0 text-xs text-muted-foreground">{i + 1}</span>
+                      {/* tabular-nums (Tur 9 P2 kokpit-meta-tabular-08, kriter 6): sıra numarası da
+                          diğer rakam taşıyan metinler gibi eş genişlikli rakamlarla basılmalı. */}
+                      <span className="w-4 shrink-0 text-xs text-muted-foreground tabular-nums">{i + 1}</span>
                       <span className="min-w-0 flex-1 truncate">{p.name}</span>
                     </span>
                     <span className="flex shrink-0 items-center justify-between gap-3 sm:contents">
@@ -177,7 +179,7 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
                     <div className="flex flex-col gap-0.5 px-4 py-2.5 @min-[1024px]:hidden sm:py-2">
                       <div className="flex min-w-0 items-center justify-between gap-3">
                         <span className="flex min-w-0 items-center gap-2">
-                          <span className="shrink-0 text-xs text-muted-foreground">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
+                          <span className="shrink-0 text-xs text-muted-foreground tabular-nums">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
                           <span className="truncate font-mono text-xs">{o.docNo}</span>
                         </span>
                         <span className="shrink-0"><StatusBadge status={o.status} kind="sales_order" /></span>
@@ -188,7 +190,7 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
                       </div>
                     </div>
                     <div className="hidden h-10 min-w-0 items-center gap-3 px-4 @min-[1024px]:flex">
-                      <span className="w-20 shrink-0 text-xs text-muted-foreground">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
+                      <span className="w-20 shrink-0 text-xs text-muted-foreground tabular-nums">{formatDate(new Date(`${o.orderDate}T00:00:00Z`))}</span>
                       <span className="w-28 shrink-0 truncate font-mono text-xs">{o.docNo}</span>
                       <span className="min-w-0 flex-1 truncate">{o.partnerName} <span className="text-muted-foreground">· {o.channelName}</span></span>
                       <MoneyCell value={o.netRevenue} className="w-28 shrink-0" />
