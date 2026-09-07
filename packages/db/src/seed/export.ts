@@ -1,11 +1,12 @@
 import { eq } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
-import { salesChannels, salesOrders, partners, products, warehouses, deliveries, deliveryLines, invoices, exportShipments, exchangeRates, hsCodes } from '../schema/index.js';
+import { salesChannels, salesOrders, partners, products, warehouses, deliveries, deliveryLines, invoices, exportShipments, exportDocuments, exportPackages, exchangeRates, hsCodes, users } from '../schema/index.js';
 import {
-  D, toDbRate, SYSTEM_ACTOR, writeAudit,
+  D, toDb, toDbRate, addDays, businessDate, SYSTEM_ACTOR, writeAudit, type ActorCtx,
   createSalesDoc, confirmOrder,
   reserveFefo, confirmPick, shipDelivery,
   createFromOrder, updateLogistics, generateProforma, linkDelivery, buildPackingList, advanceToCustoms, markShipped, linkInvoice, closeShipment,
+  updateExportDocument,
 } from '@plantero/core';
 import { log, type SeedSummary } from './_helpers.js';
 
@@ -47,6 +48,87 @@ async function warehouseByCode(tx: DbOrTx, code: string) {
   const [row] = await tx.select().from(warehouses).where(eq(warehouses.code, code)).limit(1);
   if (!row) throw new Error(`seed:export — depo bulunamadı: ${code}`);
   return row;
+}
+async function userByEmail(tx: DbOrTx, email: string) {
+  const [row] = await tx.select().from(users).where(eq(users.email, email)).limit(1);
+  return row ?? null;
+}
+
+/**
+ * ihracat-detay-20 + ihracat-belgeler-04 (Tur 11) kök neden düzeltmesi: `export_documents.due_date`
+ * ve `.responsible_id` seed'de hiçbir satırda doldurulmuyordu (0/30) — sevkiyat detayının "Belgeler"
+ * sekmesinde "Vade" sütunu HER satırda "—" basıyordu (tablonun %38'i ölü alan) ve /ihracat/belgeler
+ * KPI şeridinde "Vadesi geçmiş" yapısal olarak 0'a çakılıyken "Sorumlusuz" tam olarak "Bekleyen"e eşit
+ * çıkıyordu (13=13) — kullanıcı "hiçbir belge gecikmemiş" diye okuyordu, oysa gerçek durum "vade hiç
+ * takip edilmiyor". `not_required` satırlar (rejimin istemediği belgeler) kasıtlı olarak dışarıda
+ * bırakılır — vade/sorumlu yalnızca GERÇEKTEN takip edilen belgelere anlamlıdır. Her belgeye,
+ * sevkiyatın elindeki en güncel anahtar tarihten (ETD/gümrük/proforma — hangisi doluysa) `sequence`
+ * sırasına göre geriye doğru artan bir vade atanır (listedeki ilk belgeler son teslim tarihine daha
+ * yakın, ör. proforma en erken vadeli — gerçek akışta önce hazırlanması gerekir) — bu hem satır
+ * başına FARKLI bir tarih üretir (distinctValues ≥ 2) hem de bazı vadelerin bugünün gerisinde
+ * kalmasına (gerçek "vadesi geçmiş" belgeler) izin verir. Sorumlu YALNIZCA en az bir adım ilerlemiş
+ * belgelere (ready/sent/received) atanır — henüz hiç dokunulmamış (`required`) belgeler kasıtlı
+ * olarak sorumlusuz bırakılır: gerçek hayatta da kimse henüz ele alınmamış bir işin "sorumlusu"
+ * sayılmaz, bu yüzden "Sorumlusuz" artık "Bekleyen"den küçük ve ayırt edici bir sayı basar.
+ */
+async function fillDocumentTracking(tx: DbOrTx, shipmentId: string, referenceDate: string, direction: 1 | -1, ownerId: string | null, ctx: ActorCtx, summary: SeedSummary): Promise<void> {
+  const docs = await tx.select().from(exportDocuments).where(eq(exportDocuments.shipmentId, shipmentId)).orderBy(exportDocuments.sequence);
+  let filled = 0;
+  for (const doc of docs) {
+    if (doc.status === 'not_required') continue;
+    const offsetDays = Math.max(1, Math.round(doc.sequence / 10));
+    const dueDate = addDays(referenceDate, direction * offsetDays);
+    const responsibleId = doc.status === 'required' ? null : ownerId;
+    await updateExportDocument(tx, doc.id, { dueDate, responsibleId }, ctx);
+    filled += 1;
+  }
+  if (filled) summary.add('export_documents (vade + sorumlu dolduruldu)', filled);
+}
+
+/**
+ * ihracat-detay-21 (Tur 10→11) kök neden düzeltmesi: sevkiyatın sevk ettiği ürünlerin
+ * `products.weight_kg` alanı Excel importunda hiç taşınmadığından (masterdata seed — bu modülün
+ * dosya sınırı DIŞINDA, `packages/db/src/seed/masterdata.ts`, buradan değiştirilemez) NULL'dır;
+ * `packages/core/src/export/shipments.ts::buildPackingList` bunu doğru şekilde 0'a düşürüyor
+ * (kod hatası değil, eksik referans veri) ama sonuçta "Çeki listesi" sekmesinin 2 sütunu (Net/Brüt
+ * kg, tablonun %19'u) ve "Proforma & gümrük" panelindeki "Net/brüt ağırlık" alanı her sevkiyatta
+ * "—/—" kalıyordu — gümrükte net/brüt ağırlıksız kabul edilmeyen bir belge (çeki listesi) eksik
+ * görünüyordu. Kök neden veri katmanında olduğundan ve şema/masterdata'ya dokunulamadığından, bu
+ * modülün KENDİ yazma alanında (`export_packages`/`export_shipments`), sevk edilen SKU'ların
+ * ambalaj tipinden (`products.packaging`) türetilmiş gerçekçi bir birim net ağırlıkla satır satır
+ * geriye dönük DOLDURULUR — `buildPackingList` ile AYNI brüt/net oranı (×1,05, ambalaj payı)
+ * korunur, yalnızca birim ağırlık kaynağı değişir (0 yerine gerçekçi bir sabit).
+ */
+const UNIT_NET_WEIGHT_KG: Record<string, string> = {
+  '190010099': '1.0300', // Badem İçeceği 1L UHT (palet) — 1 litre bitkisel içeceğin yaklaşık yoğunluğu
+  '190010001': '1.0300', // Badem İçeceği 1L UHT (tekli) — aynı ürün, farklı SKU/ambalaj
+  '160020001': '0.2500', // Plantero Costa Rica Kahve — standart 250 g perakende paket
+};
+
+async function fillPackageWeights(tx: DbOrTx, shipmentId: string, summary: SeedSummary): Promise<void> {
+  const pkgs = await tx.select().from(exportPackages).where(eq(exportPackages.shipmentId, shipmentId));
+  let netTotal = D(0);
+  let grossTotal = D(0);
+  let patched = 0;
+  for (const pkg of pkgs) {
+    const [product] = await tx.select({ sku: products.sku }).from(products).where(eq(products.id, pkg.productId)).limit(1);
+    const unitNet = product ? UNIT_NET_WEIGHT_KG[product.sku] : undefined;
+    if (!unitNet) {
+      netTotal = netTotal.plus(D(pkg.netWeightKg));
+      grossTotal = grossTotal.plus(D(pkg.grossWeightKg));
+      continue;
+    }
+    const net = D(unitNet).mul(pkg.qty);
+    const gross = net.mul('1.05'); // buildPackingList'teki AYNI ambalaj payı oranı
+    await tx.update(exportPackages).set({ netWeightKg: toDb(net), grossWeightKg: toDb(gross) }).where(eq(exportPackages.id, pkg.id));
+    netTotal = netTotal.plus(net);
+    grossTotal = grossTotal.plus(gross);
+    patched += 1;
+  }
+  if (patched) {
+    await tx.update(exportShipments).set({ netWeightKg: toDb(netTotal), grossWeightKg: toDb(grossTotal) }).where(eq(exportShipments.id, shipmentId));
+    summary.add('export_packages (gerçekçi net/brüt ağırlık dolduruldu)', patched);
+  }
 }
 
 /* ==================================================================== */
@@ -166,7 +248,7 @@ async function seedExchangeRateHistory(tx: DbOrTx, summary: SeedSummary): Promis
 /* 1) SO-2026-000023 → geriye dönük KAPANMIŞ sevkiyat (ETGB, Almanya)    */
 /* ==================================================================== */
 
-async function backfillClosedShipment(tx: DbOrTx, summary: SeedSummary): Promise<void> {
+async function backfillClosedShipment(tx: DbOrTx, summary: SeedSummary, ownerId: string | null): Promise<void> {
   const [order] = await tx.select().from(salesOrders).where(eq(salesOrders.docNo, 'SO-2026-000023')).limit(1);
   if (!order) {
     log('export', 'UYARI: SO-2026-000023 bulunamadı — kapanmış sevkiyat dolgusu atlanıyor (sales seed sırası değişmiş olabilir)');
@@ -191,10 +273,12 @@ async function backfillClosedShipment(tx: DbOrTx, summary: SeedSummary): Promise
   await generateProforma(tx, shipment.id, SYSTEM_ACTOR);
   await linkDelivery(tx, shipment.id, delivery.id, SYSTEM_ACTOR);
   await buildPackingList(tx, shipment.id, SYSTEM_ACTOR);
+  await fillPackageWeights(tx, shipment.id, summary);
   const advanced = await advanceToCustoms(tx, shipment.id, { etgbNo: 'ETGB2026DE00123', customsDate: order.orderDate }, SYSTEM_ACTOR);
   await markShipped(tx, shipment.id, SYSTEM_ACTOR);
   await linkInvoice(tx, shipment.id, invoice.id, SYSTEM_ACTOR);
   const closed = await closeShipment(tx, shipment.id, SYSTEM_ACTOR);
+  await fillDocumentTracking(tx, closed.id, closed.customsDate ?? order.orderDate, -1, ownerId, SYSTEM_ACTOR, summary);
 
   await auditCreate(tx, 'export_shipments', closed.id, `${closed.docNo} geriye dönük kapanmış sevkiyat olarak kuruldu (${order.docNo} → ${delivery.docNo} → ${invoice.docNo}), rejim: ${advanced.regime}`);
   summary.add('export_shipments (kapanmış — geriye dönük)', 1);
@@ -204,7 +288,7 @@ async function backfillClosedShipment(tx: DbOrTx, summary: SeedSummary): Promise
 /* 2) Yeni ihracat siparişi + sevkiyat (gümrükte, standart rejim)        */
 /* ==================================================================== */
 
-async function seedCustomsShipment(tx: DbOrTx, summary: SeedSummary): Promise<void> {
+async function seedCustomsShipment(tx: DbOrTx, summary: SeedSummary, ownerId: string | null): Promise<void> {
   const channel = await channelByCode(tx, 'IHRACAT');
   const customer = await partnerByCode(tx, 'C-000007');
   const warehouse = await warehouseByCode(tx, 'TIRE');
@@ -239,7 +323,9 @@ async function seedCustomsShipment(tx: DbOrTx, summary: SeedSummary): Promise<vo
   // kusuru ('TCMB-SEED') kapatılırken burası atlanmıştı, kök neden aynı: kullanıcıya görünen hiçbir
   // alanda 'SEED' dizesi bulunmamalı.
   await updateLogistics(tx, shipment.id, { trackingNo: 'MAEU4207731', etd: new Date(Date.now() + 3 * 86_400_000).toISOString().slice(0, 10) }, SYSTEM_ACTOR);
+  await fillPackageWeights(tx, packed.shipment.id, summary);
   const customs = await advanceToCustoms(tx, shipment.id, { customsDeclarationNo: 'GB2026000045', customsDate: new Date().toISOString().slice(0, 10) }, SYSTEM_ACTOR);
+  await fillDocumentTracking(tx, customs.id, customs.etd ?? customs.customsDate ?? businessDate(new Date()), -1, ownerId, SYSTEM_ACTOR, summary);
 
   await auditCreate(tx, 'export_shipments', customs.id, `${customs.docNo} gümrükte (rejim: ${packed.shipment.regime}, ${customs.customsDeclarationNo})`);
   summary.add('export_shipments (gümrükte)', 1);
@@ -249,7 +335,7 @@ async function seedCustomsShipment(tx: DbOrTx, summary: SeedSummary): Promise<vo
 /* 3) Yeni ihracat siparişi + sevkiyat (taslak)                          */
 /* ==================================================================== */
 
-async function seedDraftShipment(tx: DbOrTx, summary: SeedSummary): Promise<void> {
+async function seedDraftShipment(tx: DbOrTx, summary: SeedSummary, ownerId: string | null): Promise<void> {
   const channel = await channelByCode(tx, 'IHRACAT');
   const customer = await partnerByCode(tx, 'C-000007');
   const warehouse = await warehouseByCode(tx, 'TIRE');
@@ -269,6 +355,10 @@ async function seedDraftShipment(tx: DbOrTx, summary: SeedSummary): Promise<void
     salesOrderId: order.id, incoterm: 'EXW', destinationCountry: 'DE', transportMode: 'road',
     note: 'İlk küçük parti — lojistik henüz netleşmedi',
   }, SYSTEM_ACTOR);
+  // Taslak sevkiyatın henüz bir ETD/gümrük tarihi yok — vadeler siparişin oluşturulduğundan İLERİYE
+  // doğru (direction=+1) sayılır: "bu belgeler önümüzdeki günlerde hazırlanmalı" (geriye doğru
+  // sayılsaydı taslak daha kurulur kurulmaz "vadesi geçmiş" görünürdü, gerçekçi olmazdı).
+  await fillDocumentTracking(tx, shipment.id, order.orderDate, 1, ownerId, SYSTEM_ACTOR, summary);
 
   await auditCreate(tx, 'export_shipments', shipment.id, `${shipment.docNo} taslak olarak açıldı (${order.docNo})`);
   summary.add('export_shipments (taslak)', 1);
@@ -330,14 +420,20 @@ export async function seedExport(tx: DbOrTx, summary: SeedSummary): Promise<void
   log('export', 'TCMB kur geçmişi (son 90 gün, USD/EUR/GBP)...');
   await seedExchangeRateHistory(tx, summary);
 
+  // ihracat-detay-20/21 + ihracat-belgeler-04 (Tur 11) kök neden düzeltmeleri belge vade/sorumlu
+  // + çeki listesi ağırlık dolgusu bu kullanıcıya (mevcut `core` seed adımından) ihtiyaç duyar.
+  const owner = await userByEmail(tx, 'ihracat@plantero.local');
+  if (!owner) log('export', 'UYARI: ihracat@plantero.local kullanıcısı bulunamadı — belge sorumlusu boş bırakılıyor');
+  const ownerId = owner?.id ?? null;
+
   log('export', 'SO-2026-000023 → kapanmış sevkiyat (ETGB, Almanya) geriye dönük kuruluyor...');
-  await backfillClosedShipment(tx, summary);
+  await backfillClosedShipment(tx, summary, ownerId);
 
   log('export', 'yeni ihracat siparişi → gümrükte sevkiyat (standart rejim, Hollanda)...');
-  await seedCustomsShipment(tx, summary);
+  await seedCustomsShipment(tx, summary, ownerId);
 
   log('export', 'yeni ihracat siparişi → taslak sevkiyat...');
-  await seedDraftShipment(tx, summary);
+  await seedDraftShipment(tx, summary, ownerId);
 
   log('export', 'yeni ihracat siparişi → sevkiyat henüz açılmadı (taslak, sevkiyata bağlanmamış — I36 muafiyeti)...');
   await seedPendingExportOrder(tx, summary);

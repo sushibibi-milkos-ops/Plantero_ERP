@@ -118,6 +118,15 @@ export function RatesTable({ rows }: { rows: RateRow[] }) {
           return <span className={`font-mono tabular-nums ${cls}`}>{isUp && !isZero ? '+' : ''}{formatDailyChangePct(d.toNumber())}</span>;
         },
       },
+      // Tur 11 NOT (ihracat-kurlar-13, P2, AÇIK KALDI — kasıtlı): bu sütun 25/25 satırda aynı
+      // değeri ("TCMB") bastığı için `defaultHidden: true` denendi, ama DataTable'ın <table>'ı
+      // `min-w-full` ile kapsayıcıya zorlandığından (rates-table.tsx içindeki Tur 8 notuna bkz.)
+      // sütun sayısı 6→5'e düşünce kalan 5 sütunun TAMAMI slack>145px'e çıktı (ölçüldü,
+      // scripts/_tmp-cols-probe.ts) — ihracat-kurlar-12'yi (kriter 5, Tur 8'de kapatılmıştı)
+      // yeniden açıyordu. `[&_table]:!w-auto` ile tabloyu daraltmak da ihracat-detay-19'un AYNI
+      // sınıfı kusuru (sağda ölü alan) üretiyordu. Kök neden çözümü (yeni bir gerçek bilgi sütunu
+      // ya da tablo dışı bir "Kaynak: TCMB" etiketi) bu turun bütçesini aşıyor — bulgu AÇIK
+      // bırakıldı, regresyon riskiyle kapatılmadı (bkz. artifacts/critic/ihracat.json).
       { id: 'source', accessorFn: (r) => r.source, header: 'Kaynak', meta: { width: 180, mobile: 'meta' }, cell: ({ getValue }) => <span className="text-muted-foreground">{sourceLabel(getValue<string>())}</span> },
     ],
     [changeByKey],
