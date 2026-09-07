@@ -53,12 +53,21 @@ export function DocumentsTable({
     // bu üç sütun (Belge, Sevkiyat, Müşteri) meta.width taşımıyordu — DataTable'ın auto table-layout'u
     // kalan 982px'i bunlara yığıyordu. satis modülünün Tur 11 kalıbı (channels-table.tsx 'Kanal'): hem
     // TD'ye SABİT `meta.width` hem içerik span'ine BİREBİR aynı piksel değerinde `max-w-[…] truncate`
-    // verilir. NOT (Tur 8 ölçümüyle netleşti — bkz. `docs/DESIGN-SCORECARD.md` ölçüm notları): bu
-    // `meta.width`/`max-w` YİNE DE tabloyu MUTLAK piksele kilitlemiyor — auto-layout, görünür TÜM
-    // sütunların `meta.width` değerlerini TEK bir ortak çarpanla (kapsayıcı genişliği / width toplamı)
-    // orantılı ölçekliyor; `max-w-[…] truncate` yalnızca görsel taşma/kırpma sınırı, sütunun gerçek
-    // render genişliğini SABİTlemiyor. Aşağıdaki tüm `width` değerleri bu orantılı ölçeklemeye göre
-    // (gerçek içerik genişliği + pay) SEÇİLMİŞ taban değerlerdir — bkz. scripts/probe-ihracat-r8c-fix.ts.
+    // verilir.
+    //
+    // ÖNEMLİ (Tur 8'de deneysel olarak doğrulandı — bkz. `docs/DESIGN-SCORECARD.md` ölçüm notları):
+    // tarayıcının auto table-layout algoritması `meta.width` değerlerini BASİT, tek bir ortak çarpanla
+    // orantılı ÖLÇEKLEMEZ. Bir sütunun `width`'i, o sütunun kendi hücre İÇERİĞİNİN doğal (nowrap)
+    // genişliğinin ALTINDA kaldığı sürece SONUÇ ÜZERİNDE NEREDEYSE HİÇ ETKİSİ OLMAZ (izole
+    // Playwright deneyi: 60px'ten 150px'e kadar hiçbir ara değer render genişliğini kıpırdatmadı) —
+    // yalnızca o eşiği (yaklaşık: sütunun kendi içerik genişliği + komşu sütunların "kullanılmayan"
+    // payı) AŞTIĞINDA sütun genişliği spesifiye edilen değere doğru tepki vermeye başlıyor, bu da
+    // TÜM DİĞER sütunları geri itiyor. Bu yüzden `max-w-[…] truncate` yalnızca görsel taşma/kırpma
+    // sınırıdır, sütunun gerçek render genişliğini SABİTlemez; ve aşağıdaki `width` değerleri
+    // matematiksel bir formülden değil, gerçek tarayıcıda ÖLÇÜLEREK (scripts/probe-ihracat-r8c-fix.ts,
+    // 1440x900, EXP-2026-000002) bulunmuş, her sütunun slack'ini (render genişliği − en uzun içerik)
+    // hedefin altında tutan TABAN değerlerdir — bu dosyadaki herhangi bir `width` değiştirilirse
+    // probe-ihracat-r8c-fix.ts YENİDEN çalıştırılıp TÜM sütunların slack'i kontrol edilmeli.
     //
     // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false, ihracat-detay-18/-19):
     // Tur 7'de bu bağlamda görünür sütun sayısı yalnızca 3'e (Belge/Durum/Eylemler) düştüğü için
@@ -70,9 +79,9 @@ export function DocumentsTable({
     // ve `dueDate` (Vade) VARSAYILAN GÖRÜNÜR yapılıp (aşağıdaki `sparseDefault` artık yalnızca
     // showShipmentColumn=true dalında uygulanıyor — panodaki doluluk oranı burada geçersiz, bu dar
     // bağlamda GERÇEK bilgi taşıyan sütun sayısını 3'ten 5'e çıkarmak gerekiyordu) tabloyu 5 gerçek
-    // sütuna (Belge/Durum/Belge no/Vade/Eylemler) yayıyor — genişlik kilidi kaldırılıyor, taban
-    // width'ler bu 5 sütunun toplamı 1152'ye orantılı ölçeklendiğinde her birinin slack'i ≤150px
-    // kalacak şekilde seçildi (bkz. probe-ihracat-r8c-fix.ts ölçümü).
+    // sütuna (Belge/Durum/Belge no/Vade/Eylemler) yayıyor — genişlik kilidi kaldırılıyor. Ölçülen
+    // sonuç (1440x900, 8 satır): Belge 448/320→slack128, Durum 198/91→107, Belge no 281/139→142,
+    // Vade 155/57→98, Eylemler 69/50→19 — beşi de ≤150px hedefinin altında, panel/tablo farkı 0px.
     const base: ColumnDef<ExportDocRow, unknown>[] = [
       showShipmentColumn
         ? {
@@ -80,7 +89,7 @@ export function DocumentsTable({
             cell: ({ row }) => <span className="block max-w-[220px] truncate" title={row.original.name}>{row.original.name}</span>,
           }
         : {
-            accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', width: 170, className: 'max-w-[320px] truncate' },
+            accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', width: 260, className: 'max-w-[320px] truncate' },
             cell: ({ row }) => <span className="block max-w-[320px] truncate" title={row.original.name}>{row.original.name}</span>,
           },
     ];
@@ -111,7 +120,7 @@ export function DocumentsTable({
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: showShipmentColumn ? 130 : 110, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="export_doc" /> },
       {
         accessorKey: 'docNo', header: 'Belge no',
-        meta: { width: showShipmentColumn ? 140 : 100, mobile: 'hidden', ...(showShipmentColumn ? sparseDefault : {}) },
+        meta: { width: showShipmentColumn ? 140 : 120, mobile: 'hidden', ...(showShipmentColumn ? sparseDefault : {}) },
         cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span>,
       },
       // `mobile: 'meta'` (Tur 1 P1, ihracat-belgeler-02 kök neden): önceden bu sütun mobil kartta
@@ -152,7 +161,6 @@ export function DocumentsTable({
         // Belge no/Vade varsayılan görünür yapılıp (5 gerçek sütun artık 1152px'i orantılı
         // dolduruyor) BU KİLİT KALDIRILDI — DataTable yine kapsayıcıyı dolduruyor, ama artık
         // dolduracak gerçek sütun sayısı yeterli.
-        className={!showShipmentColumn ? '[&_table]:!table-fixed' : undefined}
         emptyTitle="Belge yok"
         emptyDescription="Sevkiyat oluşturulunca rejime göre belge takip listesi otomatik kurulur."
         // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false) özel kart — Tur 2 P1

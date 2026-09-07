@@ -48,14 +48,17 @@ export function RatesTable({ rows }: { rows: RateRow[] }) {
   // küçük etiket + değişim) taşımıyordu. Aynı para biriminin BİR ÖNCEKİ güne göre değişimini
   // (`selling` bazında) gösteren "Günlük değişim" sütunu boşluğu bilgiyle dolduruyor.
   //
-  // Tur 8 P2 ihracat-kurlar-12 kök neden düzeltmesi: auto table-layout, TÜM görünür sütunların
-  // `meta.width` değerlerini TEK bir ortak çarpanla (1152 / width toplamı) orantılı ölçekliyor —
-  // toplam gerçek render genişliği HER ZAMAN 1152'ye eşitleniyor, yalnızca DAĞILIM değişiyor. İlk
-  // 'Günlük değişim' eklemesinde (width:200) diğer 5 sütun küçük tutulduğundan (100/100/110/110/100
-  // toplamı sadece 520) ortak çarpan bu tek büyük sütuna orantısız pay veriyordu (200→320, slack 203).
-  // Altı sütunun toplam gerçek içerik genişliği (~472px) ile kapsayıcı (1152px) arasındaki fark
-  // (~680px) 6 sütuna EŞİT PAYLAŞTIRILACAK şekilde taban genişlikler yeniden dengelendi — hiçbir
-  // sütun tek başına payın çoğunu almıyor, altısı da ≤120px slack'te kalıyor (bkz. probe-ihracat-r8c-fix.ts).
+  // Tur 8 P2 ihracat-kurlar-12 kök neden düzeltmesi: tarayıcının auto table-layout algoritması
+  // `meta.width` değerlerini BASİT, tek bir ortak çarpanla orantılı ölçeklemiyor (bkz.
+  // documents-table.tsx'teki aynı tespitin ayrıntılı notu) — bir sütunun kendi hücre içeriğinin
+  // doğal genişliğinin ALTINDA kalan `width` değerleri sonucu neredeyse hiç etkilemiyor, yalnızca
+  // BAŞKA sütunların "kullanılmayan" payı o sütuna akıyor. İlk 'Günlük değişim' eklemesinde
+  // (width:200) diğer 5 sütun küçük tutulduğundan (100/100/110/110/100) kullanılmayan pay neredeyse
+  // tamamen bu TEK sütuna akıyordu (render genişliği 320, slack 203). Aşağıdaki 6 taban değer
+  // matematiksel bir formülden değil, gerçek tarayıcıda ÖLÇÜLEREK (scripts/probe-ihracat-r8c-fix.ts,
+  // 1440x900) bulunmuş, hiçbir sütunun tek başına payın çoğunu almadığı bir dengedir — sonuç: 6
+  // sütun da ≤120px slack'te (114/112/112/112/115/115). Bu dosyadaki herhangi bir `width`
+  // değiştirilirse probe YENİDEN çalıştırılıp tüm sütunların slack'i kontrol edilmeli.
   const changeByKey = useMemo(() => {
     const byCurrency = new Map<string, RateRow[]>();
     for (const r of rows) {
