@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { ArrowRight, Plus } from 'lucide-react';
 import type { WarehouseCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
@@ -5,6 +7,7 @@ import { LotBadge } from '@/components/lot-badge';
 import { ExpiryBadge } from '@/components/expiry-badge';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
+import { Button } from '@/components/ui/button';
 import type { CockpitTodayItem } from '../queries';
 import { Section, RowLink, ExpiryBucketStrip, TodayRow } from './shared';
 
@@ -34,7 +37,18 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
             <MoneyCell value={data.quarantine.value} className="font-medium" />
           </div>
           {data.quarantine.top5.length === 0 ? (
-            <EmptyState compact title="Karantinada lot yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04): boş durum yalnızca ikon+başlıktan
+            // ibaretti — puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor.
+            <EmptyState
+              compact
+              title="Karantinada lot yok"
+              description="Kalite kontrolü bir lotu reddettiğinde burada karantinaya alınmış görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/kalite/kontroller"><ArrowRight className="size-3.5" /> Kalite kontrollerini gör</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {data.quarantine.top5.map((r) => (
@@ -73,7 +87,18 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
         <Section title="SKT riski" href="/depo/skt">
           <ExpiryBucketStrip totals={data.expiry.totals} />
           {data.expiry.top5.length === 0 ? (
-            <EmptyState compact title="Yaklaşan SKT yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04): boş durum yalnızca ikon+başlıktan
+            // ibaretti — puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor.
+            <EmptyState
+              compact
+              title="Yaklaşan SKT yok"
+              description="Son kullanma tarihi yaklaşan lot olduğunda burada listelenir."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/depo/lotlar"><ArrowRight className="size-3.5" /> Tüm lotları gör</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {data.expiry.top5.map((r) => (
@@ -96,7 +121,20 @@ export function DepoDashboardView({ data, today }: { data: WarehouseCards; today
 
         <Section title="Bugün" href="/depo/mal-kabul" className="lg:col-span-2">
           {today.length === 0 ? (
-            <EmptyState compact title="Bugün henüz mal kabul/sevkiyat yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04): boş durum yalnızca ikon+başlıktan
+            // ibaretti (144px kutu / 190px bölüm) — aynı modüldeki diğer boş durumlar (admin "Kritik
+            // stok", muhasebe "Bugünün tahsilatları", üretim "Fire kırılımı") zaten açıklama+eylem
+            // taşıyor. Puan kartı kriteri 7 tümü için ikon+başlık+açıklama+eylem istiyor.
+            <EmptyState
+              compact
+              title="Bugün henüz mal kabul/sevkiyat yok"
+              description="İlk mal kabul veya sevkiyat kaydedildiğinde burada görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/depo/mal-kabul/yeni"><Plus className="size-3.5" /> Mal kabul oluştur</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {today.map((t) => (

@@ -54,19 +54,26 @@ const MOBILE_LINE_COLS_STYLE = { '--mobile-line-cols': '1.25fr 1.2fr 0.9fr 0.65f
  *  genişlikte gerçek "kenarlıksız" olmak için `border-0` gerekir. Görsel geri bildirim artık `border`
  *  DEĞİL bir iç `ring` (box-shadow) — bu, layout'u etkilemediği için önceki `border-transparent`
  *  seçiminin asıl amacını (hover'da 1px'lik içerik kayması olmaması) da korur, üstelik kenarlık genişliği
- *  hiç sayılmaz. Dokunmatik cihazlarda (`hover` hiç tetiklenmez) taban ipucu olarak hep-açık soluk ring. */
+ *  hiç sayılmaz. Dokunmatik cihazlarda (`hover` hiç tetiklenmez) taban ipucu olarak hep-açık soluk ring.
+ *  `shadow-none` EKLENDİ — kök neden düzeltmesi (Tur 6 P1 arge-recete-33): `border-0` yalnızca
+ *  kenarlığı sıfırlıyordu, Input/SelectTrigger'ın taban sınıfındaki `shadow-xs` (rgba(0,0,0,.05) 0 1px
+ *  2px) DURUYORDU — saydam zeminde bu gölge ekranda hâlâ yuvarlak bir kutu ÇİZİYORDU (dinlenmede kart
+ *  içinde border VEYA saydam-olmayan gölge taşıyan dikdörtgen sayısı 1440'ta 19, 390'da 20 idi). Artık
+ *  hem kenarlık hem gölge sıfır; affordans SADECE hover/dokunmatik ring'den geliyor. */
 const CELL_CONTROL_CLS =
-  'border-0 hover:ring-1 hover:ring-inset hover:ring-input [@media(hover:none)]:ring-1 [@media(hover:none)]:ring-inset [@media(hover:none)]:ring-input/50';
+  'border-0 shadow-none hover:ring-1 hover:ring-inset hover:ring-input [@media(hover:none)]:ring-1 [@media(hover:none)]:ring-inset [@media(hover:none)]:ring-input/50';
 
 /** Mobil (< md) satır etiketleri: md+ üstünde başlık satırı zaten aynı bilgiyi taşıdığı için gizlenir.
  *  Etiket-değer çifti TEK SATIRDA (etiket solda, değer sağda) — üst üste yığılmış label+control ikilisi
  *  satır yüksekliğini ikiye katlıyordu (kök neden düzeltmesi, Tur 4 P1 arge-recete-21). */
-function FieldLabel({ children, align }: { children: React.ReactNode; align?: 'right' }) {
-  // block leading-4 (16px sabit): kök neden düzeltmesi (Tur 5 P1 arge-recete-27) — mobil malzeme
-  // kartının 4 sütunlu bandında etiket artık kontrolün ÜSTÜNDE (dar sütun, bkz. yukarısı); tarayıcının
-  // varsayılan satır yüksekliği burada fazladan ~4-5px tüketiyordu, sabit 16px ile kart yüksekliği
-  // öngörülebilir kalır.
-  return <span className={cn('block shrink-0 text-[11px] leading-4 text-muted-foreground md:hidden', align === 'right' && 'text-right')}>{children}</span>;
+function FieldLabel({ children }: { children: React.ReactNode; align?: 'right' }) {
+  // sr-only (önceden `block leading-4`): kök neden düzeltmesi (Tur 6 P1 arge-recete-35) — bu etiket
+  // yalnızca DÜZENLENEBİLİR mobil kartta görünür kalıyordu (salt-okunurda üst bandın tamamı gizli,
+  // bkz. çağrı yeri) ve tek başına 16px görsel yükseklik tüketiyordu; kart 129px'ten referans
+  // bandının (56-72px) çok üstünde kalıyordu. Erişilebilir isim (screen reader) KORUNUR, görsel alan
+  // sıfırlanır — dar sütunda kontrolün (Select/NumberInput) kendi değeri (ör. "Ortalama", "0,20")
+  // anlamı zaten taşır, mobil düzenleyen kullanıcı için görsel etiket olmadan da okunabilir.
+  return <span className="sr-only">{children}</span>;
 }
 
 export function CostSimulator({
@@ -240,9 +247,12 @@ export function CostSimulator({
   const dirty = editable && form.formState.isDirty;
 
   return (
-    // space-y-2 (mobil) / md:space-y-6: kök neden düzeltmesi (Tur 4+5 P1 arge-recete-18) — 390px'te
-    // hedef maliyete kadarki bütçeyi sıkmak için küçük ama gerçek bir kazanım (8pt ölçeğinde kalır).
-    <div className="space-y-2 md:space-y-6">
+    // space-y-2 (mobil) / md:space-y-3: kök neden düzeltmesi (Tur 4+5 P1 arge-recete-18, GENİŞLETİLDİ
+    // Tur 6 P1 arge-recete-34) — masaüstünde md:space-y-6 (24px) 5 bölüm arasında 5×24=120px krom
+    // tüketiyordu; kartın üst kenarı ile ilk malzeme satırı arasında 329px açık kalıyor, 900px'lik
+    // ekranda 6 malzemenin ancak 4'ü görünüyordu. 12px hâlâ 8pt ölçeğinde (4/8/12/16/24) — yalnızca bir
+    // basamak küçük.
+    <div className="space-y-2 md:space-y-3">
       {/* flex-nowrap + overflow-x-auto: kök neden düzeltmesi (Tur 4 P1 arge-recete-18) — 390px'te
           önceki `flex-wrap` v1/Taslak rozetini Kaydet/Onaya gönder'den AYRI bir SATIRA düşürüyordu
           (dar genişlikte sığmadığı için), hedef maliyet panelinin üstündeki bütçeyi ~35px fazladan
@@ -353,7 +363,12 @@ export function CostSimulator({
           kutu üç kattaydı (kart + bu panel + satır tablosu); ana kartla arasındaki ayrım artık ince bir
           zemin tonuyla ("nefes alan" — anti-erp), ayrı bir çerçeve DEĞİL. */}
       {targetCost ? (
-        <div className="space-y-2 rounded-lg bg-muted/30 p-4">
+        // p-3 + space-y-1.5 (önceden p-4 + space-y-2) + bar/oran satırının BİRLEŞTİRİLMESİ — kök
+        // neden düzeltmesi (Tur 6 P1 arge-recete-34): bant 115px'e ulaşıyordu (kart üstü ile ilk
+        // malzeme satırı arasındaki 329px kromun en büyük kalemi), hedef ≤96px. Ana metrik (24px hero,
+        // Tur 5 arge-recete-26'da kazanılmıştı) KÜÇÜLTÜLMEDİ — kazanım yalnızca dolgu/boşluk ve
+        // çubuk+oran metninin TEK satıra inmesinden geliyor.
+        <div className="space-y-1.5 rounded-lg bg-muted/30 p-3">
           {/* Ana metrik ≥24px/600 tabular-nums (kök neden düzeltmesi, Tur 5 P1 arge-recete-26):
               eskiden bu bant TEK tipografik kademe taşıyordu — birim maliyet, kendi etiketiyle
               ("Hedef maliyete göre") AYNI 11px'te basılıyordu, ekranın birincil çıktısı hiçbir
@@ -379,24 +394,29 @@ export function CostSimulator({
               <MoneyCell value={targetCost.toFixed(4)} digits={2} className="text-[12px] font-medium" muted />
             </div>
           </div>
-          <div className="relative">
-            <div className="h-1 overflow-hidden rounded-full bg-muted">
-              <div
-                className={cn('h-full rounded-full transition-[width] duration-200 ease-out', overTarget ? 'bg-warning/70' : 'bg-success/70')}
-                style={{ width: `${barFillPct}%` }}
-              />
+          {/* Çubuk + sapma metni TEK satırda (önceden 2 ayrı satır + aralarında space-y-2 boşluğu) —
+              kök neden düzeltmesi (Tur 6 P1 arge-recete-34): oranın kendi satırı ~14px + bir 8px'lik
+              boşluk tüketiyordu, bilgi kaybı olmadan tek satıra sığar. */}
+          <div className="flex items-center gap-2">
+            <div className="relative min-w-0 flex-1">
+              <div className="h-1 overflow-hidden rounded-full bg-muted">
+                <div
+                  className={cn('h-full rounded-full transition-[width] duration-200 ease-out', overTarget ? 'bg-warning/70' : 'bg-success/70')}
+                  style={{ width: `${barFillPct}%` }}
+                />
+              </div>
+              {/* Hedef noktası işaretçisi: 150% ölçekte hedefin (100%) konumu, sabit ~%66,7 */}
+              <div className="absolute -top-0.5 -bottom-0.5 w-px bg-foreground/40" style={{ left: `${barTargetMarkerPct}%` }} />
             </div>
-            {/* Hedef noktası işaretçisi: 150% ölçekte hedefin (100%) konumu, sabit ~%66,7 */}
-            <div className="absolute -top-0.5 -bottom-0.5 w-px bg-foreground/40" style={{ left: `${barTargetMarkerPct}%` }} />
+            {targetRatio ? (
+              <p className="shrink-0 text-[11px] whitespace-nowrap text-muted-foreground">
+                <span className={cn('font-medium tabular-nums', overTarget ? 'text-warning' : 'text-success')}>
+                  %{Math.abs(targetRatio.minus(100).toNumber()).toFixed(0)}
+                </span>{' '}
+                {overTarget ? 'hedef üstü' : targetRatio.lt(100) ? 'hedef altında' : 'tam hedefte'}
+              </p>
+            ) : null}
           </div>
-          {targetRatio ? (
-            <p className="text-[11px] text-muted-foreground">
-              <span className={cn('font-medium tabular-nums', overTarget ? 'text-warning' : 'text-success')}>
-                %{Math.abs(targetRatio.minus(100).toNumber()).toFixed(0)}
-              </span>{' '}
-              {overTarget ? 'hedef üstü' : targetRatio.lt(100) ? 'hedef altında' : 'tam hedefte'}
-            </p>
-          ) : null}
         </div>
       ) : null}
 
@@ -417,8 +437,12 @@ export function CostSimulator({
       {/* h-11 md:h-8 (kontroller) / data-[size=sm]:h-11 md:data-[size=sm]:h-8 (SelectTrigger): 390px'te
           gerçek 44px dokunma hedefi, masaüstünde eski 32px kompakt satır korunur (Tur 2 P1
           arge-recete-09) — depoda kabul edilen desen (data-table/pagination.tsx, finance/cashflow-
-          toolbar.tsx vb.). */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          toolbar.tsx vb.). Mobil: 2 sütunlu ızgara, etiket kontrolün ÜSTÜNDE (değişmedi). Masaüstü
+          (md+): TEK 32px'lik yatay şerit (kök neden düzeltmesi, Tur 6 P1 arge-recete-34) — eskiden 4
+          alan yığılı etiket+kontrol ile ~56px yükseklik tüketiyordu (kart üstü ile ilk malzeme
+          satırı arasındaki 329px kromun bir kalemi); `Field` artık md+ üstünde etiketi kontrolün
+          SOLUNA alır (bkz. `Field` tanımı), satır yüksekliği kontrolün kendi h-8'ine iner. */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:flex md:flex-nowrap md:items-center md:gap-4">
         <Field label="Parti miktarı">
           {/* minDigits=4 (kök neden düzeltmesi, Tur 5 P1 arge-recete-25): satır tablosundaki "Miktar"
               kolonu da minDigits=4 kullanıyor (Tur 2 P2 arge-recete-13 — ondalık ayırıcı hizası için);
@@ -503,12 +527,12 @@ export function CostSimulator({
                 <div
                   key={f.id}
                   role="row"
-                  // gap-y-1.5 (6px, önceden 2=8px): kök neden düzeltmesi (Tur 4 P1 arge-recete-21) —
-                  // her alan artık kendi TEK satırında (etiket solda, değer sağda), etiket+kontrol
-                  // üst üste yığılmıyor; Miktar/Maliyet kaynağı ve Birim maliyet/Fire % çiftleri aynı
-                  // grid satırında (grid-cols-2) yan yana kalır. Sil ikonu Ürün satırının sağ ucuna
-                  // taşındı — kendi başına tam satır tüketen ayrı bir aksiyon satırı kalmadı.
-                  className="grid grid-cols-2 gap-x-3 gap-y-1 border-b border-border/40 p-2.5 last:border-0 hover:bg-muted/20 md:items-center md:gap-2 md:p-0 md:py-[3px] md:[grid-template-columns:var(--line-cols)]"
+                  // p-2 + gap-y YOK (önceden p-2.5 + gap-y-1): kök neden düzeltmesi (Tur 6 P1
+                  // arge-recete-35) — mobil kart referans bandının (56-72px) çok üstündeydi
+                  // (düzenlenebilir 129px, salt-okunur 104,5px); FieldLabel artık `sr-only` (aşağısı)
+                  // ve salt-okunur modda Miktar/Kaynak/Fire % bandı TAMAMEN gizlenip yerine tek satırlık
+                  // özet metni geçtiği için dolgu/boşluk da sıkılaştırılır.
+                  className="grid grid-cols-2 gap-x-3 border-b border-border/40 p-1.5 last:border-0 hover:bg-muted/20 md:items-center md:gap-2 md:p-0 md:py-[3px] md:[grid-template-columns:var(--line-cols)]"
                   style={LINE_COLS_STYLE}
                 >
                   {/* Ürün + Satır maliyeti + Sil — TEK 44px satır (kök neden düzeltmesi, Tur 5 P1
@@ -532,11 +556,33 @@ export function CostSimulator({
                             className={cn('h-11 bg-transparent md:h-8', CELL_CONTROL_CLS)}
                           />
                         ) : (
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="font-medium">{product?.name}</span>
-                            <span className="font-mono text-[11px] text-muted-foreground">{product?.sku}</span>
+                          // min-w-0 + truncate + title — kök neden düzeltmesi (Tur 6 P1 arge-recete-32):
+                          // salt-okunur (devredilmiş) görünüm sayfanın VARSAYILAN açılışı; ad+SKU eskiden
+                          // sarma korumasız basılıyordu, 172px'lik "Ürün" sütununa sığmayan satırlarda
+                          // ("Hurma Şurubu", "Kavanoz 500ml") İKİNCİ SATIRA taşıyor, satır yüksekliğini
+                          // 39'dan 46'ya çıkarıp tablo ritmini bozuyordu (39/46/39/46/39/38, %18 oynama).
+                          // Düzenlenebilir görünümdeki Combobox zaten truncate ediyordu (Combobox.tsx
+                          // `<span className="truncate">`) — aynı davranış burada da uygulanır: ad
+                          // kırpılır (SKU sabit genişlikte kalır), tam metin `title` ile hover'da görünür.
+                          <div className="flex min-w-0 items-baseline gap-1.5" title={product ? `${product.name} · ${product.sku}` : undefined}>
+                            <span className="min-w-0 flex-1 truncate font-medium">{product?.name}</span>
+                            <span className="shrink-0 font-mono text-[11px] text-muted-foreground">{product?.sku}</span>
                           </div>
                         )}
+                      {/* Mobil özet satırı (yalnızca salt-okunur) — kök neden düzeltmesi (Tur 6 P1
+                          arge-recete-35): eskiden Miktar/Kaynak/Birim maliyet/Fire % bandı salt-okunur
+                          modda da TAM boyutuyla (44px dokunma yüksekliğindeki NumberInput'lar dahil)
+                          render ediliyordu, kart 104,5px'e çıkıyordu (referans 56-72px). Bant artık
+                          aşağıda `!editable` iken mobilde TAMAMEN gizli (`hidden md:contents`); aynı
+                          bilgi (miktar·birim, kaynak, fire) burada TEK muted satırda özetlenir. */}
+                      {!editable ? (
+                        <p className="truncate text-[11px] text-muted-foreground md:hidden">
+                          {formatQty(watched.lines[i]?.qty ?? '0', undefined, { maxDigits: 4 })} {uomById.get(watched.lines[i]?.uomId ?? '')?.code ?? ''}
+                          {' · '}
+                          {COST_SOURCE_LABELS[source]}
+                          {scrapZero ? '' : ` · Fire %${formatQty(watched.lines[i]?.scrapPct ?? '0', undefined, { maxDigits: 2 })}`}
+                        </p>
+                      ) : null}
                     </div>
                     <MoneyCell value={computation.lineCosts[i]?.toFixed(4) ?? '0'} digits={2} className="shrink-0 font-medium md:hidden" />
                     {/* Sil ikonu — mobilde Ürün satırının sağ ucunda (kök neden düzeltmesi, Tur 4 P1
@@ -545,15 +591,17 @@ export function CostSimulator({
                       <Button type="button" variant="ghost" size="icon-sm" onClick={() => remove(i)} className="size-11 shrink-0 text-muted-foreground hover:text-destructive md:hidden" aria-label="Satırı sil"><Trash2 className="size-4" /></Button>
                     ) : null}
                   </div>
-                  {/* Miktar/Kaynak/Birim maliyet/Fire % — mobilde TEK 4 sütunlu bant (`md:contents`
-                      ile masaüstünde KAYBOLUR, 4 çocuğu doğrudan dıştaki 7 sütunlu ızgaraya döner —
-                      kök neden düzeltmesi, Tur 5 P1 arge-recete-27: eskiden bu 4 alan 2 AYRI 44px
-                      satıra (Miktar+Kaynak, Birim maliyet+Fire%) yayılıyordu; artık TEK ~56px bantta,
-                      etiketler dar sütunlarda İÇE SIĞMADIĞI için değerin ÜSTÜNE alınır (satır başına
-                      bir kez — Tur 4 P1 arge-recete-21'in "aynı satır" ilkesi ihlal edilmez, o ilke
-                      etiket+kontrolün ÜST ÜSTE YIĞILMASINI önlemek içindi, dar bir sütunda üstte kısa
-                      bir başlık farklı bir sorun). */}
-                  <div className="col-span-2 grid gap-x-1 [grid-template-columns:var(--mobile-line-cols)] md:contents" style={MOBILE_LINE_COLS_STYLE}>
+                  {/* Miktar/Kaynak/Birim maliyet/Fire % — masaüstünde HER ZAMAN görünür (`md:contents`
+                      ile 7 sütunlu ızgaraya yayılır). Mobilde YALNIZCA düzenlenebilir modda görünür —
+                      kök neden düzeltmesi (Tur 6 P1 arge-recete-35): salt-okunur modda bu bant hâlâ
+                      44px'lik (disabled) NumberInput'ları render ediyordu, kartı gereksiz büyütüyordu;
+                      aynı bilgi artık yukarıdaki tek satırlık mobil özette. `hidden` (mobil, !editable)
+                      + `md:contents` (masaüstü, her zaman) — Controller'lar DOM'dan kalkmaz (yalnızca
+                      `display:none`), form durumu bozulmaz. Editable modda TEK ~44px bant (kök neden
+                      düzeltmesi, Tur 5 P1 arge-recete-27); etiketler artık `sr-only` (aşağısı, FieldLabel)
+                      — erişilebilir isim korunur ama görsel yükseklik tüketmez (Tur 6 P1 arge-recete-35,
+                      düzenlenebilir kart 129px'ten ≤104px'e). */}
+                  <div className={cn('col-span-2 grid gap-x-1 [grid-template-columns:var(--mobile-line-cols)] md:contents', !editable && 'hidden md:contents')} style={MOBILE_LINE_COLS_STYLE}>
                     <div className="min-w-0 md:block md:px-2 md:text-right" role="cell">
                       <FieldLabel>Miktar</FieldLabel>
                       <div className="flex min-w-0 items-center gap-0.5 md:justify-end md:gap-1">
@@ -578,8 +626,14 @@ export function CostSimulator({
                             "Kavanoz 500ml → 1" ile "Yulaf → 0,2"yi ayırt edilemez kılıyordu
                             (Tur 2 P1 arge-recete-12). minDigits=4=maxDigits: ondalık basamak sayısı
                             satırdan satıra değişmiyor artık, ondalık ayırıcı aynı x'te hizalanır
-                            (Tur 2 P2 arge-recete-13). */}
-                        <span className="shrink-0 text-[11px] text-muted-foreground">{uomById.get(watched.lines[i]?.uomId ?? '')?.code ?? ''}</span>
+                            (Tur 2 P2 arge-recete-13). SABİT genişlik (w-7/md:w-9) + sola yaslı — kök
+                            neden düzeltmesi (Tur 6 P1 arge-recete-31): önceden bu span İÇERİK
+                            genişliğindeydi ("KG"=2 / "ADET"=4 karakter), bu yüzden değerin sağ kenarı
+                            birim koduna göre KAYIYORDU (1440'ta KG satırları 814,8px / ADET satırları
+                            800,8px — 14px tırtık, 390'da aynı fark). Kod artık kendi SABİT hücresinde
+                            olduğundan, kod ne kadar uzun olursa olsun input'un ayrılan alanı (ve dolayısıyla
+                            sayının sağ kenarı) değişmez. */}
+                        <span className="w-7 shrink-0 text-left text-[11px] text-muted-foreground md:w-9">{uomById.get(watched.lines[i]?.uomId ?? '')?.code ?? ''}</span>
                       </div>
                     </div>
                     <div className="min-w-0 md:block md:px-2" role="cell">
@@ -693,11 +747,16 @@ export function CostSimulator({
   );
 }
 
+/** Mobil (< md): etiket kontrolün ÜSTÜNDE (space-y-1, değişmedi). Masaüstü (md+): etiket kontrolün
+ *  SOLUNDA, TEK satırda — kök neden düzeltmesi (Tur 6 P1 arge-recete-34): dört parti parametresi
+ *  eskiden dördü de etiket+kontrol dikey yığını olduğundan ~56px yükseklik tüketiyordu; yatay
+ *  düzende satır yüksekliği kontrolün kendi h-8'ine (32px) iner. `md:shrink-0` etiketin kontrolün
+ *  genişliğini çalmasını önler, `md:min-w-0` kontrol sarmalayıcısının taşmasını engeller. */
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1">
-      <span className="text-[11px] text-muted-foreground">{label}</span>
-      {children}
+    <div className="space-y-1 md:flex md:min-w-0 md:flex-1 md:items-center md:gap-2 md:space-y-0">
+      <span className="text-[11px] whitespace-nowrap text-muted-foreground md:shrink-0">{label}</span>
+      <div className="md:min-w-0 md:flex-1">{children}</div>
     </div>
   );
 }

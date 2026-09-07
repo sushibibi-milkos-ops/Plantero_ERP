@@ -1,6 +1,6 @@
 import { and, eq, isNotNull } from 'drizzle-orm';
 import { bankAccounts, cashflowLines, db, fixedExpenses, forecasts, loanInstallments } from '@plantero/db';
-import { D, type Decimal, sum, toDb } from '@plantero/core';
+import { D, type Decimal, sum, toDb, refreshActuals, SYSTEM_ACTOR } from '@plantero/core';
 import { forecastCash, type SalesHistoryPoint } from '@plantero/ai';
 
 /**
@@ -8,8 +8,19 @@ import { forecastCash, type SalesHistoryPoint } from '@plantero/ai';
  * geçmiş olarak kullanır, güncel banka bakiyesi + aktif sabit giderler + planlı kredi taksitleriyle
  * birlikte AI'a (yoksa mevsimsel hareketli ortalama fallback'e) 3 aylık nakit tahmini çıkarttırır ve
  * sonucu `forecasts` (kind='cash') tablosuna yazar.
+ *
+ * Kök neden düzeltmesi (kritik bulgu, Tur 6, kokpit görev turu): `budget_lines.actual/variance` ve
+ * `cashflow_lines.actual*` artık her `postJournalEntry` çağrısında nokta-atışı güncelleniyor
+ * (`accounting/journal.ts` → `refreshActualsForTouchedLines`), ama bu yalnızca O FİŞİN dokunduğu
+ * (dönem, hesap) kombinasyonunu hedefler. Bir bütçe SATIRI, o dönem için muhasebe kaydı zaten
+ * postlandıktan SONRA oluşturulursa (ör. yıl ortasında yeni bütçe girişi, ya da veri düzeltmesi/
+ * geriye dönük seed) nokta-atışı güncelleme hiç tetiklenmemiş olur — bu geceyi bekleyen tek güvenlik
+ * ağı TAM `refreshActuals()` taramasıdır. Önceden bu iş yalnızca `cashflow_lines`'ı OKUYUP tahmin
+ * üretiyordu, hiç yenilemiyordu; artık tahmin üretmeden ÖNCE tam yenileme çalışır.
  */
 export async function runCashflowRecompute(): Promise<Record<string, unknown>> {
+  const refreshed = await db.transaction((tx) => refreshActuals(tx, SYSTEM_ACTOR, {}));
+
   const actuals = await db
     .select({ period: cashflowLines.period, actualNetCashflow: cashflowLines.actualNetCashflow })
     .from(cashflowLines)
@@ -19,7 +30,7 @@ export async function runCashflowRecompute(): Promise<Record<string, unknown>> {
   const history: SalesHistoryPoint[] = actuals.map((a) => ({ period: a.period, amount: a.actualNetCashflow! }));
 
   if (history.length < 2) {
-    return { skipped: true, reason: 'Yeterli gerçekleşen nakit akışı verisi yok (cashflow_lines.actual_net_cashflow)', historyPoints: history.length };
+    return { skipped: true, reason: 'Yeterli gerçekleşen nakit akışı verisi yok (cashflow_lines.actual_net_cashflow)', historyPoints: history.length, refreshed };
   }
 
   const accounts = await db.select({ balance: bankAccounts.statementBalance }).from(bankAccounts).where(eq(bankAccounts.isActive, true));
@@ -41,5 +52,5 @@ export async function runCashflowRecompute(): Promise<Record<string, unknown>> {
     written++;
   }
 
-  return { historyPoints: history.length, projected: written };
+  return { historyPoints: history.length, projected: written, refreshed };
 }

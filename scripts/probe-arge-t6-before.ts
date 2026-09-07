@@ -1,6 +1,6 @@
 import { defaultBaseUrl, launchBrowser, openRoute } from './lib/browser';
 
-const ROUTE = '/arge/projeler/84122e58-da7d-4ff2-9cdd-a67a049d3901/receteler';
+const ROUTE = '/arge/projeler/501ef0c7-3273-43ae-9a81-15563cff78a9/receteler';
 
 // arge-recete-31: Miktar sütunundaki sayı sağ kenarı (birim koduna göre)
 const FN_QTY = `(() => {

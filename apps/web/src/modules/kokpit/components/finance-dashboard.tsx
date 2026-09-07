@@ -5,7 +5,7 @@ import { KpiStripRow } from '@/components/kpi-strip';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { ArrowRight, Plus } from 'lucide-react';
 import { formatMoney } from '@/lib/format';
 import type { CockpitReceipt } from '../queries';
 import { Section, DashboardGrid, StatStrip, AgingStrip, OverdueTop5List, BreakEvenPanel, BankAccountsList, RowLink } from './shared';
@@ -41,7 +41,18 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
               <MoneyCell value={bank.totalTry} className="font-medium" />
             </div>
             {bank.accounts.length === 0 ? (
-              <EmptyState compact title="Banka hesabı yok" />
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen): boş durum yalnızca
+              // ikon+başlık taşıyordu — puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor.
+              <EmptyState
+                compact
+                title="Banka hesabı yok"
+                description="Banka hesabı tanımlandığında bakiye burada görünür."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/muhasebe/banka"><ArrowRight className="size-3.5" /> Banka hesabını yönet</Link>
+                  </Button>
+                }
+              />
             ) : (
               <BankAccountsList accounts={bank.accounts} href="/muhasebe/banka" />
             )}
@@ -49,7 +60,17 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
 
           <Section title="KDV pozisyonu" href="/muhasebe/kdv">
             {!vat ? (
-              <EmptyState compact title="Henüz KDV dönemi hesaplanmadı" />
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+              <EmptyState
+                compact
+                title="Henüz KDV dönemi hesaplanmadı"
+                description="Dönem kapatıldığında KDV pozisyonu burada görünür."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/muhasebe/kdv"><ArrowRight className="size-3.5" /> KDV dönemini hesapla</Link>
+                  </Button>
+                }
+              />
             ) : (
               <StatStrip
                 divider
@@ -70,7 +91,17 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
                 olduğu halde görsel/etkileşim olarak ayırt edilemiyordu. `RowLink`'e taşındı: satır
                 40px, kendi kaydına link, hover/active/focus dili diğer tüm listelerle birebir. */}
             {reconciliationQueueItems.length === 0 ? (
-              <EmptyState compact title="Onay bekleyen öneri yok" />
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+              <EmptyState
+                compact
+                title="Onay bekleyen öneri yok"
+                description="AI mutabakat eşleştirmesi öneri ürettiğinde burada listelenir."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/muhasebe/mutabakat"><ArrowRight className="size-3.5" /> Mutabakatı aç</Link>
+                  </Button>
+                }
+              />
             ) : (
               <ul className="divide-y divide-border/50">
                 {reconciliationQueueItems.map((r) => (
@@ -89,7 +120,21 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
         <div className="min-w-0 flex flex-col gap-4">
           <Section title="Geciken alacak" href="/finans/tahsilat-takibi">
             <AgingStrip aging={overdue.aging} />
-            {overdue.top5.length === 0 ? <EmptyState compact title="Vadesi geçen alacak yok" /> : <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />}
+            {overdue.top5.length === 0 ? (
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+              <EmptyState
+                compact
+                title="Vadesi geçen alacak yok"
+                description="Vadesi geçen fatura olduğunda burada listelenir."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/finans/tahsilat-takibi"><ArrowRight className="size-3.5" /> Tahsilat takibini aç</Link>
+                  </Button>
+                }
+              />
+            ) : (
+              <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />
+            )}
           </Section>
 
           {/* Kök neden (Tur 3 P2 kokpit-fin-col-balance-02): "Bugünün tahsilatları" boş durumuna

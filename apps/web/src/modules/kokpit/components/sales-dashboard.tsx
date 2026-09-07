@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { ArrowRight, Plus } from 'lucide-react';
 import type { SalesCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
@@ -5,6 +7,7 @@ import { StatusBadge } from '@/components/status-badge';
 import { QtyCell } from '@/components/qty-cell';
 import { MoneyCell } from '@/components/money-cell';
 import { EmptyState } from '@/components/empty-state';
+import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/format';
 import { ChannelBars } from './channel-bars';
 import { Section, DashboardGrid, RowLink, RankBar } from './shared';
@@ -43,7 +46,17 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
         <div className="min-w-0 flex flex-col gap-4">
           {data.channelToday.rows.length === 0 ? (
             <Section title="Kanal ciro (bugün)" href="/satis/net-ciro">
-              <EmptyState compact title="Bugün henüz sipariş yok" />
+              {/* Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen). */}
+              <EmptyState
+                compact
+                title="Bugün henüz sipariş yok"
+                description="Bugün onaylanan sipariş olduğunda kanal kırılımı burada görünür."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/satis/siparisler/yeni"><Plus className="size-3.5" /> Yeni sipariş oluştur</Link>
+                  </Button>
+                }
+              />
             </Section>
           ) : showChannelBreakdown ? (
             <Section title="Kanal ciro (bugün)" href="/satis/net-ciro">
@@ -53,7 +66,17 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
 
           <Section title="Satış hunisi" href="/satis/firsatlar">
             {funnel.every((f) => f.count === 0) ? (
-              <EmptyState compact title="Açık fırsat yok" />
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+              <EmptyState
+                compact
+                title="Açık fırsat yok"
+                description="Bir fırsat oluşturulduğunda huni burada görünür."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/satis/firsatlar"><ArrowRight className="size-3.5" /> Fırsat panosunu aç</Link>
+                  </Button>
+                }
+              />
             ) : (
               <ul className="space-y-2.5 p-4">
                 {funnel.map((f) => (
@@ -76,7 +99,17 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
             kokpit-satis-order-trunc-01'in ihtiyaç duyduğu genişliği (1152px) verir. */}
         <Section title="En çok satan 5 (son 30 gün)" href="/satis/net-ciro" className="lg:self-start">
           {data.top5Products.length === 0 ? (
-            <EmptyState compact title="Son 30 günde satış yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+            <EmptyState
+              compact
+              title="Son 30 günde satış yok"
+              description="Son 30 günde satış olduğunda en çok satan ürünler burada listelenir."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/satis/siparisler/yeni"><Plus className="size-3.5" /> Yeni sipariş oluştur</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {data.top5Products.map((p, i) => (
@@ -109,7 +142,17 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
             (sm:w-24→20, sm:w-32→28) — kalan pay partnere. */}
         <Section title="Son siparişler" href="/satis/siparisler" className="lg:col-span-2">
           {data.recentOrders.length === 0 ? (
-            <EmptyState compact title="Son 14 günde sipariş yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+            <EmptyState
+              compact
+              title="Son 14 günde sipariş yok"
+              description="Son 14 günde oluşturulan siparişler burada listelenir."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/satis/siparisler/yeni"><Plus className="size-3.5" /> Yeni sipariş oluştur</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {data.recentOrders.map((o) => (

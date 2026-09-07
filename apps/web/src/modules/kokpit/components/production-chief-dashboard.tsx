@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Plus } from 'lucide-react';
 import type { ProductionChiefCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
@@ -34,7 +34,17 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
         <div className="min-w-0 flex flex-col gap-4">
           <Section title="Hat durumu" href="/uretim/hatlar">
             {data.lines.length === 0 ? (
-              <EmptyState compact title="Aktif hat yok" />
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+              <EmptyState
+                compact
+                title="Aktif hat yok"
+                description="Üretim hattı tanımlandığında durumu burada görünür."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/uretim/hatlar"><ArrowRight className="size-3.5" /> Hatları gör</Link>
+                  </Button>
+                }
+              />
             ) : (
               <ul className="divide-y divide-border/50">
                 {data.lines.map((l) => (
@@ -83,7 +93,17 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
               tasarım kararı değil, mevcut veri dağılımı için en dengeli yerleşim. */}
           <Section title="Son duruşlar" href="/uretim/hatlar">
             {data.recentDowntimes.length === 0 ? (
-              <EmptyState compact title="Kayıtlı duruş yok" />
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+              <EmptyState
+                compact
+                title="Kayıtlı duruş yok"
+                description="Bir hat durduğunda duruş kaydı burada listelenir."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/bakim/is-emirleri/yeni"><Plus className="size-3.5" /> Arıza bildir</Link>
+                  </Button>
+                }
+              />
             ) : (
               <ul className="divide-y divide-border/50">
                 {data.recentDowntimes.map((d) => (
@@ -105,7 +125,17 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
         <div className="min-w-0 flex flex-col gap-4">
           <Section title="Son iş emirleri" href="/uretim/is-emirleri">
             {data.recentWorkOrders.length === 0 ? (
-              <EmptyState compact title="Henüz iş emri yok" />
+              // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+              <EmptyState
+                compact
+                title="Henüz iş emri yok"
+                description="İş emri oluşturulduğunda burada listelenir."
+                action={
+                  <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                    <Link href="/uretim/is-emirleri/yeni"><Plus className="size-3.5" /> İş emri oluştur</Link>
+                  </Button>
+                }
+              />
             ) : (
               <ul className="divide-y divide-border/50">
                 {data.recentWorkOrders.map((w) => (

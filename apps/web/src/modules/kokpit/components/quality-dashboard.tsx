@@ -1,7 +1,10 @@
+import Link from 'next/link';
+import { ArrowRight, Plus } from 'lucide-react';
 import type { QualityCards } from '@plantero/core/cockpit/kpis';
 import { KpiCard } from '@/components/kpi-card';
 import { KpiStripRow } from '@/components/kpi-strip';
 import { EmptyState } from '@/components/empty-state';
+import { Button } from '@/components/ui/button';
 import { Section, RowLink, DashboardGrid } from './shared';
 
 /** Kalite panosu — bekleyen QC, red oranı (30g), düşen tedarikçi skorları, açık geri çağırma. */
@@ -18,7 +21,18 @@ export function QualityDashboardView({ data }: { data: QualityCards }) {
       <DashboardGrid>
         <Section title="Düşen tedarikçi skorları" href="/kalite/tedarikci-skoru">
           {data.supplierScoreDrops.length === 0 ? (
-            <EmptyState compact title="Düşen skor yok" description="Önceki döneme göre puanı düşen tedarikçi burada listelenir." />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04): açıklama vardı ama eylem yoktu —
+            // puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor.
+            <EmptyState
+              compact
+              title="Düşen skor yok"
+              description="Önceki döneme göre puanı düşen tedarikçi burada listelenir."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/kalite/tedarikci-skoru"><ArrowRight className="size-3.5" /> Tedarikçi skorlarını gör</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {data.supplierScoreDrops.map((s) => (
@@ -36,7 +50,17 @@ export function QualityDashboardView({ data }: { data: QualityCards }) {
 
         <Section title="Bekleyen kalite kontrolleri" href="/kalite/kontroller">
           {data.pendingQc === 0 ? (
-            <EmptyState compact title="Bekleyen kontrol yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+            <EmptyState
+              compact
+              title="Bekleyen kontrol yok"
+              description="Mal kabulde kalite kontrolü oluşturulduğunda burada görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/depo/mal-kabul/yeni"><Plus className="size-3.5" /> Mal kabul oluştur</Link>
+                </Button>
+              }
+            />
           ) : (
             <div className="flex h-16 items-center justify-between px-4">
               <span className="text-sm text-muted-foreground">Sonuç bekleyen kontrol</span>

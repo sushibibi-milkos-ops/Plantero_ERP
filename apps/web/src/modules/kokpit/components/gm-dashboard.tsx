@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { ArrowRight, Plus } from 'lucide-react';
 import type { GmDashboard } from '@plantero/core/cockpit/kpis';
 import { groupConsecutiveActivity } from '@plantero/core/cockpit/kpis';
 import type { CockpitTodayItem } from '../queries';
@@ -57,7 +57,18 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
             <MoneyCell value={channelSales.grossTotal} className="font-medium" />
           </div>
           {channelSales.rows.length === 0 ? (
-            <EmptyState compact title="Bugün henüz sipariş yok" description="İlk sipariş girildiğinde kanal çubukları burada görünür." />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04): açıklama vardı ama eylem yoktu —
+            // puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor.
+            <EmptyState
+              compact
+              title="Bugün henüz sipariş yok"
+              description="İlk sipariş girildiğinde kanal çubukları burada görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/satis/siparisler/yeni"><Plus className="size-3.5" /> Yeni sipariş oluştur</Link>
+                </Button>
+              }
+            />
           ) : (
             <div className="p-4">
               <ChannelBars rows={channelSales.rows.map((r) => ({ name: r.name, net: Number(r.net) }))} />
@@ -94,7 +105,17 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
 
         <Section title="Onay kuyruğu" href="/onaylar">
           {approvals.total === 0 ? (
-            <EmptyState compact title="Onay bekleyen öğe yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+            <EmptyState
+              compact
+              title="Onay bekleyen öğe yok"
+              description="Mutabakat, satın alma önerisi, sayım farkı veya hatırlatma onayı beklediğinde burada görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/onaylar"><ArrowRight className="size-3.5" /> Onay kuyruğunu aç</Link>
+                </Button>
+              }
+            />
           ) : (
             <StatStrip
               items={[
@@ -107,11 +128,21 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
           )}
         </Section>
 
-        {/* href yok: /ayarlar/audit (Denetim Kaydı) henüz inşa edilmedi (ayarlar modülü kapsamı) —
-            var olmayan bir rotaya "Tümü" bağlantısı vermek yerine burada başlıksız bırakılır. */}
-        <Section title="Son aktiviteler">
+        {/* Kök neden (Tur 6 P1 kokpit-depo-empty-action-04): /ayarlar/audit (Denetim Kaydı) artık
+            inşa edilmiş durumda — eski yorum yanlıştı. "Tümü" bağlantısı ve boş durum eylemi buraya
+            bağlanır. */}
+        <Section title="Son aktiviteler" href="/ayarlar/audit">
           {activityGroups.length === 0 ? (
-            <EmptyState compact title="Henüz aktivite yok" />
+            <EmptyState
+              compact
+              title="Henüz aktivite yok"
+              description="Sistemde bir kayıt oluşturulduğunda veya değiştirildiğinde burada görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/ayarlar/audit"><ArrowRight className="size-3.5" /> Denetim kaydını aç</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {activityGroups.map((a) => (
@@ -143,7 +174,17 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
             <MoneyCell value={bank.totalTry} className="font-medium" />
           </div>
           {bank.accounts.length === 0 ? (
-            <EmptyState compact title="Banka hesabı yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+            <EmptyState
+              compact
+              title="Banka hesabı yok"
+              description="Banka hesabı tanımlandığında bakiye burada görünür."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/muhasebe/banka"><ArrowRight className="size-3.5" /> Banka hesabını yönet</Link>
+                </Button>
+              }
+            />
           ) : (
             <BankAccountsList accounts={bank.accounts} href="/muhasebe/banka" />
           )}
@@ -189,7 +230,17 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
         <Section title="SKT riski" href="/depo/skt">
           <ExpiryBucketStrip totals={expiry.totals} />
           {expiry.top5.length === 0 ? (
-            <EmptyState compact title="Yaklaşan SKT yok" />
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+            <EmptyState
+              compact
+              title="Yaklaşan SKT yok"
+              description="Son kullanma tarihi yaklaşan lot olduğunda burada listelenir."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/depo/lotlar"><ArrowRight className="size-3.5" /> Tüm lotları gör</Link>
+                </Button>
+              }
+            />
           ) : (
             <ul className="divide-y divide-border/50">
               {expiry.top5.map((r) => (
@@ -215,7 +266,21 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
 
         <Section title="Geciken alacak" href="/finans/tahsilat-takibi">
           <AgingStrip aging={overdue.aging} />
-          {overdue.top5.length === 0 ? <EmptyState compact title="Vadesi geçen alacak yok" /> : <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />}
+          {overdue.top5.length === 0 ? (
+            // Kök neden (Tur 6 P1 kokpit-depo-empty-action-04, aynı desen).
+            <EmptyState
+              compact
+              title="Vadesi geçen alacak yok"
+              description="Vadesi geçen fatura olduğunda burada listelenir."
+              action={
+                <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
+                  <Link href="/finans/tahsilat-takibi"><ArrowRight className="size-3.5" /> Tahsilat takibini aç</Link>
+                </Button>
+              }
+            />
+          ) : (
+            <OverdueTop5List items={overdue.top5} href="/finans/tahsilat-takibi" />
+          )}
         </Section>
       </FlowGrid>
     </>
