@@ -125,7 +125,15 @@ const FILES = await checkFiles();
 // checks/56_export_invoice_link_symmetry.sql üst yorumu). Düzeltme önerisi: linkInvoice'a
 // assertStatus(['shipped','delivered']) ekle; s.invoiceId doluyken farklı bir fatura ile çağrılırsa
 // önce eski faturanın exportShipmentId'sini null'a çek (ya da ikinci çağrıyı reddet).
-const RULE_COUNT = 58;
+// I59 (veri-critic Tur 10, YENİ): `recall.ts::initiate()` "delivered" recall_items satırlarının
+// lotId'sini HER ZAMAN `impact.lots[0]?.id` (neredeyse her zaman kök hammadde lotu) ile dolduruyor —
+// RecallImpact['deliveries'] tipi hangi lotun sevk edildiğini hiç taşımadığından. Birden fazla lotlu
+// (kök + ≥1 üretilen mamul) HER recall'da tüm 'delivered' kalemleri AYNI (yanlış) lota işaret eder;
+// recordRecallAction('return',...) bu yüzden fiziksel iadeyi yanlış lota kaydeder (I57/I58 yalnızca
+// toplam miktarı doğrular, lot kimliğini değil). Canlı doğrulama: checks/59_recall_delivered_lot_identity.sql
+// üst yorumunda — rollback'li vitest transaction'ında 2 farklı mamul lotu/2 sevkiyatla üretildi, ikisi
+// de aynı (kök) lotId'yi taşıdı, I59 anında 2 ihlal verdi. Fresh seed'de dormant (recall_items 0 satır).
+const RULE_COUNT = 59;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
