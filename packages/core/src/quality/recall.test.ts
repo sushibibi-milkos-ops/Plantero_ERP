@@ -183,6 +183,17 @@ describe('quality/recall', () => {
       const moves = await tx.select().from(stockMoves).where(and(eq(stockMoves.kind, 'recall_return'), eq(stockMoves.refType, 'recall_item'), eq(stockMoves.refId, deliveredItem!.id)));
       expect(moves.length).toBe(1);
       expect(Number(moves[0]!.qty)).toBeCloseTo(25, 4);
+
+      // Tur 9 P0 düzeltmesi (I58): aynı itemId için ikinci bir 'return' çağrısı (çift tık/ağ
+      // gecikmesi/yeniden-deneme) artık RECALL_ITEM_ALREADY_ACTIONED ile reddedilir — hayali/phantom
+      // ikinci bir postStockMove ÜRETİLMEZ.
+      await expect(recordRecallAction(tx, deliveredItem!.id, 'return', 'İkinci deneme', ctx)).rejects.toMatchObject({ code: 'RECALL_ITEM_ALREADY_ACTIONED' });
+
+      const movesAfterRetry = await tx.select().from(stockMoves).where(and(eq(stockMoves.kind, 'recall_return'), eq(stockMoves.refType, 'recall_item'), eq(stockMoves.refId, deliveredItem!.id)));
+      expect(movesAfterRetry.length).toBe(1);
+      const afterRetry = await tx.select().from(stockQuants).where(and(eq(stockQuants.lotId, lot.id), eq(stockQuants.locationId, base.loc.kar.id)));
+      const afterRetryQty = afterRetry.reduce((acc, q) => acc + Number(q.qty), 0);
+      expect(afterRetryQty - beforeQty).toBeCloseTo(25, 4);
     });
   });
 

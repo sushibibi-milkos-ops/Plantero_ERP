@@ -11,7 +11,7 @@ import { MoneyCell } from '@/components/money-cell';
 import { QtyCell } from '@/components/qty-cell';
 import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
-import { formatDateTime, relativeTime } from '@/lib/format';
+import { formatDateTime, formatTime, relativeTime } from '@/lib/format';
 import { ChannelBars } from './channel-bars';
 import { Section, Row, RowLink, FlowGrid, StatStrip, ExpiryBucketStrip, AgingStrip, OverdueTop5List, BreakEvenPanel, TodayRow, ProductionLineRow, BankAccountsList } from './shared';
 

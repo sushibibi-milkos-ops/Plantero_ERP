@@ -5,48 +5,48 @@
       "busyClass": "",
       "children": [
         "mb-5 space-y-2 md:mb-6",
-        "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:",
+        "scrollbar-thin scroll-fade-x relative mb-6 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 md:gap-0 md:o",
         "grid gap-4 lg:grid-cols-2 lg:items-start"
       ],
       "strip": {
-        "cls": "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:divide-y-0",
-        "display": "grid",
-        "gridCols": "287.5px 287.5px 287.5px 287.5px",
+        "cls": "scrollbar-thin scroll-fade-x relative mb-6 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 md:gap-0 md:overflow-visible md:bg-transparent md:pb-0 md:[background-image:none] md:snap-none",
+        "display": "flex",
+        "gridCols": "none",
         "overflowX": "visible",
-        "borderTopWidth": "1px",
-        "borderTopColor": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
-        "radius": "8px",
+        "borderTopWidth": "0px",
+        "borderTopColor": "oklch(0.92 0.004 286.3)",
+        "radius": "0px",
         "w": 1152,
-        "h": 66,
+        "h": 80,
         "n": 4,
         "childW": [
-          287.5,
-          287.5,
-          287.5,
-          287.5
+          287.3,
+          288.3,
+          288.3,
+          288.3
         ],
         "childH": [
-          64,
-          64,
-          64,
-          64
+          80,
+          80,
+          80,
+          80
         ]
       },
       "flexRowHeights": [
-        566,
+        80,
+        530,
         44,
+        40,
+        40,
+        40,
         44,
+        40,
+        40,
+        40,
         44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        566
+        40,
+        40,
+        40
       ]
     }
   },
@@ -56,48 +56,48 @@
       "busyClass": "",
       "children": [
         "mb-5 space-y-2 md:mb-6",
-        "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:",
+        "scrollbar-thin scroll-fade-x relative mb-6 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 md:gap-0 md:o",
         "grid gap-4 lg:grid-cols-2 lg:items-start"
       ],
       "strip": {
-        "cls": "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:divide-y-0",
-        "display": "grid",
-        "gridCols": "178px 178px",
-        "overflowX": "visible",
-        "borderTopWidth": "1px",
-        "borderTopColor": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
-        "radius": "8px",
+        "cls": "scrollbar-thin scroll-fade-x relative mb-6 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 md:gap-0 md:overflow-visible md:bg-transparent md:pb-0 md:[background-image:none] md:snap-none",
+        "display": "flex",
+        "gridCols": "none",
+        "overflowX": "auto",
+        "borderTopWidth": "0px",
+        "borderTopColor": "oklch(0.92 0.004 286.3)",
+        "radius": "0px",
         "w": 358,
-        "h": 132,
+        "h": 76,
         "n": 4,
         "childW": [
-          178,
-          178,
-          178,
-          178
+          152,
+          152,
+          152,
+          152
         ],
         "childH": [
-          65,
-          65,
-          65,
-          65
+          72,
+          72,
+          72,
+          72
         ]
       },
       "flexRowHeights": [
-        566,
+        76,
+        737,
         44,
+        63,
+        63,
+        63,
         44,
+        63,
+        63,
+        63,
         44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        44,
-        566
+        63,
+        63,
+        63
       ]
     }
   }

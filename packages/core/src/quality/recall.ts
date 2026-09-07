@@ -258,6 +258,30 @@ export async function recordRecallAction(tx: DbOrTx, itemId: string, action: Rec
   const [recall] = await tx.select().from(recalls).where(eq(recalls.id, item.recallId)).for('update');
   if (!recall) throw new NotFoundError('Geri çağırma', item.recallId);
   if (recall.status === 'closed') throw new DomainError('RECALL_CLOSED', `${recall.docNo} kapatılmış — aksiyon eklenemez`, { recallId: recall.id });
+  /**
+   * Tur 9 P0 düzeltmesi (docs/INVARIANTS.md I58, checks/58_recall_action_idempotency.sql):
+   * `item.actionStatus` daha önce hiç kontrol edilmiyordu — bu fonksiyon bir server action'dan
+   * çağrıldığı ve UI yalnızca `router.refresh()` SONRASI actionStatus='done' iken düğmeleri
+   * gizlediği için, çift tık / ağ gecikmesi / yeniden-deneme aynı `itemId` için AYNI aksiyonu
+   * (özellikle `return` dalını) koşulsuz ikinci kez çalıştırıp `postStockMove(kind:'recall_return')`'u
+   * TEKRAR işletiyordu — `item.qtyDelivered` initiate() anında donmuş statik bir değer olduğundan
+   * her tekrar aynı miktarı bir daha karantinaya taşıyıp hayali/phantom envanter üretiyordu.
+   * Guard, `item.action === action && item.actionStatus === 'done'` iken (yani AYNI aksiyon zaten
+   * kaydedilmişken) reddeder — genel `actionStatus==='done'` kontrolü DEĞİL: `initiate()` fiziksel
+   * bloklama anında bloklanan her lot için `action:'block', actionStatus:'done'` satırı KENDİSİ
+   * yazıyor (aksiyon takip tablosunun tasarımı gereği — bkz. `recall_items.action` şema yorumu
+   * 'block, notify_customer, return, destroy': bu ilerleyen bir durum makinesi, tek seferlik bir
+   * bayrak değil), sonrasında aynı satır kalitenin fiilen "İade"/"İmha" kararını kaydetmesiyle
+   * `block`'tan `return`/`destroy`'a GEÇİŞ yapar — bu meşru bir sonraki adımdır, tekrar değil (aksi
+   * halde initiate() sonrası bloklanmış hiçbir stok asla resmi olarak iade/imha edilemezdi).
+   * `destroy` dalı ayrıca canlı `stock_quants WHERE qty>0` sorguladığı için kendiliğinden idempotent
+   * (ikinci aynı-aksiyon çağrısında zaten bu guard'a takılır, isterse taşınacak quant de kalmaz) —
+   * bu guard davranışını bozmaz, yalnızca aynı aksiyonun tekrarını (özellikle `return`'ü) güvenli
+   * hale getirir.
+   */
+  if (item.action === action && item.actionStatus === 'done') {
+    throw new DomainError('RECALL_ITEM_ALREADY_ACTIONED', `${item.id} için '${action}' aksiyonu zaten kaydedilmiş`, { itemId: item.id, action });
+  }
 
   if (action === 'return' && D(item.qtyDelivered).gt(0)) {
     /**
