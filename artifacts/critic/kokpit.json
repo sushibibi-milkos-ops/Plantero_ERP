@@ -1,10 +1,10 @@
 {
  "module": "kokpit",
- "round": 7,
- "note": "Tur 7 (kritik doğrulama, örnekleme Europe/Istanbul 7 Eylül 03:58-04:40): 5 rol kesiti yeniden çekildi (scripts/shot-kokpit-r3.ts, 1440x900 + 390x844). Ölçümler: artifacts/critic/measure-kokpit-r7/ (pnpm measure, 5 rol x 2 viewport) ve artifacts/critic/probe-kokpit-r7/ (YENİ scripts/probe-kokpit-r7.ts + probe-kokpit-r7b.ts: li KUTUSUNUN kendi yüksekliği [r7 probunda firstElementChild bazı listelerde satır sarmalayıcısı değil], bölüm bazında ayırt edicilik/birebir aynı satır sayısı, tam genişlikteki bölümler hariç kolon dibi dengesi, tabular-nums kapsaması, sağ kenar hizası, active/hover/focus kapsaması, 44px altı dokunma hedefleri). ÖNEMLİ FARK (Tur 6 vs Tur 7): Tur 6 gün dönümü SONRASI (01:57-03:10) örneklenmişti ve \"Bugün\"/\"Bugünün tahsilatları\"/\"Kritik stok\"/\"Fire kırılımı\" bölümleri BOŞTU; bu turda \"Bugün\" (8-10 satır), \"Karantina\", \"Son siparişler\", \"Son iş emirleri\" DOLU durumda ölçüldü — yani dolu-durum anatomisi ilk kez bu turda görüldü. TUR 6 KAPANIŞLARI YENİDEN ÖLÇÜLDÜ, HEPSİ KAPALI KALDI: kokpit-admin-col-balance-03 (FlowGrid colSpread 73px, hedef <=200; probe r7 admin-1440.json), kokpit-activity-row-anatomy-01 (\"Son aktiviteler\" 8/8 satır 40-41px = Banka/SKT riski/Geciken alacak ile aynı), kokpit-fin-payments-row-h11-01 (finance-dashboard.tsx:177 RowLink), kokpit-depo-empty-action-04 (görünen 3 boş durumun 3/3'ü ikon + 2 metin satırı + eylem: Kritik stok, Bugünün tahsilatları, Fire kırılımı — probe r7 *-390.json empties), kokpit-satis-kpi-title-trunc-01 (satis 390: clipped listesi BOŞ), kokpit-fold-rows-01/kokpit-fin-fold-rows-01/kokpit-uretim-fold-rows-02 (katlama üstü bilgi birimi admin 17 / depo 25 / muhasebe 30 / satış 20 / üretim 19 — hepsi >=15). KOD DÜZEYİ TARAMA (kokpit modülü + kpi-card/kpi-strip/empty-state/status-badge + globals.css): `transition: all` YOK, `ease-in` YOK, `scale(0)` YOK, >=300ms süre YOK; hover globals.css:10 `@custom-variant hover` ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) yalnızca transform, 140ms, :not(:focus-visible) korumalı; prefers-reduced-motion bloğu mevcut ve spinner/pulse istisnaları düzgün. Bu turda kod düzeyi bulgu YOK. FOKUS DİLİ DOĞRULAMASI (kriter 8): klavye Tab ile gerçek :focus-visible ölçüldü — RowLink/StatStrip satırları `ring-2 ring-inset` (yeşil), KpiCard ve \"Tümü\" bağlantıları globals.css:157 `outline-ring/50` ile tarayıcının auto halkasını AYNI yeşil token ile boyuyor; iki halka aynı dili konuşuyor (renk+yarıçap), yalnızca kalınlık/alfa farklı — P2 altı, bulgu açılmadı. YENİ AÇIK BULGULAR (2, ikisi de P1): kokpit-uretim-downtime-row-anatomy-05 (üretim şefi \"Son duruşlar\" elle yazılmış li — mobilde 39.5-41px, aynı ekrandaki her liste 60-65.5px) ve kokpit-fin-recon-discriminator-05 (mutabakat kuyruğu satırı yalnızca ad+tutar taşıyor; 8 satırın 3'ü birebir aynı metin, güven yüzdesi 0,15-0,90 arası değişirken hiç gösterilmiyor). TUR 7 DÜZELTME GEÇİŞİ (aynı gün, kritik doğrulama sonrası): iki YENİ AÇIK bulgu KAPATILDI. kokpit-uretim-downtime-row-anatomy-05: production-chief-dashboard.tsx \"Son duruşlar\" elle yazılmış li → shared.tsx `Row`; probe-kokpit-r7b uretim_sefi-390/1440 ile doğrulandı (bkz. ilgili finding measureAfter). kokpit-fin-recon-discriminator-05: finance-dashboard.tsx \"Mutabakat kuyruğu\" satırına güven yüzdesi eklendi (`sm:contents` grubunda tutarla birlikte — ilk denemede AYRI çocuk olarak eklenince mobilde 3 satıra/84,5px'e çıktığı görüldü, OverdueTop5List deseniyle düzeltildi) ve kpis.ts orderBy confidence DESC'e çevrildi; probe-kokpit-r7b muhasebe-390/1440 ile doğrulandı (dupes=[]). pnpm db:reset + db:check (57 kural) yeşil, pnpm typecheck/lint temiz. Her iki route artık open=[].",
+ "round": 9,
+ "note": "Tur 9 (kritik doğrulama, örnekleme Europe/Istanbul 7 Eylül 04:45–05:20). 5 rol kesiti yeniden çekildi (scripts/shot-kokpit-r3.ts, 1440×900 + 390×844 → artifacts/screens/kokpit-<rol>/). Ölçümler: artifacts/critic/measure-kokpit-r9/ — pnpm measure (5 rol × 2 viewport), YENİ scripts/probe-kokpit-r9.ts (bölüm anatomisi, bayt-bayt aynı satır, sağ kenar hizası, tabular kapsaması, kolon dibi dengesi, dokunma hedefleri), probe-kokpit-r9b.ts (sıfır değer soluklaştırma + dev-overlay teyidi), probe-kokpit-r9d/e/f.ts (YÜKLENİYOR İSKELETİNİ gerçekten yakalama), probe-kokpit-r9g.ts (katlama üstü bilgi birimi). TUR 8 AÇIK BULGULARI YENİDEN ÖLÇÜLDÜ: kokpit-activity-dupe-06 AÇIK KALDI (admin \"Son aktiviteler\" 8 satır, 1 bayt-bayt aynı çift), kokpit-meta-tabular-08 AÇIK KALDI (digitNonTab 18/18/11/9/2), kokpit-loading-strip-frame-07 KAPATILDI ve yerine kokpit-loading-skeleton-mismatch-09 (P1) açıldı — ilk kez iskelet DOM'u yakalanıp ölçüldü ve mobilde tamamen farklı bir bileşen çizdiği görüldü. ÖNEMLİ ÖLÇÜM NOTU: kokpit/loading.tsx SERT gezinmede hiç görünmüyor (25 sn boyunca yalnızca (app)/loading.tsx yakalandı — probe-r9e); rota iskeleti YUMUŞAK gezinmede, router önbelleği boşken basılıyor (probe-r9f prefetch'i 6 sn geciktirerek yakaladı). KAZANAN: her 5 kesitte referans (Stripe 56 / Linear 57) — toplam 59 ≥ referans ama açık P1 var, kazanma kuralı sağlanmıyor.",
  "routes": {
   "/kokpit?rol=admin": {
-   "round": 8,
+   "round": 9,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -14,63 +14,52 @@
     5,
     5,
     5,
-    5,
+    4,
     5,
     5,
     5,
     5,
     5
    ],
-   "total": 60,
+   "total": 59,
    "verdict": "KAZANAN: Plantero",
    "shots": [
     "artifacts/screens/kokpit-admin/desktop.png",
     "artifacts/screens/kokpit-admin/mobile.png"
    ],
-   "scoreNotes": {
-    "1": "5 — değişmedi (measure-kokpit-r8/admin-1440.json: h1 24px/600, mobil 20px/600; font kademeleri 13px gövde ağırlıklı, 10-12px etiket).",
-    "2": "5 — FlowGrid dengesi korunuyor: kolon dipleri 1616 / 1543 → fark 73px (hedef ≤200). Bölüm arası 16px (probe-r8d gaps: [16]×8), sayfa kenarı 24px.",
-    "3": "5 — katlama üstü (1440×900) bilgi birimi 19 (4 KPI + 2 kanal + 2 break-even + 4 Bugün + 4 Banka + 3 Üretim hattı); masaüstü satır 40/41px (tek satırlık) ve 54,5-55,5px (2 satırlık); mobil kart 60-65,5px (band 56-72).",
-    "4": "5 — nötr zemin + tek yeşil vurgu; kırmızı yalnızca negatif bakiye/vade aşımı, amber yalnızca SKT/kalite uyarısı; sıfırlar muted.",
-    "5": "5 — hairline ayraç, taşma yok (scrollW 1440 = clientW; 390 = 390), sayı sütunu sağ kenar sapması 0px (Bugün, Banka, SKT riski, Geciken alacak: rightSpread 0), satır hover/active/focus var. Not: kokpit-activity-dupe-06 içerik tekrarı (P2) — anatomi ölçümlerinin hiçbirini bozmadığı için puan düşürülmedi.",
-    "6": "5 — .num düğümlerinin 28/28'i tabular-nums (nonTabular 0); satırda 2 ondalık, KPI/şeritte yuvarlanmış. İkincil meta için bkz. kokpit-meta-tabular-08 (P2, ölçülebilir hizalama sapması yok).",
-    "7": "5 — 'Kritik stok' boş durumu ikon+başlık+açıklama+eylem; rota özel iskelet var. İskelet-gerçek çerçeve/satır farkı P2 (kokpit-loading-strip-frame-07) olarak açıldı, boş/hata durumları etkilenmiyor.",
-    "8": "5 — active: kapsaması 42/42 (probe-r8d noActive 0), hover: 42/42; :active scale(0.97) :not(:focus-visible) guardlı; focus ring 2px inset.",
-    "9": "5 — 390px: yatay taşma yok (scrollW 390 = clientW), 44px altı ETKİLEŞİMLİ hedef yok (tek istisna tıklanamaz breadcrumb span), kart 60-65,5px.",
-    "10": "5 — değişmedi; 16px ikon seti, süs ikonu yok.",
-    "11": "5 — değişmedi; Section/Row/RowLink/StatStrip tek anatomi.",
-    "12": "5 — kutu içinde kutu yok, çerçeve/ikon çorbası yok. Aktivite satırı tekrarı P2 olarak listelendi (Tur 1'deki 8/8 özdeş satır durumundan 2/8'e indi; o bulgu da P2 idi — aynı ölçüt korunuyor)."
-   },
+   "scoreNotes": "Tur 9 deltası — kriter 7: 5→4. Gerekçe: rota iskeleti ilk kez YAKALANIP ölçüldü (probe-r9f, prefetch geciktirilerek). Tur 8 yalnızca kodu okuyup masaüstü çerçeve + 4px satır farkını P2 saymıştı; Tur 9 ölçümü mobilde iskeletin BAŞKA bir bileşen (132px 2×2 çerçeveli ızgara vs ~76px yatay kaydıran şerit) çizdiğini ve satır başına 19–21px hata yaptığını gösterdi → P1. Diğer 11 kriter yeniden ölçüldü ve 5'te kaldı: taşma yok (scrollWidth = clientWidth, 10/10 kesit), satır 40–41px masaüstü / 60–65,5px mobil, katlama üstü bilgi birimi 19/26/24/25/19 (≥15), .num düğümlerinde tabular-nums 100%, sıfır değerler soluk (oklab(0.552 … / 0.7)) hem KPI hem StatStrip'te, mobilde 44px altı dokunma hedefi 0, h1 24px/600 masaüstü + 20px/600 mobil, gövde 13px baskın. Kod düzeyi tarama temiz: transition:all / ease-in / scale(0) / ≥300ms YOK; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) 140ms, :not(:focus-visible) korumalı. Ekran görüntülerindeki sol-alt siyah \"N\" rozeti Next.js dev overlay'i (probe-r9b devOverlay=true) — ürün kusuru değil, bulgu açılmadı.",
    "open": [
+    {
+     "id": "kokpit-loading-skeleton-mismatch-09",
+     "criterion": 7,
+     "severity": "P1",
+     "openedRound": 9,
+     "supersedes": "kokpit-loading-strip-frame-07",
+     "text": "Rota iskeleti (kokpit/loading.tsx) gerçek sayfanın anatomisini TAŞIMIYOR; yükleme bitince görünür bir düzen sıçraması oluyor. (a) MASAÜSTÜ: iskelet KPI şeridi ÇERÇEVELİ bir kutu (1px border + 8px radius + divide-x/divide-y) ve 66px; gerçek şerit çerçevesiz/şeffaf, 80px ve yalnızca kartlar arası SOL hairline taşıyor — yükleme bitince bir çerçeve \"sönüyor\" ve şerit 14px büyüyor. (b) MOBİL (390px): iskelet 2×2 çerçeveli ızgara, 132px; gerçek şerit ise 4 adet 152×72px kartın YATAY KAYDIRAN (snap) şeridi, ~76px — yani iskelet mobilde bambaşka bir bileşen çiziyor ve 56px fazla yer kaplıyor. (c) İskelet liste satırı h-11 (44px); gerçek satır masaüstünde sm:h-10 (40px), mobilde 62,5–65,5px — mobilde satır başına 19–21px hata, ~18 satırda ~400px eksik yükseklik vaadi. Dosyanın kendi yorum bloğu \"KpiStripRow ile aynı anatomi: çerçevesiz, masaüstünde dikey hairline\" diyor; kod bunun tersini yapıyor (rounded-lg border). NOT: sert gezinmede (adres çubuğu/ilk yükleme) yalnızca (app)/loading.tsx görünüyor, rota iskeleti yumuşak gezinmede (prefetch dolmamışken) basılıyor — probe r9f bunu prefetch geciktirerek yakaladı.",
+     "measure": "probe-r9f.json → soft-1440 strip: cls \"mb-6 grid grid-cols-2 divide-x divide-y … rounded-lg border border-border/60 sm:grid-cols-4\", borderTopWidth 1px, radius 8px, h 66, childH [64,64,64,64]; soft-390 strip: gridCols \"178px 178px\", h 132, childH [65,65,65,65]; flexRowHeights her iki viewport'ta 44. Gerçek sayfa: kpi-card.tsx \"md:h-20 … md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:bg-transparent\" + mobil \"h-[72px] w-[152px]\", kpi-strip.tsx \"flex gap-2 overflow-x-auto snap-x\"; shared.tsx ROW_BASE \"sm:h-10\"; measure-kokpit-r9/*-390.json rows.heights medyan 63,5–65,5.",
+     "target": "İskelet KPI şeridi = KpiStripRow anatomisi: masaüstünde dış çerçevesiz/şeffaf + kartlar arası yalnızca sol hairline, kart yüksekliği 80px; mobilde çerçeveli 2×2 ızgara yerine 4×(152×72px) yatay kaydıran şerit (toplam ≤80px). İskelet liste satırı masaüstünde 40px (h-10), mobilde 62–66px. Kabul: soft-nav iskeleti ile yüklenmiş sayfa arasında KPI şeridi yüksekliği farkı ≤4px ve satır yüksekliği farkı ≤4px, iskelette dış çerçeve/radius yok.",
+     "file": "apps/web/src/app/(app)/kokpit/loading.tsx:24 (KPI şeridi), :42 (liste satırı h-11)",
+     "shot": "artifacts/critic/measure-kokpit-r9/soft-skeleton-1440.png, soft-skeleton-390.png"
+    },
     {
      "id": "kokpit-activity-dupe-06",
      "criterion": 12,
      "severity": "P2",
-     "text": "\"Son aktiviteler\" listesinde 8 satırın 2'si bayt-bayt aynı basılıyor: \"Üretim Şefi · uretim@plantero.local giriş yaptı · 2 kez\" + \"1 saat önce\" iki kez (3. ve 5. satır); ayrıca 8/8 satır aynı göreli zaman etiketini taşıyor, yani okuyucu iki satırı hiçbir alandan ayırt edemiyor. Kök neden: groupConsecutiveActivity yalnızca ARDIŞIK (kullanıcı, özet) tekrarlarını katlıyor; araya başka bir kullanıcının satırı girince aynı çift ikinci kez ayrı grup olarak basılıyor.",
-     "measure": "artifacts/critic/measure-kokpit-r8/probe-r8b.json → admin 'Son aktiviteler' rows: 8, bayt-bayt aynı metin çifti 2 (dupes=2); farklı zaman etiketi sayısı 1/8",
-     "target": "aynı bölümde 0 bayt-bayt aynı satır — ardışık olmayan aynı (kullanıcı, özet) çiftleri de katlansın ya da göreli etiket tekrar ettiğinde saat (HH:mm) basılsın",
-     "file": "packages/core/src/cockpit/kpis.ts:278 (groupConsecutiveActivity) + apps/web/src/modules/kokpit/components/gm-dashboard.tsx:148-165",
-     "openedRound": 8
-    },
-    {
-     "id": "kokpit-loading-strip-frame-07",
-     "criterion": 7,
-     "severity": "P2",
-     "text": "Yükleniyor iskeleti KPI şeridini ÇERÇEVELİ bir kutu olarak çiziyor (rounded-lg border + divide-x divide-y), yüklenen şerit ise masaüstünde çerçevesiz/şeffaf ve yalnızca kartlar arası sol hairline taşıyor — yükleme bitince bir çerçeve 'sönüyor'. Aynı iskelette liste satırı h-11 (44px), gerçek satır h-10 (40px): 3 satırlık bir bölümde 12px kayma.",
-     "measure": "loading.tsx:24 'mb-6 grid grid-cols-2 divide-x divide-y … rounded-lg border border-border/60' ve loading.tsx:42 'flex h-11'; gerçek: kpi-card.tsx:200 'md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:bg-transparent', shared.tsx ROW_BASE 'sm:h-10'",
-     "target": "iskelet KPI şeridi masaüstünde dış çerçevesiz + yalnızca sol hairline; iskelet liste satırı h-10 (40px)",
-     "file": "apps/web/src/app/(app)/kokpit/loading.tsx:24,42",
-     "openedRound": 8
+     "openedRound": 8,
+     "text": "\"Son aktiviteler\" listesinde ardışık OLMAYAN aynı (kullanıcı, özet) çifti ikinci kez ayrı satır olarak basılıyor: 8 satırın 2'si bayt-bayt aynı. Ayrıca 8/8 satır aynı göreli zaman etiketini taşıdığı için okuyucu iki satırı hiçbir alandan ayırt edemiyor. Kök neden: groupConsecutiveActivity yalnızca ARDIŞIK tekrarları katlıyor.",
+     "measure": "Tur 9 yeniden ölçüm — probe-r9.json admin-1440 §\"Son aktiviteler\": rowCount 8, dupes 1 çift (\"Satış Sorumlusu · satis@plantero.local giriş yaptı\" + \"2 dakika önce\" iki kez), distinctTexts 7/8; probe-r9.json digitNonTabSample admin → \"2 dakika önce\" 8 satırın 7'sinde aynı.",
+     "target": "Aynı bölümde 0 bayt-bayt aynı satır — ardışık olmayan aynı (kullanıcı, özet) çiftleri de katlansın ya da göreli etiket tekrar ettiğinde saat (HH:mm) basılsın.",
+     "file": "packages/core/src/cockpit/kpis.ts:277 (groupConsecutiveActivity) + apps/web/src/modules/kokpit/components/gm-dashboard.tsx:148-165"
     },
     {
      "id": "kokpit-meta-tabular-08",
      "criterion": 6,
      "severity": "P2",
-     "text": "Para/miktar değerlerinin tamamı tabular-nums; ancak İKİNCİL sayısal metinler değil: tarih sütunu (07.09.2026), gecikme/süre metaları (16 gün, 45 dk), sıra numaraları (1..5). Ölçülebilir bir hizalama sapması ÜRETMİYOR (hepsi ya sabit genişlikte kolonda ya sağ hizalı; rightSpread 0), bu yüzden kriter 6 puanı düşürülmedi — yine de kriterin harfi tabular-nums istiyor.",
-     "measure": "probe-r8d.json nonTabular: admin 30, depo 21, muhasebe 11, satis 28, uretim 18 düğüm (mono belge no'lar hariç görsel etkisi olan: tarih/süre/sıra)",
-     "target": "main içindeki rakam taşıyan tüm metin düğümlerinde font-variant-numeric: tabular-nums (mono belge numaraları hariç)",
-     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx (tarih/sıra sütunu), production-chief-dashboard.tsx (dk), shared.tsx OverdueTop5List (gün)",
-     "openedRound": 8
+     "openedRound": 8,
+     "text": "Para/miktar değerlerinin tamamı tabular-nums (.num düğümlerinde 0 istisna); ancak İKİNCİL sayısal metinler değil: tarih sütunu (07.09.2026), süre/gecikme metaları (45 dk, 16 gün), sıra numaraları (1..5), dönem etiketleri (Eylül 2026). Ölçülebilir bir hizalama sapması üretmiyor (rightSpread 0), bu yüzden kriter 6 puanı düşürülmedi — yine de kriterin harfi tabular-nums istiyor.",
+     "measure": "Tur 9 yeniden ölçüm — probe-r9.json digitNonTab (mono hariç): admin 18, satis 18, muhasebe 11, uretim_sefi 9, depo 2; numNonTab (.num düğümleri) 5 rolde de 0; tüm bölümlerde rightSpread 0.",
+     "target": "main içindeki rakam taşıyan tüm görünür metin düğümlerinde font-variant-numeric: tabular-nums (mono belge numaraları hariç) → digitNonTab 0.",
+     "file": "apps/web/src/modules/kokpit/components/sales-dashboard.tsx (tarih/sıra sütunu), production-chief-dashboard.tsx (dk), shared.tsx OverdueTop5List (gün), finance-dashboard.tsx (dönem)"
     }
    ],
    "closed": [
@@ -380,11 +369,16 @@
      "verifiedBy": "ölçüm",
      "criticVerifiedRound": 6,
      "measureAfter": "1440x900 Tur 6 sonrası (probe-kokpit-r6.ts): 'Üretim hatları' [52.5]x3, 'Bugün' [54.5], 'Hat durumu' [52.5]x3, 'Son iş emirleri' [54.5]x8 → çok satırlı satır yüksekliği kümesi {52.5, 54.5} (önceden {52.5, 58.5}, 6px fark). Kalan 2px fark TodayRow'un iç `gap-0.5` ile ProductionLineRow'un `gap-0.5` arasındaki alt-satır sayısı farkından (2 vs 3 satır) kaynaklanıyor — ikisi de hedef ≤56px bandının içinde, aradaki fark 6px'ten 2px'e düştü. 390px mobilde ölçüm DEĞİŞMEDİ (62.5-64.5 bandında)."
+    },
+    {
+     "id": "kokpit-loading-strip-frame-07",
+     "closedRound": 9,
+     "verifiedBy": "yerine geçti: kokpit-loading-skeleton-mismatch-09 (aynı kök neden, mobil kanıtla P2→P1 yükseltildi)"
     }
    ]
   },
   "/kokpit?rol=depo": {
-   "round": 8,
+   "round": 9,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -394,34 +388,34 @@
     5,
     5,
     5,
-    5,
+    4,
     5,
     5,
     5,
     5,
     5
    ],
-   "total": 60,
+   "total": 59,
    "verdict": "KAZANAN: Plantero",
    "shots": [
     "artifacts/screens/kokpit-depo/desktop.png",
     "artifacts/screens/kokpit-depo/mobile.png"
    ],
-   "scoreNotes": {
-    "1": "5 — değişmedi (h1 24/600, gövde 13px, etiket 10-12px).",
-    "2": "5 — kolon dibi farkı 58px (Karantina 529 / SKT riski 587; tam genişlikteki 'Bugün' hariç), hedef ≤200px.",
-    "3": "5 — katlama üstü 23 bilgi birimi (4 KPI + 5 Karantina + 4 SKT kovası + 5 SKT satırı + 5 Bugün); satır 40-41px; mobil 62,5-64,5px.",
-    "4": "5 — değişmedi; amber yalnızca karantina/SKT uyarısı.",
-    "5": "5 — rightSpread 0 (Karantina, SKT riski, Bugün); taşma yok (1440/390).",
-    "6": "5 — .num 25/25 tabular-nums; 2 ondalık; sıfır muted.",
-    "7": "5 — değişmedi; 27/27 EmptyState eylem taşıyor.",
-    "8": "5 — active: kapsaması 26/26.",
-    "9": "5 — 390px taşma yok, 44px altı etkileşimli hedef yok, kart 62,5-64,5px.",
-    "10": "5 — değişmedi.",
-    "11": "5 — tek satırlık satırlar {40,41}, şerit anatomisi tek.",
-    "12": "5 — değişmedi."
-   },
-   "open": [],
+   "scoreNotes": "Tur 9 deltası — kriter 7: 5→4. Gerekçe: rota iskeleti ilk kez YAKALANIP ölçüldü (probe-r9f, prefetch geciktirilerek). Tur 8 yalnızca kodu okuyup masaüstü çerçeve + 4px satır farkını P2 saymıştı; Tur 9 ölçümü mobilde iskeletin BAŞKA bir bileşen (132px 2×2 çerçeveli ızgara vs ~76px yatay kaydıran şerit) çizdiğini ve satır başına 19–21px hata yaptığını gösterdi → P1. Diğer 11 kriter yeniden ölçüldü ve 5'te kaldı: taşma yok (scrollWidth = clientWidth, 10/10 kesit), satır 40–41px masaüstü / 60–65,5px mobil, katlama üstü bilgi birimi 19/26/24/25/19 (≥15), .num düğümlerinde tabular-nums 100%, sıfır değerler soluk (oklab(0.552 … / 0.7)) hem KPI hem StatStrip'te, mobilde 44px altı dokunma hedefi 0, h1 24px/600 masaüstü + 20px/600 mobil, gövde 13px baskın. Kod düzeyi tarama temiz: transition:all / ease-in / scale(0) / ≥300ms YOK; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) 140ms, :not(:focus-visible) korumalı. Ekran görüntülerindeki sol-alt siyah \"N\" rozeti Next.js dev overlay'i (probe-r9b devOverlay=true) — ürün kusuru değil, bulgu açılmadı.",
+   "open": [
+    {
+     "id": "kokpit-loading-skeleton-mismatch-09",
+     "criterion": 7,
+     "severity": "P1",
+     "openedRound": 9,
+     "supersedes": "kokpit-loading-strip-frame-07",
+     "text": "Rota iskeleti (kokpit/loading.tsx) gerçek sayfanın anatomisini TAŞIMIYOR; yükleme bitince görünür bir düzen sıçraması oluyor. (a) MASAÜSTÜ: iskelet KPI şeridi ÇERÇEVELİ bir kutu (1px border + 8px radius + divide-x/divide-y) ve 66px; gerçek şerit çerçevesiz/şeffaf, 80px ve yalnızca kartlar arası SOL hairline taşıyor — yükleme bitince bir çerçeve \"sönüyor\" ve şerit 14px büyüyor. (b) MOBİL (390px): iskelet 2×2 çerçeveli ızgara, 132px; gerçek şerit ise 4 adet 152×72px kartın YATAY KAYDIRAN (snap) şeridi, ~76px — yani iskelet mobilde bambaşka bir bileşen çiziyor ve 56px fazla yer kaplıyor. (c) İskelet liste satırı h-11 (44px); gerçek satır masaüstünde sm:h-10 (40px), mobilde 62,5–65,5px — mobilde satır başına 19–21px hata, ~18 satırda ~400px eksik yükseklik vaadi. Dosyanın kendi yorum bloğu \"KpiStripRow ile aynı anatomi: çerçevesiz, masaüstünde dikey hairline\" diyor; kod bunun tersini yapıyor (rounded-lg border). NOT: sert gezinmede (adres çubuğu/ilk yükleme) yalnızca (app)/loading.tsx görünüyor, rota iskeleti yumuşak gezinmede (prefetch dolmamışken) basılıyor — probe r9f bunu prefetch geciktirerek yakaladı.",
+     "measure": "probe-r9f.json → soft-1440 strip: cls \"mb-6 grid grid-cols-2 divide-x divide-y … rounded-lg border border-border/60 sm:grid-cols-4\", borderTopWidth 1px, radius 8px, h 66, childH [64,64,64,64]; soft-390 strip: gridCols \"178px 178px\", h 132, childH [65,65,65,65]; flexRowHeights her iki viewport'ta 44. Gerçek sayfa: kpi-card.tsx \"md:h-20 … md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:bg-transparent\" + mobil \"h-[72px] w-[152px]\", kpi-strip.tsx \"flex gap-2 overflow-x-auto snap-x\"; shared.tsx ROW_BASE \"sm:h-10\"; measure-kokpit-r9/*-390.json rows.heights medyan 63,5–65,5.",
+     "target": "İskelet KPI şeridi = KpiStripRow anatomisi: masaüstünde dış çerçevesiz/şeffaf + kartlar arası yalnızca sol hairline, kart yüksekliği 80px; mobilde çerçeveli 2×2 ızgara yerine 4×(152×72px) yatay kaydıran şerit (toplam ≤80px). İskelet liste satırı masaüstünde 40px (h-10), mobilde 62–66px. Kabul: soft-nav iskeleti ile yüklenmiş sayfa arasında KPI şeridi yüksekliği farkı ≤4px ve satır yüksekliği farkı ≤4px, iskelette dış çerçeve/radius yok.",
+     "file": "apps/web/src/app/(app)/kokpit/loading.tsx:24 (KPI şeridi), :42 (liste satırı h-11)",
+     "shot": "artifacts/critic/measure-kokpit-r9/soft-skeleton-1440.png, soft-skeleton-390.png"
+    }
+   ],
    "closed": [
     {
      "openedRound": 4,
@@ -576,11 +570,16 @@
      "verifiedBy": "ölçüm",
      "criticVerifiedRound": 6,
      "measureAfter": "scripts/probe-kokpit-r6.ts ile 7 rol × 2 viewport (1440x900 + 390x844) yeniden ölçüldü (artifacts/critic/measure-kokpit-r6-follow/*.json, pnpm db:reset sonrası canlı veriyle). O an ekranda render olan HER boş durum (admin \"Kritik stok\" textLines=2/action=true h=231/243; muhasebe \"Bugünün tahsilatları\" textLines=2/action=true h=212/224; kalite \"Düşen skor yok\" textLines=2/action=true h=212/243; üretim şefi \"Fire kırılımı\" textLines=2/action=true h=212/243) kriter 7'yi karşılıyor. Depo \"Bugün\" bölümü bu ölçümde artık boş DURUMDA DEĞİL (db:reset sonrası seed \"bugün\" tarihli mal kabul/sevkiyat kaydı ürettiği için canlı olarak yeniden tetiklenemedi — bkz. artifacts/screens/kokpit-depo/desktop.png) fakat kod incelemesiyle (depo-dashboard.tsx:99-113) ve AYNI EmptyState bileşeninin/aynı prop deseninin başka 4 örnekte canlı doğrulanmasıyla (yukarıdaki ölçümler) davranışı garanti: aynı `<EmptyState compact title description action={<Button asChild ...><Link .../></Button>} />` çağrısı, farklı veri kaynağı. Statik kanıt: `grep -h \"<EmptyState compact title=\" apps/web/src/modules/kokpit/components/*.tsx | wc -l` → 0 (23'ten); `grep -c \"<EmptyState\"` = `grep -c \"action={\"` her 8 dosyada (depo 3/3, finance 5/5, gm 8/8, maintenance 1/1, production-chief 4/4, quality 2/2, sales 4/4). pnpm --filter @plantero/web typecheck + lint temiz; pnpm db:reset + pnpm db:check (I1-I56) 0 ihlal."
+    },
+    {
+     "id": "kokpit-loading-strip-frame-07",
+     "closedRound": 9,
+     "verifiedBy": "yerine geçti: kokpit-loading-skeleton-mismatch-09 (aynı kök neden, mobil kanıtla P2→P1 yükseltildi)"
     }
    ]
   },
   "/kokpit?rol=muhasebe": {
-   "round": 8,
+   "round": 9,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -590,34 +589,34 @@
     5,
     5,
     5,
-    5,
+    4,
     5,
     5,
     5,
     5,
     5
    ],
-   "total": 60,
+   "total": 59,
    "verdict": "KAZANAN: Stripe",
    "shots": [
     "artifacts/screens/kokpit-muhasebe/desktop.png",
     "artifacts/screens/kokpit-muhasebe/mobile.png"
    ],
-   "scoreNotes": {
-    "1": "5 — değişmedi.",
-    "2": "5 — kolon dibi farkı 66px (999 / 1065), Tur 7'deki 138px'ten daha dengeli.",
-    "3": "5 — katlama üstü 26 bilgi birimi (5 KPI + 4 Banka + 4 KDV hücresi + 5 Mutabakat + 4 yaşlandırma hücresi + 4 Geciken satırı); satır 40-41px, mobil 63-64px.",
-    "4": "5 — kırmızı yalnızca negatif bakiye/gecikme; distinctColors 15 (kokpitteki en düşük); sıfırlar muted.",
-    "5": "5 — Mutabakat satırı ad + güven yüzdesi + tutar; rightSpread 0; 8/8 satır ayırt edilebilir (aynı ad+tutar çifti güven yüzdesiyle ayrışıyor).",
-    "6": "5 — .num 18/18 tabular-nums; şerit etiketi de tabular (kapanış tutarları hizalı).",
-    "7": "5 — 'Bugünün tahsilatları' boş durumu ikon+başlık+açıklama+eylem (Tahsilat kaydet).",
-    "8": "5 — active: kapsaması 28/28.",
-    "9": "5 — 390px taşma yok, kart 63-64px, 44px altı etkileşimli hedef yok.",
-    "10": "5 — değişmedi.",
-    "11": "5 — StatStrip'in top? varyantı (nakit projeksiyonu) aynı 15px değer/10px etiket dilini koruyor.",
-    "12": "5 — değişmedi."
-   },
-   "open": [],
+   "scoreNotes": "Tur 9 deltası — kriter 7: 5→4. Gerekçe: rota iskeleti ilk kez YAKALANIP ölçüldü (probe-r9f, prefetch geciktirilerek). Tur 8 yalnızca kodu okuyup masaüstü çerçeve + 4px satır farkını P2 saymıştı; Tur 9 ölçümü mobilde iskeletin BAŞKA bir bileşen (132px 2×2 çerçeveli ızgara vs ~76px yatay kaydıran şerit) çizdiğini ve satır başına 19–21px hata yaptığını gösterdi → P1. Diğer 11 kriter yeniden ölçüldü ve 5'te kaldı: taşma yok (scrollWidth = clientWidth, 10/10 kesit), satır 40–41px masaüstü / 60–65,5px mobil, katlama üstü bilgi birimi 19/26/24/25/19 (≥15), .num düğümlerinde tabular-nums 100%, sıfır değerler soluk (oklab(0.552 … / 0.7)) hem KPI hem StatStrip'te, mobilde 44px altı dokunma hedefi 0, h1 24px/600 masaüstü + 20px/600 mobil, gövde 13px baskın. Kod düzeyi tarama temiz: transition:all / ease-in / scale(0) / ≥300ms YOK; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) 140ms, :not(:focus-visible) korumalı. Ekran görüntülerindeki sol-alt siyah \"N\" rozeti Next.js dev overlay'i (probe-r9b devOverlay=true) — ürün kusuru değil, bulgu açılmadı.",
+   "open": [
+    {
+     "id": "kokpit-loading-skeleton-mismatch-09",
+     "criterion": 7,
+     "severity": "P1",
+     "openedRound": 9,
+     "supersedes": "kokpit-loading-strip-frame-07",
+     "text": "Rota iskeleti (kokpit/loading.tsx) gerçek sayfanın anatomisini TAŞIMIYOR; yükleme bitince görünür bir düzen sıçraması oluyor. (a) MASAÜSTÜ: iskelet KPI şeridi ÇERÇEVELİ bir kutu (1px border + 8px radius + divide-x/divide-y) ve 66px; gerçek şerit çerçevesiz/şeffaf, 80px ve yalnızca kartlar arası SOL hairline taşıyor — yükleme bitince bir çerçeve \"sönüyor\" ve şerit 14px büyüyor. (b) MOBİL (390px): iskelet 2×2 çerçeveli ızgara, 132px; gerçek şerit ise 4 adet 152×72px kartın YATAY KAYDIRAN (snap) şeridi, ~76px — yani iskelet mobilde bambaşka bir bileşen çiziyor ve 56px fazla yer kaplıyor. (c) İskelet liste satırı h-11 (44px); gerçek satır masaüstünde sm:h-10 (40px), mobilde 62,5–65,5px — mobilde satır başına 19–21px hata, ~18 satırda ~400px eksik yükseklik vaadi. Dosyanın kendi yorum bloğu \"KpiStripRow ile aynı anatomi: çerçevesiz, masaüstünde dikey hairline\" diyor; kod bunun tersini yapıyor (rounded-lg border). NOT: sert gezinmede (adres çubuğu/ilk yükleme) yalnızca (app)/loading.tsx görünüyor, rota iskeleti yumuşak gezinmede (prefetch dolmamışken) basılıyor — probe r9f bunu prefetch geciktirerek yakaladı.",
+     "measure": "probe-r9f.json → soft-1440 strip: cls \"mb-6 grid grid-cols-2 divide-x divide-y … rounded-lg border border-border/60 sm:grid-cols-4\", borderTopWidth 1px, radius 8px, h 66, childH [64,64,64,64]; soft-390 strip: gridCols \"178px 178px\", h 132, childH [65,65,65,65]; flexRowHeights her iki viewport'ta 44. Gerçek sayfa: kpi-card.tsx \"md:h-20 … md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:bg-transparent\" + mobil \"h-[72px] w-[152px]\", kpi-strip.tsx \"flex gap-2 overflow-x-auto snap-x\"; shared.tsx ROW_BASE \"sm:h-10\"; measure-kokpit-r9/*-390.json rows.heights medyan 63,5–65,5.",
+     "target": "İskelet KPI şeridi = KpiStripRow anatomisi: masaüstünde dış çerçevesiz/şeffaf + kartlar arası yalnızca sol hairline, kart yüksekliği 80px; mobilde çerçeveli 2×2 ızgara yerine 4×(152×72px) yatay kaydıran şerit (toplam ≤80px). İskelet liste satırı masaüstünde 40px (h-10), mobilde 62–66px. Kabul: soft-nav iskeleti ile yüklenmiş sayfa arasında KPI şeridi yüksekliği farkı ≤4px ve satır yüksekliği farkı ≤4px, iskelette dış çerçeve/radius yok.",
+     "file": "apps/web/src/app/(app)/kokpit/loading.tsx:24 (KPI şeridi), :42 (liste satırı h-11)",
+     "shot": "artifacts/critic/measure-kokpit-r9/soft-skeleton-1440.png, soft-skeleton-390.png"
+    }
+   ],
    "closed": [
     {
      "openedRound": 5,
@@ -850,11 +849,16 @@
      "verifiedBy": "ölçüm",
      "fix": "Satıra üçüncü alan olarak güven yüzdesi eklendi (finance-dashboard.tsx: `%{Math.round(Number(r.confidence)*100)}`, 11px, tabular-nums, text-muted-foreground — muhasebe modülündeki reconciliation-history-table.tsx/approval-queue.tsx ile AYNI biçim). Sıralama artık DB'de (packages/core/src/cockpit/kpis.ts) confidence DESC, sonra txDate DESC — en güvenilir öneri başta. İlk denemede güven yüzdesi MoneyCell'den AYRI bir üçüncü doğrudan çocuk olarak eklenmişti; ROW_BASE mobilde `flex-col` olduğu için bu satırı 3 satıra (84,5px) çıkarıp mobil bandı (56-72px) aşıyordu — `OverdueTop5List` (shared.tsx) ile AYNI desene çevrildi: güven+tutar `sm:contents` ile tek mobil satırında gruplanıyor, masaüstünde düzleşip ayrı sütun oluyor.",
      "measureAfter": "1440x900 /kokpit (muhasebe) Tur 7: probe-kokpit-r7b muhasebe-1440.json → dupes=[] (önceki 3x \"Trendyol Pazaryeri₺5.000,00\" artık 0), \"Mutabakat kuyruğu\" heights=[40,41] (RowLink tabanı değişmedi), rightSpread=0. DB sıralaması doğrulandı (psql): Migros %90, Kahve Dünyası %85, Hesap İşletim %85, Kira %80, SEDAŞ %75, Mali Müşavirlik %75, Mali Müşavirlik %40, Trendyol %33 — artık her satır kendi güven yüzdesiyle görünüyor ve sıra güven DESC. 390x844: probe-kokpit-r7b muhasebe-390.json → dupes=[], \"Mutabakat kuyruğu\" heights=[63,64] — modülün zaten kabul edilmiş 2 satırlık RowLink anatomisiyle (\"Geciken alacak\", AYNI `sm:contents` deseni, AYNI heights=[63,64]) BİREBİR aynı, mobil bandın (56-72px) içinde. measure.ts: scrollWidth=clientWidth (taşma yok) her iki viewport'ta."
+    },
+    {
+     "id": "kokpit-loading-strip-frame-07",
+     "closedRound": 9,
+     "verifiedBy": "yerine geçti: kokpit-loading-skeleton-mismatch-09 (aynı kök neden, mobil kanıtla P2→P1 yükseltildi)"
     }
    ]
   },
   "/kokpit?rol=satis": {
-   "round": 8,
+   "round": 9,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -864,34 +868,34 @@
     5,
     5,
     5,
-    5,
+    4,
     5,
     5,
     5,
     5,
     5
    ],
-   "total": 60,
+   "total": 59,
    "verdict": "KAZANAN: Plantero",
    "shots": [
     "artifacts/screens/kokpit-satis/desktop.png",
     "artifacts/screens/kokpit-satis/mobile.png"
    ],
-   "scoreNotes": {
-    "1": "5 — değişmedi.",
-    "2": "5 — iki kolonlu üst sıranın dip farkı 78px (Satış hunisi 448 / En çok satan 5 526); 'Son siparişler' tam genişlik. 3 KPI'lık şeridin sola yaslı durması kasıtlı (kpi-strip.tsx stripCompact, Tur 4 bulgusunun kök neden düzeltmesi: ≤3 kartta esneme yerine sabit 196px min genişlik).",
-    "3": "5 — katlama üstü 15+ bilgi birimi (3 KPI + 4 huni + 5 en çok satan + Son siparişler); liste satırı 40-41px, mobil 62,5-64px. Huninin 16px satırları LİSTE değil GRAFİK satırı (etiket + RankBar + sayı).",
-    "4": "5 — yeşil yalnızca huni/çubuk vurgusu ve 'Faturalandı'; diğer durumlar nötr gri.",
-    "5": "5 — rightSpread 0 (En çok satan 5, Son siparişler); taşma yok; 390px'te kırpılan metin YOK (probe-r8c satis clipped []).",
-    "6": "5 — .num 30/30 tabular-nums; birim (KG/ADET) 10-12px muted ve sayıdan sonra.",
-    "7": "5 — bu kesitte boş durum render olmuyor; iskelet yükleme mevcut; kaynaktaki tüm EmptyState'ler eylem taşıyor.",
-    "8": "5 — active: kapsaması 21/21.",
-    "9": "5 — 390px taşma yok, kırpma yok, kart 63-64px.",
-    "10": "5 — değişmedi.",
-    "11": "5 — değişmedi.",
-    "12": "5 — değişmedi."
-   },
-   "open": [],
+   "scoreNotes": "Tur 9 deltası — kriter 7: 5→4. Gerekçe: rota iskeleti ilk kez YAKALANIP ölçüldü (probe-r9f, prefetch geciktirilerek). Tur 8 yalnızca kodu okuyup masaüstü çerçeve + 4px satır farkını P2 saymıştı; Tur 9 ölçümü mobilde iskeletin BAŞKA bir bileşen (132px 2×2 çerçeveli ızgara vs ~76px yatay kaydıran şerit) çizdiğini ve satır başına 19–21px hata yaptığını gösterdi → P1. Diğer 11 kriter yeniden ölçüldü ve 5'te kaldı: taşma yok (scrollWidth = clientWidth, 10/10 kesit), satır 40–41px masaüstü / 60–65,5px mobil, katlama üstü bilgi birimi 19/26/24/25/19 (≥15), .num düğümlerinde tabular-nums 100%, sıfır değerler soluk (oklab(0.552 … / 0.7)) hem KPI hem StatStrip'te, mobilde 44px altı dokunma hedefi 0, h1 24px/600 masaüstü + 20px/600 mobil, gövde 13px baskın. Kod düzeyi tarama temiz: transition:all / ease-in / scale(0) / ≥300ms YOK; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) 140ms, :not(:focus-visible) korumalı. Ekran görüntülerindeki sol-alt siyah \"N\" rozeti Next.js dev overlay'i (probe-r9b devOverlay=true) — ürün kusuru değil, bulgu açılmadı.",
+   "open": [
+    {
+     "id": "kokpit-loading-skeleton-mismatch-09",
+     "criterion": 7,
+     "severity": "P1",
+     "openedRound": 9,
+     "supersedes": "kokpit-loading-strip-frame-07",
+     "text": "Rota iskeleti (kokpit/loading.tsx) gerçek sayfanın anatomisini TAŞIMIYOR; yükleme bitince görünür bir düzen sıçraması oluyor. (a) MASAÜSTÜ: iskelet KPI şeridi ÇERÇEVELİ bir kutu (1px border + 8px radius + divide-x/divide-y) ve 66px; gerçek şerit çerçevesiz/şeffaf, 80px ve yalnızca kartlar arası SOL hairline taşıyor — yükleme bitince bir çerçeve \"sönüyor\" ve şerit 14px büyüyor. (b) MOBİL (390px): iskelet 2×2 çerçeveli ızgara, 132px; gerçek şerit ise 4 adet 152×72px kartın YATAY KAYDIRAN (snap) şeridi, ~76px — yani iskelet mobilde bambaşka bir bileşen çiziyor ve 56px fazla yer kaplıyor. (c) İskelet liste satırı h-11 (44px); gerçek satır masaüstünde sm:h-10 (40px), mobilde 62,5–65,5px — mobilde satır başına 19–21px hata, ~18 satırda ~400px eksik yükseklik vaadi. Dosyanın kendi yorum bloğu \"KpiStripRow ile aynı anatomi: çerçevesiz, masaüstünde dikey hairline\" diyor; kod bunun tersini yapıyor (rounded-lg border). NOT: sert gezinmede (adres çubuğu/ilk yükleme) yalnızca (app)/loading.tsx görünüyor, rota iskeleti yumuşak gezinmede (prefetch dolmamışken) basılıyor — probe r9f bunu prefetch geciktirerek yakaladı.",
+     "measure": "probe-r9f.json → soft-1440 strip: cls \"mb-6 grid grid-cols-2 divide-x divide-y … rounded-lg border border-border/60 sm:grid-cols-4\", borderTopWidth 1px, radius 8px, h 66, childH [64,64,64,64]; soft-390 strip: gridCols \"178px 178px\", h 132, childH [65,65,65,65]; flexRowHeights her iki viewport'ta 44. Gerçek sayfa: kpi-card.tsx \"md:h-20 … md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:bg-transparent\" + mobil \"h-[72px] w-[152px]\", kpi-strip.tsx \"flex gap-2 overflow-x-auto snap-x\"; shared.tsx ROW_BASE \"sm:h-10\"; measure-kokpit-r9/*-390.json rows.heights medyan 63,5–65,5.",
+     "target": "İskelet KPI şeridi = KpiStripRow anatomisi: masaüstünde dış çerçevesiz/şeffaf + kartlar arası yalnızca sol hairline, kart yüksekliği 80px; mobilde çerçeveli 2×2 ızgara yerine 4×(152×72px) yatay kaydıran şerit (toplam ≤80px). İskelet liste satırı masaüstünde 40px (h-10), mobilde 62–66px. Kabul: soft-nav iskeleti ile yüklenmiş sayfa arasında KPI şeridi yüksekliği farkı ≤4px ve satır yüksekliği farkı ≤4px, iskelette dış çerçeve/radius yok.",
+     "file": "apps/web/src/app/(app)/kokpit/loading.tsx:24 (KPI şeridi), :42 (liste satırı h-11)",
+     "shot": "artifacts/critic/measure-kokpit-r9/soft-skeleton-1440.png, soft-skeleton-390.png"
+    }
+   ],
    "closed": [
     {
      "openedRound": 4,
@@ -1049,11 +1053,16 @@
      "verifiedBy": "ölçüm",
      "criticVerifiedRound": 6,
      "measureAfter": "390x844 /kokpit (satış), probe-kokpit-r6.ts clipped[] artık BOŞ (önceden 'Bugünkü ciro (brüt …' clientW 126 / scrollW 144). Ekran görüntüsüyle doğrulandı (artifacts/screens/kokpit-satis/mobile.png): \"Bugünkü ciro\" kartı tam görünüyor, kırpma yok."
+    },
+    {
+     "id": "kokpit-loading-strip-frame-07",
+     "closedRound": 9,
+     "verifiedBy": "yerine geçti: kokpit-loading-skeleton-mismatch-09 (aynı kök neden, mobil kanıtla P2→P1 yükseltildi)"
     }
    ]
   },
   "/kokpit?rol=uretim": {
-   "round": 8,
+   "round": 9,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -1063,34 +1072,34 @@
     5,
     5,
     5,
-    5,
+    4,
     5,
     5,
     5,
     5,
     5
    ],
-   "total": 60,
+   "total": 59,
    "verdict": "KAZANAN: Linear",
    "shots": [
     "artifacts/screens/kokpit-uretim_sefi/desktop.png",
     "artifacts/screens/kokpit-uretim_sefi/mobile.png"
    ],
-   "scoreNotes": {
-    "1": "5 — değişmedi.",
-    "2": "5 — kolon dibi farkı 143px (sol 908 / sağ 765), Tur 7'deki 182px'ten iyileşti, hedef ≤200px.",
-    "3": "4→5 (gerekçe: kokpit-uretim-downtime-row-anatomy-05'in kök neden düzeltmesi ölçümle doğrulandı) — 'Son duruşlar' mobil satırları Tur 7'de 39,5-41px ile bandın (56-72) ALTINDAYDI; Tur 8 ölçümü 59,5 / 60,5 / 64,5px: aynı ekrandaki 'Hat durumu' (64,5-65,5) ve 'Son iş emirleri' (64,5-65,5) ile tek yoğunluk sınıfında. Masaüstü 40-41 / 54,5-55,5px, katlama üstü 15+ bilgi birimi.",
-    "4": "5 — gri/yeşil/mavi/amber dört durum tonu, kırmızı yok; ≤4 ton kuralı içinde.",
-    "5": "5 — hairline ayraç, miktar sütunu sağ hizalı, taşma yok (scrollW 1440 = clientW).",
-    "6": "5 — miktarlar tabular-nums, birim 10-12px muted, sıfır ('0 ADET') soluk.",
-    "7": "5 — 'Fire kırılımı' boş durumu ikon+başlık+açıklama+eylem ('İş emirlerini gör').",
-    "8": "5 — active: kapsaması 20/20.",
-    "9": "5 — 390px taşma yok, kart 59,5-65,5px, 44px altı etkileşimli hedef yok; kırpmalar yalnızca ikincil meta (hat adı, WO·ürün) ve ellipsis'li.",
-    "10": "5 — değişmedi.",
-    "11": "5 — 'Son duruşlar' shared.tsx Row tabanında; ekrandaki tüm liste satırları ortak tabandan geliyor.",
-    "12": "5 — değişmedi."
-   },
-   "open": [],
+   "scoreNotes": "Tur 9 deltası — kriter 7: 5→4. Gerekçe: rota iskeleti ilk kez YAKALANIP ölçüldü (probe-r9f, prefetch geciktirilerek). Tur 8 yalnızca kodu okuyup masaüstü çerçeve + 4px satır farkını P2 saymıştı; Tur 9 ölçümü mobilde iskeletin BAŞKA bir bileşen (132px 2×2 çerçeveli ızgara vs ~76px yatay kaydıran şerit) çizdiğini ve satır başına 19–21px hata yaptığını gösterdi → P1. Diğer 11 kriter yeniden ölçüldü ve 5'te kaldı: taşma yok (scrollWidth = clientWidth, 10/10 kesit), satır 40–41px masaüstü / 60–65,5px mobil, katlama üstü bilgi birimi 19/26/24/25/19 (≥15), .num düğümlerinde tabular-nums 100%, sıfır değerler soluk (oklab(0.552 … / 0.7)) hem KPI hem StatStrip'te, mobilde 44px altı dokunma hedefi 0, h1 24px/600 masaüstü + 20px/600 mobil, gövde 13px baskın. Kod düzeyi tarama temiz: transition:all / ease-in / scale(0) / ≥300ms YOK; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) 140ms, :not(:focus-visible) korumalı. Ekran görüntülerindeki sol-alt siyah \"N\" rozeti Next.js dev overlay'i (probe-r9b devOverlay=true) — ürün kusuru değil, bulgu açılmadı.",
+   "open": [
+    {
+     "id": "kokpit-loading-skeleton-mismatch-09",
+     "criterion": 7,
+     "severity": "P1",
+     "openedRound": 9,
+     "supersedes": "kokpit-loading-strip-frame-07",
+     "text": "Rota iskeleti (kokpit/loading.tsx) gerçek sayfanın anatomisini TAŞIMIYOR; yükleme bitince görünür bir düzen sıçraması oluyor. (a) MASAÜSTÜ: iskelet KPI şeridi ÇERÇEVELİ bir kutu (1px border + 8px radius + divide-x/divide-y) ve 66px; gerçek şerit çerçevesiz/şeffaf, 80px ve yalnızca kartlar arası SOL hairline taşıyor — yükleme bitince bir çerçeve \"sönüyor\" ve şerit 14px büyüyor. (b) MOBİL (390px): iskelet 2×2 çerçeveli ızgara, 132px; gerçek şerit ise 4 adet 152×72px kartın YATAY KAYDIRAN (snap) şeridi, ~76px — yani iskelet mobilde bambaşka bir bileşen çiziyor ve 56px fazla yer kaplıyor. (c) İskelet liste satırı h-11 (44px); gerçek satır masaüstünde sm:h-10 (40px), mobilde 62,5–65,5px — mobilde satır başına 19–21px hata, ~18 satırda ~400px eksik yükseklik vaadi. Dosyanın kendi yorum bloğu \"KpiStripRow ile aynı anatomi: çerçevesiz, masaüstünde dikey hairline\" diyor; kod bunun tersini yapıyor (rounded-lg border). NOT: sert gezinmede (adres çubuğu/ilk yükleme) yalnızca (app)/loading.tsx görünüyor, rota iskeleti yumuşak gezinmede (prefetch dolmamışken) basılıyor — probe r9f bunu prefetch geciktirerek yakaladı.",
+     "measure": "probe-r9f.json → soft-1440 strip: cls \"mb-6 grid grid-cols-2 divide-x divide-y … rounded-lg border border-border/60 sm:grid-cols-4\", borderTopWidth 1px, radius 8px, h 66, childH [64,64,64,64]; soft-390 strip: gridCols \"178px 178px\", h 132, childH [65,65,65,65]; flexRowHeights her iki viewport'ta 44. Gerçek sayfa: kpi-card.tsx \"md:h-20 … md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:bg-transparent\" + mobil \"h-[72px] w-[152px]\", kpi-strip.tsx \"flex gap-2 overflow-x-auto snap-x\"; shared.tsx ROW_BASE \"sm:h-10\"; measure-kokpit-r9/*-390.json rows.heights medyan 63,5–65,5.",
+     "target": "İskelet KPI şeridi = KpiStripRow anatomisi: masaüstünde dış çerçevesiz/şeffaf + kartlar arası yalnızca sol hairline, kart yüksekliği 80px; mobilde çerçeveli 2×2 ızgara yerine 4×(152×72px) yatay kaydıran şerit (toplam ≤80px). İskelet liste satırı masaüstünde 40px (h-10), mobilde 62–66px. Kabul: soft-nav iskeleti ile yüklenmiş sayfa arasında KPI şeridi yüksekliği farkı ≤4px ve satır yüksekliği farkı ≤4px, iskelette dış çerçeve/radius yok.",
+     "file": "apps/web/src/app/(app)/kokpit/loading.tsx:24 (KPI şeridi), :42 (liste satırı h-11)",
+     "shot": "artifacts/critic/measure-kokpit-r9/soft-skeleton-1440.png, soft-skeleton-390.png"
+    }
+   ],
    "closed": [
     {
      "openedRound": 4,
@@ -1304,6 +1313,11 @@
      "id": "kokpit-uretim-downtime-row-anatomy-05-verify",
      "closedRound": 8,
      "verifiedBy": "ölçüm: measure-kokpit-r8/uretim_sefi-390.json rows.heights [59.5,65.5,65.5]; probe-r8c 'Son duruşlar' {59.5,60.5,64.5} — 56-72px bandı içinde"
+    },
+    {
+     "id": "kokpit-loading-strip-frame-07",
+     "closedRound": 9,
+     "verifiedBy": "yerine geçti: kokpit-loading-skeleton-mismatch-09 (aynı kök neden, mobil kanıtla P2→P1 yükseltildi)"
     }
    ]
   }

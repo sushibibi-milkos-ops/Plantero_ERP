@@ -1,0 +1,502 @@
+{
+  "admin": {
+    "total": 19,
+    "byKind": {
+      "li": 10,
+      "kpi": 2,
+      "cell": 7
+    },
+    "sample": [
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000014TamamlandıAnadolu"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000013Kalite bekliyorAn"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000012TamamlandıKahve D"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000011TamamlandıAromati"
+      },
+      {
+        "kind": "li",
+        "t": "QNB · QNB-ODEMIS-TL₺1.250,00"
+      },
+      {
+        "kind": "li",
+        "t": "Vakıfbank · VKF-TIRE-EUR€0,00"
+      },
+      {
+        "kind": "li",
+        "t": "Vakıfbank · VKF-TIRE-TL-₺255.598,50"
+      },
+      {
+        "kind": "li",
+        "t": "Bazlar, Barista & KremalarBoştaŞu an açı"
+      },
+      {
+        "kind": "li",
+        "t": "Toz Karıştırma & DolumÜretimdeWO-2026-00"
+      },
+      {
+        "kind": "li",
+        "t": "Saşe / Stick Toz DolumBoştaŞu an açık iş"
+      },
+      {
+        "kind": "kpi",
+        "t": "Bugünkü net ciro%67,8dündenKritik stok k"
+      },
+      {
+        "kind": "kpi",
+        "t": "Bugünkü net ciro%67,8dünden"
+      },
+      {
+        "kind": "cell",
+        "t": "Brüt (bugün)₺2.678,40"
+      },
+      {
+        "kind": "cell",
+        "t": "İhracat₺2.678,40"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000014TamamlandıAnadolu"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000013Kalite bekliyorAn"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000012TamamlandıKahve D"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000011TamamlandıAromati"
+      },
+      {
+        "kind": "cell",
+        "t": "Toplam (TRY hesaplar)-₺254.348,50"
+      }
+    ]
+  },
+  "depo": {
+    "total": 26,
+    "byKind": {
+      "li": 15,
+      "cell": 11
+    },
+    "sample": [
+      {
+        "kind": "li",
+        "t": "ARK-2290TIRE/KARANTINA₺36.400,00Vanilya "
+      },
+      {
+        "kind": "li",
+        "t": "AKY-QC-01TIRE/KARANTINA₺7.875,00Badem"
+      },
+      {
+        "kind": "li",
+        "t": "OP-301030000-CTIRE/KARANTINA₺5.760,00Bad"
+      },
+      {
+        "kind": "li",
+        "t": "OP-301040000-CTIRE/KARANTINA₺5.320,00Fın"
+      },
+      {
+        "kind": "li",
+        "t": "OP-307020000-A10 gün önce dolduDeniz Tuz"
+      },
+      {
+        "kind": "li",
+        "t": "OP-304030000-A3 günAlkalize Kakao"
+      },
+      {
+        "kind": "li",
+        "t": "OP-302020000-A3 günstevya"
+      },
+      {
+        "kind": "li",
+        "t": "OP-308020000-A4 günMatcha Tozu (Toptan)"
+      },
+      {
+        "kind": "li",
+        "t": "OP-307010000-A5 günCream"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000014TamamlandıAnadolu"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000013Kalite bekliyorAn"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000012TamamlandıKahve D"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000011TamamlandıAromati"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000010TamamlandıTatlısu"
+      },
+      {
+        "kind": "li",
+        "t": "Mal kabulGR-2026-000009TamamlandıTatlısu"
+      },
+      {
+        "kind": "cell",
+        "t": "4 lot bekliyor₺55.355,00"
+      },
+      {
+        "kind": "cell",
+        "t": "1Süresi geçti"
+      },
+      {
+        "kind": "cell",
+        "t": "50< 30 gün"
+      },
+      {
+        "kind": "cell",
+        "t": "3030-60 gün"
+      },
+      {
+        "kind": "cell",
+        "t": "060-90 gün"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000014Anadolu Kuruyemiş"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000013Anadolu Kuruyemiş"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000012Kahve Dünyası Yeş"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000011Aromatik Kimya Ar"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000010Tatlısu Tatlandır"
+      },
+      {
+        "kind": "cell",
+        "t": "Mal kabulGR-2026-000009Tatlısu Tatlandır"
+      }
+    ]
+  },
+  "muhasebe": {
+    "total": 24,
+    "byKind": {
+      "li": 12,
+      "cell": 12
+    },
+    "sample": [
+      {
+        "kind": "li",
+        "t": "QNB · QNB-ODEMIS-TL₺1.250,00"
+      },
+      {
+        "kind": "li",
+        "t": "Vakıfbank · VKF-TIRE-EUR€0,00"
+      },
+      {
+        "kind": "li",
+        "t": "Vakıfbank · VKF-TIRE-TL-₺255.598,50"
+      },
+      {
+        "kind": "li",
+        "t": "Migros Ticaret A.Ş.%90₺3.800,00"
+      },
+      {
+        "kind": "li",
+        "t": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürü"
+      },
+      {
+        "kind": "li",
+        "t": "Hesap İşletim Ücreti%85-₺185,50"
+      },
+      {
+        "kind": "li",
+        "t": "Kira Ödemesi — Tire OSB%80-₺150.000,00"
+      },
+      {
+        "kind": "li",
+        "t": "SEDAŞ Elektrik Faturası%75-₺450,75"
+      },
+      {
+        "kind": "li",
+        "t": "Migros Ticaret A.Ş.16 gün₺3.800,00"
+      },
+      {
+        "kind": "li",
+        "t": "Hepsiburada Pazaryeri3 gün₺3.282,50"
+      },
+      {
+        "kind": "li",
+        "t": "Hepsiburada Pazaryeri37 gün₺1.100,00"
+      },
+      {
+        "kind": "li",
+        "t": "Trendyol Pazaryeri2 gün₺27,00"
+      },
+      {
+        "kind": "cell",
+        "t": "Toplam (TRY hesaplar)-₺254.348,50"
+      },
+      {
+        "kind": "cell",
+        "t": "Ağustos 2026Dönem"
+      },
+      {
+        "kind": "cell",
+        "t": "₺0Ödenecek"
+      },
+      {
+        "kind": "cell",
+        "t": "₺443Hesaplanan (391)"
+      },
+      {
+        "kind": "cell",
+        "t": "₺35.080İndirilecek (191)"
+      },
+      {
+        "kind": "cell",
+        "t": "₺7.1090-30 gün"
+      },
+      {
+        "kind": "cell",
+        "t": "₺1.10031-60 gün"
+      },
+      {
+        "kind": "cell",
+        "t": "₺061-90 gün"
+      },
+      {
+        "kind": "cell",
+        "t": "₺090+ gün"
+      },
+      {
+        "kind": "cell",
+        "t": "Eylül 2026₺33.278kapanış ₺33.278"
+      },
+      {
+        "kind": "cell",
+        "t": "Ekim 2026₺32.340kapanış ₺65.618"
+      },
+      {
+        "kind": "cell",
+        "t": "Kasım 2026₺31.227kapanış ₺96.845"
+      }
+    ]
+  },
+  "satis": {
+    "total": 25,
+    "byKind": {
+      "li": 16,
+      "kpi": 2,
+      "cell": 7
+    },
+    "sample": [
+      {
+        "kind": "li",
+        "t": "Aday3"
+      },
+      {
+        "kind": "li",
+        "t": "Nitelikli2"
+      },
+      {
+        "kind": "li",
+        "t": "Teklif Aşaması2"
+      },
+      {
+        "kind": "li",
+        "t": "Müzakere1"
+      },
+      {
+        "kind": "li",
+        "t": "1Spriluna15KG₺17.100,00"
+      },
+      {
+        "kind": "li",
+        "t": "2Plain Protein Mixi26ADET₺16.932,50"
+      },
+      {
+        "kind": "li",
+        "t": "3Badem İçeceği 1 Litrelik UHT40ADET₺16.8"
+      },
+      {
+        "kind": "li",
+        "t": "4YULAF BAZI36ADET₺13.587,00"
+      },
+      {
+        "kind": "li",
+        "t": "5BADEM BAZI35ADET₺12.181,50"
+      },
+      {
+        "kind": "li",
+        "t": "07.09.2026SO-2026-000032Sipariş onaylıBi"
+      },
+      {
+        "kind": "li",
+        "t": "06.09.2026SO-2026-000033TaslakBioGrün Ha"
+      },
+      {
+        "kind": "li",
+        "t": "02.09.2026SO-2026-000031Sevk edildiBioGr"
+      },
+      {
+        "kind": "li",
+        "t": "01.09.2026SO-2026-000018TaslakDoğal Yaşa"
+      },
+      {
+        "kind": "li",
+        "t": "01.09.2026SO-2026-000010FaturalandıTrend"
+      },
+      {
+        "kind": "li",
+        "t": "01.09.2026SO-2026-000004TaslakTrendyol P"
+      },
+      {
+        "kind": "li",
+        "t": "31.08.2026SO-2026-000011TaslakHepsiburad"
+      },
+      {
+        "kind": "kpi",
+        "t": "Bugünkü siparişBugünkü ciro%67,8dündenAç"
+      },
+      {
+        "kind": "kpi",
+        "t": "Bugünkü ciro%67,8dünden"
+      },
+      {
+        "kind": "cell",
+        "t": "07.09.2026SO-2026-000032BioGrün Handels "
+      },
+      {
+        "kind": "cell",
+        "t": "06.09.2026SO-2026-000033BioGrün Handels "
+      },
+      {
+        "kind": "cell",
+        "t": "02.09.2026SO-2026-000031BioGrün Handels "
+      },
+      {
+        "kind": "cell",
+        "t": "01.09.2026SO-2026-000018Doğal Yaşam Mark"
+      },
+      {
+        "kind": "cell",
+        "t": "01.09.2026SO-2026-000010Trendyol Pazarye"
+      },
+      {
+        "kind": "cell",
+        "t": "01.09.2026SO-2026-000004Trendyol Pazarye"
+      },
+      {
+        "kind": "cell",
+        "t": "31.08.2026SO-2026-000011Hepsiburada Paza"
+      }
+    ]
+  },
+  "uretim_sefi": {
+    "total": 19,
+    "byKind": {
+      "li": 14,
+      "kpi": 2,
+      "cell": 3
+    },
+    "sample": [
+      {
+        "kind": "li",
+        "t": "Bazlar, Barista & KremalarBoştaŞu an açı"
+      },
+      {
+        "kind": "li",
+        "t": "Toz Karıştırma & DolumÜretimdeWO-2026-00"
+      },
+      {
+        "kind": "li",
+        "t": "Saşe / Stick Toz DolumBoştaŞu an açık iş"
+      },
+      {
+        "kind": "li",
+        "t": "Toz Karıştırma & Dolum · ArızaDevam ediy"
+      },
+      {
+        "kind": "li",
+        "t": "Toz Karıştırma & Dolum · Arıza45 dk"
+      },
+      {
+        "kind": "li",
+        "t": "Bazlar, Barista & Kremalar · Arıza90 dk"
+      },
+      {
+        "kind": "li",
+        "t": "Bazlar, Barista & KremalarWO-2026-000008"
+      },
+      {
+        "kind": "li",
+        "t": "Toz Karıştırma & DolumWO-2026-000006Bitt"
+      },
+      {
+        "kind": "li",
+        "t": "Toz Karıştırma & DolumWO-2026-000007Üret"
+      },
+      {
+        "kind": "li",
+        "t": "Bazlar, Barista & KremalarWO-2026-000005"
+      },
+      {
+        "kind": "li",
+        "t": "Saşe / Stick Toz DolumWO-2026-000004Kapa"
+      },
+      {
+        "kind": "li",
+        "t": "Toz Karıştırma & DolumWO-2026-000003Kapa"
+      },
+      {
+        "kind": "li",
+        "t": "Bazlar, Barista & KremalarWO-2026-000002"
+      },
+      {
+        "kind": "li",
+        "t": "Bazlar, Barista & KremalarWO-2026-000001"
+      },
+      {
+        "kind": "kpi",
+        "t": "Açık iş emriGeciken iş emriBugünkü OEEFi"
+      },
+      {
+        "kind": "kpi",
+        "t": "Fire oranı (7g)"
+      },
+      {
+        "kind": "cell",
+        "t": "Son 7 günde fire kaydı yokİş emri tamaml"
+      },
+      {
+        "kind": "cell",
+        "t": "Toz Karıştırma & Dolum · Arıza45 dk"
+      },
+      {
+        "kind": "cell",
+        "t": "Bazlar, Barista & Kremalar · Arıza90 dk"
+      }
+    ]
+  }
+}
