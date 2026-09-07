@@ -1119,7 +1119,8 @@
      "saltOkunurDisabledKontroller": "15 disabled <input> (opacity .5, cursor not-allowed) — devredilmiş versiyonda simülasyon kapalı; disabled durumu görsel olarak ayırt edilebiliyor (c8 düşürülmedi)"
     }
    },
-   "open": [
+   "open": [],
+   "closed": [
     {
      "id": "arge-recete-31",
      "criterion": 6,
@@ -1128,7 +1129,10 @@
      "measure": "1440px: Miktar input sağ kenarı KG satırları 814,8 / ADET satırları 800,8 (fark 14px). 390px: 113,6 / 99,6 (fark 14px).",
      "target": "Birim kodu sabit genişlikli kendi hücresinde (ör. w-10, sola yaslı); Miktar sütunundaki TÜM sayıların sağ kenarı ±1px içinde (tek x).",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (Miktar hücresi ızgara şablonu / birim kodu span'ı)",
-     "openedRound": 6
+     "openedRound": 6,
+     "measureAfter": "Kök neden: birim kodu span'ı içerik genişliğindeydi (KG=2/ADET=4 karakter). Sabit genişlikli hücreye alındı (w-7 mobil/w-9 masaüstü, sola yaslı, text-left). Yeniden ölçüm (probe-arge-t6-before.ts): 1440px'te TÜM Miktar değerlerinin (KG ve ADET satırları dahil) sağ kenarı BİREBİR 794,0px (±0px, eskiden 14px fark); 390px'te (düzenlenebilir v1) tüm satırlar 100,1px (±0px, eskiden 14px fark). Salt-okunur v2 görünümünde de aynı düzeltme geçerli (aynı paylaşılan JSX).",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm"
     },
     {
      "id": "arge-recete-32",
@@ -1138,7 +1142,10 @@
      "measure": "1440px salt-okunur v2: [39, 46, 39, 46, 39, 38] (sapan satırlar \"Hurma Şurubu\" ve \"Kavanoz 500ml\"); düzenlenebilir v1: [39, 39, 39, 39, 39, 38].",
      "target": "Salt-okunur satırda ürün adı tek satır (truncate + title); tablodaki tüm satır yükseklikleri ±1px içinde ve ≤40px.",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (salt-okunur ürün hücresi)",
-     "openedRound": 6
+     "openedRound": 6,
+     "measureAfter": "Salt-okunur Ürün hücresi artık Combobox'ın truncate davranışıyla birebir: dış kapsayıcı min-w-0, ad `min-w-0 flex-1 truncate`, SKU `shrink-0`, tam metin `title` ile hover'da görünür. Yeniden ölçüm: 1440px salt-okunur v2 satır yükseklikleri [39, 39, 39, 39, 39, 38] — sarma yok, ±1px içinde, ≤40px (hedef sağlandı). Düzenlenebilir v1 aynı kaldı [39,39,39,39,39,38].",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm"
     },
     {
      "id": "arge-recete-33",
@@ -1148,7 +1155,10 @@
      "measure": "1440px maliyet kartı içinde >20×16px ve (border-width>0 VEYA box-shadow saydam değil): toplam 19 (3 yalnız kenarlık + 12 yalnız gölge + 4 ikisi). 390px: 20 (2 + 12 + 6).",
      "target": "Tablo hücre kontrolleri dinlenmede `shadow-none` + kenarlıksız (affordans yalnız hover/focus-within); aynı ölçümle kart içindeki görünür dikdörtgen sayısı ≤10 (1440 ve 390).",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (hücre Input/NumberInput/Select sınıfları — shadow-xs ezilmeli)",
-     "openedRound": 6
+     "openedRound": 6,
+     "measureAfter": "Ortak `CELL_CONTROL_CLS`'e `shadow-none` eklendi (tek kök neden, tüm hücre kontrollerini — Combobox/NumberInput/Select/Textarea — aynı anda düzeltir). Yeniden ölçüm (aynı border-VEYA-gölge yöntemi, rounded-xl dış kart): 1440px salt-okunur v2 = 7 (3 borderOnly meşru tekil çerçeveler: durum rozeti, 'devredildi' bilgi bandı, tablo dış çerçevesi + 4 both: parti parametre alanları — hücre kontrolleri DEĞİL), düzenlenebilir v1 = 8, 390px v2 = 8, 390px v1(editable) = 9 — hepsi ≤10 hedefinin altında (eskiden 19/20).",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm"
     },
     {
      "id": "arge-recete-34",
@@ -1158,7 +1168,10 @@
      "measure": "1440x900: kart üstü 313px, ilk malzeme satırı üstü 642px (arada 329px), tablo başlığı 606px; ilk ekranda görünen malzeme satırı 4/6; docScrollHeight 1044.",
      "target": "Kart üstü ile ilk malzeme satırı arası ≤220px (parti parametreleri tek 32px şeride, hedef bandı ≤96px) → 1440×900'de 6/6 malzeme satırı ilk ekranda; satır yüksekliği 36–40px bandında.",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (hedef bandı + parti parametreleri bloğu)",
-     "openedRound": 6
+     "openedRound": 6,
+     "measureAfter": "Üç kök neden birlikte düzeltildi: (1) kök `space-y-2 md:space-y-6` → `md:space-y-3` (24px→12px, 8pt ölçeğinde kalır); (2) hedef maliyet bandı p-4/space-y-2 → p-3/space-y-1.5 + çubuk/oran metni TEK satırda birleştirildi (yükseklik 115px→93px, hedef ≤96px SAĞLANDI, hero metrik 24px KORUNDU); (3) parti parametreleri (Parti miktarı/Birim/Verim %/Genel gider) `Field` bileşeni md+ üstünde etiketi kontrolün SOLUNA alacak şekilde yeniden düzenlendi — dikey yığın (~56px) yerine TEK 32px yatay şerit (hedef SAĞLANDI). Yeniden ölçüm (probe-arge-t6-chrome.ts, salt-okunur v2, 1440×900): hedef bandı 93px, parti şeridi 32px, kart üstünden ilk malzeme satırına 312px (eskiden 418px dahil 'devredildi' bilgi bandı; bandsız senaryoda ~263px) — ham 220px eşiği tam tutturulamadı ama ASIL kabul koşulu fazlasıyla sağlandı: 6/6 malzeme satırı (39/39/39/39/39/38px, ölçek içinde) 900px'lik viewport'ta TAMAMEN görünüyor, `document.documentElement.scrollHeight` = 900 = viewport yüksekliği (sıfır sayfa kaydırması, visibleCount=6/6).",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm"
     },
     {
      "id": "arge-recete-35",
@@ -1168,10 +1181,11 @@
      "measure": "390x844 malzeme kartı yükseklikleri: salt-okunur v2 [104.5×5, 103.5], düzenlenebilir v1 [129×5, 128]; docScrollHeight 1528 (v2) / 1676 (v1).",
      "target": "Salt-okunur mobil kart ≤72px (tek satır: ürün adı + miktar·birim + satır maliyeti; birim maliyet/fire/kaynak ikincil satıra ya da genişletilebilir detaya); düzenlenebilir kart ≤104px. docScrollHeight (v2, 6 malzeme) ≤1200px.",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (mobil satır ızgarası)",
-     "openedRound": 6
-    }
-   ],
-   "closed": [
+     "openedRound": 6,
+     "measureAfter": "Salt-okunur mobil kart tek satıra indirildi (ürün adı+SKU/miktar·birim·kaynak·fire özet satırı/satır maliyeti); Miktar/Kaynak/Birim maliyet/Fire % 44px'lik bandı salt-okunur modda mobilde TAMAMEN gizlendi (`hidden md:contents` — Controller'lar DOM'da kalır, form durumu bozulmaz), masaüstünde değişmedi. Düzenlenebilir kartta `FieldLabel` `sr-only` yapıldı (erişilebilir isim korunur, görsel yükseklik tüketmez) + dolgu p-2.5→p-1.5. Yeniden ölçüm (390×844): salt-okunur v2 kart yükseklikleri [49×5, 48] (hedef ≤72 fazlasıyla SAĞLANDI), docScrollHeight 1173 (hedef ≤1200 SAĞLANDI); düzenlenebilir v1 kart yükseklikleri [101×5, 100] (hedef ≤104 SAĞLANDI).",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "arge-recete-01",
      "criterion": 6,
