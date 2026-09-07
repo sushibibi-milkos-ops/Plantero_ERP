@@ -1,0 +1,715 @@
+{
+ "sevkiyatlar": {
+  "tables": [
+   {
+    "ti": 0,
+    "tableW": 1152,
+    "containerW": 1152,
+    "scrollW": 1152,
+    "rowCount": 3,
+    "cols": [
+     {
+      "h": "Sevkiyat no",
+      "width": 158,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 3,
+      "sample": [
+       "EXP-2026-000001",
+       "EXP-2026-000002",
+       "EXP-2026-000003"
+      ]
+     },
+     {
+      "h": "Müşteri",
+      "width": 190,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 1,
+      "sample": [
+       "BioGrün Handels GmbH",
+       "BioGrün Handels GmbH",
+       "BioGrün Handels GmbH"
+      ]
+     },
+     {
+      "h": "Durum",
+      "width": 140,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 3,
+      "sample": [
+       "Kapalı",
+       "Gümrükte",
+       "Taslak"
+      ]
+     },
+     {
+      "h": "Ülke",
+      "width": 65,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 2,
+      "sample": [
+       "DE",
+       "NL",
+       "DE"
+      ]
+     },
+     {
+      "h": "Rejim",
+      "width": 76,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 2,
+      "sample": [
+       "ETGB",
+       "Standart",
+       "ETGB"
+      ]
+     },
+     {
+      "h": "Belgeler",
+      "width": 87,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 3,
+      "sample": [
+       "9/11",
+       "2/8",
+       "6/11"
+      ]
+     },
+     {
+      "h": "Tutar (döviz)",
+      "width": 120,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 3,
+      "sample": [
+       "€270,00",
+       "€16.800,00",
+       "€0,00"
+      ]
+     },
+     {
+      "h": "ETD",
+      "width": 96,
+      "rows": 3,
+      "filled": 1,
+      "distinct": 2,
+      "sample": [
+       "—",
+       "10.09.2026",
+       "—"
+      ]
+     },
+     {
+      "h": "Oluşturma",
+      "width": 99,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 1,
+      "sample": [
+       "07.09.2026",
+       "07.09.2026",
+       "07.09.2026"
+      ]
+     },
+     {
+      "h": "Tutar (₺)",
+      "width": 120,
+      "rows": 3,
+      "filled": 3,
+      "distinct": 3,
+      "sample": [
+       "₺10.044,00",
+       "₺624.960,00",
+       "₺2.678,40"
+      ]
+     }
+    ]
+   }
+  ],
+  "inter": {
+   "rowBg": "rgba(0, 0, 0, 0)",
+   "focus": {
+    "outline": "0px none",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+   }
+  },
+  "hoverAfter": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "selectOpts": null
+ },
+ "belgeler": {
+  "tables": [
+   {
+    "ti": 0,
+    "tableW": 1152,
+    "containerW": 1152,
+    "scrollW": 1152,
+    "rowCount": 30,
+    "cols": [
+     {
+      "h": "Belge",
+      "width": 330,
+      "rows": 30,
+      "filled": 30,
+      "distinct": 12,
+      "sample": [
+       "ETGB (mikro ihracat beyanı)",
+       "Sağlık sertifikası",
+       "Çeki listesi (packing list)"
+      ]
+     },
+     {
+      "h": "Sevkiyat",
+      "width": 225,
+      "rows": 30,
+      "filled": 30,
+      "distinct": 3,
+      "sample": [
+       "EXP-2026-000001",
+       "EXP-2026-000001",
+       "EXP-2026-000001"
+      ]
+     },
+     {
+      "h": "Müşteri",
+      "width": 342,
+      "rows": 30,
+      "filled": 30,
+      "distinct": 1,
+      "sample": [
+       "BioGrün Handels GmbH",
+       "BioGrün Handels GmbH",
+       "BioGrün Handels GmbH"
+      ]
+     },
+     {
+      "h": "Durum",
+      "width": 195,
+      "rows": 30,
+      "filled": 30,
+      "distinct": 5,
+      "sample": [
+       "Alındı",
+       "Gerekli",
+       "Hazır"
+      ]
+     },
+     {
+      "h": "Eylemler",
+      "width": 60,
+      "rows": 30,
+      "filled": 0,
+      "distinct": 1,
+      "sample": [
+       "",
+       "",
+       ""
+      ]
+     }
+    ]
+   }
+  ],
+  "inter": {
+   "rowBg": "rgba(0, 0, 0, 0)",
+   "focus": {
+    "outline": "0px none",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+   }
+  },
+  "hoverAfter": "rgba(0, 0, 0, 0)",
+  "selectOpts": null
+ },
+ "kurlar": {
+  "tables": [
+   {
+    "ti": 0,
+    "tableW": 1152,
+    "containerW": 1152,
+    "scrollW": 1152,
+    "rowCount": 25,
+    "cols": [
+     {
+      "h": "Tarih",
+      "width": 185,
+      "rows": 25,
+      "filled": 25,
+      "distinct": 13,
+      "sample": [
+       "07.09.2026",
+       "07.09.2026",
+       "06.09.2026"
+      ]
+     },
+     {
+      "h": "Para birimi",
+      "width": 201,
+      "rows": 25,
+      "filled": 25,
+      "distinct": 2,
+      "sample": [
+       "EUR",
+       "USD",
+       "EUR"
+      ]
+     },
+     {
+      "h": "Alış",
+      "width": 175,
+      "rows": 25,
+      "filled": 25,
+      "distinct": 23,
+      "sample": [
+       "₺37,2000",
+       "₺34,0738",
+       "₺38,5000"
+      ]
+     },
+     {
+      "h": "Satış",
+      "width": 175,
+      "rows": 25,
+      "filled": 25,
+      "distinct": 23,
+      "sample": [
+       "Satış₺37,4000",
+       "Satış₺34,2237",
+       "Satış₺38,7000"
+      ]
+     },
+     {
+      "h": "Günlük değişim",
+      "width": 231,
+      "rows": 25,
+      "filled": 25,
+      "distinct": 18,
+      "sample": [
+       "-%3,36",
+       "+%0,75",
+       "+%4,66"
+      ]
+     },
+     {
+      "h": "Kaynak",
+      "width": 185,
+      "rows": 25,
+      "filled": 25,
+      "distinct": 1,
+      "sample": [
+       "TCMB",
+       "TCMB",
+       "TCMB"
+      ]
+     }
+    ]
+   }
+  ],
+  "inter": {
+   "rowBg": "rgba(0, 0, 0, 0)",
+   "focus": {
+    "outline": "0px none",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+   }
+  },
+  "hoverAfter": "rgba(0, 0, 0, 0)",
+  "selectOpts": null
+ },
+ "gtip": {
+  "tables": [
+   {
+    "ti": 0,
+    "tableW": 1152,
+    "containerW": 1152,
+    "scrollW": 1152,
+    "rowCount": 39,
+    "cols": [
+     {
+      "h": "SKU",
+      "width": 179,
+      "rows": 39,
+      "filled": 39,
+      "distinct": 39,
+      "sample": [
+       "110010001",
+       "110010002",
+       "110010003"
+      ]
+     },
+     {
+      "h": "Ürün",
+      "width": 519,
+      "rows": 39,
+      "filled": 39,
+      "distinct": 39,
+      "sample": [
+       "BADEM BAZI",
+       "2x Badem Bazı",
+       "3x Badem Bazı"
+      ]
+     },
+     {
+      "h": "Tip",
+      "width": 151,
+      "rows": 39,
+      "filled": 39,
+      "distinct": 2,
+      "sample": [
+       "Mamul",
+       "Mamul",
+       "Mamul"
+      ]
+     },
+     {
+      "h": "GTİP",
+      "width": 303,
+      "rows": 39,
+      "filled": 39,
+      "distinct": 2,
+      "sample": [
+       "Eşlenmedi",
+       "Eşlenmedi",
+       "Eşlenmedi"
+      ]
+     }
+    ]
+   }
+  ],
+  "inter": {
+   "rowBg": "rgba(0, 0, 0, 0)",
+   "focus": {
+    "outline": "0px none",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+   }
+  },
+  "hoverAfter": "rgba(0, 0, 0, 0)",
+  "selectOpts": null
+ },
+ "yeni": {
+  "tables": [],
+  "inter": {
+   "rowBg": null,
+   "focus": {
+    "outline": "0px none",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+   }
+  },
+  "hoverAfter": null,
+  "selectOpts": 11
+ },
+ "detay:Sipariş satırları": [
+  {
+   "ti": 0,
+   "tableW": 1152,
+   "containerW": 1152,
+   "scrollW": 1152,
+   "rowCount": 1,
+   "cols": [
+    {
+     "h": "Ürün",
+     "width": 292,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "Badem İçeceği 1 Litrelik UHT"
+     ]
+    },
+    {
+     "h": "SKU",
+     "width": 175,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "190010099"
+     ]
+    },
+    {
+     "h": "Miktar",
+     "width": 160,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "40 ADET"
+     ]
+    },
+    {
+     "h": "Sevk edilen",
+     "width": 160,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "40"
+     ]
+    },
+    {
+     "h": "Birim fiyat",
+     "width": 175,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "€420,00"
+     ]
+    },
+    {
+     "h": "Tutar",
+     "width": 189,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "€16.800,00"
+     ]
+    }
+   ]
+  }
+ ],
+ "detay:Çeki listesi": [
+  {
+   "ti": 0,
+   "tableW": 1152,
+   "containerW": 1152,
+   "scrollW": 1152,
+   "rowCount": 1,
+   "cols": [
+    {
+     "h": "Kap no",
+     "width": 98,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "#1"
+     ]
+    },
+    {
+     "h": "Ürün",
+     "width": 246,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "Badem İçeceği 1 Litrelik UHT"
+     ]
+    },
+    {
+     "h": "SKU",
+     "width": 147,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "190010099"
+     ]
+    },
+    {
+     "h": "Lot",
+     "width": 184,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "PL-260822-H1-05"
+     ]
+    },
+    {
+     "h": "Miktar",
+     "width": 135,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "40 ADET"
+     ]
+    },
+    {
+     "h": "GTİP",
+     "width": 122,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "2202.99"
+     ]
+    },
+    {
+     "h": "Net kg",
+     "width": 110,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "41,2"
+     ]
+    },
+    {
+     "h": "Brüt kg",
+     "width": 110,
+     "rows": 1,
+     "filled": 1,
+     "distinct": 1,
+     "sample": [
+      "43,26"
+     ]
+    }
+   ]
+  }
+ ],
+ "detay:Belgeler": [
+  {
+   "ti": 0,
+   "tableW": 1152,
+   "containerW": 1152,
+   "scrollW": 1152,
+   "rowCount": 8,
+   "cols": [
+    {
+     "h": "Belge",
+     "width": 445,
+     "rows": 8,
+     "filled": 8,
+     "distinct": 8,
+     "sample": [
+      "Proforma fatura",
+      "Ticari fatura",
+      "Çeki listesi (packing list)"
+     ]
+    },
+    {
+     "h": "Durum",
+     "width": 197,
+     "rows": 8,
+     "filled": 8,
+     "distinct": 4,
+     "sample": [
+      "Gönderildi",
+      "Gerekli",
+      "Hazır"
+     ]
+    },
+    {
+     "h": "Belge no",
+     "width": 279,
+     "rows": 8,
+     "filled": 1,
+     "distinct": 2,
+     "sample": [
+      "PF-EXP-2026-000002",
+      "—",
+      "—"
+     ]
+    },
+    {
+     "h": "Vade",
+     "width": 163,
+     "rows": 8,
+     "filled": 7,
+     "distinct": 8,
+     "sample": [
+      "09.09.2026",
+      "08.09.2026",
+      "07.09.2026"
+     ]
+    },
+    {
+     "h": "Eylemler",
+     "width": 68,
+     "rows": 8,
+     "filled": 0,
+     "distinct": 1,
+     "sample": [
+      "",
+      "",
+      ""
+     ]
+    }
+   ]
+  }
+ ],
+ "detay:Fatura & kur": [],
+ "mobile": {
+  "sevkiyatlar": {
+   "scrollW": 390,
+   "clientW": 390,
+   "wideCount": 9,
+   "wide": [
+    "DIV.group relative block text-left h-[72px] @488",
+    "DIV.truncate text-xs font-medium text-muted-@475",
+    "DIV.mt-1 truncate text-[19px] leading-none f@475",
+    "DIV.mt-1 h-[15px]@475",
+    "DIV.group relative block text-left h-[72px] @648"
+   ],
+   "cardHeights": [
+    64
+   ]
+  },
+  "belgeler": {
+   "scrollW": 390,
+   "clientW": 390,
+   "wideCount": 9,
+   "wide": [
+    "DIV.group relative block text-left h-[72px] @488",
+    "DIV.truncate text-xs font-medium text-muted-@475",
+    "DIV.mt-1 truncate text-[19px] leading-none f@475",
+    "DIV.mt-1 h-[15px]@475",
+    "DIV.group relative block text-left h-[72px] @648"
+   ],
+   "cardHeights": [
+    60
+   ]
+  },
+  "kurlar": {
+   "scrollW": 390,
+   "clientW": 390,
+   "wideCount": 0,
+   "wide": [],
+   "cardHeights": [
+    18,
+    64
+   ]
+  },
+  "gtip": {
+   "scrollW": 390,
+   "clientW": 390,
+   "wideCount": 9,
+   "wide": [
+    "DIV.group relative block text-left h-[72px] @488",
+    "DIV.truncate text-xs font-medium text-muted-@475",
+    "DIV.mt-1 truncate text-[19px] leading-none f@475",
+    "DIV.mt-1 h-[15px]@475",
+    "DIV.group relative block text-left h-[72px] @648"
+   ],
+   "cardHeights": [
+    60
+   ]
+  },
+  "yeni": {
+   "scrollW": 390,
+   "clientW": 390,
+   "wideCount": 0,
+   "wide": [],
+   "cardHeights": []
+  },
+  "detay": {
+   "scrollW": 390,
+   "clientW": 390,
+   "wideCount": 24,
+   "wide": [
+    "DIV.flex items-center gap-2@676",
+    "A.flex w-[78vw] shrink-0 snap-start flex-c@652",
+    "DIV.flex items-center justify-between gap-2@641",
+    "SPAN.line-clamp-2 min-h-8 text-[11px] leading@402",
+    "SPAN.inline-flex shrink-0 items-center gap-1.@641"
+   ],
+   "cardHeights": [
+    64
+   ]
+  }
+ }
+}

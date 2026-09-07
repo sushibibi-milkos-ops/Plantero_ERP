@@ -1,0 +1,335 @@
+{
+  "isemirleriMobilKart": [
+    {
+      "text": "MO-2026-000006",
+      "badge": {
+        "l": 241,
+        "r": 313,
+        "w": 72
+      },
+      "menu": {
+        "l": 319,
+        "r": 363,
+        "w": 44
+      },
+      "placeholder": null,
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000002",
+      "badge": {
+        "l": 219,
+        "r": 313,
+        "w": 94
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 228,
+        "r": 234,
+        "w": 6
+      },
+      "h": 64.5
+    },
+    {
+      "text": "MO-2026-000001",
+      "badge": {
+        "l": 219,
+        "r": 313,
+        "w": 94
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 228,
+        "r": 234,
+        "w": 6
+      },
+      "h": 64.5
+    },
+    {
+      "text": "MO-2026-000003",
+      "badge": {
+        "l": 219,
+        "r": 313,
+        "w": 94
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 228,
+        "r": 234,
+        "w": 6
+      },
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000005",
+      "badge": {
+        "l": 219,
+        "r": 313,
+        "w": 94
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 228,
+        "r": 234,
+        "w": 6
+      },
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000004",
+      "badge": {
+        "l": 219,
+        "r": 313,
+        "w": 94
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 228,
+        "r": 234,
+        "w": 6
+      },
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000006BildirildiMikser motorunda anormal ses",
+      "badge": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "menu": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "placeholder": null,
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000002TamamlandıGramaj sapması — toz dolumu tutarsız1",
+      "badge": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000001TamamlandıDolum başlığı sızdırıyor2",
+      "badge": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000003TamamlandıHaftalık bıçak/hazne temizliği — Ön ezme (ezme makinesi, parçalama hazneli)",
+      "badge": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000005TamamlandıHaftalık stick nozul temizliği — Stick dolum makinesi (20 g)",
+      "badge": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000004TamamlandıGünlük hassasiyet testi — Metal dedektörü (30×25)",
+      "badge": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "menu": null,
+      "placeholder": {
+        "l": 0,
+        "r": 0,
+        "w": 0
+      },
+      "h": 0
+    }
+  ],
+  "kpiStrip_oee_390": {
+    "scrollWidth": 792,
+    "clientWidth": 358,
+    "cardCount": 5,
+    "fullyVisible": 2
+  },
+  "kpiStrip_makineler_390": {
+    "scrollWidth": 632,
+    "clientWidth": 358,
+    "cardCount": 4,
+    "fullyVisible": 2
+  },
+  "oeeTables": [
+    {
+      "heads": [
+        "HAT",
+        "OEE",
+        "KULLANILABİLİRLİK",
+        "PERFORMANS",
+        "KALİTE",
+        "DURUŞ"
+      ],
+      "rows": [
+        [
+          "HAT3 Saşe / Stick Toz Dolum",
+          "%0,14",
+          "%100",
+          "%0,14",
+          "%3,33",
+          "0 dk"
+        ],
+        [
+          "HAT2 Toz Karıştırma & Dolum",
+          "%0,24",
+          "%99,48",
+          "%0,26",
+          "%6,63",
+          "75 dk"
+        ],
+        [
+          "HAT1 Bazlar, Barista & Kremalar",
+          "%1,2",
+          "%99,38",
+          "%1,2",
+          "%9,97",
+          "90 dk"
+        ]
+      ],
+      "decimalsPerCol": [
+        [],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2
+        ],
+        []
+      ]
+    }
+  ],
+  "oeeChartLines": [
+    {
+      "stroke": "none",
+      "dash": "none",
+      "width": "2px",
+      "name": "OEE"
+    },
+    {
+      "stroke": "oklch(0.55 0.16 152)",
+      "dash": "none",
+      "width": "2px",
+      "name": "OEE"
+    },
+    {
+      "stroke": "none",
+      "dash": "none",
+      "width": "1px",
+      "name": "Kullanılabilirlik"
+    },
+    {
+      "stroke": "oklch(0.552 0.016 285.9 / 0.9)",
+      "dash": "none",
+      "width": "1px",
+      "name": "Kullanılabilirlik"
+    },
+    {
+      "stroke": "none",
+      "dash": "4px, 3px",
+      "width": "1px",
+      "name": "Performans"
+    },
+    {
+      "stroke": "oklch(0.552 0.016 285.9 / 0.62)",
+      "dash": "4px, 3px",
+      "width": "1px",
+      "name": "Performans"
+    },
+    {
+      "stroke": "none",
+      "dash": "1px, 3px",
+      "width": "1px",
+      "name": "Kalite"
+    },
+    {
+      "stroke": "oklch(0.552 0.016 285.9 / 0.4)",
+      "dash": "1px, 3px",
+      "width": "1px",
+      "name": "Kalite"
+    }
+  ],
+  "anim_done": {
+    "status": "",
+    "timeline": [
+      "Bildirildi",
+      "Yapılıyor",
+      "Tamamlandı"
+    ],
+    "animated": [
+      {
+        "tag": "SPAN",
+        "cls": "absolute top-1 -left-[18.5px] size-2.5 rounded-full ring-4 ring-background bg-primary moti",
+        "name": "pulse",
+        "dur": "2s"
+      }
+    ]
+  },
+  "anim_open": {
+    "status": "",
+    "timeline": [
+      "Bildirildi"
+    ],
+    "animated": []
+  },
+  "transitionScan": {
+    "/bakim/makineler": [],
+    "/bakim/makineler/e9446ff8-da45-418f-be58-5905fd4546c1": [],
+    "/bakim/planlar": [],
+    "/bakim/is-emirleri": [],
+    "/bakim/is-emirleri/e310fac1-bb23-458d-8834-fc4cfbee0b9b": [],
+    "/bakim/is-emirleri/yeni": [],
+    "/bakim/oee": []
+  }
+}
