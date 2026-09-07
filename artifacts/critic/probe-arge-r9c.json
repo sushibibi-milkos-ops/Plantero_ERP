@@ -2,8 +2,8 @@
  "Fıstık Bazı (v1 Taslak)@390": {
   "found": true,
   "barCw": 344,
-  "barSw": 364,
-  "overflowPx": 20,
+  "barSw": 344,
+  "overflowPx": 0,
   "docOverflow": 0,
   "kids": [
    {
@@ -13,13 +13,7 @@
     "hiddenPx": 0
    },
    {
-    "label": "Yeni deneme reçetesi",
-    "w": 44,
-    "h": 44,
-    "hiddenPx": 0
-   },
-   {
-    "label": "Yeni versiyon",
+    "label": "Ekle",
     "w": 44,
     "h": 44,
     "hiddenPx": 0
@@ -34,15 +28,15 @@
     "label": "Onaya gönder",
     "w": 44,
     "h": 44,
-    "hiddenPx": 20
+    "hiddenPx": 0
    }
   ]
  },
  "Fıstık Bazı (v1 Taslak)@375": {
   "found": true,
   "barCw": 329,
-  "barSw": 364,
-  "overflowPx": 35,
+  "barSw": 329,
+  "overflowPx": 0,
   "docOverflow": 0,
   "kids": [
    {
@@ -52,13 +46,7 @@
     "hiddenPx": 0
    },
    {
-    "label": "Yeni deneme reçetesi",
-    "w": 44,
-    "h": 44,
-    "hiddenPx": 0
-   },
-   {
-    "label": "Yeni versiyon",
+    "label": "Ekle",
     "w": 44,
     "h": 44,
     "hiddenPx": 0
@@ -73,7 +61,7 @@
     "label": "Onaya gönder",
     "w": 44,
     "h": 44,
-    "hiddenPx": 35
+    "hiddenPx": 0
    }
   ]
  },
@@ -91,13 +79,7 @@
     "hiddenPx": 0
    },
    {
-    "label": "Yeni deneme reçetesi",
-    "w": 44,
-    "h": 44,
-    "hiddenPx": 0
-   },
-   {
-    "label": "Yeni versiyon",
+    "label": "Ekle",
     "w": 44,
     "h": 44,
     "hiddenPx": 0
@@ -118,13 +100,7 @@
     "hiddenPx": 0
    },
    {
-    "label": "Yeni deneme reçetesi",
-    "w": 44,
-    "h": 44,
-    "hiddenPx": 0
-   },
-   {
-    "label": "Yeni versiyon",
+    "label": "Ekle",
     "w": 44,
     "h": 44,
     "hiddenPx": 0
@@ -145,13 +121,7 @@
     "hiddenPx": 0
    },
    {
-    "label": "Yeni deneme reçetesi",
-    "w": 44,
-    "h": 44,
-    "hiddenPx": 0
-   },
-   {
-    "label": "Yeni versiyon",
+    "label": "Ekle",
     "w": 44,
     "h": 44,
     "hiddenPx": 0
@@ -172,13 +142,7 @@
     "hiddenPx": 0
    },
    {
-    "label": "Yeni deneme reçetesi",
-    "w": 44,
-    "h": 44,
-    "hiddenPx": 0
-   },
-   {
-    "label": "Yeni versiyon",
+    "label": "Ekle",
     "w": 44,
     "h": 44,
     "hiddenPx": 0

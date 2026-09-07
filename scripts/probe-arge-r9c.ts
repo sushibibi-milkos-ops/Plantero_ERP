@@ -7,9 +7,9 @@ import { launchBrowser, openRoute, defaultBaseUrl } from './lib/browser';
 
 const base = defaultBaseUrl();
 const PIDS = [
-  ['Fıstık Bazı (v1 Taslak)', 'c2913daa-05c6-46bc-9f48-942e864a651f'],
-  ['Şekersiz Protein', '2902918e-e50f-41ae-9f38-f51378a76237'],
-  ['Oat Barista v2', '92e43c12-adeb-4c1f-9c13-3bb066b46461'],
+  ['Fıstık Bazı (v1 Taslak)', 'c7f425ec-6403-4e4b-a1d7-7ac9276dbb5c'],
+  ['Şekersiz Protein', '43fa7408-7a4b-4a14-a20e-e21e0d6687fe'],
+  ['Oat Barista v2', '53ef3653-8c32-49eb-b08b-bab13ba9c15c'],
 ] as const;
 
 async function run() {

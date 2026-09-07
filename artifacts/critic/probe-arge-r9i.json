@@ -1,0 +1,36 @@
+{
+ "/arge/receteler": [
+  {
+   "name": "Şekersiz Protein",
+   "cost": "₺166,17",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "name": "Oat Barista Reçetesi",
+   "cost": "₺103,41",
+   "color": "oklch(0.72 0.17 70)"
+  },
+  {
+   "name": "Fıstık Bazı",
+   "cost": "₺31,92",
+   "color": "oklch(0.72 0.17 70)"
+  }
+ ],
+ "/arge/projeler": [
+  {
+   "name": "RD-2026-000001",
+   "cost": "₺31,92",
+   "color": "oklch(0.72 0.17 70)"
+  },
+  {
+   "name": "RD-2026-000002",
+   "cost": "₺166,17",
+   "color": "oklch(0.21 0.006 285.9)"
+  },
+  {
+   "name": "RD-2026-000003",
+   "cost": "₺103,41",
+   "color": "oklch(0.72 0.17 70)"
+  }
+ ]
+}

@@ -1435,7 +1435,8 @@
      "odakHalkasi": "\"Onaya gönder\" focus-visible → boxShadow oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px (görsel: artifacts/critic/arge-r9-focus-onaya.png)"
     }
    },
-   "open": [
+   "open": [],
+   "closed": [
     {
      "id": "arge-recete-39",
      "criterion": 9,
@@ -1445,10 +1446,10 @@
      "target": "375 ve 390px'te eylem şeridi scrollWidth ≤ clientWidth VE \"Onaya gönder\" hiddenPx = 0 (ör. mobilde \"Yeni deneme reçetesi\" + \"Yeni versiyon\" ikonlarını bir taşma menüsüne al, ya da Versiyon SelectTrigger w-40 160px → w-32 128px)",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (~268: `flex flex-nowrap items-center gap-2 overflow-x-auto` şeridi; Versiyon SelectTrigger `w-40`)",
      "openedRound": 9,
-     "lastMeasuredRound": 9
-    }
-   ],
-   "closed": [
+     "measureAfter": "Kök neden: mobil şeritte \"Yeni deneme reçetesi\" (44px) + \"Yeni versiyon\" (44px) AYRI iki ikon buton vardı. Tek 44×44 DropdownMenu (\"Ekle\") altında birleştirildi (cost-simulator.tsx ~323-344); açılışını tetikleyen NewRecipeDialog kontrollü/tetikleyicisiz hale getirildi (hideTrigger). Versiyon SelectTrigger genişliği (w-40=160px) KORUNDU — versiyon durumu metni artık kırpılmıyor. Yeniden ölçüm (scripts/probe-arge-r9c.ts, güncel proje id'leriyle — Fıstık Bazı c7f425ec, Şekersiz Protein 43fa7408, Oat Barista v2 53ef3653): her üç projede, 390 VE 375px'te eylem şeridi overflowPx=0 (barSw=barCw: 344/344 ve 329/329), dokümanda yatay taşma yok (docOverflow=0); şeritteki her buton (Versiyon 160×44, Ekle 44×44, Kaydet 44×44, Onaya gönder 44×44) hiddenPx=0 — \"Onaya gönder\" tam görünür. artifacts/critic/probe-arge-r9c.json güncellendi.",
+     "closedRound": 9,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "arge-recete-31",
      "criterion": 6,
