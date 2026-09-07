@@ -147,8 +147,23 @@ const FILES = await checkFiles();
 // irsaliye yerine TEK irsaliyeye (2 delivery_lines, aynı deliveryId) sevk edildi; commit'li canlı
 // egzersizde `recall_items WHERE hop='delivered'` yalnızca 1 satır (30 kg) üretti, gerçekte 60 kg
 // (2 lot) sevk edilmişti — I60 anında 1 ihlal verdi (`recall_delivered_item_missing`). Fresh seed'de
-// dormant (I59 ile aynı sebep: recall_items 0 satır).
-const RULE_COUNT = 62;
+// dormant (I59 ile aynı sebep: recall_items 0 satır). I63/I64 (veri-critic Tur 13, YENİ, saf
+// regresyon güvenlik ağı — CANLI DOĞRULANDI): `transfer_lines` (depo transferi) ve
+// `stock_count_lines` (sayım fark satırı) — I38'in iş emri satırları için kurduğu "belge satırı ↔
+// bağlı stock_moves birebir eşleşir" disiplini bu iki tabloya hiç uygulanmamıştı; I1/I2/I8 yalnızca
+// AGREGE quant/hareket tutarlılığını görüyor, tek bir transfer/sayım satırının kendi hareketinin
+// eksik/fazla/yanlış lokasyon-maliyetli olduğu satır-seviyesi hatayı (toplamda birbirini götürse
+// bile) yakalamıyordu. Rollback'li vitest transaction'ında canlı egzersiz: (a) depolar arası
+// (2 depo, transit ara durak) bir transfer `completeTransfer`+`receiveTransfer` ile 'done'a
+// taşındı (beklenen: 2 bacak/hareket) — sağlıklı durumda I63 0 ihlal, ikinci bacağın hareketi
+// bilinçli silindiğinde I63 anında 1 ihlal verdi (expected=2, actual=1); (b) bir sayım
+// `snapshotCount`→`recordCount`(+5 fark)→`submitReview`→`approveCount`(eşik altı, doğrudan
+// onay)→`postCount` ile kaydedildi (beklenen: 1 `count_gain` hareketi) — sağlıklı durumda I64 0
+// ihlal, hareketi bilinçli silindiğinde I64 anında 1 ihlal verdi (expected=1, actual=0). Fresh
+// seed'de her ikisi de 0 ihlal (seed'deki tek transfer aynı depo içi/tek bacak, tek sayımın tüm
+// hareketleri sağlam) — bu turdan itibaren sürekli regresyon güvenlik ağı (bkz.
+// checks/63_transfer_move_linkage.sql, checks/64_count_line_move_linkage.sql üst yorumları).
+const RULE_COUNT = 64;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
