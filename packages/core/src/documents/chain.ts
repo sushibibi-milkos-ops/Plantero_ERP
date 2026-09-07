@@ -101,6 +101,40 @@ type Key = `${string}:${string}`;
 const key = (type: string, id: string): Key => `${type}:${id}`;
 
 /**
+ * Kanonik belge zinciri rankı (CLAUDE.md kural 3: teklif → sipariş → irsaliye → fatura → tahsilat).
+ * Aynı derinlikteki (depth) düğümler arasındaki sırayı belirler — depth tek başına yeterli değil:
+ * bir belgeye AYNI ANDA iki farklı belge doğrudan bağlanmış olabilir (ör. hem sipariş hem irsaliye,
+ * ikisi de ihracat sevkiyatına depth=1'de bağlı). Eskiden bu durumda document_index.doc_date (seed/
+ * oluşturma zaman damgası, birkaç ms fark) sırayı belirliyordu — bu zaman damgası belge zincirinin
+ * GERÇEK yönünü yansıtmaz (ör. irsaliye kaydı sipariş kaydından önce insert edilmiş olabilir), bu
+ * yüzden aynı topolojiye sahip iki kayıt ekranda farklı (biri düz, biri ters) sırada render
+ * ediliyordu (Tur 15c, EXP-2026-000001 vs EXP-2026-000002).
+ */
+const TYPE_RANK: Record<string, number> = {
+  opportunity: 0,
+  quotation: 1,
+  purchase_order: 2,
+  sales_order: 2,
+  work_order: 3,
+  receipt: 4,
+  delivery: 4,
+  transfer: 4,
+  stock_count: 4,
+  scrap: 4,
+  quality_check: 5,
+  export_shipment: 6,
+  proforma: 6,
+  packing_list: 6,
+  invoice: 7,
+  credit_note: 7,
+  recall: 8,
+  payment: 9,
+  maintenance_order: 10,
+  journal_entry: 10,
+  bank_transaction: 10,
+};
+
+/**
  * Belge zinciri — BFS her iki yön. upstream: bu belgeye kaynak olanlar (ve onların kaynakları),
  * downstream: bu belgeden türeyenler.
  */
@@ -143,11 +177,24 @@ export async function getChain(db: DbOrTx, type: DocumentType, id: string, opts:
   const [up, down] = [await walk('up'), await walk('down')];
   const all = [...up.values(), ...down.values()];
   const nodeInfo = await loadNodes(db, all);
-  const toNodes = (m: Map<Key, { type: DocumentType; id: string; depth: number }>) =>
+  // direction 'up': getChain() bu diziyi "mevcut belgeye en yakından en uzağa" döndürür (depth artan);
+  // DocumentChain bileşeni (apps/web/src/components/document-chain.tsx) ekranda kronolojik (en eskiden
+  // en yeniye) okunması için bunu `reverse()`ler. Aynı derinlikte birden fazla düğüm varsa (ör. hem
+  // sipariş hem irsaliye aynı ihracat sevkiyatına doğrudan bağlıysa, ikisi de depth=1), rank'ı tersine
+  // (büyükten küçüğe) diziyoruz ki reverse() sonrası kanonik sırayla (küçükten büyüğe, ör. sipariş →
+  // irsaliye) okunsun. direction 'down' zaten TERS ÇEVRİLMEDEN doğrudan render edildiği için aynı
+  // derinlikteki düğümler doğrudan artan rank'a (kanonik kronolojik sıra) göre dizilir.
+  const toNodes = (m: Map<Key, { type: DocumentType; id: string; depth: number }>, direction: 'up' | 'down') =>
     Array.from(m.values())
       .map((n) => ({ ...(nodeInfo.get(key(n.type, n.id)) ?? fallbackNode(n.type, n.id)), depth: n.depth }))
-      .sort((a, b) => a.depth - b.depth || (a.date && b.date ? a.date.getTime() - b.date.getTime() : 0));
-  return { upstream: toNodes(up), downstream: toNodes(down), links };
+      .sort((a, b) => {
+        if (a.depth !== b.depth) return a.depth - b.depth;
+        const rankDiff = (TYPE_RANK[a.type] ?? 99) - (TYPE_RANK[b.type] ?? 99);
+        const tieRank = direction === 'up' ? -rankDiff : rankDiff;
+        if (tieRank !== 0) return tieRank;
+        return a.date && b.date ? a.date.getTime() - b.date.getTime() : 0;
+      });
+  return { upstream: toNodes(up, 'up'), downstream: toNodes(down, 'down'), links };
 }
 
 const fallbackNode = (type: DocumentType, id: string): Omit<ChainNode, 'depth'> => ({

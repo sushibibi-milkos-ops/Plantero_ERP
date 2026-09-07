@@ -1,0 +1,122 @@
+{
+  "/satis/siparisler/0b5dd02d-6f08-4374-b2a4-86d5091a468a": [
+    {
+      "x": 264,
+      "label": "Fırsat",
+      "docNo": "OPP-2026-000010"
+    },
+    {
+      "x": 472,
+      "label": "Teklif",
+      "docNo": "QT-2026-000001"
+    },
+    {
+      "x": 680,
+      "label": "Sipariş",
+      "docNo": "SO-2026-000001"
+    },
+    {
+      "x": 888,
+      "label": "İrsaliye",
+      "docNo": "DN-2026-000001"
+    },
+    {
+      "x": 1096,
+      "label": "Fatura",
+      "docNo": "INV-2026-000001"
+    }
+  ],
+  "/muhasebe/faturalar/cc78c35e-f6c9-4019-b5d0-e33b57cc62dc": [
+    {
+      "x": 260,
+      "label": "Fırsat",
+      "docNo": "OPP-2026-000010"
+    },
+    {
+      "x": 468,
+      "label": "Teklif",
+      "docNo": "QT-2026-000001"
+    },
+    {
+      "x": 676,
+      "label": "Sipariş",
+      "docNo": "SO-2026-000001"
+    },
+    {
+      "x": 884,
+      "label": "İrsaliye",
+      "docNo": "DN-2026-000001"
+    },
+    {
+      "x": 1092,
+      "label": "Tahsilat/Ödeme",
+      "docNo": "PAY-2026-000002"
+    },
+    {
+      "x": 1300,
+      "label": "Fatura",
+      "docNo": "INV-2026-000001"
+    }
+  ],
+  "/satin-alma/siparisler/e0e6f928-5bbc-417c-97e5-1849dd7a3746": [
+    {
+      "x": 264,
+      "label": "Satın alma siparişi",
+      "docNo": "PO-2026-000001"
+    },
+    {
+      "x": 472,
+      "label": "Mal kabul",
+      "docNo": "GR-2026-000001"
+    },
+    {
+      "x": 680,
+      "label": "Fatura",
+      "docNo": "PINV-2026-000001"
+    }
+  ],
+  "/depo/sevkiyat/8599674d-22c2-43ce-8aed-6ebc1e775443": [
+    {
+      "x": 264,
+      "label": "Fırsat",
+      "docNo": "OPP-2026-000010"
+    },
+    {
+      "x": 472,
+      "label": "Teklif",
+      "docNo": "QT-2026-000001"
+    },
+    {
+      "x": 680,
+      "label": "Sipariş",
+      "docNo": "SO-2026-000001"
+    },
+    {
+      "x": 888,
+      "label": "İrsaliye",
+      "docNo": "DN-2026-000001"
+    },
+    {
+      "x": 1096,
+      "label": "Fatura",
+      "docNo": "INV-2026-000001"
+    }
+  ],
+  "/depo/mal-kabul/4539b1b2-1add-42e5-8fa7-5f1495ba9e36": [
+    {
+      "x": 264,
+      "label": "Satın alma siparişi",
+      "docNo": "PO-2026-000001"
+    },
+    {
+      "x": 472,
+      "label": "Mal kabul",
+      "docNo": "GR-2026-000001"
+    },
+    {
+      "x": 680,
+      "label": "Fatura",
+      "docNo": "PINV-2026-000001"
+    }
+  ]
+}
