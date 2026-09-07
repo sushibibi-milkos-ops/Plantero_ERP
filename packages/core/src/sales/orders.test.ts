@@ -87,7 +87,10 @@ describe('sales/orders — sipariş → onay → sevk → fatura', () => {
       await stockFinished(tx, b, 'PL-FX-1', '10');
       // Canlı örnek: exchange_rates.buying(2026-09-05, EUR)=36.805224 — eski round2() bunu
       // 36.810000'a yuvarlayıp sipariş/fatura kuruna öyle yazıyordu (fx_difference'ları bozan kök neden).
-      await tx.insert(exchangeRates).values({ currency: 'EUR', rateDate: today(), buying: '36.805224', selling: '37.003102' });
+      // Seed'in 90 günlük kur dolgusu bugünün EUR satırını zaten yazmış olabilir (exchange_rates_uq) —
+      // rollback'li transaction içinde upsert ile test kuru geçerli kılınır.
+      await tx.insert(exchangeRates).values({ currency: 'EUR', rateDate: today(), buying: '36.805224', selling: '37.003102' })
+        .onConflictDoUpdate({ target: [exchangeRates.currency, exchangeRates.rateDate], set: { buying: '36.805224', selling: '37.003102' } });
 
       const { order } = await createSalesDoc(tx, {
         docType: 'order', partnerId: b.customer.id, channelId: channel.id, warehouseId: b.wh.id, orderDate: today(), currency: 'EUR',
