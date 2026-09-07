@@ -2,6 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { eq, inArray, and } from 'drizzle-orm';
 import { schema } from '@plantero/db';
 import { seedBase, withRollback, expectReject, ctx, d } from '../__tests__/helpers.js';
+import { seedProductionBase } from '../production/__test-utils__.js';
+import { receiveRawHelper } from '../stock/__test-utils__.js';
+import { createWorkOrder, releaseWorkOrder, startWorkOrder } from '../production/workOrders.js';
+import { autoConsumeRemaining } from '../production/consume.js';
+import { finishWorkOrder } from '../production/finish.js';
 import { createLot, postStockMove, reserve } from '../stock/ledger.js';
 import { simulate, initiate, closeRecall, recordRecallAction, buildDraftMessage } from './recall.js';
 import type { RecallImpact } from '../lots/trace.js';
@@ -194,6 +199,72 @@ describe('quality/recall', () => {
       const afterRetry = await tx.select().from(stockQuants).where(and(eq(stockQuants.lotId, lot.id), eq(stockQuants.locationId, base.loc.kar.id)));
       const afterRetryQty = afterRetry.reduce((acc, q) => acc + Number(q.qty), 0);
       expect(afterRetryQty - beforeQty).toBeCloseTo(25, 4);
+    });
+  });
+
+  it("initiate(): 'delivered' recall_items satırının lotId'si GERÇEKTEN sevk edilen lotla eşleşir — tek hammadde lotundan 2 farklı iş emriyle üretilen 2 farklı mamul lotu 2 ayrı irsaliyeyle sevk edildiğinde kök hammadde lotuyla karıştırılmaz (I59 kök neden düzeltmesi, checks/59_recall_delivered_lot_identity.sql)", async () => {
+    await withRollback(async (tx) => {
+      const base = await seedProductionBase(tx);
+      const { lot: rootLot } = await receiveRawHelper(tx, base, `RC59-${base.s}`, '100', '10', { toLocationId: base.loc.hamR01.id, status: 'released' });
+
+      async function produceLot(qty: string) {
+        const { workOrder } = await createWorkOrder(tx, { productId: base.finished.id, warehouseId: base.wh.id, plannedQty: d(qty) }, ctx);
+        await releaseWorkOrder(tx, workOrder.id, ctx);
+        await startWorkOrder(tx, workOrder.id, ctx);
+        await autoConsumeRemaining(tx, workOrder.id, ctx); // rootLot'tan FEFO ile tüketir (stokta tek hammadde lotu)
+        const { lot } = await finishWorkOrder(tx, { workOrderId: workOrder.id, producedQty: d(qty) }, ctx);
+        if (!lot) throw new Error('Mamul lot oluşmadı');
+        // Bitirme anında bu lot için tek bir quant satırı vardır (henüz hiç sevk edilmedi) — üretimin
+        // fiilen yazdığı hedef lokasyonu (`wo.destLocationId`) varsayım yerine doğrudan sorgudan alır.
+        const [quant] = await tx.select({ locationId: schema.stockQuants.locationId }).from(schema.stockQuants).where(eq(schema.stockQuants.lotId, lot.id)).limit(1);
+        return { lot, locationId: quant!.locationId };
+      }
+
+      async function ship(tag: string, lot: typeof rootLot, fromLocationId: string, qty: string) {
+        const [delivery] = await tx
+          .insert(deliveries)
+          .values({ docNo: `DN59-${tag}-${base.s}`, status: 'delivered', partnerId: base.customer.id, warehouseId: base.wh.id, origin: 'chain' })
+          .returning();
+        await tx.insert(deliveryLines).values({
+          deliveryId: delivery!.id, productId: base.finished.id, qty: `${qty}.0000`, pickedQty: `${qty}.0000`, uomId: base.kg.id,
+          lotId: lot.id, fromLocationId,
+        });
+        await postStockMove(tx, { kind: 'delivery', productId: base.finished.id, lotId: lot.id, fromLocationId, toLocationId: base.loc.cust.id, qty: d(qty), uomId: base.kg.id, refType: 'delivery', refId: delivery!.id, refNo: delivery!.docNo }, ctx);
+        return delivery!;
+      }
+
+      // Aynı hammadde lotundan (rootLot) iki AYRI iş emriyle iki farklı mamul lotu üretilir.
+      const a = await produceLot('30');
+      const b = await produceLot('30');
+      expect(a.lot.id).not.toBe(b.lot.id);
+
+      // İki farklı mamul lotu iki AYRI irsaliyeyle sevk edilir.
+      const deliveryA = await ship('A', a.lot, a.locationId, '30');
+      const deliveryB = await ship('B', b.lot, b.locationId, '30');
+
+      const { recall } = await simulate(tx, { rootLotId: rootLot.id, direction: 'forward', reason: 'I59 regresyon' }, ctx);
+      await initiate(tx, recall.id, ctx);
+
+      const delivered = await tx.select().from(recallItems).where(and(eq(recallItems.recallId, recall.id), eq(recallItems.hop, 'delivered')));
+      expect(delivered.length).toBe(2);
+
+      const itemA = delivered.find((i) => i.deliveryId === deliveryA.id);
+      const itemB = delivered.find((i) => i.deliveryId === deliveryB.id);
+      expect(itemA).toBeTruthy();
+      expect(itemB).toBeTruthy();
+      // Kök neden düzeltmesi: her satır GERÇEKTEN kendi irsaliyesinin taşıdığı mamul lotunu taşımalı.
+      expect(itemA!.lotId).toBe(a.lot.id);
+      expect(itemB!.lotId).toBe(b.lot.id);
+      // Eski (P0) davranış: HER İKİ satır da kök hammadde lotunun id'siyle yazılırdı — bu artık YANLIŞ.
+      expect(itemA!.lotId).not.toBe(rootLot.id);
+      expect(itemB!.lotId).not.toBe(rootLot.id);
+
+      // I59 SQL kontrolüyle birebir aynı doğrulama: recall_items.lot_id, delivery_lines'taki gerçek
+      // sevk edilen lotla eşleşmeli.
+      for (const item of delivered) {
+        const [dl] = await tx.select().from(deliveryLines).where(and(eq(deliveryLines.deliveryId, item.deliveryId!), eq(deliveryLines.lotId, item.lotId!)));
+        expect(dl).toBeTruthy();
+      }
     });
   });
 

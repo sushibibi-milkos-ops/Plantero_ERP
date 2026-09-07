@@ -32,6 +32,15 @@ export type TraceNode = {
   href: string;
   /** Kök lottan uzaklık (0 = kök) */
   depth: number;
+  /**
+   * P0 düzeltmesi (I59 — `packages/db/src/checks/59_recall_delivered_lot_identity.sql`): yalnızca
+   * `kind:'delivery'` düğümlerinde dolu — bu sevkiyatın GERÇEKTE taşıdığı lotun id'si. `traceForward`
+   * içindeki `visit(lot, depth)` kapanışı bu düğümü tam olarak `lot.lot.id`nin sevkiyatlarını
+   * gezerken yaratır; o an hangi lotun sevk edildiği zaten bilinir — bu alan olmadan `simulateRecall`
+   * yalnızca `{id, docNo, status, qty}` görüyordu ve `recall.ts::initiate()` her 'delivered' kalemine
+   * zincirin İLK (genelde kök hammadde) lotunu yazmak zorunda kalıyordu.
+   */
+  lotId?: string | null;
 };
 
 export type TraceEdge = { from: string; to: string; label?: string; qty?: string };
@@ -231,7 +240,10 @@ export async function traceForward(db: DbOrTx, lotId: string): Promise<TraceResu
       if (cur) cur.qty = cur.qty.plus(q); else byDelivery.set(r.delivery.id, { delivery: r.delivery, qty: q });
     }
     for (const { delivery, qty } of byDelivery.values()) {
-      const dNid = g.add({ id: delivery.id, kind: 'delivery', label: delivery.docNo, sub: `Sevk ${formatQtyTr(qty)}`, status: delivery.status, qty: toDb(qty), uom: lotUom, href: hrefs.delivery(delivery.id), depth: depth + 1 });
+      // `lotId: lot.lot.id` — bu döngü, dışarıdaki `visit(lot, ...)` kapanışı İÇİNDE, TEK BİR lot için
+      // çalışıyor (bkz. üstteki `dls` sorgusu: `eq(deliveryLines.lotId, lot.lot.id)`) — yani bu düğüm
+      // her zaman GERÇEKTEN sevk edilen lotu taşır (I59 düzeltmesi).
+      const dNid = g.add({ id: delivery.id, kind: 'delivery', label: delivery.docNo, sub: `Sevk ${formatQtyTr(qty)}`, status: delivery.status, qty: toDb(qty), uom: lotUom, href: hrefs.delivery(delivery.id), depth: depth + 1, lotId: lot.lot.id });
       g.link(lotNid, dNid, 'sevkiyat', toDb(qty));
       const [p] = await db.select({ id: partners.id, name: partners.name, code: partners.code }).from(partners).where(eq(partners.id, delivery.partnerId)).limit(1);
       if (p) {
@@ -251,7 +263,16 @@ export type QtyByUom = { uom: string; qty: string };
 export type RecallImpact = {
   lots: Array<{ id: string; lotNo: string; status: string | null; product: string | null; depth: number }>;
   workOrders: Array<{ id: string; docNo: string; status: string | null }>;
-  deliveries: Array<{ id: string; docNo: string; status: string | null; qty: string }>;
+  /**
+   * P0 düzeltmesi (I59): `lotId` — bu sevkiyatın gerçekten taşıdığı lot. `initiate()` 'delivered'
+   * `recall_items` satırlarını artık bu alanla yazar; eskiden sabit `impact.lots[0]` kullanılıyordu.
+   * Bilinen sınırlama: aynı fiziksel irsaliyede zincirden BİRDEN FAZLA farklı lot sevk edildiyse (aynı
+   * `deliveries.id` iki ayrı lotun `traceForward` ziyaretinde düğüm olarak belirirse) `Graph.add` ilk
+   * ekleneni korur — yalnızca ilk karşılaşılan lotun id'si tutulur. Bu, recall_items'ın bugünkü
+   * tasarımıyla (sevkiyat başına TEK satır — `initiate()`'teki `for (const d of impact.deliveries)`)
+   * zaten var olan bir sınırlamadır; birincil hata (TÜM satırların kök lotu taşıması) bu turda kapandı.
+   */
+  deliveries: Array<{ id: string; docNo: string; status: string | null; qty: string; lotId: string | null }>;
   customers: Array<{ id: string; name: string }>;
   /**
    * Tur 2 P1 (kalite-geri-cagirma-id-06): zincirdeki lotlar farklı ölçü birimlerinde olabilir
@@ -276,7 +297,7 @@ export async function simulateRecall(db: DbOrTx, lotId: string, direction: 'forw
 
   const lots = new Map<string, RecallImpact['lots'][number]>();
   const wos = new Map<string, RecallImpact['workOrders'][number]>();
-  const dels = new Map<string, RecallImpact['deliveries'][number] & { uom: string | null }>();
+  const dels = new Map<string, Omit<RecallImpact['deliveries'][number], 'lotId'> & { uom: string | null; lotId: string | null }>();
   const customers = new Map<string, RecallImpact['customers'][number]>();
   let qtyInStock = ZERO;
   // Sevkiyat düğümünün kendisi (yalnızca ileri izlemede üretilir) hem toplamı hem birimini taşır —
@@ -289,7 +310,7 @@ export async function simulateRecall(db: DbOrTx, lotId: string, direction: 'forw
         const cur = lots.get(rawId);
         if (!cur || n.depth < cur.depth) lots.set(rawId, { id: rawId, lotNo: n.label, status: n.status ?? null, product: n.sub, depth: n.depth });
       } else if (n.kind === 'work_order') wos.set(rawId, { id: rawId, docNo: n.label, status: n.status ?? null });
-      else if (n.kind === 'delivery') dels.set(rawId, { id: rawId, docNo: n.label, status: n.status ?? null, qty: n.qty ?? '0.0000', uom: n.uom ?? null });
+      else if (n.kind === 'delivery') dels.set(rawId, { id: rawId, docNo: n.label, status: n.status ?? null, qty: n.qty ?? '0.0000', uom: n.uom ?? null, lotId: n.lotId ?? null });
       else if (n.kind === 'partner' && n.sub?.startsWith('Müşteri')) customers.set(rawId, { id: rawId, name: n.label });
     }
   }

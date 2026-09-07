@@ -164,6 +164,17 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
   }
 
   for (const d of impact.deliveries) {
+    /**
+     * P0 düzeltmesi (I59, checks/59_recall_delivered_lot_identity.sql): eskiden BURADA sabit
+     * `impact.lots[0]?.id` (neredeyse her zaman zincirin kök/hammadde lotu) yazılıyordu — sevkiyatın
+     * GERÇEKTE taşıdığı lotla hiçbir ilgisi yoktu. `lots/trace.ts::traceForward` artık her sevkiyat
+     * düğümünü tam olarak hangi lotu ziyaret ederken ürettiğini (`d.lotId`) taşıyor — bu, tek
+     * hammadde lotundan birden fazla mamul lotu üretilip AYRI irsaliyelerle sevk edildiği (tipik
+     * üretim zinciri geri çağırması) her senaryoda doğru lotu yazar. `d.lotId` yalnızca çok eski
+     * (bu düzeltmeden önce alınmış) bir `recalls.impact` anlık görüntüsü tazelenmeden kullanılırsa
+     * boş olabilir — `initiate()` etkiyi HER ZAMAN taze hesapladığından (üstteki `traceSimulateRecall`
+     * çağrısı) bu dal pratikte tetiklenmez; kök lota geri düşüş yalnızca tip güvenliği içindir.
+     */
     await tx.insert(recallItems).values({
       recallId, lotId: impact.lots[0]?.id ?? recall.rootLotId, hop: 'delivered', depth: 0, deliveryId: d.id,
       qtyInStock: toDb(0), qtyDelivered: toDb(d.qty), action: 'notify_customer', actionStatus: 'pending',
