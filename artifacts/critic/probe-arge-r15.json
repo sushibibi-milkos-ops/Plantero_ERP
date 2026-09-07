@@ -1,0 +1,488 @@
+{
+ "projeler_1440": {
+  "mainTop": 48,
+  "h1Offset": 24,
+  "theadOffset": 154,
+  "firstRowViewport": 238,
+  "firstRowOffsetInMain": 190,
+  "rowHeight": 36,
+  "money": [
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   }
+  ],
+  "hedefKelimesi": false
+ },
+ "projeler_1440_hoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+ "projeler_1440_focus": {
+  "tag": "BUTTON",
+  "label": "Bildirimler",
+  "outlineWidth": "1px",
+  "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "outlineOffset": "0px",
+  "boxShadow": "none"
+ },
+ "projeler_1440_empty": {
+  "hasSvg": true,
+  "text": " canlı maliyet simülasyonu Yeni projeDurum0 kayıtKodProjeDurumÜrün / SKUBirim maliyetSahibiLansmanEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin."
+ },
+ "projeler_390": {
+  "mainTop": 48,
+  "h1Offset": 16,
+  "theadOffset": -48,
+  "firstRowViewport": 0,
+  "firstRowOffsetInMain": -48,
+  "rowHeight": 0,
+  "money": [
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   }
+  ],
+  "hedefKelimesi": false
+ },
+ "projeler_390_empty": {
+  "hasSvg": true,
+  "text": " canlı maliyet simülasyonu Yeni projeDurum0 kayıtKodProjeDurumÜrün / SKUBirim maliyetSahibiLansmanEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin."
+ },
+ "receteler_1440": {
+  "mainTop": 48,
+  "h1Offset": 24,
+  "theadOffset": 124,
+  "firstRowViewport": 208,
+  "firstRowOffsetInMain": 160,
+  "rowHeight": 36,
+  "money": [
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   }
+  ],
+  "hedefKelimesi": false
+ },
+ "receteler_1440_hoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+ "receteler_1440_focus": {
+  "tag": "BUTTON",
+  "label": "Bildirimler",
+  "outlineWidth": "1px",
+  "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "outlineOffset": "0px",
+  "boxShadow": "none"
+ },
+ "receteler_1440_empty": {
+  "hasSvg": true,
+  "text": "Deneme ReçeteleriDurum0 kayıtReçeteProjeVersiyonDurumBirim maliyetVersiyonlarDevrolmuş BOMEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin."
+ },
+ "receteler_390": {
+  "mainTop": 48,
+  "h1Offset": 16,
+  "theadOffset": -48,
+  "firstRowViewport": 0,
+  "firstRowOffsetInMain": -48,
+  "rowHeight": 0,
+  "money": [
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   },
+   {
+    "text": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "fvn": "tabular-nums",
+    "align": "right",
+    "title": null,
+    "aria": null,
+    "srOnly": false
+   }
+  ],
+  "hedefKelimesi": false
+ },
+ "receteler_390_empty": {
+  "hasSvg": true,
+  "text": "Deneme ReçeteleriDurum0 kayıtReçeteProjeVersiyonDurumBirim maliyetVersiyonlarDevrolmuş BOMEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin."
+ },
+ "precete_1440": {
+  "solidAccentCount": 2,
+  "solid": [
+   {
+    "text": "Yeni deneme reçetesi",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 186,
+    "h": 32
+   },
+   {
+    "text": "Onaya gönder",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 136,
+    "h": 32
+   }
+  ],
+  "gaps": [
+   {
+    "value": "0,35",
+    "label": "₺",
+    "prefixRight": 1310.9,
+    "firstDigitX": 1360,
+    "gap": 49.1
+   },
+   {
+    "value": "38,00",
+    "label": "₺",
+    "prefixRight": 1076.7,
+    "firstDigitX": 1119.4,
+    "gap": 42.7
+   }
+  ],
+  "readonlyMoney": [
+   {
+    "text": "₺31,92",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺28,00",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺5,81",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺5,81",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺2,40",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺120,00",
+    "fvn": "tabular-nums"
+   }
+  ],
+  "fireMarks": [
+   {
+    "text": "Fire %",
+    "w": 64,
+    "h": 18,
+    "srOnly": false
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   }
+  ]
+ },
+ "precete_390": {
+  "solidAccentCount": 1,
+  "solid": [
+   {
+    "text": "Onaya gönder",
+    "bg": "oklch(0.55 0.16 152)",
+    "w": 44,
+    "h": 44
+   }
+  ],
+  "gaps": [
+   {
+    "value": "0,35",
+    "label": "₺",
+    "prefixRight": 218.7,
+    "firstDigitX": 328,
+    "gap": 109.3
+   },
+   {
+    "value": "38,00",
+    "label": "₺",
+    "prefixRight": 250.7,
+    "firstDigitX": 269.4,
+    "gap": 18.7
+   }
+  ],
+  "readonlyMoney": [
+   {
+    "text": "₺31,92",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺28,00",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺5,81",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺5,81",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺2,40",
+    "fvn": "tabular-nums"
+   },
+   {
+    "text": "₺120,00",
+    "fvn": "tabular-nums"
+   }
+  ],
+  "fireMarks": [
+   {
+    "text": "Fire %",
+    "w": 0,
+    "h": 0,
+    "srOnly": false
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   },
+   {
+    "text": "Fire %",
+    "w": 1,
+    "h": 1,
+    "srOnly": true
+   }
+  ]
+ },
+ "board_1440": {
+  "solidAccent": [],
+  "innerScroller": {
+   "cls": "scrollbar-thin scroll-fade-x flex h-[calc(100dvh-28.5rem)] m",
+   "sw": 1864,
+   "cw": 1152
+  }
+ },
+ "board_390": {
+  "solidAccent": [],
+  "innerScroller": {
+   "cls": "scrollbar-thin mb-2 flex items-center gap-1.5 overflow-x-aut",
+   "sw": 454,
+   "cw": 358
+  }
+ }
+}

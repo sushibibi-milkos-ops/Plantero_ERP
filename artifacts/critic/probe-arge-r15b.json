@@ -1,0 +1,112 @@
+{
+ "projeler_focusInMain": [
+  {
+   "inMain": true,
+   "tag": "BUTTON",
+   "label": "Yeni proje",
+   "outlineStyle": "none",
+   "outlineWidth": "0px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "0px"
+  },
+  {
+   "inMain": true,
+   "tag": "INPUT",
+   "label": "Tabloda ara",
+   "outlineStyle": "none",
+   "outlineWidth": "0px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "0px"
+  },
+  {
+   "inMain": true,
+   "tag": "BUTTON",
+   "label": "Durum",
+   "outlineStyle": "none",
+   "outlineWidth": "0px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "0px"
+  }
+ ],
+ "receteler_focusInMain": [
+  {
+   "inMain": true,
+   "tag": "INPUT",
+   "label": "Tabloda ara",
+   "outlineStyle": "none",
+   "outlineWidth": "0px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "0px"
+  },
+  {
+   "inMain": true,
+   "tag": "BUTTON",
+   "label": "Durum",
+   "outlineStyle": "none",
+   "outlineWidth": "0px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "0px"
+  },
+  {
+   "inMain": true,
+   "tag": "BUTTON",
+   "label": "Sütunlar",
+   "outlineStyle": "none",
+   "outlineWidth": "0px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "0px"
+  }
+ ],
+ "precete_focusInMain": [
+  {
+   "inMain": true,
+   "tag": "A",
+   "label": "Pano",
+   "outlineStyle": "auto",
+   "outlineWidth": "1px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "1px"
+  },
+  {
+   "inMain": true,
+   "tag": "A",
+   "label": "Deneme Reçeteleri",
+   "outlineStyle": "auto",
+   "outlineWidth": "1px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "1px"
+  }
+ ],
+ "board_focusInMain": [
+  {
+   "inMain": true,
+   "tag": "A",
+   "label": "Pano",
+   "outlineStyle": "auto",
+   "outlineWidth": "1px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "1px"
+  },
+  {
+   "inMain": true,
+   "tag": "A",
+   "label": "Deneme Reçeteleri",
+   "outlineStyle": "auto",
+   "outlineWidth": "1px",
+   "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "outlineOffset": "1px"
+  }
+ ],
+ "projeler_390cards": {
+  "count": 3,
+  "firstTop": 306,
+  "firstOffsetInMain": 258,
+  "h": 63.5
+ },
+ "receteler_390cards": {
+  "count": 3,
+  "firstTop": 220,
+  "firstOffsetInMain": 172,
+  "h": 63.5
+ }
+}
