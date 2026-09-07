@@ -36,7 +36,13 @@ type FormValues = { batchQty: string; batchUomId: string; expectedYieldPct: stri
 // sınıfı (`md:[grid-template-columns:var(--line-cols)]`) SABİT/literal kalır (JIT taraması güvenli),
 // yalnızca değişkenin çalışma zamanı değeri satır bazında ayarlanır. Sütun sayısı hep 7 — `editable`
 // false iken son (aksiyon) sütun boş kalır, tabloyu her seferinde yeniden şablonlamaya gerek kalmaz.
-const LINE_COLS_STYLE = { '--line-cols': 'minmax(0,1fr) 9rem 9rem 8rem 6rem 7rem 2.25rem' } as React.CSSProperties;
+// 9rem→8rem (Maliyet kaynağı), 8rem→7rem (Birim maliyet), 6rem→4rem (Fire %): kök neden düzeltmesi
+// (Tur 7 P1 arge-recete-36) — Ürün sütunu (minmax(0,1fr)) ızgaranın en dar içerik sütunuydu (172px),
+// "Hurma Şurubu"/"Kavanoz 500ml" gibi adlar kırpılıyordu; Fire %'nin 96px'i tek haneli bir değer
+// ("0") için, Maliyet kaynağı'nın 144px'i ise en uzun etiket ("Ortalama maliyet") için bile fazlaydı.
+// Kazanılan alan Ürün'e (fr birimi) akar, sabit px izler asla büyümediği için diğer sütunlar kendi
+// gerçek içerik genişliklerine küçültülür.
+const LINE_COLS_STYLE = { '--line-cols': 'minmax(0,1fr) 9rem 8rem 7rem 4rem 7rem 2.25rem' } as React.CSSProperties;
 
 /** Mobil (< md) malzeme kartının kontrol şeridi sütun genişlikleri — kök neden düzeltmesi (Tur 5 P1
  *  arge-recete-27): eskiden 4 ayrı satır (ürün+sil / miktar+kaynak / birim maliyet+fire / satır
@@ -291,8 +297,12 @@ export function CostSimulator({
             </Select>
           ) : null}
           {versions.length > 0 ? (
+            // w-28→w-40 (112px→160px): kök neden düzeltmesi (Tur 7 P1 arge-recete-37) — sabit 112px
+            // genişlik, seçili versiyonun durumunu ("v2 · Devredildi") kelime ortasından kırpıyordu;
+            // sayfanın en kritik tek verisiydi (taslak mı, üretime devredilmiş mi). Satırdaki üç
+            // kontrolün toplamı (160+44+44+2×6px boşluk) 330px'lik kart içeriğine hâlâ rahatça sığar.
             <Select value={selectedVersionId ?? undefined} onValueChange={onSelectVersion}>
-              <SelectTrigger size="sm" aria-label="Versiyon" className="w-28 shrink-0 text-[13px] data-[size=sm]:h-11 md:data-[size=sm]:h-8">
+              <SelectTrigger size="sm" aria-label="Versiyon" className="w-40 shrink-0 text-[13px] data-[size=sm]:h-11 md:data-[size=sm]:h-8">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -492,7 +502,13 @@ export function CostSimulator({
           P1 arge-recete-19). Başlık şeridi DataTable'ın kendi diliyle eşitlendi: 12px, normal-case,
           letter-spacing yok, zemin yok — yalnız alt hairline (Tur 4 P1 arge-recete-23; iskeletteki
           başlık şeridi de aynı düzeltmeyi görür, bkz. recipe-workspace.tsx CostSimulatorSkeleton). */}
-      <div className="rounded-lg border border-border/60 text-[13px]" role="table" aria-label="Reçete satırları">
+      {/* Dış çerçeve YOK (kök neden düzeltmesi, Tur 7 P1 arge-recete-38): bu tablo zaten dıştaki
+          rounded-xl kartın (recipe-workspace.tsx) İÇİNDE — kendi border+rounded-lg'si "kutu içinde
+          kutu" ikinci bir eşmerkezli çerçeve üretiyordu (kriter 12'nin açıkça yasakladığı desen).
+          Başlık şeridi zaten kendi alt hairline'ını (border-b border-border/60) taşıyor, satırlar da
+          kendi alt ayracını (border-b border-border/40) — dış çerçeveye ihtiyaç yok, kartın kendisi
+          sınırı çizer. */}
+      <div className="text-[13px]" role="table" aria-label="Reçete satırları">
         {/* py-2 (yatay dolgu YOK): kök neden düzeltmesi (Tur 5 P2 arge-recete-30) — başlık şeridi
             eskiden TEK bir dış `px-3` ile döşeliydi, aşağıdaki veri hücreleri ise HER SÜTUN kendi
             `md:px-2`/`md:px-2.5` dolgusunu taşıyordu (12px vs 8/10px) — sağa hizalı sayı sütunlarında

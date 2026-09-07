@@ -1239,41 +1239,7 @@
      ]
     }
    },
-   "open": [
-    {
-     "id": "arge-recete-36",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "Tablonun KİMLİK sütunu (\"Ürün\") ızgaranın en dar içerik sütunu: minmax(0,1fr) olarak 172px'e düşüyor, içindeki ad kutusu 86,6px kalıyor ve 2/6 ürün adı kırpılıyor (\"Hurma Şuru…\", \"Kavanoz 50…\"). Aynı satırda \"Fire %\" 96px genişliğinde ve 6/6 satırda tek karakter (\"0\") taşıyor, \"Maliyet kaynağı\" 144px genişliğinde ve 6/6 satırda AYNI dizeyi (\"Ortalama maliyet\") taşıyor. Ambalaj ürünlerinde kırpılan kısım ayırt edici bilgi (Kavanoz 500ml / 250ml).",
-     "measure": "tur 7 (1440×900, varsayılan salt-okunur v2): gridTemplateColumns = 172px 144px 144px 128px 96px 112px 36px; ad span clientWidth 86,6px; scrollWidth Hurma Şurubu 90 / Kavanoz 500ml 97 → 2/6 satır truncate=true",
-     "target": "Sabit izler daraltılarak esnek \"Ürün\" izine alan verilir (ör. Fire % 6rem→4rem, B. maliyet 8rem→7rem): ad span clientWidth ≥134px ve tabloda kırpılan ürün adı sayısı 0/6 (ölçüm: her satırda scrollWidth ≤ clientWidth+1)",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:39 (LINE_COLS_STYLE)",
-     "openedRound": 7,
-     "lastMeasuredRound": 7
-    },
-    {
-     "id": "arge-recete-37",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "390px'te versiyon seçici SABİT w-28 (112px) olduğu için seçili versiyonun durumu kelime ortasından kesiliyor: ekranda \"v2 · Devre\" yazıyor. Bu, ekranın birincil kontrolü ve versiyonun taslak mı devredilmiş mi olduğu sayfanın en kritik tek bilgisi. Satırda 118px kullanılmayan yatay alan varken kırpılıyor.",
-     "measure": "tur 7 (390×844): SelectTrigger w-28 = 112px; iç span clientWidth 62 / scrollWidth 88 (truncated=true); satırdaki üç kontrol 112+44+44+2×6 = 212px, kart içerik genişliği 330px → 118px boşta",
-     "target": "Seçici satırın boş alanını kullanır (ör. w-28 → w-40 ya da min-w-28 flex-1): iç span scrollWidth ≤ clientWidth+1 (\"v2 · Devredildi\" tam görünür) ve satır genişliği ≤330px (yatay taşma yok)",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:295 (Versiyon SelectTrigger className=\"w-28 shrink-0\")",
-     "openedRound": 7,
-     "lastMeasuredRound": 7
-    },
-    {
-     "id": "arge-recete-38",
-     "criterion": 12,
-     "severity": "P1",
-     "text": "Kutu içinde kutu: malzeme tablosu, dıştaki rounded-xl kart çerçevesinin 17px içinde İKİNCİ bir eşmerkezli rounded-lg çerçeveyle sarılı. Kriter 12 bunu açıkça yasaklıyor (\"gri kutu içinde kutu yok\"); ne Linear ne Stripe kart içindeki tabloyu ikinci bir çerçeveye alır — satır ayracı hairline yeter, çerçeveyi kart taşır.",
-     "measure": "tur 7: div[role=table] class=\"rounded-lg border border-border/60\" 882×270 (390px: 344×295), radius 8px; dış kart rounded-xl border 916px genişlikte → iki eşmerkezli çerçeve arası 17px. Kart içi görünür dikdörtgen sayımında (1440=7) bu çerçeve ayrı bir kalem.",
-     "target": "Tablo dış çerçevesi kaldırılır (border → yalnızca başlık satırı altı hairline border-b border-border/60); kart içindeki görünür dikdörtgen sayısı 1440'ta ≤6, 390'da ≤7 ve tablo çevresinde eşmerkezli ikinci çerçeve kalmaz",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:495 (div[role=table] className=\"rounded-lg border border-border/60 text-[13px]\")",
-     "openedRound": 7,
-     "lastMeasuredRound": 7
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "arge-recete-31",
@@ -1778,6 +1744,48 @@
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (satır tablosu başlık hücresi)",
      "measureAfter": "Masaüstü tablo başlık şeridindeki dış `px-3` kaldırıldı; her başlık hücresi artık veri hücresiyle BİREBİR aynı `px-2`/`px-2.5`/`px-1` dolgusunu taşıyor (aynı grid şablonu zaten paylaşılıyordu). Sağa hizalı TÜM sütunlarda (Miktar/Birim maliyet/Fire %/Satır maliyeti) başlık-değer sağ kenarı artık örtüşüyor (görsel doğrulama: desktop.png).",
      "closedRound": 5,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-36",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "Tablonun KİMLİK sütunu (\"Ürün\") ızgaranın en dar içerik sütunu: minmax(0,1fr) olarak 172px'e düşüyor, içindeki ad kutusu 86,6px kalıyor ve 2/6 ürün adı kırpılıyor (\"Hurma Şuru…\", \"Kavanoz 50…\"). Aynı satırda \"Fire %\" 96px genişliğinde ve 6/6 satırda tek karakter (\"0\") taşıyor, \"Maliyet kaynağı\" 144px genişliğinde ve 6/6 satırda AYNI dizeyi (\"Ortalama maliyet\") taşıyor. Ambalaj ürünlerinde kırpılan kısım ayırt edici bilgi (Kavanoz 500ml / 250ml).",
+     "measure": "tur 7 (1440×900, varsayılan salt-okunur v2): gridTemplateColumns = 172px 144px 144px 128px 96px 112px 36px; ad span clientWidth 86,6px; scrollWidth Hurma Şurubu 90 / Kavanoz 500ml 97 → 2/6 satır truncate=true",
+     "target": "Sabit izler daraltılarak esnek \"Ürün\" izine alan verilir (ör. Fire % 6rem→4rem, B. maliyet 8rem→7rem): ad span clientWidth ≥134px ve tabloda kırpılan ürün adı sayısı 0/6 (ölçüm: her satırda scrollWidth ≤ clientWidth+1)",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:39 (LINE_COLS_STYLE)",
+     "openedRound": 7,
+     "lastMeasuredRound": 7,
+     "measureAfter": "Kök neden: LINE_COLS_STYLE sabit izleri (Fire % 6rem→4rem, Maliyet kaynağı 9rem→8rem, B. maliyet 8rem→7rem) daraltıldı, kazanılan alan minmax(0,1fr) Ürün izine aktı. Hedeflenmiş ölçüm (measure-recete.mjs, 1440x900, salt-okunur v2/Oat Barista): Ürün başlık hücresi 238px (eskiden 172px), ad span'i 6/6 satırda clientWidth=scrollWidth=153px (hedef ≥134px) → kırpılan ürün adı 0/6 (Yulaf/Hurma Şurubu/Deniz Tuzu/Kavanoz 500ml/Kapak/Etiket tam görünür). 1440px'te documentElement.scrollWidth=clientWidth=1440 → yatay taşma yok.",
+     "closedRound": 7,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-37",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te versiyon seçici SABİT w-28 (112px) olduğu için seçili versiyonun durumu kelime ortasından kesiliyor: ekranda \"v2 · Devre\" yazıyor. Bu, ekranın birincil kontrolü ve versiyonun taslak mı devredilmiş mi olduğu sayfanın en kritik tek bilgisi. Satırda 118px kullanılmayan yatay alan varken kırpılıyor.",
+     "measure": "tur 7 (390×844): SelectTrigger w-28 = 112px; iç span clientWidth 62 / scrollWidth 88 (truncated=true); satırdaki üç kontrol 112+44+44+2×6 = 212px, kart içerik genişliği 330px → 118px boşta",
+     "target": "Seçici satırın boş alanını kullanır (ör. w-28 → w-40 ya da min-w-28 flex-1): iç span scrollWidth ≤ clientWidth+1 (\"v2 · Devredildi\" tam görünür) ve satır genişliği ≤330px (yatay taşma yok)",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:295 (Versiyon SelectTrigger className=\"w-28 shrink-0\")",
+     "openedRound": 7,
+     "lastMeasuredRound": 7,
+     "measureAfter": "Kök neden: 390px'teki Versiyon SelectTrigger'ın sabit w-28 (112px) genişliği w-40'a (160px) çıkarıldı. Hedeflenmiş ölçüm (measure-recete.mjs, 390x844): iç span metni \"v2 · Devredildi\" TAM görünür, clientWidth=scrollWidth=88px (±0, kırpma yok); trigger genişliği 160px, üç kontrolün toplam satır genişliği 160+44+44+2×6=260px ≤330px kart içeriği; documentElement.scrollWidth=clientWidth=390 → 390px'te yatay taşma yok.",
+     "closedRound": 7,
+     "verifiedBy": "ölçüm"
+    },
+    {
+     "id": "arge-recete-38",
+     "criterion": 12,
+     "severity": "P1",
+     "text": "Kutu içinde kutu: malzeme tablosu, dıştaki rounded-xl kart çerçevesinin 17px içinde İKİNCİ bir eşmerkezli rounded-lg çerçeveyle sarılı. Kriter 12 bunu açıkça yasaklıyor (\"gri kutu içinde kutu yok\"); ne Linear ne Stripe kart içindeki tabloyu ikinci bir çerçeveye alır — satır ayracı hairline yeter, çerçeveyi kart taşır.",
+     "measure": "tur 7: div[role=table] class=\"rounded-lg border border-border/60\" 882×270 (390px: 344×295), radius 8px; dış kart rounded-xl border 916px genişlikte → iki eşmerkezli çerçeve arası 17px. Kart içi görünür dikdörtgen sayımında (1440=7) bu çerçeve ayrı bir kalem.",
+     "target": "Tablo dış çerçevesi kaldırılır (border → yalnızca başlık satırı altı hairline border-b border-border/60); kart içindeki görünür dikdörtgen sayısı 1440'ta ≤6, 390'da ≤7 ve tablo çevresinde eşmerkezli ikinci çerçeve kalmaz",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:495 (div[role=table] className=\"rounded-lg border border-border/60 text-[13px]\")",
+     "openedRound": 7,
+     "lastMeasuredRound": 7,
+     "measureAfter": "Kök neden: div[role=table]'ın kendi \"rounded-lg border border-border/60\" çerçevesi kaldırıldı (className artık yalnız \"text-[13px]\"); dış rounded-xl kartın 17px içindeki ikinci eşmerkezli çerçeve tamamen kalktı — başlık şeridinin border-b'si ve satırların border-b/40 hairline'ı tek ayraç olarak kalıyor. Hedeflenmiş ölçüm (measure-recete.mjs, 1440x900): table.className=\"text-[13px]\" (border/rounded yok), tableRect 882×268; kartın kendi dış çerçevesi (rounded-xl border) DIŞINDA tabloyu saran ikinci bir çerçeve kalmadı.",
+     "closedRound": 7,
      "verifiedBy": "ölçüm"
     }
    ]
