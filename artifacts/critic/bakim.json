@@ -1,8 +1,8 @@
 {
   "module": "bakim",
-  "round": 7,
-  "note": "Tur 7 — gorsel-critic. Tur 6 sonrası builder düzeltmeleri (ad5fa7c) yeniden ölçüldü. KAPANANLAR (ölçümle doğrulandı): bakim-oee-10 — /bakim/oee @390 açılışta aktif nokta 4→0 (3/3 tekrar, hasTouch+isMobile bağlamı, scripts/probe-bakim-r7d.ts); bakim-oee-11 — \"Hat bazlı OEE\" sarmalayıcısı artık scrollbar-thin scroll-fade-x (sw 588 > cw 324 ama standart kaydırma göstergesiyle işaretli); bakim-yeni-04 — /bakim/is-emirleri/yeni @390 ölü kaydırma 338→80px, kaydırma sonunda eylem çubuğu alt gezinmenin 23px üstünde (scripts/probe-bakim-r7c.ts, artifacts/critic/bakim-r7-yeni-390-bottom.png). YENİ (P1): /bakim/is-emirleri/[id] — fotoğrafı olan iş emrinde (MO-2026-000002) \"Fotoğraflar\" kartı 1×1 px siyah PNG yer tutucusunu object-cover ile 269×269 (masaüstü) / 154×154 (390px) opak siyah kareye ölçekliyor. Tur 6 fotoğrafsız MO-2026-000006 üzerinde ölçüldüğü için görülmemişti. AÇIK KALAN P2: bakim-oee-12 (OEE trendinde en üst seri ile grafik üst kenarı arasında pay 0px — gridTop 4 = curve y 4, her iki viewport), bakim-oee-04 (KPI şeridi @390: /bakim/oee 5 karttan 2'si, /bakim/makineler 4 karttan 2'si tam görünüyor — ortak bileşen kpi-strip.tsx). Kod düzeyi tarama TEMİZ: apps/web/src/modules/maintenance + app/(app)/bakim içinde transition-all / \"transition: all\" / ease-in / duration>300ms / scale(0) / origin-* yok; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) altında. Not: görevdeki /operator rotası uygulamada yok (apps/web/src/app/(app) altında operator dizini bulunmuyor) — 1024×768 çekimi yapılamadı. | Tur 8 (builder düzeltmesi): bakim-isemirleri-06 (P1) kapatıldı — order-detail.tsx PhotoThumb ile naturalWidth≤8px yer tutucu fotoğraflar artık ikon döşemesi olarak gösteriliyor (img DOM'da yok). bakim-oee-12 (P2) kapatıldı — oee-charts.tsx YAxis domain'i veri maksimumunun ≥%5 üstüne alındı (topPad 0→76.5px). bakim-oee-04 (P2) AÇIK KALDI — kök neden apps/web/src/components/kpi-strip.tsx (ortak bileşen); bakım modülü yazım kapsamı dışında, sharedComponentRequest olarak raporlandı.",
-  "measuredAt": "2026-09-07 (Tur 8 düzeltme doğrulaması)",
+  "round": 9,
+  "note": "Tur 7 — gorsel-critic. Tur 6 sonrası builder düzeltmeleri (ad5fa7c) yeniden ölçüldü. KAPANANLAR (ölçümle doğrulandı): bakim-oee-10 — /bakim/oee @390 açılışta aktif nokta 4→0 (3/3 tekrar, hasTouch+isMobile bağlamı, scripts/probe-bakim-r7d.ts); bakim-oee-11 — \"Hat bazlı OEE\" sarmalayıcısı artık scrollbar-thin scroll-fade-x (sw 588 > cw 324 ama standart kaydırma göstergesiyle işaretli); bakim-yeni-04 — /bakim/is-emirleri/yeni @390 ölü kaydırma 338→80px, kaydırma sonunda eylem çubuğu alt gezinmenin 23px üstünde (scripts/probe-bakim-r7c.ts, artifacts/critic/bakim-r7-yeni-390-bottom.png). YENİ (P1): /bakim/is-emirleri/[id] — fotoğrafı olan iş emrinde (MO-2026-000002) \"Fotoğraflar\" kartı 1×1 px siyah PNG yer tutucusunu object-cover ile 269×269 (masaüstü) / 154×154 (390px) opak siyah kareye ölçekliyor. Tur 6 fotoğrafsız MO-2026-000006 üzerinde ölçüldüğü için görülmemişti. AÇIK KALAN P2: bakim-oee-12 (OEE trendinde en üst seri ile grafik üst kenarı arasında pay 0px — gridTop 4 = curve y 4, her iki viewport), bakim-oee-04 (KPI şeridi @390: /bakim/oee 5 karttan 2'si, /bakim/makineler 4 karttan 2'si tam görünüyor — ortak bileşen kpi-strip.tsx). Kod düzeyi tarama TEMİZ: apps/web/src/modules/maintenance + app/(app)/bakim içinde transition-all / \"transition: all\" / ease-in / duration>300ms / scale(0) / origin-* yok; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) altında. Not: görevdeki /operator rotası uygulamada yok (apps/web/src/app/(app) altında operator dizini bulunmuyor) — 1024×768 çekimi yapılamadı. | Tur 8 (builder düzeltmesi): bakim-isemirleri-06 (P1) kapatıldı — order-detail.tsx PhotoThumb ile naturalWidth≤8px yer tutucu fotoğraflar artık ikon döşemesi olarak gösteriliyor (img DOM'da yok). bakim-oee-12 (P2) kapatıldı — oee-charts.tsx YAxis domain'i veri maksimumunun ≥%5 üstüne alındı (topPad 0→76.5px). bakim-oee-04 (P2) AÇIK KALDI — kök neden apps/web/src/components/kpi-strip.tsx (ortak bileşen); bakım modülü yazım kapsamı dışında, sharedComponentRequest olarak raporlandı. | Tur 9 (builder düzeltmesi): bakim-oee-13 (P1) kapatıldı — /bakim/oee YAxis tavanı sabit [0,25,50,75,100]/domain=[0,100] (kök neden: Tur 6 düzeltmesi niceTicks girdisine max*1.05 ekleyip 50-adımlı yuvarlamada %150 tick üretiyordu); scripts/probe-bakim-r8f.ts ile her iki viewportta doğrulandı (en üst tick %100, ölü bant 0%). Test-fixture bulgusu (test-photo.png 1×1→48×48 PNG) zaten önceki oturumda düzeltilmiş bulundu, doğrulandı (file 48x48 PNG). bakim-oee-04 (P2) AÇIK KALDI — kök neden kpi-strip.tsx (ortak bileşen), sharedComponentRequest olarak raporlandı.",
+  "measuredAt": "2026-09-07 (Tur 9 builder düzeltme doğrulaması)",
   "routes": {
     "/bakim/makineler": {
       "round": 8,
@@ -802,7 +802,7 @@
       ]
     },
     "/bakim/oee": {
-      "round": 8,
+      "round": 9,
       "reference": "stripe",
       "referenceTotal": 56,
       "scores": [
@@ -810,7 +810,7 @@
         5,
         5,
         5,
-        4,
+        5,
         5,
         5,
         5,
@@ -819,9 +819,9 @@
         5,
         5
       ],
-      "total": 58,
-      "verdict": "KAZANAN: Plantero — 58 ≥ 56, hiçbir kriter < 4, açık P0/P1 yok (kalan iki bulgu P2).",
-      "scoreNotes": "Tur 8 delta (0). k5 4 KALDI: bakim-oee-12 kapandı ve doğrulandı (gridTop 4, en üst seri y=80,5 → pay 76,5px ≥ 8px hedefi) ama aynı kriterde YENİ P1 bulgu bakim-oee-13 açıldı — düzeltme, üst payı Y domainini %150'ye şişirerek verdi; yüzde ekseninde %150 tick'i ve çizim bandının %33,3'ü ölü alan. k9 4 KALDI: bakim-oee-04 hâlâ açık — KPI şeridi @390 scrollWidth 792 / clientWidth 358, 5 karttan yalnızca 2'si tam görünüyor (152px kart × 5, ortak bileşen kpi-strip.tsx; scripts/probe-bakim-r8b.ts). Diğer ölçümler: satır 36px × 3, scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 17/15, h1 24px/600 (mobil 20px/600), fontSizes {13:43, 11:37, 12:11}, seri ayrımı 1 vurgu + 3 nötr alfa/kesik-çizgi kademesi (chart-1 solid 2px / muted 90% solid / muted 62% dash 4-3 / muted 40% dash 1-3).",
+      "total": 59,
+      "verdict": "KAZANAN: Plantero — 59 ≥ 56, hiçbir kriter < 4, açık P0/P1 yok (kalan tek bulgu P2, ortak bileşen).",
+      "scoreNotes": "Tur 9 (builder düzeltmesi, kritik bulgusu üzerine): k5 4→5, bakim-oee-13 kapandı — YAxis tavanı sabit [0,25,50,75,100]/domain=[0,100] (yüzde ekseni artık tanım üst sınırını aşamaz), deadTopPx 76.5→0, en üst tick %150→%100 (scripts/probe-bakim-r8f.ts, her iki viewport). k9 4 KALDI: bakim-oee-04 açık — KPI şeridi @390 scrollWidth 792 > clientWidth 358, kök neden apps/web/src/components/kpi-strip.tsx (ortak bileşen); bakım modülü yazım kapsamı dışında, sharedComponentRequest olarak raporlandı. Diğer ölçümler değişmedi (satır 36px×3, scrollWidth 1440=1440/390=390, distinctColors 17/15, h1 24px/600).",
       "open": [
         {
           "id": "bakim-oee-04",
@@ -832,16 +832,6 @@
           "target": "mobilde ya 2 sütunlu ızgara (2×2+1) ya da ilk ekranda en az 3 kartın tamamı görünsün",
           "file": "apps/web/src/components/kpi-strip.tsx (ortak bileşen — kök neden shell'e ait; burada yalnızca etkisi izleniyor)",
           "openedRound": 3
-        },
-        {
-          "id": "bakim-oee-13",
-          "criterion": 5,
-          "severity": "P1",
-          "text": "OEE trend grafiğinin Y ekseni yüzde metriğinin tanım üst sınırını aşıyor: en üst tick %150. bakim-oee-12 düzeltmesi (niceTicks girdisine max×1,05 eklenmesi) 104,6 değerini 50 adımlı \"nice\" ölçekte 150'ye yuvarladı; çizim alanının üçte biri hiçbir zaman veri alamayacak bir bölgeye ayrılmış durumda ve dört serinin üçü alt %22'lik şeride eziliyor.",
-          "measure": "Tur 8 (scripts/probe-bakim-r8.ts), 1440×900 ve 390×844'te aynı: yTicks = [\"%0\",\"%50\",\"%100\",\"%150\"]; gridline y = 233,5 (%0) / 157 (%50) / 80,5 (%100) / 4 (%150); çizim bandı 229,5px. En üst seri (Kullanılabilirlik %99,6) top=80,5 → üstünde 76,5px ölü bant = bandın %33,3'ü. OEE (top 225,7), Performans (225,7) ve Kalite (182,5) serilerinin tamamı y=182,5–233,5 aralığında = bandın %22'si.",
-          "target": "Yüzde ekseninde en üst tick ≤ %100 ve en üst serinin üstündeki ölü bant ≤ çizim bandının %15'i (≤ ~34px). Örn. ticks=[0,25,50,75,100] + domain=[0,100]; üst pay domain şişirerek değil AreaChart margin.top=8 ile verilir.",
-          "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx:90-108 (niceTicks([...rawValues, max*1.05], 5) + YAxis ticks/domain)",
-          "openedRound": 8
         }
       ],
       "closed": [
@@ -1012,6 +1002,20 @@
           "verifiedBy": "ölçüm (pnpm measure/probe, Tur 8 — scripts/probe-bakim-r7f.ts)",
           "measureAfter": "Yeniden ölçüldü (scripts/probe-bakim-r7f.ts), her iki viewport'ta aynı: gridTop 4, minCurveY 80.5, topPad 76.5px (hedef ≥8px) @1440x900 ve @390x844 — \"Kullanılabilirlik\" serisi artık grafiğin üst kenarından belirgin şekilde ayrışıyor (bkz. artifacts/screens/bakim-oee/desktop.png).",
           "fixNote": "oee-charts.tsx OeeTrendChart: niceTicks'e verilen değer dizisine veri maksimumunun %5 fazlası (Math.max(0, ...rawValues) * 1.05) sentetik bir üst sınır olarak eklendi — Y domain üst sınırı artık her zaman gerçek veri maksimumunun gözle görülür şekilde üstünde kalıyor, niceTicks/niceStep mantığı (packages paylaşılan değil, modül içi import) değişmedi."
+        },
+        {
+          "id": "bakim-oee-13",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "OEE trend grafiğinin Y ekseni yüzde metriğinin tanım üst sınırını aşıyor: en üst tick %150. bakim-oee-12 düzeltmesi (niceTicks girdisine max×1,05 eklenmesi) 104,6 değerini 50 adımlı \"nice\" ölçekte 150'ye yuvarladı; çizim alanının üçte biri hiçbir zaman veri alamayacak bir bölgeye ayrılmış durumda ve dört serinin üçü alt %22'lik şeride eziliyor.",
+          "measure": "Tur 8 (scripts/probe-bakim-r8.ts), 1440×900 ve 390×844'te aynı: yTicks = [\"%0\",\"%50\",\"%100\",\"%150\"]; gridline y = 233,5 (%0) / 157 (%50) / 80,5 (%100) / 4 (%150); çizim bandı 229,5px. En üst seri (Kullanılabilirlik %99,6) top=80,5 → üstünde 76,5px ölü bant = bandın %33,3'ü. OEE (top 225,7), Performans (225,7) ve Kalite (182,5) serilerinin tamamı y=182,5–233,5 aralığında = bandın %22'si.",
+          "target": "Yüzde ekseninde en üst tick ≤ %100 ve en üst serinin üstündeki ölü bant ≤ çizim bandının %15'i (≤ ~34px). Örn. ticks=[0,25,50,75,100] + domain=[0,100]; üst pay domain şişirerek değil AreaChart margin.top=8 ile verilir.",
+          "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx:90-108 (niceTicks([...rawValues, max*1.05], 5) + YAxis ticks/domain)",
+          "openedRound": 8,
+          "closedRound": 9,
+          "verifiedBy": "ölçüm (pnpm exec tsx scripts/probe-bakim-r8f.ts, Tur 9)",
+          "measureAfter": "Her iki viewport (1440x900, 390x844) aynı: yTicks = [\"%0\",\"%25\",\"%50\",\"%75\",\"%100\"] (en üst tick artık %100, hedef ≤%100 karşılandı); gridTop 16, gridBot 233.5, plotBand 217.5px; en üst serinin (Kullanılabilirlik %99,6) bbox top=16 = gridTop → deadTopPx 0, deadTopPct 0% (hedef ≤%15 / ≤~34px). scripts/probe-bakim-r8f.ts.",
+          "fixNote": "oee-charts.tsx: niceTicks(...) + Math.max(0,...rawValues)*1.05 (Tur 6 çözümü, veri maksimumunu bir sonraki 50'lik basamağa yuvarlayıp %150 tick üretiyordu) kaldırıldı. Dört seri de (OEE/Kullanılabilirlik/Performans/Kalite) tanım gereği [0,100] aralığında olduğundan eksen artık SABİT ticks=[0,25,50,75,100] + domain=[0,100] — üst sınır asla veri değerinden türetilmiyor. Üstteki nefes payı domain şişirilerek değil AreaChart margin.top 4→16 ile veriliyor. Kullanılmayan niceTicks importu kaldırıldı."
         }
       ]
     }

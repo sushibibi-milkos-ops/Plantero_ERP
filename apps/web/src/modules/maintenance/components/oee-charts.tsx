@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatDate, formatPct } from '@/lib/format';
-import { niceTicks } from '@/modules/finance/components/cashflow-chart';
 import type { OeeTrendPoint, DowntimeParetoRow } from '../queries';
 import { DOWNTIME_REASON_LABELS } from '../labels';
 
@@ -84,19 +83,22 @@ function TrendTooltip({ active, payload, label }: { active?: boolean; payload?: 
   );
 }
 
+// Kriter 5 (Tur 8 P1 bakim-oee-13) kök neden düzeltmesi: Tur 6'nın çözümü (niceTicks girdisine
+// `Math.max(0,...rawValues)*1.05` eklemek) veri maksimumunu 50'lik "nice" adımda bir sonraki basamağa
+// yuvarlıyordu (%99,6 → %104,6 → tick %150) — eksen, tanım gereği 0-100 aralığına sınırlı bir yüzde
+// metriğinin üst sınırını aşıyor ve çizim bandının %33'ünü asla veri almayacak ölü bant yapıyordu.
+// Yüzde ekseninin üst sınırı ASLA veri değerinden türetilmemeli: dört seri de (OEE/Kullanılabilirlik/
+// Performans/Kalite) tanım gereği [0,100] aralığındadır, bu yüzden eksen sabit [0,25,50,75,100] —
+// üstteki nefes payı domain'i şişirerek değil `AreaChart margin.top` ile veriliyor.
+const OEE_TREND_TICKS = [0, 25, 50, 75, 100];
+
 export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
   const points = data.map((d) => ({ day: d.day, oee: Number(d.oeePct), availability: Number(d.availabilityPct), performance: Number(d.performancePct), quality: Number(d.qualityPct) }));
-  const rawValues = points.flatMap((p) => [p.oee, p.availability, p.performance, p.quality]);
-  // Kriter 5 (Tur 6 P2 bakim-oee-12) kök neden düzeltmesi: niceTicks üst sınırı veri maksimumuna
-  // (ör. %99,6) tam oturabiliyordu — en üst seri ile grafik üst kenarı arasında pay kalmıyordu
-  // (gridTop = curve y). Veri maksimumunun en az %5 üstünü de tick hesabına dahil ederek domain
-  // üst sınırının veri maksimumundan gözle görülür şekilde yukarıda kalması garanti edilir.
-  const ticks = niceTicks([...rawValues, Math.max(0, ...rawValues) * 1.05], 5);
   const { gateProps, areaGateProps, handlers } = useTooltipGate();
 
   return (
     <ResponsiveContainer width="100%" height={280}>
-      <AreaChart data={points} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} {...handlers}>
+      <AreaChart data={points} margin={{ top: 16, right: 8, left: 0, bottom: 0 }} {...handlers}>
         <defs>
           <linearGradient id="fill-oee" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor={OEE_COLOR} stopOpacity={0.16} />
@@ -105,7 +107,7 @@ export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
         </defs>
         <CartesianGrid stroke="var(--border)" vertical={false} />
         <XAxis dataKey="day" tickFormatter={dayTick} tick={xTick} axisLine={false} tickLine={false} minTickGap={28} />
-        <YAxis tickFormatter={(v: number) => `%${v}`} tick={xTick} axisLine={false} tickLine={false} width={40} ticks={ticks} domain={[ticks[0]!, ticks[ticks.length - 1]!]} />
+        <YAxis tickFormatter={(v: number) => `%${v}`} tick={xTick} axisLine={false} tickLine={false} width={40} ticks={OEE_TREND_TICKS} domain={[0, 100]} />
         <Tooltip {...gateProps} content={<TrendTooltip />} isAnimationActive={false} allowEscapeViewBox={{ x: false, y: false }} wrapperStyle={{ outline: 'none' }} />
         <Legend
           iconType="plainline"
