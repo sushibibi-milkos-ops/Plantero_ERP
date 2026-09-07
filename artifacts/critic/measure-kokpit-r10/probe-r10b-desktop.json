@@ -1,0 +1,86 @@
+{
+  "1440": {
+    "clicked": true,
+    "skel": {
+      "stripH": 80,
+      "stripBorder": "0px/0px",
+      "stripRadius": "0px",
+      "stripOverflowX": "visible",
+      "stripCardH": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "stripCardW": [
+        287.3,
+        288.3,
+        288.3,
+        288.3
+      ],
+      "stripCardBorderL": [
+        "0px",
+        "1px",
+        "1px",
+        "1px"
+      ],
+      "stripCardRadius": [
+        "0px",
+        "0px",
+        "0px",
+        "0px"
+      ],
+      "cardRadius": "12px",
+      "cardBorder": "1px",
+      "headerH": 44,
+      "rowH": [
+        40,
+        40,
+        40
+      ],
+      "cardCount": 6,
+      "docH": 900
+    },
+    "real": {
+      "stripH": 80,
+      "stripBorder": "0px/0px",
+      "stripRadius": "0px",
+      "stripOverflowX": "visible",
+      "stripCardH": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "stripCardW": [
+        287.3,
+        288.3,
+        288.3,
+        288.3
+      ],
+      "stripCardBorderL": [
+        "0px",
+        "1px",
+        "1px",
+        "1px"
+      ],
+      "stripCardRadius": [
+        "0px",
+        "0px",
+        "0px",
+        "0px"
+      ],
+      "cardRadius": "12px",
+      "cardBorder": "1px",
+      "headerH": 44,
+      "rowH": [
+        40,
+        44,
+        52.5,
+        54.5
+      ],
+      "cardCount": 10,
+      "docH": 1592
+    }
+  }
+}

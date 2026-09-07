@@ -1,0 +1,133 @@
+{
+  "390": {
+    "clicked": true,
+    "skel": {
+      "stripH": 76,
+      "stripBorder": "0px/0px",
+      "stripRadius": "0px",
+      "stripOverflowX": "auto",
+      "stripCardH": [
+        72,
+        72,
+        72,
+        72
+      ],
+      "stripCardW": [
+        152,
+        152,
+        152,
+        152
+      ],
+      "stripCardBorderL": [
+        "1px",
+        "1px",
+        "1px",
+        "1px"
+      ],
+      "stripCardRadius": [
+        "8px",
+        "8px",
+        "8px",
+        "8px"
+      ],
+      "cardRadius": "12px",
+      "cardBorder": "1px",
+      "headerH": 44,
+      "rowH": [
+        63,
+        63,
+        63
+      ],
+      "cardCount": 6,
+      "docH": 1870
+    },
+    "real": {
+      "stripH": 76,
+      "stripBorder": "0px/0px",
+      "stripRadius": "0px",
+      "stripOverflowX": "auto",
+      "stripCardH": [
+        72,
+        72,
+        72,
+        72
+      ],
+      "stripCardW": [
+        152,
+        152,
+        152,
+        152
+      ],
+      "stripCardBorderL": [
+        "1px",
+        "1px",
+        "1px",
+        "1px"
+      ],
+      "stripCardRadius": [
+        "8px",
+        "8px",
+        "8px",
+        "8px"
+      ],
+      "cardRadius": "12px",
+      "cardBorder": "1px",
+      "headerH": 44,
+      "rowH": [
+        44,
+        60,
+        62.5,
+        63,
+        63.5,
+        64.5
+      ],
+      "cardCount": 10,
+      "docH": 3732
+    }
+  },
+  "1440": {
+    "clicked": true,
+    "skel": null,
+    "real": {
+      "stripH": 80,
+      "stripBorder": "0px/0px",
+      "stripRadius": "0px",
+      "stripOverflowX": "visible",
+      "stripCardH": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "stripCardW": [
+        287.3,
+        288.3,
+        288.3,
+        288.3
+      ],
+      "stripCardBorderL": [
+        "0px",
+        "1px",
+        "1px",
+        "1px"
+      ],
+      "stripCardRadius": [
+        "0px",
+        "0px",
+        "0px",
+        "0px"
+      ],
+      "cardRadius": "12px",
+      "cardBorder": "1px",
+      "headerH": 44,
+      "rowH": [
+        40,
+        44,
+        52.5,
+        54.5
+      ],
+      "cardCount": 10,
+      "docH": 1656
+    }
+  }
+}

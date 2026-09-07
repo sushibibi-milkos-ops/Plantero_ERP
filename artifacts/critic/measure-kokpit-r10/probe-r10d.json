@@ -1,0 +1,39 @@
+{
+  "desktop": {
+    "base0": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+      "boxShadow": "none"
+    },
+    "hovered": {
+      "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+      "transition": "all 0s ease"
+    },
+    "focused": {
+      "tag": "A",
+      "txt": "Mal kabulGR-2026-000014TamamlandıAnadolu Kuruyemiş",
+      "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.4)",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklch(0.55 0.16 152) 0px 0px 0px 2px inset, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "outline": "0px none",
+      "w": 566,
+      "h": 55
+    },
+    "allLink": {
+      "boxShadow": "none",
+      "outline": "1px auto",
+      "w": 48,
+      "h": 16
+    },
+    "emptyBtn": {
+      "txt": "Satın alma siparişi oluştur",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "h": 32,
+      "fs": "14px",
+      "transition": "0.15s"
+    }
+  },
+  "mobile": {
+    "total": 42,
+    "below44": []
+  }
+}
