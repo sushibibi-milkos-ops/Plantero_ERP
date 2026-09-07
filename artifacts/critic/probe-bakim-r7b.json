@@ -1,0 +1,48 @@
+{
+ "vp": "390x844",
+ "hostLeft": 16,
+ "hostRight": 374,
+ "innerW": 390,
+ "over": [
+  {
+   "tag": "div",
+   "cls": "flex items-center justify-end gap-2 border-t border-border pt-4 sticky bottom-16 -mx-4 z-2",
+   "left": 0,
+   "right": 390,
+   "w": 390,
+   "txt": "VazgeçArızayı bildir"
+  }
+ ]
+}
+{
+ "vp": "1440x900",
+ "hostLeft": 264,
+ "hostRight": 840,
+ "innerW": 1440,
+ "over": [
+  {
+   "tag": "div",
+   "cls": "mx-auto w-full max-w-[1400px]",
+   "left": 264,
+   "right": 1416,
+   "w": 1152,
+   "txt": "Arıza BildirMakineyi tarayın y"
+  },
+  {
+   "tag": "div",
+   "cls": "mb-5 md:mb-6",
+   "left": 264,
+   "right": 1416,
+   "w": 1152,
+   "txt": "Arıza BildirMakineyi tarayın y"
+  },
+  {
+   "tag": "div",
+   "cls": "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between",
+   "left": 264,
+   "right": 1416,
+   "w": 1152,
+   "txt": "Arıza BildirMakineyi tarayın y"
+  }
+ ]
+}
