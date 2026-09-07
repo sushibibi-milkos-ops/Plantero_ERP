@@ -27,7 +27,11 @@ export function PackingListTable({ packages }: { packages: Packages }) {
   const columns = useMemo<ColumnDef<PackageRow, unknown>[]>(
     () => [
       { id: 'packageNo', accessorFn: (r) => r.packageNo, header: 'Kap no', meta: { width: 80, className: 'font-mono tabular-nums text-muted-foreground', mobile: 'meta' }, cell: ({ getValue }) => `#${getValue<number>()}` },
-      { id: 'product', accessorFn: (r) => r.productName, header: 'Ürün', meta: { mobile: 'title' }, cell: ({ row }) => <span className="font-medium">{row.original.productName}</span> },
+      // Tur 7 P2 ihracat-detay-18 kök neden düzeltmesi: meta.width taşımayan tek sütun burasıydı —
+      // auto table-layout kalan genişliğin tamamını buraya yığıyordu (order-lines-table.tsx'teki
+      // aynı kök nedenle birebir aynı düzeltme: TD'ye sabit `meta.width` + içerik span'ine BİREBİR
+      // aynı `max-w-[…] truncate`, satis modülünün Tur 11 kalıbı).
+      { id: 'product', accessorFn: (r) => r.productName, header: 'Ürün', meta: { mobile: 'title', width: 170, className: 'max-w-[280px] truncate' }, cell: ({ row }) => <span className="block max-w-[280px] truncate font-medium" title={row.original.productName}>{row.original.productName}</span> },
       { id: 'sku', accessorFn: (r) => r.sku, header: 'SKU', meta: { width: 120, className: 'font-mono text-xs text-muted-foreground', mobile: 'subtitle' } },
       {
         id: 'lot', accessorFn: (r) => r.lotNo ?? '', header: 'Lot', meta: { width: 150, mobile: 'badge' },

@@ -25,9 +25,15 @@ type OrderLineRow = OrderLines[number];
 export function OrderLinesTable({ lines, currency }: { lines: OrderLines; currency?: string | null }) {
   const columns = useMemo<ColumnDef<OrderLineRow, unknown>[]>(
     () => [
+      // Tur 7 P2 ihracat-detay-18 kök neden düzeltmesi: meta.width taşımayan tek sütun burasıydı —
+      // auto table-layout kalan genişliğin tamamını (562px, en uzun içerik yalnızca ~182px) buraya
+      // yığıyordu. satis modülünün Tur 11 kalıbı (channels-table.tsx 'Kanal'): TD'ye sabit
+      // `meta.width` + içerik span'ine BİREBİR aynı `max-w-[…] truncate` — değer, bu tablodaki 5
+      // sabit sütunun toplamıyla (590px) birlikte 1152px'e oransal esneme uygulandığında dahi en
+      // uzun ürün adında slack'in ≤120px kalacağı şekilde kalibre edildi (scripts/probe-ihracat-r8-fix.ts).
       {
-        id: 'product', accessorFn: (r) => r.productName, header: 'Ürün', meta: { mobile: 'title' },
-        cell: ({ row }) => <span className="font-medium">{row.original.productName}</span>,
+        id: 'product', accessorFn: (r) => r.productName, header: 'Ürün', meta: { mobile: 'title', width: 190, className: 'max-w-[280px] truncate' },
+        cell: ({ row }) => <span className="block max-w-[280px] truncate font-medium" title={row.original.productName}>{row.original.productName}</span>,
       },
       { id: 'sku', accessorFn: (r) => r.sku, header: 'SKU', meta: { width: 120, className: 'font-mono text-xs text-muted-foreground', mobile: 'subtitle' } },
       {

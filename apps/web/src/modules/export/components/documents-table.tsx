@@ -49,12 +49,28 @@ export function DocumentsTable({
   }
 
   const columns = useMemo<ColumnDef<ExportDocRow, unknown>[]>(() => {
+    // Tur 7 P2 ihracat-detay-18 / ihracat-belgeler-03 kök neden düzeltmesi: bu üç sütun (Belge,
+    // Sevkiyat, Müşteri) meta.width taşımıyordu — DataTable'ın auto table-layout'u kalan genişliği
+    // (belgeler panosunda 982px, tek sevkiyatın Belgeler sekmesinde de aynı) bunlara yığıyordu.
+    // satis modülünün Tur 11 kalıbı (channels-table.tsx 'Kanal'): hem TD'ye SABİT `meta.width` hem
+    // içerik span'ine BİREBİR aynı piksel değerinde `max-w-[…] truncate` verilir — yalnızca width
+    // vermek yetmiyor (tabloda width'siz başka sütun kalmadığından oransal esneme TÜM sütunlara
+    // eşit oranda yayılıyor), yalnızca truncate vermek de yetmiyor (TD kendi payını almaya devam
+    // ediyor). İki kilit birlikte: gerçek içerik kısa kaldığında (çoğu belge adı/cari adı) truncate
+    // hiç devreye girmez, en uzun içerikte de TD'nin oransal esnemesi ölçülüp kabul eşiğinin
+    // (slack ≤120px) altında kalacak şekilde kalibre edilmiştir (scripts/probe-ihracat-r8-fix.ts).
     const base: ColumnDef<ExportDocRow, unknown>[] = [
-      { accessorKey: 'name', header: 'Belge', meta: { mobile: 'title' } },
+      {
+        accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', width: 220, className: 'max-w-[220px] truncate' },
+        cell: ({ row }) => <span className="block max-w-[220px] truncate" title={row.original.name}>{row.original.name}</span>,
+      },
     ];
     if (showShipmentColumn) {
-      base.push({ id: 'shipmentDocNo', accessorFn: (r) => r.shipmentDocNo, header: 'Sevkiyat', meta: { className: 'font-mono', mobile: 'subtitle' } });
-      base.push({ id: 'partnerName', accessorFn: (r) => r.partnerName, header: 'Müşteri', meta: { mobile: 'hidden' } });
+      base.push({ id: 'shipmentDocNo', accessorFn: (r) => r.shipmentDocNo, header: 'Sevkiyat', meta: { width: 130, className: 'font-mono', mobile: 'subtitle' } });
+      base.push({
+        id: 'partnerName', accessorFn: (r) => r.partnerName, header: 'Müşteri', meta: { width: 190, mobile: 'hidden', className: 'max-w-[190px] truncate' },
+        cell: ({ getValue }) => <span className="block max-w-[190px] truncate text-muted-foreground" title={getValue<string>() ?? undefined}>{getValue<string>()}</span>,
+      });
     }
     // `defaultHidden` (Tur 2 P1 ihracat-detay-06 kök neden düzeltmesi): önceden yalnızca ortak belge
     // panosunda (/ihracat/belgeler, showShipmentColumn=true) uygulanıyordu — "doluluk tek sevkiyatın

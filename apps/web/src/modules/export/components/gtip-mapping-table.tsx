@@ -88,7 +88,14 @@ export function GtipMappingTable({ products, hsCodeOptions, editable }: { produc
   const columns = useMemo<ColumnDef<GtipProductRow, unknown>[]>(
     () => [
       { accessorKey: 'sku', header: 'SKU', meta: { width: 130, className: 'font-mono', mobile: 'subtitle' } },
-      { accessorKey: 'name', header: 'Ürün', meta: { mobile: 'title' } },
+      // Tur 7 P2 ihracat-gtip-09 kök neden düzeltmesi: meta.width taşımayan tek sütun burasıydı —
+      // auto table-layout kalan genişliğin tamamını (692px, en uzun ürün adı 353px) buraya
+      // yığıyordu. satis modülünün Tur 11 kalıbı: TD'ye sabit `meta.width` + içerik span'ine
+      // BİREBİR aynı `max-w-[…] truncate`.
+      {
+        accessorKey: 'name', header: 'Ürün', meta: { mobile: 'title', width: 280, className: 'max-w-[380px] truncate' },
+        cell: ({ getValue }) => <span className="block max-w-[380px] truncate" title={getValue<string>()}>{getValue<string>()}</span>,
+      },
       // Tur 4 P1 ihracat-gtip-08 kök neden düzeltmesi: `category1` ile `type` birebir eşlemeli
       // (satılabilir ürünlerde 'Mamul Ürünler'↔finished, 'Hammaddeler'↔raw_material) — ikisi de
       // aynı ayrımı gösteriyor, "Kategori" sıfır ek bilgiyle 160px'lik sütun genişliği tüketiyordu ve
