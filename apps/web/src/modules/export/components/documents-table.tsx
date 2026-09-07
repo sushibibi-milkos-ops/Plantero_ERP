@@ -49,21 +49,37 @@ export function DocumentsTable({
   }
 
   const columns = useMemo<ColumnDef<ExportDocRow, unknown>[]>(() => {
-    // Tur 7 P2 ihracat-detay-18 / ihracat-belgeler-03 kök neden düzeltmesi: bu üç sütun (Belge,
-    // Sevkiyat, Müşteri) meta.width taşımıyordu — DataTable'ın auto table-layout'u kalan genişliği
-    // (belgeler panosunda 982px, tek sevkiyatın Belgeler sekmesinde de aynı) bunlara yığıyordu.
-    // satis modülünün Tur 11 kalıbı (channels-table.tsx 'Kanal'): hem TD'ye SABİT `meta.width` hem
-    // içerik span'ine BİREBİR aynı piksel değerinde `max-w-[…] truncate` verilir — yalnızca width
-    // vermek yetmiyor (tabloda width'siz başka sütun kalmadığından oransal esneme TÜM sütunlara
-    // eşit oranda yayılıyor), yalnızca truncate vermek de yetmiyor (TD kendi payını almaya devam
-    // ediyor). İki kilit birlikte: gerçek içerik kısa kaldığında (çoğu belge adı/cari adı) truncate
-    // hiç devreye girmez, en uzun içerikte de TD'nin oransal esnemesi ölçülüp kabul eşiğinin
-    // (slack ≤120px) altında kalacak şekilde kalibre edilmiştir (scripts/probe-ihracat-r8-fix.ts).
+    // Tur 7 P2 ihracat-belgeler-03 kök neden düzeltmesi (yalnızca ortak belge panosu,
+    // showShipmentColumn=true): bu üç sütun (Belge, Sevkiyat, Müşteri) meta.width taşımıyordu —
+    // DataTable'ın auto table-layout'u kalan 982px'i bunlara yığıyordu. satis modülünün Tur 11
+    // kalıbı (channels-table.tsx 'Kanal'): hem TD'ye SABİT `meta.width` hem içerik span'ine BİREBİR
+    // aynı piksel değerinde `max-w-[…] truncate` verilir — yalnızca width vermek yetmiyor (tabloda
+    // width'siz başka sütun kalmadığından oransal esneme TÜM sütunlara eşit oranda yayılıyor),
+    // yalnızca truncate vermek de yetmiyor (TD kendi payını almaya devam ediyor).
+    //
+    // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false, ihracat-detay-18)
+    // BİLE İSTE bu kalıp uygulanMADI: o bağlamda görünür sütun sayısı yalnızca 3'e (Belge/Durum/
+    // Eylemler) düşüyor — 'Belge'ye sabit width vermek panodaki gibi çalışmıyor, aksine 'Durum'u da
+    // aynı oransal esnemeye sokup (130px→384px, slack 293px) YENİ bir P2 doğuruyor (ölçüldü,
+    // scripts/probe-ihracat-r8-fix.ts): 1152px'lik kapsayıcıda yalnızca 2 gerçek bilgi sütunu
+    // (Belge+Durum) varken satır başına düşen genişlik matematiksel olarak 120px'in altına
+    // indirilemiyor (Belge no/Vade/Sorumlu'yu varsayılan görünür yapmak da seçenek değil — bu tam
+    // olarak Tur 1'de KAPATILAN ihracat-belgeler-01'i yeniden açar, bkz. aşağıdaki `sparseDefault`
+    // yorumu). Kök neden yerine gerçek çözüm: bu dar bağlamda tabloyu 1152px'e ZORLAMAMAK —
+    // aşağıda DataTable'a verilen `className` ile `min-w-full`/`w-full` iptal edilip tablo GERÇEK
+    // içerik genişliğine (~390px) küçülüyor, artan boşluk sütunlara değil TABLONUN SAĞINA
+    // bırakılıyor (satis-kanallar-03 bulgusunun orijinal hedef metninde önerilen ideal: "artan
+    // genişlik sütunlara değil tablonun sağındaki boşluğa bırakılmalı").
     const base: ColumnDef<ExportDocRow, unknown>[] = [
-      {
-        accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', width: 220, className: 'max-w-[220px] truncate' },
-        cell: ({ row }) => <span className="block max-w-[220px] truncate" title={row.original.name}>{row.original.name}</span>,
-      },
+      showShipmentColumn
+        ? {
+            accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', width: 220, className: 'max-w-[220px] truncate' },
+            cell: ({ row }) => <span className="block max-w-[220px] truncate" title={row.original.name}>{row.original.name}</span>,
+          }
+        : {
+            accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', className: 'max-w-[320px] truncate' },
+            cell: ({ row }) => <span className="block max-w-[320px] truncate" title={row.original.name}>{row.original.name}</span>,
+          },
     ];
     if (showShipmentColumn) {
       base.push({
@@ -110,6 +126,15 @@ export function DocumentsTable({
         searchPlaceholder="Belge, sevkiyat, müşteri ara…"
         filters={filters}
         rowActions={rowActions}
+        // ihracat-detay-18 kök neden düzeltmesi (yalnızca sevkiyat detayının kendi Belgeler
+        // sekmesinde, showShipmentColumn=false): DataTable'ın <table> öğesi `min-w-full`/`w-full`
+        // ile kapsayıcıyı DOLDURMAYA zorlanıyor (bkz. data-table.tsx'teki Tur 2 P0 yorumu) — 3
+        // sütunlu bu dar tabloda bu, tek esnek sütuna (Belge) 762px'e varan ölü alan yığıyordu.
+        // Paylaşılan bileşen DEĞİŞTİRİLMEDEN (kural 2), yalnızca BU KULLANIMDA `[&_table]:!w-auto
+        // [&_table]:!min-w-0` ile o zorlama iptal edilir — tablo gerçek içerik genişliğine küçülür,
+        // artan boşluk sütunlara değil (satis-kanallar-03'ün orijinal hedefindeki gibi) tablonun
+        // SAĞINA bırakılır.
+        className={!showShipmentColumn ? '[&_table]:!w-auto [&_table]:!min-w-0' : undefined}
         emptyTitle="Belge yok"
         emptyDescription="Sevkiyat oluşturulunca rejime göre belge takip listesi otomatik kurulur."
         // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false) özel kart — Tur 2 P1

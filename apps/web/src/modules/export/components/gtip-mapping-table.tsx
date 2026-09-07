@@ -93,8 +93,8 @@ export function GtipMappingTable({ products, hsCodeOptions, editable }: { produc
       // yığıyordu. satis modülünün Tur 11 kalıbı: TD'ye sabit `meta.width` + içerik span'ine
       // BİREBİR aynı `max-w-[…] truncate`.
       {
-        accessorKey: 'name', header: 'Ürün', meta: { mobile: 'title', width: 280, className: 'max-w-[380px] truncate' },
-        cell: ({ getValue }) => <span className="block max-w-[380px] truncate" title={getValue<string>()}>{getValue<string>()}</span>,
+        accessorKey: 'name', header: 'Ürün', meta: { mobile: 'title', width: 280, className: 'max-w-[420px] truncate' },
+        cell: ({ getValue }) => <span className="block max-w-[420px] truncate" title={getValue<string>()}>{getValue<string>()}</span>,
       },
       // Tur 4 P1 ihracat-gtip-08 kök neden düzeltmesi: `category1` ile `type` birebir eşlemeli
       // (satılabilir ürünlerde 'Mamul Ürünler'↔finished, 'Hammaddeler'↔raw_material) — ikisi de

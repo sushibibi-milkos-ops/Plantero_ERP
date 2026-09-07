@@ -82,7 +82,11 @@ export function RatesTable({ rows }: { rows: RateRow[] }) {
         ),
       },
       {
-        id: 'dailyChange', header: 'Günlük değişim', meta: { align: 'right', width: 130, mobile: 'meta' },
+        // accessorFn ZORUNLU (Tur 7 sırasında bulundu): accessor'sız sütunlarda `getValue()` her
+        // zaman `undefined` döner — mobile-cards.tsx'in `isEmptyValue` filtresi bunu HER SATIRDA
+        // "boş" sayıp sütunü mobil meta zincirinden koşulsuz düşürüyordu (hücre gerçek bir yüzde
+        // bassa bile). accessorFn gerçek Decimal|null değerini döndürünce filtre doğru çalışır.
+        id: 'dailyChange', accessorFn: (r) => changeByKey.get(`${r.currency}-${r.rateDate}`) ?? null, header: 'Günlük değişim', meta: { align: 'right', width: 200, mobile: 'meta' },
         cell: ({ row }) => {
           const d = changeByKey.get(`${row.original.currency}-${row.original.rateDate}`);
           if (!d) return <span className="text-muted-foreground">—</span>;

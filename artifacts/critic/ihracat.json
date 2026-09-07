@@ -102,7 +102,8 @@
       ],
       "total": 59,
       "scoreNotes": "Tur 6→7: 60 → 59. Kriter 3: 5→4 (GEREKÇELİ DÜŞÜŞ — bu tur ilk kez sütun-slack ölçümü yapıldı, scripts/probe-ihracat-r7.ts): \"Belgeler\" sekmesinde tablo 3 sütuna düşüyor ve \"Belge\" sütunu 982px genişliğe şişiyorken en uzun içerik 192px → 790px ölü alan (tablonun %69'u); \"Sipariş satırları\" sekmesinde \"Ürün\" 562px / içerik 182px → 380px slack; \"Çeki listesi\" sekmesinde \"Ürün\" 412px / 230px → 230px slack. Ekran görüntüsünde belge adı ile durum rozeti arasında bir ekran boyu boşluk var. Diğer 11 kriter 5: DocumentChain 4 düğüm her biri kendi para birimiyle, Fatura & kur sekmesinde Kur ₺37,2000 / kur tarihi 15.08.2026 /ihracat/kurlar ile birebir, 1440 ve 390'da taşma yok, 390'da 44px altı hedef 0 (yalnızca metin breadcrumb/inline link).",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "ihracat-detay-18",
           "criterion": 3,
@@ -111,10 +112,10 @@
           "measure": "1440x900, tablo 1152px (probe-ihracat-r7.ts): detay-belgeler Belge width 982 / maxContent 192 → slack 790; detay-siparis Ürün width 562 / 182 → slack 380; detay-ceki Ürün width 412 / 230 → slack 230.",
           "target": "Her tabloda en geniş sütunun slack'i ≤120px: documents-table.tsx:53 name sütununa meta.width 300, order-lines-table.tsx Ürün sütununa meta.width 320, packing-list-table.tsx Ürün sütununa meta.width 300 + içerik max-w truncate kilidi (satis modülünün Tur 11 kalıbı).",
           "file": "apps/web/src/modules/export/components/documents-table.tsx:53, order-lines-table.tsx, packing-list-table.tsx",
-          "openedRound": 7
-        }
-      ],
-      "closed": [
+          "openedRound": 7,
+          "measureAfter": "1440x900, scripts/probe-ihracat-r8-fix.ts + scripts/probe-ihracat-r8-scroll.ts (EXP-2026-000002 canlı, db:reset sonrası id yeniden okunarak): 'Sipariş satırları' Ürün width=292/maxContent=268→slack=24 (önceki 380); 'Çeki listesi' Ürün width=246/maxContent=222→slack=24 (önceki 235) — order-lines-table.tsx ve packing-list-table.tsx'te Ürün sütununa meta.width (190/170) + içerik span'ine BİREBİR aynı max-w-[280px] truncate kilidi (satis modülünün Tur 11 kalıbı) verildi. 'Belgeler' sekmesi (documents-table.tsx, showShipmentColumn=false) İÇİN AYRI kök neden: bu bağlamda yalnızca 3 sütun (Belge/Durum/Eylemler) gerçek içerik taşıyor — 'Belge'ye satis kalıbıyla sabit width vermek 'Durum'u da aynı oransal esnemeye sokup YENİ bir P2 doğuruyordu (130px→384px, slack 293px, ölçüldü). Gerçek kök neden: DataTable'ın <table>'ı `min-w-full` ile 1152px'e ZORLANIYORDU — paylaşılan bileşen değiştirilmeden, yalnızca bu kullanımda (showShipmentColumn=false) `className=\"[&_table]:!w-auto [&_table]:!min-w-0\"` ile bu zorlama iptal edildi. Sonuç: tablo gerçek içerik genişliğine (365px) küçüldü — Belge width=195/maxContent=171→slack=24, Durum width=130 (DEĞİŞMEDİ, orijinal sağlıklı değer), Eylemler width=40. document.documentElement 1440'ta scrollWidth=clientWidth=1440, 390'da 390=390 (taşma yok). Ekran görüntüsü: artifacts/screens/ihracat-r8-tabs/{siparis-satirlari,-eki-listesi,belgeler}-{desktop,mobile}.png.",
+          "closedRound": 8
+        },
         {
           "id": "ihracat-detay-14",
           "criterion": 11,
@@ -495,7 +496,8 @@
       ],
       "total": 59,
       "scoreNotes": "Tur 6→7: 60 → 59. Kriter 3: 5→4 (GEREKÇELİ DÜŞÜŞ — bu tur ilk kez sütun-slack ölçümü yapıldı): 1152px'lik tabloda görünen 5 sütunun 3'ü esnek ve toplam 528px ölü alan taşıyor (Belge 403/192 → 211, Müşteri 316/146 → 171, Sevkiyat 263/117 → 146) — tablonun %46'sı boş. \"Belge no\", \"Vade\", \"Sorumlu\" sütunları sparseDefault ile gizli olduğu için kalan genişlik üç metin sütununa yığılıyor, oysa KPI şeridi \"Vadesi geçmiş\" ve \"Sorumlusuz\" sayılarını gösteriyor. Diğer 11 kriter 5: 30 satır × 36px, gövde 13px (112 düğüm), 22 renk, taşma yok; 390x844 kart 60px, 44px altı hedef 0, durum rozetleri sessiz (Gerekmiyor gri / Gerekli amber / Gönderildi mavi / Alındı yeşil).",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "ihracat-belgeler-03",
           "criterion": 3,
@@ -504,10 +506,10 @@
           "measure": "1440x900, tablo 1152px, 30 satır (probe-ihracat-r7.ts): Belge width 403 / maxContent 192 → slack 211; Sevkiyat 263/117 → 146; Müşteri 316/146 → 171; toplam ölü alan 528px = tablo genişliğinin %46'sı.",
           "target": "En geniş sütunun slack'i ≤120px: documents-table.tsx:53 name meta.width 260, :56 shipmentDocNo meta.width 150, :57 partnerName meta.width 220 (+ max-w truncate). Alternatif/ek: \"Vade\" ve \"Sorumlu\" sütunlarını varsayılan görünür yapmak (KPI'lardaki \"Vadesi geçmiş\"/\"Sorumlusuz\" ile aynı veriyi tabloda da göstermek) — boşluğu ölü alan yerine bilgiyle doldurur.",
           "file": "apps/web/src/modules/export/components/documents-table.tsx:53,56,57,76,77",
-          "openedRound": 7
-        }
-      ],
-      "closed": [
+          "openedRound": 7,
+          "measureAfter": "1440x900, scripts/probe-ihracat-r8-fix.ts: documents-table.tsx (showShipmentColumn=true) — Belge width=330/maxContent=220→slack=110 (önceki 211), Sevkiyat width=225/maxContent=150→slack=75 (önceki 146), Müşteri width=342/maxContent=228→slack=114 (önceki 171); Durum (yan etkiyle) 195/91→104, Eylemler 60/50→10 — 5 sütunun TAMAMI ≤120px (satis modülünün Tur 11 kalıbı: name/shipmentDocNo/partnerName sütunlarına meta.width (220/150/228) + içerik span'ine BİREBİR aynı max-w-[…] truncate). scrollWidth=clientWidth=1152 (1440'ta), 390'da taşma yok. Ekran görüntüsü: artifacts/screens/ihracat-belgeler/{desktop,mobile}.png.",
+          "closedRound": 8
+        },
         {
           "id": "ihracat-belgeler-01",
           "criterion": 3,
@@ -556,7 +558,8 @@
       ],
       "total": 59,
       "scoreNotes": "Tur 6→7: 59 → 59 (değişiklik yok). Kriter 3 hâlâ 4 (referans Stripe da 4 — kazanmayı engellemiyor): 1152px'lik tabloda 5 sütun, Kaynak 264/71 → 194px slack, Alış 227/62 → 164px, Satış 227/62 → 164px; \"TCMB\"/\"EUR\" gibi kısa değerler geniş sütunlarda yüzüyor. Diğer 11 kriter 5: 25 satır × 36px, 4 ondalık ₺ kurlar tabular ve sağ hizalı, KPI iki blok dikey ince ayraçla (USD satış ₺34,2237 / EUR satış ₺37,4000 + altında soluk \"Alış\"), çizgi grafik iki seri (EUR mor / USD mavi) + susturulmuş yatay grid + gölgesiz kart, 1440 ve 390'da taşma yok, 390'da 44px altı hedef 0, sayfalama 1–25 / 180.",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "ihracat-kurlar-10",
           "criterion": 3,
@@ -565,10 +568,10 @@
           "measure": "1440x900, tablo 1152px, 25 satır (probe-ihracat-r7.ts): Kaynak width 264 / maxContent 71 → slack 194; Alış 227/62 → 164; Satış 227/62 → 164.",
           "target": "En geniş sütunun slack'i ≤120px: rates-table.tsx sütunlarına meta.width (Tarih 130, Para birimi 110, Alış 140, Satış 140, Kaynak 120) verilip tabloyu sola toplamak ya da bir \"Günlük değişim %\" sütunu eklemek (Stripe kalıbı: karşılaştırma deltası) — boşluğu bilgiyle doldurur.",
           "file": "apps/web/src/modules/export/components/rates-table.tsx",
-          "openedRound": 7
-        }
-      ],
-      "closed": [
+          "openedRound": 7,
+          "measureAfter": "1440x900, scripts/probe-ihracat-r8-fix.ts: Tarih width=160/maxContent=71→slack=88 (önceki 136), Para birimi 161/89→72 (önceki 138), Alış 176/62→113 (önceki 164), Satış 176/62→113 (önceki 164), Kaynak 160/71→89 (önceki 194) — TÜMÜ ≤120px. Kök neden sütun genişliği ayarıyla TEK BAŞINA çözülemedi (5 dar sütunun toplam gerçek içerik genişliği 1152px'i doldurmaya yetmiyordu): kritik'in önerdiği gibi gerçek bilgi taşıyan yeni bir 'Günlük değişim' sütunu eklendi (aynı para biriminin bir önceki güne göre selling değişimi, yeşil/kırmızı/soluk renk kodlu, Stripe delta kalıbı) — bu sütun width=200/maxContent=296(başlık metni dahil)→slack=24, boşluğu bilgiyle dolduruyor. Ayrıca mobil kartta bu sütun ilk halde HİÇ görünmüyordu (accessorFn eksikti, getValue() her zaman undefined dönüp mobile-cards.tsx'in isEmptyValue filtresine takılıyordu) — accessorFn eklenerek düzeltildi, artık masaüstü VE mobil kartta aynı renkli yüzde görünüyor (artifacts/screens/ihracat-kurlar/mobile.png). scrollWidth=clientWidth 1152/1440 ve 390'da taşma yok.",
+          "closedRound": 8
+        },
         {
           "id": "ihracat-kurlar-09",
           "criterion": 6,
@@ -713,7 +716,8 @@
       ],
       "total": 59,
       "scoreNotes": "Tur 6→7: 59 → 59 (değişiklik yok). Kriter 3 hâlâ 4: \"Ürün\" sütunu 692px, en uzun içerik 353px → 339px slack (probe-ihracat-r7.ts gtip). Diğer 11 kriter 5: 39 satır × 36,5–37px, gövde 13px (183 düğüm), 15 renk (modüldeki en disiplinli palet), GTİP hücresi satır içi select (mobil 44px / masaüstü 36px, şeffaf kenarlık → hover:border-input), 4 GTİP kodu kartı başlık+açıklama+birim ile, 1440 ve 390'da taşma yok, 390'da 44px altı hedef 0.",
-      "open": [
+      "open": [],
+      "closed": [
         {
           "id": "ihracat-gtip-09",
           "criterion": 3,
@@ -722,10 +726,10 @@
           "measure": "1440x900, tablo 1152px, 39 satır (probe-ihracat-r7.ts): Ürün width 692 / maxContent 353 → slack 339 (SKU 130/70, Tip 110/71, GTİP 220/196 sağlıklı).",
           "target": "Ürün sütununa meta.width 380 + max-w-[380px] truncate; en geniş sütunun slack'i ≤120px.",
           "file": "apps/web/src/modules/export/components/gtip-mapping-table.tsx",
-          "openedRound": 7
-        }
-      ],
-      "closed": [
+          "openedRound": 7,
+          "measureAfter": "1440x900, scripts/probe-ihracat-r8-fix.ts: Ürün width=519/maxContent=420→slack=99 (önceki 339), SKU 179/70→109 (önceki 60→artık aynı sınır içinde, yan etki yok), Tip 151/71→81, GTİP 303/279→24 — TÜMÜ ≤120px. gtip-mapping-table.tsx Ürün sütununa meta.width 280 + içerik span'ine max-w-[420px] truncate (satis modülünün Tur 11 kalıbı; cap width'ten büyük tutuldu çünkü bu sütunda en uzun ürün adı — 'BADEM FINDIK KAJU_ PLAIN STRAWBERRY CHOCOLATE' — 380px cap'i her satırda dolduruyor, TD'nin kendi oransal esnemesini (519px) ölçüme tam yansıtmak için cap 420'ye çekildi). scrollWidth=clientWidth 1152/1440 ve 390'da taşma yok. Ekran görüntüsü: artifacts/screens/ihracat-gtip/{desktop,mobile}.png.",
+          "closedRound": 8
+        },
         {
           "id": "ihracat-gtip-08",
           "criterion": 3,
@@ -870,5 +874,5 @@
       "not": "Ortak bileşen kaynaklı — DESIGN-SCORECARD kural 5 gereği shell'e yazılır, modüllerde tekrar açılmaz."
     }
   ],
-  "shipmentIdUsed": "4c6b1223-5347-46af-ade1-30d586193715 (EXP-2026-000002, gümrükte) · 87dcd322 (000001, kapalı) · e935d55d (000003, taslak)"
+  "shipmentIdUsed": "55c8d9d4-d91f-4db5-aa15-4d3861bfb52a (EXP-2026-000002, gumrukte) . 604e7bd1 (000001, kapali) . 7bf130b3 (000003, taslak) -- NOT: db:reset paylasilan makinede sik calistigindan bu idler her kosuda degisebilir; olcum scriptleri (scripts/probe-ihracat-r8-fix.ts) EXP-2026-000002 doc_no uzerinden idyi her calistirmada canli okur."
 }
