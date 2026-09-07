@@ -1,0 +1,216 @@
+{
+ "projeler": [
+  {
+   "label": "Yeni proje",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  },
+  {
+   "label": "Tabloda ara",
+   "tag": "INPUT",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px",
+    "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.9 0.004 286.3)"
+  },
+  {
+   "label": "Durum",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px",
+    "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  },
+  {
+   "label": "Liste görünümü",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  },
+  {
+   "label": "Kart görünümü",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  }
+ ],
+ "receteler": [
+  {
+   "label": "Tabloda ara",
+   "tag": "INPUT",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px",
+    "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.9 0.004 286.3)"
+  },
+  {
+   "label": "Durum",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px",
+    "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  },
+  {
+   "label": "Sütunlar",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px",
+    "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  },
+  {
+   "label": "Reçete",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "label": "Proje",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.92 0.004 286.3)"
+  }
+ ],
+ "precete": [
+  {
+   "label": "Pano",
+   "tag": "A",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 1px",
+   "borderColor": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "label": "Deneme Reçeteleri",
+   "tag": "A",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 1px",
+   "borderColor": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "label": "Yeni deneme reçetesi",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  },
+  {
+   "label": "v1Taslak",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 0px",
+   "borderColor": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "label": "Yeni versiyon",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px",
+    "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+   ],
+   "outline": "none 0px 0px",
+   "borderColor": "oklch(0.55 0.16 152)"
+  }
+ ],
+ "board": [
+  {
+   "label": "Pano",
+   "tag": "A",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 1px",
+   "borderColor": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "label": "Deneme Reçeteleri",
+   "tag": "A",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 1px",
+   "borderColor": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "label": "Fikir",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 0px",
+   "borderColor": "oklab(0.92 0.00112267 -0.00383922 / 0.6)"
+  },
+  {
+   "label": "Formülasyon",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 0px",
+   "borderColor": "oklab(0.92 0.00112267 -0.00383922 / 0.6)"
+  },
+  {
+   "label": "Pilot Üretim",
+   "tag": "BUTTON",
+   "fv": true,
+   "shadow": [
+    "none"
+   ],
+   "outline": "auto 1px 0px",
+   "borderColor": "oklab(0.92 0.00112267 -0.00383922 / 0.6)"
+  }
+ ]
+}

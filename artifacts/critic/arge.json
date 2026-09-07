@@ -1,6 +1,6 @@
 {
  "module": "arge",
- "round": 14,
+ "round": 15,
  "updatedAt": "2026-09-07",
  "reference": {
   "linear": 57,
@@ -22,7 +22,7 @@
  ],
  "routes": {
   "/arge/projeler": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -41,7 +41,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 14. İki açık P2 yeniden ölçüldü, ikisi de AÇIK ve DEĞİŞMEMİŞ: (a) arge-projeler-08 (c2) 1440px ilk tablo satırı viewport 238px / <main> ofseti 190px (h1 24, thead 154) — tur 4-14 birebir aynı; 390px ilk kart 63.5px. (b) arge-projeler-09 (c4) 3/3 para hücresinde title/aria/sr-only yok, 2/3 hücre warning oklch(0.72 0.17 70), main.textContent içinde \"hedef\" yok. Diğer 10 kriter yeniden ölçüldü, tur 13 ile aynı: sw=cw=1440 ve 390 (taşma yok), satır 36/36/36, h1 24/600 (mobil 20/600), 13px gövde + 11/12px etiket, 18 renk, para 3/3 tabular-nums + sağa hizalı, satır hover accent/50, gerçek Tab’da 2px accent outline (offset -2px), 390’da <44px etkileşimli hedef yok, boş durum SearchX + başlık + ipucu + ✕ temizle. Kod taraması temiz. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 15. İki açık P2 yeniden ölçüldü, ikisi de AÇIK ve DEĞİŞMEMİŞ: (a) arge-projeler-08 (c2) 1440px ilk tablo satırı <main> ofseti 190px, 390px 258px. (b) arge-projeler-09 (c4) 3/3 para hücresinde title/aria/sr-only yok, 2/3 hücre warning, ekranda 'hedef' kelimesi yok. Diğer 10 kriter yeniden ölçüldü, tur 14 ile aynı: sw=cw=1440 ve 390 (yatay taşma yok), satır 36/36/36 (mobil kart 63,5px), h1 24/600 (mobil 20/600), 13px gövde + 11/12px etiket, 17 renk (mobil 16), para 3/3 tabular-nums + sağa hizalı, satır hover oklab(0.955 .../0.5), gerçek Tab'da satırda 2px solid accent outline (offset -2px) ve butonlarda 3px accent/50 ring + accent border (geçiş 150ms sonrası ölçüldü; anlık okuma yanıltıyor), 390'da <44px etkileşimli hedef yok (yalnız breadcrumb metni), boş durum SearchX + 'Eşleşen kayıt yok' + ipucu + alandaki ✕ temizle. Kod taraması temiz. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -568,27 +568,29 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar içerik alanında 168px tüketiliyor (Linear başlığı, sayacı ve filtreyi tek satırda tutar). /arge/receteler ile aynı kalıp (arge-receteler-02).",
-     "measure": "tur 13 yeniden ölçüm: 1440px ilk tablo satırı viewport 238px / <main> ofseti 190px (h1 ofseti 24, thead 154) — tur 4-13 birebir aynı. 390px: ilk kart viewport 306px / <main> ofseti 258px, kart yüksekliği 63.5px. Hedef ≤112px (masaüstü) / ≤176px (mobil).",
+     "measure": "tur 15 yeniden ölçüm (probe-arge-r15.json): 1440px ilk tablo satırı viewport 238px / <main> ofseti 190px (h1 ofseti 24, thead ofseti 154) — tur 4-15 birebir aynı. 390px: ilk kart viewport 306px / <main> ofseti 258px, kart yüksekliği 63,5px. Hedef ≤112px (masaüstü).",
      "target": "Başlık + '3 kayıt' + filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
      "openedRound": 2,
-     "reMeasuredRound": 13,
-     "lastMeasuredRound": 13,
+     "reMeasuredRound": 15,
+     "lastMeasuredRound": 15,
      "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — arge-receteler-02 ile aynı kök neden (PageHeader + DataTable araç çubuğunun iki ayrı şerit olması, ortak bileşen kompozisyonu); arge modülü sözleşmesi kapsamında düzeltilemez, mevcut ortak dosyalar değiştirilmedi. Bkz. sharedComponentRequests.",
-     "round14": "yeniden ölçüldü — AÇIK"
+     "round14": "yeniden ölçüldü — AÇIK",
+     "round15": "yeniden ölçüldü — AÇIK, değişmedi"
     },
     {
      "id": "arge-projeler-09",
      "criterion": 4,
      "severity": "P2",
      "text": "Tablo görünümünde \"Birim maliyet\" değerleri hedef aşımında warning (turuncu) basılıyor ama ekranda hedefi gösteren hiçbir şey yok: ₺31,92 turuncu, ₺166,17 nötr — kullanıcı küçük sayının neden uyarı rengiyle basıldığını çözemiyor. Aynı modülün KART görünümü aynı olguyu \"₺31,92 / hedef ₺28,00\" ile açıklıyor (project-list.tsx:167-174), tablo görünümü açıklamıyor.",
-     "measure": "tur 13 (1440×900): 3/3 para hücresinde title/aria-label/sr-only YOK; ₺31,92 ve ₺103,41 oklch(0.72 0.17 70)=warning, ₺166,17 oklch(0.21 0.006 285.9)=foreground. main.textContent içinde 'hedef' sözcüğü YOK (false).",
+     "measure": "tur 15 (1440×900): 3/3 para hücresinde title/aria-label/sr-only YOK; ₺31,92 ve ₺103,41 oklch(0.72 0.17 70)=warning, ₺166,17 oklch(0.21 0.006 285.9)=foreground; 3/3 hücre tabular-nums + sağa hizalı. main.textContent içinde 'hedef' sözcüğü YOK.",
      "target": "Hedef üstü hücrelerde hedef değeri ekranda çözülebilir olsun: hücreye title/aria (ör. \"Hedef ₺28,00 · %14 üstü\") ya da kart görünümündeki gibi \"/ hedef ₺X\" son eki → renkli 2/2 hücrede hedef bilgisi erişilebilir.",
      "file": "apps/web/src/modules/rnd/components/project-list.tsx:82-89 (tablo sütunu)",
      "openedRound": 11,
-     "lastMeasuredRound": 13,
-     "reMeasuredRound": 13,
-     "round14": "yeniden ölçüldü — AÇIK"
+     "lastMeasuredRound": 15,
+     "reMeasuredRound": 15,
+     "round14": "yeniden ölçüldü — AÇIK",
+     "round15": "yeniden ölçüldü — AÇIK, değişmedi"
     }
    ],
    "closed": [
@@ -692,7 +694,7 @@
    ]
   },
   "/arge/projeler/[id]/board": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -711,7 +713,7 @@
    ],
    "total": 60,
    "winner": "Plantero",
-   "scoreNotes": "Tur 14. Açık bulgu yok; yeniden ölçüm tur 13 ile aynı: 1440 ve 390’da sw=cw (yatay taşma yok — kolon şeridi kendi kabında kayıyor), 390’da <44px etkileşimli hedef yok, dolu-vurgu buton 0 (kanban tamamen nötr), font kademeleri 11/13 baskın + tek h1 (1440’ta 24, 390’da 20), 20 renk. Kod taraması temiz (duration-150, ease-out; transition-all/ease-in/scale(0) yok). Toplam 60 ≥ 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 15. Açık bulgu yok; yeniden ölçüm tur 14 ile aynı: 1440 ve 390'da sw=cw (yatay taşma yok — kolon şeridi kendi kabında kayıyor: iç kaydırıcı sw 1864 / cw 1152, mobil sekme şeridi 454/358), 390'da <44px etkileşimli hedef yok, dolu-vurgu buton 0 (kanban tamamen nötr), font kademeleri 11/13 baskın + tek h1 (1440'ta 24, 390'da 20), 19 renk (mobil 17). Kod taraması temiz (duration-150/200, ease-out; transition-all/ease-in/scale(0) yok; spring 0.35s kesilebilir, DragOverlay 220ms). Toplam 60 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "columnHeights_1440": [
      588,
@@ -1280,7 +1282,7 @@
    ]
   },
   "/arge/projeler/[id]/receteler": {
-   "round": 14,
+   "round": 15,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -1299,7 +1301,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 14. Üç açık P2 yeniden ölçüldü, üçü de AÇIK: (a) arge-recete-41 (c6) ₺ öneki ile ilk rakam arası 1440px’te 42,7px (manuel satır) ve 49,1px (genel gider); 390px’te 18,7px / 109,3px — hedef ≤4px; aynı sütundaki diğer 3 satır \"₺120,00\" biçiminde bitişik. (b) arge-recete-42 (c1) 1440px’te dolu-vurgu (oklch(0.55 0.16 152)) buton sayısı hâlâ 2 — \"Yeni deneme reçetesi\" 186×32 ve \"Onaya gönder\" 136×32; 390px’te 1. (c) arge-recete-43 (c9) KISMİ İLERLEME: satır başına .sr-only \"Fire %\" etiketi eklenmiş (4/4 satır), ama görünür \"Fire\"/\"%\" işareti hâlâ 0 (masaüstü başlığı 390px’te w=0/h=0) → hedef \"görünür birim/etiket\" karşılanmadı, açık kalır. Diğer kriterler tur 13 ile aynı: sw=cw 1440/390 (taşma yok), 390’da <44px etkileşimli hedef yok, hedef maliyet çubuğu tek warning tonu, 21 renk. Kod taraması temiz (cost-simulator duration-200 ease-out). Açık P0/P1 yok, toplam 59 ≥ 56 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 15. Üç açık P2 yeniden ölçüldü, üçü de AÇIK ve tur 14'e göre değişmemiş: (a) arge-recete-41 (c6) ₺ öneki–ilk rakam arası 1440px 42,7/49,1px, 390px 18,7/109,3px (hedef ≤4px). (b) arge-recete-42 (c1) dolu-vurgu buton 1440px'te 2. (c) arge-recete-43 (c9) görünür 'Fire'/'%' işareti 390px'te 0. Diğer kriterler tur 14 ile aynı: sw=cw 1440/390 (taşma yok), 390'da <44px etkileşimli hedef yok, hedef maliyet çubuğu tek warning tonu, salt-okunur para 6/6 tabular-nums, 21 renk (mobil 18), h1 24/600 (mobil 20/600), buton odağı 3px accent/50 ring. Kod taraması temiz (cost-simulator duration-200 ease-out). Açık P0/P1 yok, toplam 59 ≥ 56 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "rowHeights_1440": [
      39,
@@ -2030,41 +2032,44 @@
      "criterion": 6,
      "severity": "P2",
      "text": "Aynı \"Birim maliyet\" sütununda para birimi iki farklı biçimde basılıyor: manuel kaynaklı satırda ₺ öneki hücrenin solunda tek başına duruyor (kutu dinlenmede kenarlıksız olduğu için sahipsiz bir glif gibi görünüyor), salt-okunur satırlarda ₺ rakama bitişik. Stripe tutarları tek bir para dili ile basar.",
-     "measure": "tur 13 yeniden ölçüm (canvas metin genişliğiyle ilk rakamın x'i): 1440px manuel satır ₺→'38,00' 42,7px, 'Genel gider (parti)' ₺→'0,35' 49,1px; 390px manuel satır 18,7px, 'Genel gider (parti)' 109,3px. Aynı sütundaki salt-okunur MoneyCell'lerde ₺ rakama bitişik (₺120,00). Hedef ≤4px.",
+     "measure": "tur 15 yeniden ölçüm (canvas metin genişliğiyle ilk rakamın x'i): 1440px manuel satır ₺→'38,00' 42,7px, 'Genel gider (parti)' ₺→'0,35' 49,1px; 390px manuel satır 18,7px, genel gider 109,3px. Aynı sütundaki salt-okunur MoneyCell'lerde ₺ rakama bitişik (₺120,00 / ₺5,81 / ₺2,40, hepsi tabular-nums). Hedef ≤4px.",
      "target": "Sütundaki 4/4 satırda ₺ ile ilk rakam arası ≤4px (ör. manuel satırda öneki inline yaz: değerle birlikte sağa yaslı tek metin bloğu)",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:708-723 (NumberInput prefix=\"₺\" + inputClassName pl-6/md:pl-7)",
      "openedRound": 10,
-     "lastMeasuredRound": 13,
+     "lastMeasuredRound": 15,
      "ownerNote": "Tur 10 düzeltme turu: KAPATILMADI — kök neden paylaşılan `NumberInput` bileşeninde (apps/web/src/components/form/number-input.tsx:117): ₺ öneki `absolute left-2.5` ile sabit konumlanıyor, değer ise `text-right`; basamak sayısı satırdan satıra değiştikçe önek-rakam arası boşluk da değişiyor. arge modülü sözleşmesi kapsamında mevcut ortak dosya değiştirilmedi (yalnızca yeni dosya eklenebilir). Bkz. sharedComponentRequests.",
      "owner": "shell",
-     "reMeasuredRound": 13,
-     "round14": "yeniden ölçüldü — AÇIK"
+     "reMeasuredRound": 15,
+     "round14": "yeniden ölçüldü — AÇIK",
+     "round15": "yeniden ölçüldü — AÇIK, değişmedi"
     },
     {
      "id": "arge-recete-42",
      "criterion": 1,
      "severity": "P2",
      "text": "Ekranda aynı anda iki DOLU vurgu rengi buton var: sol raydaki \"Yeni deneme reçetesi\" ve kart başlığındaki \"Onaya gönder\". Stripe/Linear bir görünümde tek birincil eylem bırakır; ikinci \"yeni\" eylemi ikincil (outline/ghost + artı ikonu) olur, aksi hâlde ekranın gerçek birincil eylemi (versiyonu onaya göndermek) ikinci bir yeşil blokla rekabet ediyor.",
-     "measure": "tur 13 (1440×900): background oklch(0.55 0.16 152) olan görünür buton sayısı 2 — 'Yeni deneme reçetesi' 186×32, 'Onaya gönder' 136×32. 390px'te 1 ('Onaya gönder' 44×44 ikon butonu).",
+     "measure": "tur 15 (1440×900): background oklch(0.55 0.16 152) olan görünür buton sayısı 2 — 'Yeni deneme reçetesi' 186×32, 'Onaya gönder' 136×32. 390px'te 1 ('Onaya gönder' 44×44 ikon butonu).",
      "target": "Görünümde eşzamanlı dolu-vurgu buton sayısı 1 (sol raydaki \"Yeni deneme reçetesi\" outline/secondary'ye iner; \"Onaya gönder\" tek birincil kalır).",
      "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx (sol ray \"Yeni deneme reçetesi\" tetikleyicisi)",
      "openedRound": 11,
-     "lastMeasuredRound": 13,
-     "reMeasuredRound": 13,
-     "round14": "yeniden ölçüldü — AÇIK"
+     "lastMeasuredRound": 15,
+     "reMeasuredRound": 15,
+     "round14": "yeniden ölçüldü — AÇIK",
+     "round15": "yeniden ölçüldü — AÇIK, değişmedi"
     },
     {
      "id": "arge-recete-43",
      "criterion": 5,
      "severity": "P2",
      "text": "390px'te malzeme satırının en sağındaki Fire % değeri görünür etiketsiz/birimsiz basılıyor: satır '0,1500 KG · Manuel · ₺ 38,00 · 2' okunuyor, sondaki '2' neyin yüzdesi belli değil (masaüstünde 'Fire %' sütun başlığı var, mobilde başlık satırı yok). Erişilebilirlik tarafı her satırda sr-only 'Fire %' ile karşılanmış; eksik olan yalnızca görsel birim.",
-     "measure": "tur 14 (390×844): fire input value \"2\"/\"0\", 52×44, x=309; aria-label/title yok ANCAK satır başına .sr-only \"Fire %\" etiketi eklenmiş (4/4 satır) → ekran okuyucuda çözülüyor. Görünür (w>0,h>0) \"Fire\"/\"%\" işareti hâlâ 0 (masaüstü başlığı 390px’te w=0/h=0).",
+     "measure": "tur 15 (390×844): satır başına .sr-only 'Fire %' etiketi var (4/4 satır) → ekran okuyucuda çözülüyor; görünür (w>0,h>0) 'Fire'/'%' işareti 0 (masaüstü 'Fire %' başlığı 390px'te w=0/h=0). Masaüstünde başlık 64×18 görünür.",
      "target": "Mobilde fire alanının yanında görünür birim/etiket olsun (ör. sağına '%' son eki ya da 11px muted 'Fire') → 390px'te görünür 'Fire'/'%' işareti ≥1 ve satırdaki 4/4 sayı birimli okunur.",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (satır grid'i, Fire % hücresi)",
      "openedRound": 12,
-     "lastMeasuredRound": 13,
-     "reMeasuredRound": 13,
-     "round14": "kısmen ilerledi (sr-only etiket eklendi), görünür etiket hedefi karşılanmadı — AÇIK"
+     "lastMeasuredRound": 15,
+     "reMeasuredRound": 15,
+     "round14": "kısmen ilerledi (sr-only etiket eklendi), görünür etiket hedefi karşılanmadı — AÇIK",
+     "round15": "yeniden ölçüldü — AÇIK (sr-only ilerlemesi tur 14'ten beri aynı, görünür etiket yok)"
     }
    ],
    "closed": [
@@ -2647,7 +2652,7 @@
    ]
   },
   "/arge/receteler": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -2666,7 +2671,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 14. İki açık P2 yeniden ölçüldü, ikisi de AÇIK ve DEĞİŞMEMİŞ: (a) arge-receteler-02 (c2) 1440px ilk tablo satırı viewport 208px / <main> ofseti 160px (h1 24, thead 124) — tur 5-14 aynı. (b) arge-receteler-04 (c4) 3/3 para hücresinde title/aria/sr-only yok, \"hedef\" kelimesi ekranda yok, 2/3 hücre warning. Diğer kriterler: sw=cw 1440/390, satır 36/36/36, mobil kart 63.5px, th/td sağ kenarları 7/7 sütunda birebir aynı, font YALNIZCA 3 kademe (12/13/24 — modüldeki en temiz dağılım), 23 renk, hover accent/50, gerçek Tab’da 2px accent outline, 390’da <44px hedef yok, boş durum SearchX + başlık + ipucu + ✕ temizle. Kod taraması temiz. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 15. İki açık P2 yeniden ölçüldü, ikisi de AÇIK ve DEĞİŞMEMİŞ: (a) arge-receteler-02 (c2) 1440px ilk satır <main> ofseti 160px, 390px 172px. (b) arge-receteler-04 (c4) para hücrelerinde hedef bilgisi yok. Diğer kriterler: sw=cw 1440/390, satır 36/36/36, mobil kart 63,5px, para 3/3 tabular-nums + sağa hizalı, font 12/13/24 kademeleri baskın, 21 renk (mobil 20), hover oklab(0.955 .../0.5), Tab'da satırda 2px accent outline + butonlarda 3px accent/50 ring, 390'da <44px etkileşimli hedef yok, boş durum SearchX + başlık + ipucu + ✕ temizle. Kod taraması temiz. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -3119,27 +3124,29 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar 168px dikey alan tüketiliyor.",
-     "measure": "tur 13 yeniden ölçüm: 1440px ilk tablo satırı viewport 208px / <main> ofseti 160px (h1 ofseti 24, thead 124) — tur 5-13 aynı. 390px: ilk kart viewport 220px / <main> ofseti 172px, kart yüksekliği 63.5px. Hedef ≤112px (masaüstü).",
+     "measure": "tur 15 yeniden ölçüm: 1440px ilk tablo satırı viewport 208px / <main> ofseti 160px (h1 ofseti 24, thead 124) — tur 5-15 aynı. 390px: ilk kart viewport 220px / <main> ofseti 172px, kart yüksekliği 63,5px. Hedef ≤112px (masaüstü).",
      "target": "Başlık ile filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1,
-     "reMeasuredRound": 13,
-     "lastMeasuredRound": 13,
+     "reMeasuredRound": 15,
+     "lastMeasuredRound": 15,
      "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — kök neden `PageHeader` (apps/web/src/components/page-header.tsx) ile `DataTable` araç çubuğunun (apps/web/src/components/data-table) iki AYRI yatay şerit olarak dikey olarak istiflenmesi; her ikisi de ortak bileşen, arge modülü sözleşmesi (mevcut ortak dosyayı değiştirme) kapsamında düzeltilemez. Sayfa (page.tsx) tarafında yapılabilecek tüm optimizasyon (Tur 5'te 'N proje' önekinin kaldırılması) uygulanmıştı; kalan boşluk PageHeader/DataTable kompozisyonundan geliyor — bkz. sharedComponentRequests.",
-     "round14": "yeniden ölçüldü — AÇIK"
+     "round14": "yeniden ölçüldü — AÇIK",
+     "round15": "yeniden ölçüldü — AÇIK, değişmedi"
     },
     {
      "id": "arge-receteler-04",
      "criterion": 4,
      "severity": "P2",
      "text": "Kardeş bulgu arge-projeler-09 ile aynı: \"Birim maliyet\" hedef aşımında warning basılıyor, ama ekranda hedef değeri yok — ₺103,41 ve ₺31,92 turuncu, ₺166,17 nötr; kullanıcı kuralı ekrandan çözemiyor.",
-     "measure": "tur 13 (1440×900): 3/3 para hücresinde title/aria/sr-only yok; ₺103,41 ve ₺31,92 warning oklch(0.72 0.17 70), ₺166,17 foreground. main.textContent içinde 'hedef' YOK.",
+     "measure": "tur 15 (1440×900): 3/3 para hücresinde title/aria/sr-only yok; ₺103,41 ve ₺31,92 warning oklch(0.72 0.17 70), ₺166,17 foreground. main.textContent içinde 'hedef' YOK.",
      "target": "Hedef üstü hücreler hedefi ekranda erişilebilir kılsın (title/aria \"Hedef ₺X · %Y üstü\" ya da \"/ hedef ₺X\" son eki) → renkli 2/2 hücrede hedef okunabilir.",
      "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx:34-45",
      "openedRound": 11,
-     "lastMeasuredRound": 13,
-     "reMeasuredRound": 13,
-     "round14": "yeniden ölçüldü — AÇIK"
+     "lastMeasuredRound": 15,
+     "reMeasuredRound": 15,
+     "round14": "yeniden ölçüldü — AÇIK",
+     "round15": "yeniden ölçüldü — AÇIK, değişmedi"
     }
    ],
    "closed": [
@@ -3220,11 +3227,11 @@
   "easeIn": 0,
   "scaleZero": 0,
   "durationOver300ms": 0,
-  "hoverGating": "globals.css `@custom-variant hover` → (hover:hover) and (pointer:fine); rnd modülündeki 15 hover: kullanımının tamamı bu tanımdan geçiyor.",
+  "hoverGating": "globals.css `@custom-variant hover` → (hover:hover) and (pointer:fine); rnd + arge içindeki 24 hover: kullanımının tamamı bu tanımdan geçiyor.",
   "keyboardActivation": "Tur 10 doğrudan ölçüm (CDP forcePseudoState, kanban kartı): :active + :focus-visible → transform \"none\"; yalnız :active → scale(0.97). globals.css:179-182 `:not(:focus-visible)` kuralı yardımcı sınıf `active:scale-[0.98]`ı da yeniyor → klavye aktivasyonunda animasyon YOK.",
-  "notes": "Tur 10: apps/web/src/modules/rnd + app/(app)/arge içinde transition-all / transition: all, ease-in (ease-in-out hariç), scale(0)/scale-0, 300ms üstü sabit süre YOK. En uzunlar: motion layout spring duration 0.35 bounce 0.15 (kesilebilir), DragOverlay dropAnimation 220ms cubic-bezier(0.23,1,0.32,1), card-drawer ilerleme çubuğu 200ms. transform-origin hatası yok."
+  "notes": "Tur 15: apps/web/src/modules/rnd + app/(app)/arge içinde transition-all / transition: all, ease-in (ease-in-out hariç), scale(0)/scale-0, 300ms üstü sabit süre YOK. En uzunlar: motion layout spring duration 0.35 bounce 0.15 (kesilebilir), DragOverlay dropAnimation 220ms cubic-bezier(0.23,1,0.32,1), card-drawer/cost-simulator 200ms. transform-origin/origin-* kullanımı yok. 24 hover: kullanımının tamamı globals.css @custom-variant hover → (hover:hover) and (pointer:fine) tanımından geçiyor."
  },
- "projectIdUsed": "8f3bffbd-8b3a-41ae-9f82-8f43f810cc52 (RD-2026-000001 Fıstık Bazı — listedeki ilk kayıt, v1 · Taslak/editable; DB yeniden seed edildiği için tur 9 id'leri geçersiz)",
+ "projectIdUsed": "3c293a91-d8d6-4817-8c0d-b0df4223b5ee (RD-2026-000001 Fıstık Bazı — listedeki ilk kayıt, v1 · Taslak/editable; DB yeniden seed edildiği için tur 14 idleri geçersiz)",
  "sharedComponentRequests": [
   {
    "id": "shell-numberinput-prefix-01",
