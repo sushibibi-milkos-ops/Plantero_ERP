@@ -158,12 +158,20 @@ export default async function ExportShipmentDetailPage({ params }: { params: Pro
               <h3 className="mb-3 text-[13px] font-semibold">İhracat faturası</h3>
               {invoice ? (
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Link href={`/muhasebe/faturalar/${invoice.id}`} className="inline-flex items-center gap-1.5 font-mono text-[13px] hover:underline">
+                  {/* Tur 13 P1 ihracat-detay-22 ikizi: bu bağlantı ihracat-detay-22 ile aynı kusuru
+                      taşıyordu (390px'te 137x19,5px, renk gövde metniyle aynı, tek işaret hover:underline
+                      — dokunmatikte hiç tetiklenmiyor). Satır 246'daki "Bağlı irsaliye" kalıbıyla aynı
+                      düzeltme: link satırın tamamını kaplıyor (min-h-11 ile ≥44px dokunma hedefi) ve
+                      doküman no kalıcı olarak text-primary + alt çizgi ile işaretli. */}
+                  <Link
+                    href={`/muhasebe/faturalar/${invoice.id}`}
+                    className="-mx-1 flex min-h-11 items-center justify-between gap-2 rounded-md px-1 font-mono text-[13px] hover:bg-accent/40"
+                  >
+                    <span className="flex items-center gap-1.5 text-primary underline decoration-border underline-offset-2">
                       <FileText className="size-3.5 text-muted-foreground" /> {invoice.docNo}
-                    </Link>
+                    </span>
                     <StatusBadge status={invoice.status} kind="invoice" />
-                  </div>
+                  </Link>
                   <div className="grid grid-cols-2 gap-3 text-[13px]">
                     <div>
                       <div className="text-xs text-muted-foreground">Tutar</div>
