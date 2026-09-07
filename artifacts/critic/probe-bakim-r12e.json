@@ -1,0 +1,547 @@
+{
+  "total": 40,
+  "noRing": [
+    {
+      "tag": "A",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "Arıza bildir",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 36
+    },
+    {
+      "tag": "INPUT",
+      "cls": "w-full min-w-0 rounded-md border border-input bg-t",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center f",
+      "text": "Durum",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center f",
+      "text": "Tür",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center f",
+      "text": "Öncelik",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "No",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Başlık",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Makine",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Tür",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Öncelik",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Durum",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    }
+  ],
+  "all": [
+    {
+      "tag": "A",
+      "cls": "rounded-md outline-none focus-visible:ring-2 focus",
+      "text": "Plantero",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": false,
+      "h": 25.4
+    },
+    {
+      "tag": "A",
+      "cls": "relative flex items-center gap-2.5 rounded-md px-2",
+      "text": "Kokpit",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Bildirimler",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Ana Veri",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Depo",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Üretim",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Satış & CRM",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Satın Alma",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Kalite",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Muhasebe",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Finans",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "İhracat",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Bakım",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "A",
+      "cls": "relative flex items-center gap-2.5 rounded-md px-2",
+      "text": "Makineler",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 28
+    },
+    {
+      "tag": "A",
+      "cls": "relative flex items-center gap-2.5 rounded-md px-2",
+      "text": "Planlar",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 28
+    },
+    {
+      "tag": "A",
+      "cls": "relative flex items-center gap-2.5 rounded-md px-2",
+      "text": "İş Emirleri",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 28
+    },
+    {
+      "tag": "A",
+      "cls": "relative flex items-center gap-2.5 rounded-md px-2",
+      "text": "OEE",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Ar-Ge",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "flex h-8 w-full items-center gap-2.5 rounded-md px",
+      "text": "Ayarlar",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "grid size-8 place-items-center rounded-md text-mut",
+      "text": "",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "A",
+      "cls": "transition-colors hover:text-foreground",
+      "text": "Bakım",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 19.5
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "hidden h-8 w-56 items-center gap-2 rounded-md bord",
+      "text": "Ara veya git… ⌘K",
+      "ow": "1px",
+      "os": "auto",
+      "bs": "none",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "A",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": false,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "ml-1 flex size-11 items-center justify-center roun",
+      "text": "SY",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": false,
+      "h": 28
+    },
+    {
+      "tag": "A",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "Arıza bildir",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 36
+    },
+    {
+      "tag": "INPUT",
+      "cls": "w-full min-w-0 rounded-md border border-input bg-t",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center f",
+      "text": "Durum",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center f",
+      "text": "Tür",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center f",
+      "text": "Öncelik",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "inline-flex shrink-0 items-center justify-center g",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 32
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "No",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Başlık",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Makine",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Tür",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Öncelik",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "Durum",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "group/th -mx-1.5 inline-flex h-7 max-w-full items-",
+      "text": "",
+      "ow": "0px",
+      "os": "none",
+      "bs": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rg",
+      "inMain": true,
+      "h": 28
+    },
+    {
+      "tag": "TR",
+      "cls": "group/row h-9 border-b border-border/50 last:borde",
+      "text": "MO-2026-000006\t Mikser mot",
+      "ow": "2px",
+      "os": "solid",
+      "bs": "none",
+      "inMain": true,
+      "h": 36
+    }
+  ]
+}

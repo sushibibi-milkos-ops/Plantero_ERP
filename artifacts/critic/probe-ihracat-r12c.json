@@ -1,0 +1,400 @@
+{
+ "sevkiyatlar": [
+  {
+   "h": "Sevkiyat no",
+   "width": 158,
+   "maxContent": 141,
+   "slack": 17
+  },
+  {
+   "h": "Müşteri",
+   "width": 190,
+   "maxContent": 170,
+   "slack": 20
+  },
+  {
+   "h": "Durum",
+   "width": 140,
+   "maxContent": 84,
+   "slack": 56
+  },
+  {
+   "h": "Ülke",
+   "width": 65,
+   "maxContent": 69,
+   "slack": -4
+  },
+  {
+   "h": "Rejim",
+   "width": 76,
+   "maxContent": 76,
+   "slack": 0
+  },
+  {
+   "h": "Belgeler",
+   "width": 87,
+   "maxContent": 91,
+   "slack": -4
+  },
+  {
+   "h": "Tutar (döviz)",
+   "width": 120,
+   "maxContent": 117,
+   "slack": 3
+  },
+  {
+   "h": "ETD",
+   "width": 96,
+   "maxContent": 92,
+   "slack": 4
+  },
+  {
+   "h": "Oluşturma",
+   "width": 99,
+   "maxContent": 103,
+   "slack": -4
+  },
+  {
+   "h": "Tutar (₺)",
+   "width": 120,
+   "maxContent": 103,
+   "slack": 17
+  }
+ ],
+ "belgeler": [
+  {
+   "h": "Belge",
+   "width": 330,
+   "maxContent": 216,
+   "slack": 114
+  },
+  {
+   "h": "Sevkiyat",
+   "width": 225,
+   "maxContent": 141,
+   "slack": 84
+  },
+  {
+   "h": "Müşteri",
+   "width": 342,
+   "maxContent": 170,
+   "slack": 172
+  },
+  {
+   "h": "Durum",
+   "width": 195,
+   "maxContent": 95,
+   "slack": 100
+  },
+  {
+   "h": "Eylemler",
+   "width": 60,
+   "maxContent": 74,
+   "slack": -14
+  }
+ ],
+ "kurlar": [
+  {
+   "h": "Tarih",
+   "width": 185,
+   "maxContent": 95,
+   "slack": 90
+  },
+  {
+   "h": "Para birimi",
+   "width": 201,
+   "maxContent": 105,
+   "slack": 96
+  },
+  {
+   "h": "Alış",
+   "width": 175,
+   "maxContent": 84,
+   "slack": 91
+  },
+  {
+   "h": "Satış",
+   "width": 175,
+   "maxContent": 114,
+   "slack": 61
+  },
+  {
+   "h": "Günlük değişim",
+   "width": 231,
+   "maxContent": 133,
+   "slack": 98
+  },
+  {
+   "h": "Kaynak",
+   "width": 185,
+   "maxContent": 87,
+   "slack": 98
+  }
+ ],
+ "gtip": [
+  {
+   "h": "SKU",
+   "width": 179,
+   "maxContent": 94,
+   "slack": 85
+  },
+  {
+   "h": "Ürün",
+   "width": 519,
+   "maxContent": 377,
+   "slack": 142
+  },
+  {
+   "h": "Tip",
+   "width": 151,
+   "maxContent": 95,
+   "slack": 56
+  },
+  {
+   "h": "GTİP",
+   "width": 303,
+   "maxContent": 107,
+   "slack": 196
+  }
+ ],
+ "detay:Sipariş satırları": [
+  {
+   "h": "Ürün",
+   "width": 292,
+   "maxContent": 199,
+   "slack": 93
+  },
+  {
+   "h": "SKU",
+   "width": 175,
+   "maxContent": 89,
+   "slack": 86
+  },
+  {
+   "h": "Miktar",
+   "width": 160,
+   "maxContent": 80,
+   "slack": 80
+  },
+  {
+   "h": "Sevk edilen",
+   "width": 160,
+   "maxContent": 110,
+   "slack": 50
+  },
+  {
+   "h": "Birim fiyat",
+   "width": 175,
+   "maxContent": 102,
+   "slack": 73
+  },
+  {
+   "h": "Tutar",
+   "width": 189,
+   "maxContent": 93,
+   "slack": 96
+  }
+ ],
+ "detay:Çeki listesi": [
+  {
+   "h": "Kap no",
+   "width": 98,
+   "maxContent": 84,
+   "slack": 14
+  },
+  {
+   "h": "Ürün",
+   "width": 246,
+   "maxContent": 199,
+   "slack": 47
+  },
+  {
+   "h": "SKU",
+   "width": 147,
+   "maxContent": 89,
+   "slack": 58
+  },
+  {
+   "h": "Lot",
+   "width": 184,
+   "maxContent": 135,
+   "slack": 49
+  },
+  {
+   "h": "Miktar",
+   "width": 135,
+   "maxContent": 80,
+   "slack": 55
+  },
+  {
+   "h": "GTİP",
+   "width": 122,
+   "maxContent": 76,
+   "slack": 46
+  },
+  {
+   "h": "Net kg",
+   "width": 110,
+   "maxContent": 81,
+   "slack": 29
+  },
+  {
+   "h": "Brüt kg",
+   "width": 110,
+   "maxContent": 85,
+   "slack": 25
+  }
+ ],
+ "detay:Belgeler": [
+  {
+   "h": "Belge",
+   "width": 445,
+   "maxContent": 195,
+   "slack": 250
+  },
+  {
+   "h": "Durum",
+   "width": 197,
+   "maxContent": 95,
+   "slack": 102
+  },
+  {
+   "h": "Belge no",
+   "width": 279,
+   "maxContent": 163,
+   "slack": 116
+  },
+  {
+   "h": "Vade",
+   "width": 163,
+   "maxContent": 95,
+   "slack": 68
+  },
+  {
+   "h": "Eylemler",
+   "width": 68,
+   "maxContent": 74,
+   "slack": -6
+  }
+ ],
+ "kapali:Sipariş satırları": [
+  {
+   "h": "Ürün",
+   "width": 298,
+   "maxContent": 204,
+   "slack": 94
+  },
+  {
+   "h": "SKU",
+   "width": 174,
+   "maxContent": 89,
+   "slack": 85
+  },
+  {
+   "h": "Miktar",
+   "width": 159,
+   "maxContent": 80,
+   "slack": 79
+  },
+  {
+   "h": "Sevk edilen",
+   "width": 159,
+   "maxContent": 110,
+   "slack": 49
+  },
+  {
+   "h": "Birim fiyat",
+   "width": 174,
+   "maxContent": 102,
+   "slack": 72
+  },
+  {
+   "h": "Tutar",
+   "width": 188,
+   "maxContent": 75,
+   "slack": 113
+  }
+ ],
+ "kapali:Çeki listesi": [
+  {
+   "h": "Kap no",
+   "width": 98,
+   "maxContent": 84,
+   "slack": 14
+  },
+  {
+   "h": "Ürün",
+   "width": 250,
+   "maxContent": 204,
+   "slack": 46
+  },
+  {
+   "h": "SKU",
+   "width": 146,
+   "maxContent": 89,
+   "slack": 57
+  },
+  {
+   "h": "Lot",
+   "width": 183,
+   "maxContent": 135,
+   "slack": 48
+  },
+  {
+   "h": "Miktar",
+   "width": 134,
+   "maxContent": 80,
+   "slack": 54
+  },
+  {
+   "h": "GTİP",
+   "width": 122,
+   "maxContent": 71,
+   "slack": 51
+  },
+  {
+   "h": "Net kg",
+   "width": 110,
+   "maxContent": 81,
+   "slack": 29
+  },
+  {
+   "h": "Brüt kg",
+   "width": 110,
+   "maxContent": 85,
+   "slack": 25
+  }
+ ],
+ "kapali:Belgeler": [
+  {
+   "h": "Belge",
+   "width": 447,
+   "maxContent": 216,
+   "slack": 231
+  },
+  {
+   "h": "Durum",
+   "width": 197,
+   "maxContent": 95,
+   "slack": 102
+  },
+  {
+   "h": "Belge no",
+   "width": 275,
+   "maxContent": 160,
+   "slack": 115
+  },
+  {
+   "h": "Vade",
+   "width": 164,
+   "maxContent": 95,
+   "slack": 69
+  },
+  {
+   "h": "Eylemler",
+   "width": 69,
+   "maxContent": 74,
+   "slack": -5
+  }
+ ]
+}

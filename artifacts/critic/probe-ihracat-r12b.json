@@ -1,0 +1,236 @@
+{
+ "1024x768": {
+  "sevkiyatlar": {
+   "page": {
+    "sw": 1024,
+    "cw": 1024
+   },
+   "table": {
+    "tableW": 1115,
+    "wrapClientW": 736,
+    "wrapScrollW": 1115,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [
+    "Tutar (döviz)",
+    "ETD",
+    "Oluşturma",
+    "Tutar (₺)"
+   ],
+   "viewportW": 1024
+  },
+  "belgeler": {
+   "page": {
+    "sw": 1024,
+    "cw": 1024
+   },
+   "table": {
+    "tableW": 768,
+    "wrapClientW": 736,
+    "wrapScrollW": 768,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [
+    "Eylemler"
+   ],
+   "viewportW": 1024
+  },
+  "kurlar": {
+   "page": {
+    "sw": 1024,
+    "cw": 1024
+   },
+   "table": {
+    "tableW": 1120,
+    "wrapClientW": 736,
+    "wrapScrollW": 1120,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [
+    "Günlük değişim",
+    "Kaynak"
+   ],
+   "viewportW": 1024
+  },
+  "gtip": {
+   "page": {
+    "sw": 1024,
+    "cw": 1024
+   },
+   "table": {
+    "tableW": 837,
+    "wrapClientW": 736,
+    "wrapScrollW": 837,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [
+    "GTİP"
+   ],
+   "viewportW": 1024
+  },
+  "detay": {
+   "page": {
+    "sw": 1024,
+    "cw": 1024
+   },
+   "table": {
+    "tableW": 791,
+    "wrapClientW": 736,
+    "wrapScrollW": 791,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [
+    "Tutar"
+   ],
+   "viewportW": 1024
+  }
+ },
+ "1280x800": {
+  "sevkiyatlar": {
+   "page": {
+    "sw": 1280,
+    "cw": 1280
+   },
+   "table": {
+    "tableW": 1115,
+    "wrapClientW": 992,
+    "wrapScrollW": 1115,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [
+    "Tutar (₺)"
+   ],
+   "viewportW": 1280
+  },
+  "belgeler": {
+   "page": {
+    "sw": 1280,
+    "cw": 1280
+   },
+   "table": {
+    "tableW": 992,
+    "wrapClientW": 992,
+    "wrapScrollW": 992,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1280
+  },
+  "kurlar": {
+   "page": {
+    "sw": 1280,
+    "cw": 1280
+   },
+   "table": {
+    "tableW": 1120,
+    "wrapClientW": 992,
+    "wrapScrollW": 1120,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [
+    "Kaynak"
+   ],
+   "viewportW": 1280
+  },
+  "gtip": {
+   "page": {
+    "sw": 1280,
+    "cw": 1280
+   },
+   "table": {
+    "tableW": 992,
+    "wrapClientW": 992,
+    "wrapScrollW": 992,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1280
+  },
+  "detay": {
+   "page": {
+    "sw": 1280,
+    "cw": 1280
+   },
+   "table": {
+    "tableW": 992,
+    "wrapClientW": 992,
+    "wrapScrollW": 992,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1280
+  }
+ },
+ "1440x900": {
+  "sevkiyatlar": {
+   "page": {
+    "sw": 1440,
+    "cw": 1440
+   },
+   "table": {
+    "tableW": 1152,
+    "wrapClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1440
+  },
+  "belgeler": {
+   "page": {
+    "sw": 1440,
+    "cw": 1440
+   },
+   "table": {
+    "tableW": 1152,
+    "wrapClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1440
+  },
+  "kurlar": {
+   "page": {
+    "sw": 1440,
+    "cw": 1440
+   },
+   "table": {
+    "tableW": 1152,
+    "wrapClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1440
+  },
+  "gtip": {
+   "page": {
+    "sw": 1440,
+    "cw": 1440
+   },
+   "table": {
+    "tableW": 1152,
+    "wrapClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1440
+  },
+  "detay": {
+   "page": {
+    "sw": 1440,
+    "cw": 1440
+   },
+   "table": {
+    "tableW": 1152,
+    "wrapClientW": 1152,
+    "wrapScrollW": 1152,
+    "wrapClass": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto"
+   },
+   "clippedCols": [],
+   "viewportW": 1440
+  }
+ }
+}

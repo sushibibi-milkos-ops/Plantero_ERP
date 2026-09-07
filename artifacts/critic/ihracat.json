@@ -1,6 +1,6 @@
 {
  "module": "ihracat",
- "round": 11,
+ "round": 12,
  "note": "Tur 11. Tur 10 kartından (commit c444062) bu yana ihracat modülünde VE ortak bileşenlerde tek satır kaynak değişikliği yok — git diff c444062..HEAD -- apps/web/src/modules/export, apps/web/src/app/(app)/ihracat, apps/web/src/components, apps/web/src/app/globals.css, packages/db/src/seed/export.ts = boş (aradaki değişiklikler kokpit/bakım/ar-ge/core/db-checks dosyalarında). 6 rota × (1440x900 + 390x844) yeniden çekildi, detay sayfasının 4 sekmesi × 2 viewport + kapalı/taslak sevkiyat özet+belgeler + liste 1024x768 + kurlar koyu tema alındı; hepsi Read ile incelendi. Ölçüm: measure-ihracat-r11/ (12 dosya), probe-ihracat-r11.json (sütun genişliği/dolu/distinct + hover), r11b (gerçek klavye Tab, tabular-nums yaprak, boş arama, mobil dokunma hedefleri — DETAY ROTASI DAHİL, Tur 10 bunu ölçmemişti), r11c/r11d/r11e (odak halkası), r11f (Bağlı irsaliye bağlantısı 390px dokunma hedefi). Tur 10'un 4 açık P2 bulgusu yeniden ölçüldü, HEPSİ AÇIK: export_documents due_date 0/30 + responsible_id 0/30 (detay-20, belgeler-04); export_packages net/gross = 0.0000 (detay-21); exchange_rates kaynak sütunu ekranda 25/25 \"TCMB\" (kurlar-13). Kök neden packages/db/src/seed/export.ts, dokunulmadı. YENİ P1: ihracat-detay-22 — 390px'te \"Bağlı irsaliye\" kartındaki DN bağlantısı 109x20 px (yükseklik 20 < 44) ve dokunmatik cihazda hiçbir bağlantı işareti taşımıyor (renk = gövde metni, alt çizgi yalnız hover ile, hover globals.css:10 ile (hover:hover) altında kapalı). Tur 10 detay rotasını 390px dokunma hedefi için hiç ölçmemişti; bu regresyon değil, yeni ölçüm. ODAK HALKASI YANLIŞ ALARMI KAYDA GEÇİYOR: Tab sonrası bekleme olmadan okunan getComputedStyle, :focus-visible eşleşse bile --tw-ring-shadow'u saydam gösteriyor (stil yeniden hesabı yarışıyor). 250ms bekleyip hem stil hem kırpılmış görüntü alındığında 6/6 elemanda halka görünür: buton/kart tetikleyicilerinde border-ring = oklch(0.55 0.16 152) + 3px ring, inputta yeşil kenarlık + halka (artifacts/critic/ihracat-r11-focus-*.png). Kriter 8 düşmedi. Kod taraması TEMİZ: modül dosyalarında transition-all / transition: all / ease-in / scale(0) / ≥300ms süre / origin-* yok; tek animasyon fetch-rates-button.tsx animate-spin. 5 hover: kullanımının 5'i de globals.css:10 @custom-variant hover ile (hover:hover) and (pointer:fine) altında. Koyu tema (kurlar) doğrulandı: mor/mavi çizgi grafiği, kırmızı/yeşil delta ve hairline ayraçlar okunur. 1024x768'de liste tablosu kendi overflow-x kapsayıcısında kayıyor, sayfa taşması yok.",
  "measurements": {
   "tool": "pnpm measure + scripts/probe-ihracat-r11{,b,c,d,e,f}.ts",
@@ -25,7 +25,7 @@
  },
  "routes": {
   "/ihracat/sevkiyatlar": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -43,7 +43,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 10→11: delta YOK. Gerekçe: kaynak değişmedi (git diff c444062..HEAD boş) ve ölçümler birebir aynı: satır 36px/13px, tablo 1152 = kapsayıcı 1152, 10 sütunun 8'i ≥2 farklı değer, para sütunları sağ hizalı ve mono, hover oklab(0.955 …/0.5) yalnız tıklanabilir satırlarda, 390'da 3 kart × 64px ve 0 dokunma hedefi ihlali, KPI şeridi 4 blok dikey hairline ayraçla. 60/57 → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 11→12: delta YOK (60). Yeniden ölçüldü — probe-ihracat-r12.json: tablo 1152 = kapsayıcı 1152, 3 satır × 36px/13px, 10 sütunun 8'i ≥2 farklı değer (Müşteri ve Oluşturma tek değerli, ikisi de tohum verisi kaynaklı: tek ihracat müşterisi, aynı gün oluşturma), para sütunları sağ hizalı + mono + tabular-nums, satır hover oklab(0.955 …/0.5) yalnız tıklanabilir satırlarda (probe-r12d.rowHover.changed=true). measure-ihracat-r12/sevkiyatlar-{1440,390}.json: scrollWidth=clientWidth her iki genişlikte, h1 24px/600 (mobilde 20px/600), 390'da 3 kart × 63,5px ve gerçek dokunma hedefi ihlali 0 (tek kayıt breadcrumb-page span'i, etkileşimli değil). Boş arama durumu ikon + \"Eşleşen kayıt yok\" + öneri (ihracat-r12-bos-sevkiyatlar.png). Gerçek Tab ile odak halkası görsel olarak doğrulandı (artifacts/critic/r12-focus/sevkiyatlar-{1..6}.png — 3px yeşil halka). 60/57 → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -90,26 +90,26 @@
    ]
   },
   "/ihracat/sevkiyatlar/[id]": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "probeId": "e7c470c7-ef19-4c11-ace0-5a77377b84b7 (EXP-2026-000002, gümrükte) + 150d33db-63e4-4ae8-8b9b-92db2ca818a1 (EXP-2026-000001, kapalı) + 0eb2515b-bf8e-4af4-b081-5f82f4a0397e (taslak)",
    "scores": [
     5,
     5,
-    4,
     5,
     5,
     5,
     5,
     5,
-    4,
+    5,
+    5,
     5,
     5,
     5
    ],
-   "total": 58,
-   "scoreNotes": "Tur 10→11: kriter 9 (mobil düzen) 5→4. Gerekçe: Tur 10 detay rotasını 390px dokunma hedefi için HİÇ ölçmemişti (probe-ihracat-r10b yalnız 4 liste rotasını taradı). Tur 11'de ölçüldü: \"Bağlı irsaliye\" kartındaki tek çıkış bağlantısı 109×20 px (yükseklik 20 < 44) ve dokunmatikte bağlantı işareti taşımıyor → ihracat-detay-22 (P1). Kriter 3 KASITLI olarak 4'te kalıyor: Belgeler sekmesinde Vade 0/8 + Belge no 1/8 (436px/1152 = %37,8) ve Çeki listesinde Net kg/Brüt kg 0/1 (220px = %19,1). Diğer 10 kriter 5: belge zinciri düğümleri kendi para biriminde, \"Devam belgesi yok\" kesikli yer tutucusu, taslak/kapalı durumda eylem şeridi ve alan etiketleri değişiyor, \"Henüz bağlı fatura yok\" boş durumu ikon+başlık+açıklama ile, kur ₺37,2000 × €16.800 = ₺624.960,00 /ihracat/kurlar ile birebir, 1440 ve 390'da sayfa taşması yok. 58/57 ama açık P1 var → KAZANAN: Linear.",
+   "total": 60,
+   "scoreNotes": "Tur 11→12: kriter 3 (yoğunluk) 4→5 ve kriter 9 (mobil düzen) 4→5; toplam 58→60. Kriter 3 gerekçesi: Tur 11'de 4'te tutulmasının İKİ ölçülen nedeni de kapandı — (a) Belgeler sekmesi \"Vade\" sütunu 0/8 dolu → 7/8 dolu ve 8 FARKLI tarih (probe-ihracat-r12.json detay:Belgeler → Vade width=163 rows=8 filled=7 distinct=8; tek boş satır \"Gerekmiyor\" işaretli ETGB), (b) Çeki listesi \"Net kg\"/\"Brüt kg\" 0/1 → 1/1 dolu (41,2 / 43,26) ve \"Proforma & gümrük\" kartındaki \"Net / brüt ağırlık\" artık \"—/—\" değil \"41,2 kg / 43,26 kg\". Kalan tek seyrek sütun \"Belge no\" (1/8) KUSUR SAYILMADI: değeri süreç ilerledikçe doluyor — kapanmış sevkiyatta (EXP-2026-000001) PF/INV/ETGB numaralarıyla 4/11 dolu, gerekli 5 satırın 3'ünde numara var; mobil kartta boş alan hiç basılmıyor. Kriter 9 gerekçesi: ihracat-detay-22 (P1) kapandı — 390×844'te gerçek dokunma hedefi ihlali 0 (measure-ihracat-r12/detay-390.json; tek kayıt breadcrumb-page span'i, etkileşimli değil), sayfa scrollWidth=clientWidth=390, \"Bağlı irsaliye\" satırı artık tam genişlik + text-primary + kalıcı alt çizgi. Anatomi regresyonsuz: probe-ihracat-r8c-fix.ts ile deadRightPx=0, tablo 1152=panel 1152, tüm sütun slack'leri ≤140 (<150 kabul eşiği). Kur bilgisi paneli ₺37,2000 / 07.09.2026 → exchange_rates(EUR, 2026-09-07, buying=37,200000) satırıyla birebir (ihracat-detay-17 kapalı kalıyor); ₺624.960,00 = €16.800 × 37,2. Taslak (EXP-2026-000003) ve kapalı (EXP-2026-000001) durumlarında eylem şeridi ve alan etiketleri değişiyor. 60/57 → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -420,7 +420,7 @@
    ]
   },
   "/ihracat/sevkiyatlar/yeni": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -438,7 +438,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 10→11: delta YOK. Kaynak değişmedi; yeniden ölçüldü: 1440 ve 390'da taşma yok, 13/12 farklı renk, 3 font kademesi, tek kolon form (390), gerçek Tab ile 6/6 alanda yeşil kenarlık + 3px halka, 390'da görünür 44px altı etkileşimli hedef yok (3 adet 1×1 SELECT shadcn'in gizli yerli elemanı). 60/57 → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 11→12: delta YOK (60). Yeniden ölçüldü — measure-ihracat-r12/yeni-{1440,390}.json: 1440 ve 390'da taşma yok, 13/12 farklı renk, 3 font kademesi (13px gövde, 10-11px etiket, 20px h1 mobilde / 24px masaüstü), 390'da tek kolon, görünür 44px altı etkileşimli hedef yok (3 adet 1×1 SELECT shadcn'in gizli yerli elemanı, breadcrumb-page span'i etkileşimli değil). Gerçek Tab ile odak halkası görsel doğrulandı: artifacts/critic/r12-focus/yeni-{1..6}.png — combobox, select tetikleyicisi ve düz metin alanlarının hepsinde 3px yeşil halka. 60/57 → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -550,7 +550,7 @@
    ]
   },
   "/ihracat/belgeler": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -568,7 +568,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 10→11: delta YOK. Yeniden ölçüldü: 30 satır × 36px, tablo 1152 = kapsayıcı 1152, 5 sütunun 4'ü veri (Eylemler hover menüsü), Durum 5 farklı değer, 390'da 30 kart × 60px ve 0 dokunma ihlali, boş arama \"Eşleşen kayıt yok\" + ikon + öneri. Açık P2 (belgeler-04) kriter 3'e bağlı ama Tur 8-10 boyunca 5 verildi; gerekçesiz düşüş protokol ihlali olacağı için 5 korunuyor. 60/57 → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 11→12: delta YOK (60). Yeniden ölçüldü — probe-ihracat-r12.json: 30 satır × 36px, tablo 1152 = kapsayıcı 1152, 5 sütun (Belge 12 farklı değer, Sevkiyat 3, Durum 5), 390'da 30 kart × 60px ve gerçek dokunma ihlali 0. KPI şeridi 4 blok: Toplam 30 / Bekleyen 13 / Vadesi geçmiş 6 / Sorumlusuz 11 — Tur 11'de kapatılan ihracat-belgeler-04 sayesinde \"Vadesi geçmiş\" artık 0'a çakılı değil (6). \"Müşteri\" sütunu 30/30 aynı değeri basıyor ama bu YAPISAL değil veri kaynaklı (tohumda tek ihracat müşterisi var); ihracat-kurlar-13'ten farkı: eşleme sütunu ASLA farklılaşamıyor, bu sütun üretimde farklılaşır — bu yüzden bulgu açılmadı. 60/57 → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -635,7 +635,7 @@
    ]
   },
   "/ihracat/kurlar": {
-   "round": 11,
+   "round": 12,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -653,7 +653,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 10→11: delta YOK. Yeniden ölçüldü: 25 satır × 36px, 6 sütun, Alış/Satış 23 farklı değer, delta yeşil/kırmızı yalnız işaret için, KPI iki blok dikey hairline ayraçla ve alt satırda alış kuru, grafik ince çizgi + eksen 4 kademe, 390'da 0 dokunma ihlali, koyu temada grafik/delta/hairline okunur (ihracat-r11-kurlar-dark.png). 60/56 → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 11→12: delta YOK (60). Yeniden ölçüldü — probe-ihracat-r12.json: 25 satır × 36px, tablo 1152 = kapsayıcı 1152, Alış/Satış 23 farklı değer, Günlük değişim 18, Tarih 13; delta yeşil/kırmızı yalnız yön için; KPI iki blok dikey hairline ayraçla (USD satış ₺34,2237 / EUR satış ₺37,4000, alt satırda alış); ince çizgi grafik 2 seri + 5 kademeli eksen; 180 kayıt sayfalama; 390'da taşma yok, dokunma ihlali 0. ihracat-kurlar-13 (P2) AÇIK KALDI — ölçüm birebir aynı (Kaynak width=185, distinct=1, 25/25 \"TCMB\"); rates-table.tsx'e Tur 11'de eklenen yorum defaultHidden denemesinin neden geri alındığını belgeliyor, ama bulgu kapanmadı. P2 kazanmayı engellemez. 60/56 → KAZANAN: Plantero.",
    "open": [
     {
      "id": "ihracat-kurlar-13",
@@ -668,7 +668,8 @@
       "round": 10,
       "verdict": "AÇIK KALDI",
       "measure": "1440x900, probe-ihracat-r10.json kurlar → Kaynak width=185 rows=25 filled=25 distinct=1 (\"TCMB\"), tablonun %16'sı. psql: exchange_rates.source → TCMB-SEED 172, TCMB 8 (ikisi de UI'da \"TCMB\"). Mobilde de her kartın alt satırında 25 kez \"TCMB\" tekrar ediyor (390x844 ekran görüntüsü).",
-      "round11": "DENENDİ, GERİ ALINDI — kasıtlı olarak AÇIK bırakıldı. `meta.defaultHidden:true` ile sütun varsayılan kapatıldığında (rates-table.tsx), DataTable'ın <table>'ı `min-w-full` ile kapsayıcıya zorlandığından kalan 5 sütunun TAMAMI slack>145px'e çıktı (ölçüldü: Tarih 149, Para birimi 150, Alış 146, Satış 146, Günlük değişim 159 — hepsi Tur 8'de kapatılmış ihracat-kurlar-12'nin (kriter 5, hedef <=120px) eşiğinin üstünde), yani bir P2'yi kapatmaya çalışırken kapanmış bir P1/P2'yi (kurlar-12) yeniden açıyordu. `[&_table]:!w-auto` ile tabloyu kapsayıcıdan daraltmak da ihracat-detay-19'un (Tur 8) AYNI sınıf kusurunu (tablonun sağında ölü alan) üretiyordu — bu ikisi arasında salınan bir çözüm, net bir kazanım değil. Kök neden çözümü (gerçek bir 6. bilgi sütunu ya da tablo dışı bir 'Kaynak: TCMB' etiketi) bu turun bütçesini aşıyor; değişiklik geri alındı (rates-table.tsx kod yorumunda gerekçe kayıtlı), ölçüm hâlâ Tur 10 ile birebir: Kaynak width=185 rows=25 filled=25 distinct=1."
+      "round11": "DENENDİ, GERİ ALINDI — kasıtlı olarak AÇIK bırakıldı. `meta.defaultHidden:true` ile sütun varsayılan kapatıldığında (rates-table.tsx), DataTable'ın <table>'ı `min-w-full` ile kapsayıcıya zorlandığından kalan 5 sütunun TAMAMI slack>145px'e çıktı (ölçüldü: Tarih 149, Para birimi 150, Alış 146, Satış 146, Günlük değişim 159 — hepsi Tur 8'de kapatılmış ihracat-kurlar-12'nin (kriter 5, hedef <=120px) eşiğinin üstünde), yani bir P2'yi kapatmaya çalışırken kapanmış bir P1/P2'yi (kurlar-12) yeniden açıyordu. `[&_table]:!w-auto` ile tabloyu kapsayıcıdan daraltmak da ihracat-detay-19'un (Tur 8) AYNI sınıf kusurunu (tablonun sağında ölü alan) üretiyordu — bu ikisi arasında salınan bir çözüm, net bir kazanım değil. Kök neden çözümü (gerçek bir 6. bilgi sütunu ya da tablo dışı bir 'Kaynak: TCMB' etiketi) bu turun bütçesini aşıyor; değişiklik geri alındı (rates-table.tsx kod yorumunda gerekçe kayıtlı), ölçüm hâlâ Tur 10 ile birebir: Kaynak width=185 rows=25 filled=25 distinct=1.",
+      "round12": "AÇIK. probe-ihracat-r12.json kurlar.tables[0].cols → Kaynak width=185, rows=25, filled=25, distinct=1, sample=[\"TCMB\"]. psql: select source,count(*) from exchange_rates group by 1 → TCMB-SEED / TCMB (ikisi de UI'da \"TCMB\"). Mobilde de 25/25 kartın meta satırında \"TCMB\" tekrar ediyor (artifacts/screens/ihracat-kurlar/mobile.png). Kaynak dosya rates-table.tsx Tur 11'de yalnızca AÇIKLAMA yorumu aldı, davranış değişmedi."
      }
     }
    ],
@@ -839,7 +840,7 @@
    ]
   },
   "/ihracat/gtip": {
-   "round": 11,
+   "round": 12,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -857,7 +858,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 10→11: delta YOK. Yeniden ölçüldü: 39 satır × 36,5–37px, 4 sütunun 4'ü ≥2 farklı değer (Tip 2, GTİP 2), tablo 1152 = kapsayıcı, 15 farklı renk, GTİP kod kartları 4'lü şeritte birim rozetiyle, 390'da 39 kart × 60px ve 0 dokunma ihlali. 60/57 → KAZANAN: Plantero.",
+   "scoreNotes": "Tur 11→12: delta YOK (60). Yeniden ölçüldü — probe-ihracat-r12.json: 39 satır × 36,5–37px, tablo 1152 = kapsayıcı 1152, 4 sütunun 4'ü ≥2 farklı değer (SKU 39, Ürün 39, Tip 2, GTİP 2), 15/13 farklı renk, GTİP kod kartları 4'lü şeritte birim rozetiyle (KG/LT), 390'da 39 kart × 60px ve dokunma ihlali 0, boş arama \"Eşleşen kayıt yok\" + ikon + öneri. 60/57 → KAZANAN: Plantero.",
    "open": [],
    "closed": [
     {
@@ -1021,5 +1022,6 @@
    "not": "Ortak bileşen kaynaklı — DESIGN-SCORECARD kural 5 gereği shell'e yazılır, modüllerde tekrar açılmaz."
   }
  ],
- "shipmentIdUsed": "1a86b964-2697-43e7-84a5-b2650344fe39 (EXP-2026-000002, gümrükte) · 9460f226-79a1-49c8-a721-00616a598678 (EXP-2026-000001, kapalı) · 91139318-419d-4ec2-ba1a-8b08b531b0a3 (EXP-2026-000003, taslak) — veritabanı yeniden tohumlandığı için Tur 9 kimlikleri geçersiz"
+ "shipmentIdUsed": "1a86b964-2697-43e7-84a5-b2650344fe39 (EXP-2026-000002, gümrükte) · 9460f226-79a1-49c8-a721-00616a598678 (EXP-2026-000001, kapalı) · 91139318-419d-4ec2-ba1a-8b08b531b0a3 (EXP-2026-000003, taslak) — veritabanı yeniden tohumlandığı için Tur 9 kimlikleri geçersiz",
+ "measuredAt": "2026-09-07T08:58:08.629Z"
 }

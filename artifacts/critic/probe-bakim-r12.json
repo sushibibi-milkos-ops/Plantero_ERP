@@ -1,0 +1,176 @@
+{
+  "timelinePass1": [
+    {
+      "docNo": "MO-2026-000001",
+      "labels": [
+        "Bildirildi",
+        "Yapılıyor",
+        "Tamamlandı"
+      ],
+      "ranks": [
+        0,
+        2,
+        3
+      ],
+      "monotonic": true
+    },
+    {
+      "docNo": "MO-2026-000002",
+      "labels": [
+        "Bildirildi",
+        "Yapılıyor",
+        "Tamamlandı"
+      ],
+      "ranks": [
+        0,
+        2,
+        3
+      ],
+      "monotonic": true
+    },
+    {
+      "docNo": "MO-2026-000003",
+      "labels": [
+        "Planlandı",
+        "Yapılıyor",
+        "Tamamlandı"
+      ],
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "monotonic": true
+    },
+    {
+      "docNo": "MO-2026-000004",
+      "labels": [
+        "Planlandı",
+        "Yapılıyor",
+        "Tamamlandı"
+      ],
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "monotonic": true
+    },
+    {
+      "docNo": "MO-2026-000005",
+      "labels": [
+        "Planlandı",
+        "Yapılıyor",
+        "Tamamlandı"
+      ],
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "monotonic": true
+    },
+    {
+      "docNo": "MO-2026-000006",
+      "labels": [
+        "Bildirildi"
+      ],
+      "ranks": [
+        0
+      ],
+      "monotonic": true
+    }
+  ],
+  "timelineDeterministic": true,
+  "timelineAllMonotonic": true,
+  "oeeKpi390": {
+    "scrollers": [
+      {
+        "sw": 792,
+        "cw": 358,
+        "kids": 5,
+        "fullyVisible": 2,
+        "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory md:snap-none ",
+        "text": "OEE (ortalama)/—/önceki dönem/Kullanılabilirlik/Performans/Kalite/Toplam duruş"
+      },
+      {
+        "sw": 588,
+        "cw": 324,
+        "kids": 1,
+        "fullyVisible": 0,
+        "cls": "scrollbar-thin scroll-fade-x overflow-x-auto",
+        "text": "HAT\tOEE\tKULLANILABİLİRLİK\tPERFORMANS\tKALİTE\tDURUŞ/HAT3 Saşe / Stick Toz Dolum\t%0,14\t%100\t%"
+      }
+    ],
+    "kpiGrids": []
+  },
+  "makinelerKpi390": {
+    "scrollers": [
+      {
+        "sw": 632,
+        "cw": 358,
+        "kids": 4,
+        "fullyVisible": 2,
+        "cls": "relative mb-6 scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory md:snap-none ",
+        "text": "Toplam makine/Çalışıyor/Arızalı/Vadesi geçen bakım"
+      },
+      {
+        "sw": 272,
+        "cw": 254,
+        "kids": 0,
+        "fullyVisible": 0,
+        "cls": "",
+        "text": "Balans tankı (paslanmaz çelik tank, yan sıyırıcılı)"
+      },
+      {
+        "sw": 291,
+        "cw": 254,
+        "kids": 0,
+        "fullyVisible": 0,
+        "cls": "",
+        "text": "Folyo kapatma / emniyet bandı (manuel indüksiyon)"
+      },
+      {
+        "sw": 369,
+        "cw": 254,
+        "kids": 0,
+        "fullyVisible": 0,
+        "cls": "",
+        "text": "Emniyet bandı kapatma (paketleme, Beta-Pak dolum ve kapatma)"
+      }
+    ],
+    "kpiGrids": []
+  },
+  "checklist": [
+    {
+      "w": 16,
+      "h": 16,
+      "disabled": true,
+      "pe": "auto"
+    },
+    {
+      "w": 16,
+      "h": 16,
+      "disabled": true,
+      "pe": "auto"
+    }
+  ],
+  "inlineLinks": [
+    {
+      "t": "Haftalık stick nozul temizliği",
+      "h": 35.5,
+      "display": "inline"
+    }
+  ],
+  "hiddenSelects": [
+    {
+      "w": 1,
+      "h": 1,
+      "opacity": "1",
+      "position": "absolute",
+      "ariaHidden": "true",
+      "tabIndex": -1
+    }
+  ],
+  "formControls": []
+}
