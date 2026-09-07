@@ -203,12 +203,16 @@ export async function getCardDetail(cardId: string): Promise<CardDetail | null> 
 export type RecipeSummaryRow = {
   id: string; name: string; projectId: string; projectName: string; currentVersionId: string | null;
   versionCount: number; latestVersion: number | null; latestStatus: string | null; latestUnitCost: string | null;
+  // targetUnitCost: kök neden düzeltmesi (Tur 9 P2 arge-receteler-03) — /arge/projeler tablosu
+  // "birim maliyet hedef üstünde" olgusunu warning rengiyle basarken bu tablo (aynı olgu için) nötr
+  // foreground kullanıyordu; proje hedefi eklendi ki iki kardeş ekran AYNI kuralla renklendirsin.
+  targetUnitCost: string | null;
   releasedBomCode: string | null;
 };
 
 export async function listRecipesForProject(projectId: string): Promise<RecipeSummaryRow[]> {
   const rows = await db
-    .select({ r: trialRecipes, projectName: rndProjects.name, projectId2: rndProjects.id })
+    .select({ r: trialRecipes, projectName: rndProjects.name, projectId2: rndProjects.id, targetUnitCost: rndProjects.targetUnitCost })
     .from(trialRecipes)
     .innerJoin(rndProjects, eq(rndProjects.id, trialRecipes.projectId))
     .where(eq(trialRecipes.projectId, projectId))
@@ -218,14 +222,14 @@ export async function listRecipesForProject(projectId: string): Promise<RecipeSu
 
 export async function listAllRecipes(): Promise<RecipeSummaryRow[]> {
   const rows = await db
-    .select({ r: trialRecipes, projectName: rndProjects.name, projectId2: rndProjects.id })
+    .select({ r: trialRecipes, projectName: rndProjects.name, projectId2: rndProjects.id, targetUnitCost: rndProjects.targetUnitCost })
     .from(trialRecipes)
     .innerJoin(rndProjects, eq(rndProjects.id, trialRecipes.projectId))
     .orderBy(desc(trialRecipes.updatedAt));
   return assembleRecipeSummaries(rows);
 }
 
-async function assembleRecipeSummaries(recipes: Array<{ r: typeof trialRecipes.$inferSelect; projectName: string; projectId2: string }>): Promise<RecipeSummaryRow[]> {
+async function assembleRecipeSummaries(recipes: Array<{ r: typeof trialRecipes.$inferSelect; projectName: string; projectId2: string; targetUnitCost: string | null }>): Promise<RecipeSummaryRow[]> {
   if (recipes.length === 0) return [];
 
   const recipeIds = recipes.map((r) => r.r.id);
@@ -248,6 +252,7 @@ async function assembleRecipeSummaries(recipes: Array<{ r: typeof trialRecipes.$
     return {
       id: r.r.id, name: r.r.name, projectId: r.projectId2, projectName: r.projectName, currentVersionId: r.r.currentVersionId,
       versionCount: vs.length, latestVersion: current?.version ?? null, latestStatus: current?.status ?? null, latestUnitCost: current?.unitCost ?? null,
+      targetUnitCost: r.targetUnitCost,
       releasedBomCode: released?.releasedBomId ? (bomCodeById.get(released.releasedBomId) ?? null) : null,
     };
   });

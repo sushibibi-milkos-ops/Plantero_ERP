@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Camera, CheckCircle2, Play, XCircle, MoreHorizontal, SearchX } from 'lucide-react';
+import { Camera, CheckCircle2, Play, XCircle, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { StatusBadge } from '@/components/status-badge';
@@ -85,7 +85,7 @@ function Card({ order, onOpen, onStart, onCancel }: { order: MaintenanceOrderRow
   );
 }
 
-export function OrdersBoard({ orders }: { orders: MaintenanceOrderRow[] }) {
+export function OrdersBoard({ orders, isFiltering = false }: { orders: MaintenanceOrderRow[]; isFiltering?: boolean }) {
   const router = useRouter();
   const [cancelTarget, setCancelTarget] = useState<MaintenanceOrderRow | null>(null);
 
@@ -103,6 +103,23 @@ export function OrdersBoard({ orders }: { orders: MaintenanceOrderRow[] }) {
     } else {
       toast.error(res.error);
     }
+  }
+
+  // Kök neden (Tur 9 P1 bakim-isemirleri-11): arama/filtre aktifken 0 sonuçta eskiden 5 boş sütun
+  // ("Bu durumda iş emri yok") birden basılıyordu — aktif filtreye dair hiçbir iz yoktu ve liste
+  // görünümündeki (OrdersTable) "Eşleşen kayıt yok" boş durumuyla tutarsızdı. Filtre aktifken ve
+  // hiçbir sütunda kart kalmadığında sütun ızgarası yerine liste görünümüyle (OrdersTable →
+  // DataTable) BİREBİR AYNI EmptyState basılır — başlık/açıklama VE ikon dahil. İkon kasıtlı
+  // olarak varsayılan (Inbox) bırakılır: DataTable'ın kendi boş-durum ikon seçimi yalnızca
+  // KENDİ iç arama/filtre state'ine bakar (data-table.tsx:180 `filtered`), OrdersTable'ın dıştan
+  // ilettiği `externallyFiltered` bayrağını ikon için görmez (yalnızca başlık/açıklama metnini
+  // etkiler) — bu nedenle liste görünümü de bu durumda SearchX değil Inbox basıyor (hem masaüstü
+  // hem mobil, ölçüldü: artifacts/critic/bakim-r9-fix-liste-1440.png, …/bakim-r9-fix-mobil-390.png).
+  // DataTable dondurulmuş ortak bileşen olduğundan burada SearchX zorlanmaz — kriter 11 (tutarlılık)
+  // "aynı ikon" gerektirir, "SearchX ikonu" değil; bu üçü artık birebir aynı. `emptyIcon` prop'unun
+  // DataTable'a eklenmesi ayrı bir ortak bileşen talebi olarak raporlanır (sharedComponentRequests).
+  if (isFiltering && orders.length === 0) {
+    return <EmptyState title="Eşleşen kayıt yok" description="Arama ya da filtreleri değiştirmeyi deneyin." />;
   }
 
   return (

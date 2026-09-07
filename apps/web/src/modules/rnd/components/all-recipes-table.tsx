@@ -8,6 +8,7 @@ import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/da
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
+import { cn } from '@/lib/utils';
 import { TRIAL_STATUS_LABELS } from '../labels';
 import type { RecipeSummaryRow } from '../queries';
 
@@ -32,7 +33,15 @@ export function AllRecipesTable({ recipes }: { recipes: RecipeSummaryRow[] }) {
       },
       {
         id: 'unitCost', accessorFn: (r) => Number(r.latestUnitCost ?? 0), header: 'Birim maliyet', meta: { width: 120, align: 'right' },
-        cell: ({ row }) => (row.original.latestUnitCost ? <MoneyCell value={row.original.latestUnitCost} digits={2} /> : <span className="text-muted-foreground">—</span>),
+        cell: ({ row }) => {
+          const p = row.original;
+          if (!p.latestUnitCost) return <span className="text-muted-foreground">—</span>;
+          // Kök neden düzeltmesi (Tur 9 P2 arge-receteler-03): kardeş ekran /arge/projeler'de
+          // AYNI olgu (birim maliyet proje hedefinin üstünde) `text-warning` ile basılıyordu, burada
+          // nötr foreground kalıyordu — proje-list.tsx (project-list.tsx:85-87) ile BİREBİR aynı kural.
+          const overTarget = p.targetUnitCost && Number(p.latestUnitCost) > Number(p.targetUnitCost);
+          return <MoneyCell value={p.latestUnitCost} digits={2} className={cn(overTarget && 'text-warning')} />;
+        },
       },
       { id: 'versionCount', accessorFn: (r) => r.versionCount, header: 'Versiyonlar', meta: { width: 100, align: 'right', mobile: 'hidden' } },
       {

@@ -5,7 +5,7 @@ import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { Trash2, Loader2, Save, Send, Rocket, FlaskConical, Wand2, Copy } from 'lucide-react';
+import { Trash2, Loader2, Save, Send, Rocket, FlaskConical, Wand2, Copy, Plus, FilePlus } from 'lucide-react';
 import { D } from '@plantero/core/money';
 import { computeTrialCost } from '@plantero/core/rnd/costFormula';
 // `status.js`'ten (DB'siz/saf dosya) içe aktarılır, `trials.js`'ten DEĞİL: trials.ts sunucuya özgü
@@ -15,6 +15,7 @@ import { EDITABLE_STATUSES } from '@plantero/core/rnd/status';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Combobox } from '@/components/form/combobox';
 import { NumberInput } from '@/components/form/number-input';
 import { MoneyCell } from '@/components/money-cell';
@@ -112,6 +113,11 @@ export function CostSimulator({
   // giden rakamı sessizce ayrıştırabilirdi. `!detail.hasPendingApproval` ek bir savunma katmanı.
   const editable = canManage && EDITABLE_STATUSES.has(detail.version.status) && !detail.hasPendingApproval;
   const [pending, setPending] = useState(false);
+  // Mobil "Ekle" taşma menüsü — kök neden düzeltmesi (Tur 9 P1 arge-recete-39): "Yeni deneme
+  // reçetesi" (44px) + "Yeni versiyon" (44px) ayrı ayrı ikon butonlarken 390px'te üst eylem şeridi
+  // scrollWidth > clientWidth üretiyor, sayfanın BİRİNCİL eylemi "Onaya gönder" görünür alanın
+  // dışında kalıyordu. İki ender kullanılan eylem TEK 44×44 menüye alındı (94px kazanılır).
+  const [newRecipeMobileOpen, setNewRecipeMobileOpen] = useState(false);
 
   const toLineForm = (l: VersionDetail['lines'][number]): LineForm => ({
     productId: l.productId, qty: l.qty, uomId: l.uomId, costSource: l.costSource as CostSource,
@@ -299,8 +305,9 @@ export function CostSimulator({
           {versions.length > 0 ? (
             // w-28→w-40 (112px→160px): kök neden düzeltmesi (Tur 7 P1 arge-recete-37) — sabit 112px
             // genişlik, seçili versiyonun durumunu ("v2 · Devredildi") kelime ortasından kırpıyordu;
-            // sayfanın en kritik tek verisiydi (taslak mı, üretime devredilmiş mi). Satırdaki üç
-            // kontrolün toplamı (160+44+44+2×6px boşluk) 330px'lik kart içeriğine hâlâ rahatça sığar.
+            // sayfanın en kritik tek verisiydi (taslak mı, üretime devredilmiş mi). Tur 9 P1
+            // arge-recete-39: "Yeni reçete"+"Yeni versiyon" TEK 44px "Ekle" menüsüne toplandığından
+            // (aşağıda) bu genişlik korunabildi — genişlik KÜÇÜLTÜLMEDİ, taşan iki ayrı buton çıkarıldı.
             <Select value={selectedVersionId ?? undefined} onValueChange={onSelectVersion}>
               <SelectTrigger size="sm" aria-label="Versiyon" className="w-40 shrink-0 text-[13px] data-[size=sm]:h-11 md:data-[size=sm]:h-8">
                 <SelectValue />
@@ -314,14 +321,40 @@ export function CostSimulator({
             </Select>
           ) : null}
           {canManage ? (
-            <>
-              <NewRecipeDialog projectId={projectId} productOptions={productOptions} compact triggerClassName="shrink-0" />
-              <Button variant="outline" size="icon" className="size-11 shrink-0" onClick={onNewVersion} disabled={newVersionPending} aria-label="Yeni versiyon">
-                {newVersionPending ? <Loader2 className="size-4 animate-spin" /> : <Copy className="size-4" />}
-              </Button>
-            </>
+            // Tek taşma menüsü (kök neden düzeltmesi, Tur 9 P1 arge-recete-39): eskiden burada
+            // "Yeni deneme reçetesi" + "Yeni versiyon" AYRI iki 44px ikon buton vardı (88px + gap) —
+            // şerit 390px'te 364px'e taşıyor, birincil eylem "Onaya gönder" görünür alanın DIŞINDA
+            // kalıyordu. Bu ikisi nadiren kullanılır (versiyon/reçete oluşturma), Kaydet/Onaya gönder
+            // her düzenlemede kullanılır — TEK 44×44 "Ekle" menüsüne toplandı (94px kazanılır).
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="size-11 shrink-0" aria-label="Ekle">
+                  {newVersionPending ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onSelect={() => setNewRecipeMobileOpen(true)}>
+                  <FilePlus className="size-4" /> Yeni deneme reçetesi
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={onNewVersion} disabled={newVersionPending}>
+                  <Copy className="size-4" /> Yeni versiyon
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : null}
         </div>
+        {/* Kontrollü, tetikleyicisiz dialog — açılışı yukarıdaki "Ekle" menüsünün DropdownMenuItem'ı
+            tetikler (bkz. new-recipe-dialog.tsx `open`/`onOpenChange`/`hideTrigger`). Şerit dışında
+            (genişlik tüketmez), yalnızca `canManage` iken var. */}
+        {canManage ? (
+          <NewRecipeDialog
+            projectId={projectId}
+            productOptions={productOptions}
+            open={newRecipeMobileOpen}
+            onOpenChange={setNewRecipeMobileOpen}
+            hideTrigger
+          />
+        ) : null}
         {/* sr-only md:not-sr-only: mobilde ikon-yalnız (yeni birleşik satırda "Onaya gönder" metni
             genişliği taşmaya + yatay kaydırmayla gizli birincil eyleme yol açıyordu), md+ üstünde
             metin geri döner — aynı buton, aynı tıklanabilir alan, yalnızca etiket görünürlüğü

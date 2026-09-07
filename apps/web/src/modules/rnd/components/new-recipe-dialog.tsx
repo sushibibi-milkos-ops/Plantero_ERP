@@ -14,7 +14,7 @@ import { createTrialRecipeAction } from '../actions';
 import type { ProductOption } from '../queries';
 
 export function NewRecipeDialog({
-  projectId, productOptions, triggerClassName, compact,
+  projectId, productOptions, triggerClassName, compact, open: openProp, onOpenChange: onOpenChangeProp, hideTrigger,
 }: {
   projectId: string;
   productOptions: ProductOption[];
@@ -24,9 +24,19 @@ export function NewRecipeDialog({
   /** Yalnızca ikon (metin `sr-only`) — mobil tek satırlık araç çubuğunda yer kazanır (Tur 4 P1
    *  arge-recete-18): 44×44 dokunma hedefi korunur, görünür metin yok. */
   compact?: boolean;
+  /** Dışarıdan kontrollü açık/kapalı durumu — `hideTrigger` ile birlikte kullanılır (Tur 9 P1
+   *  arge-recete-39: cost-simulator.tsx mobil eylem şeridinde "Yeni deneme reçetesi" bir
+   *  DropdownMenuItem'dan tetiklenir, kendi <DialogTrigger>'ı DOM'da yer kaplamaz). Verilmezse
+   *  bileşen kendi iç `open` durumunu yönetir (eski davranış, diğer 2 kullanım yerinde değişmedi). */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** true ise <DialogTrigger> hiç render edilmez — açma/kapama tamamen `open`/`onOpenChange` ile. */
+  hideTrigger?: boolean;
 }) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = openProp ?? internalOpen;
+  const setOpen = onOpenChangeProp ?? setInternalOpen;
   const [name, setName] = useState('');
   const [productId, setProductId] = useState<string | null>(null);
   const [qty, setQty] = useState('1');
@@ -57,13 +67,15 @@ export function NewRecipeDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {/* h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi (kriter 9) — sidebar'daki diğer
-            butonlarla (recipe-workspace.tsx "Yeni versiyon") aynı desen. */}
-        <Button size={compact ? 'icon' : 'sm'} aria-label={compact ? 'Yeni deneme reçetesi' : undefined} className={cn('h-11 w-full md:h-8 md:w-auto', compact && 'size-11 w-11', triggerClassName)}>
-          <Plus className="size-4" /> <span className={cn(compact && 'sr-only')}>Yeni deneme reçetesi</span>
-        </Button>
-      </DialogTrigger>
+      {hideTrigger ? null : (
+        <DialogTrigger asChild>
+          {/* h-11 md:h-8: 390px'te gerçek 44px dokunma hedefi (kriter 9) — sidebar'daki diğer
+              butonlarla (recipe-workspace.tsx "Yeni versiyon") aynı desen. */}
+          <Button size={compact ? 'icon' : 'sm'} aria-label={compact ? 'Yeni deneme reçetesi' : undefined} className={cn('h-11 w-full md:h-8 md:w-auto', compact && 'size-11 w-11', triggerClassName)}>
+            <Plus className="size-4" /> <span className={cn(compact && 'sr-only')}>Yeni deneme reçetesi</span>
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-sm">
         <DialogHeader><DialogTitle>Yeni deneme reçetesi</DialogTitle></DialogHeader>
         <div className="space-y-3">
