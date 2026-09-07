@@ -1,0 +1,709 @@
+{
+  "kpiStrip_oee_390": {
+    "scrollWidth": 792,
+    "clientWidth": 358,
+    "cards": 5,
+    "fullyVisible": 2
+  },
+  "kpiStrip_makineler_390": {
+    "scrollWidth": 632,
+    "clientWidth": 358,
+    "cards": 4,
+    "fullyVisible": 2
+  },
+  "isemirleriMobilKart": [
+    {
+      "text": "MO-2026-000006",
+      "badgeRight": 313,
+      "hasMenu": true,
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000002",
+      "badgeRight": 313,
+      "hasMenu": false,
+      "h": 64.5
+    },
+    {
+      "text": "MO-2026-000001",
+      "badgeRight": 313,
+      "hasMenu": false,
+      "h": 64.5
+    },
+    {
+      "text": "MO-2026-000003",
+      "badgeRight": 313,
+      "hasMenu": false,
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000005",
+      "badgeRight": 313,
+      "hasMenu": false,
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000004",
+      "badgeRight": 313,
+      "hasMenu": false,
+      "h": 62
+    },
+    {
+      "text": "MO-2026-000006BildirildiMikser motorunda anormal ses",
+      "badgeRight": 0,
+      "hasMenu": true,
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000002TamamlandıGramaj sapması — toz dolumu tutarsız1",
+      "badgeRight": 0,
+      "hasMenu": false,
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000001TamamlandıDolum başlığı sızdırıyor2",
+      "badgeRight": 0,
+      "hasMenu": false,
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000003TamamlandıHaftalık bıçak/hazne temizliği — Ön ezme (ezme makinesi, parçalama hazneli)",
+      "badgeRight": 0,
+      "hasMenu": false,
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000005TamamlandıHaftalık stick nozul temizliği — Stick dolum makinesi (20 g)",
+      "badgeRight": 0,
+      "hasMenu": false,
+      "h": 0
+    },
+    {
+      "text": "MO-2026-000004TamamlandıGünlük hassasiyet testi — Metal dedektörü (30×25)",
+      "badgeRight": 0,
+      "hasMenu": false,
+      "h": 0
+    }
+  ],
+  "oeeDecimals": [
+    {
+      "heads": [
+        "Hat",
+        "OEE",
+        "Kullanılabilirlik",
+        "Performans",
+        "Kalite",
+        "Duruş"
+      ],
+      "decimalsPerCol": {
+        "OEE": [
+          "1",
+          "2"
+        ],
+        "Kullanılabilirlik": [
+          "0",
+          "2"
+        ],
+        "Performans": [
+          "1",
+          "2"
+        ],
+        "Kalite": [
+          "2"
+        ]
+      },
+      "rowTexts": [
+        "HAT3 Saşe / Stick Toz Dolum %0,14 %100 %0,14 %3,33 0 dk",
+        "HAT2 Toz Karıştırma & Dolum %0,24 %99,48 %0,26 %6,63 75 dk",
+        "HAT1 Bazlar, Barista & Kremalar %1,2 %99,38 %1,2 %9,97 90 dk"
+      ]
+    }
+  ],
+  "anim_done": [
+    {
+      "tag": "SPAN",
+      "cls": "absolute top-1 -left-[18.5px] size-2.5 rounded-full ring-4 ring-background bg-primary motion-safe:animate-pulse",
+      "name": "pulse",
+      "dur": "2s"
+    }
+  ],
+  "timeline_done": null,
+  "anim_open": [],
+  "timeline_open": null,
+  "styleViolations": {
+    "/bakim/makineler": [
+      {
+        "kind": "transition-all",
+        "cls": "__variable_1b85de __variable_fdaf1b light"
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      }
+    ],
+    "/bakim/makineler/8d445599-2fa3-4433-96a5-972be1a6f91e": [
+      {
+        "kind": "transition-all",
+        "cls": "__variable_1b85de __variable_fdaf1b light"
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      }
+    ],
+    "/bakim/planlar": [
+      {
+        "kind": "transition-all",
+        "cls": "__variable_1b85de __variable_fdaf1b light"
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      }
+    ],
+    "/bakim/is-emirleri": [
+      {
+        "kind": "transition-all",
+        "cls": "__variable_1b85de __variable_fdaf1b light"
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      }
+    ],
+    "/bakim/is-emirleri/d96f2887-9da4-47b5-9e5a-efebe3a3158d": [
+      {
+        "kind": "transition-all",
+        "cls": "__variable_1b85de __variable_fdaf1b light"
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      }
+    ],
+    "/bakim/is-emirleri/yeni": [
+      {
+        "kind": "transition-all",
+        "cls": "__variable_1b85de __variable_fdaf1b light"
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      }
+    ],
+    "/bakim/oee": [
+      {
+        "kind": "transition-all",
+        "cls": "__variable_1b85de __variable_fdaf1b light"
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      },
+      {
+        "kind": "transition-all",
+        "cls": ""
+      }
+    ]
+  }
+}

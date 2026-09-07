@@ -1,0 +1,260 @@
+{
+ "kurlar": [
+  [
+   {
+    "txt": "07.09.2026",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "EUR",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "₺37,2000",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "Satış₺37,4000",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "-%3,36",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "TCMB",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   }
+  ],
+  [
+   {
+    "txt": "07.09.2026",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "USD",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "₺34,0738",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "Satış₺34,2237",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "+%0,75",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "TCMB",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   }
+  ]
+ ],
+ "sevkiyatlar": [
+  [
+   {
+    "txt": "EXP-2026-000001",
+    "ff": "JetBrains Mono",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "BioGrün Handels ",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "Kapalı",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "DE",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "ETGB",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "9/11",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "start"
+   },
+   {
+    "txt": "€270,00",
+    "ff": "Inter",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "—",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "07.09.2026",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "₺10.044,00",
+    "ff": "Inter",
+    "fvn": "tabular-nums",
+    "align": "right"
+   }
+  ],
+  [
+   {
+    "txt": "EXP-2026-000002",
+    "ff": "JetBrains Mono",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "BioGrün Handels ",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "Gümrükte",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "NL",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "Standart",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "2/8",
+    "ff": "JetBrains Mono",
+    "fvn": "tabular-nums",
+    "align": "start"
+   },
+   {
+    "txt": "€16.800,00",
+    "ff": "Inter",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "txt": "10.09.2026",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "07.09.2026",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "₺624.960,00",
+    "ff": "Inter",
+    "fvn": "tabular-nums",
+    "align": "right"
+   }
+  ]
+ ],
+ "gtip": [
+  [
+   {
+    "txt": "110010001",
+    "ff": "JetBrains Mono",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "BADEM BAZI",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "Mamul",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "Eşlenmedi",
+    "ff": "JetBrains Mono",
+    "fvn": "normal",
+    "align": "start"
+   }
+  ],
+  [
+   {
+    "txt": "110010002",
+    "ff": "JetBrains Mono",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "2x Badem Bazı",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "Mamul",
+    "ff": "Inter",
+    "fvn": "normal",
+    "align": "start"
+   },
+   {
+    "txt": "Eşlenmedi",
+    "ff": "JetBrains Mono",
+    "fvn": "normal",
+    "align": "start"
+   }
+  ]
+ ]
+}

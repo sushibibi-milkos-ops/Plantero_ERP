@@ -1,0 +1,106 @@
+{
+ "sevkiyatlar": [
+  {
+   "tag": "A",
+   "txt": "Yeni sevkiyat",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "0px oklab(0.92 0.00112267 -0.00383922)"
+  },
+  {
+   "tag": "INPUT",
+   "txt": "",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklch(0.9 0.004 286.3)"
+  },
+  {
+   "tag": "BUTTON",
+   "txt": "Durum",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)"
+  }
+ ],
+ "kurlar": [
+  {
+   "tag": "BUTTON",
+   "txt": "Bugünü çek",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklab(0.92 0.00112267 -0.00383922)"
+  },
+  {
+   "tag": "svg",
+   "txt": "12.0618.0624.0630.0606",
+   "fv": true,
+   "outline": "5px auto oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "none",
+   "border": "0px oklch(0.92 0.004 286.3)"
+  },
+  {
+   "tag": "INPUT",
+   "txt": "",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklch(0.9 0.004 286.3)"
+  }
+ ],
+ "yeni": [
+  {
+   "tag": "BUTTON",
+   "txt": "Sipariş seçin",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "txt": "FOB",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "INPUT",
+   "txt": "",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklch(0.9 0.004 286.3)"
+  }
+ ],
+ "detay": [
+  {
+   "tag": "BUTTON",
+   "txt": "Gümrük bilgisini günce",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "1px oklab(0.92 0.00112267 -0.00383922)"
+  },
+  {
+   "tag": "BUTTON",
+   "txt": "Yüklendi işaretle",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "0px oklab(0.92 0.00112267 -0.00383922)"
+  },
+  {
+   "tag": "BUTTON",
+   "txt": "İptal et",
+   "fv": true,
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "0px oklab(0.92 0.00112267 -0.00383922)"
+  }
+ ]
+}

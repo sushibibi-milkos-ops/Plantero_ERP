@@ -1,0 +1,561 @@
+{
+ "sevkiyatlar": {
+  "rings": [
+   {
+    "tag": "A",
+    "txt": "Yeni sevkiyat",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Durum",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Sevkiyat no",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Müşteri",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Durum",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Ülke",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   }
+  ]
+ },
+ "belgeler": {
+  "rings": [
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Durum",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Belge",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Sevkiyat",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Müşteri",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Durum",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 24
+   }
+  ]
+ },
+ "kurlar": {
+  "rings": [
+   {
+    "tag": "BUTTON",
+    "txt": "Bugünü çek",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "svg",
+    "txt": "12.0618.0624.0630.0606.0",
+    "inMain": true,
+    "outlineW": "5px",
+    "outlineStyle": "auto",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "none",
+    "h": 260
+   },
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Para birimi",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Tarih",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Para birimi",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Alış",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   }
+  ]
+ },
+ "gtip": {
+  "rings": [
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Eşleme",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Tip",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 32
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "SKU",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Ürün",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Tip",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "GTİP",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   }
+  ]
+ },
+ "yeni": {
+  "rings": [
+   {
+    "tag": "BUTTON",
+    "txt": "Sipariş seçin",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "FOB",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Karayolu",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "INPUT",
+    "txt": "",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   }
+  ]
+ },
+ "detay": {
+  "rings": [
+   {
+    "tag": "BUTTON",
+    "txt": "Gümrük bilgisini güncell",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Yüklendi işaretle",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "İptal et",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 36
+   },
+   {
+    "tag": "A",
+    "txt": "İrsaliyeSevk edildiDN-20",
+    "inMain": true,
+    "outlineW": "1px",
+    "outlineStyle": "auto",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "none",
+    "h": 125
+   },
+   {
+    "tag": "A",
+    "txt": "SiparişSipariş onaylıSO-",
+    "inMain": true,
+    "outlineW": "1px",
+    "outlineStyle": "auto",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "none",
+    "h": 125
+   },
+   {
+    "tag": "A",
+    "txt": "İhracat sevkiyatıGümrükt",
+    "inMain": true,
+    "outlineW": "1px",
+    "outlineStyle": "auto",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "none",
+    "h": 125
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Düzenle",
+    "inMain": true,
+    "outlineW": "0px",
+    "outlineStyle": "none",
+    "outlineColor": "oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 28
+   },
+   {
+    "tag": "BUTTON",
+    "txt": "Sipariş satırları",
+    "inMain": true,
+    "outlineW": "1px",
+    "outlineStyle": "solid",
+    "outlineColor": "oklch(0.55 0.16 152)",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+    "h": 29
+   }
+  ]
+ },
+ "bos:sevkiyatlar": {
+  "text": "ık sevkiyatAçık sevkiyat tutarıGümrükteBelgesi eksikDurum0 kayıtSevkiyat noMüşteriDurumÜlkeRejimBelgelerTutar (döviz)ETDOluşturmaTutar (₺)Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svg": 17,
+  "btns": [
+   "Tutar (döviz)",
+   "ETD",
+   "Oluşturma",
+   "Tutar (₺)"
+  ]
+ },
+ "bos:belgeler": {
+  "text": "a/fatura/çeki listesi/sertifika takibi tek panoda.Toplam belgeBekleyenVadesi geçmişSorumlusuzDurum0 kayıtBelgeSevkiyatMüşteriDurumEylemlerEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svg": 10,
+  "btns": [
+   "Belge",
+   "Sevkiyat",
+   "Müşteri",
+   "Durum"
+  ]
+ },
+ "bos:kurlar": {
+  "text": "16.0721.0727.0702.0808.0814.0820.0826.0801.0907.09₺30,0₺33,0₺36,0₺39,0₺42,0Para birimi0 kayıtTarihPara birimiAlışSatışGünlük değişimKaynakEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svg": 16,
+  "btns": [
+   "Alış",
+   "Satış",
+   "Günlük değişim",
+   "Kaynak"
+  ]
+ },
+ "bos:gtip": {
+  "text": "n konsantreleri ve dokulandırılmış proteinli maddeler2202.99LTBitkisel içecekler (badem/yulaf/kaju sütü vb.)EşlemeTip0 kayıtSKUÜrünTipGTİPEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svg": 11,
+  "btns": [
+   "SKU",
+   "Ürün",
+   "Tip",
+   "GTİP"
+  ]
+ },
+ "dark:sevkiyatlar": {
+  "htmlClass": "__variable_1b85de __variable_fdaf1b dark",
+  "bodyBg": "oklch(0.16 0.005 285.8)",
+  "mainColor": "oklch(0.96 0.002 286.4)"
+ },
+ "dark:kurlar": {
+  "htmlClass": "__variable_1b85de __variable_fdaf1b dark",
+  "bodyBg": "oklch(0.16 0.005 285.8)",
+  "mainColor": "oklch(0.96 0.002 286.4)"
+ },
+ "dark:detay": {
+  "htmlClass": "__variable_1b85de __variable_fdaf1b dark",
+  "bodyBg": "oklch(0.16 0.005 285.8)",
+  "mainColor": "oklch(0.96 0.002 286.4)"
+ }
+}
