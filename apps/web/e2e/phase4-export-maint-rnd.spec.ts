@@ -500,8 +500,14 @@ test.describe('Akış: İhracat sevkiyat zinciri + kur farkı (phase4)', () => {
     await expect(dialog).toBeVisible();
     const etgbNo = `ETGB2026DE${RUN}`;
     // `Label` burada `htmlFor` bağlamıyor (K-A11Y — bkz. phase1/phase3 aynı not), `Input`in de `id`si
-    // yok — placeholder ile hedeflenir.
-    await dialog.getByPlaceholder('ETGB2026DE00123').fill(etgbNo);
+    // yok — placeholder ile hedeflenir. Kök neden (canlıda yakalandı, bu turda): commit `400abfc`
+    // ("ihracat: gümrük diyaloğu tutarsızlığını ... düzelt (Tur 5)") placeholder'ı KASITLI olarak
+    // `"ETGB2026DE00123"` → `"ör. ETGB2026TR00001"`e değiştirdi (gerçek ETGB no'suyla karışmasın
+    // diye — bkz. `shipment-actions.tsx` üst yorumu) ama bu test dosyası o değişiklikten SONRA hâlâ
+    // ESKİ placeholder metnini arıyordu — `getByPlaceholder` alt-dize eşleşmediği için locator hiç
+    // çözülmedi, test 150 sn zaman aşımına düşüp sayfayı zorla kapattı. Bu bir uygulama bulgusu
+    // DEĞİL — yalnızca testin placeholder değişikliğine ayak uyduramamış (stale) bir locator'ı.
+    await dialog.getByPlaceholder('ETGB2026TR00001').fill(etgbNo);
     await dialog.getByRole('button', { name: 'Gümrüğe al' }).click();
     await expect(page.getByText('Gümrük işlemine alındı')).toBeVisible({ timeout: 10_000 });
 

@@ -125,7 +125,7 @@ const FILES = await checkFiles();
 // checks/56_export_invoice_link_symmetry.sql üst yorumu). Düzeltme önerisi: linkInvoice'a
 // assertStatus(['shipped','delivered']) ekle; s.invoiceId doluyken farklı bir fatura ile çağrılırsa
 // önce eski faturanın exportShipmentId'sini null'a çek (ya da ikinci çağrıyı reddet).
-const RULE_COUNT = 57;
+const RULE_COUNT = 58;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
