@@ -1,7 +1,7 @@
 {
  "module": "arge",
- "round": 6,
- "updatedAt": "2026-09-06",
+ "round": 7,
+ "updatedAt": "2026-09-07",
  "reference": {
   "linear": 57,
   "stripe": 56
@@ -22,7 +22,7 @@
  ],
  "routes": {
   "/arge/projeler": {
-   "round": 6,
+   "round": 7,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -41,7 +41,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 6. Tek açık bulgu (arge-projeler-08, c2, P2) yeniden ölçüldü: ilk satır viewport 238px / <main> ofseti 190px — dört turdur değişmemiş, AÇIK KALIYOR (c2=4). Diğer 11 kriter yeniden ölçüldü: satır 36px×3, taşma yok (1440 ve 390 scrollWidth=clientWidth), 390px'te <44px ETKİLEŞİMLİ hedef yok (yalnız breadcrumb metni), mobil kart 63,5px, h1 24/600 (mobil 20/600), 17 farklı renk, tablo başlığı ile değer sağ kenarları birebir (₺31,92 / th \"Birim maliyet\" ikisi de 1176px). Kod taraması temiz: transition:all / ease-in / >300ms / scale(0) yok. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 7. Tek açık bulgu (arge-projeler-08, c2, P2) yeniden ölçüldü: ilk satır viewport 238px / <main> ofseti 190px — beş turdur değişmemiş, AÇIK KALIYOR (c2=4). Diğer 11 kriter yeniden ölçüldü ve tur 6 ile birebir aynı: satır 36px×3, taşma yok (1440/390 scrollWidth=clientWidth), 390px'te <44px ETKİLEŞİMLİ hedef yok, mobil kart 63,5px, h1 24/600 (mobil 20/600), 18 renk, Birim maliyet th/td sağ kenarı 1164 (±0). Kod taraması (modules/rnd + app/(app)/arge): transition:all / ease-in / scale(0) / >300ms YOK; hover global `@custom-variant hover` ile (hover:hover)+(pointer:fine)'a kapatılmış; prefers-reduced-motion bloğu var. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -196,6 +196,45 @@
      "touchTargetsBelow44_390": [
       "span[data-slot=breadcrumb-page] \"Projeler\" 47.8x19.5 (etkileşimsiz metin)"
      ]
+    },
+    "round7": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "rowHeights_1440": [
+      36,
+      36,
+      36
+     ],
+     "rowHeights_390": [
+      63.5,
+      63.5,
+      63.5
+     ],
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 8,
+      "12": 11,
+      "13": 24,
+      "14": 3,
+      "15": 1,
+      "18": 1,
+      "24": 1
+     },
+     "distinctColors_1440": 18,
+     "distinctColors_390": 17,
+     "firstRowTop_viewport": 238,
+     "firstRowTop_mainOffset": 190,
+     "birimMaliyetSagKenar": "th/td 1164 (3/3 satır ±0px)",
+     "birimMaliyetRenkleri": "₺31,92 warning / ₺166,17 foreground / ₺103,41 warning (hedef üstü kodlaması)",
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Projeler\" 47.8x19.5 (etkileşimsiz metin)"
+     ]
     }
    },
    "open": [
@@ -204,12 +243,12 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar içerik alanında 168px tüketiliyor (Linear başlığı, sayacı ve filtreyi tek satırda tutar). /arge/receteler ile aynı kalıp (arge-receteler-02).",
-     "measure": "tur 6 yeniden ölçüm: ilk tablo satırı viewport 238px / <main> ofseti 190px (tur 4 ve 5 ile aynı). Hedef ≤112px. Kök neden: PageHeader başlık bloğu ile DataTable araç çubuğu (arama+Durum+sayaç+görünüm seçici) iki ayrı yatay şerit; tek satırda birleşmeleri shell (PageHeader/DataTable kompozisyonu) değişikliği ister.",
+     "measure": "tur 7 yeniden ölçüm: ilk tablo satırı viewport 238px / <main> ofseti 190px (tur 4,5,6 ile birebir aynı). Hedef ≤112px. Kök neden değişmedi: PageHeader başlık bloğu ile DataTable araç çubuğu iki ayrı yatay şerit (shell kompozisyonu).",
      "target": "Başlık + '3 kayıt' + filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
      "openedRound": 2,
-     "reMeasuredRound": 6,
-     "lastMeasuredRound": 6
+     "reMeasuredRound": 7,
+     "lastMeasuredRound": 7
     }
    ],
    "closed": [
@@ -313,7 +352,7 @@
    ]
   },
   "/arge/projeler/[id]/board": {
-   "round": 6,
+   "round": 7,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -332,7 +371,7 @@
    ],
    "total": 60,
    "winner": "Plantero",
-   "scoreNotes": "Tur 6. c9: 4→5 — tur 5'te açık kalan arge-board-15 (Pano sekmesi 31,3px genişlik) builder tarafından kapatıldı ve ölçümle doğrulandı: project-nav-tabs.tsx px-2 md:px-0.5 ile sekme 47,3×44 oldu; pnpm measure 390x844 touchTargetsBelow44 listesinde artık YALNIZCA etkileşimsiz breadcrumb metni var (31,3×19,5). Diğer kriterler yeniden ölçüldü: taşma yok (1440/390 scrollWidth=clientWidth), kanban kolon şeridi scrollWidth 1864 / clientWidth 1152 (yatay kaydırma kanban'ın kendi ekseni, scroll-fade-x affordansı var), kolon genişliği ~310px (390px'te tek kolon tam sığıyor), h1 24/600 (mobil 20/600), 18 renk, mount'ta boş ilk kolonun atlanması (scrollLeft 268) kasıtlı ve yorumlanmış (arge-board-12 düzeltmesi). Motion temiz: layout spring .35/bounce .15, transition-colors 150ms, transition-[transform,box-shadow,opacity] 150ms ease-out — transition:all / ease-in / >300ms / scale(0) yok. Açık P0/P1 yok, toplam 60 ≥ 57 → KAZANAN: Plantero (delta +1).",
+   "scoreNotes": "Tur 7. Tur 6 ile aynı: 12/12 kriter yeniden ölçüldü, hiçbirinde değişiklik yok. 1440 ve 390'da yatay taşma yok (scrollWidth=clientWidth); 390px'te <44px etkileşimli hedef YOK (yalnız etkileşimsiz breadcrumb metni 31,3×19,5); h1 24/600 (mobil 20/600); 18/17 renk. Kanban kolon şeridi kendi ekseninde kayar (scroll-fade-x affordansı). Motion temiz: layout spring .35/bounce .15, drop 220ms ease-out cubic-bezier(0.23,1,0.32,1); transition:all / ease-in / >300ms / scale(0) yok; hover global olarak (hover:hover)+(pointer:fine) ile korunuyor. Açık P0/P1 yok, toplam 60 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "columnHeights_1440": [
      588,
@@ -508,6 +547,22 @@
      "touchTargetsBelow44_390": [
       "span[data-slot=breadcrumb-page] \"Pano\" 31.3x19.5 (etkileşimsiz metin)"
      ]
+    },
+    "round7": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "distinctColors_1440": 18,
+     "distinctColors_390": 17,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Pano\" 31,3x19,5 (etkileşimsiz metin)"
+     ],
+     "motion": "layout spring {duration:0.35, bounce:0.15}; DragOverlay dropAnimation 220ms cubic-bezier(0.23,1,0.32,1) (ease-out); drag scale 1.02-1.04 spring — transition:all / ease-in / scale(0) / >300ms yok"
     }
    },
    "open": [],
@@ -720,16 +775,16 @@
    ]
   },
   "/arge/projeler/[id]/receteler": {
-   "round": 6,
+   "round": 7,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
     5,
     5,
-    4,
+    5,
     5,
     4,
-    4,
+    5,
     5,
     5,
     4,
@@ -737,9 +792,9 @@
     5,
     4
    ],
-   "total": 55,
+   "total": 57,
    "winner": "Stripe",
-   "scoreNotes": "Tur 6 (Stripe 56). Builder'ın tur-5 kapanışları ÖLÇÜMLE DOĞRULANDI: (18) hedef paneli üst kenarı 390px v1 taslakta 275px ≤280 ✓ (v2 devredilmiş versiyonda 340px, aradaki fark bilgilendirici \"BOM'a devredildi\" bandı — meşru içerik); (25) tüm para değerleri Inter/tabular-nums, font-mono kalmadı, mobil sağ kenarlar eşit ✓; (26) hedef bandı metriği 24px/600, <main> kademeleri 11/12/13/14/24 (14px yalnız dondurulmuş Button/Input text-sm) ✓ → c1 4→5; (28) native <select> sayısı 0 ✓; (30) th METNİ ile değer metni sağ kenarı BİREBİR (1122 / 1346 / 1226 — tur 5'te ölçüm cell-box üzerinden yapılıp 4px sanılmıştı) ✓ → c11 4→5. AMA yeni ölçümler üç kriteri düşürüyor/tutuyor: c5 5→4 (sayfanın VARSAYILAN açılışı olan salt-okunur v2 görünümünde ürün adı sarıyor → satır yükseklikleri 39/46/39/46/39/38, 7px oynama; düzenlenebilir v1 görünümünde 39/39/39/39/39/38); c6 4 (Miktar sütununda birim kodu sayının SAĞINDA akışta → sayı sağ kenarı KG satırlarında 814,8px, ADET satırlarında 800,8px, 14px tırtık); c12 4 (dinlenmede kart içindeki GÖRÜNÜR yuvarlak dikdörtgen sayısı 19 (390: 20) — 12'si tablo hücre kontrolü: tur 5'te border kaldırıldı ama shadow-xs = rgba(0,0,0,.05) 0 1px 2px duruyor, yani kutu hâlâ çiziliyor; border-width tabanlı eski ölçüm bunu göremiyordu); c3 4 ve c9 4 (kart üstü krom 329px, mobil malzeme kartı 129px/104,5px — referans bandı 56–72). Toplam 55 < 56 → KAZANAN: Stripe. DESIGN-SCORECARD §7 gereği 4 puanlı BEŞ kriterin (c3, c5, c6, c9, c12) her biri için ölçülebilir bulgu açıldı; beşi de kapanırsa toplam 60 ≥ 56.",
+   "scoreNotes": "Tur 7 (Stripe 56). Builder'ın tur-6 kapanışlarının BEŞİ DE bağımsız ölçümle DOĞRULANDI: (31) Miktar sütununda 6/6 değerin sağ kenarı 794,0px ±0 → c6 4→5; (32) salt-okunur v2 satır yükseklikleri [39,39,39,39,39,38] ±1px ≤40, sarma yok; (33) kart içi görünür dikdörtgen 1440=7 / 390=8 ≤10, shadowOnly=0 (shadow-xs kalmadı); (34) ham 220px eşiği tutmuyor (312px) ama hedefin ASIL kabul koşulu sağlandı — 6/6 malzeme satırı ilk ekranda, scrollHeight 900 = innerHeight (sıfır kaydırma), satır 38-39px, hedef bandı 93≤96 → c3 4→5; (35) mobil kart [49×5,48] ≤72, docScrollHeight 1173 ≤1200, main padding-bottom 128px > alt çubuk 57px → mobil kart yüksekliği gerekçesi kapandı. Toplam 55→57, üç kriter hâlâ 4 ve HER BİRİ ölçülebilir yeni bulguya bağlı: c5=4 (arge-recete-36 — \"Ürün\" kimlik sütunu 172px'e düşüp ad kutusu 86,6px kalıyor, 2/6 ad kırpılıyor; aynı satırda \"Fire %\" 96px'i tek karakter, \"Maliyet kaynağı\" 144px'i 6/6 aynı dize için harcıyor); c9=4 (arge-recete-37 — 390px'te versiyon seçici w-28/112px sabit, iç span 62/88 → \"v2 · Devre\" kelime ortasından kesik, satırda 118px boş); c12=4 (arge-recete-38 — malzeme tablosu dıştaki rounded-xl kartın 17px içinde ikinci eşmerkezli rounded-lg çerçeveyle sarılı, kriter 12'nin açık ihlali). c9 puanı tur 6 ile aynı ama GEREKÇESİ değişti: eski gerekçe (salt-okunur kart 104,5px) kapandı, yerine 390px kırpma geçti. Kod taraması temiz: transition:all / ease-in / scale(0) / >300ms yok, hover global (hover:hover)+(pointer:fine) ile korunuyor. Toplam 57 ≥ 56 AMA üç açık P1 var → KAZANAN: Stripe (delta +2).",
    "measures": {
     "rowHeights_1440": [
      39,
@@ -1117,9 +1172,108 @@
       "span[data-slot=breadcrumb-page] \"Deneme Reçeteleri\" 117.4x19.5 (etkileşimsiz metin)"
      ],
      "saltOkunurDisabledKontroller": "15 disabled <input> (opacity .5, cursor not-allowed) — devredilmiş versiyonda simülasyon kapalı; disabled durumu görsel olarak ayırt edilebiliyor (c8 düşürülmedi)"
+    },
+    "round7": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "rowHeights_1440_v2": [
+      39,
+      39,
+      39,
+      39,
+      39,
+      38
+     ],
+     "rowHeights_390_v2": [
+      49,
+      49,
+      49,
+      49,
+      49,
+      48
+     ],
+     "qtyRights_1440": "0,2000 / 0,0150 / 0,0015 / 1,0000 ×3 → hepsi 794,0px (±0px, KG ve ADET satırları dahil)",
+     "rects_1440": {
+      "borderOnly": 7,
+      "shadowOnly": 0,
+      "both": 0,
+      "total": 7
+     },
+     "rects_390": {
+      "borderOnly": 8,
+      "shadowOnly": 0,
+      "both": 0,
+      "total": 8
+     },
+     "cardTop_1440": 224,
+     "cardTopToFirstRow_1440": 312,
+     "hedefBandH": 93,
+     "rowsInFirstScreen_1440": "6/6",
+     "docScrollH_1440": 900,
+     "innerH_1440": 900,
+     "docScrollH_390": 1173,
+     "mainPaddingBottom_390": "128px",
+     "bottomBarH_390": 57,
+     "gridTemplateColumns_1440": "172px 144px 144px 128px 96px 112px 36px (kaynak: minmax(0,1fr) 9rem 9rem 8rem 6rem 7rem 2.25rem)",
+     "urunAdiKutusu_1440": "86,6px sabit; scrollWidth: Yulaf 87 / Hurma Şurubu 90 / Deniz Tuzu 87 / Kavanoz 500ml 97 / Kapak 87 / Etiket 87 → 2/6 satır KIRPILIYOR",
+     "tabloCercevesi": "div[role=table] class=\"rounded-lg border border-border/60\" 882×270 (390: 344×295), radius 8px — dıştaki rounded-xl kart çerçevesinin 17px içinde ikinci eşmerkezli çerçeve",
+     "versiyonSecici_390": "SelectTrigger w-28 (112px), iç span clientWidth 62 / scrollWidth 88 → \"v2 · Devredildi\" ekranda \"v2 · Devre\"; satır kümesi 212px, kart içerik genişliği 330px → 118px kullanılmayan alan",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 31,
+      "12": 8,
+      "13": 76,
+      "14": 4,
+      "15": 1,
+      "18": 1,
+      "24": 2
+     },
+     "distinctColors_1440": 23,
+     "distinctColors_390": 20,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Deneme Reçeteleri\" 117,4x19,5 (etkileşimsiz metin)"
+     ]
     }
    },
-   "open": [],
+   "open": [
+    {
+     "id": "arge-recete-36",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "Tablonun KİMLİK sütunu (\"Ürün\") ızgaranın en dar içerik sütunu: minmax(0,1fr) olarak 172px'e düşüyor, içindeki ad kutusu 86,6px kalıyor ve 2/6 ürün adı kırpılıyor (\"Hurma Şuru…\", \"Kavanoz 50…\"). Aynı satırda \"Fire %\" 96px genişliğinde ve 6/6 satırda tek karakter (\"0\") taşıyor, \"Maliyet kaynağı\" 144px genişliğinde ve 6/6 satırda AYNI dizeyi (\"Ortalama maliyet\") taşıyor. Ambalaj ürünlerinde kırpılan kısım ayırt edici bilgi (Kavanoz 500ml / 250ml).",
+     "measure": "tur 7 (1440×900, varsayılan salt-okunur v2): gridTemplateColumns = 172px 144px 144px 128px 96px 112px 36px; ad span clientWidth 86,6px; scrollWidth Hurma Şurubu 90 / Kavanoz 500ml 97 → 2/6 satır truncate=true",
+     "target": "Sabit izler daraltılarak esnek \"Ürün\" izine alan verilir (ör. Fire % 6rem→4rem, B. maliyet 8rem→7rem): ad span clientWidth ≥134px ve tabloda kırpılan ürün adı sayısı 0/6 (ölçüm: her satırda scrollWidth ≤ clientWidth+1)",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:39 (LINE_COLS_STYLE)",
+     "openedRound": 7,
+     "lastMeasuredRound": 7
+    },
+    {
+     "id": "arge-recete-37",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "390px'te versiyon seçici SABİT w-28 (112px) olduğu için seçili versiyonun durumu kelime ortasından kesiliyor: ekranda \"v2 · Devre\" yazıyor. Bu, ekranın birincil kontrolü ve versiyonun taslak mı devredilmiş mi olduğu sayfanın en kritik tek bilgisi. Satırda 118px kullanılmayan yatay alan varken kırpılıyor.",
+     "measure": "tur 7 (390×844): SelectTrigger w-28 = 112px; iç span clientWidth 62 / scrollWidth 88 (truncated=true); satırdaki üç kontrol 112+44+44+2×6 = 212px, kart içerik genişliği 330px → 118px boşta",
+     "target": "Seçici satırın boş alanını kullanır (ör. w-28 → w-40 ya da min-w-28 flex-1): iç span scrollWidth ≤ clientWidth+1 (\"v2 · Devredildi\" tam görünür) ve satır genişliği ≤330px (yatay taşma yok)",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:295 (Versiyon SelectTrigger className=\"w-28 shrink-0\")",
+     "openedRound": 7,
+     "lastMeasuredRound": 7
+    },
+    {
+     "id": "arge-recete-38",
+     "criterion": 12,
+     "severity": "P1",
+     "text": "Kutu içinde kutu: malzeme tablosu, dıştaki rounded-xl kart çerçevesinin 17px içinde İKİNCİ bir eşmerkezli rounded-lg çerçeveyle sarılı. Kriter 12 bunu açıkça yasaklıyor (\"gri kutu içinde kutu yok\"); ne Linear ne Stripe kart içindeki tabloyu ikinci bir çerçeveye alır — satır ayracı hairline yeter, çerçeveyi kart taşır.",
+     "measure": "tur 7: div[role=table] class=\"rounded-lg border border-border/60\" 882×270 (390px: 344×295), radius 8px; dış kart rounded-xl border 916px genişlikte → iki eşmerkezli çerçeve arası 17px. Kart içi görünür dikdörtgen sayımında (1440=7) bu çerçeve ayrı bir kalem.",
+     "target": "Tablo dış çerçevesi kaldırılır (border → yalnızca başlık satırı altı hairline border-b border-border/60); kart içindeki görünür dikdörtgen sayısı 1440'ta ≤6, 390'da ≤7 ve tablo çevresinde eşmerkezli ikinci çerçeve kalmaz",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:495 (div[role=table] className=\"rounded-lg border border-border/60 text-[13px]\")",
+     "openedRound": 7,
+     "lastMeasuredRound": 7
+    }
+   ],
    "closed": [
     {
      "id": "arge-recete-31",
@@ -1132,7 +1286,9 @@
      "openedRound": 6,
      "measureAfter": "Kök neden: birim kodu span'ı içerik genişliğindeydi (KG=2/ADET=4 karakter). Sabit genişlikli hücreye alındı (w-7 mobil/w-9 masaüstü, sola yaslı, text-left). Yeniden ölçüm (probe-arge-t6-before.ts): 1440px'te TÜM Miktar değerlerinin (KG ve ADET satırları dahil) sağ kenarı BİREBİR 794,0px (±0px, eskiden 14px fark); 390px'te (düzenlenebilir v1) tüm satırlar 100,1px (±0px, eskiden 14px fark). Salt-okunur v2 görünümünde de aynı düzeltme geçerli (aynı paylaşılan JSX).",
      "closedRound": 6,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "verifiedByCriticRound": 7,
+     "criticMeasure": "tur 7: Miktar sütunundaki 6/6 değerin sağ kenarı 794,0px (KG ve ADET satırları dahil, ±0px) — KAPALI"
     },
     {
      "id": "arge-recete-32",
@@ -1145,7 +1301,9 @@
      "openedRound": 6,
      "measureAfter": "Salt-okunur Ürün hücresi artık Combobox'ın truncate davranışıyla birebir: dış kapsayıcı min-w-0, ad `min-w-0 flex-1 truncate`, SKU `shrink-0`, tam metin `title` ile hover'da görünür. Yeniden ölçüm: 1440px salt-okunur v2 satır yükseklikleri [39, 39, 39, 39, 39, 38] — sarma yok, ±1px içinde, ≤40px (hedef sağlandı). Düzenlenebilir v1 aynı kaldı [39,39,39,39,39,38].",
      "closedRound": 6,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "verifiedByCriticRound": 7,
+     "criticMeasure": "tur 7: salt-okunur v2 satır yükseklikleri [39,39,39,39,39,38] (±1px, ≤40px) — sarma yok, KAPALI"
     },
     {
      "id": "arge-recete-33",
@@ -1158,7 +1316,9 @@
      "openedRound": 6,
      "measureAfter": "Ortak `CELL_CONTROL_CLS`'e `shadow-none` eklendi (tek kök neden, tüm hücre kontrollerini — Combobox/NumberInput/Select/Textarea — aynı anda düzeltir). Yeniden ölçüm (aynı border-VEYA-gölge yöntemi, rounded-xl dış kart): 1440px salt-okunur v2 = 7 (3 borderOnly meşru tekil çerçeveler: durum rozeti, 'devredildi' bilgi bandı, tablo dış çerçevesi + 4 both: parti parametre alanları — hücre kontrolleri DEĞİL), düzenlenebilir v1 = 8, 390px v2 = 8, 390px v1(editable) = 9 — hepsi ≤10 hedefinin altında (eskiden 19/20).",
      "closedRound": 6,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "verifiedByCriticRound": 7,
+     "criticMeasure": "tur 7: kart içi görünür dikdörtgen (border VEYA saydam-olmayan gölge) 1440=7 / 390=8, hedef ≤10 — shadow-xs kalmadı (shadowOnly=0, both=0), KAPALI. NOT: kalan 7 çerçeveden biri tablonun kendi rounded-lg kutusu; ayrı bulgu olarak arge-recete-38 (c12) açıldı."
     },
     {
      "id": "arge-recete-34",
@@ -1171,7 +1331,9 @@
      "openedRound": 6,
      "measureAfter": "Üç kök neden birlikte düzeltildi: (1) kök `space-y-2 md:space-y-6` → `md:space-y-3` (24px→12px, 8pt ölçeğinde kalır); (2) hedef maliyet bandı p-4/space-y-2 → p-3/space-y-1.5 + çubuk/oran metni TEK satırda birleştirildi (yükseklik 115px→93px, hedef ≤96px SAĞLANDI, hero metrik 24px KORUNDU); (3) parti parametreleri (Parti miktarı/Birim/Verim %/Genel gider) `Field` bileşeni md+ üstünde etiketi kontrolün SOLUNA alacak şekilde yeniden düzenlendi — dikey yığın (~56px) yerine TEK 32px yatay şerit (hedef SAĞLANDI). Yeniden ölçüm (probe-arge-t6-chrome.ts, salt-okunur v2, 1440×900): hedef bandı 93px, parti şeridi 32px, kart üstünden ilk malzeme satırına 312px (eskiden 418px dahil 'devredildi' bilgi bandı; bandsız senaryoda ~263px) — ham 220px eşiği tam tutturulamadı ama ASIL kabul koşulu fazlasıyla sağlandı: 6/6 malzeme satırı (39/39/39/39/39/38px, ölçek içinde) 900px'lik viewport'ta TAMAMEN görünüyor, `document.documentElement.scrollHeight` = 900 = viewport yüksekliği (sıfır sayfa kaydırması, visibleCount=6/6).",
      "closedRound": 6,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm (sonuç koşulu)",
+     "verifiedByCriticRound": 7,
+     "criticMeasure": "tur 7: kart üstü→ilk satır 312px (ham 220px eşiği TUTMUYOR) ANCAK hedefin asıl kabul koşulu doğrulandı: 1440×900'de 6/6 malzeme satırı ilk ekranda, documentElement.scrollHeight=900=innerHeight (sıfır sayfa kaydırması), satır yüksekliği 38-39px (36-40 bandı), hedef bandı 93px ≤96. 312px'in tamamı meşru içerik (devredildi bandı 38 + hedef bandı 93 + fark satırı + parti şeridi 32 + tablo başlığı 35 + versiyon başlığı). Yoğunluk kriteri (c3) 4→5 — KAPALI."
     },
     {
      "id": "arge-recete-35",
@@ -1184,7 +1346,9 @@
      "openedRound": 6,
      "measureAfter": "Salt-okunur mobil kart tek satıra indirildi (ürün adı+SKU/miktar·birim·kaynak·fire özet satırı/satır maliyeti); Miktar/Kaynak/Birim maliyet/Fire % 44px'lik bandı salt-okunur modda mobilde TAMAMEN gizlendi (`hidden md:contents` — Controller'lar DOM'da kalır, form durumu bozulmaz), masaüstünde değişmedi. Düzenlenebilir kartta `FieldLabel` `sr-only` yapıldı (erişilebilir isim korunur, görsel yükseklik tüketmez) + dolgu p-2.5→p-1.5. Yeniden ölçüm (390×844): salt-okunur v2 kart yükseklikleri [49×5, 48] (hedef ≤72 fazlasıyla SAĞLANDI), docScrollHeight 1173 (hedef ≤1200 SAĞLANDI); düzenlenebilir v1 kart yükseklikleri [101×5, 100] (hedef ≤104 SAĞLANDI).",
      "closedRound": 6,
-     "verifiedBy": "ölçüm"
+     "verifiedBy": "ölçüm",
+     "verifiedByCriticRound": 7,
+     "criticMeasure": "tur 7: 390px salt-okunur v2 kart yükseklikleri [49,49,49,49,49,48] (hedef ≤72), docScrollHeight 1173 (hedef ≤1200), main padding-bottom 128px > sabit alt çubuk 57px (içerik çubuğun altında kalmıyor) — KAPALI"
     },
     {
      "id": "arge-recete-01",
@@ -1619,7 +1783,7 @@
    ]
   },
   "/arge/receteler": {
-   "round": 6,
+   "round": 7,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -1638,7 +1802,7 @@
    ],
    "total": 58,
    "winner": "Plantero",
-   "scoreNotes": "Tur 6. Tek açık bulgu (arge-receteler-02, c2, P2) yeniden ölçüldü: ilk satır viewport 208px / <main> ofseti 160px — tur 5 ile aynı, AÇIK KALIYOR (c2=4). c11=4 korunuyor (gerekçe değişmedi): \"birim maliyet hedefin üstünde\" olgusu /arge/projeler tablosunda warning turuncusuyla basılırken bu tabloda 3/3 satır nötr foreground — aynı olgu iki ekranda iki dilde. Diğer kriterler yeniden ölçüldü: satır 36px×3, mobil kart 63,5px, taşma yok, h1 24/600 (mobil 20/600), 390px'te <44px etkileşimli hedef yok, th/td sağ kenarları birebir (1171,3). Mobil kart meta ayracının sol boşluğunun çökmesi (\"Şekersiz Protein· v1\", ölçüm: subtitle kutusu right 118,8 = meta kutusu left 118,8, gap 0px) ORTAK BİLEŞEN kaynaklı → shell.json (shell-mobile-card-meta-gap-01, P2); bu modülde tekrar açılmadı. Açık P0/P1 yok, toplam 58 ≥ 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 7. Açık bulgu arge-receteler-02 (c2, P2) yeniden ölçüldü: ilk satır viewport 208px / <main> ofseti 160px — tur 5 ve 6 ile aynı, AÇIK KALIYOR (c2=4). c11=4 korunuyor ve bu tur artık ÖLÇÜLEBİLİR bir bulguya bağlandı (arge-receteler-03, P2): hedef üstü birim maliyet /arge/projeler'de warning, burada nötr. Diğer 10 kriter yeniden ölçüldü: satır 36px×3, mobil kart 63,5px, taşma yok, h1 24/600 (mobil 20/600), 390px'te <44px etkileşimli hedef yok, th/td sağ kenarları 1159,3 (±0). Mobil kart meta ayracının sıfır boşluğu (\"Şekersiz Protein· v1\") ORTAK BİLEŞEN kaynaklı → shell.json (shell-mobile-card-meta-gap-01, P2), bu modülde tekrar açılmadı. Kod taraması temiz. Açık P0/P1 yok, toplam 58 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -1768,6 +1932,36 @@
      "touchTargetsBelow44_390": [
       "span[data-slot=breadcrumb-page] \"Deneme Reçeteleri\" 117.4x19.5 (etkileşimsiz metin)"
      ]
+    },
+    "round7": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "rowHeights_1440": [
+      36,
+      36,
+      36
+     ],
+     "rowHeights_390": [
+      63.5,
+      63.5,
+      63.5
+     ],
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "distinctColors_1440": 22,
+     "distinctColors_390": 21,
+     "firstRowTop_viewport": 208,
+     "firstRowTop_mainOffset": 160,
+     "birimMaliyetSagKenar": "th/td 1159,3 (3/3 satır ±0px)",
+     "birimMaliyetRenkleri": "3/3 satır oklch(0.21 0.006 285.9) = foreground; AYNI değerler /arge/projeler tablosunda ₺31,92 ve ₺103,41 için oklch(0.72 0.17 70) = warning",
+     "mobilKartAyraci_390": "subtitle right 118,8 = meta \"·\" left 118,8 → gap 0px (\"Şekersiz Protein· v1\") — shell kaynaklı (shell-mobile-card-meta-gap-01)",
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Deneme Reçeteleri\" 117,4x19,5 (etkileşimsiz metin)"
+     ]
     }
    },
    "open": [
@@ -1776,12 +1970,23 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar 168px dikey alan tüketiliyor.",
-     "measure": "tur 6 yeniden ölçüm: ilk tablo satırı viewport 208px / <main> ofseti 160px (tur 5 ile aynı; hedef ≤112px). Kalan bütçe PageHeader başlığı + DataTable araç çubuğunun iki ayrı şerit olmasından geliyor (shell).",
+     "measure": "tur 7 yeniden ölçüm: ilk tablo satırı viewport 208px / <main> ofseti 160px (tur 5 ve 6 ile aynı; hedef ≤112px). Kalan bütçe PageHeader başlığı ile DataTable araç çubuğunun iki ayrı şerit olmasından geliyor (shell).",
      "target": "Başlık ile filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1,
-     "reMeasuredRound": 6,
-     "lastMeasuredRound": 6
+     "reMeasuredRound": 7,
+     "lastMeasuredRound": 7
+    },
+    {
+     "id": "arge-receteler-03",
+     "criterion": 11,
+     "severity": "P2",
+     "text": "Aynı olgu (\"birim maliyet proje hedefinin üstünde\") iki kardeş ekranda iki farklı dille anlatılıyor: /arge/projeler tablosunda ₺31,92 ve ₺103,41 warning turuncusuyla basılırken, bu tabloda AYNI iki değer nötr foreground. Kullanıcı iki ekranı yan yana koyduğunda çelişkili sinyal alıyor.",
+     "measure": "tur 7: /arge/receteler Birim maliyet sütunu 3/3 satır oklch(0.21 0.006 285.9)=foreground; /arge/projeler aynı değerler için 2/3 satır oklch(0.72 0.17 70)=warning",
+     "target": "Hedef üstü birim maliyet iki ekranda da AYNI kodlamayla (warning) basılır; ölçüm: /arge/receteler ₺103,41 ve ₺31,92 rengi = /arge/projeler aynı satırların rengi",
+     "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx (Birim maliyet sütunu hücre render'ı)",
+     "openedRound": 7,
+     "lastMeasuredRound": 7
     }
    ],
    "closed": [

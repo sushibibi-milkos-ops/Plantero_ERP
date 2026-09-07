@@ -1,0 +1,75 @@
+{
+ "as": "satis",
+ "vp": "1440x900",
+ "bySection": {
+  "Satış hunisi": {
+   "heights": [
+    16
+   ],
+   "lines": [
+    1
+   ],
+   "n": 4
+  },
+  "En çok satan 5 (son 30 gün)": {
+   "heights": [
+    41,
+    40
+   ],
+   "lines": [
+    2
+   ],
+   "n": 5
+  },
+  "Son siparişler": {
+   "heights": [
+    41,
+    40
+   ],
+   "lines": [
+    3
+   ],
+   "n": 10
+  }
+ },
+ "dupes": [],
+ "colBottoms": [
+  {
+   "left": 264,
+   "bottom": 448
+  },
+  {
+   "left": 848,
+   "bottom": 526
+  }
+ ],
+ "colSpread": 78,
+ "rightSpread": {
+  "Satış hunisi": 0,
+  "En çok satan 5 (son 30 gün)": 0,
+  "Son siparişler": 0
+ },
+ "secs": [
+  {
+   "t": "Satış hunisi",
+   "top": 276,
+   "bottom": 448,
+   "left": 264,
+   "w": 568
+  },
+  {
+   "t": "En çok satan 5 (son 30 gün)",
+   "top": 276,
+   "bottom": 526,
+   "left": 848,
+   "w": 568
+  },
+  {
+   "t": "Son siparişler",
+   "top": 542,
+   "bottom": 997,
+   "left": 264,
+   "w": 1152
+  }
+ ]
+}

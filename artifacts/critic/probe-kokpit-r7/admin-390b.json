@@ -1,0 +1,150 @@
+{
+ "as": "admin",
+ "vp": "390x844",
+ "bySection": {
+  "Bugün": {
+   "heights": [
+    63.5,
+    62.5
+   ],
+   "lines": [
+    2,
+    3
+   ],
+   "n": 8
+  },
+  "Son aktiviteler": {
+   "heights": [
+    61,
+    60
+   ],
+   "lines": [
+    2
+   ],
+   "n": 8
+  },
+  "Banka": {
+   "heights": [
+    64,
+    63
+   ],
+   "lines": [
+    2
+   ],
+   "n": 3
+  },
+  "Üretim hatları": {
+   "heights": [
+    65.5,
+    64.5
+   ],
+   "lines": [
+    2
+   ],
+   "n": 3
+  },
+  "SKT riski": {
+   "heights": [
+    64.5,
+    63.5
+   ],
+   "lines": [
+    3
+   ],
+   "n": 5
+  },
+  "Geciken alacak": {
+   "heights": [
+    64,
+    63
+   ],
+   "lines": [
+    3
+   ],
+   "n": 4
+  }
+ },
+ "dupes": [],
+ "colBottoms": [],
+ "colSpread": 0,
+ "rightSpread": {
+  "Bugün": 0,
+  "Son aktiviteler": 44,
+  "Banka": 0,
+  "Üretim hatları": 0,
+  "SKT riski": 0,
+  "Geciken alacak": 0
+ },
+ "secs": [
+  {
+   "t": "Günlük kanal satışları",
+   "top": 256,
+   "bottom": 401,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Break-even'a uzaklık",
+   "top": 417,
+   "bottom": 580,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Bugün",
+   "top": 596,
+   "bottom": 1149,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Onay kuyruğu",
+   "top": 1165,
+   "bottom": 1332,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Son aktiviteler",
+   "top": 1348,
+   "bottom": 1881,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Banka",
+   "top": 1897,
+   "bottom": 2178,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Üretim hatları",
+   "top": 2194,
+   "bottom": 2436,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Kritik stok",
+   "top": 2452,
+   "bottom": 2741,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "SKT riski",
+   "top": 2757,
+   "bottom": 3246,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Geciken alacak",
+   "top": 3262,
+   "bottom": 3685,
+   "left": 16,
+   "w": 358
+  }
+ ]
+}

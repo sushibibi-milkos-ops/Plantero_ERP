@@ -1,0 +1,186 @@
+{
+ "as": "depo",
+ "vp": "390x844",
+ "bySection": {
+  "Karantina": {
+   "h": [
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  "SKT riski": {
+   "h": [
+    63.5,
+    63.5,
+    63.5,
+    63.5,
+    63.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  "Bugün": {
+   "h": [
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "singleLine": [],
+ "multiLine": [
+  62.5,
+  63,
+  63.5
+ ],
+ "smallRows": [],
+ "empties": [],
+ "clipped": [
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti",
+   "clientW": 248,
+   "scrollW": 277
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti",
+   "clientW": 248,
+   "scrollW": 277
+  },
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler",
+   "clientW": 248,
+   "scrollW": 331
+  },
+  {
+   "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+   "clientW": 240,
+   "scrollW": 242
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+   "clientW": 248,
+   "scrollW": 257
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+   "clientW": 240,
+   "scrollW": 257
+  }
+ ],
+ "liAbove": 5,
+ "cellAbove": 4,
+ "colBottoms": [
+  {
+   "left": 16,
+   "bottom": 1803
+  }
+ ],
+ "colSpread": 0,
+ "noTabCount": 16,
+ "noTab": [
+  {
+   "text": "4 lot bekliyor",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-307020000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-304030000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-302020000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-308020000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-307010000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000014",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000013",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000012",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000011",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000010",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000009",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 39,
+ "rightSpread": {
+  "Karantina": 0,
+  "SKT riski": 0
+ },
+ "interactiveCount": 26,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Mal kabul bekleyen",
+  "Sevk bekleyen",
+  "Açık sayım",
+  "Karantinada",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [
+  16
+ ],
+ "smallTargets": [],
+ "vh": 844,
+ "docScrollW": 390,
+ "docClientW": 390
+}

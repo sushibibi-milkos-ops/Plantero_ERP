@@ -1,0 +1,180 @@
+{
+ "as": "satis",
+ "vp": "390x844",
+ "bySection": {
+  "Satış hunisi": {
+   "h": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "lines": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "En çok satan 5 (son 30 gün)": {
+   "h": [
+    63,
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  "Son siparişler": {
+   "h": [
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "singleLine": [
+  16
+ ],
+ "multiLine": [
+  62.5,
+  63
+ ],
+ "smallRows": [
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Aday3"
+  },
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Nitelikli2"
+  },
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Teklif Aşaması2"
+  },
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Müzakere1"
+  }
+ ],
+ "empties": [],
+ "clipped": [],
+ "liAbove": 9,
+ "cellAbove": 0,
+ "colBottoms": [
+  {
+   "left": 16,
+   "bottom": 1505
+  }
+ ],
+ "colSpread": 0,
+ "noTabCount": 27,
+ "noTab": [
+  {
+   "text": "En çok satan 5 (son 30 gün)",
+   "fvn": "normal"
+  },
+  {
+   "text": "1",
+   "fvn": "normal"
+  },
+  {
+   "text": "2",
+   "fvn": "normal"
+  },
+  {
+   "text": "3",
+   "fvn": "normal"
+  },
+  {
+   "text": "Badem İçeceği 1 Litrelik UHT",
+   "fvn": "normal"
+  },
+  {
+   "text": "4",
+   "fvn": "normal"
+  },
+  {
+   "text": "5",
+   "fvn": "normal"
+  },
+  {
+   "text": "07.09.2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "SO-2026-000032",
+   "fvn": "normal"
+  },
+  {
+   "text": "06.09.2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "SO-2026-000033",
+   "fvn": "normal"
+  },
+  {
+   "text": "02.09.2026",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 46,
+ "rightSpread": {
+  "Satış hunisi": 120,
+  "En çok satan 5 (son 30 gün)": 0
+ },
+ "interactiveCount": 21,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Bugünkü sipariş",
+  "Bugünkü ciro%67,8dünden",
+  "Açık fırsat",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [
+  16
+ ],
+ "smallTargets": [],
+ "vh": 844,
+ "docScrollW": 390,
+ "docClientW": 390
+}

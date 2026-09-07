@@ -1,0 +1,126 @@
+{
+ "d1440": {
+  "headCols": "172px 144px 144px 128px 96px 112px 36px",
+  "headH": 35,
+  "rowCols": "172px 144px 144px 128px 96px 112px 36px",
+  "cellWidths": [
+   {
+    "w": 172,
+    "t": "Yulaf3010600000,2 "
+   },
+   {
+    "w": 144,
+    "t": "MiktarKG"
+   },
+   {
+    "w": 144,
+    "t": "KaynakOrtalama mal"
+   },
+   {
+    "w": 128,
+    "t": "B. maliyet₺40,00"
+   },
+   {
+    "w": 96,
+    "t": "Fire %"
+   },
+   {
+    "w": 112,
+    "t": "₺8,00"
+   }
+  ],
+  "rowHoverBg": "rgba(0, 0, 0, 0)",
+  "tableBox": {
+   "w": 882,
+   "h": 270,
+   "borderTop": "1px solid oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+   "borderLeft": "1px oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+   "radius": "8px",
+   "cls": "rounded-lg border border-border/60 text-[13px]"
+  },
+  "versionRow": {
+   "trigW": 0,
+   "parentW": 0,
+   "siblings": [
+    {
+     "tag": "button",
+     "w": 0,
+     "t": "v2 · Devredildi"
+    },
+    {
+     "tag": "button",
+     "w": 0,
+     "t": "Yeni deneme reçe"
+    },
+    {
+     "tag": "button",
+     "w": 0,
+     "t": ""
+    }
+   ],
+   "parentCls": "flex shrink-0 items-center gap-1.5 md:hidden"
+  }
+ },
+ "d390": {
+  "headCols": "none",
+  "headH": 0,
+  "rowCols": "159px 159px",
+  "cellWidths": [
+   {
+    "w": 330,
+    "t": "Yulaf3010600000,2 "
+   },
+   {
+    "w": 0,
+    "t": "MiktarKG"
+   },
+   {
+    "w": 0,
+    "t": "KaynakOrtalama mal"
+   },
+   {
+    "w": 0,
+    "t": "B. maliyet₺40,00"
+   },
+   {
+    "w": 0,
+    "t": "Fire %"
+   },
+   {
+    "w": 0,
+    "t": "₺8,00"
+   }
+  ],
+  "rowHoverBg": "rgba(0, 0, 0, 0)",
+  "tableBox": {
+   "w": 344,
+   "h": 295,
+   "borderTop": "1px solid oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+   "borderLeft": "1px oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+   "radius": "8px",
+   "cls": "rounded-lg border border-border/60 text-[13px]"
+  },
+  "versionRow": {
+   "trigW": 112,
+   "parentW": 212,
+   "siblings": [
+    {
+     "tag": "button",
+     "w": 112,
+     "t": "v2 · Devredildi"
+    },
+    {
+     "tag": "button",
+     "w": 44,
+     "t": "Yeni deneme reçe"
+    },
+    {
+     "tag": "button",
+     "w": 44,
+     "t": ""
+    }
+   ],
+   "parentCls": "flex shrink-0 items-center gap-1.5 md:hidden"
+  }
+ }
+}

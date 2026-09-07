@@ -1,0 +1,158 @@
+{
+ "as": "muhasebe",
+ "vp": "390x844",
+ "bySection": {
+  "Banka": {
+   "h": [
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "Mutabakat kuyruğu": {
+   "h": [
+    63,
+    63,
+    63,
+    63,
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "Geciken alacak": {
+   "h": [
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "singleLine": [],
+ "multiLine": [
+  63
+ ],
+ "smallRows": [],
+ "empties": [
+  {
+   "section": "Bugünün tahsilatları",
+   "h": 224,
+   "sectionH": 270,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Bugün tahsilat yok",
+    "Bir tahsilat kaydedildiğinde burada görü"
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler",
+   "clientW": 324,
+   "scrollW": 331
+  }
+ ],
+ "liAbove": 4,
+ "cellAbove": 4,
+ "colBottoms": [
+  {
+   "left": 16,
+   "bottom": 2336
+  }
+ ],
+ "colSpread": 0,
+ "noTabCount": 9,
+ "noTab": [
+  {
+   "text": "16 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "3 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "37 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "2 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "Nakit projeksiyonu (3 ay)",
+   "fvn": "normal"
+  },
+  {
+   "text": "Eylül 2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "Ekim 2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "Kasım 2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "%0,2 tamamlandı",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 47,
+ "rightSpread": {
+  "Banka": 0,
+  "Mutabakat kuyruğu": 0,
+  "Geciken alacak": 0
+ },
+ "interactiveCount": 28,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Banka toplamı",
+  "Vadesi geçen alacak",
+  "KDV ödenecek",
+  "Mutabakat kuyruğu",
+  "Break-even ilerleme",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [
+  16
+ ],
+ "smallTargets": [],
+ "vh": 844,
+ "docScrollW": 390,
+ "docClientW": 390
+}
