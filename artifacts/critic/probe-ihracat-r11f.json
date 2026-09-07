@@ -1,0 +1,22 @@
+{
+ "EXP-2026-000002": {
+  "w": 109,
+  "h": 20,
+  "parentH": 20,
+  "parentW": 324,
+  "pad": "0px/0px",
+  "minH": "auto",
+  "display": "block",
+  "href": "/depo/sevkiyat/5065b829-d1c4-4f8c-b520-c8e26ac8fdd1"
+ },
+ "EXP-2026-000001": {
+  "w": 109,
+  "h": 20,
+  "parentH": 20,
+  "parentW": 324,
+  "pad": "0px/0px",
+  "minH": "auto",
+  "display": "block",
+  "href": "/depo/sevkiyat/ce8965a9-c0d8-4947-a3b9-233b42adcefc"
+ }
+}

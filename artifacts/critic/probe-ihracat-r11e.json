@@ -1,0 +1,102 @@
+{
+ "sevkiyatlar": [
+  {
+   "tag": "A",
+   "label": "Yeni sevkiyat",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "INPUT",
+   "label": "Sevkiyat no, müşteri ara…",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.9 0.004 286.3)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Durum",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Sevkiyat no",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.92 0.004 286.3)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Müşteri",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+   "border": "oklch(0.92 0.004 286.3)"
+  }
+ ],
+ "yeni": [
+  {
+   "tag": "BUTTON",
+   "label": "Sipariş seçin",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "FOB",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "INPUT",
+   "label": "Ör. İzmir FOB",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.9 0.004 286.3)"
+  },
+  {
+   "tag": "INPUT",
+   "label": "DE",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.9 0.004 286.3)"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Karayolu",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.55 0.16 152)"
+  },
+  {
+   "tag": "INPUT",
+   "label": "Ör. İzmir Alsancak Limanı",
+   "fv": true,
+   "outline": "0px/none/oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "box": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+   "border": "oklch(0.9 0.004 286.3)"
+  }
+ ]
+}
