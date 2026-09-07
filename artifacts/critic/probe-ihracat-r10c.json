@@ -1,0 +1,143 @@
+{
+ "sevkiyatlar": {
+  "cellCount": 16,
+  "cellsWithoutTabular": 13,
+  "sampleBad": [
+   {
+    "t": "9/11",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "€270,00",
+    "fvn": "normal",
+    "align": "right",
+    "fam": "Inter"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "₺10.044,00",
+    "fvn": "normal",
+    "align": "right",
+    "fam": "Inter"
+   },
+   {
+    "t": "2/8",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   }
+  ],
+  "kpis": []
+ },
+ "kurlar": {
+  "cellCount": 100,
+  "cellsWithoutTabular": 100,
+  "sampleBad": [
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "₺37,2000",
+    "fvn": "normal",
+    "align": "right",
+    "fam": "Inter"
+   },
+   {
+    "t": "Satış₺37,4000",
+    "fvn": "normal",
+    "align": "right",
+    "fam": "Inter"
+   },
+   {
+    "t": "-%3,36",
+    "fvn": "normal",
+    "align": "right",
+    "fam": "Inter"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   }
+  ],
+  "kpis": []
+ },
+ "belgeler": {
+  "cellCount": 32,
+  "cellsWithoutTabular": 2,
+  "sampleBad": [
+   {
+    "t": "EUR.1 dolaşım sert",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "EUR.1 dolaşım sert",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   }
+  ],
+  "kpis": []
+ },
+ "gtip": {
+  "cellCount": 51,
+  "cellsWithoutTabular": 12,
+  "sampleBad": [
+   {
+    "t": "2x Badem Bazı",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "3x Badem Bazı",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "6x Badem Bazı",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "2x Fındık",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   },
+   {
+    "t": "3x Fındık Bazı",
+    "fvn": "normal",
+    "align": "start",
+    "fam": "Inter"
+   }
+  ],
+  "kpis": []
+ },
+ "at1024": {
+  "docScrollW": 1024,
+  "docClientW": 1024,
+  "tableW": 1115,
+  "wrapClientW": 736,
+  "wrapScrollW": 1115
+ },
+ "dark": {
+  "html": "__variable_1b85de __variable_fdaf1b dark",
+  "bodyBg": "oklch(0.16 0.005 285.8)"
+ }
+}

@@ -1,0 +1,267 @@
+{
+ "sevkiyatlar": {
+  "rings": [
+   {
+    "tag": "A",
+    "label": "Plantero",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412"
+   },
+   {
+    "tag": "A",
+    "label": "Kokpit",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Bildirimler",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Ana Veri",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Depo",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Üretim",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   }
+  ],
+  "empty": {
+   "tail": [
+    "\t",
+    "ETD",
+    "\t",
+    "Oluşturma",
+    "\t",
+    "Tutar (₺)",
+    "Eşleşen kayıt yok",
+    "Arama ya da filtreleri değiştirmeyi deneyin."
+   ],
+   "svgs": 1
+  }
+ },
+ "belgeler": {
+  "rings": [
+   {
+    "tag": "A",
+    "label": "Plantero",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412"
+   },
+   {
+    "tag": "A",
+    "label": "Kokpit",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Bildirimler",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Ana Veri",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Depo",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Üretim",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   }
+  ],
+  "empty": {
+   "tail": [
+    "\t",
+    "Müşteri",
+    "\t",
+    "Durum",
+    "\t",
+    "Eylemler",
+    "Eşleşen kayıt yok",
+    "Arama ya da filtreleri değiştirmeyi deneyin."
+   ],
+   "svgs": 1
+  }
+ },
+ "kurlar": {
+  "rings": [
+   {
+    "tag": "A",
+    "label": "Plantero",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412"
+   },
+   {
+    "tag": "A",
+    "label": "Kokpit",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Bildirimler",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Ana Veri",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Depo",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Üretim",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   }
+  ],
+  "empty": {
+   "tail": [
+    "\t",
+    "Satış",
+    "\t",
+    "Günlük değişim",
+    "\t",
+    "Kaynak",
+    "Eşleşen kayıt yok",
+    "Arama ya da filtreleri değiştirmeyi deneyin."
+   ],
+   "svgs": 1
+  }
+ },
+ "gtip": {
+  "rings": [
+   {
+    "tag": "A",
+    "label": "Plantero",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.1412"
+   },
+   {
+    "tag": "A",
+    "label": "Kokpit",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Bildirimler",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Ana Veri",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Depo",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   },
+   {
+    "tag": "BUTTON",
+    "label": "Üretim",
+    "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "boxShadow": "none"
+   }
+  ],
+  "empty": {
+   "tail": [
+    "\t",
+    "Ürün",
+    "\t",
+    "Tip",
+    "\t",
+    "GTİP",
+    "Eşleşen kayıt yok",
+    "Arama ya da filtreleri değiştirmeyi deneyin."
+   ],
+   "svgs": 1
+  }
+ },
+ "mobileTouch": {
+  "sevkiyatlar": [],
+  "belgeler": [],
+  "kurlar": [],
+  "gtip": [],
+  "yeni": [
+   {
+    "tag": "SELECT",
+    "cls": "",
+    "label": "EXWFCACPTCIPDAPDPUDD",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "tag": "SELECT",
+    "cls": "",
+    "label": "KarayoluDeniz yoluHa",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "tag": "SELECT",
+    "cls": "",
+    "label": "Otomatik (tutara gör",
+    "w": 1,
+    "h": 1
+   }
+  ]
+ }
+}

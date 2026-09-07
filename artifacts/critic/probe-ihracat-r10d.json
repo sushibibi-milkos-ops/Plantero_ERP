@@ -1,0 +1,162 @@
+{
+ "sevkiyatlar": {
+  "total": 16,
+  "badCount": 4,
+  "bad": [
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "10.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   }
+  ],
+  "kpis": []
+ },
+ "kurlar": {
+  "total": 75,
+  "badCount": 25,
+  "bad": [
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "06.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "06.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "05.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "05.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "04.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "04.09.2026",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   }
+  ],
+  "kpis": []
+ },
+ "gtip": {
+  "total": 51,
+  "badCount": 11,
+  "bad": [
+   {
+    "t": "2x Badem Bazı",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "3x Badem Bazı",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "6x Badem Bazı",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "2x Fındık",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "3x Fındık Bazı",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "6x Fındık Bazı",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "2x Kaju Bazı",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "3x Kaju Bazı",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   }
+  ],
+  "kpis": []
+ },
+ "belgeler": {
+  "total": 32,
+  "badCount": 2,
+  "bad": [
+   {
+    "t": "EUR.1 dolaşım sertif",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "EUR.1 dolaşım sertif",
+    "fvn": "normal",
+    "fam": "Inter",
+    "align": "start"
+   }
+  ],
+  "kpis": []
+ }
+}

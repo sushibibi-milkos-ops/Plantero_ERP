@@ -1,0 +1,10 @@
+{
+ "dots": [],
+ "rowCount": 0,
+ "tokens": {
+  "primary": "oklch(0.55 0.16 152)",
+  "success": "oklch(0.6 0.16 152)",
+  "warning": "oklch(0.72 0.17 70)",
+  "info": "oklch(0.6 0.15 250)"
+ }
+}

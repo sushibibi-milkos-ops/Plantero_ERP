@@ -1,0 +1,188 @@
+{
+ "planlar": [
+  {
+   "subtitle": "MK-002 Püre makinesi (ball mill mi",
+   "metric": "—",
+   "boxGap": 8,
+   "textGap": 279.8
+  },
+  {
+   "subtitle": "MK-023 Metal dedektörü (30×25)",
+   "metric": "08.09.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-018 Stick dolum makinesi (20 g)",
+   "metric": "14.09.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-005 Sıvı dolum makinesi 1 (YKM ",
+   "metric": "14.09.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-011 Silindirik toz mikser 200 k",
+   "metric": "14.09.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-001 Ön ezme (ezme makinesi, par",
+   "metric": "14.09.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-015 Emniyet bandı kapatma (pake",
+   "metric": "07.10.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-003 Homogenizer",
+   "metric": "07.10.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-014 Dikey toz dolum makinesi (o",
+   "metric": "07.10.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-004 Balans tankı (paslanmaz çel",
+   "metric": "07.10.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-008 Folyo kapatma / emniyet ban",
+   "metric": "07.10.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  },
+  {
+   "subtitle": "MK-010 İmalat kazanı (büyük kazan)",
+   "metric": "07.12.2026",
+   "boxGap": 8,
+   "textGap": 218.4
+  }
+ ],
+ "makineler": [
+  {
+   "subtitle": "Ön ezme (ezme makinesi, parçalama ",
+   "metric": "0",
+   "boxGap": 8,
+   "textGap": 71
+  },
+  {
+   "subtitle": "Püre makinesi (ball mill mikser)Mi",
+   "metric": "0",
+   "boxGap": 8,
+   "textGap": 152.2
+  },
+  {
+   "subtitle": "HomogenizerHomojenizatör",
+   "metric": "0",
+   "boxGap": 8,
+   "textGap": 251.5
+  },
+  {
+   "subtitle": "Balans tankı (paslanmaz çelik tank",
+   "metric": "0",
+   "boxGap": 8,
+   "textGap": 55.9
+  },
+  {
+   "subtitle": "Sıvı dolum makinesi 1 (YKM AYZ24)D",
+   "metric": "0",
+   "boxGap": 8,
+   "textGap": 126.8
+  },
+  {
+   "subtitle": "Sıvı dolum makinesi 2 (Sonkaya SMD",
+   "metric": "0",
+   "boxGap": 8,
+   "textGap": 78.1
+  }
+ ],
+ "isemirleri": [
+  {
+   "subtitle": "Mikser motorunda anormal ses",
+   "metric": "",
+   "boxGap": 8,
+   "textGap": 160.6
+  },
+  {
+   "subtitle": "Gramaj sapması — toz dolumu tutars",
+   "metric": "1",
+   "boxGap": 8,
+   "textGap": 92.3
+  },
+  {
+   "subtitle": "Dolum başlığı sızdırıyor",
+   "metric": "2",
+   "boxGap": 8,
+   "textGap": 178.8
+  },
+  {
+   "subtitle": "Haftalık bıçak/hazne temizliği — Ö",
+   "metric": "",
+   "boxGap": 8,
+   "textGap": 62.2
+  },
+  {
+   "subtitle": "Haftalık stick nozul temizliği — S",
+   "metric": "",
+   "boxGap": 8,
+   "textGap": 17.5
+  },
+  {
+   "subtitle": "Günlük hassasiyet testi — Metal de",
+   "metric": "",
+   "boxGap": 8,
+   "textGap": 44.7
+  },
+  {
+   "subtitle": "Mikser motorunda anormal ses",
+   "metric": "",
+   "boxGap": 0,
+   "textGap": 0
+  },
+  {
+   "subtitle": "Gramaj sapması — toz dolumu tutars",
+   "metric": "1",
+   "boxGap": 0,
+   "textGap": 0
+  },
+  {
+   "subtitle": "Dolum başlığı sızdırıyor",
+   "metric": "2",
+   "boxGap": 0,
+   "textGap": 0
+  },
+  {
+   "subtitle": "Haftalık bıçak/hazne temizliği — Ö",
+   "metric": "",
+   "boxGap": 0,
+   "textGap": 0
+  },
+  {
+   "subtitle": "Haftalık stick nozul temizliği — S",
+   "metric": "",
+   "boxGap": 0,
+   "textGap": 0
+  },
+  {
+   "subtitle": "Günlük hassasiyet testi — Metal de",
+   "metric": "",
+   "boxGap": 0,
+   "textGap": 0
+  }
+ ]
+}

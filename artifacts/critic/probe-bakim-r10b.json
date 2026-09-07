@@ -1,0 +1,258 @@
+{
+ "isemirleri": [
+  {
+   "h": 62,
+   "cardRight": 374,
+   "badge": {
+    "text": "Bildirildi",
+    "right": 313
+   },
+   "hasBtn": true,
+   "btnRight": 363,
+   "texts": [
+    {
+     "t": "MO-2026-000006",
+     "left": 27,
+     "right": 235,
+     "size": "14px"
+    },
+    {
+     "t": "Mikser motorunda anormal ses",
+     "left": 27,
+     "right": 202,
+     "size": "12px"
+    }
+   ]
+  },
+  {
+   "h": 64.5,
+   "cardRight": 374,
+   "badge": {
+    "text": "Tamamlandı",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MO-2026-000002",
+     "left": 27,
+     "right": 263,
+     "size": "14px"
+    },
+    {
+     "t": "Gramaj sapması — toz dolumu ",
+     "left": 27,
+     "right": 245,
+     "size": "12px"
+    }
+   ]
+  },
+  {
+   "h": 64.5,
+   "cardRight": 374,
+   "badge": {
+    "text": "Tamamlandı",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MO-2026-000001",
+     "left": 27,
+     "right": 263,
+     "size": "14px"
+    },
+    {
+     "t": "Dolum başlığı sızdırıyor",
+     "left": 27,
+     "right": 158,
+     "size": "12px"
+    }
+   ]
+  },
+  {
+   "h": 62,
+   "cardRight": 374,
+   "badge": {
+    "text": "Tamamlandı",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MO-2026-000003",
+     "left": 27,
+     "right": 263,
+     "size": "14px"
+    },
+    {
+     "t": "Haftalık bıçak/hazne temizli",
+     "left": 27,
+     "right": 355,
+     "size": "12px"
+    }
+   ]
+  },
+  {
+   "h": 62,
+   "cardRight": 374,
+   "badge": {
+    "text": "Tamamlandı",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MO-2026-000005",
+     "left": 27,
+     "right": 263,
+     "size": "14px"
+    },
+    {
+     "t": "Haftalık stick nozul temizli",
+     "left": 27,
+     "right": 355,
+     "size": "12px"
+    }
+   ]
+  },
+  {
+   "h": 62,
+   "cardRight": 374,
+   "badge": {
+    "text": "Tamamlandı",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MO-2026-000004",
+     "left": 27,
+     "right": 263,
+     "size": "14px"
+    },
+    {
+     "t": "Günlük hassasiyet testi — Me",
+     "left": 27,
+     "right": 318,
+     "size": "12px"
+    }
+   ]
+  }
+ ],
+ "makineler": [
+  {
+   "h": 63.5,
+   "cardRight": 374,
+   "badge": {
+    "text": "Boşta",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MK-001",
+     "left": 27,
+     "right": 297,
+     "size": "14px"
+    },
+    {
+     "t": "Ön ezme (ezme makinesi, parç",
+     "left": 27,
+     "right": 284,
+     "size": "12px"
+    },
+    {
+     "t": "Öğütücü",
+     "left": 0,
+     "right": 0,
+     "size": "11px"
+    },
+    {
+     "t": "0",
+     "left": 355,
+     "right": 363,
+     "size": "13px"
+    }
+   ]
+  },
+  {
+   "h": 63.5,
+   "cardRight": 374,
+   "badge": {
+    "text": "Boşta",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MK-002",
+     "left": 27,
+     "right": 297,
+     "size": "14px"
+    },
+    {
+     "t": "Püre makinesi (ball mill mik",
+     "left": 27,
+     "right": 203,
+     "size": "12px"
+    },
+    {
+     "t": "Mikser",
+     "left": 0,
+     "right": 0,
+     "size": "11px"
+    },
+    {
+     "t": "0",
+     "left": 355,
+     "right": 363,
+     "size": "13px"
+    }
+   ]
+  },
+  {
+   "h": 63.5,
+   "cardRight": 374,
+   "badge": {
+    "text": "Boşta",
+    "right": 363
+   },
+   "hasBtn": false,
+   "btnRight": null,
+   "texts": [
+    {
+     "t": "MK-003",
+     "left": 27,
+     "right": 297,
+     "size": "14px"
+    },
+    {
+     "t": "Homogenizer",
+     "left": 27,
+     "right": 103,
+     "size": "12px"
+    },
+    {
+     "t": "Homojenizatör",
+     "left": 0,
+     "right": 0,
+     "size": "11px"
+    },
+    {
+     "t": "0",
+     "left": 355,
+     "right": 363,
+     "size": "13px"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+[
+ {
+  "label": "Bildirildi",
+  "dotBg": "oklch(0.72 0.17 70)",
+  "size": [
+   10,
+   10
+  ]
+ },
+ {
+  "label": "Yapılıyor",
+  "dotBg": "oklch(0.55 0.16 152)",
+  "size": [
+   10,
+   10
+  ]
+ },
+ {
+  "label": "Tamamlandı",
+  "dotBg": "oklch(0.6 0.16 152)",
+  "size": [
+   10,
+   10
+  ]
+ }
+]

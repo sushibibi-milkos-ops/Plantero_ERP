@@ -1,0 +1,97 @@
+{
+ "gumrukte": {
+  "Sipariş satırları": {
+   "heights": [
+    64
+   ],
+   "distinct": [
+    64
+   ],
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "Çeki listesi": {
+   "heights": [
+    88
+   ],
+   "distinct": [
+    88
+   ],
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "Belgeler": {
+   "heights": [
+    60,
+    56,
+    56,
+    56,
+    56,
+    60,
+    60,
+    56
+   ],
+   "distinct": [
+    56,
+    60
+   ],
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "Fatura & kur": {
+   "heights": [],
+   "distinct": [],
+   "scrollW": 390,
+   "clientW": 390
+  }
+ },
+ "kapali": {
+  "Sipariş satırları": {
+   "heights": [
+    64
+   ],
+   "distinct": [
+    64
+   ],
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "Çeki listesi": {
+   "heights": [
+    88
+   ],
+   "distinct": [
+    88
+   ],
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "Belgeler": {
+   "heights": [
+    60,
+    60,
+    56,
+    60,
+    60,
+    56,
+    60,
+    60,
+    60,
+    60,
+    56
+   ],
+   "distinct": [
+    56,
+    60
+   ],
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "Fatura & kur": {
+   "heights": [],
+   "distinct": [],
+   "scrollW": 390,
+   "clientW": 390
+  }
+ }
+}
