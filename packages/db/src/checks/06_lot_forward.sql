@@ -12,6 +12,28 @@
 --      Recalled/expired lotun MEVCUT konumu I27 (anlık usage kontrolü) ile, recall SONRASI oluşan YENİ
 --      (meşru olmayan) hareketler ise I40 (moved_at > lot.updated_at zaman damgası) ile ayrı ayrı kapsanır.
 --   c) Σ tüketim + Σ sevk + Σ fire (iş emri + genel) + eldeki stok ≤ initial_qty (+ sayım fazlası)
+--
+-- Veri bütünlüğü turu 7 (veri-critic), YENİ alt terim (P1, kök neden — kontrolün KENDİ formül eksikliği,
+-- CANLI OLARAK KANITLANDI): `packages/core/src/accounting/invoices.ts::createCreditNote` (isSales dalı,
+-- I50 kapatma yolu, Tur 11) satılmış/sevk edilmiş bir lotun iadesinde `postStockMove(kind:'return_in')`
+-- ile malı FİZİKSEL olarak müşteri sanal lokasyonundan geri asıl depoya taşıyor — bu ARTAN `oh.qty`
+-- (eldeki) doğru bir davranış. Ama `d` terimi (`delivery_lines.picked_qty`) o sevkiyatın TARİHSEL kaydı
+-- olduğundan iade sonrasında da HİÇ azalmıyor (haklı olarak — "bu lot bir keresinde bu miktar sevk
+-- edildi" gerçeği değişmez). Sonuç: aynı fiziksel birimler hem `d`'de (tarihsel sevkiyat) hem `oh`'da
+-- (iade sonrası yeniden eldeki) sayılıyor — iade edilen miktar kadar ÇİFT SAYIM oluşuyor ve toplam
+-- `initial_qty`'yi iade miktarı kadar aşıyor. `recall_return` (geri çağırmada müşteriden fiziksel iade —
+-- bkz. I57) de AYNI sınıf bir "customer virtualUsage'dan içeri" hareketi (`stock/ledger.ts` VIRTUAL_USAGE
+-- eşlemesi, `recall_return: {direction:'in', virtualUsage:['customer']}`) olduğundan aynı çift sayıma
+-- yol açar (bugün dormant — I57 düzeltilene kadar hiç üretilmiyor, ama üretildiği an aynı sınıf hata
+-- oluşur). Canlı doğrulama (rollback'li transaction, fresh seed, `INV-2026-000001` üzerinde
+-- `createCreditNote` doğrudan çağrıldı): iade sonrası AYNI transaction'da eski formül **2 ihlal**
+-- verdi (`lot_qty_exceeds_initial`, diff=+6,0000 ve +12,0000 — tam iade edilen miktarlar kadar).
+-- Düzeltme: her iki "customer'dan içeri" hareket türünü (`return_in`, `recall_return`) toplamdan
+-- ÇIKARAN yeni bir `ret` CTE'si eklendi — bu miktarlar zaten `d` (tarihsel sevkiyat) tarafında bir kez
+-- sayılmıştır, `oh`'da ikinci kez sayılmamalı. Aynı egzersiz düzeltme SONRASI tekrarlandığında 0 ihlal.
+-- Kök neden dosyası: `packages/db/src/checks/06_lot_forward.sql`'in kendisi (servis kodu —
+-- `createCreditNote`'un fiziksel iade mantığı — baştan beri doğruydu, yalnızca bu kontrolün formülü
+-- iade senaryosunu hiç hesaba katmıyordu).
 
 SELECT
   'I6' AS rule, 'delivery_line_missing_lot' AS entity, dl.id::text AS id,
@@ -38,8 +60,8 @@ UNION ALL
 SELECT
   'I6', 'lot_qty_exceeds_initial', l.id::text,
   l.initial_qty::numeric(18, 4) AS expected,
-  (COALESCE(c.qty, 0) + COALESCE(d.qty, 0) + COALESCE(s.qty, 0) + COALESCE(ws.qty, 0) + COALESCE(oh.qty, 0) - COALESCE(cg.qty, 0))::numeric(18, 4) AS actual,
-  ((COALESCE(c.qty, 0) + COALESCE(d.qty, 0) + COALESCE(s.qty, 0) + COALESCE(ws.qty, 0) + COALESCE(oh.qty, 0) - COALESCE(cg.qty, 0)) - l.initial_qty)::numeric(18, 4) AS diff
+  (COALESCE(c.qty, 0) + COALESCE(d.qty, 0) + COALESCE(s.qty, 0) + COALESCE(ws.qty, 0) + COALESCE(oh.qty, 0) - COALESCE(cg.qty, 0) - COALESCE(ret.qty, 0))::numeric(18, 4) AS actual,
+  ((COALESCE(c.qty, 0) + COALESCE(d.qty, 0) + COALESCE(s.qty, 0) + COALESCE(ws.qty, 0) + COALESCE(oh.qty, 0) - COALESCE(cg.qty, 0) - COALESCE(ret.qty, 0)) - l.initial_qty)::numeric(18, 4) AS diff
 FROM stock_lots l
 LEFT JOIN (SELECT lot_id, SUM(qty) AS qty FROM work_order_consumptions GROUP BY lot_id) c ON c.lot_id = l.id
 LEFT JOIN (SELECT lot_id, SUM(picked_qty) AS qty FROM delivery_lines WHERE lot_id IS NOT NULL GROUP BY lot_id) d ON d.lot_id = l.id
@@ -47,6 +69,7 @@ LEFT JOIN (SELECT lot_id, SUM(qty) AS qty FROM scraps WHERE lot_id IS NOT NULL G
 LEFT JOIN (SELECT lot_id, SUM(qty) AS qty FROM work_order_scraps WHERE lot_id IS NOT NULL GROUP BY lot_id) ws ON ws.lot_id = l.id
 LEFT JOIN (SELECT lot_id, SUM(qty) AS qty FROM stock_quants WHERE lot_id IS NOT NULL GROUP BY lot_id) oh ON oh.lot_id = l.id
 LEFT JOIN (SELECT lot_id, SUM(qty) AS qty FROM stock_moves WHERE kind = 'count_gain' AND lot_id IS NOT NULL GROUP BY lot_id) cg ON cg.lot_id = l.id
-WHERE (COALESCE(c.qty, 0) + COALESCE(d.qty, 0) + COALESCE(s.qty, 0) + COALESCE(ws.qty, 0) + COALESCE(oh.qty, 0) - COALESCE(cg.qty, 0)) - l.initial_qty > 0
+LEFT JOIN (SELECT lot_id, SUM(qty) AS qty FROM stock_moves WHERE kind IN ('return_in', 'recall_return') AND lot_id IS NOT NULL GROUP BY lot_id) ret ON ret.lot_id = l.id
+WHERE (COALESCE(c.qty, 0) + COALESCE(d.qty, 0) + COALESCE(s.qty, 0) + COALESCE(ws.qty, 0) + COALESCE(oh.qty, 0) - COALESCE(cg.qty, 0) - COALESCE(ret.qty, 0)) - l.initial_qty > 0
 
 ORDER BY id;
