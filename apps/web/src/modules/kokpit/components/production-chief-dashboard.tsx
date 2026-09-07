@@ -60,10 +60,15 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
             {data.scrapBreakdown7d.length === 0 ? (
               // Kök neden (Tur 2 P1 kokpit-empty-action-03): boş durum yalnızca ikon+başlık taşıyordu —
               // puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor.
+              // Kök neden (Tur 6 P2 kokpit-uretim-fold-rows-02): açıklama+eylem eklenince shell
+              // `EmptyState`'in `compact` varyantındaki `py-10` (shell-emptystate-compact-height-01,
+              // ortak dosya — burada değiştirilmez) bölümü 258px'e çıkarıp katlama üstü satır sayısını
+              // 14'e düşürüyordu. Masaüstünde daraltılmış dikey boşluk; mobil DEĞİŞMEDİ.
               <EmptyState
                 compact
                 title="Son 7 günde fire kaydı yok"
                 description="İş emri tamamlanırken fire girildiğinde kırılım burada görünür."
+                className="sm:py-1"
                 action={
                   <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
                     <Link href="/uretim/is-emirleri"><ArrowRight className="size-3.5" /> İş emirlerini gör</Link>
@@ -154,8 +159,11 @@ export function ProductionChiefDashboardView({ data }: { data: ProductionChiefCa
                         gerçek içeriğe göre büyür) + belge no (`shrink-0` — asla kırpılmaz) + rozet
                         (satırın kendi sağ kenarı, ondan sonra hizalanacak başka öğe yok). Satır 2: ürün
                         adı + miktar (rozet artık bu satırda değil — miktarın sağ kenarı her zaman
-                        satırın sağ kenarı, ±0px). */}
-                    <RowLink href="/uretim/is-emirleri" className="sm:h-auto sm:flex-col sm:items-stretch sm:gap-0.5 sm:py-2">
+                        satırın sağ kenarı, ±0px).
+                        Kök neden (Tur 6 P2 kokpit-multiline-row-band-01): `sm:py-2` (58.5px) aynı
+                        ekrandaki "Hat durumu" (`ProductionLineRow`, `sm:py-1.5`, 52.5px) ile aynı görsel
+                        sınıfta olduğu halde modülün ≤56px bandını aşıyordu — `sm:py-1.5`'e çekildi. */}
+                    <RowLink href="/uretim/is-emirleri" className="sm:h-auto sm:flex-col sm:items-stretch sm:gap-0.5 sm:py-1.5">
                       <div className="flex min-w-0 items-center justify-between gap-3">
                         <span className="flex min-w-0 flex-1 items-center gap-2">
                           <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">{w.lineName}</span>

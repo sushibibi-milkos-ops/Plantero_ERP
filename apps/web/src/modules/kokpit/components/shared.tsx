@@ -396,8 +396,12 @@ export function TodayRow({ item }: { item: CockpitTodayItem }) {
   const money = (w?: string) => (item.amount !== undefined ? <MoneyCell value={item.amount} className={w} /> : <QtyCell value={item.qty ?? '0'} uom={item.uom} className={w} />);
   return (
     <RowLink href={item.href} className="px-0 py-0 sm:h-auto sm:flex-col sm:items-stretch sm:gap-0 sm:px-0 sm:py-0">
-      {/* Dar konteyner + mobil: 2 satır. */}
-      <div className="flex flex-col gap-0.5 px-4 py-2.5 @min-[700px]:hidden sm:py-2">
+      {/* Dar konteyner + mobil: 2 satır.
+          Kök neden (Tur 6 P2 kokpit-multiline-row-band-01): masaüstünde `sm:py-2` (58.5px) aynı görsel
+          sınıftaki `ProductionLineRow`'un `sm:py-1.5` (52.5px) değerinden farklıydı — modülün kendi
+          bandını ("iki/çok satırlık satır ≤56px", bkz. ProductionLineRow yorumu) 2.5px aşıyordu. Mobil
+          (390px, dokunma hedefi) DEĞİŞMEDİ — yalnızca `sm:py-2` → `sm:py-1.5`. */}
+      <div className="flex flex-col gap-0.5 px-4 py-2.5 @min-[700px]:hidden sm:py-1.5">
         <div className="flex min-w-0 items-center justify-between gap-3">
           <span className="flex min-w-0 items-center gap-2">
             <span className="shrink-0 truncate text-xs text-muted-foreground">{item.kind}</span>

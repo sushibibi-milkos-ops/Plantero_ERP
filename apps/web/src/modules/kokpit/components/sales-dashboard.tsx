@@ -32,7 +32,11 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
       <KpiStripRow>
         <KpiCard title="Bugünkü sipariş" value={data.todayOrders} format="int" href="/satis/siparisler" variant="strip" />
         {revenueEqual ? (
-          <KpiCard title="Bugünkü ciro (brüt = net)" value={data.channelToday.netTotal} format="money" fractionDigits={0} delta={data.channelToday.netDeltaPct} deltaLabel="dünden" href="/satis/net-ciro" variant="strip" />
+          // Kök neden (Tur 6 P2 kokpit-satis-kpi-title-trunc-01): "Bugünkü ciro (brüt = net)" 390px'te
+          // sabit 140px'lik mobil KPI kartında (kpi-card.tsx, shell — burada değiştirilmez) kırpılıyordu
+          // ("Bugünkü ciro (brüt …"). Parantez içi eşitlik notu yalnızca açıklayıcıydı (brüt kartı zaten
+          // hiç render edilmiyor); başlık kısaltılınca bilgi kaybı yok.
+          <KpiCard title="Bugünkü ciro" value={data.channelToday.netTotal} format="money" fractionDigits={0} delta={data.channelToday.netDeltaPct} deltaLabel="dünden" href="/satis/net-ciro" variant="strip" />
         ) : (
           <>
             <KpiCard title="Bugünkü brüt ciro" value={data.channelToday.grossTotal} format="money" fractionDigits={0} delta={data.channelToday.grossDeltaPct} deltaLabel="dünden" href="/satis/net-ciro" variant="strip" />

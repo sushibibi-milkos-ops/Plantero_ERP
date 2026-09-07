@@ -202,10 +202,17 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
 
         <Section title="Kritik stok" href="/satin-alma/kritik-stok">
           {criticalStock.items.length === 0 ? (
+            // Kök neden (Tur 6 P2 kokpit-fold-rows-01): shell `EmptyState`'in `compact` varyantı
+            // `py-10` taşıyor (shell-emptystate-compact-height-01, apps/web/src/components/empty-state.tsx
+            // — ortak dosya, burada değiştirilmez) — açıklama+eylem eklenince bölüm 277px'e çıkıp
+            // katlama üstü satır sayısını 5'e düşürüyordu. Kokpit tarafında yalnızca bu örneğe
+            // (`className`, twMerge ile `py-10`'u ezer) masaüstünde daraltılmış dikey boşluk verilir —
+            // mobil (dokunma hedefi) DEĞİŞMEDİ.
             <EmptyState
               compact
               title="Kritik stok yok"
               description="Kapsama süresi tedarik süresinin altına düşen kalemler burada listelenir."
+              className="sm:py-1"
               action={
                 <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
                   <Link href="/satin-alma/siparisler/yeni"><Plus className="size-3.5" /> Satın alma siparişi oluştur</Link>

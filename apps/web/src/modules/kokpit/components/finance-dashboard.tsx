@@ -150,10 +150,14 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
               // Kök neden (Tur 2 P1 kokpit-empty-action-02): boş durum yalnızca ikon+başlık taşıyordu —
               // puan kartı kriteri 7 ikon+başlık+açıklama+eylem istiyor (Tur 1'de yalnızca 2/14 boş
               // durum düzeltilmişti, bu ikisi eksik kalmıştı).
+              // Kök neden (Tur 6 P2 kokpit-fin-fold-rows-01): shell `EmptyState`'in `compact` varyantı
+              // `py-10` taşıyor (shell-emptystate-compact-height-01, ortak dosya — burada değiştirilmez).
+              // Masaüstünde daraltılmış dikey boşluk (`className`, twMerge ile ezer); mobil DEĞİŞMEDİ.
               <EmptyState
                 compact
                 title="Bugün tahsilat yok"
                 description="Bir tahsilat kaydedildiğinde burada görünür."
+                className="sm:py-1"
                 action={
                   <Button asChild variant="outline" size="sm" className="h-11 md:h-8">
                     <Link href="/finans/tahsilat/yeni"><Plus className="size-3.5" /> Tahsilat kaydet</Link>
