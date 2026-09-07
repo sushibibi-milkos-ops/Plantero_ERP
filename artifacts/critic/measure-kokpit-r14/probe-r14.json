@@ -1,0 +1,998 @@
+{
+  "admin": {
+    "d": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 42,
+        "withRing": 38,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Bugünkü net ciro%67,8dünden",
+            "ring": false,
+            "w": 287.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Kritik stok kalemi",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Vadesi geçen alacak",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Break-even ilerleme",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "%0,2 tamamlandı",
+          "fz": "11px"
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 ",
+          "fz": "11px"
+        },
+        {
+          "t": "GR-2026-000014",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000013",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000012",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000011",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000010",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000009",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000028",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000029",
+          "fz": "12px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 21 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "WO-2026-000007 · Strawberry Pr",
+          "fz": "11px"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fz": "11px"
+        },
+        {
+          "t": "OP-307020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-304030000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-302020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-308020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-307010000-A",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 22,
+      "contentW": 1200
+    },
+    "m": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 42,
+        "withRing": 38,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Bugünkü net ciro%67,8dünden",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Kritik stok kalemi",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Vadesi geçen alacak",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Break-even ilerleme",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "%0,2 tamamlandı",
+          "fz": "11px"
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 ",
+          "fz": "11px"
+        },
+        {
+          "t": "GR-2026-000014",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000013",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000012",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000011",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000010",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000009",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000028",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000029",
+          "fz": "12px"
+        },
+        {
+          "t": "· 12 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "· 2 kez",
+          "fz": "13px"
+        },
+        {
+          "t": "WO-2026-000007 · Strawberry Pr",
+          "fz": "11px"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fz": "11px"
+        },
+        {
+          "t": "OP-307020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-304030000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-302020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-308020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-307010000-A",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 23,
+      "contentW": 390
+    }
+  },
+  "depo": {
+    "d": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 26,
+        "withRing": 22,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Mal kabul bekleyen",
+            "ring": false,
+            "w": 287.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Sevk bekleyen",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Açık sayım",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Karantinada",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · D",
+          "fz": "14px"
+        },
+        {
+          "t": "4 lot bekliyor",
+          "fz": "13px"
+        },
+        {
+          "t": "OP-307020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-304030000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-302020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-308020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-307010000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000014",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000013",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000012",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000011",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000010",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000009",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000028",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000029",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000027",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000026",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 17,
+      "contentW": 1200
+    },
+    "m": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 26,
+        "withRing": 22,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Mal kabul bekleyen",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Sevk bekleyen",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Açık sayım",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Karantinada",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · D",
+          "fz": "14px"
+        },
+        {
+          "t": "4 lot bekliyor",
+          "fz": "13px"
+        },
+        {
+          "t": "OP-307020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-304030000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-302020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-308020000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "OP-307010000-A",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000014",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000013",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000012",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000011",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000010",
+          "fz": "12px"
+        },
+        {
+          "t": "GR-2026-000009",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000028",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000029",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000027",
+          "fz": "12px"
+        },
+        {
+          "t": "DN-2026-000026",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 17,
+      "contentW": 390
+    }
+  },
+  "muhasebe": {
+    "d": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 28,
+        "withRing": 23,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Banka toplamı",
+            "ring": false,
+            "w": 229.6,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Vadesi geçen alacak",
+            "ring": false,
+            "w": 230.6,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "KDV ödenecek",
+            "ring": false,
+            "w": 230.6,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Mutabakat kuyruğu",
+            "ring": false,
+            "w": 230.6,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Break-even ilerleme",
+            "ring": false,
+            "w": 230.6,
+            "h": 80
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "Nakit projeksiyonu (3 ay)",
+          "fz": "13px"
+        },
+        {
+          "t": "%0,2 tamamlandı",
+          "fz": "11px"
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 ",
+          "fz": "11px"
+        }
+      ],
+      "nonTabularCount": 3,
+      "contentW": 1200
+    },
+    "m": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 28,
+        "withRing": 23,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Banka toplamı",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Vadesi geçen alacak",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "KDV ödenecek",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Mutabakat kuyruğu",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Break-even ilerleme",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "Nakit projeksiyonu (3 ay)",
+          "fz": "13px"
+        },
+        {
+          "t": "%0,2 tamamlandı",
+          "fz": "11px"
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 ",
+          "fz": "11px"
+        }
+      ],
+      "nonTabularCount": 3,
+      "contentW": 390
+    }
+  },
+  "satis": {
+    "d": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 21,
+        "withRing": 18,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Bugünkü sipariş",
+            "ring": false,
+            "w": 196,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Bugünkü ciro%67,8dünden",
+            "ring": false,
+            "w": 196,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Açık fırsat",
+            "ring": false,
+            "w": 196,
+            "h": 80
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · S",
+          "fz": "14px"
+        },
+        {
+          "t": "En çok satan 5 (son 30 gün)",
+          "fz": "13px"
+        },
+        {
+          "t": "Badem İçeceği 1 Litrelik UHT",
+          "fz": "13px"
+        },
+        {
+          "t": "SO-2026-000032",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000033",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000031",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000018",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000010",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000004",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000011",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000009",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000015",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000024",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 13,
+      "contentW": 1200
+    },
+    "m": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 21,
+        "withRing": 18,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Bugünkü sipariş",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Bugünkü ciro%67,8dünden",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Açık fırsat",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · S",
+          "fz": "14px"
+        },
+        {
+          "t": "En çok satan 5 (son 30 gün)",
+          "fz": "13px"
+        },
+        {
+          "t": "Badem İçeceği 1 Litrelik UHT",
+          "fz": "13px"
+        },
+        {
+          "t": "SO-2026-000032",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000033",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000031",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000018",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000010",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000004",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000011",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000009",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000015",
+          "fz": "12px"
+        },
+        {
+          "t": "SO-2026-000024",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 13,
+      "contentW": 390
+    }
+  },
+  "uretim_sefi": {
+    "d": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 20,
+        "withRing": 16,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Açık iş emri",
+            "ring": false,
+            "w": 287.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Geciken iş emri",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Bugünkü OEE",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          },
+          {
+            "tag": "a",
+            "text": "Fire oranı (7g)",
+            "ring": false,
+            "w": 288.3,
+            "h": 80
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "Fire oranı (7g)",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000007 · Strawberry Pr",
+          "fz": "11px"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fz": "11px"
+        },
+        {
+          "t": "Fire kırılımı (7 gün)",
+          "fz": "13px"
+        },
+        {
+          "t": "Son 7 günde fire kaydı yok",
+          "fz": "14px"
+        },
+        {
+          "t": "WO-2026-000008",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000006",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000007",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000005",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000004",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000003",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000002",
+          "fz": "12px"
+        },
+        {
+          "t": "%100 Oat Spredable",
+          "fz": "13px"
+        },
+        {
+          "t": "WO-2026-000001",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 14,
+      "contentW": 1200
+    },
+    "m": {
+      "kpiStrip": null,
+      "focusSummary": {
+        "total": 20,
+        "withRing": 16,
+        "withoutRing": [
+          {
+            "tag": "a",
+            "text": "Açık iş emri",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Geciken iş emri",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Bugünkü OEE",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          },
+          {
+            "tag": "a",
+            "text": "Fire oranı (7g)",
+            "ring": false,
+            "w": 152,
+            "h": 72
+          }
+        ]
+      },
+      "badgeAnatomy": [],
+      "columns": null,
+      "nonTabular": [
+        {
+          "t": "Fire oranı (7g)",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000007 · Strawberry Pr",
+          "fz": "11px"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fz": "11px"
+        },
+        {
+          "t": "Fire kırılımı (7 gün)",
+          "fz": "13px"
+        },
+        {
+          "t": "Son 7 günde fire kaydı yok",
+          "fz": "14px"
+        },
+        {
+          "t": "WO-2026-000008",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000006",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000007",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000005",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000004",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000003",
+          "fz": "12px"
+        },
+        {
+          "t": "WO-2026-000002",
+          "fz": "12px"
+        },
+        {
+          "t": "%100 Oat Spredable",
+          "fz": "13px"
+        },
+        {
+          "t": "WO-2026-000001",
+          "fz": "12px"
+        }
+      ],
+      "nonTabularCount": 14,
+      "contentW": 390
+    }
+  }
+}

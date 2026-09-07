@@ -1,0 +1,449 @@
+{
+  "admin": {
+    "badges": [
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Kalite bekliyor",
+        "status": "qc_pending",
+        "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Sevk edildi",
+        "status": "shipped",
+        "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Taslak",
+        "status": "draft",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Boşta",
+        "status": "idle",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Üretim hatları"
+      },
+      {
+        "t": "Üretimde",
+        "status": "in_progress",
+        "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Üretim hatları"
+      },
+      {
+        "t": "Boşta",
+        "status": "idle",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Üretim hatları"
+      }
+    ],
+    "cols": [],
+    "mainW": 1200
+  },
+  "depo": {
+    "badges": [
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Kalite bekliyor",
+        "status": "qc_pending",
+        "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Tamamlandı",
+        "status": "done",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Sevk edildi",
+        "status": "shipped",
+        "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Taslak",
+        "status": "draft",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Sevk edildi",
+        "status": "shipped",
+        "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      },
+      {
+        "t": "Sevk edildi",
+        "status": "shipped",
+        "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Bugün"
+      }
+    ],
+    "cols": [
+      {
+        "w": 1152,
+        "children": [
+          {
+            "bottom": 529,
+            "h": 253,
+            "w": 568
+          },
+          {
+            "bottom": 586.5,
+            "h": 310.5,
+            "w": 568
+          },
+          {
+            "bottom": 1057.5,
+            "h": 455,
+            "w": 1152
+          }
+        ]
+      }
+    ],
+    "mainW": 1200
+  },
+  "muhasebe": {
+    "badges": [],
+    "cols": [
+      {
+        "w": 1152,
+        "children": [
+          {
+            "bottom": 998.5,
+            "h": 722.5,
+            "w": 568
+          },
+          {
+            "bottom": 1061,
+            "h": 785,
+            "w": 568
+          }
+        ]
+      }
+    ],
+    "mainW": 1200
+  },
+  "satis": {
+    "badges": [
+      {
+        "t": "Sipariş onaylı",
+        "status": "confirmed",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Taslak",
+        "status": "draft",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Sevk edildi",
+        "status": "delivered",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Taslak",
+        "status": "draft",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Faturalandı",
+        "status": "invoiced",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Taslak",
+        "status": "draft",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Taslak",
+        "status": "draft",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Faturalandı",
+        "status": "invoiced",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Faturalandı",
+        "status": "invoiced",
+        "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      },
+      {
+        "t": "Sevk edildi",
+        "status": "delivered",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son siparişler"
+      }
+    ],
+    "cols": [
+      {
+        "w": 1152,
+        "children": [
+          {
+            "bottom": 448,
+            "h": 172,
+            "w": 568
+          },
+          {
+            "bottom": 526,
+            "h": 250,
+            "w": 568
+          },
+          {
+            "bottom": 997,
+            "h": 455,
+            "w": 1152
+          }
+        ]
+      }
+    ],
+    "mainW": 1200
+  },
+  "uretim_sefi": {
+    "badges": [
+      {
+        "t": "Boşta",
+        "status": "idle",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Hat durumu"
+      },
+      {
+        "t": "Üretimde",
+        "status": "in_progress",
+        "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Hat durumu"
+      },
+      {
+        "t": "Boşta",
+        "status": "idle",
+        "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Hat durumu"
+      },
+      {
+        "t": "Devam ediyor",
+        "status": "in_progress",
+        "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son duruşlar"
+      },
+      {
+        "t": "Planlandı",
+        "status": "planned",
+        "bg": "oklab(0.6 -0.051303 -0.140954 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      },
+      {
+        "t": "Bitti",
+        "status": "finished",
+        "bg": "rgba(0, 0, 0, 0)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      },
+      {
+        "t": "Üretimde",
+        "status": "in_progress",
+        "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      },
+      {
+        "t": "Bitti",
+        "status": "finished",
+        "bg": "rgba(0, 0, 0, 0)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      },
+      {
+        "t": "Kapatıldı",
+        "status": "closed",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      },
+      {
+        "t": "Kapatıldı",
+        "status": "closed",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      },
+      {
+        "t": "Kapatıldı",
+        "status": "closed",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      },
+      {
+        "t": "Kapatıldı",
+        "status": "closed",
+        "bg": "oklch(0.967 0.001 286.4)",
+        "h": 20,
+        "fz": "11px",
+        "card": "Son iş emirleri"
+      }
+    ],
+    "cols": [
+      {
+        "w": 1152,
+        "children": [
+          {
+            "bottom": 904,
+            "h": 628,
+            "w": 568
+          },
+          {
+            "bottom": 765,
+            "h": 489,
+            "w": 568
+          }
+        ]
+      }
+    ],
+    "mainW": 1200
+  }
+}
