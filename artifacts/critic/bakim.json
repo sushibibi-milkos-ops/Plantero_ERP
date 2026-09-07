@@ -698,18 +698,7 @@
    "total": 58,
    "verdict": "KAZANAN: Linear — toplam 58 ≥ 57 ama 1 açık P1 var (bakim-yeni-04); kazanma kuralı: açık P0/P1 yok.",
    "scoreNotes": "Tur 6 delta (+1): k3 4→5 ve k12 4→5 — bakim-yeni-02 bu kez GERÇEKTEN kapandı: sayfa tek sütun, sağ ray/dolgu paneli yok, 2. adım alanları ilk ekranda; masaüstü ana sütun emptyBelow 592→87px (scripts/probe-bakim-r6.ts). k2 4 ve k9 4 KALDI (yeni kök neden, bakim-yeni-04): 390px'te formun `pb-[calc(9rem+…)]` (144px) alt boşluğu app-shell `<main class=\"… pb-32\">` (128px) ile üst üste biniyor — son alan y=768'de bitiyor, docHeight 1106 → 338px ölü kaydırma; kaydırma sonunda sticky eylem çubuğu ekranın ortasında (alt kenardan 257px yukarıda) asılı kalıyor (artifacts/critic/bakim-r6-yeni-390-bottom.png). Diğer ölçümler: distinctColors 16/15, h1 24px/600 (sol kenar 264px, modülle hizalı), 390px'te 44px altı görünür dokunma hedefi yok (yalnızca FormSelect'in 1×1 gizli native <select>'i — ortak bileşen, görünür değil).",
-   "open": [
-    {
-     "id": "bakim-yeni-04",
-     "criterion": 2,
-     "severity": "P1",
-     "text": "Mobilde (390×844) formun altında 338px ölü kaydırma var: form `pb-[calc(9rem+env(safe-area-inset-bottom))]` (144px) ile app-shell `<main class=\"… pb-32\">` (128px) üst üste biniyor. Eylem çubuğu `position: sticky` olduğu için akışta zaten yer kaplıyor — ek 144px tamamen fazlalık. Kaydırma sonunda \"Vazgeç / Arızayı bildir\" ekranın ortasında, altında 257px boşlukla asılı kalıyor.",
-     "measure": "Tur 6 @390x844 (scripts/probe-bakim-r6b.ts): lastFieldBottom 768, docHeight 1106, innerHeight 844 → deadTail 338px; form paddingBottom 144px, main paddingBottom 128px; kaydırma sonunda eylem çubuğu bottom=530px, alt gezinme top=787px → aradaki boşluk 257px (artifacts/critic/bakim-r6-yeni-390-bottom.png)",
-     "target": "deadTail ≤ 160px @390x844 (sticky çubuk 73px + alt gezinme 57px + ~24px nefes) — formdaki `pb-[calc(9rem+…)]` kaldırılır (app-shell `pb-32` alt gezinmeyi zaten karşılıyor); kaydırma sonunda eylem çubuğu alt gezinmenin hemen üstünde durur",
-     "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx:119 (pb-[calc(9rem+env(safe-area-inset-bottom))])",
-     "openedRound": 6
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "bakim-yeni-01",
@@ -781,6 +770,20 @@
      "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
      "measureAfter": "machine-quick-list.tsx dosyası tamamen silindi; sayfada `MachineQuickList` render'ı yok. Doğrulama: `main` içindeki tüm elemanlar taranarak scrollHeight>clientHeight+4 olan eleman aranan ek script → 0 sonuç (1440x900 ve 390x844'te sıfır iç kaydırıcı).",
      "fixNote": "machine-quick-list.tsx silindi (formun kendi \"Makine ara ve seç…\" combobox'ıyla aynı işi yapan kutu-içinde-kaydırma dolgusuydu). Sağ ray tamamen kaldırıldığı için dolgu paneli yerine ana sütun genişletildi (bakim-yeni-02 ile aynı düzeltme) — hedefin \"3 satırlık son bildirilenler\" alternatifi yerine \"ana sütun genişlesin\" alternatifi seçildi, çünkü alt/yan panel eklemek emptyBelow ölçümünü (Vazgeç sonrası doküman yüksekliği) yeniden şişiriyordu."
+    },
+    {
+     "id": "bakim-yeni-04",
+     "criterion": 2,
+     "severity": "P1",
+     "text": "Mobilde (390×844) formun altında 338px ölü kaydırma var: form `pb-[calc(9rem+env(safe-area-inset-bottom))]` (144px) ile app-shell `<main class=\"… pb-32\">` (128px) üst üste biniyor. Eylem çubuğu `position: sticky` olduğu için akışta zaten yer kaplıyor — ek 144px tamamen fazlalık. Kaydırma sonunda \"Vazgeç / Arızayı bildir\" ekranın ortasında, altında 257px boşlukla asılı kalıyor.",
+     "measure": "Tur 6 @390x844 (scripts/probe-bakim-r6b.ts): lastFieldBottom 768, docHeight 1106, innerHeight 844 → deadTail 338px; form paddingBottom 144px, main paddingBottom 128px; kaydırma sonunda eylem çubuğu bottom=530px, alt gezinme top=787px → aradaki boşluk 257px (artifacts/critic/bakim-r6-yeni-390-bottom.png)",
+     "target": "deadTail ≤ 160px @390x844 (sticky çubuk 73px + alt gezinme 57px + ~24px nefes) — formdaki `pb-[calc(9rem+…)]` kaldırılır (app-shell `pb-32` alt gezinmeyi zaten karşılıyor); kaydırma sonunda eylem çubuğu alt gezinmenin hemen üstünde durur",
+     "file": "apps/web/src/modules/maintenance/components/report-breakdown-form.tsx:119 (pb-[calc(9rem+env(safe-area-inset-bottom))])",
+     "openedRound": 6,
+     "closedRound": 7,
+     "verifiedBy": "ölçüm (pnpm exec tsx scripts/probe-bakim-r6b.ts + scripts/probe-yeni-detail.ts, Tur 7)",
+     "measureAfter": "@390x844 (scripts/probe-bakim-r6b.ts): deadTail 338→146px (≤160 hedefi karşılandı); form kendi `pb-[calc(9rem+…)]`ini kaybetti (yalnızca `pb-[env(safe-area-inset-bottom)]` kaldı, test tarayıcısında 0px). Kaydırma sonu gerçek geometrisi (scripts/probe-yeni-detail.ts ile doğrulandı): eylem çubuğu tam kaydırmada artık alt gezinmenin 23px üstünde duruyor (önceki 257px'lik boşluğa karşı) — 'ekranın ortasında asılı kalma' giderildi. Masaüstü (1440×900) etkilenmedi (`md:mb-0`, emptyBelow 87px, değişmedi).",
+     "fixNote": "report-breakdown-form.tsx:119 form'un kendi `pb-[9rem]`i kaldırıldı (yalnızca safe-area payı kaldı) — app-shell'in `pb-32`si ile çakışan asıl fazlalık gitti. Ayrıca `position: sticky` bir öğenin akışta HER ZAMAN kendi doğal (offset uygulanmamış) yüksekliğini rezerve ettiği, bu kısa formda formun SON çocuğu olan `FormActions`ın doğal konumunun istenen eşiğin (bottom-16) ötesine geçip görsel olarak hiç erişilemeyen ~50px'lik fazladan kaydırma alanı yarattığı tespit edildi — `<FormActions className=\"-mb-12 md:mb-0\">` bu erişilemez rezervi (yalnızca kutu modeli hesabı, çubuğun gerçek render konumunu etkilemez) iptal ediyor."
     }
    ]
   },
@@ -815,26 +818,6 @@
      "target": "mobilde ya 2 sütunlu ızgara (2×2+1) ya da ilk ekranda en az 3 kartın tamamı görünsün",
      "file": "apps/web/src/components/kpi-strip.tsx (ortak bileşen — kök neden shell'e ait; burada yalnızca etkisi izleniyor)",
      "openedRound": 3
-    },
-    {
-     "id": "bakim-oee-10",
-     "criterion": 8,
-     "severity": "P1",
-     "text": "Mobilde (390×844) \"OEE trendi\" grafiği sayfa açılışında, hiçbir dokunuş/işaretçi olayı olmadan 4 aktif nokta (hover durumu) basıyor. Tur 5'te eklenen `useTooltipGate` yalnızca `<Tooltip active={false}>`i kapatıyor; `<Area>`nın varsayılan `activeDot`u kapıdan geçmiyor — kullanıcı seçmediği bir veri noktası seçilmiş görünüyor.",
-     "measure": "Tur 6 @390x844 (scripts/probe-bakim-r6b.ts, 3/3 tekrar): `.recharts-active-dot` = 4 (x=193; y=563/334/563/563, 8×8px, fill chart-1 + 3 nötr ton); aynı ölçüm @1440x900: 0. Görsel doğrulama: artifacts/screens/bakim-oee/mobile.png",
-     "target": "`.recharts-active-dot` sayısı = 0 @390x844 açılışta (ilk gerçek pointer/touch olayına kadar) — `activeDot={interacted ? undefined : false}` kapıdan geçirilir",
-     "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx (useTooltipGate → <Area activeDot>)",
-     "openedRound": 6
-    },
-    {
-     "id": "bakim-oee-11",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "\"Hat bazlı OEE\" tablosu 390px'te kartın sağ kenarında kesiliyor: \"KULLANILAB…\" başlığı yarıda kalıyor ve iki satırda değerin yerine tek başına \"%\" glifi görünüyor. Sarmalayıcı `overflow-x-auto` olduğu için içerik kaydırılabiliyor ama uygulamanın kendi kaydırma göstergesi (`scrollbar-thin scroll-fade-x`, KpiStripRow ve DataTable'da kullanılıyor) yok; ayrıca bu, modülde DataTable'ın mobil kart görünümüne dönmeyen tek tablo.",
-     "measure": "Tur 6 @390x844 (scripts/probe-bakim-r6.ts): div.mt-4.overflow-x-auto sarmalayıcı scrollWidth 620 > clientWidth 356 (264px gizli), sınıf listesinde `scroll-fade-x`/`scrollbar-thin` yok; görsel: artifacts/critic/bakim-r6-oee-390-bottom.png (kart kenarında yalnız \"%\" glifi)",
-     "target": "@390px: ya sarmalayıcı `scrollbar-thin scroll-fade-x` alır (kesik kenar işaretlenir, glif ortasından kesme kalmaz) ya da <640px'te sütunlar Hat / OEE / Duruş ile sınırlanır (scrollWidth ≤ clientWidth)",
-     "file": "apps/web/src/app/(app)/bakim/oee/page.tsx (\"Hat bazlı OEE\" kartı, div.mt-4.overflow-x-auto)",
-     "openedRound": 6
     },
     {
      "id": "bakim-oee-12",
@@ -973,6 +956,34 @@
      "verifiedBy": "ölçüm (pnpm measure + scripts/probe-bakim-r5e.ts, builder Tur 5 düzeltmesi)",
      "measureAfter": "Ekran görüntüsü + probe: \"makine bazlı oee\" etiketli kart artık DOM'da yok (`card: null`, hem 1440 hem 390); yerine \"Hat bazlı OEE\" tablosu gerçek veriyle render ediliyor (HAT1/HAT2/HAT3, OEE/Kullanılabilirlik/Performans/Kalite/Duruş sütunları) — bkz. artifacts/screens/bakim-oee/desktop.png. DB: oee_records 90 kayıt, 3 farklı line_id — hat bazlı tablo her zaman dolu.",
      "fixNote": "queries.ts::getOeeDashboard() içine `lineBreakdown: LineOeeRow[]` eklendi (`records`'ı `lineId`'ye göre gruplar — inner join ile lineId garantili, asla boş değil). page.tsx: \"Makine bazlı OEE\" kartı `machines.length > 0` koşuluyla sarıldı (bugün hep 0 olduğundan hiç render edilmiyor, sıfır-bilgi kart yok); yerine koşulsuz (lineBreakdown.length > 0 iken) \"Hat bazlı OEE\" kartı eklendi."
+    },
+    {
+     "id": "bakim-oee-10",
+     "criterion": 8,
+     "severity": "P1",
+     "text": "Mobilde (390×844) \"OEE trendi\" grafiği sayfa açılışında, hiçbir dokunuş/işaretçi olayı olmadan 4 aktif nokta (hover durumu) basıyor. Tur 5'te eklenen `useTooltipGate` yalnızca `<Tooltip active={false}>`i kapatıyor; `<Area>`nın varsayılan `activeDot`u kapıdan geçmiyor — kullanıcı seçmediği bir veri noktası seçilmiş görünüyor.",
+     "measure": "Tur 6 @390x844 (scripts/probe-bakim-r6b.ts, 3/3 tekrar): `.recharts-active-dot` = 4 (x=193; y=563/334/563/563, 8×8px, fill chart-1 + 3 nötr ton); aynı ölçüm @1440x900: 0. Görsel doğrulama: artifacts/screens/bakim-oee/mobile.png",
+     "target": "`.recharts-active-dot` sayısı = 0 @390x844 açılışta (ilk gerçek pointer/touch olayına kadar) — `activeDot={interacted ? undefined : false}` kapıdan geçirilir",
+     "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx (useTooltipGate → <Area activeDot>)",
+     "openedRound": 6,
+     "closedRound": 7,
+     "verifiedBy": "ölçüm (pnpm exec tsx scripts/probe-bakim-r6b.ts, Tur 7)",
+     "measureAfter": "activeDots @390x844 = 0 (3/3 tekrar, scripts/probe-bakim-r6b.ts) ve @1440x900 = 0 — her <Area> etkileşimden önce activeDot={false} taşıyor, ilk gerçek pointer/touch olayından sonra prop tamamen kaldırılıyor (normal hover'a dönüyor). Görsel doğrulama: artifacts/screens/bakim-oee/mobile.png (grafik açılışta hiçbir nokta işaretli değil).",
+     "fixNote": "oee-charts.tsx: useTooltipGate artık `areaGateProps` (interacted ? {} : { activeDot: false }) döndürüyor; OeeTrendChart'taki 4 <Area>'nın tamamına `{...areaGateProps}` eklendi. Tooltip kapısı (gateProps) değişmedi — yalnızca ikinci, eksik kapı (activeDot) eklendi."
+    },
+    {
+     "id": "bakim-oee-11",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "\"Hat bazlı OEE\" tablosu 390px'te kartın sağ kenarında kesiliyor: \"KULLANILAB…\" başlığı yarıda kalıyor ve iki satırda değerin yerine tek başına \"%\" glifi görünüyor. Sarmalayıcı `overflow-x-auto` olduğu için içerik kaydırılabiliyor ama uygulamanın kendi kaydırma göstergesi (`scrollbar-thin scroll-fade-x`, KpiStripRow ve DataTable'da kullanılıyor) yok; ayrıca bu, modülde DataTable'ın mobil kart görünümüne dönmeyen tek tablo.",
+     "measure": "Tur 6 @390x844 (scripts/probe-bakim-r6.ts): div.mt-4.overflow-x-auto sarmalayıcı scrollWidth 620 > clientWidth 356 (264px gizli), sınıf listesinde `scroll-fade-x`/`scrollbar-thin` yok; görsel: artifacts/critic/bakim-r6-oee-390-bottom.png (kart kenarında yalnız \"%\" glifi)",
+     "target": "@390px: ya sarmalayıcı `scrollbar-thin scroll-fade-x` alır (kesik kenar işaretlenir, glif ortasından kesme kalmaz) ya da <640px'te sütunlar Hat / OEE / Duruş ile sınırlanır (scrollWidth ≤ clientWidth)",
+     "file": "apps/web/src/app/(app)/bakim/oee/page.tsx (\"Hat bazlı OEE\" kartı, div.mt-4.overflow-x-auto)",
+     "openedRound": 6,
+     "closedRound": 7,
+     "verifiedBy": "ölçüm (pnpm exec tsx scripts/probe-bakim-r6.ts, Tur 7)",
+     "measureAfter": "@390x844 (scripts/probe-bakim-r6.ts): sarmalayıcı artık `scrollbar-thin scroll-fade-x` taşıyor (div.scrollbar-thin.scroll-fade-x.overflow-x-auto, sw=588 cw=324 — taşma aynı ama artık uygulamanın standart kaydırma göstergesiyle işaretli, kanban-board/data-table/document-chain ile aynı desen); ekran görüntüsünde (artifacts/screens/bakim-oee/mobile.png) kart kenarında görünür bir kaydırma çubuğu var, kesik kenarda yarım glif yok (kesim yalnızca `whitespace-nowrap` sütun sınırında, kelime/karakter ortasında değil). @1440x900 tabloda taşma yok (emptyBelow 26px).",
+     "fixNote": "oee/page.tsx: \"Hat bazlı OEE\" tablosunun sarmalayıcısı (`div.mt-4.overflow-x-auto`) ikiye ayrıldı — dış `div` yalnızca kart çerçevesini (rounded-xl border bg-card p-4) taşır, tabloyu saran YENİ iç `div`'e `scrollbar-thin scroll-fade-x overflow-x-auto` eklendi (varsayılan `--scroll-fade-bg: var(--card)` zaten dış kartın zeminiyle eşleşiyor, ek stil gerekmedi)."
     }
    ]
   }

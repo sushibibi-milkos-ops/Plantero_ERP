@@ -245,7 +245,17 @@ export function ReportBreakdownForm({ machines }: { machines: MachineFormOption[
             </div>
         </div>
 
-        <FormActions submitLabel="Arızayı bildir" onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={!scanned}>
+        {/* `-mb-12 md:mb-0` (yalnızca mobil): `position: sticky` bir öğe akışta HER ZAMAN kendi
+            DOĞAL (offset uygulanmamış) konumunun yüksekliğini rezerve eder — ekranda gösterilen
+            "yapışmış" konum yalnızca bir görsel kaydırma (clamp/offset), belge yüksekliği bu doğal
+            konumu kullanır. Bu form kısa olduğu ve `FormActions` formun SON çocuğu olduğu için doğal
+            konum, istenen `bottom-16` eşiğinin (viewport altından 64px) ötesine geçiyor — belge
+            yalnızca GÖRSEL OLARAK HİÇBİR ZAMAN ERİŞİLEMEYEN ~50px'lik fazladan kaydırma alanı
+            rezerve ediyor (Tur 6 P1 bakim-yeni-04, `scripts/probe-bakim-r6b.ts` `deadTail`). Negatif
+            alt kenar boşluğu yalnızca bu erişilemez rezervi iptal eder — çubuğun gerçek (yapışmış)
+            render konumunu DEĞİŞTİRMEZ (kenar boşluğu kutu modeli hesabıdır, `sticky`'nin ofset
+            dönüşümünden bağımsızdır); masaüstünde (`md:static`, rezerv sorunu yok) sıfırlanır. */}
+        <FormActions submitLabel="Arızayı bildir" onCancel={() => router.back()} pending={form.formState.isSubmitting} disabled={!scanned} className="-mb-12 md:mb-0">
           {scanning ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
         </FormActions>
       </form>
