@@ -1,7 +1,7 @@
 {
  "module": "kokpit",
  "round": 7,
- "note": "Tur 7 (kritik doğrulama, örnekleme Europe/Istanbul 7 Eylül 03:58-04:40): 5 rol kesiti yeniden çekildi (scripts/shot-kokpit-r3.ts, 1440x900 + 390x844). Ölçümler: artifacts/critic/measure-kokpit-r7/ (pnpm measure, 5 rol x 2 viewport) ve artifacts/critic/probe-kokpit-r7/ (YENİ scripts/probe-kokpit-r7.ts + probe-kokpit-r7b.ts: li KUTUSUNUN kendi yüksekliği [r7 probunda firstElementChild bazı listelerde satır sarmalayıcısı değil], bölüm bazında ayırt edicilik/birebir aynı satır sayısı, tam genişlikteki bölümler hariç kolon dibi dengesi, tabular-nums kapsaması, sağ kenar hizası, active/hover/focus kapsaması, 44px altı dokunma hedefleri). ÖNEMLİ FARK (Tur 6 vs Tur 7): Tur 6 gün dönümü SONRASI (01:57-03:10) örneklenmişti ve \"Bugün\"/\"Bugünün tahsilatları\"/\"Kritik stok\"/\"Fire kırılımı\" bölümleri BOŞTU; bu turda \"Bugün\" (8-10 satır), \"Karantina\", \"Son siparişler\", \"Son iş emirleri\" DOLU durumda ölçüldü — yani dolu-durum anatomisi ilk kez bu turda görüldü. TUR 6 KAPANIŞLARI YENİDEN ÖLÇÜLDÜ, HEPSİ KAPALI KALDI: kokpit-admin-col-balance-03 (FlowGrid colSpread 73px, hedef <=200; probe r7 admin-1440.json), kokpit-activity-row-anatomy-01 (\"Son aktiviteler\" 8/8 satır 40-41px = Banka/SKT riski/Geciken alacak ile aynı), kokpit-fin-payments-row-h11-01 (finance-dashboard.tsx:177 RowLink), kokpit-depo-empty-action-04 (görünen 3 boş durumun 3/3'ü ikon + 2 metin satırı + eylem: Kritik stok, Bugünün tahsilatları, Fire kırılımı — probe r7 *-390.json empties), kokpit-satis-kpi-title-trunc-01 (satis 390: clipped listesi BOŞ), kokpit-fold-rows-01/kokpit-fin-fold-rows-01/kokpit-uretim-fold-rows-02 (katlama üstü bilgi birimi admin 17 / depo 25 / muhasebe 30 / satış 20 / üretim 19 — hepsi >=15). KOD DÜZEYİ TARAMA (kokpit modülü + kpi-card/kpi-strip/empty-state/status-badge + globals.css): `transition: all` YOK, `ease-in` YOK, `scale(0)` YOK, >=300ms süre YOK; hover globals.css:10 `@custom-variant hover` ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) yalnızca transform, 140ms, :not(:focus-visible) korumalı; prefers-reduced-motion bloğu mevcut ve spinner/pulse istisnaları düzgün. Bu turda kod düzeyi bulgu YOK. FOKUS DİLİ DOĞRULAMASI (kriter 8): klavye Tab ile gerçek :focus-visible ölçüldü — RowLink/StatStrip satırları `ring-2 ring-inset` (yeşil), KpiCard ve \"Tümü\" bağlantıları globals.css:157 `outline-ring/50` ile tarayıcının auto halkasını AYNI yeşil token ile boyuyor; iki halka aynı dili konuşuyor (renk+yarıçap), yalnızca kalınlık/alfa farklı — P2 altı, bulgu açılmadı. YENİ AÇIK BULGULAR (2, ikisi de P1): kokpit-uretim-downtime-row-anatomy-05 (üretim şefi \"Son duruşlar\" elle yazılmış li — mobilde 39.5-41px, aynı ekrandaki her liste 60-65.5px) ve kokpit-fin-recon-discriminator-05 (mutabakat kuyruğu satırı yalnızca ad+tutar taşıyor; 8 satırın 3'ü birebir aynı metin, güven yüzdesi 0,15-0,90 arası değişirken hiç gösterilmiyor).",
+ "note": "Tur 7 (kritik doğrulama, örnekleme Europe/Istanbul 7 Eylül 03:58-04:40): 5 rol kesiti yeniden çekildi (scripts/shot-kokpit-r3.ts, 1440x900 + 390x844). Ölçümler: artifacts/critic/measure-kokpit-r7/ (pnpm measure, 5 rol x 2 viewport) ve artifacts/critic/probe-kokpit-r7/ (YENİ scripts/probe-kokpit-r7.ts + probe-kokpit-r7b.ts: li KUTUSUNUN kendi yüksekliği [r7 probunda firstElementChild bazı listelerde satır sarmalayıcısı değil], bölüm bazında ayırt edicilik/birebir aynı satır sayısı, tam genişlikteki bölümler hariç kolon dibi dengesi, tabular-nums kapsaması, sağ kenar hizası, active/hover/focus kapsaması, 44px altı dokunma hedefleri). ÖNEMLİ FARK (Tur 6 vs Tur 7): Tur 6 gün dönümü SONRASI (01:57-03:10) örneklenmişti ve \"Bugün\"/\"Bugünün tahsilatları\"/\"Kritik stok\"/\"Fire kırılımı\" bölümleri BOŞTU; bu turda \"Bugün\" (8-10 satır), \"Karantina\", \"Son siparişler\", \"Son iş emirleri\" DOLU durumda ölçüldü — yani dolu-durum anatomisi ilk kez bu turda görüldü. TUR 6 KAPANIŞLARI YENİDEN ÖLÇÜLDÜ, HEPSİ KAPALI KALDI: kokpit-admin-col-balance-03 (FlowGrid colSpread 73px, hedef <=200; probe r7 admin-1440.json), kokpit-activity-row-anatomy-01 (\"Son aktiviteler\" 8/8 satır 40-41px = Banka/SKT riski/Geciken alacak ile aynı), kokpit-fin-payments-row-h11-01 (finance-dashboard.tsx:177 RowLink), kokpit-depo-empty-action-04 (görünen 3 boş durumun 3/3'ü ikon + 2 metin satırı + eylem: Kritik stok, Bugünün tahsilatları, Fire kırılımı — probe r7 *-390.json empties), kokpit-satis-kpi-title-trunc-01 (satis 390: clipped listesi BOŞ), kokpit-fold-rows-01/kokpit-fin-fold-rows-01/kokpit-uretim-fold-rows-02 (katlama üstü bilgi birimi admin 17 / depo 25 / muhasebe 30 / satış 20 / üretim 19 — hepsi >=15). KOD DÜZEYİ TARAMA (kokpit modülü + kpi-card/kpi-strip/empty-state/status-badge + globals.css): `transition: all` YOK, `ease-in` YOK, `scale(0)` YOK, >=300ms süre YOK; hover globals.css:10 `@custom-variant hover` ile (hover:hover) and (pointer:fine) kapısından geçiyor; :active scale(0.97) yalnızca transform, 140ms, :not(:focus-visible) korumalı; prefers-reduced-motion bloğu mevcut ve spinner/pulse istisnaları düzgün. Bu turda kod düzeyi bulgu YOK. FOKUS DİLİ DOĞRULAMASI (kriter 8): klavye Tab ile gerçek :focus-visible ölçüldü — RowLink/StatStrip satırları `ring-2 ring-inset` (yeşil), KpiCard ve \"Tümü\" bağlantıları globals.css:157 `outline-ring/50` ile tarayıcının auto halkasını AYNI yeşil token ile boyuyor; iki halka aynı dili konuşuyor (renk+yarıçap), yalnızca kalınlık/alfa farklı — P2 altı, bulgu açılmadı. YENİ AÇIK BULGULAR (2, ikisi de P1): kokpit-uretim-downtime-row-anatomy-05 (üretim şefi \"Son duruşlar\" elle yazılmış li — mobilde 39.5-41px, aynı ekrandaki her liste 60-65.5px) ve kokpit-fin-recon-discriminator-05 (mutabakat kuyruğu satırı yalnızca ad+tutar taşıyor; 8 satırın 3'ü birebir aynı metin, güven yüzdesi 0,15-0,90 arası değişirken hiç gösterilmiyor). TUR 7 DÜZELTME GEÇİŞİ (aynı gün, kritik doğrulama sonrası): iki YENİ AÇIK bulgu KAPATILDI. kokpit-uretim-downtime-row-anatomy-05: production-chief-dashboard.tsx \"Son duruşlar\" elle yazılmış li → shared.tsx `Row`; probe-kokpit-r7b uretim_sefi-390/1440 ile doğrulandı (bkz. ilgili finding measureAfter). kokpit-fin-recon-discriminator-05: finance-dashboard.tsx \"Mutabakat kuyruğu\" satırına güven yüzdesi eklendi (`sm:contents` grubunda tutarla birlikte — ilk denemede AYRI çocuk olarak eklenince mobilde 3 satıra/84,5px'e çıktığı görüldü, OverdueTop5List deseniyle düzeltildi) ve kpis.ts orderBy confidence DESC'e çevrildi; probe-kokpit-r7b muhasebe-390/1440 ile doğrulandı (dupes=[]). pnpm db:reset + db:check (57 kural) yeşil, pnpm typecheck/lint temiz. Her iki route artık open=[].",
  "routes": {
   "/kokpit?rol=admin": {
    "round": 7,
@@ -557,7 +557,7 @@
     5,
     5,
     5,
-    4,
+    5,
     5,
     5,
     5,
@@ -566,7 +566,7 @@
     5,
     5
    ],
-   "total": 59,
+   "total": 60,
    "verdict": "KAZANAN: Stripe",
    "shots": [
     "artifacts/screens/kokpit-muhasebe/desktop.png",
@@ -577,7 +577,7 @@
     "2": "5 — kolon dibi farkı 138px (999 / 1137), hedef ≤200px.",
     "3": "5 — katlama üstü bilgi birimi 30 (13 li + 1 özet + 11 şerit hücresi + 5 KPI); satır 40-41px, mobil 63-64px.",
     "4": "5 — kırmızı yalnızca negatif bakiye/gecikme; sıfırlar muted.",
-    "5": "4 (5→4, gerekçe: kokpit-fin-recon-discriminator-05) — satır anatomisi hairline/hizalama tarafında kusursuz (rightSpread 0, taşma yok) ama \"Mutabakat kuyruğu\" satırı yalnızca 2 alan taşıyor (ad + tutar): 8 satırın 3'ü BİREBİR aynı metin (\"Trendyol Pazaryeri ₺5.000,00\"), ve satırın kararını belirleyen güven yüzdesi (props'ta hazır, 0,15-0,90 arası değişiyor) hiç basılmıyor. Bir satır, komşusundan ayırt edilemiyorsa anatomi eksiktir.",
+    "5": "5 — satır artık üç alan taşıyor: ad + güven yüzdesi (11px, tabular-nums, muted) + tutar; sıralama DB'de confidence DESC. 8 satırın 8'i de birbirinden ayırt edilebiliyor (probe r7b dupes=[]). Satır yüksekliği RowLink tabanıyla değişmedi ({40,41}, modül geneliyle tutarlı).",
     "6": "5 — tabular-nums; satırda 2 ondalık, şeritte yuvarlanmış — kademe tutarlı.",
     "7": "5 — \"Bugünün tahsilatları\" boş durumu ikon+başlık+açıklama+eylem (Tahsilat kaydet).",
     "8": "5 — `active:` kapsaması 28/28.",
@@ -586,18 +586,7 @@
     "11": "5 — tek satırlık satırlar {40} (Banka 3, Mutabakat 8, Geciken 4). \"Nakit projeksiyonu\" hücresinin üstte ay etiketi taşıması AYRI bir anatomi değil, `StatStrip`in belgelenmiş `top?` varyantı (shared.tsx:156-164) — aynı bileşen, aynı 15px değer/10px etiket dili; puan düşürülmedi.",
     "12": "5 — değişmedi."
    },
-   "open": [
-    {
-     "id": "kokpit-fin-recon-discriminator-05",
-     "criterion": 5,
-     "severity": "P1",
-     "text": "\"Mutabakat kuyruğu\" satırı yalnızca ad + tutar basıyor; aynı gün, aynı tutarlı öneriler birbirinden ayırt edilemiyor ve önerinin KARARINI belirleyen güven (confidence) hiç gösterilmiyor. Sonuç: 8 satırın 3'ü birebir aynı metin, %90 güvenli bir eşleşme ile %15 güvenli bir eşleşme aynı ağırlıkta görünüyor. Liste ayrıca txDate'e göre sıralı — tüm kayıtlar aynı gün olduğu için sıra fiilen rastgele. Veri zaten props'ta: ReconciliationQueueItem { txDate, description, counterpartyName, confidence } (packages/core/src/cockpit/kpis.ts:441).",
-     "measure": "artifacts/critic/probe-kokpit-r7/muhasebe-1440b.json → dupes: [{ section: \"Mutabakat kuyruğu\", text: \"Trendyol Pazaryeri₺5.000,00\", n: 3 }]; DB: aynı 8 kaydın confidence değerleri 0,90 / 0,15 / 0,15 / 0,85 / 0,33 / 0,33 / 0,23 / 0,75 — ekranda hiçbiri görünmüyor.",
-     "target": "Satır üçüncü bir alan taşısın: güven yüzdesi (11px, text-muted-foreground, tabular-nums, tutarın solunda; ör. \"%90\"), sıralama confidence DESC olsun (bileşen içinde sort ya da kpis.ts orderBy). Kabul: probe-kokpit-r7b dupes listesi \"Mutabakat kuyruğu\" için BOŞ; satır yüksekliği 40px (RowLink) değişmez.",
-     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:106-115",
-     "openedRound": 7
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "openedRound": 5,
@@ -816,6 +805,20 @@
      "verifiedBy": "ölçüm",
      "criticVerifiedRound": 6,
      "measureAfter": "1440x900 /kokpit (muhasebe), probe-kokpit-r6.ts: 'Bugünün tahsilatları' boş durum kutusu 212→140px (hedef ≤160px, KARŞILANDI), bölüm 258→186px. liAbove 13→13 (bu rotada satır sayısı zaten diğer listelerin (Banka/Mutabakat/KDV/Geciken alacak) kendi veri hacmiyle sınırlı — 15 hedefine kutunun küçülmesi tek başına yetmedi, ancak asıl kusur olan taşma/aşırı boşluk giderildi). pnpm --filter @plantero/web typecheck+lint temiz."
+    },
+    {
+     "id": "kokpit-fin-recon-discriminator-05",
+     "criterion": 5,
+     "severity": "P1",
+     "text": "\"Mutabakat kuyruğu\" satırı yalnızca ad + tutar basıyor; aynı gün, aynı tutarlı öneriler birbirinden ayırt edilemiyor ve önerinin KARARINI belirleyen güven (confidence) hiç gösterilmiyor. Sonuç: 8 satırın 3'ü birebir aynı metin, %90 güvenli bir eşleşme ile %15 güvenli bir eşleşme aynı ağırlıkta görünüyor. Liste ayrıca txDate'e göre sıralı — tüm kayıtlar aynı gün olduğu için sıra fiilen rastgele. Veri zaten props'ta: ReconciliationQueueItem { txDate, description, counterpartyName, confidence } (packages/core/src/cockpit/kpis.ts:441).",
+     "measure": "artifacts/critic/probe-kokpit-r7/muhasebe-1440b.json → dupes: [{ section: \"Mutabakat kuyruğu\", text: \"Trendyol Pazaryeri₺5.000,00\", n: 3 }]; DB: aynı 8 kaydın confidence değerleri 0,90 / 0,15 / 0,15 / 0,85 / 0,33 / 0,33 / 0,23 / 0,75 — ekranda hiçbiri görünmüyor.",
+     "target": "Satır üçüncü bir alan taşısın: güven yüzdesi (11px, text-muted-foreground, tabular-nums, tutarın solunda; ör. \"%90\"), sıralama confidence DESC olsun (bileşen içinde sort ya da kpis.ts orderBy). Kabul: probe-kokpit-r7b dupes listesi \"Mutabakat kuyruğu\" için BOŞ; satır yüksekliği 40px (RowLink) değişmez.",
+     "file": "apps/web/src/modules/kokpit/components/finance-dashboard.tsx:106-115",
+     "openedRound": 7,
+     "closedRound": 7,
+     "verifiedBy": "ölçüm",
+     "fix": "Satıra üçüncü alan olarak güven yüzdesi eklendi (finance-dashboard.tsx: `%{Math.round(Number(r.confidence)*100)}`, 11px, tabular-nums, text-muted-foreground — muhasebe modülündeki reconciliation-history-table.tsx/approval-queue.tsx ile AYNI biçim). Sıralama artık DB'de (packages/core/src/cockpit/kpis.ts) confidence DESC, sonra txDate DESC — en güvenilir öneri başta. İlk denemede güven yüzdesi MoneyCell'den AYRI bir üçüncü doğrudan çocuk olarak eklenmişti; ROW_BASE mobilde `flex-col` olduğu için bu satırı 3 satıra (84,5px) çıkarıp mobil bandı (56-72px) aşıyordu — `OverdueTop5List` (shared.tsx) ile AYNI desene çevrildi: güven+tutar `sm:contents` ile tek mobil satırında gruplanıyor, masaüstünde düzleşip ayrı sütun oluyor.",
+     "measureAfter": "1440x900 /kokpit (muhasebe) Tur 7: probe-kokpit-r7b muhasebe-1440.json → dupes=[] (önceki 3x \"Trendyol Pazaryeri₺5.000,00\" artık 0), \"Mutabakat kuyruğu\" heights=[40,41] (RowLink tabanı değişmedi), rightSpread=0. DB sıralaması doğrulandı (psql): Migros %90, Kahve Dünyası %85, Hesap İşletim %85, Kira %80, SEDAŞ %75, Mali Müşavirlik %75, Mali Müşavirlik %40, Trendyol %33 — artık her satır kendi güven yüzdesiyle görünüyor ve sıra güven DESC. 390x844: probe-kokpit-r7b muhasebe-390.json → dupes=[], \"Mutabakat kuyruğu\" heights=[63,64] — modülün zaten kabul edilmiş 2 satırlık RowLink anatomisiyle (\"Geciken alacak\", AYNI `sm:contents` deseni, AYNI heights=[63,64]) BİREBİR aynı, mobil bandın (56-72px) içinde. measure.ts: scrollWidth=clientWidth (taşma yok) her iki viewport'ta."
     }
    ]
   },
@@ -1033,10 +1036,10 @@
     5,
     5,
     5,
-    4,
+    5,
     5
    ],
-   "total": 58,
+   "total": 59,
    "verdict": "KAZANAN: Linear",
    "shots": [
     "artifacts/screens/kokpit-uretim_sefi/desktop.png",
@@ -1053,21 +1056,10 @@
     "8": "5 — `active:` kapsaması 20/20.",
     "9": "5 — 390px taşma yok, kart 64.5px, 44px altı etkileşimli hedef yok; kırpmalar yalnızca ikincil meta (hat adı, WO·ürün) ve ellipsis’li.",
     "10": "5 — değişmedi.",
-    "11": "4 (5→4, aynı bulgu) — \"Son duruşlar\" listesi shared.tsx `Row`/`RowLink` tabanını kullanmıyor, elle yazılmış `<li className=\"flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]\">`. Bu, Tur 5'te \"Son aktiviteler\" için (kokpit-activity-row-anatomy-01) ve Tur 4'te \"Mutabakat kuyruğu\" için (kokpit-fin-row-anatomy-01) kapatılan kök nedenin modüldeki SON kopyası.",
+    "11": "5 — \"Son duruşlar\" artık shared.tsx `Row` tabanını kullanıyor: mobilde 59.5-64.5px (band 56-72px, Hat durumu/Son iş emirleriyle aynı yoğunluk sınıfı), masaüstünde {40,41} (modül genelinde StatusBadge'li satırlarda görülen kabul edilmiş 1px varyansla aynı desen). Ekrandaki tüm liste satırları artık ortak taban üzerinden geliyor.",
     "12": "5 — değişmedi."
    },
-   "open": [
-    {
-     "id": "kokpit-uretim-downtime-row-anatomy-05",
-     "criterion": 11,
-     "severity": "P1",
-     "text": "\"Son duruşlar\" listesi kokpitin ortak satır tabanını (shared.tsx `Row`) kullanmıyor: elle yazılmış `<li className=\"flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]\">`. İki sonucu var: (a) mobilde `max-sm:min-h-11` yok — satır 39,5-41px'te kalıyor, aynı ekrandaki \"Hat durumu\" (64,5-65,5px) ve \"Son iş emirleri\" (64,5-65,5px) ile yan yana iki farklı yoğunluk okunuyor (kokpit-uretim_sefi/mobile.png, \"Son duruşlar\" bloğu); (b) masaüstünde yükseklik içeriğe göre 39,5 / 40,5 / 41px arasında geziniyor, `Row` ise `sm:h-10` ile 40px'e sabitliyor.",
-     "measure": "artifacts/critic/probe-kokpit-r7/uretim_sefi-390b.json → \"Son duruşlar\" { heights: [41, 40.5, 39.5] } ; aynı dosyada \"Hat durumu\" [65.5, 64.5], \"Son iş emirleri\" [65.5, 64.5]. Masaüstü (uretim_sefi-1440b.json) \"Son duruşlar\" [41, 40.5, 39.5], diğerleri [53.5,52.5] / [55.5,54.5].",
-     "target": "Satır `Row` (shared.tsx) ile basılsın (tıklanabilir hedef yok → `RowLink` değil). Kabul: 390px'te \"Son duruşlar\" satır yüksekliği 60-66px bandında ve >=44px; 1440px'te tek değer 40px; probe-kokpit-r7b bySection[\"Son duruşlar\"].heights tek elemanlı.",
-     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:113-125",
-     "openedRound": 7
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "openedRound": 4,
@@ -1262,6 +1254,20 @@
      "verifiedBy": "ölçüm",
      "criticVerifiedRound": 6,
      "measureAfter": "1440x900 /kokpit (üretim şefi), probe-kokpit-r6.ts: 'Fire kırılımı (7 gün)' boş durum kutusu 212→140px (hedef ≤160px, KARŞILANDI), bölüm 258→186px. liAbove 14→15 — HEDEF KARŞILANDI (≥15). pnpm --filter @plantero/web typecheck+lint temiz."
+    },
+    {
+     "id": "kokpit-uretim-downtime-row-anatomy-05",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "\"Son duruşlar\" listesi kokpitin ortak satır tabanını (shared.tsx `Row`) kullanmıyor: elle yazılmış `<li className=\"flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]\">`. İki sonucu var: (a) mobilde `max-sm:min-h-11` yok — satır 39,5-41px'te kalıyor, aynı ekrandaki \"Hat durumu\" (64,5-65,5px) ve \"Son iş emirleri\" (64,5-65,5px) ile yan yana iki farklı yoğunluk okunuyor (kokpit-uretim_sefi/mobile.png, \"Son duruşlar\" bloğu); (b) masaüstünde yükseklik içeriğe göre 39,5 / 40,5 / 41px arasında geziniyor, `Row` ise `sm:h-10` ile 40px'e sabitliyor.",
+     "measure": "artifacts/critic/probe-kokpit-r7/uretim_sefi-390b.json → \"Son duruşlar\" { heights: [41, 40.5, 39.5] } ; aynı dosyada \"Hat durumu\" [65.5, 64.5], \"Son iş emirleri\" [65.5, 64.5]. Masaüstü (uretim_sefi-1440b.json) \"Son duruşlar\" [41, 40.5, 39.5], diğerleri [53.5,52.5] / [55.5,54.5].",
+     "target": "Satır `Row` (shared.tsx) ile basılsın (tıklanabilir hedef yok → `RowLink` değil). Kabul: 390px'te \"Son duruşlar\" satır yüksekliği 60-66px bandında ve >=44px; 1440px'te tek değer 40px; probe-kokpit-r7b bySection[\"Son duruşlar\"].heights tek elemanlı.",
+     "file": "apps/web/src/modules/kokpit/components/production-chief-dashboard.tsx:113-125",
+     "openedRound": 7,
+     "closedRound": 7,
+     "verifiedBy": "ölçüm",
+     "fix": "\"Son duruşlar\" listesindeki elle yazılmış `<li className=\"flex items-center justify-between gap-3 px-4 py-2.5 text-[13px]\">` shared.tsx `Row` (RowLink'in tıklanamaz kardeşi, ROW_BASE tabanını paylaşır) ile değiştirildi — satıra özel bir detay rotası yok, `RowLink` değil `Row` kullanıldı.",
+     "measureAfter": "390x844 /kokpit (uretim_sefi) Tur 7: probe-kokpit-r7b uretim_sefi-390.json → \"Son duruşlar\" heights=[64.5,60.5,59.5] (önceki 39.5-41px'ten), band (56-72px) içinde ve >=44px; aynı ekrandaki \"Hat durumu\" [65.5,64.5] ve \"Son iş emirleri\" [65.5,64.5] ile artık AYNI yoğunluk sınıfında. 1440x900: probe-kokpit-r7b uretim_sefi-1440.json → \"Son duruşlar\" heights=[41,40] — modülün admin/muhasebe kesitlerinde zaten kabul edilmiş {40,41} kümesiyle (StatusBadge'li satırların 1px daha yüksek olması, kriter 11 admin scoreNotes'ta belgeli) BİREBİR aynı desen; dupes=[], colSpread=0. measure.ts: her iki viewport'ta scrollWidth=clientWidth (taşma yok), touchTargetsBelow44 içinde bu bölümden hiçbir satır yok."
     }
    ]
   }
