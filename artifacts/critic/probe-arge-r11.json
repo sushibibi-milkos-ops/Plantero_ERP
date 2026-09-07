@@ -1,0 +1,452 @@
+{
+ "projeler_offset": {
+  "firstRowTop_viewport": 238,
+  "firstRowTop_mainOffset": 190,
+  "h1Top_mainOffset": 24,
+  "theadTop_mainOffset": 154,
+  "theadBg": "oklch(0.967 0.001 286.4)"
+ },
+ "projeler_money": [
+  {
+   "t": "₺31,92",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null
+  },
+  {
+   "t": "₺166,17",
+   "color": "oklch(0.21 0.006 285.9)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null
+  },
+  {
+   "t": "₺103,41",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null
+  }
+ ],
+ "projeler_rowFeedback": {
+  "rest": "rgba(0, 0, 0, 0)",
+  "hover": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+  "focus": {
+   "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "boxShadow": "none"
+  }
+ },
+ "receteler_offset": {
+  "firstRowTop_viewport": 208,
+  "firstRowTop_mainOffset": 160,
+  "h1Top_mainOffset": 24,
+  "theadTop_mainOffset": 124,
+  "theadBg": "oklch(0.967 0.001 286.4)"
+ },
+ "receteler_money": [
+  {
+   "t": "₺166,17",
+   "color": "oklch(0.21 0.006 285.9)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null
+  },
+  {
+   "t": "₺103,41",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null
+  },
+  {
+   "t": "₺31,92",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null
+  }
+ ],
+ "precete_1440": {
+  "prefixRows": [
+   {
+    "value": "0,35",
+    "gap": 48.1,
+    "inputW": 106
+   },
+   {
+    "value": "38,00",
+    "gap": 42.7,
+    "inputW": 96
+   }
+  ],
+  "rowAlign": [
+   {
+    "name": "Badem",
+    "cySrc": 560,
+    "cyMoney": 0,
+    "delta": 560,
+    "moneyText": "₺5,81"
+   },
+   {
+    "name": "Hurma Şurubu",
+    "cySrc": 599,
+    "cyMoney": 0,
+    "delta": 599,
+    "moneyText": "₺2,40"
+   },
+   {
+    "name": "Deniz Tuzu",
+    "cySrc": 638,
+    "cyMoney": 0,
+    "delta": 638,
+    "moneyText": "₺0,03"
+   },
+   {
+    "name": "Kavanoz 500ml",
+    "cySrc": 677,
+    "cyMoney": 0,
+    "delta": 677,
+    "moneyText": "₺22,00"
+   }
+  ],
+  "restBorders": [
+   {
+    "label": "v1 · Taslak",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "1,0000",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "KG",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "96",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,35",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ürün ara ve ek",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Badem",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,1500",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Manuel",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "38,00",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "2",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Hurma Şurubu",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,0200",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ortalama",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Deniz Tuzu",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,0020",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ortalama",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Kavanoz 500ml",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "1,0000",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ortalama",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   }
+  ],
+  "doc": {
+   "sw": 1440,
+   "cw": 1440
+  }
+ },
+ "precete_390": {
+  "prefixRows": [
+   {
+    "value": "0,35",
+    "gap": 108.3,
+    "inputW": 166
+   },
+   {
+    "value": "38,00",
+    "gap": 18.7,
+    "inputW": 72
+   }
+  ],
+  "rowAlign": [
+   {
+    "name": "Badem",
+    "cySrc": 680,
+    "cyMoney": 636,
+    "delta": 44,
+    "moneyText": "₺5,81"
+   },
+   {
+    "name": "Hurma Şurubu",
+    "cySrc": 781,
+    "cyMoney": 737,
+    "delta": 44,
+    "moneyText": "₺2,40"
+   },
+   {
+    "name": "Deniz Tuzu",
+    "cySrc": 882,
+    "cyMoney": 838,
+    "delta": 44,
+    "moneyText": "₺0,03"
+   },
+   {
+    "name": "Kavanoz 500ml",
+    "cySrc": 983,
+    "cyMoney": 939,
+    "delta": 44,
+    "moneyText": "₺22,00"
+   }
+  ],
+  "restBorders": [
+   {
+    "label": "v1 · Taslak",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "1,0000",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "KG",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "96",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,35",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ürün ara ve ek",
+    "bw": "1px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Badem",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,1500",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Manuel",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "38,00",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "2",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Hurma Şurubu",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,0200",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ortalama",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Deniz Tuzu",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0,0020",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ortalama",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Kavanoz 500ml",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "1,0000",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "Ortalama",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   },
+   {
+    "label": "0",
+    "bw": "0px",
+    "bc": "oklch(0.9 0.004 286.3)",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0)"
+   }
+  ],
+  "doc": {
+   "sw": 390,
+   "cw": 390
+  }
+ }
+}

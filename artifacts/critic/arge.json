@@ -1,6 +1,6 @@
 {
  "module": "arge",
- "round": 10,
+ "round": 11,
  "updatedAt": "2026-09-07",
  "reference": {
   "linear": 57,
@@ -22,7 +22,7 @@
  ],
  "routes": {
   "/arge/projeler": {
-   "round": 10,
+   "round": 11,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -41,7 +41,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 10. Tek açık bulgu (arge-projeler-08, c2, P2) yeniden ölçüldü: ilk tablo satırı viewport 238px / <main> ofseti 190px — sekiz turdur (4-10) birebir aynı, AÇIK KALIYOR (c2=4). Diğer 11 kriter yeniden ölçüldü, tur 9 ile aynı: satır 36px×3, 1440/390 scrollWidth=clientWidth, 390px'te <44px ETKİLEŞİMLİ hedef yok, mobil kart 63,5px, h1 24/600 (mobil 20/600), 17/16 renk, para 3/3 tabular-nums + sağa hizalı. c11: kardeş ekranla renk kodlaması artık BİREBİR aynı (aşağıya bkz. /arge/receteler arge-receteler-03 kapandı) → c11=5 korunur. Kod taraması (modules/rnd + app/(app)/arge): transition-all / ease-in / scale(0) / >300ms YOK; hover global `@custom-variant hover` ile (hover:hover)+(pointer:fine)'a kapalı; klavye aktivasyonunda ölçek animasyonu YOK (CDP forcePseudoState: :active+:focus-visible → transform none, yalnız :active → scale(0.97)). Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 11. Açık bulgu arge-projeler-08 (c2, P2) yeniden ölçüldü: ilk tablo satırı viewport 238px / <main> ofseti 190px — dokuz turdur (4-11) birebir aynı; 390px ölçümü EKLENDİ: ilk kart 306px (viewport %36) → AÇIK KALIYOR (c2=4). Diğer 11 kriter yeniden ölçüldü ve tur 10 ile aynı: satır 36px×3, 1440/390 sw=cw (taşma yok), mobil kart 64px, h1 24/600 (mobil 20/600), 17/16 renk, para 3/3 tabular-nums + sağa hizalı, satır hover accent/50 ve KLAVYE focus 2px yeşil outline (bu tur Tab ile doğrulandı), boş durum ikon+başlık+ipucu. Yeni P2 (arge-projeler-09, c4): birim maliyet warning rengi ekranda çözülemiyor (kart görünümünde \"/ hedef ₺28,00\" var, tablo görünümünde yok) — c4 tanımı (renk yalnızca anlam taşır) ihlal edilmediği için PUAN DÜŞMEZ. Kod taraması temiz. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -368,6 +368,53 @@
      ],
      "birimMaliyetRenkleri": "₺31,92 oklch(0.72 0.17 70)=warning · ₺166,17 oklch(0.21 0.006 285.9)=foreground · ₺103,41 warning — /arge/receteler ile BİREBİR AYNI (tur 9'daki c11 sapması kapandı)",
      "paraHucreleri": "3/3 tabular-nums + text-align:right"
+    },
+    "round11": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "rowHeights_1440": [
+      36,
+      36,
+      36
+     ],
+     "rowHeights_390": [
+      63.5,
+      63.5,
+      63.5
+     ],
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 8,
+      "12": 11,
+      "13": 32,
+      "14": 3,
+      "15": 1,
+      "18": 1,
+      "24": 1
+     },
+     "distinctColors_1440": 17,
+     "distinctColors_390": 16,
+     "firstRowTop_viewport": 238,
+     "firstRowTop_mainOffset": 190,
+     "theadTop_mainOffset": 154,
+     "h1Top_mainOffset": 24,
+     "firstCardTop_390_viewport": 306,
+     "firstCardTop_390_mainOffset": 258,
+     "mobileCardH": 64,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Projeler\" 47.8x19.5 (etkileşimsiz metin)"
+     ],
+     "rowRest": "rgba(0,0,0,0)",
+     "rowHover": "oklab(0.955 … / 0.5) = accent/50",
+     "rowKeyboardFocus": "outline 2px solid oklch(0.55 0.16 152), offset -2px, transform none",
+     "money": "3/3 tabular-nums + sağa hizalı; ₺31,92 ve ₺103,41 warning (hedef üstü), ₺166,17 foreground; hiçbirinde title/aria yok",
+     "emptyState": "arama \"zzzqqq\" → ikon + \"Eşleşen kayıt yok\" + \"Arama ya da filtreleri değiştirmeyi deneyin.\" (tek görünür kopya)"
     }
    },
    "open": [
@@ -376,13 +423,24 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar içerik alanında 168px tüketiliyor (Linear başlığı, sayacı ve filtreyi tek satırda tutar). /arge/receteler ile aynı kalıp (arge-receteler-02).",
-     "measure": "tur 10 yeniden ölçüm: ilk tablo satırı viewport 238px / <main> ofseti 190px (tur 4-9 ile birebir aynı). Hedef ≤112px. Kök neden değişmedi: PageHeader başlık bloğu ile DataTable araç çubuğu iki ayrı yatay şerit (shell kompozisyonu).",
+     "measure": "tur 11 yeniden ölçüm: 1440px ilk tablo satırı viewport 238px / <main> ofseti 190px (h1 ofseti 24, thead 154) — tur 4-10 ile birebir aynı. 390px: ilk kart viewport 306px / <main> ofseti 258px (844px ekranın %36'sı başlık+açıklama+tam genişlik buton+arama+filtre şeridi olarak dört ayrı banda gidiyor). Hedef ≤112px (masaüstü) / ≤176px (mobil).",
      "target": "Başlık + '3 kayıt' + filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
      "openedRound": 2,
-     "reMeasuredRound": 10,
-     "lastMeasuredRound": 10,
+     "reMeasuredRound": 11,
+     "lastMeasuredRound": 11,
      "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — arge-receteler-02 ile aynı kök neden (PageHeader + DataTable araç çubuğunun iki ayrı şerit olması, ortak bileşen kompozisyonu); arge modülü sözleşmesi kapsamında düzeltilemez, mevcut ortak dosyalar değiştirilmedi. Bkz. sharedComponentRequests."
+    },
+    {
+     "id": "arge-projeler-09",
+     "criterion": 4,
+     "severity": "P2",
+     "text": "Tablo görünümünde \"Birim maliyet\" değerleri hedef aşımında warning (turuncu) basılıyor ama ekranda hedefi gösteren hiçbir şey yok: ₺31,92 turuncu, ₺166,17 nötr — kullanıcı küçük sayının neden uyarı rengiyle basıldığını çözemiyor. Aynı modülün KART görünümü aynı olguyu \"₺31,92 / hedef ₺28,00\" ile açıklıyor (project-list.tsx:167-174), tablo görünümü açıklamıyor.",
+     "measure": "tur 11 (1440×900): 3/3 para hücresinde title/aria-label yok; renkler ₺31,92 oklch(0.72 0.17 70)=warning, ₺166,17 oklch(0.21 …)=foreground, ₺103,41 warning. Ekranda \"hedef\" sözcüğü hiç geçmiyor (tablo görünümü).",
+     "target": "Hedef üstü hücrelerde hedef değeri ekranda çözülebilir olsun: hücreye title/aria (ör. \"Hedef ₺28,00 · %14 üstü\") ya da kart görünümündeki gibi \"/ hedef ₺X\" son eki → renkli 2/2 hücrede hedef bilgisi erişilebilir.",
+     "file": "apps/web/src/modules/rnd/components/project-list.tsx:82-89 (tablo sütunu)",
+     "openedRound": 11,
+     "lastMeasuredRound": 11
     }
    ],
    "closed": [
@@ -486,7 +544,7 @@
    ]
   },
   "/arge/projeler/[id]/board": {
-   "round": 10,
+   "round": 11,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -505,7 +563,7 @@
    ],
    "total": 60,
    "winner": "Plantero",
-   "scoreNotes": "Tur 10. Açık P0/P1 yok; 12 kriter yeniden ölçüldü, tur 9 ile aynı. 1440: sayfa scrollWidth=clientWidth=1440 (kanban kendi overflow-x:auto kaydırıcısında), h1 24/600, 19 renk, font kademeleri 11/13/14 ağırlıklı. 390: scrollWidth=clientWidth=390, <44px etkileşimli hedef YOK, h1 20/600, 17 renk. Bu tur ek olarak KLAVYE akışı doğrudan ölçüldü: gerçek Tab ile kanban kartına gelindiğinde :focus-visible eşleşiyor ve yeşil ring görünüyor (outline 1px auto ring/50); Boşluk basılıyken ölçek animasyonu OYNAMIYOR (globals.css :not(:focus-visible) kuralı CDP forcePseudoState ile doğrulandı) — c8=5 teyit. Kod taraması: transition-[transform,box-shadow,opacity] 150ms ease-out, motion layout spring 0.35s/bounce 0.15, DragOverlay 220ms — transition-all / ease-in / scale(0) / >300ms sabit süre YOK. Yeni tek bulgu P2 (arge-board-16, c11: kart odak halkası UA `outline:auto`, paylaşılan Button ise 3px ring — aynı ekranda iki farklı odak dili); kazanmayı engellemez. Toplam 60 ≥ 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 11. Açık bulgu yok; 12 kriter yeniden ölçüldü ve tur 10 ile aynı: 1440 ve 390'da sayfa yatay taşması yok (kanban kendi kapsayıcısında kayıyor, scroll-fade-x), 390'da <44px etkileşimli hedef yok, h1 24/600 (mobil 20/600), 19/17 renk, kart focus-visible 3px ring. Kod taraması: transition-all / ease-in / scale(0) yok, hover global @custom-variant ile (hover:hover)+(pointer:fine) altında; tek >300ms değer kolon yeniden konumlanmasındaki spring (duration 0.35, bounce 0.15) — büyük eleman için kabul edilebilir, bulgu açılmadı. Toplam 60 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "columnHeights_1440": [
      588,
@@ -761,6 +819,33 @@
      "kartOdakHalkasi": "gerçek Tab ile: kart :focus-visible → outline 1px auto oklab(0.55 -0.141272 0.0751154 / 0.5) = ring/50 (görsel: artifacts/critic/arge-r10-board-focus.png)",
      "kartEkleOdakHalkasi": "Button focus-visible → boxShadow oklab(0.55 … / 0.5) 0 0 0 3px",
      "klavyeAktivasyonu": "CDP forcePseudoState — :active+:focus-visible → transform none (klavyede ölçek YOK); yalnız :active → scale(0.97)"
+    },
+    "round11": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 27,
+      "12": 1,
+      "13": 34,
+      "14": 9,
+      "15": 1,
+      "18": 1,
+      "24": 1
+     },
+     "distinctColors_1440": 19,
+     "distinctColors_390": 17,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Pano\" 31.3x19.5 (etkileşimsiz metin)"
+     ],
+     "boardCardFocus": "board-card.tsx:43 focus-visible:border-ring + ring-[3px] ring-ring/50 (tur 10 CDP forcePseudoState ölçümü geçerli)",
+     "motion": "kolon layout spring duration 0.35/bounce 0.15 (büyük eleman, kabul); DragOverlay dropAnimation 220ms cubic-bezier(0.23,1,0.32,1); transition-all / ease-in / scale(0) YOK"
     }
    },
    "open": [],
@@ -985,7 +1070,7 @@
    ]
   },
   "/arge/projeler/[id]/receteler": {
-   "round": 10,
+   "round": 11,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -1003,8 +1088,8 @@
     5
    ],
    "total": 59,
-   "winner": "Stripe",
-   "scoreNotes": "Tur 10 (Stripe 56). arge-recete-39 (tur 9 P1) BAĞIMSIZ DOĞRULANDI ve KAPALI kalır: 390 ve 375px'te eylem şeridi sw=cw (344/344, 329/329), dört kontrolün de overflowRight=0, \"Onaya gönder\" tam görünür → c9 4→5 (gerekçe: tur 9'daki tek c9 kusuru ölçümle gitti). ANCAK yeni P1 (arge-recete-40, c6): 390px'te salt-okunur \"B. maliyet\" değeri kendi satırının taban hizasının 12px ÜSTÜNDE duruyor (3/4 satırda; manuel satırda 0px) — değer, kendi hücre kutusunun üst kenarından taşıyor (kanıt: artifacts/critic/arge-r10-precete-390-satirlar.png). Bu yüzden c6 5→4. Diğer 10 kriter tur 9 ile aynı: 1440/390/375'te sayfa taşması yok, para hücreleri tabular-nums ve sütun sağ kenarları ±0px (B. maliyet 1155, Satır maliyeti 1347), h1 24/600 (mobil 20/600), 21/18 renk, hedef bandı tek vurgu rengiyle (%14 hedef üstü), boş/yükleniyor durumları yerinde, Button focus ring 3px. İkinci yeni bulgu P2 (arge-recete-41, c6): manuel satırda ₺ öneki rakamlardan ~32px kopuk, salt-okunur satırlarda bitişik. Kod taraması temiz (en uzun 200ms; transition-all / ease-in / scale(0) yok; hover gated). Toplam 59 ≥ 56 AMA açık P1 var → KAZANAN: Stripe (delta 0; c9 +1, c6 −1).",
+   "winner": "Plantero",
+   "scoreNotes": "Tur 11 (Stripe 56). Tur 10'un P1'i arge-recete-40 (390px B. maliyet dikey hizası) BAĞIMSIZ DOĞRULANDI ve KAPALI: 4/4 satırda |Δcy| = 0px. Açık P1 kalmadı. c6 = 4 KORUNUYOR (yükseltilmedi): açık arge-recete-41 (₺ öneki ile rakam arası boşluk) bu tur yeniden ölçüldü ve BÜYÜDÜ — 390px'te \"Genel gider (parti)\" alanında 108,3px, manuel satırda 18,7px; masaüstünde 42,7/48,1px (hedef ≤4px). Kök neden ortak `NumberInput` (apps/web/src/components/form/number-input.tsx:117) → shell sahipli, severity P2 (tur 10 değerlendirmesiyle tutarlı, kazanmayı engellemez). Diğer 11 kriter tur 10 ile aynı: 1440/390 sw=cw, satır kontrolleri rest'te kenarlıksız (16/16 border 0px), para hücreleri tabular-nums, hedef bandı 24px/600 tek vurgu, boş/yükleniyor durumları yerinde. Yeni P2 (arge-recete-42, c1): aynı ekranda iki dolu-vurgu birincil buton. Kod taraması temiz (en uzun 220ms drop animasyonu; transition-all/ease-in/scale(0) yok; hover gated). Toplam 59 ≥ 56, açık P0/P1 YOK → KAZANAN: Plantero (delta 0; c6 4→4).",
    "measures": {
     "rowHeights_1440": [
      39,
@@ -1547,6 +1632,35 @@
      "paraOnEki_1440": "Manuel satırda ₺ öneki input'un solunda (pl-6), rakamlar sağa yaslı → ₺ ile rakam arası ~32px; salt-okunur satırlarda ₺ rakama bitişik (₺120,00)",
      "odakHalkasi": "Button focus-visible → boxShadow oklab(0.55 … / 0.5) 0 0 0 3px",
      "bosDurum": "loading.tsx + EmptyState mevcut (kardeş listede ölçüldü: ikon+başlık+ipucu, \"0 kayıt\" sayacı, input'ta temizle ×)"
+    },
+    "round11": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 19,
+      "12": 8,
+      "13": 67,
+      "14": 7,
+      "15": 1,
+      "18": 1,
+      "24": 2
+     },
+     "distinctColors_1440": 21,
+     "distinctColors_390": 18,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Deneme Reçeteleri\" 117.4x19.5 (etkileşimsiz metin)"
+     ],
+     "rowAlign_390": "4/4 satırda |cy(B. maliyet) − cy(Kaynak)| = 0px (658/759/860/961) — arge-recete-40 BAĞIMSIZ DOĞRULANDI, kapalı kalır",
+     "prefixGap": "1440: manuel satır ₺→ilk rakam 42,7px, \"Genel gider (parti)\" 48,1px; 390: manuel satır 18,7px, \"Genel gider (parti)\" 108,3px (hedef ≤4px)",
+     "restBorders": "satır içi 16/16 kontrol border-width 0px (rest), üstteki 5 form alanı + ürün arama 1px — tur 5 arge-recete-29 kapanışı korunuyor",
+     "primaryButtons": "1440'ta eşzamanlı iki dolu-vurgu buton: \"Yeni deneme reçetesi\" 186×32 ve \"Onaya gönder\" 136×32 (ikisi de oklch(0.55 0.16 152))"
     }
    },
    "open": [
@@ -1555,12 +1669,24 @@
      "criterion": 6,
      "severity": "P2",
      "text": "Aynı \"Birim maliyet\" sütununda para birimi iki farklı biçimde basılıyor: manuel kaynaklı satırda ₺ öneki hücrenin solunda tek başına duruyor (kutu dinlenmede kenarlıksız olduğu için sahipsiz bir glif gibi görünüyor), salt-okunur satırlarda ₺ rakama bitişik. Stripe tutarları tek bir para dili ile basar.",
-     "measure": "tur 10 (1440×900): manuel satırda NumberInput `pl-6 text-right` → ₺ sol kenarda, rakamlar sağ kenarda, arada ~32px boşluk; salt-okunur satırlarda MoneyCell \"₺120,00\" tek parça. Aynı sütunda 1 satır kopuk / 3 satır bitişik.",
+     "measure": "tur 11 yeniden ölçüm (canvas metin genişliğiyle ilk rakamın x'i): 1440px manuel satır ₺→\"38,00\" 42,7px, \"Genel gider (parti)\" ₺→\"0,35\" 48,1px; 390px manuel satır 18,7px, \"Genel gider (parti)\" 108,3px. Aynı sütundaki salt-okunur MoneyCell'lerde ₺ rakama bitişik (₺120,00). Hedef ≤4px.",
      "target": "Sütundaki 4/4 satırda ₺ ile ilk rakam arası ≤4px (ör. manuel satırda öneki inline yaz: değerle birlikte sağa yaslı tek metin bloğu)",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:708-723 (NumberInput prefix=\"₺\" + inputClassName pl-6/md:pl-7)",
      "openedRound": 10,
-     "lastMeasuredRound": 10,
-     "ownerNote": "Tur 10 düzeltme turu: KAPATILMADI — kök neden paylaşılan `NumberInput` bileşeninde (apps/web/src/components/form/number-input.tsx:117): ₺ öneki `absolute left-2.5` ile sabit konumlanıyor, değer ise `text-right`; basamak sayısı satırdan satıra değiştikçe önek-rakam arası boşluk da değişiyor. arge modülü sözleşmesi kapsamında mevcut ortak dosya değiştirilmedi (yalnızca yeni dosya eklenebilir). Bkz. sharedComponentRequests."
+     "lastMeasuredRound": 11,
+     "ownerNote": "Tur 10 düzeltme turu: KAPATILMADI — kök neden paylaşılan `NumberInput` bileşeninde (apps/web/src/components/form/number-input.tsx:117): ₺ öneki `absolute left-2.5` ile sabit konumlanıyor, değer ise `text-right`; basamak sayısı satırdan satıra değiştikçe önek-rakam arası boşluk da değişiyor. arge modülü sözleşmesi kapsamında mevcut ortak dosya değiştirilmedi (yalnızca yeni dosya eklenebilir). Bkz. sharedComponentRequests.",
+     "owner": "shell"
+    },
+    {
+     "id": "arge-recete-42",
+     "criterion": 1,
+     "severity": "P2",
+     "text": "Ekranda aynı anda iki DOLU vurgu rengi buton var: sol raydaki \"Yeni deneme reçetesi\" ve kart başlığındaki \"Onaya gönder\". Stripe/Linear bir görünümde tek birincil eylem bırakır; ikinci \"yeni\" eylemi ikincil (outline/ghost + artı ikonu) olur, aksi hâlde ekranın gerçek birincil eylemi (versiyonu onaya göndermek) ikinci bir yeşil blokla rekabet ediyor.",
+     "measure": "tur 11 (1440×900): background oklch(0.55 0.16 152) olan görünür buton sayısı 2 — \"Yeni deneme reçetesi\" 186×32, \"Onaya gönder\" 136×32.",
+     "target": "Görünümde eşzamanlı dolu-vurgu buton sayısı 1 (sol raydaki \"Yeni deneme reçetesi\" outline/secondary'ye iner; \"Onaya gönder\" tek birincil kalır).",
+     "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx (sol ray \"Yeni deneme reçetesi\" tetikleyicisi)",
+     "openedRound": 11,
+     "lastMeasuredRound": 11
     }
    ],
    "closed": [
@@ -2143,7 +2269,7 @@
    ]
   },
   "/arge/receteler": {
-   "round": 10,
+   "round": 11,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -2162,7 +2288,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 10. arge-receteler-03 (c11, P2) BAĞIMSIZ DOĞRULANDI ve KAPALI: Birim maliyet sütunu artık /arge/projeler ile aynı dili konuşuyor (₺166,17 foreground; ₺103,41 ve ₺31,92 warning = hedef üstü) → c11 4→5 (gerekçeli artış). Kalan tek açık bulgu arge-receteler-02 (c2, P2) yeniden ölçüldü: ilk tablo satırı viewport 208px / <main> ofseti 160px — tur 5-10 ile aynı, hedef ≤112px, AÇIK (c2=4). Diğer 10 kriter tur 9 ile aynı: satır 36px×3, 1440/390 taşma yok, mobil kart 63,5px, h1 24/600 (mobil 20/600), 21/20 renk, <44px etkileşimli hedef yok, para 3/3 tabular-nums + sağa hizalı, tablo anatomisi /arge/projeler ile birebir. Boş durum yeniden çekildi (ikon+başlık+ipucu+temizleme affordansı) → c7=5. Kod taraması temiz. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta +1, c11 gerekçeli).",
+   "scoreNotes": "Tur 11. Açık bulgu arge-receteler-02 (c2, P2) yeniden ölçüldü: ilk tablo satırı viewport 208px / <main> ofseti 160px (tur 5-11 aynı; hedef ≤112px), 390px ilk kart 220px → AÇIK KALIYOR (c2=4). Diğer 11 kriter tur 10 ile aynı: satır 36px×3, mobil kart 64px, 1440/390 sw=cw, h1 24/600 (mobil 20/600), 21/20 renk, para tabular-nums + sağa hizalı, boş durum özenli. Yeni P2 (arge-receteler-04, c4): /arge/projeler ile aynı çözülemeyen hedef-üstü renk kodlaması (kardeş bulgu arge-projeler-09) — c4 tanımı ihlal edilmediğinden puan düşmez. Kod taraması temiz. Açık P0/P1 yok, toplam 59 ≥ 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -2437,6 +2563,50 @@
      ],
      "birimMaliyetRenkleri": "₺166,17 oklch(0.21 0.006 285.9)=foreground · ₺103,41 oklch(0.72 0.17 70)=warning · ₺31,92 warning — /arge/projeler ile BİREBİR aynı (arge-receteler-03 kapandı)",
      "bosDurum": "eşleşmeyen aramada: dairesel ikon + \"Eşleşen kayıt yok\" + \"Arama ya da filtreleri değiştirmeyi deneyin.\" + \"0 kayıt\" sayacı + input temizle × (artifacts/critic/arge-r10-bos-1440.png)"
+    },
+    "round11": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "rowHeights_1440": [
+      36,
+      36,
+      36
+     ],
+     "rowHeights_390": [
+      63.5,
+      63.5,
+      63.5
+     ],
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 5,
+      "12": 9,
+      "13": 37,
+      "14": 1,
+      "15": 1,
+      "18": 1,
+      "24": 1
+     },
+     "distinctColors_1440": 21,
+     "distinctColors_390": 20,
+     "firstRowTop_viewport": 208,
+     "firstRowTop_mainOffset": 160,
+     "theadTop_mainOffset": 124,
+     "h1Top_mainOffset": 24,
+     "firstCardTop_390_viewport": 220,
+     "firstCardTop_390_mainOffset": 172,
+     "mobileCardH": 64,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] \"Deneme Reçeteleri\" 117.4x19.5 (etkileşimsiz metin)"
+     ],
+     "money": "3/3 tabular-nums + sağa hizalı; renk kodlaması /arge/projeler ile BİREBİR aynı (hedef üstü → warning)",
+     "emptyState": "arama \"zzzqqq\" → ikon + \"Eşleşen kayıt yok\" + ipucu (tek görünür kopya)"
     }
    },
    "open": [
@@ -2445,13 +2615,24 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar 168px dikey alan tüketiliyor.",
-     "measure": "tur 10 yeniden ölçüm: ilk tablo satırı viewport 208px / <main> ofseti 160px (tur 5-9 ile aynı; hedef ≤112px). Kök neden: PageHeader başlığı ile DataTable araç çubuğunun iki ayrı yatay şerit olması (shell kompozisyonu).",
+     "measure": "tur 11 yeniden ölçüm: 1440px ilk tablo satırı viewport 208px / <main> ofseti 160px (h1 ofseti 24, thead 124) — tur 5-10 ile aynı. 390px: ilk kart viewport 220px / <main> ofseti 172px. Hedef ≤112px (masaüstü). Kök neden değişmedi: PageHeader başlığı ile DataTable araç çubuğu iki ayrı yatay şerit (shell kompozisyonu).",
      "target": "Başlık ile filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1,
-     "reMeasuredRound": 10,
-     "lastMeasuredRound": 10,
+     "reMeasuredRound": 11,
+     "lastMeasuredRound": 11,
      "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — kök neden `PageHeader` (apps/web/src/components/page-header.tsx) ile `DataTable` araç çubuğunun (apps/web/src/components/data-table) iki AYRI yatay şerit olarak dikey olarak istiflenmesi; her ikisi de ortak bileşen, arge modülü sözleşmesi (mevcut ortak dosyayı değiştirme) kapsamında düzeltilemez. Sayfa (page.tsx) tarafında yapılabilecek tüm optimizasyon (Tur 5'te 'N proje' önekinin kaldırılması) uygulanmıştı; kalan boşluk PageHeader/DataTable kompozisyonundan geliyor — bkz. sharedComponentRequests."
+    },
+    {
+     "id": "arge-receteler-04",
+     "criterion": 4,
+     "severity": "P2",
+     "text": "Kardeş bulgu arge-projeler-09 ile aynı: \"Birim maliyet\" hedef aşımında warning basılıyor, ama ekranda hedef değeri yok — ₺103,41 ve ₺31,92 turuncu, ₺166,17 nötr; kullanıcı kuralı ekrandan çözemiyor.",
+     "measure": "tur 11 (1440×900): 3/3 para hücresinde title/aria yok; 2/3 hücre warning renginde; ekranda \"hedef\" bilgisi yok.",
+     "target": "Hedef üstü hücreler hedefi ekranda erişilebilir kılsın (title/aria \"Hedef ₺X · %Y üstü\" ya da \"/ hedef ₺X\" son eki) → renkli 2/2 hücrede hedef okunabilir.",
+     "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx:34-45",
+     "openedRound": 11,
+     "lastMeasuredRound": 11
     }
    ],
    "closed": [
@@ -2536,5 +2717,27 @@
   "keyboardActivation": "Tur 10 doğrudan ölçüm (CDP forcePseudoState, kanban kartı): :active + :focus-visible → transform \"none\"; yalnız :active → scale(0.97). globals.css:179-182 `:not(:focus-visible)` kuralı yardımcı sınıf `active:scale-[0.98]`ı da yeniyor → klavye aktivasyonunda animasyon YOK.",
   "notes": "Tur 10: apps/web/src/modules/rnd + app/(app)/arge içinde transition-all / transition: all, ease-in (ease-in-out hariç), scale(0)/scale-0, 300ms üstü sabit süre YOK. En uzunlar: motion layout spring duration 0.35 bounce 0.15 (kesilebilir), DragOverlay dropAnimation 220ms cubic-bezier(0.23,1,0.32,1), card-drawer ilerleme çubuğu 200ms. transform-origin hatası yok."
  },
- "projectIdUsed": "8f3bffbd-8b3a-41ae-9f82-8f43f810cc52 (RD-2026-000001 Fıstık Bazı — listedeki ilk kayıt, v1 · Taslak/editable; DB yeniden seed edildiği için tur 9 id'leri geçersiz)"
+ "projectIdUsed": "8f3bffbd-8b3a-41ae-9f82-8f43f810cc52 (RD-2026-000001 Fıstık Bazı — listedeki ilk kayıt, v1 · Taslak/editable; DB yeniden seed edildiği için tur 9 id'leri geçersiz)",
+ "sharedComponentRequests": [
+  {
+   "id": "shell-numberinput-prefix-01",
+   "from": "arge-recete-41",
+   "criterion": 6,
+   "severity": "P2",
+   "file": "apps/web/src/components/form/number-input.tsx:117",
+   "text": "Para öneki `absolute left-2.5`, değer `text-right` → önek ile ilk rakam arasındaki boşluk alan genişliğine ve basamak sayısına göre 18-108px arasında değişiyor; aynı sütundaki salt-okunur MoneyCell'lerde ₺ rakama bitişik. Uygulama genelinde prefix'li tüm NumberInput'ları etkiler.",
+   "measure": "/arge/projeler/[id]/receteler — 1440: 42,7px ve 48,1px; 390: 18,7px ve 108,3px",
+   "target": "Önek değerle birlikte tek sağa yaslı metin bloğu (ör. inline prefix) → ₺ ile ilk rakam arası ≤4px, tüm viewportlarda"
+  },
+  {
+   "id": "shell-pageheader-toolbar-01",
+   "from": "arge-projeler-08 + arge-receteler-02",
+   "criterion": 2,
+   "severity": "P2",
+   "file": "apps/web/src/components/page-header.tsx + apps/web/src/components/data-table",
+   "text": "PageHeader başlık bloğu ile DataTable araç çubuğu iki ayrı yatay şerit olarak istifleniyor; Linear başlık + kayıt sayısı + filtre + görünüm seçiciyi tek satırda tutar.",
+   "measure": "/arge/projeler 1440: ilk satır <main> ofseti 190px, 390: 258px · /arge/receteler 1440: 160px, 390: 172px",
+   "target": "Masaüstünde ilk satır <main> ofseti ≤112px (başlık + sayaç + filtre tek şerit)"
+  }
+ ]
 }

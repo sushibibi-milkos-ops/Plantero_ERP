@@ -1,0 +1,67 @@
+{
+ "precete_390_rowAlign": [
+  {
+   "row": "Badem₺5,81Miktar",
+   "kaynak": {
+    "t": "KaynakManuel",
+    "cy": 658
+   },
+   "bMaliyet": {
+    "t": "B. maliyet₺",
+    "cy": 658
+   },
+   "delta": 0
+  },
+  {
+   "row": "Hurma Şurubu₺2,4",
+   "kaynak": {
+    "t": "KaynakOrtala",
+    "cy": 759
+   },
+   "bMaliyet": {
+    "t": "B. maliyet₺1",
+    "cy": 759
+   },
+   "delta": 0
+  },
+  {
+   "row": "Deniz Tuzu₺0,03M",
+   "kaynak": {
+    "t": "KaynakOrtala",
+    "cy": 860
+   },
+   "bMaliyet": {
+    "t": "B. maliyet₺1",
+    "cy": 860
+   },
+   "delta": 0
+  },
+  {
+   "row": "Kavanoz 500ml₺22",
+   "kaynak": {
+    "t": "KaynakOrtala",
+    "cy": 961
+   },
+   "bMaliyet": {
+    "t": "B. maliyet₺2",
+    "cy": 961
+   },
+   "delta": 0
+  }
+ ],
+ "projeler_kbFocus": {
+  "tag": "tr",
+  "txt": "RD-2026-000001Fıstık Baz",
+  "outline": "2px solid oklch(0.55 0.16 152)",
+  "offset": "-2px",
+  "transform": "none",
+  "transition": "all 0s"
+ },
+ "board_cardFocus": {
+  "found": true,
+  "cls": "w-full min-h-11 rounded-lg border border-border/60 bg-card p-2.5 text-left shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-n",
+  "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "transition": "transform 0s"
+ },
+ "board_cols": []
+}

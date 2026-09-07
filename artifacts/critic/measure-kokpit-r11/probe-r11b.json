@@ -1,0 +1,434 @@
+{
+  "admin": {
+    "badgeAnatomy": [
+      {
+        "section": "Bugün",
+        "n": 8,
+        "filled": 8,
+        "unfilled": [],
+        "heights": [
+          20
+        ],
+        "fontSizes": [
+          "11px"
+        ],
+        "collisions": []
+      },
+      {
+        "section": "Üretim hatları",
+        "n": 3,
+        "filled": 3,
+        "unfilled": [],
+        "heights": [
+          20
+        ],
+        "fontSizes": [
+          "11px"
+        ],
+        "collisions": []
+      }
+    ],
+    "sectionRows": [
+      {
+        "title": "Günlük kanal satışları",
+        "rowCount": 2,
+        "rowHeights": [
+          44,
+          40
+        ],
+        "tiers": [
+          "₺2.678,40=13px/500",
+          "₺2.678,40=13px/400"
+        ]
+      },
+      {
+        "title": "Bugün",
+        "rowCount": 8,
+        "rowHeights": [
+          54.5
+        ],
+        "tiers": [
+          "GR-2026-000014=12px/400 | ₺3.850,00=13px/400",
+          "GR-2026-000013=12px/400 | ₺7.875,00=13px/400",
+          "GR-2026-000012=12px/400 | ₺4.590,00=13px/400",
+          "GR-2026-000011=12px/400 | ₺10.920,00=13px/400",
+          "GR-2026-000010=12px/400 | ₺6.500,00=13px/400",
+          "GR-2026-000009=12px/400 | ₺13.800,00=13px/400",
+          "DN-2026-000028=12px/400",
+          "DN-2026-000029=12px/400"
+        ]
+      },
+      {
+        "title": "Son aktiviteler",
+        "rowCount": 8,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "· 4 kez=13px/400 | 2 dakika önce · 10:46=11px/400",
+          "5 dakika önce · 10:43=11px/400",
+          "5 dakika önce · 10:43=11px/400",
+          "5 dakika önce · 10:43=11px/400",
+          "5 dakika önce · 10:43=11px/400",
+          "5 dakika önce · 10:43=11px/400",
+          "5 dakika önce · 10:43=11px/400",
+          "· 8 kez=13px/400 | 5 dakika önce · 10:43=11px/400"
+        ]
+      },
+      {
+        "title": "Banka",
+        "rowCount": 4,
+        "rowHeights": [
+          44,
+          40
+        ],
+        "tiers": [
+          "-₺254.348,50=13px/500",
+          "₺1.250,00=13px/400",
+          "€0,00=13px/400",
+          "-₺255.598,50=13px/400"
+        ]
+      },
+      {
+        "title": "Üretim hatları",
+        "rowCount": 3,
+        "rowHeights": [
+          52.5
+        ],
+        "tiers": [
+          "",
+          "WO-2026-000007 · Straw=11px/400 | 1 açık iş emri=11px/400",
+          ""
+        ]
+      },
+      {
+        "title": "Kritik stok",
+        "rowCount": 1,
+        "rowHeights": [
+          155
+        ],
+        "tiers": [
+          ""
+        ]
+      },
+      {
+        "title": "SKT riski",
+        "rowCount": 5,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "OP-307020000-A=12px/400 | 10 gün önce doldu=11px/500",
+          "OP-304030000-A=12px/400 | 3 gün=11px/500",
+          "OP-302020000-A=12px/400 | 3 gün=11px/500",
+          "OP-308020000-A=12px/400 | 4 gün=11px/500",
+          "OP-307010000-A=12px/400 | 5 gün=11px/500"
+        ]
+      },
+      {
+        "title": "Geciken alacak",
+        "rowCount": 4,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "16 gün=12px/400 | ₺3.800,00=13px/400",
+          "3 gün=12px/400 | ₺3.282,50=13px/400",
+          "37 gün=12px/400 | ₺1.100,00=13px/400",
+          "2 gün=12px/400 | ₺27,00=13px/400"
+        ]
+      }
+    ],
+    "strips": []
+  },
+  "depo": {
+    "badgeAnatomy": [
+      {
+        "section": "Bugün",
+        "n": 10,
+        "filled": 10,
+        "unfilled": [],
+        "heights": [
+          20
+        ],
+        "fontSizes": [
+          "11px"
+        ],
+        "collisions": []
+      }
+    ],
+    "sectionRows": [
+      {
+        "title": "Karantina",
+        "rowCount": 5,
+        "rowHeights": [
+          44,
+          40
+        ],
+        "tiers": [
+          "4 lot bekliyor=13px/400 | ₺55.355,00=13px/500",
+          "₺36.400,00=13px/400",
+          "₺7.875,00=13px/400",
+          "₺5.760,00=13px/400",
+          "₺5.320,00=13px/400"
+        ]
+      },
+      {
+        "title": "SKT riski",
+        "rowCount": 5,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "OP-307020000-A=12px/400 | 10 gün önce doldu=11px/500",
+          "OP-304030000-A=12px/400 | 3 gün=11px/500",
+          "OP-302020000-A=12px/400 | 3 gün=11px/500",
+          "OP-308020000-A=12px/400 | 4 gün=11px/500",
+          "OP-307010000-A=12px/400 | 5 gün=11px/500"
+        ]
+      },
+      {
+        "title": "Bugün",
+        "rowCount": 10,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "GR-2026-000014=12px/400 | ₺3.850,00=13px/400",
+          "GR-2026-000013=12px/400 | ₺7.875,00=13px/400",
+          "GR-2026-000012=12px/400 | ₺4.590,00=13px/400",
+          "GR-2026-000011=12px/400 | ₺10.920,00=13px/400",
+          "GR-2026-000010=12px/400 | ₺6.500,00=13px/400",
+          "GR-2026-000009=12px/400 | ₺13.800,00=13px/400",
+          "DN-2026-000028=12px/400",
+          "DN-2026-000029=12px/400",
+          "DN-2026-000027=12px/400",
+          "DN-2026-000026=12px/400"
+        ]
+      }
+    ],
+    "strips": []
+  },
+  "muhasebe": {
+    "badgeAnatomy": [],
+    "sectionRows": [
+      {
+        "title": "Banka",
+        "rowCount": 4,
+        "rowHeights": [
+          44,
+          40
+        ],
+        "tiers": [
+          "-₺254.348,50=13px/500",
+          "₺1.250,00=13px/400",
+          "€0,00=13px/400",
+          "-₺255.598,50=13px/400"
+        ]
+      },
+      {
+        "title": "Mutabakat kuyruğu",
+        "rowCount": 8,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "%90=11px/400 | ₺3.800,00=13px/400",
+          "%85=11px/400 | -₺54.900,00=13px/400",
+          "%85=11px/400 | -₺185,50=13px/400",
+          "%80=11px/400 | -₺150.000,00=13px/400",
+          "%75=11px/400 | -₺450,75=13px/400",
+          "%75=11px/400 | -₺10.000,00=13px/400",
+          "%40=11px/400 | -₺10.000,00=13px/400",
+          "%33=11px/400 | ₺5.000,00=13px/400"
+        ]
+      },
+      {
+        "title": "Geciken alacak",
+        "rowCount": 4,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "16 gün=12px/400 | ₺3.800,00=13px/400",
+          "3 gün=12px/400 | ₺3.282,50=13px/400",
+          "37 gün=12px/400 | ₺1.100,00=13px/400",
+          "2 gün=12px/400 | ₺27,00=13px/400"
+        ]
+      },
+      {
+        "title": "Bugünün tahsilatları",
+        "rowCount": 1,
+        "rowHeights": [
+          135.5
+        ],
+        "tiers": [
+          ""
+        ]
+      }
+    ],
+    "strips": []
+  },
+  "satis": {
+    "badgeAnatomy": [
+      {
+        "section": "Son siparişler",
+        "n": 10,
+        "filled": 10,
+        "unfilled": [],
+        "heights": [
+          20
+        ],
+        "fontSizes": [
+          "11px"
+        ],
+        "collisions": [
+          {
+            "sig": "oklch(0.967 0.001 286.4)|oklab(0.21 0.00164376 -0.00577045 / 0.8)|oklab(0.21 0.00164376 -0.00577045 / 0.5)",
+            "labels": [
+              "Sipariş onaylı",
+              "Sevk edildi"
+            ]
+          }
+        ]
+      }
+    ],
+    "sectionRows": [
+      {
+        "title": "En çok satan 5 (son 30 gün)",
+        "rowCount": 5,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "1=12px/400 | ₺17.100,00=13px/400",
+          "2=12px/400 | ₺16.932,50=13px/400",
+          "3=12px/400 | Badem İçeceği 1 Litrel=13px/400 | ₺16.800,00=13px/400",
+          "4=12px/400 | ₺13.587,00=13px/400",
+          "5=12px/400 | ₺12.181,50=13px/400"
+        ]
+      },
+      {
+        "title": "Son siparişler",
+        "rowCount": 10,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "07.09.2026=12px/400 | SO-2026-000032=12px/400 | ₺72,00=13px/400",
+          "06.09.2026=12px/400 | SO-2026-000033=12px/400 | ₺216,00=13px/400",
+          "02.09.2026=12px/400 | SO-2026-000031=12px/400 | ₺16.800,00=13px/400",
+          "01.09.2026=12px/400 | SO-2026-000018=12px/400 | ₺2.277,23=13px/400",
+          "01.09.2026=12px/400 | SO-2026-000010=12px/400 | ₺3.021,14=13px/400",
+          "01.09.2026=12px/400 | SO-2026-000004=12px/400 | ₺1.714,90=13px/400",
+          "31.08.2026=12px/400 | SO-2026-000011=12px/400 | ₺2.593,61=13px/400",
+          "30.08.2026=12px/400 | SO-2026-000009=12px/400 | ₺4.178,76=13px/400",
+          "29.08.2026=12px/400 | SO-2026-000015=12px/400 | ₺1.659,95=13px/400",
+          "29.08.2026=12px/400 | SO-2026-000024=12px/400 | ₺14.250,00=13px/400"
+        ]
+      }
+    ],
+    "strips": []
+  },
+  "uretim_sefi": {
+    "badgeAnatomy": [
+      {
+        "section": "Hat durumu",
+        "n": 3,
+        "filled": 3,
+        "unfilled": [],
+        "heights": [
+          20
+        ],
+        "fontSizes": [
+          "11px"
+        ],
+        "collisions": []
+      },
+      {
+        "section": "Son duruşlar",
+        "n": 1,
+        "filled": 1,
+        "unfilled": [],
+        "heights": [
+          20
+        ],
+        "fontSizes": [
+          "11px"
+        ],
+        "collisions": []
+      },
+      {
+        "section": "Son iş emirleri",
+        "n": 8,
+        "filled": 6,
+        "unfilled": [
+          "Bitti",
+          "Bitti"
+        ],
+        "heights": [
+          20
+        ],
+        "fontSizes": [
+          "11px"
+        ],
+        "collisions": []
+      }
+    ],
+    "sectionRows": [
+      {
+        "title": "Hat durumu",
+        "rowCount": 3,
+        "rowHeights": [
+          52.5
+        ],
+        "tiers": [
+          "",
+          "WO-2026-000007 · Straw=11px/400 | 1 açık iş emri=11px/400",
+          ""
+        ]
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "rowCount": 1,
+        "rowHeights": [
+          135.5
+        ],
+        "tiers": [
+          "Son 7 günde fire kaydı=14px/500"
+        ]
+      },
+      {
+        "title": "Son duruşlar",
+        "rowCount": 4,
+        "rowHeights": [
+          40
+        ],
+        "tiers": [
+          "",
+          "45 dk=12px/400",
+          "90 dk=12px/400",
+          "30 dk=12px/400"
+        ]
+      },
+      {
+        "title": "Son iş emirleri",
+        "rowCount": 8,
+        "rowHeights": [
+          54.5
+        ],
+        "tiers": [
+          "WO-2026-000008=12px/400",
+          "WO-2026-000006=12px/400",
+          "WO-2026-000007=12px/400",
+          "WO-2026-000005=12px/400",
+          "WO-2026-000004=12px/400",
+          "WO-2026-000003=12px/400",
+          "WO-2026-000002=12px/400 | %100 Oat Spredable=13px/400",
+          "WO-2026-000001=12px/400"
+        ]
+      }
+    ],
+    "strips": []
+  }
+}
