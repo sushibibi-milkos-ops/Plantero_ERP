@@ -10,12 +10,12 @@ const id = (no: string) => execSync(`psql "${DB}" -t -A -c "select id from expor
 async function main() {
   const browser = await launchBrowser();
   const res: Record<string, string[][]> = {};
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, locale: 'tr-TR', timezoneId: 'Europe/Istanbul' });
+  const p = await ctx.newPage();
   for (const no of ['EXP-2026-000001', 'EXP-2026-000002', 'EXP-2026-000003']) {
     const sid = id(no);
     res[no] = [];
     for (let i = 0; i < 2; i++) {
-      const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, locale: 'tr-TR', timezoneId: 'Europe/Istanbul' });
-      const p = await ctx.newPage();
       await openRoute(p, { base: BASE, route: `/ihracat/sevkiyatlar/${sid}`, as: 'admin' });
       const order = await p.evaluate(() => {
         const cards = Array.from(document.querySelectorAll('a[data-pressable]')).filter((a) => /^(SİPARİŞ|İRSALİYE|FATURA|İHRACAT|TEKLİF|MAL KABUL)/i.test((a.textContent ?? '').trim()));
@@ -28,9 +28,9 @@ async function main() {
         });
       });
       res[no].push(order);
-      await ctx.close();
     }
   }
+  await ctx.close();
   writeFileSync('artifacts/critic/probe-ihracat-r15b.json', JSON.stringify(res, null, 2));
   console.error(JSON.stringify(res, null, 2));
 }

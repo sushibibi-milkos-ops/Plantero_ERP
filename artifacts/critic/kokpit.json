@@ -4,7 +4,7 @@
   "note": "Tur 12 (kritik doğrulama, örnekleme Europe/Istanbul 7 Eylül 2026). 5 rol kesiti yeniden çekildi (scripts/shot-kokpit-r3.ts, 1440×900 + 390×844 → artifacts/screens/kokpit-<rol>/) ve Read ile bakıldı. Ölçümler: artifacts/critic/measure-kokpit-r12/ — pnpm measure (5 rol × 2 viewport) + scripts/probe-kokpit-r12.ts (KPI bandı genişliği/flexGrow, odak dili sayımı, kolon dibi, tabular kapsaması) + probe-kokpit-r12b.ts (rozet anatomisi, bölüm satırı sayısal kademeleri). TUR 11 BULGULARI YENİDEN ÖLÇÜLDÜ, ÜÇÜ DE AÇIK: kokpit-focus-ring-dialect-10 (P2, 5 rolde de), kokpit-satis-kpi-band-width-10 (P2, 588/1152px), kokpit-wo-badge-anatomy-10 (P2, 2/8 dolgusuz). Yeni P0/P1 yok; kokpit modülünün hiçbir dosyası Tur 11’den beri değişmedi (git log). Ölçüm eşikleri: her rolde scrollWidth = clientWidth (1440 ve 390), 390px’te 44px altı tek eleman etkileşimsiz breadcrumb metni, satır yükseklikleri 40-41px (çok satırlı anatomi 52,5-55,5px), mobil kart 59,5-65,5px, h1 24px/600 masaüstü / 20px/600 mobil, farklı renk 15-24. Kod düzeyi tarama temiz: kokpit modülünde `transition: all`/`transition-all`, `ease-in`, `scale(0)`, 300ms+ süre yok; `hover:` globals.css:10-16’da (hover:hover) and (pointer:fine) ile kapılı; tek animasyon motion-safe:animate-pulse. KAZANAN: beş rol kesitinin hepsinde Plantero (toplamlar 59/59/59/58/59; referans Stripe 56 / Linear 57).",
   "routes": {
     "/kokpit?rol=admin": {
-      "round": 14,
+      "round": 15,
       "reference": "stripe",
       "referenceTotal": 56,
       "scores": [
@@ -27,20 +27,20 @@
         "artifacts/screens/kokpit-admin/desktop.png",
         "artifacts/screens/kokpit-admin/mobile.png"
       ],
-      "scoreNotes": "Tur 14 deltası — puan değişmedi (59, Stripe 56). Kokpit modülü ve KpiCard/KpiStrip/StatusBadge dosyaları Tur 10’dan (562d5de) beri değişmedi (git log). Ölçümler: scrollWidth 1440 = clientWidth (390’da 390 = 390), satır yükseklikleri [40, 41, 55,5], 24 satır (Tur 13’te 31 — paralel oturumların yazdığı sipariş/teslimat verisi değişti, düzen değil), h1 24px/600 (mobil 20px/600), 21 farklı renk, 390px’te 44px altı tek eleman etkileşimsiz breadcrumb metni (39,3×19,5). Kriter 8 = 4: kokpit-focus-ring-dialect-10 hâlâ açık, P2. Kazanma kuralı sağlanıyor (59 ≥ 56, min kriter 4, açık P0/P1 yok).",
+      "scoreNotes": "Tur 15 deltası — puan değişmedi (59, Stripe 56). Kokpit modülü + KpiCard/KpiStrip/StatusBadge dosyaları Tur 10’dan (562d5de) beri değişmedi; ara commit’ler (624915c…9c2c050) başka modülleri dokundu. Yeniden ölçüm (m-admin-*.json): scrollWidth 1440 = clientWidth, 390’da 390 = 390 (taşma yok), 24 satır [40, 41, 55,5], mobilde 24 kart [60, 63,5, 65,5], h1 24px/600 (mobil 20px/600), 21 farklı renk (mobil 19), punto dağılımı 13px ağırlıklı (78 düğüm) + 12/11/10 etiket kademeleri. 390px’te 44px altı tek eleman etkileşimsiz breadcrumb metni (39,3×19,5). Kriter 8 = 4: kokpit-focus-ring-dialect-10 açık (4/42), P2 — Tur 15’te odak GÖRÜNÜRLÜĞÜ kanıtlandı (artifacts/critic/kokpit-r15-focus-kpi.png): KPI şerit kartı :focus-visible’da outline auto/1px/oklab(0.55 -0.141 0.075 / 0.5) yani AYNI ring token’ının ince UA çizgisi — erişilebilirlik kaybı yok, yalnızca 2px inset ring’den farklı bir lehçe; P1’e yükseltilmedi. Kazanma kuralı sağlanıyor (59 ≥ 56, min kriter 4, açık P0/P1 yok).",
       "open": [
         {
           "id": "kokpit-focus-ring-dialect-10",
           "criterion": 8,
           "severity": "P2",
           "text": "Kokpit içinde İKİ farklı odak dili var: liste satırları (RowLink, shared.tsx:81), bölüm başlıklarındaki \"Tümü\" bağlantıları (shared.tsx:29) ve StatStrip hücreleri (shared.tsx:233) `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` çiziyor; KPI şeridi kartları (kpi-card.tsx `variant=\"strip\"` sarmalayıcı <Link>/<button>, satır 218-227) hiçbir focus-visible sınıfı taşımadığı için tarayıcının varsayılan `outline: auto 1px` halkasına düşüyor. Odak görünür ama aynı ekranda 1px UA çerçevesi ile 2px iç halka yan yana. Tur 10’dan beri kpi-card.tsx’e dokunulmadı (git log: son değişiklik 562d5de).",
-          "measure": "1440×900 /kokpit (admin): main içindeki 42 odak durağının 38’i focus-visible:ring taşıyor, 4’ü taşımıyor — dördü de KPI şerit kartı (287,3/288,3×80). 390×844’te de aynı 4 kart (152×72). Tur 14 yeniden ölçüm: DEĞİŞMEDİ (artifacts/critic/measure-kokpit-r14/probe-r14.json → focusSummary). kpi-card.tsx:189-215 `cls` zincirinde hâlâ focus-visible:ring yok.",
+          "measure": "1440×900 /kokpit (admin): main içindeki 42 odak durağının 38’i focus-visible:ring taşıyor, 4’ü taşımıyor — dördü de KPI şerit kartı (287,3/288,3×80). 390×844’te de aynı 4 kart (152×72). Tur 15 yeniden ölçüm: DEĞİŞMEDİ (artifacts/critic/measure-kokpit-r15/probe-r15.json → focusSummary). kpi-card.tsx:189-215 `cls` zincirinde hâlâ focus-visible:ring yok. Odak GÖRÜNÜR (artifacts/critic/kokpit-r15-focus-kpi.png: outline auto 1px, aynı --ring rengi) — bu yüzden P2 kalır, P1 değil.",
           "target": "Odaklanabilir her kokpit yüzeyi tek dil kullansın: KpiCard `cls` zincirine `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` (strip) / `focus-visible:ring-offset-2` (card) eklensin — ölçümde focus-visible:ring taşımayan odak durağı sayısı 0.",
           "file": "apps/web/src/components/kpi-card.tsx:190-227 (cls zinciri, href/onClick dalları)",
           "openedRound": 10,
           "reMeasuredRound": 12,
           "status": "açık",
-          "lastVerifiedRound": 13,
+          "lastVerifiedRound": 15,
           "recheckedRound": 14
         }
       ],
@@ -422,7 +422,7 @@
       ]
     },
     "/kokpit?rol=depo": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -445,20 +445,20 @@
         "artifacts/screens/kokpit-depo/desktop.png",
         "artifacts/screens/kokpit-depo/mobile.png"
       ],
-      "scoreNotes": "Tur 14 deltası — puan değişmedi (59, Linear 57). Ölçümler Tur 13 ile birebir: 19 satır [40, 41, 41], 390px’te 19 kart [62,5, 63,5, 64,5], scrollWidth = clientWidth iki kırılımda da, 22 farklı renk, mobilde 44px altı etkileşimli eleman yok. Kriter 8 = 4: kokpit-focus-ring-dialect-10 açık (4/26). Kazanma kuralı sağlanıyor.",
+      "scoreNotes": "Tur 15 deltası — puan değişmedi (59, Linear 57). Ölçümler Tur 13/14 ile birebir: 19 satır [40, 41, 41], 390px’te 19 kart [62,5, 63,5, 64,5], scrollWidth = clientWidth iki kırılımda da, 22 farklı renk (mobil 20), 44px altı etkileşimli eleman mobilde yok. Kriter 8 = 4: kokpit-focus-ring-dialect-10 açık (4/26), P2. Kazanma kuralı sağlanıyor.",
       "open": [
         {
           "id": "kokpit-focus-ring-dialect-10",
           "criterion": 8,
           "severity": "P2",
           "text": "Kokpit içinde İKİ farklı odak dili var: liste satırları (RowLink, shared.tsx:81), bölüm başlıklarındaki \"Tümü\" bağlantıları (shared.tsx:29) ve StatStrip hücreleri (shared.tsx:233) `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` çiziyor; KPI şeridi kartları (kpi-card.tsx `variant=\"strip\"` sarmalayıcı <Link>/<button>, satır 218-227) hiçbir focus-visible sınıfı taşımadığı için tarayıcının varsayılan `outline: auto 1px` halkasına düşüyor. Odak görünür ama aynı ekranda 1px UA çerçevesi ile 2px iç halka yan yana. Tur 10’dan beri kpi-card.tsx’e dokunulmadı (git log: son değişiklik 562d5de).",
-          "measure": "1440×900 /kokpit (depo): 26 odak durağının 22’si ring, 4’ü KPI şerit kartı (287,3/288,3×80). 390×844: aynı 4 kart (152×72). Tur 14 yeniden ölçüm: DEĞİŞMEDİ (artifacts/critic/measure-kokpit-r14/probe-r14.json).",
+          "measure": "1440×900 /kokpit (depo): 26 odak durağının 22’si ring, 4’ü KPI şerit kartı (287,3/288,3×80). 390×844: aynı 4 kart (152×72). Tur 15 yeniden ölçüm: DEĞİŞMEDİ (probe-r15.json).",
           "target": "Odaklanabilir her kokpit yüzeyi tek dil kullansın: KpiCard `cls` zincirine `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` (strip) / `focus-visible:ring-offset-2` (card) eklensin — ölçümde focus-visible:ring taşımayan odak durağı sayısı 0.",
           "file": "apps/web/src/components/kpi-card.tsx:190-227 (cls zinciri, href/onClick dalları)",
           "openedRound": 10,
           "reMeasuredRound": 12,
           "status": "açık",
-          "lastVerifiedRound": 13,
+          "lastVerifiedRound": 15,
           "recheckedRound": 14
         }
       ],
@@ -647,7 +647,7 @@
       ]
     },
     "/kokpit?rol=muhasebe": {
-      "round": 14,
+      "round": 15,
       "reference": "stripe",
       "referenceTotal": 56,
       "scores": [
@@ -670,20 +670,20 @@
         "artifacts/screens/kokpit-muhasebe/desktop.png",
         "artifacts/screens/kokpit-muhasebe/mobile.png"
       ],
-      "scoreNotes": "Tur 14 deltası — puan değişmedi (59, Stripe 56). 15 satır [40, 41, 41], 15 farklı renk (beş kesitin en disiplinlisi), tabular-nums taşımayan yalnızca 3 yaprak ve üçü de sayı sütunu değil. Negatif tutarlar tek renk (destructive), pozitifler boyanmıyor. Kriter 8 = 4: kokpit-focus-ring-dialect-10 açık (5/28).",
+      "scoreNotes": "Tur 15 deltası — puan değişmedi (59, Stripe 56). 15 satır [40, 41, 41], mobilde 15 kart [63, 64, 64], 15 farklı renk (beş kesitin en disiplinlisi; mobil 13), tabular-nums taşımayan yalnızca 3 yaprak ve üçü de sayı sütunu değil (probe-r15.json → nonTabular: \"Nakit projeksiyonu (3 ay)\", \"%0,2 tamamlandı\", \"23 gün kaldı…\"). Negatif tutarlar tek renk (destructive), pozitifler boyanmıyor. Kriter 8 = 4: kokpit-focus-ring-dialect-10 açık (5/28), P2.",
       "open": [
         {
           "id": "kokpit-focus-ring-dialect-10",
           "criterion": 8,
           "severity": "P2",
           "text": "Kokpit içinde İKİ farklı odak dili var: liste satırları (RowLink, shared.tsx:81), bölüm başlıklarındaki \"Tümü\" bağlantıları (shared.tsx:29) ve StatStrip hücreleri (shared.tsx:233) `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` çiziyor; KPI şeridi kartları (kpi-card.tsx `variant=\"strip\"` sarmalayıcı <Link>/<button>, satır 218-227) hiçbir focus-visible sınıfı taşımadığı için tarayıcının varsayılan `outline: auto 1px` halkasına düşüyor. Odak görünür ama aynı ekranda 1px UA çerçevesi ile 2px iç halka yan yana. Tur 10’dan beri kpi-card.tsx’e dokunulmadı (git log: son değişiklik 562d5de).",
-          "measure": "1440×900 /kokpit (muhasebe): 28 odak durağının 23’ü ring, 5’i KPI şerit kartı (229,6/230,6×80). 390×844: aynı 5 kart (152×72). Tur 14 yeniden ölçüm: DEĞİŞMEDİ (artifacts/critic/measure-kokpit-r14/probe-r14.json).",
+          "measure": "1440×900 /kokpit (muhasebe): 28 odak durağının 23’ü ring, 5’i KPI şerit kartı (229,6/230,6×80). 390×844: aynı 5 kart (152×72). Tur 15 yeniden ölçüm: DEĞİŞMEDİ (probe-r15.json).",
           "target": "Odaklanabilir her kokpit yüzeyi tek dil kullansın: KpiCard `cls` zincirine `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` (strip) / `focus-visible:ring-offset-2` (card) eklensin — ölçümde focus-visible:ring taşımayan odak durağı sayısı 0.",
           "file": "apps/web/src/components/kpi-card.tsx:190-227 (cls zinciri, href/onClick dalları)",
           "openedRound": 10,
           "reMeasuredRound": 12,
           "status": "açık",
-          "lastVerifiedRound": 13,
+          "lastVerifiedRound": 15,
           "recheckedRound": 14
         }
       ],
@@ -950,7 +950,7 @@
       ]
     },
     "/kokpit?rol=satis": {
-      "round": 14,
+      "round": 15,
       "reference": "stripe",
       "referenceTotal": 56,
       "scores": [
@@ -973,20 +973,20 @@
         "artifacts/screens/kokpit-satis/desktop.png",
         "artifacts/screens/kokpit-satis/mobile.png"
       ],
-      "scoreNotes": "Tur 14 deltası — puan değişmedi (58, Stripe 56). Kriter 2 = 4: kokpit-satis-kpi-band-width-10 hâlâ açık — üç KPI kartı 196+196+196 = 588/1152px (%51), flexGrow 0, son dikey hairline x=852’de havada; aynı şerit admin/depo/üretimde 287,3+288,3×3 = 1152/1152, muhasebede 229,6+230,6×4 = 1152/1152 (probe-r14.json → focusSummary.withoutRing genişlikleri; kpi-card.tsx:203 `md:min-w-[196px] md:shrink-0 md:flex-none md:grow-0` değişmedi). Kriter 8 = 4: KPI şerit kartları (3/21) UA outline’ında. Satır ölçüsü [16, 41, 41] — 16px olan satış hunisi listesinin li’si (etiket+çubuk 16px içerik + 20px gap), tablo satırı değil; DEĞERLENDİRİLDİ, AÇILMADI. Kazanma kuralı sağlanıyor (58 ≥ 56, açık P0/P1 yok).",
+      "scoreNotes": "Tur 15 deltası — puan değişmedi (58, Stripe 56). Kriter 2 = 4: kokpit-satis-kpi-band-width-10 hâlâ açık — üç KPI kartı 196+196+196 = 588/1152px (%51), flexGrow 0, son dikey hairline x=852’de havada asılı; aynı şerit admin/depo/üretimde 287,3+288,3×3 = 1152/1152, muhasebede 229,6+230,6×4 = 1152/1152 (probe-r15.json → focusSummary.withoutRing genişlikleri). kpi-card.tsx:203 `md:min-w-[196px] md:shrink-0 md:flex-none md:grow-0` DEĞİŞMEDİ. Kriter 8 = 4: KPI şerit kartları (3/21) UA outline’ında. Satır ölçüsü [16, 41, 41] — 16px olan satış hunisi listesinin li’si (etiket+çubuk 16px içerik + 20px gap), tablo satırı değil; yeniden DEĞERLENDİRİLDİ, AÇILMADI. Kazanma kuralı sağlanıyor (58 ≥ 56, açık P0/P1 yok).",
       "open": [
         {
           "id": "kokpit-satis-kpi-band-width-10",
           "criterion": 2,
           "severity": "P2",
           "text": "Satış kesitinde KPI şeridi içerik genişliğinin yarısında bitiyor: `KpiStripRow` 3 ve daha az kartta `stripCompact` veriyor (kpi-strip.tsx:33-36), kart `md:min-w-[196px] md:shrink-0 md:flex-none md:grow-0` alıyor (kpi-card.tsx:203). Aynı şerit diğer dört rolde `md:flex-1` ile 1152px'in tamamına yayılıyor. Son dikey hairline x=852'de havada kalıyor, sağında 564px boş bant duruyor, altındaki bölüm kartlarının hepsi tam genişlikte — bant hizası kopuyor.",
-          "measure": "1440×900 /kokpit (satış): 3 KPI kartı 196+196+196 = 588 / 1152px (%51), son kart sağ kenarı x=852; admin/depo/üretim 287,3+288,3×3 = 1152/1152, muhasebe 229,6+230,6×4 = 1152/1152 (artifacts/critic/measure-kokpit-r14/probe-r14.json). Tur 14 yeniden ölçüm: DEĞİŞMEDİ; kpi-strip.tsx:33-36 compact dalı ve kpi-card.tsx:203 aynı.",
+          "measure": "1440×900 /kokpit (satış): 3 KPI kartı 196+196+196 = 588 / 1152px (%51), son kart sağ kenarı x=852; admin/depo/üretim 287,3+288,3×3 = 1152/1152, muhasebe 229,6+230,6×4 = 1152/1152 (artifacts/critic/measure-kokpit-r15/probe-r15.json). Tur 15 yeniden ölçüm: DEĞİŞMEDİ; kpi-strip.tsx:33-36 compact dalı ve kpi-card.tsx:203 aynı. artifacts/screens/kokpit-satis/desktop.png’de bandın sağ yarısı boş.",
           "target": "Masaüstünde KPI bandı kart sayısından bağımsız olarak içerik genişliğinin tamamını kaplasın (eşit paylı, aralarında yüzen boşluk olmadan): 3 kartta da şerit toplam genişliği = 1152px (%100), son hairline içerik sağ kenarında. Tur 4'te çözülen \"kartlar arasında yüzen ~500px boşluk\" ızgara payıyla (kart başına 1/4 sütun üst sınırı) korunmalı, sabit 196px ile değil.",
           "file": "apps/web/src/components/kpi-strip.tsx:33-36 (compact dalı), apps/web/src/components/kpi-card.tsx:203 (stripCompact genişliği)",
           "openedRound": 10,
           "reMeasuredRound": 12,
           "status": "açık",
-          "lastVerifiedRound": 13,
+          "lastVerifiedRound": 15,
           "recheckedRound": 14
         },
         {
@@ -994,13 +994,13 @@
           "criterion": 8,
           "severity": "P2",
           "text": "Kokpit içinde İKİ farklı odak dili var: liste satırları (RowLink, shared.tsx:81), bölüm başlıklarındaki \"Tümü\" bağlantıları (shared.tsx:29) ve StatStrip hücreleri (shared.tsx:233) `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` çiziyor; KPI şeridi kartları (kpi-card.tsx `variant=\"strip\"` sarmalayıcı <Link>/<button>, satır 218-227) hiçbir focus-visible sınıfı taşımadığı için tarayıcının varsayılan `outline: auto 1px` halkasına düşüyor. Odak görünür ama aynı ekranda 1px UA çerçevesi ile 2px iç halka yan yana. Tur 10’dan beri kpi-card.tsx’e dokunulmadı (git log: son değişiklik 562d5de).",
-          "measure": "1440×900 /kokpit (satış): 21 odak durağının 18’i ring, 3’ü KPI şerit kartı (196×80). 390×844: aynı 3 kart (152×72). Tur 14 yeniden ölçüm: DEĞİŞMEDİ (artifacts/critic/measure-kokpit-r14/probe-r14.json).",
+          "measure": "1440×900 /kokpit (satış): 21 odak durağının 18’i ring, 3’ü KPI şerit kartı (196×80). 390×844: aynı 3 kart (152×72). Tur 15 yeniden ölçüm: DEĞİŞMEDİ (probe-r15.json).",
           "target": "Odaklanabilir her kokpit yüzeyi tek dil kullansın: KpiCard `cls` zincirine `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` (strip) / `focus-visible:ring-offset-2` (card) eklensin — ölçümde focus-visible:ring taşımayan odak durağı sayısı 0.",
           "file": "apps/web/src/components/kpi-card.tsx:190-227 (cls zinciri, href/onClick dalları)",
           "openedRound": 10,
           "reMeasuredRound": 12,
           "status": "açık",
-          "lastVerifiedRound": 13,
+          "lastVerifiedRound": 15,
           "recheckedRound": 14
         }
       ],
@@ -1192,7 +1192,7 @@
       ]
     },
     "/kokpit?rol=uretim": {
-      "round": 14,
+      "round": 15,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -1215,20 +1215,20 @@
         "artifacts/screens/kokpit-uretim_sefi/desktop.png",
         "artifacts/screens/kokpit-uretim_sefi/mobile.png"
       ],
-      "scoreNotes": "Tur 14 deltası — puan değişmedi (59, Linear 57). 15 satır [40, 54,5, 55,5], 24 farklı renk, 390px’te 15 kart [59,5, 65,5, 65,5]. Kriter 8 = 4: kokpit-focus-ring-dialect-10 açık (4/20). Kriter 11 = 5 korunur: kokpit-wo-badge-anatomy-10 hâlâ açık ama P2 — probe-r14b.json: \"Son iş emirleri\" 8 rozetin 2’si (\"Bitti\", finished) backgroundColor rgba(0, 0, 0, 0), diğer 6’sı dolgulu; rozet yüksekliği 20px ve punto 11px üçünde de aynı, ayrım yalnızca zeminde. Hem 1440px hem 390px’te görünür.",
+      "scoreNotes": "Tur 15 deltası — puan değişmedi (59, Linear 57). 15 satır [40, 54,5, 55,5], 24 farklı renk (mobil 23), 390px’te 15 kart [59,5, 65,5, 65,5]. Kriter 8 = 4: kokpit-focus-ring-dialect-10 açık (4/20). Kriter 11 = 5 korunur: kokpit-wo-badge-anatomy-10 hâlâ açık ama P2 — probe-r15b.json: \"Son iş emirleri\" 12 rozetin 2’si (\"Bitti\", finished) backgroundColor rgba(0, 0, 0, 0), diğer 10’u dolgulu (planned/in_progress/closed); rozet yüksekliği 20px ve punto 11px hepsinde aynı, ayrım yalnızca zeminde. Hem 1440px hem 390px ekran görüntüsünde görünür.",
       "open": [
         {
           "id": "kokpit-wo-badge-anatomy-10",
           "criterion": 11,
           "severity": "P2",
           "text": "\"Son iş emirleri\" sütununda tek rozet bileşeni İKİ anatomi çiziyor: \"Planlandı\" (info), \"Üretimde\" (primary) ve \"Kapatıldı\" (muted) dolgulu pil; \"Bitti\" (success) dolgusuz — yalnızca nokta + metin (status-badge.tsx:72 `SUBTLE_STATUS = { work_order: new Set(['finished']) }`). Aynı bileşen `delivery` kind'ında bu yaklaşımı Tur 5'te açıkça reddedip (\"saf tutarsızlık\") ayrımı TONdan kurmuştu (shipped=primary, delivered=success); work_order hâlâ eski dolgu/dolgusuz ayrımında. Masaüstünde de mobilde de görünür.",
-          "measure": "1440×900 ve 390×844 /kokpit (üretim şefi): \"Son iş emirleri\" 8 rozetin 6’sı dolgulu, 2’si dolgusuz — ikisi de \"Bitti\" (finished), backgroundColor rgba(0, 0, 0, 0) (artifacts/critic/measure-kokpit-r14/probe-r14b.json → badges). Aynı panodaki \"Hat durumu\" (3/3) ve \"Son duruşlar\" (1/1) tamamen dolgulu. status-badge.tsx:72 `SUBTLE_STATUS = { work_order: new Set(['finished']) }` Tur 10’dan beri değişmedi. Tur 14 yeniden ölçüm: DEĞİŞMEDİ.",
+          "measure": "1440×900 ve 390×844 /kokpit (üretim şefi): \"Son iş emirleri\" 12 rozetin 10’u dolgulu, 2’si dolgusuz — ikisi de \"Bitti\" (finished), backgroundColor rgba(0, 0, 0, 0) (artifacts/critic/measure-kokpit-r15/probe-r15b.json → badges). Aynı panodaki \"Hat durumu\" (3/3) ve \"Son duruşlar\" (1/1) tamamen dolgulu. status-badge.tsx:72 `SUBTLE_STATUS = { work_order: new Set(['finished']) }` Tur 10’dan beri değişmedi. Tur 15 yeniden ölçüm: DEĞİŞMEDİ.",
           "target": "Aynı sütundaki tüm iş emri rozetleri tek anatomi (dolgulu pil, h-5, 11px) olsun; in_progress↔finished ayrımı dolgudan değil TONdan kurulsun (delivery'de olduğu gibi) — ölçümde dolgusuz rozet sayısı 0/8 ve iki durumun backgroundColor değerleri birbirinden farklı.",
           "file": "apps/web/src/components/status-badge.tsx:72 (SUBTLE_STATUS), apps/web/src/lib/status.ts (work_order tonları)",
           "openedRound": 10,
           "reMeasuredRound": 12,
           "status": "açık",
-          "lastVerifiedRound": 13,
+          "lastVerifiedRound": 15,
           "recheckedRound": 14
         },
         {
@@ -1236,13 +1236,13 @@
           "criterion": 8,
           "severity": "P2",
           "text": "Kokpit içinde İKİ farklı odak dili var: liste satırları (RowLink, shared.tsx:81), bölüm başlıklarındaki \"Tümü\" bağlantıları (shared.tsx:29) ve StatStrip hücreleri (shared.tsx:233) `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` çiziyor; KPI şeridi kartları (kpi-card.tsx `variant=\"strip\"` sarmalayıcı <Link>/<button>, satır 218-227) hiçbir focus-visible sınıfı taşımadığı için tarayıcının varsayılan `outline: auto 1px` halkasına düşüyor. Odak görünür ama aynı ekranda 1px UA çerçevesi ile 2px iç halka yan yana. Tur 10’dan beri kpi-card.tsx’e dokunulmadı (git log: son değişiklik 562d5de).",
-          "measure": "1440×900 /kokpit (üretim şefi): 20 odak durağının 16’sı ring, 4’ü KPI şerit kartı (287,3/288,3×80). 390×844: aynı 4 kart (152×72). Tur 14 yeniden ölçüm: DEĞİŞMEDİ (artifacts/critic/measure-kokpit-r14/probe-r14.json).",
+          "measure": "1440×900 /kokpit (üretim şefi): 20 odak durağının 16’sı ring, 4’ü KPI şerit kartı (287,3/288,3×80). 390×844: aynı 4 kart (152×72). Tur 15 yeniden ölçüm: DEĞİŞMEDİ (probe-r15.json).",
           "target": "Odaklanabilir her kokpit yüzeyi tek dil kullansın: KpiCard `cls` zincirine `outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset` (strip) / `focus-visible:ring-offset-2` (card) eklensin — ölçümde focus-visible:ring taşımayan odak durağı sayısı 0.",
           "file": "apps/web/src/components/kpi-card.tsx:190-227 (cls zinciri, href/onClick dalları)",
           "openedRound": 10,
           "reMeasuredRound": 12,
           "status": "açık",
-          "lastVerifiedRound": 13,
+          "lastVerifiedRound": 15,
           "recheckedRound": 14
         }
       ],
