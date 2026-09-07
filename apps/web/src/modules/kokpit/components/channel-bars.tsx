@@ -1,5 +1,5 @@
 import { formatMoney } from '@/lib/format';
-import { RankBar } from './shared';
+import { RankBar, Row } from './shared';
 
 /**
  * "Bugünkü kanal satışları" çubukları — tek ölçü (net ciro) kanal bazında sıralanmış yatay çubuklar.
@@ -24,6 +24,17 @@ import { RankBar } from './shared';
  * Kural yalnızca AYNI sütun içindir — KPI şeridindeki (0 ondalık) büyük rakamla bu listenin (2
  * ondalık) arasındaki kademe ayrımı KORUNUR, çünkü onlar ayrı sütunlar/bileşenlerdir. Her iki dal da
  * `digits: 2` kullanır.
+ *
+ * Kök neden (Tur 10 P1 kokpit-channel-single-tier-10, kriter 1): tek-kanal dalı `text-[15px]
+ * font-semibold` (15px/600) basıyordu — AYNI sağ hizalı para sütunundaki özet satır ("Brüt (bugün)",
+ * gm-dashboard.tsx) `13px/500`. Bugünkü veri bu iki değeri BİREBİR eşit kılınca (tek kanal → brüt =
+ * o kanalın net'i) kırılım özetten DAHA YÜKSEK SESLE basılmış oluyordu — hiyerarşi VERİYE göre
+ * tersine dönüyordu. Tek kanal dalı artık çok-kanallı dalla AYNI kademeyi (paylaşılan `Row`, 13px,
+ * font-weight 400 — normal gövde ağırlığı, `font-semibold`/`font-medium` YOK) kullanır: bölüm içi
+ * para düğümleri artık {(13,500 özet), (13,400 kırılım)} kümesine sığar, kırılım hiçbir zaman
+ * özetten büyük/kalın olamaz. `Row` (shared.tsx) aynı zamanda satır bandını da (masaüstü 40px,
+ * mobil ≥44px `max-sm:min-h-11`) garanti eder — üst bileşendeki (`gm-dashboard.tsx`) `p-4` sarmalayıcı
+ * bu bandı bozduğu için kaldırılıp bu bileşenin KENDİ dolgusuna (Row / aşağıdaki `<ul>`) bırakıldı.
  */
 export function ChannelBars({ rows }: { rows: { name: string; net: number }[] }) {
   if (!rows.length) return null;
@@ -35,18 +46,18 @@ export function ChannelBars({ rows }: { rows: { name: string; net: number }[] })
   if (sorted.length === 1) {
     const only = sorted[0]!;
     return (
-      <div className="flex items-baseline justify-between">
-        {/* Kök neden (Tur 2 P2 kokpit-14px-tier-01): tek-kanal etiketi `text-sm` (14px) taşıyordu —
-            çok-kanallı halde AYNI etiket 12px (bkz. aşağıdaki liste `text-xs`); tek satırlık gövde
-            metni için `text-[13px]` (kokpit'in genel gövde kademesi) kullanılır. */}
-        <span className="text-[13px] text-muted-foreground">{only.name}</span>
-        <span className="num text-[15px] font-semibold tabular-nums">{formatMoney(only.net, 'TRY', { digits: 2 })}</span>
-      </div>
+      // Kök neden (Tur 2 P2 kokpit-14px-tier-01, üstteki Tur 10 P1 notuyla güncellendi): tek-kanal
+      // satırı artık çok-kanallı listeyle AYNI paylaşılan `Row` anatomisini (13px, normal ağırlık,
+      // 40/44px bant) kullanır — ayrı bir `flex items-baseline` düzeni değil.
+      <Row>
+        <span className="min-w-0 flex-1 truncate text-muted-foreground">{only.name}</span>
+        <span className="num shrink-0 tabular-nums">{formatMoney(only.net, 'TRY', { digits: 2 })}</span>
+      </Row>
     );
   }
 
   return (
-    <ul className="space-y-2.5">
+    <ul className="space-y-2.5 px-4 py-3">
       {sorted.map((r, i) => (
         <li key={r.name} className="flex items-center gap-3">
           <span className="w-24 shrink-0 truncate text-xs text-muted-foreground">{r.name}</span>

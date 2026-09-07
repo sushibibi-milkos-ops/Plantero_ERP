@@ -51,7 +51,12 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
               sayısını (hedef ≥15) düşürüyordu. Tek bir ikincil sayı için ayrı bir KPI bloğu yerine bu
               bölümün KENDİ Banka/Karantina ile AYNI "başlık altı özet satırı" anatomisi (h-11, 13px,
               muted etiket + MoneyCell) kullanılır — 96px'ten 44px'e iner, sparkline (zaten KPI
-              şeridinde tekrar eden bir görselleştirme değildi ama küçük alanda anlamsızdı) kaldırılır. */}
+              şeridinde tekrar eden bir görselleştirme değildi ama küçük alanda anlamsızdı) kaldırılır.
+              Kök neden (Tur 10 P1 kokpit-channel-single-tier-10): buradaki `<div className="p-4">`
+              sarmalayıcı `ChannelBars`'ın kendi satır bandını (paylaşılan `Row`, 40/44px) BOZUYORDU —
+              tek kanal dalı bu yüzden ayrı/daha büyük bir tipografi kademesine (`text-[15px]
+              font-semibold`) kaçmıştı. `ChannelBars` artık kendi dolgusunu taşıyor (`Row` / `<ul
+              px-4>`), bu sarmalayıcı kaldırıldı. */}
           <div className="flex h-11 items-center justify-between border-b border-border/60 px-4 text-[13px]">
             <span className="text-muted-foreground">Brüt (bugün)</span>
             <MoneyCell value={channelSales.grossTotal} className="font-medium" />
@@ -70,9 +75,7 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
               }
             />
           ) : (
-            <div className="p-4">
-              <ChannelBars rows={channelSales.rows.map((r) => ({ name: r.name, net: Number(r.net) }))} />
-            </div>
+            <ChannelBars rows={channelSales.rows.map((r) => ({ name: r.name, net: Number(r.net) }))} />
           )}
         </Section>
 

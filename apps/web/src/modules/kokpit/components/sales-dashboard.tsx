@@ -64,7 +64,10 @@ export function SalesDashboardView({ data }: { data: SalesCards }) {
             </Section>
           ) : showChannelBreakdown ? (
             <Section title="Kanal ciro (bugün)" href="/satis/net-ciro">
-              <div className="p-4"><ChannelBars rows={data.channelToday.rows.map((r) => ({ name: r.name, net: Number(r.net) }))} /></div>
+              {/* Tur 10 P1 kokpit-channel-single-tier-10 aynı kök nedeni (gm-dashboard.tsx'teki
+                  yorum): `p-4` sarmalayıcı `ChannelBars`'ın kendi satır bandını bozuyordu —
+                  bileşen artık kendi dolgusunu taşıyor. */}
+              <ChannelBars rows={data.channelToday.rows.map((r) => ({ name: r.name, net: Number(r.net) }))} />
             </Section>
           ) : null}
 

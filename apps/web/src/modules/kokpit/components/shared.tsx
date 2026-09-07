@@ -20,9 +20,13 @@ export function Section({ title, href, children, className }: { title: string; h
         <h2 className="text-[13px] font-semibold">{title}</h2>
         {href ? (
           // max-md:min-h-11: mobil dokunma hedefi 44px.
+          // Kök neden (Tur 10 P2 kokpit-focus-ring-dialect-10, kriter 8): bu bağlantı hiçbir
+          // focus-visible sınıfı taşımıyordu — tarayıcının varsayılan `outline: auto 1px` halkasına
+          // düşüyordu, aynı ekrandaki `RowLink` (ring-2 inset) ile FARKLI bir odak dili oluşturuyordu.
+          // Artık kokpit'in tek odak dili (`outline-none focus-visible:ring-2 ring-ring ring-inset`).
           <Link
             href={href}
-            className="inline-flex items-center gap-1 max-md:min-h-11 text-xs text-muted-foreground hover:text-foreground active:text-foreground/80"
+            className="inline-flex items-center gap-1 rounded max-md:min-h-11 text-xs text-muted-foreground outline-none hover:text-foreground active:text-foreground/80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
           >
             Tümü <ArrowRight className="size-3" />
           </Link>
@@ -224,7 +228,9 @@ export function StatStrip({ items, className, divider = true }: { items: StatStr
           </>
         );
         return it.href ? (
-          <Link key={it.key} href={it.href} className="px-2 py-2.5 text-center hover:bg-muted/40 active:bg-muted/60">
+          // Kök neden (Tur 10 P2 kokpit-focus-ring-dialect-10, kriter 8): aynı `RowLink` odak dili
+          // (bkz. üstteki Section "Tümü" notu) — bu hücre de eskiden UA varsayılan outline'ına düşüyordu.
+          <Link key={it.key} href={it.href} className="px-2 py-2.5 text-center outline-none hover:bg-muted/40 active:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset">
             {inner}
           </Link>
         ) : (
