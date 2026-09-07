@@ -1,0 +1,43 @@
+{
+  "/bakim/makineler": {
+    "violations": [],
+    "violationCount": 0,
+    "animated": []
+  },
+  "/bakim/planlar": {
+    "violations": [],
+    "violationCount": 0,
+    "animated": []
+  },
+  "/bakim/is-emirleri": {
+    "violations": [],
+    "violationCount": 0,
+    "animated": []
+  },
+  "/bakim/oee": {
+    "violations": [],
+    "violationCount": 0,
+    "animated": []
+  },
+  "/bakim/is-emirleri/yeni": {
+    "violations": [],
+    "violationCount": 0,
+    "animated": []
+  },
+  "/bakim/makineler/daa41905-b9ad-4454-8e79-ea1448c88af3": {
+    "violations": [],
+    "violationCount": 0,
+    "animated": []
+  },
+  "/bakim/is-emirleri/4a9cca52-d4ec-4d48-ae31-4e8912f03da6": {
+    "violations": [],
+    "violationCount": 0,
+    "animated": [
+      {
+        "name": "pulse",
+        "dur": "2s",
+        "id": "SPAN.absolute top-1 -left-[18.5px] size-2.5 r"
+      }
+    ]
+  }
+}
