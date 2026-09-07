@@ -1,0 +1,116 @@
+{
+ "actionbar_390": {
+  "found": true,
+  "bar": {
+   "left": 23,
+   "right": 367,
+   "cw": 344,
+   "sw": 364
+  },
+  "kids": [
+   {
+    "label": "Versiyon",
+    "left": 23,
+    "right": 183,
+    "w": 160,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni deneme reçetesi",
+    "left": 189,
+    "right": 233,
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni versiyon",
+    "left": 239,
+    "right": 283,
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Kaydet",
+    "left": 291,
+    "right": 335,
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Onaya gönder",
+    "left": 343,
+    "right": 387,
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 20
+   }
+  ]
+ },
+ "focus_actionbar": {
+  "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "boxShadow": "none"
+ },
+ "pr_1440": {
+  "rows": [],
+  "firstRowTop_mainOffset": null,
+  "money": [
+   {
+    "t": "₺31,92",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺28,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺5,81",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺5,81",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺2,40",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺120,00",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺2,40",
+    "fvn": "tabular-nums",
+    "align": "right"
+   },
+   {
+    "t": "₺0,03",
+    "fvn": "tabular-nums",
+    "align": "right"
+   }
+  ]
+ },
+ "focus_pr_1440": {
+  "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "boxShadow": "none"
+ },
+ "board_card": {
+  "tag": "DIV",
+  "cls": "flex min-h-dvh bg-background",
+  "w": 1440,
+  "h": 904,
+  "tabindex": null,
+  "bg": "oklch(0.985 0.002 250)",
+  "border": "oklch(0.92 0.004 286.3)"
+ }
+}

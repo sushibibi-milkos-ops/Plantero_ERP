@@ -1,0 +1,24 @@
+{
+ "focus_onaya": {
+  "text": "Onaya gönder",
+  "isTarget": true,
+  "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0"
+ },
+ "board_card_focus": {
+  "info": {
+   "tag": "BUTTON",
+   "cls": "w-full min-h-11 rounded-lg border border-border/60 bg-card p-2.5 text-left shadow-[0_1px_2px_rgba(0,0,0,0.04)] transitio",
+   "tabindex": 0
+  },
+  "focus": {
+   "isTarget": true,
+   "outline": "1px auto oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0"
+  }
+ },
+ "board_card_hover": {
+  "before": "oklch(1 0 0) | shadow=rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0",
+  "after": "oklch(1 0 0) | shadow=rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0"
+ }
+}

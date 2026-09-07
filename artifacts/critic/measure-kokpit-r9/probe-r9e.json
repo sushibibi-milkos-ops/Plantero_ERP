@@ -1,0 +1,39 @@
+{
+  "v-1440": [
+    {
+      "sig": "space-y-6|space-y-2#grid gap-3 sm:grid-cols-2 xl:grid-cols-4#space-y-px overflow-hidden rounded-lg border",
+      "busyClass": "space-y-6",
+      "children": [
+        "space-y-2",
+        "grid gap-3 sm:grid-cols-2 xl:grid-cols-4",
+        "space-y-px overflow-hidden rounded-lg border"
+      ],
+      "strip": {
+        "cls": "grid gap-3 sm:grid-cols-2 xl:grid-cols-4",
+        "display": "grid",
+        "gridCols": "279px 279px 279px 279px",
+        "overflowX": "visible",
+        "borderTop": "0px",
+        "radius": "0px",
+        "w": 1152,
+        "h": 96,
+        "n": 4,
+        "childW": [
+          279,
+          279,
+          279,
+          279
+        ],
+        "childH": [
+          96,
+          96,
+          96,
+          96
+        ]
+      },
+      "flexRowHeights": [],
+      "shot": "skeleton-1440-v0.png"
+    }
+  ],
+  "v-390": []
+}

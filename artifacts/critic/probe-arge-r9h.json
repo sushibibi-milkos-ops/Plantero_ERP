@@ -1,0 +1,30 @@
+{
+ "/arge/projeler": {
+  "wrapperCls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto",
+  "wrapperBorder": "0px solid oklch(0.92 0.004 286.3)",
+  "wrapperRadius": "0px",
+  "wrapperBg": "oklch(1 0 0)",
+  "theadBg": "oklch(0.967 0.001 286.4)",
+  "thBg": "rgba(0, 0, 0, 0)",
+  "thFont": "12px/500 oklch(0.552 0.016 285.9) tt=none ls=normal",
+  "thBorderBottom": "0px solid oklch(0.92 0.004 286.3)",
+  "rowBorderBottom": "1px solid oklab(0.92 0.00112267 -0.00383922 / 0.5)",
+  "rowBg": "rgba(0, 0, 0, 0)",
+  "rowHeight": 36,
+  "tableCls": "min-w-full border-collapse"
+ },
+ "/arge/receteler": {
+  "wrapperCls": "scrollbar-thin scroll-fade-x max-h-[calc(100dvh-16rem)] overflow-auto",
+  "wrapperBorder": "0px solid oklch(0.92 0.004 286.3)",
+  "wrapperRadius": "0px",
+  "wrapperBg": "oklch(1 0 0)",
+  "theadBg": "oklch(0.967 0.001 286.4)",
+  "thBg": "rgba(0, 0, 0, 0)",
+  "thFont": "12px/500 oklch(0.552 0.016 285.9) tt=none ls=normal",
+  "thBorderBottom": "0px solid oklch(0.92 0.004 286.3)",
+  "rowBorderBottom": "1px solid oklab(0.92 0.00112267 -0.00383922 / 0.5)",
+  "rowBg": "rgba(0, 0, 0, 0)",
+  "rowHeight": 36,
+  "tableCls": "min-w-full border-collapse"
+ }
+}

@@ -1,0 +1,98 @@
+{
+ "projeler_1440": {
+  "firstRowTop_viewport": 238,
+  "firstRowTop_mainOffset": 190,
+  "rowHeight": 36,
+  "birim": [
+   {
+    "t": "₺31,92",
+    "color": "oklch(0.72 0.17 70)"
+   },
+   {
+    "t": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺103,41",
+    "color": "oklch(0.72 0.17 70)"
+   }
+  ]
+ },
+ "receteler_1440": {
+  "firstRowTop_viewport": 208,
+  "firstRowTop_mainOffset": 160,
+  "heads": [
+   "Reçete",
+   "Proje",
+   "Versiyon",
+   "Durum",
+   "Birim maliyet",
+   "Versiyonlar",
+   "Devrolmuş BOM"
+  ],
+  "birimIdx": 4,
+  "birim": [
+   {
+    "t": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺103,41",
+    "color": "oklch(0.21 0.006 285.9)"
+   },
+   {
+    "t": "₺31,92",
+    "color": "oklch(0.21 0.006 285.9)"
+   }
+  ]
+ },
+ "pr_390_actionbar": {
+  "vw": 390,
+  "clipped": [],
+  "scrollers": [
+   {
+    "tag": "nav",
+    "cls": "min-w-0 flex-1",
+    "sw": 117,
+    "cw": 102,
+    "overflowX": "visible",
+    "text": "Ar-GeProjelerDetayDeneme Reçeteleri"
+   },
+   {
+    "tag": "ol",
+    "cls": "flex items-center break-words text-muted-foreground flex-nowrap gap-1 text-[13px] sm:gap-1",
+    "sw": 117,
+    "cw": 102,
+    "overflowX": "visible",
+    "text": "Ar-GeProjelerDetayDeneme Reçeteleri"
+   },
+   {
+    "tag": "div",
+    "cls": "flex flex-nowrap items-center gap-2 overflow-x-auto md:justify-between md:gap-3",
+    "sw": 364,
+    "cw": 344,
+    "overflowX": "auto",
+    "text": "v1Taslakv1 · Taslak Yeni deneme reçetesi Kaydet Onaya gönder"
+   }
+  ]
+ },
+ "pr_390_touch": [],
+ "board_1440": {
+  "scrollers": [
+   {
+    "cls": "scrollbar-thin scroll-fade-x flex h-[calc(100dvh-28.5rem)] min-h-[320px] snap-x ",
+    "sw": 1864,
+    "cw": 1152,
+    "ox": "auto"
+   }
+  ],
+  "cols": []
+ },
+ "board_focus": {
+  "tag": "A",
+  "label": "Plantero",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "outlineWidth": "0px",
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+ }
+}

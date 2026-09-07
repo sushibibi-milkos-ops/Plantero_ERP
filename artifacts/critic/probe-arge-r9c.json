@@ -1,0 +1,188 @@
+{
+ "Fıstık Bazı (v1 Taslak)@390": {
+  "found": true,
+  "barCw": 344,
+  "barSw": 364,
+  "overflowPx": 20,
+  "docOverflow": 0,
+  "kids": [
+   {
+    "label": "Versiyon",
+    "w": 160,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni deneme reçetesi",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni versiyon",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Kaydet",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Onaya gönder",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 20
+   }
+  ]
+ },
+ "Fıstık Bazı (v1 Taslak)@375": {
+  "found": true,
+  "barCw": 329,
+  "barSw": 364,
+  "overflowPx": 35,
+  "docOverflow": 0,
+  "kids": [
+   {
+    "label": "Versiyon",
+    "w": 160,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni deneme reçetesi",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni versiyon",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Kaydet",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Onaya gönder",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 35
+   }
+  ]
+ },
+ "Şekersiz Protein@390": {
+  "found": true,
+  "barCw": 344,
+  "barSw": 344,
+  "overflowPx": 0,
+  "docOverflow": 0,
+  "kids": [
+   {
+    "label": "Versiyon",
+    "w": 160,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni deneme reçetesi",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni versiyon",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   }
+  ]
+ },
+ "Şekersiz Protein@375": {
+  "found": true,
+  "barCw": 329,
+  "barSw": 329,
+  "overflowPx": 0,
+  "docOverflow": 0,
+  "kids": [
+   {
+    "label": "Versiyon",
+    "w": 160,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni deneme reçetesi",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni versiyon",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   }
+  ]
+ },
+ "Oat Barista v2@390": {
+  "found": true,
+  "barCw": 344,
+  "barSw": 344,
+  "overflowPx": 0,
+  "docOverflow": 0,
+  "kids": [
+   {
+    "label": "Versiyon",
+    "w": 160,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni deneme reçetesi",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni versiyon",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   }
+  ]
+ },
+ "Oat Barista v2@375": {
+  "found": true,
+  "barCw": 329,
+  "barSw": 329,
+  "overflowPx": 0,
+  "docOverflow": 0,
+  "kids": [
+   {
+    "label": "Versiyon",
+    "w": 160,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni deneme reçetesi",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   },
+   {
+    "label": "Yeni versiyon",
+    "w": 44,
+    "h": 44,
+    "hiddenPx": 0
+   }
+  ]
+ }
+}

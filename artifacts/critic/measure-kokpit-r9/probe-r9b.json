@@ -1,0 +1,284 @@
+{
+  "zero-admin": {
+    "kpis": [],
+    "statCells": [
+      {
+        "v": "₺2.678,40",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "12",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "1",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "50",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "30",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺7.109",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺1.100",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      }
+    ],
+    "devOverlay": true
+  },
+  "interact-admin": {
+    "noHover": [],
+    "noActive": [],
+    "noFocusRing": [
+      "Bugünkü net ciro%67,8dün",
+      "Kritik stok kalemi",
+      "Vadesi geçen alacak",
+      "Break-even ilerleme",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "0AI satın alma",
+      "12Mutabakat",
+      "0Sayım farkı",
+      "0Hatırlatma",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü"
+    ],
+    "total": 42
+  },
+  "zero-depo": {
+    "kpis": [],
+    "statCells": [
+      {
+        "v": "1",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "50",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "30",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      }
+    ],
+    "devOverlay": true
+  },
+  "interact-depo": {
+    "noHover": [],
+    "noActive": [],
+    "noFocusRing": [
+      "Mal kabul bekleyen",
+      "Sevk bekleyen",
+      "Açık sayım",
+      "Karantinada",
+      "Tümü",
+      "Tümü",
+      "Tümü"
+    ],
+    "total": 26
+  },
+  "zero-muhasebe": {
+    "kpis": [],
+    "statCells": [
+      {
+        "v": "₺0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺443",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺35.080",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺7.109",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺1.100",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺0",
+        "size": 15,
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺33.278",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺32.340",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      },
+      {
+        "v": "₺31.227",
+        "size": 15,
+        "color": "oklch(0.21 0.006 285.9)",
+        "tabular": "tabular-nums"
+      }
+    ],
+    "devOverlay": true
+  },
+  "interact-muhasebe": {
+    "noHover": [],
+    "noActive": [],
+    "noFocusRing": [
+      "Banka toplamı",
+      "Vadesi geçen alacak",
+      "KDV ödenecek",
+      "Mutabakat kuyruğu",
+      "Break-even ilerleme",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü"
+    ],
+    "total": 28
+  },
+  "zero-satis": {
+    "kpis": [],
+    "statCells": [],
+    "devOverlay": true
+  },
+  "interact-satis": {
+    "noHover": [],
+    "noActive": [],
+    "noFocusRing": [
+      "Bugünkü sipariş",
+      "Bugünkü ciro%67,8dünden",
+      "Açık fırsat",
+      "Tümü",
+      "Tümü",
+      "Tümü"
+    ],
+    "total": 21
+  },
+  "zero-uretim_sefi": {
+    "kpis": [],
+    "statCells": [],
+    "devOverlay": true
+  },
+  "interact-uretim_sefi": {
+    "noHover": [],
+    "noActive": [],
+    "noFocusRing": [
+      "Açık iş emri",
+      "Geciken iş emri",
+      "Bugünkü OEE",
+      "Fire oranı (7g)",
+      "Tümü",
+      "Tümü",
+      "Tümü",
+      "Tümü"
+    ],
+    "total": 20
+  },
+  "skeleton-1440": {
+    "present": false
+  },
+  "skeleton-390": {
+    "present": false
+  }
+}

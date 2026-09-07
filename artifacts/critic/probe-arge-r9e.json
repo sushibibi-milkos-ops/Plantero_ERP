@@ -1,0 +1,27 @@
+{
+ "onaya_focus": {
+  "text": "Onaya gönder",
+  "matchesFocusVisible": true,
+  "outline": "0px none",
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+  "borderColor": "oklab(0.92 0.00112267 -0.00383922)"
+ },
+ "card_rest": {
+  "bg": "oklch(1 0 0)",
+  "border": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+  "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px"
+ },
+ "card_hover": {
+  "hovered": true,
+  "bg": "oklch(1 0 0)",
+  "border": "oklch(0.92 0.004 286.3)",
+  "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px"
+ },
+ "card_focus": {
+  "isActive": false,
+  "matchesFocusVisible": false,
+  "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+  "outlineOffset": "0px",
+  "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px"
+ }
+}

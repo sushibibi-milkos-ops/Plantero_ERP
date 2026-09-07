@@ -1,0 +1,39 @@
+{
+  "skeleton-1440": {
+    "present": false
+  },
+  "skeleton-390": {
+    "present": true,
+    "strip": {
+      "cls": "grid gap-3 sm:grid-cols-2 xl:grid-cols-4",
+      "display": "grid",
+      "gridCols": "358px",
+      "borderTop": "0px",
+      "borderColor": "oklch(0.92 0.004 286.3)",
+      "radius": "0px",
+      "overflowX": "visible",
+      "w": 358,
+      "h": 420,
+      "n": 4,
+      "childBox": [
+        [
+          358,
+          96
+        ],
+        [
+          358,
+          96
+        ],
+        [
+          358,
+          96
+        ],
+        [
+          358,
+          96
+        ]
+      ]
+    },
+    "flexBoxes": []
+  }
+}

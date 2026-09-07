@@ -1,0 +1,1634 @@
+{
+  "admin-1440": {
+    "vw": 1440,
+    "vh": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Günlük kanal satışları",
+        "left": 264,
+        "width": 568,
+        "top": 276,
+        "bottom": 421,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "left": 264,
+        "width": 568,
+        "top": 437,
+        "bottom": 600,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Bugün",
+        "left": 264,
+        "width": 568,
+        "top": 616,
+        "bottom": 1105,
+        "rowCount": 8,
+        "hMin": 54.5,
+        "hMax": 55.5,
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": 0
+      },
+      {
+        "title": "Onay kuyruğu",
+        "left": 264,
+        "width": 568,
+        "top": 1121,
+        "bottom": 1227,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Son aktiviteler",
+        "left": 264,
+        "width": 568,
+        "top": 1243,
+        "bottom": 1616,
+        "rowCount": 8,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [
+          "Satış Sorumlusu · satis@plantero.local giriş yaptı2 dakika önce"
+        ],
+        "distinctTexts": 7,
+        "rightSpread": null
+      },
+      {
+        "title": "Banka",
+        "left": 848,
+        "width": 568,
+        "top": 276,
+        "bottom": 488,
+        "rowCount": 3,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": 0
+      },
+      {
+        "title": "Üretim hatları",
+        "left": 848,
+        "width": 568,
+        "top": 504,
+        "bottom": 710,
+        "rowCount": 3,
+        "hMin": 52.5,
+        "hMax": 53.5,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": null
+      },
+      {
+        "title": "Kritik stok",
+        "left": 848,
+        "width": 568,
+        "top": 726,
+        "bottom": 927,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "SKT riski",
+        "left": 848,
+        "width": 568,
+        "top": 943,
+        "bottom": 1253,
+        "rowCount": 5,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 5,
+        "rightSpread": 0
+      },
+      {
+        "title": "Geciken alacak",
+        "left": 848,
+        "width": 568,
+        "top": 1269,
+        "bottom": 1539,
+        "rowCount": 4,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 77,
+    "colBottoms": [
+      1616,
+      1539
+    ],
+    "aboveFold": 10,
+    "clipped": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "numCount": 28,
+    "numNonTab": 0,
+    "digitLeaves": 74,
+    "digitNonTab": 18,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Genel Müdür",
+      "%0,2 tamamlandı",
+      "23 gün kaldı · günlük ₺67.689 gerekiyor",
+      "2 dakika önce",
+      "2 dakika önce",
+      "2 dakika önce",
+      "2 dakika önce",
+      "2 dakika önce",
+      "· 2 kez",
+      "2 dakika önce",
+      "2 dakika önce",
+      "· 3 kez",
+      "2 dakika önce",
+      "1 açık iş emri",
+      "16 gün",
+      "3 gün",
+      "37 gün",
+      "2 gün"
+    ],
+    "touchSmall": [
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "QNB · QNB-ODEMIS-TL₺1.250,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Vakıfbank · VKF-TIRE-EUR€0,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Vakıfbank · VKF-TIRE-TL-₺255.5",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Satın alma siparişi oluştur",
+        "w": 213.3,
+        "h": 32
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "OP-307020000-A10 gün önce dold",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-304030000-A3 günAlkalize Ka",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-302020000-A3 günstevya",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-308020000-A4 günMatcha Tozu",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-307010000-A5 günCream",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Migros Ticaret A.Ş.16 gün₺3.80",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Hepsiburada Pazaryeri3 gün₺3.2",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Hepsiburada Pazaryeri37 gün₺1.",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Trendyol Pazaryeri2 gün₺27,00",
+        "w": 566,
+        "h": 40
+      }
+    ],
+    "empties": [
+      {
+        "t": "Üretim hatlarıTümü Bazlar, Barista & KremalarBoştaŞu an açık iş emri yokToz Karı",
+        "svg": 1,
+        "actions": 4,
+        "h": 205.5
+      },
+      {
+        "t": "Kritik stokTümü Kritik stok yokKapsama süresi tedarik süresinin altına düşen kal",
+        "svg": 3,
+        "actions": 2,
+        "h": 201
+      }
+    ]
+  },
+  "admin-390": {
+    "vw": 390,
+    "vh": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Günlük kanal satışları",
+        "left": 16,
+        "width": 358,
+        "top": 256,
+        "bottom": 401,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "left": 16,
+        "width": 358,
+        "top": 417,
+        "bottom": 580,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Bugün",
+        "left": 16,
+        "width": 358,
+        "top": 596,
+        "bottom": 1149,
+        "rowCount": 8,
+        "hMin": 62.5,
+        "hMax": 63.5,
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": 0
+      },
+      {
+        "title": "Onay kuyruğu",
+        "left": 16,
+        "width": 358,
+        "top": 1165,
+        "bottom": 1332,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Son aktiviteler",
+        "left": 16,
+        "width": 358,
+        "top": 1348,
+        "bottom": 1881,
+        "rowCount": 8,
+        "hMin": 60,
+        "hMax": 61,
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": null
+      },
+      {
+        "title": "Banka",
+        "left": 16,
+        "width": 358,
+        "top": 1897,
+        "bottom": 2178,
+        "rowCount": 3,
+        "hMin": 63,
+        "hMax": 64,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": 0
+      },
+      {
+        "title": "Üretim hatları",
+        "left": 16,
+        "width": 358,
+        "top": 2194,
+        "bottom": 2436,
+        "rowCount": 3,
+        "hMin": 64.5,
+        "hMax": 65.5,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": null
+      },
+      {
+        "title": "Kritik stok",
+        "left": 16,
+        "width": 358,
+        "top": 2452,
+        "bottom": 2705,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "SKT riski",
+        "left": 16,
+        "width": 358,
+        "top": 2721,
+        "bottom": 3210,
+        "rowCount": 5,
+        "hMin": 63.5,
+        "hMax": 64.5,
+        "dupes": [],
+        "distinctTexts": 5,
+        "rightSpread": 0
+      },
+      {
+        "title": "Geciken alacak",
+        "left": 16,
+        "width": 358,
+        "top": 3226,
+        "bottom": 3649,
+        "rowCount": 4,
+        "hMin": 63,
+        "hMax": 64,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 0,
+    "colBottoms": [],
+    "aboveFold": 3,
+    "clipped": [
+      "",
+      "",
+      "",
+      "",
+      "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+      "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+      "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+      "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+      "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+      "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+      "WO-2026-000007 · Strawberry Protein Mixi"
+    ],
+    "numCount": 28,
+    "numNonTab": 0,
+    "digitLeaves": 74,
+    "digitNonTab": 18,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Genel Müdür",
+      "%0,2 tamamlandı",
+      "23 gün kaldı · günlük ₺67.689 gerekiyor",
+      "· 7 kez",
+      "2 dakika önce",
+      "2 dakika önce",
+      "2 dakika önce",
+      "2 dakika önce",
+      "· 2 kez",
+      "2 dakika önce",
+      "3 dakika önce",
+      "· 3 kez",
+      "3 dakika önce",
+      "1 açık iş emri",
+      "16 gün",
+      "3 gün",
+      "37 gün",
+      "2 gün"
+    ],
+    "touchSmall": [],
+    "empties": [
+      {
+        "t": "Üretim hatlarıTümü Bazlar, Barista & KremalarBoştaŞu an açık iş emri yokToz Karı",
+        "svg": 1,
+        "actions": 4,
+        "h": 241.5
+      },
+      {
+        "t": "Kritik stokTümü Kritik stok yokKapsama süresi tedarik süresinin altına düşen kal",
+        "svg": 3,
+        "actions": 2,
+        "h": 253
+      }
+    ]
+  },
+  "depo-1440": {
+    "vw": 1440,
+    "vh": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Karantina",
+        "left": 264,
+        "width": 568,
+        "top": 276,
+        "bottom": 529,
+        "rowCount": 4,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      },
+      {
+        "title": "SKT riski",
+        "left": 848,
+        "width": 568,
+        "top": 276,
+        "bottom": 587,
+        "rowCount": 5,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 5,
+        "rightSpread": 0
+      },
+      {
+        "title": "Bugün",
+        "left": 264,
+        "width": 1152,
+        "top": 603,
+        "bottom": 1058,
+        "rowCount": 10,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 10,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 58,
+    "colBottoms": [
+      529,
+      587
+    ],
+    "aboveFold": 15,
+    "clipped": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "numCount": 25,
+    "numNonTab": 0,
+    "digitLeaves": 40,
+    "digitNonTab": 2,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Depo özeti",
+      "4 lot bekliyor"
+    ],
+    "touchSmall": [
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "ARK-2290TIRE/KARANTINA₺36.400,",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "AKY-QC-01TIRE/KARANTINA₺7.875,",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-301030000-CTIRE/KARANTINA₺5",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-301040000-CTIRE/KARANTINA₺5",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "OP-307020000-A10 gün önce dold",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-304030000-A3 günAlkalize Ka",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-302020000-A3 günstevya",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-308020000-A4 günMatcha Tozu",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "OP-307010000-A5 günCream",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Mal kabulGR-2026-000014Tamamla",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "Mal kabulGR-2026-000013Kalite ",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "Mal kabulGR-2026-000012Tamamla",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "Mal kabulGR-2026-000011Tamamla",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "Mal kabulGR-2026-000010Tamamla",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "Mal kabulGR-2026-000009Tamamla",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "SevkiyatDN-2026-000028Sevk edi",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "SevkiyatDN-2026-000029TaslakBi",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "SevkiyatDN-2026-000027Sevk edi",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "SevkiyatDN-2026-000026Sevk edi",
+        "w": 1150,
+        "h": 40
+      }
+    ],
+    "empties": []
+  },
+  "depo-390": {
+    "vw": 390,
+    "vh": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Karantina",
+        "left": 16,
+        "width": 358,
+        "top": 256,
+        "bottom": 601,
+        "rowCount": 4,
+        "hMin": 63,
+        "hMax": 64,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      },
+      {
+        "title": "SKT riski",
+        "left": 16,
+        "width": 358,
+        "top": 617,
+        "bottom": 1107,
+        "rowCount": 5,
+        "hMin": 63.5,
+        "hMax": 64.5,
+        "dupes": [],
+        "distinctTexts": 5,
+        "rightSpread": 0
+      },
+      {
+        "title": "Bugün",
+        "left": 16,
+        "width": 358,
+        "top": 1123,
+        "bottom": 1803,
+        "rowCount": 10,
+        "hMin": 62.5,
+        "hMax": 63.5,
+        "dupes": [],
+        "distinctTexts": 10,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 0,
+    "colBottoms": [],
+    "aboveFold": 4,
+    "clipped": [
+      "",
+      "",
+      "",
+      "",
+      "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+      "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti.",
+      "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti.",
+      "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+      "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+      "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş."
+    ],
+    "numCount": 25,
+    "numNonTab": 0,
+    "digitLeaves": 40,
+    "digitNonTab": 2,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Depo özeti",
+      "4 lot bekliyor"
+    ],
+    "touchSmall": [],
+    "empties": []
+  },
+  "muhasebe-1440": {
+    "vw": 1440,
+    "vh": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Banka",
+        "left": 264,
+        "width": 568,
+        "top": 276,
+        "bottom": 488,
+        "rowCount": 3,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": 0
+      },
+      {
+        "title": "KDV pozisyonu",
+        "left": 264,
+        "width": 568,
+        "top": 504,
+        "bottom": 610,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Mutabakat kuyruğu",
+        "left": 264,
+        "width": 568,
+        "top": 626,
+        "bottom": 999,
+        "rowCount": 8,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": 0
+      },
+      {
+        "title": "Geciken alacak",
+        "left": 848,
+        "width": 568,
+        "top": 276,
+        "bottom": 546,
+        "rowCount": 4,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      },
+      {
+        "title": "Bugünün tahsilatları",
+        "left": 848,
+        "width": 568,
+        "top": 562,
+        "bottom": 743,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Nakit projeksiyonu (3 ay)",
+        "left": 848,
+        "width": 568,
+        "top": 759,
+        "bottom": 882,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "left": 848,
+        "width": 568,
+        "top": 898,
+        "bottom": 1061,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      }
+    ],
+    "colSpread": 62,
+    "colBottoms": [
+      999,
+      1061
+    ],
+    "aboveFold": 12,
+    "clipped": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "numCount": 18,
+    "numNonTab": 0,
+    "digitLeaves": 57,
+    "digitNonTab": 11,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Muhasebe / ",
+      "16 gün",
+      "3 gün",
+      "37 gün",
+      "2 gün",
+      "Nakit projeksiyonu (3 ay)",
+      "Eylül 2026",
+      "Ekim 2026",
+      "Kasım 2026",
+      "%0,2 tamamlandı",
+      "23 gün kaldı · günlük ₺67.689 gerekiyor"
+    ],
+    "touchSmall": [
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "QNB · QNB-ODEMIS-TL₺1.250,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Vakıfbank · VKF-TIRE-EUR€0,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Vakıfbank · VKF-TIRE-TL-₺255.5",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Migros Ticaret A.Ş.%90₺3.800,0",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Kahve Dünyası Yeşil Kahve ve E",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Hesap İşletim Ücreti%85-₺185,5",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Kira Ödemesi — Tire OSB%80-₺15",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "SEDAŞ Elektrik Faturası%75-₺45",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Mali Müşavirlik Ücreti%75-₺10.",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Mali Müşavirlik Ücreti%40-₺10.",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Trendyol Pazaryeri%33₺5.000,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Migros Ticaret A.Ş.16 gün₺3.80",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Hepsiburada Pazaryeri3 gün₺3.2",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Hepsiburada Pazaryeri37 gün₺1.",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Trendyol Pazaryeri2 gün₺27,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tahsilat kaydet",
+        "w": 142.5,
+        "h": 32
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      }
+    ],
+    "empties": [
+      {
+        "t": "Bugünün tahsilatlarıTümü Bugün tahsilat yokBir tahsilat kaydedildiğinde burada g",
+        "svg": 3,
+        "actions": 2,
+        "h": 181.5
+      }
+    ]
+  },
+  "muhasebe-390": {
+    "vw": 390,
+    "vh": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Banka",
+        "left": 16,
+        "width": 358,
+        "top": 256,
+        "bottom": 537,
+        "rowCount": 3,
+        "hMin": 63,
+        "hMax": 64,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": 0
+      },
+      {
+        "title": "KDV pozisyonu",
+        "left": 16,
+        "width": 358,
+        "top": 553,
+        "bottom": 720,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Mutabakat kuyruğu",
+        "left": 16,
+        "width": 358,
+        "top": 736,
+        "bottom": 1293,
+        "rowCount": 8,
+        "hMin": 63,
+        "hMax": 64,
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": 0
+      },
+      {
+        "title": "Geciken alacak",
+        "left": 16,
+        "width": 358,
+        "top": 1309,
+        "bottom": 1732,
+        "rowCount": 4,
+        "hMin": 63,
+        "hMax": 64,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      },
+      {
+        "title": "Bugünün tahsilatları",
+        "left": 16,
+        "width": 358,
+        "top": 1748,
+        "bottom": 1982,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Nakit projeksiyonu (3 ay)",
+        "left": 16,
+        "width": 358,
+        "top": 1998,
+        "bottom": 2120,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "left": 16,
+        "width": 358,
+        "top": 2136,
+        "bottom": 2300,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      }
+    ],
+    "colSpread": 0,
+    "colBottoms": [],
+    "aboveFold": 3,
+    "clipped": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler Ltd. Şti."
+    ],
+    "numCount": 18,
+    "numNonTab": 0,
+    "digitLeaves": 57,
+    "digitNonTab": 11,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Muhasebe / ",
+      "16 gün",
+      "3 gün",
+      "37 gün",
+      "2 gün",
+      "Nakit projeksiyonu (3 ay)",
+      "Eylül 2026",
+      "Ekim 2026",
+      "Kasım 2026",
+      "%0,2 tamamlandı",
+      "23 gün kaldı · günlük ₺67.689 gerekiyor"
+    ],
+    "touchSmall": [],
+    "empties": [
+      {
+        "t": "Bugünün tahsilatlarıTümü Bugün tahsilat yokBir tahsilat kaydedildiğinde burada g",
+        "svg": 3,
+        "actions": 2,
+        "h": 233.5
+      }
+    ]
+  },
+  "satis-1440": {
+    "vw": 1440,
+    "vh": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Satış hunisi",
+        "left": 264,
+        "width": 568,
+        "top": 276,
+        "bottom": 448,
+        "rowCount": 4,
+        "hMin": 16,
+        "hMax": 16,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      },
+      {
+        "title": "En çok satan 5 (son 30 gün)",
+        "left": 848,
+        "width": 568,
+        "top": 276,
+        "bottom": 526,
+        "rowCount": 5,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 5,
+        "rightSpread": 0
+      },
+      {
+        "title": "Son siparişler",
+        "left": 264,
+        "width": 1152,
+        "top": 542,
+        "bottom": 997,
+        "rowCount": 10,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 10,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 78,
+    "colBottoms": [
+      448,
+      526
+    ],
+    "aboveFold": 16,
+    "clipped": [
+      "",
+      "",
+      ""
+    ],
+    "numCount": 30,
+    "numNonTab": 0,
+    "digitLeaves": 47,
+    "digitNonTab": 18,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Satış özeti",
+      "En çok satan 5 (son 30 gün)",
+      "1",
+      "2",
+      "3",
+      "Badem İçeceği 1 Litrelik UHT",
+      "4",
+      "5",
+      "07.09.2026",
+      "06.09.2026",
+      "02.09.2026",
+      "01.09.2026",
+      "01.09.2026",
+      "01.09.2026",
+      "31.08.2026",
+      "30.08.2026",
+      "29.08.2026",
+      "29.08.2026"
+    ],
+    "touchSmall": [
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "1Spriluna15KG₺17.100,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "2Plain Protein Mixi26ADET₺16.9",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "3Badem İçeceği 1 Litrelik UHT4",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "4YULAF BAZI36ADET₺13.587,00",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "5BADEM BAZI35ADET₺12.181,50",
+        "w": 566,
+        "h": 40
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "07.09.2026SO-2026-000032Sipari",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "06.09.2026SO-2026-000033Taslak",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "02.09.2026SO-2026-000031Sevk e",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "01.09.2026SO-2026-000018Taslak",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "01.09.2026SO-2026-000010Fatura",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "01.09.2026SO-2026-000004Taslak",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "31.08.2026SO-2026-000011Taslak",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "30.08.2026SO-2026-000009Fatura",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "29.08.2026SO-2026-000015Fatura",
+        "w": 1150,
+        "h": 40
+      },
+      {
+        "t": "29.08.2026SO-2026-000024Sevk e",
+        "w": 1150,
+        "h": 40
+      }
+    ],
+    "empties": []
+  },
+  "satis-390": {
+    "vw": 390,
+    "vh": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Satış hunisi",
+        "left": 16,
+        "width": 358,
+        "top": 256,
+        "bottom": 428,
+        "rowCount": 4,
+        "hMin": 16,
+        "hMax": 16,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": 0
+      },
+      {
+        "title": "En çok satan 5 (son 30 gün)",
+        "left": 16,
+        "width": 358,
+        "top": 444,
+        "bottom": 809,
+        "rowCount": 5,
+        "hMin": 63,
+        "hMax": 64,
+        "dupes": [],
+        "distinctTexts": 5,
+        "rightSpread": 0
+      },
+      {
+        "title": "Son siparişler",
+        "left": 16,
+        "width": 358,
+        "top": 825,
+        "bottom": 1505,
+        "rowCount": 10,
+        "hMin": 62.5,
+        "hMax": 63.5,
+        "dupes": [],
+        "distinctTexts": 10,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 0,
+    "colBottoms": [],
+    "aboveFold": 9,
+    "clipped": [
+      "",
+      "",
+      ""
+    ],
+    "numCount": 30,
+    "numNonTab": 0,
+    "digitLeaves": 47,
+    "digitNonTab": 18,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Satış özeti",
+      "En çok satan 5 (son 30 gün)",
+      "1",
+      "2",
+      "3",
+      "Badem İçeceği 1 Litrelik UHT",
+      "4",
+      "5",
+      "07.09.2026",
+      "06.09.2026",
+      "02.09.2026",
+      "01.09.2026",
+      "01.09.2026",
+      "01.09.2026",
+      "31.08.2026",
+      "30.08.2026",
+      "29.08.2026",
+      "29.08.2026"
+    ],
+    "touchSmall": [],
+    "empties": []
+  },
+  "uretim_sefi-1440": {
+    "vw": 1440,
+    "vh": 900,
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Hat durumu",
+        "left": 264,
+        "width": 568,
+        "top": 276,
+        "bottom": 482,
+        "rowCount": 3,
+        "hMin": 52.5,
+        "hMax": 53.5,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": null
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "left": 264,
+        "width": 568,
+        "top": 498,
+        "bottom": 679,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Son duruşlar",
+        "left": 264,
+        "width": 568,
+        "top": 695,
+        "bottom": 904,
+        "rowCount": 4,
+        "hMin": 40,
+        "hMax": 41,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": null
+      },
+      {
+        "title": "Son iş emirleri",
+        "left": 848,
+        "width": 568,
+        "top": 276,
+        "bottom": 765,
+        "rowCount": 8,
+        "hMin": 54.5,
+        "hMax": 55.5,
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 139,
+    "colBottoms": [
+      904,
+      765
+    ],
+    "aboveFold": 14,
+    "clipped": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "numCount": 8,
+    "numNonTab": 0,
+    "digitLeaves": 18,
+    "digitNonTab": 9,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Üretim şefi",
+      "Fire oranı (7g)",
+      "1 açık iş emri",
+      "Fire kırılımı (7 gün)",
+      "Son 7 günde fire kaydı yok",
+      "45 dk",
+      "90 dk",
+      "30 dk",
+      "%100 Oat Spredable"
+    ],
+    "touchSmall": [
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "İş emirlerini gör",
+        "w": 145.9,
+        "h": 32
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      },
+      {
+        "t": "Tümü",
+        "w": 47.8,
+        "h": 16
+      }
+    ],
+    "empties": [
+      {
+        "t": "Hat durumuTümü Bazlar, Barista & KremalarBoştaŞu an açık iş emri yokToz Karıştır",
+        "svg": 1,
+        "actions": 4,
+        "h": 205.5
+      },
+      {
+        "t": "Fire kırılımı (7 gün)Tümü Son 7 günde fire kaydı yokİş emri tamamlanırken fire g",
+        "svg": 3,
+        "actions": 2,
+        "h": 181.5
+      }
+    ]
+  },
+  "uretim_sefi-390": {
+    "vw": 390,
+    "vh": 844,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Hat durumu",
+        "left": 16,
+        "width": 358,
+        "top": 256,
+        "bottom": 498,
+        "rowCount": 3,
+        "hMin": 64.5,
+        "hMax": 65.5,
+        "dupes": [],
+        "distinctTexts": 3,
+        "rightSpread": null
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "left": 16,
+        "width": 358,
+        "top": 514,
+        "bottom": 767,
+        "rowCount": 0,
+        "hMin": null,
+        "hMax": null,
+        "dupes": [],
+        "distinctTexts": 0,
+        "rightSpread": null
+      },
+      {
+        "title": "Son duruşlar",
+        "left": 16,
+        "width": 358,
+        "top": 783,
+        "bottom": 1074,
+        "rowCount": 4,
+        "hMin": 59.5,
+        "hMax": 64.5,
+        "dupes": [],
+        "distinctTexts": 4,
+        "rightSpread": null
+      },
+      {
+        "title": "Son iş emirleri",
+        "left": 16,
+        "width": 358,
+        "top": 1090,
+        "bottom": 1659,
+        "rowCount": 8,
+        "hMin": 64.5,
+        "hMax": 65.5,
+        "dupes": [],
+        "distinctTexts": 8,
+        "rightSpread": 0
+      }
+    ],
+    "colSpread": 0,
+    "colBottoms": [],
+    "aboveFold": 3,
+    "clipped": [
+      "",
+      "",
+      "",
+      "",
+      "WO-2026-000007 · Strawberry Protein Mixi",
+      "Bazlar, Barista & Kremalar",
+      "Toz Karıştırma & Dolum",
+      "Saşe / Stick Toz Dolum",
+      "Toz Karıştırma & Dolum",
+      "Bazlar, Barista & Kremalar",
+      "Bazlar, Barista & Kremalar"
+    ],
+    "numCount": 8,
+    "numNonTab": 0,
+    "digitLeaves": 18,
+    "digitNonTab": 9,
+    "digitNonTabSample": [
+      "7 Eylül 2026 · Tire tesisi · Üretim şefi",
+      "Fire oranı (7g)",
+      "1 açık iş emri",
+      "Fire kırılımı (7 gün)",
+      "Son 7 günde fire kaydı yok",
+      "45 dk",
+      "90 dk",
+      "30 dk",
+      "%100 Oat Spredable"
+    ],
+    "touchSmall": [],
+    "empties": [
+      {
+        "t": "Hat durumuTümü Bazlar, Barista & KremalarBoştaŞu an açık iş emri yokToz Karıştır",
+        "svg": 1,
+        "actions": 4,
+        "h": 241.5
+      },
+      {
+        "t": "Fire kırılımı (7 gün)Tümü Son 7 günde fire kaydı yokİş emri tamamlanırken fire g",
+        "svg": 3,
+        "actions": 2,
+        "h": 253
+      }
+    ]
+  }
+}

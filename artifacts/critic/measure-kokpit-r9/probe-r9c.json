@@ -1,0 +1,16 @@
+{
+  "skeleton-1440": {
+    "present": false,
+    "mainHTML": "<div class=\"mx-auto w-full max-w-[1400px]\"><div class=\"mb-5 md:mb-6\"><div class=\"flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between\"><div class=\"min-w-0\"><div class=\"mb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase\">Günaydın</div><h1 class=\"truncate text-xl font-",
+    "delayedUrls": [
+      "http://localhost:3000/kokpit?_rsc=APTaygLP-bRiYAdZ"
+    ]
+  },
+  "skeleton-390": {
+    "present": false,
+    "mainHTML": "<div class=\"mx-auto w-full max-w-[1400px]\"><div class=\"mb-5 md:mb-6\"><div class=\"flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between\"><div class=\"min-w-0\"><div class=\"mb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase\">Günaydın</div><h1 class=\"truncate text-xl font-",
+    "delayedUrls": [
+      "http://localhost:3000/kokpit?_rsc=APTaygLP-bRiYAdZ"
+    ]
+  }
+}
