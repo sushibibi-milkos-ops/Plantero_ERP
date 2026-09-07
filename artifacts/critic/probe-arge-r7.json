@@ -1,0 +1,717 @@
+{
+ "precete_1440": {
+  "roleRows": 7,
+  "rowHeights": [
+   39,
+   39,
+   39,
+   39,
+   39,
+   38
+  ],
+  "rowTexts": [
+   "Yulaf3010600000,2 KG · Ortal",
+   "Hurma Şurubu3020300000,015 K",
+   "Deniz Tuzu3070200000,0015 KG",
+   "Kavanoz 500ml4010100001 ADET",
+   "Kapak4010200001 ADET · Ortal",
+   "Etiket4010300001 ADET · Orta"
+  ],
+  "qtyRights": [
+   {
+    "t": "1,0000",
+    "right": 725.5
+   },
+   {
+    "t": "0,2000",
+    "right": 794
+   },
+   {
+    "t": "0,0150",
+    "right": 794
+   },
+   {
+    "t": "0,0015",
+    "right": 794
+   },
+   {
+    "t": "1,0000",
+    "right": 794
+   },
+   {
+    "t": "1,0000",
+    "right": 794
+   },
+   {
+    "t": "1,0000",
+    "right": 794
+   }
+  ],
+  "nameCells": [
+   {
+    "t": "Yulaf",
+    "boxW": 86.6,
+    "scrollW": 87,
+    "truncated": false,
+    "left": 528,
+    "right": 614.6
+   },
+   {
+    "t": "Hurma Şurubu",
+    "boxW": 86.6,
+    "scrollW": 90,
+    "truncated": true,
+    "left": 528,
+    "right": 614.6
+   },
+   {
+    "t": "Deniz Tuzu",
+    "boxW": 86.6,
+    "scrollW": 87,
+    "truncated": false,
+    "left": 528,
+    "right": 614.6
+   },
+   {
+    "t": "Kavanoz 500ml",
+    "boxW": 86.6,
+    "scrollW": 97,
+    "truncated": true,
+    "left": 528,
+    "right": 614.6
+   },
+   {
+    "t": "Kapak",
+    "boxW": 86.6,
+    "scrollW": 87,
+    "truncated": false,
+    "left": 528,
+    "right": 614.6
+   },
+   {
+    "t": "Etiket",
+    "boxW": 86.6,
+    "scrollW": 87,
+    "truncated": false,
+    "left": 528,
+    "right": 614.6
+   }
+  ],
+  "productCells": [
+   {
+    "w": 172,
+    "left": 518,
+    "right": 690
+   },
+   {
+    "w": 172,
+    "left": 518,
+    "right": 690
+   },
+   {
+    "w": 172,
+    "left": 518,
+    "right": 690
+   },
+   {
+    "w": 172,
+    "left": 518,
+    "right": 690
+   },
+   {
+    "w": 172,
+    "left": 518,
+    "right": 690
+   },
+   {
+    "w": 172,
+    "left": 518,
+    "right": 690
+   }
+  ],
+  "skus": [
+   {
+    "t": "301060000",
+    "left": 620.6,
+    "right": 680
+   },
+   {
+    "t": "302030000",
+    "left": 620.6,
+    "right": 680
+   },
+   {
+    "t": "307020000",
+    "left": 620.6,
+    "right": 680
+   },
+   {
+    "t": "401010000",
+    "left": 620.6,
+    "right": 680
+   },
+   {
+    "t": "401020000",
+    "left": 620.6,
+    "right": 680
+   },
+   {
+    "t": "401030000",
+    "left": 620.6,
+    "right": 680
+   }
+  ],
+  "cardTop": 224,
+  "cardTopToFirstRow": 312,
+  "cardW": 916,
+  "rects": {
+   "borderOnly": 7,
+   "shadowOnly": 0,
+   "both": 0,
+   "list": [
+    {
+     "tag": "span",
+     "v": "Devredildi",
+     "w": 83,
+     "h": 20,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "div",
+     "v": "Bu versiyon ür",
+     "w": 882,
+     "h": 38,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "input",
+     "v": "1,0000",
+     "w": 139,
+     "h": 32,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "button",
+     "v": "",
+     "w": 174,
+     "h": 32,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "input",
+     "v": "97",
+     "w": 157,
+     "h": 32,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "input",
+     "v": "50,00",
+     "w": 106,
+     "h": 32,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "div",
+     "v": "ÜrünMiktarMali",
+     "w": 882,
+     "h": 270,
+     "b": true,
+     "s": null
+    }
+   ],
+   "total": 7
+  },
+  "docScrollH": 900,
+  "innerH": 900,
+  "rowsInFirstScreen": 6,
+  "mobileSummaries": [
+   "0,2 KG · Ortalama maliyet",
+   "0,015 KG · Ortalama maliyet",
+   "0,0015 KG · Ortalama maliyet",
+   "1 ADET · Ortalama maliyet",
+   "1 ADET · Ortalama maliyet",
+   "1 ADET · Ortalama maliyet"
+  ],
+  "selectTriggers": [
+   {
+    "text": "v2 · Devredildi",
+    "boxW": 0,
+    "scrollW": 0,
+    "truncated": false
+   },
+   {
+    "text": "KG",
+    "boxW": 18,
+    "scrollW": 18,
+    "truncated": false
+   }
+  ],
+  "bottomBar": [],
+  "mainPadBottom": "40px",
+  "hedefBandH": 93
+ },
+ "precete_390": {
+  "roleRows": 7,
+  "rowHeights": [
+   49,
+   49,
+   49,
+   49,
+   49,
+   48
+  ],
+  "rowTexts": [
+   "Yulaf3010600000,2 KG · Ortal",
+   "Hurma Şurubu3020300000,015 K",
+   "Deniz Tuzu3070200000,0015 KG",
+   "Kavanoz 500ml4010100001 ADET",
+   "Kapak4010200001 ADET · Ortal",
+   "Etiket4010300001 ADET · Orta"
+  ],
+  "qtyRights": [
+   {
+    "t": "1,0000",
+    "right": 189
+   },
+   {
+    "t": "0,2000",
+    "right": 0
+   },
+   {
+    "t": "0,0150",
+    "right": 0
+   },
+   {
+    "t": "0,0015",
+    "right": 0
+   },
+   {
+    "t": "1,0000",
+    "right": 0
+   },
+   {
+    "t": "1,0000",
+    "right": 0
+   },
+   {
+    "t": "1,0000",
+    "right": 0
+   }
+  ],
+  "nameCells": [
+   {
+    "t": "Yulaf",
+    "boxW": 220.5,
+    "scrollW": 221,
+    "truncated": false,
+    "left": 30,
+    "right": 250.5
+   },
+   {
+    "t": "Hurma Şurubu",
+    "boxW": 220.5,
+    "scrollW": 221,
+    "truncated": false,
+    "left": 30,
+    "right": 250.5
+   },
+   {
+    "t": "Deniz Tuzu",
+    "boxW": 220.5,
+    "scrollW": 221,
+    "truncated": false,
+    "left": 30,
+    "right": 250.5
+   },
+   {
+    "t": "Kavanoz 500ml",
+    "boxW": 212.2,
+    "scrollW": 212,
+    "truncated": false,
+    "left": 30,
+    "right": 242.2
+   },
+   {
+    "t": "Kapak",
+    "boxW": 212.2,
+    "scrollW": 212,
+    "truncated": false,
+    "left": 30,
+    "right": 242.2
+   },
+   {
+    "t": "Etiket",
+    "boxW": 220.5,
+    "scrollW": 221,
+    "truncated": false,
+    "left": 30,
+    "right": 250.5
+   }
+  ],
+  "productCells": [
+   {
+    "w": 330,
+    "left": 30,
+    "right": 360
+   },
+   {
+    "w": 330,
+    "left": 30,
+    "right": 360
+   },
+   {
+    "w": 330,
+    "left": 30,
+    "right": 360
+   },
+   {
+    "w": 330,
+    "left": 30,
+    "right": 360
+   },
+   {
+    "w": 330,
+    "left": 30,
+    "right": 360
+   },
+   {
+    "w": 330,
+    "left": 30,
+    "right": 360
+   }
+  ],
+  "skus": [
+   {
+    "t": "301060000",
+    "left": 256.5,
+    "right": 315.9
+   },
+   {
+    "t": "302030000",
+    "left": 256.5,
+    "right": 315.9
+   },
+   {
+    "t": "307020000",
+    "left": 256.5,
+    "right": 315.9
+   },
+   {
+    "t": "401010000",
+    "left": 248.2,
+    "right": 307.6
+   },
+   {
+    "t": "401020000",
+    "left": 248.2,
+    "right": 307.6
+   },
+   {
+    "t": "401030000",
+    "left": 256.5,
+    "right": 315.9
+   }
+  ],
+  "cardTop": 216,
+  "cardTopToFirstRow": 406.5,
+  "cardW": 358,
+  "rects": {
+   "borderOnly": 8,
+   "shadowOnly": 0,
+   "both": 0,
+   "list": [
+    {
+     "tag": "button",
+     "v": "",
+     "w": 112,
+     "h": 44,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "button",
+     "v": "",
+     "w": 44,
+     "h": 44,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "div",
+     "v": "Bu versiyon ür",
+     "w": 344,
+     "h": 57,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "input",
+     "v": "1,0000",
+     "w": 166,
+     "h": 44,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "button",
+     "v": "",
+     "w": 166,
+     "h": 44,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "input",
+     "v": "97",
+     "w": 166,
+     "h": 44,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "input",
+     "v": "50,00",
+     "w": 166,
+     "h": 44,
+     "b": true,
+     "s": null
+    },
+    {
+     "tag": "div",
+     "v": "ÜrünMiktarMali",
+     "w": 344,
+     "h": 295,
+     "b": true,
+     "s": null
+    }
+   ],
+   "total": 8
+  },
+  "docScrollH": 1173,
+  "innerH": 844,
+  "rowsInFirstScreen": 4,
+  "mobileSummaries": [
+   "0,2 KG · Ortalama maliyet",
+   "0,015 KG · Ortalama maliyet",
+   "0,0015 KG · Ortalama maliyet",
+   "1 ADET · Ortalama maliyet",
+   "1 ADET · Ortalama maliyet",
+   "1 ADET · Ortalama maliyet"
+  ],
+  "selectTriggers": [
+   {
+    "text": "v2 · Devredildi",
+    "boxW": 62,
+    "scrollW": 88,
+    "truncated": true
+   },
+   {
+    "text": "KG",
+    "boxW": 18,
+    "scrollW": 18,
+    "truncated": false
+   }
+  ],
+  "bottomBar": [
+   {
+    "h": 57,
+    "cls": "fixed inset-x-0 bottom-0 z-30 flex border-t border-border/60"
+   }
+  ],
+  "mainPadBottom": "128px",
+  "hedefBandH": 93
+ },
+ "projeler_1440": {
+  "firstRowViewportTop": 238,
+  "firstRowMainOffset": 190,
+  "rowH": 36,
+  "costColors": [
+   {
+    "t": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "right": 1164
+   },
+   {
+    "t": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 1164
+   },
+   {
+    "t": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "right": 1164
+   }
+  ],
+  "mobileCardLeaves": [
+   {
+    "t": "Fıstık Bazı",
+    "left": 0,
+    "right": 0
+   },
+   {
+    "t": "",
+    "left": 0,
+    "right": 0
+   },
+   {
+    "t": "110050001 (aday)",
+    "left": 0,
+    "right": 0
+   },
+   {
+    "t": "₺31,92",
+    "left": 0,
+    "right": 0
+   }
+  ]
+ },
+ "projeler_390": {
+  "firstRowViewportTop": 0,
+  "firstRowMainOffset": -48,
+  "rowH": 0,
+  "costColors": [
+   {
+    "t": "₺31,92",
+    "color": "oklch(0.72 0.17 70)",
+    "right": 0
+   },
+   {
+    "t": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 0
+   },
+   {
+    "t": "₺103,41",
+    "color": "oklch(0.72 0.17 70)",
+    "right": 0
+   }
+  ],
+  "mobileCardLeaves": [
+   {
+    "t": "Fıstık Bazı",
+    "left": 27,
+    "right": 94.7
+   },
+   {
+    "t": "",
+    "left": 317.4,
+    "right": 323.4
+   },
+   {
+    "t": "110050001 (aday)",
+    "left": 27,
+    "right": 142.2
+   },
+   {
+    "t": "₺31,92",
+    "left": 318.8,
+    "right": 363
+   }
+  ]
+ },
+ "receteler_1440": {
+  "firstRowViewportTop": 208,
+  "firstRowMainOffset": 160,
+  "rowH": 36,
+  "costColors": [
+   {
+    "t": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 1159.3
+   },
+   {
+    "t": "₺103,41",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 1159.3
+   },
+   {
+    "t": "₺31,92",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 1159.3
+   }
+  ],
+  "mobileCardLeaves": [
+   {
+    "t": "Şekersiz Protein",
+    "left": 0,
+    "right": 0
+   },
+   {
+    "t": "",
+    "left": 0,
+    "right": 0
+   },
+   {
+    "t": "Şekersiz Protein",
+    "left": 0,
+    "right": 0
+   },
+   {
+    "t": "·",
+    "left": 0,
+    "right": 0
+   },
+   {
+    "t": "₺166,17",
+    "left": 0,
+    "right": 0
+   }
+  ]
+ },
+ "receteler_390": {
+  "firstRowViewportTop": 0,
+  "firstRowMainOffset": -48,
+  "rowH": 0,
+  "costColors": [
+   {
+    "t": "₺166,17",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 0
+   },
+   {
+    "t": "₺103,41",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 0
+   },
+   {
+    "t": "₺31,92",
+    "color": "oklch(0.21 0.006 285.9)",
+    "right": 0
+   }
+  ],
+  "mobileCardLeaves": [
+   {
+    "t": "Şekersiz Protein",
+    "left": 27,
+    "right": 260.2
+   },
+   {
+    "t": "",
+    "left": 275.2,
+    "right": 281.2
+   },
+   {
+    "t": "Şekersiz Protein",
+    "left": 27,
+    "right": 118.8
+   },
+   {
+    "t": "·",
+    "left": 118.8,
+    "right": 125.6
+   },
+   {
+    "t": "₺166,17",
+    "left": 310.5,
+    "right": 363
+   }
+  ]
+ }
+}

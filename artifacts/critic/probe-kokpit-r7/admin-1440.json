@@ -1,0 +1,305 @@
+{
+ "as": "admin",
+ "vp": "1440x900",
+ "bySection": {
+  "Bugün": {
+   "h": [
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3
+   ]
+  },
+  "Son aktiviteler": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "Banka": {
+   "h": [
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1
+   ]
+  },
+  "Üretim hatları": {
+   "h": [
+    52.5,
+    52.5,
+    52.5
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "SKT riski": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "Geciken alacak": {
+   "h": [
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2
+   ]
+  }
+ },
+ "singleLine": [
+  40
+ ],
+ "multiLine": [
+  40,
+  52.5,
+  54.5
+ ],
+ "smallRows": [],
+ "empties": [
+  {
+   "section": "Kritik stok",
+   "h": 159,
+   "sectionH": 205,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Kritik stok yok",
+    "Kapsama süresi tedarik süresinin altına "
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [],
+ "liAbove": 11,
+ "cellAbove": 0,
+ "colBottoms": [
+  {
+   "left": 264,
+   "bottom": 1616
+  },
+  {
+   "left": 848,
+   "bottom": 1543
+  }
+ ],
+ "colSpread": 73,
+ "noTabCount": 31,
+ "noTab": [
+  {
+   "text": "%0,2 tamamlandı",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000014",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000013",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000012",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000011",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000010",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000009",
+   "fvn": "normal"
+  },
+  {
+   "text": "DN-2026-000028",
+   "fvn": "normal"
+  },
+  {
+   "text": "DN-2026-000029",
+   "fvn": "normal"
+  },
+  {
+   "text": "4 dakika önce",
+   "fvn": "normal"
+  },
+  {
+   "text": "· 2 kez",
+   "fvn": "normal"
+  },
+  {
+   "text": "4 dakika önce",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 73,
+ "rightSpread": {
+  "Son aktiviteler": 0,
+  "Banka": 0,
+  "Üretim hatları": 0,
+  "SKT riski": 69
+ },
+ "interactiveCount": 42,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Bugünkü net ciro%67,8dünden",
+  "Kritik stok kalemi",
+  "Vadesi geçen alacak",
+  "Break-even ilerleme",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "0AI satın alma",
+  "12Mutabakat",
+  "0Sayım farkı",
+  "0Hatırlatma",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [
+  16
+ ],
+ "smallTargets": [
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "QNB · QNB-ODEMIS-TL₺1.25",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Vakıfbank · VKF-TIRE-EUR",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Vakıfbank · VKF-TIRE-TL-",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Satın alma siparişi oluş",
+   "w": 213.3,
+   "h": 32
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "OP-307020000-A10 gün önc",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "OP-304030000-A3 günAlkal",
+   "w": 566,
+   "h": 40
+  }
+ ],
+ "vh": 900,
+ "docScrollW": 1440,
+ "docClientW": 1440
+}

@@ -1,0 +1,233 @@
+{
+ "as": "muhasebe",
+ "vp": "1440x900",
+ "bySection": {
+  "Banka": {
+   "h": [
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1
+   ]
+  },
+  "Mutabakat kuyruğu": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "Geciken alacak": {
+   "h": [
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2
+   ]
+  }
+ },
+ "singleLine": [
+  40
+ ],
+ "multiLine": [
+  40
+ ],
+ "smallRows": [],
+ "empties": [
+  {
+   "section": "Bugünün tahsilatları",
+   "h": 140,
+   "sectionH": 186,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Bugün tahsilat yok",
+    "Bir tahsilat kaydedildiğinde burada görü"
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [],
+ "liAbove": 13,
+ "cellAbove": 11,
+ "colBottoms": [
+  {
+   "left": 264,
+   "bottom": 999
+  },
+  {
+   "left": 848,
+   "bottom": 1065
+  }
+ ],
+ "colSpread": 66,
+ "noTabCount": 9,
+ "noTab": [
+  {
+   "text": "16 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "3 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "37 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "2 gün",
+   "fvn": "normal"
+  },
+  {
+   "text": "Nakit projeksiyonu (3 ay)",
+   "fvn": "normal"
+  },
+  {
+   "text": "Eylül 2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "Ekim 2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "Kasım 2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "%0,2 tamamlandı",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 47,
+ "rightSpread": {
+  "Banka": 0,
+  "Mutabakat kuyruğu": 0
+ },
+ "interactiveCount": 28,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Banka toplamı",
+  "Vadesi geçen alacak",
+  "KDV ödenecek",
+  "Mutabakat kuyruğu",
+  "Break-even ilerleme",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [
+  16
+ ],
+ "smallTargets": [
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "QNB · QNB-ODEMIS-TL₺1.25",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Vakıfbank · VKF-TIRE-EUR",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Vakıfbank · VKF-TIRE-TL-",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Migros Ticaret A.Ş.₺3.80",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Hepsiburada Pazaryeri₺3.",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Trendyol Pazaryeri₺3.800",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Kahve Dünyası Yeşil Kahv",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Trendyol Pazaryeri₺5.000",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Trendyol Pazaryeri₺5.000",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Trendyol Pazaryeri₺5.000",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "SEDAŞ Elektrik Faturası-",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  }
+ ],
+ "vh": 900,
+ "docScrollW": 1440,
+ "docClientW": 1440
+}

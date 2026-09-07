@@ -1,0 +1,257 @@
+{
+ "as": "satis",
+ "vp": "1440x900",
+ "bySection": {
+  "Satış hunisi": {
+   "h": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "lines": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "En çok satan 5 (son 30 gün)": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "Son siparişler": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "singleLine": [
+  16
+ ],
+ "multiLine": [
+  40
+ ],
+ "smallRows": [
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Aday3"
+  },
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Nitelikli2"
+  },
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Teklif Aşaması2"
+  },
+  {
+   "section": "Satış hunisi",
+   "h": 16,
+   "lines": 1,
+   "text": "Müzakere1"
+  }
+ ],
+ "empties": [],
+ "clipped": [],
+ "liAbove": 17,
+ "cellAbove": 0,
+ "colBottoms": [
+  {
+   "left": 264,
+   "bottom": 997
+  },
+  {
+   "left": 848,
+   "bottom": 526
+  }
+ ],
+ "colSpread": 471,
+ "noTabCount": 27,
+ "noTab": [
+  {
+   "text": "En çok satan 5 (son 30 gün)",
+   "fvn": "normal"
+  },
+  {
+   "text": "1",
+   "fvn": "normal"
+  },
+  {
+   "text": "2",
+   "fvn": "normal"
+  },
+  {
+   "text": "3",
+   "fvn": "normal"
+  },
+  {
+   "text": "Badem İçeceği 1 Litrelik UHT",
+   "fvn": "normal"
+  },
+  {
+   "text": "4",
+   "fvn": "normal"
+  },
+  {
+   "text": "5",
+   "fvn": "normal"
+  },
+  {
+   "text": "07.09.2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "SO-2026-000032",
+   "fvn": "normal"
+  },
+  {
+   "text": "06.09.2026",
+   "fvn": "normal"
+  },
+  {
+   "text": "SO-2026-000033",
+   "fvn": "normal"
+  },
+  {
+   "text": "02.09.2026",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 46,
+ "rightSpread": {
+  "Satış hunisi": 260,
+  "Son siparişler": 0
+ },
+ "interactiveCount": 21,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Bugünkü sipariş",
+  "Bugünkü ciro%67,8dünden",
+  "Açık fırsat",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [],
+ "smallTargets": [
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "1Spriluna15KG₺17.100,00",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "2Plain Protein Mixi26ADE",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "3Badem İçeceği 1 Litreli",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "4YULAF BAZI36ADET₺13.587",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "5BADEM BAZI35ADET₺12.181",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "07.09.2026SO-2026-000032",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "06.09.2026SO-2026-000033",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "02.09.2026SO-2026-000031",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "01.09.2026SO-2026-000018",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "01.09.2026SO-2026-000010",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "01.09.2026SO-2026-000004",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "31.08.2026SO-2026-000011",
+   "w": 1150,
+   "h": 40
+  }
+ ],
+ "vh": 900,
+ "docScrollW": 1440,
+ "docClientW": 1440
+}

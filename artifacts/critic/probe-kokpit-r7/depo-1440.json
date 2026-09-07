@@ -1,0 +1,232 @@
+{
+ "as": "depo",
+ "vp": "1440x900",
+ "bySection": {
+  "Karantina": {
+   "h": [
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "SKT riski": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "Bugün": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  }
+ },
+ "singleLine": [],
+ "multiLine": [
+  40
+ ],
+ "smallRows": [],
+ "empties": [],
+ "clipped": [],
+ "liAbove": 16,
+ "cellAbove": 4,
+ "colBottoms": [
+  {
+   "left": 264,
+   "bottom": 1058
+  },
+  {
+   "left": 848,
+   "bottom": 587
+  }
+ ],
+ "colSpread": 471,
+ "noTabCount": 16,
+ "noTab": [
+  {
+   "text": "4 lot bekliyor",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-307020000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-304030000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-302020000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-308020000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "OP-307010000-A",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000014",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000013",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000012",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000011",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000010",
+   "fvn": "normal"
+  },
+  {
+   "text": "GR-2026-000009",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 39,
+ "rightSpread": {
+  "Karantina": 0,
+  "SKT riski": 69,
+  "Bugün": 0
+ },
+ "interactiveCount": 26,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Mal kabul bekleyen",
+  "Sevk bekleyen",
+  "Açık sayım",
+  "Karantinada",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [],
+ "smallTargets": [
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "ARK-2290TIRE/KARANTINA₺3",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "AKY-QC-01TIRE/KARANTINA₺",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "OP-301030000-CTIRE/KARAN",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "OP-301040000-CTIRE/KARAN",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "OP-307020000-A10 gün önc",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "OP-304030000-A3 günAlkal",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "OP-302020000-A3 günstevy",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "OP-308020000-A4 günMatch",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "OP-307010000-A5 günCream",
+   "w": 566,
+   "h": 40
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Mal kabulGR-2026-000014T",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "Mal kabulGR-2026-000013K",
+   "w": 1150,
+   "h": 40
+  },
+  {
+   "t": "Mal kabulGR-2026-000012T",
+   "w": 1150,
+   "h": 40
+  }
+ ],
+ "vh": 900,
+ "docScrollW": 1440,
+ "docClientW": 1440
+}

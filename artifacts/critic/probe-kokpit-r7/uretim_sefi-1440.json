@@ -1,0 +1,219 @@
+{
+ "as": "uretim_sefi",
+ "vp": "1440x900",
+ "bySection": {
+  "Hat durumu": {
+   "h": [
+    52.5,
+    52.5,
+    52.5
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "Son duruşlar": {
+   "h": [
+    19.5,
+    19.5,
+    19.5,
+    19.5
+   ],
+   "lines": [
+    1,
+    2,
+    1,
+    2
+   ]
+  },
+  "Son iş emirleri": {
+   "h": [
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5,
+    54.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "singleLine": [
+  19.5
+ ],
+ "multiLine": [
+  19.5,
+  52.5,
+  54.5
+ ],
+ "smallRows": [
+  {
+   "section": "Son duruşlar",
+   "h": 19.5,
+   "lines": 1,
+   "text": "Toz Karıştırma & Dolum · ArızaDevam ediy"
+  },
+  {
+   "section": "Son duruşlar",
+   "h": 19.5,
+   "lines": 2,
+   "text": "Toz Karıştırma & Dolum · Arıza45 dk"
+  },
+  {
+   "section": "Son duruşlar",
+   "h": 19.5,
+   "lines": 1,
+   "text": "Bazlar, Barista & Kremalar · Arıza90 dk"
+  },
+  {
+   "section": "Son duruşlar",
+   "h": 19.5,
+   "lines": 2,
+   "text": "Toz Karıştırma & Dolum · Mola30 dk"
+  }
+ ],
+ "empties": [
+  {
+   "section": "Fire kırılımı (7 gün)",
+   "h": 140,
+   "sectionH": 186,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Son 7 günde fire kaydı yok",
+    "İş emri tamamlanırken fire girildiğinde "
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [],
+ "liAbove": 15,
+ "cellAbove": 0,
+ "colBottoms": [
+  {
+   "left": 264,
+   "bottom": 907
+  },
+  {
+   "left": 848,
+   "bottom": 765
+  }
+ ],
+ "colSpread": 142,
+ "noTabCount": 16,
+ "noTab": [
+  {
+   "text": "Fire oranı (7g)",
+   "fvn": "normal"
+  },
+  {
+   "text": "1 açık iş emri",
+   "fvn": "normal"
+  },
+  {
+   "text": "Fire kırılımı (7 gün)",
+   "fvn": "normal"
+  },
+  {
+   "text": "Son 7 günde fire kaydı yok",
+   "fvn": "normal"
+  },
+  {
+   "text": "45 dk",
+   "fvn": "normal"
+  },
+  {
+   "text": "90 dk",
+   "fvn": "normal"
+  },
+  {
+   "text": "30 dk",
+   "fvn": "normal"
+  },
+  {
+   "text": "WO-2026-000008",
+   "fvn": "normal"
+  },
+  {
+   "text": "WO-2026-000006",
+   "fvn": "normal"
+  },
+  {
+   "text": "WO-2026-000007",
+   "fvn": "normal"
+  },
+  {
+   "text": "WO-2026-000005",
+   "fvn": "normal"
+  },
+  {
+   "text": "WO-2026-000004",
+   "fvn": "normal"
+  }
+ ],
+ "numLeafCount": 16,
+ "rightSpread": {
+  "Hat durumu": 0,
+  "Son duruşlar": 17,
+  "Son iş emirleri": 0
+ },
+ "interactiveCount": 20,
+ "noActive": [],
+ "noHover": [],
+ "noFocus": [
+  "Açık iş emri",
+  "Geciken iş emri",
+  "Bugünkü OEE",
+  "Fire oranı (7g)",
+  "Tümü",
+  "Tümü",
+  "Tümü",
+  "Tümü"
+ ],
+ "gaps": [
+  16
+ ],
+ "smallTargets": [
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "İş emirlerini gör",
+   "w": 145.9,
+   "h": 32
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  },
+  {
+   "t": "Tümü",
+   "w": 47.8,
+   "h": 16
+  }
+ ],
+ "vh": 900,
+ "docScrollW": 1440,
+ "docClientW": 1440
+}
