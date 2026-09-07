@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { DataTable, type ColumnDef, type DataTableFilter } from '@/components/data-table';
-import { formatDate, formatPct, formatRate } from '@/lib/format';
+import { formatDate, formatRate } from '@/lib/format';
 // `@plantero/core` barrel `node:crypto` içe aktarır — client bundle'a sızmasın diye doğrudan
 // `decimal.js` (order-lines-table.tsx / packing-list-table.tsx'teki aynı gerekçe).
 import Decimal from 'decimal.js';
@@ -17,6 +17,16 @@ const CURRENCY_LABEL: Record<string, string> = { USD: 'USD', EUR: 'EUR', GBP: 'G
 // (TCMB) korunur, yalnızca tohumlama son eki EKRAN etiketinden temizlenir; alttaki veri değişmez.
 function sourceLabel(source: string): string {
   return source.replace(/-SEED$/i, '');
+}
+
+// Tur 8 P2 ihracat-kurlar-11 kök neden düzeltmesi: paylaşılan `formatPct` (lib/format.ts)
+// `minimumFractionDigits: 0` kullanıyor — tam yüzdelere yakın satırlarda (ör. %0,50) sondaki sıfır
+// kırpılıp "%0,5" basılıyor, sağa hizalı tabular-nums sütunda ondalık virgülü satırdan satıra kayıyor.
+// Paylaşılan `format.ts` DEĞİŞTİRİLMEDEN (diğer modüllerdeki `formatPct` çağrıları etkilenmesin diye)
+// bu sütuna ÖZEL, sabit 2 ondalıklı yerel bir biçimlendirici tanımlanır.
+const DAILY_CHANGE_FMT = new Intl.NumberFormat('tr-TR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function formatDailyChangePct(v: number): string {
+  return DAILY_CHANGE_FMT.format(v / 100);
 }
 
 /**
@@ -37,6 +47,15 @@ export function RatesTable({ rows }: { rows: RateRow[] }) {
   // gerçek bilgi eksikliği — kartın kendisi Stripe'ın "delta" kalıbını (KpiCard'daki büyük rakam +
   // küçük etiket + değişim) taşımıyordu. Aynı para biriminin BİR ÖNCEKİ güne göre değişimini
   // (`selling` bazında) gösteren "Günlük değişim" sütunu boşluğu bilgiyle dolduruyor.
+  //
+  // Tur 8 P2 ihracat-kurlar-12 kök neden düzeltmesi: auto table-layout, TÜM görünür sütunların
+  // `meta.width` değerlerini TEK bir ortak çarpanla (1152 / width toplamı) orantılı ölçekliyor —
+  // toplam gerçek render genişliği HER ZAMAN 1152'ye eşitleniyor, yalnızca DAĞILIM değişiyor. İlk
+  // 'Günlük değişim' eklemesinde (width:200) diğer 5 sütun küçük tutulduğundan (100/100/110/110/100
+  // toplamı sadece 520) ortak çarpan bu tek büyük sütuna orantısız pay veriyordu (200→320, slack 203).
+  // Altı sütunun toplam gerçek içerik genişliği (~472px) ile kapsayıcı (1152px) arasındaki fark
+  // (~680px) 6 sütuna EŞİT PAYLAŞTIRILACAK şekilde taban genişlikler yeniden dengelendi — hiçbir
+  // sütun tek başına payın çoğunu almıyor, altısı da ≤120px slack'te kalıyor (bkz. probe-ihracat-r8c-fix.ts).
   const changeByKey = useMemo(() => {
     const byCurrency = new Map<string, RateRow[]>();
     for (const r of rows) {
@@ -59,14 +78,14 @@ export function RatesTable({ rows }: { rows: RateRow[] }) {
 
   const columns = useMemo<ColumnDef<RateRow, unknown>[]>(
     () => [
-      { id: 'rateDate', accessorFn: (r) => r.rateDate, header: 'Tarih', meta: { width: 100, mobile: 'subtitle' }, cell: ({ getValue }) => formatDate(getValue<string>()) },
-      { id: 'currency', accessorFn: (r) => r.currency, header: 'Para birimi', meta: { width: 100, mobile: 'title' }, cell: ({ getValue }) => <span className="font-medium">{CURRENCY_LABEL[getValue<string>()] ?? getValue<string>()}</span> },
-      { id: 'buying', accessorFn: (r) => r.buying, header: 'Alış', meta: { align: 'right', width: 110, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono tabular-nums">{formatRate(getValue<string>())}</span> },
+      { id: 'rateDate', accessorFn: (r) => r.rateDate, header: 'Tarih', meta: { width: 180, mobile: 'subtitle' }, cell: ({ getValue }) => formatDate(getValue<string>()) },
+      { id: 'currency', accessorFn: (r) => r.currency, header: 'Para birimi', meta: { width: 195, mobile: 'title' }, cell: ({ getValue }) => <span className="font-medium">{CURRENCY_LABEL[getValue<string>()] ?? getValue<string>()}</span> },
+      { id: 'buying', accessorFn: (r) => r.buying, header: 'Alış', meta: { align: 'right', width: 170, mobile: 'hidden' }, cell: ({ getValue }) => <span className="font-mono tabular-nums">{formatRate(getValue<string>())}</span> },
       {
         id: 'selling',
         accessorFn: (r) => r.selling,
         header: 'Satış',
-        meta: { align: 'right', width: 110 },
+        meta: { align: 'right', width: 170 },
         // Tur 5 P2 ihracat-kurlar-09 kök neden düzeltmesi: masaüstünde "Alış" ayrı bir sütunda
         // mobile:'hidden' olduğundan mobil kartın metrik yuvasında yalnızca bu (satış) kuru kalıyor
         // ama etiketsiz — iki kur birbirine %0,5 yakın olduğundan kullanıcı hangisine baktığını
@@ -86,17 +105,17 @@ export function RatesTable({ rows }: { rows: RateRow[] }) {
         // zaman `undefined` döner — mobile-cards.tsx'in `isEmptyValue` filtresi bunu HER SATIRDA
         // "boş" sayıp sütunü mobil meta zincirinden koşulsuz düşürüyordu (hücre gerçek bir yüzde
         // bassa bile). accessorFn gerçek Decimal|null değerini döndürünce filtre doğru çalışır.
-        id: 'dailyChange', accessorFn: (r) => changeByKey.get(`${r.currency}-${r.rateDate}`) ?? null, header: 'Günlük değişim', meta: { align: 'right', width: 200, mobile: 'meta' },
+        id: 'dailyChange', accessorFn: (r) => changeByKey.get(`${r.currency}-${r.rateDate}`) ?? null, header: 'Günlük değişim', meta: { align: 'right', width: 225, mobile: 'meta' },
         cell: ({ row }) => {
           const d = changeByKey.get(`${row.original.currency}-${row.original.rateDate}`);
           if (!d) return <span className="text-muted-foreground">—</span>;
           const isZero = d.isZero();
           const isUp = d.gt(0);
           const cls = isZero ? 'text-muted-foreground' : isUp ? 'text-success' : 'text-destructive';
-          return <span className={`font-mono tabular-nums ${cls}`}>{isUp && !isZero ? '+' : ''}{formatPct(d.toNumber(), 2)}</span>;
+          return <span className={`font-mono tabular-nums ${cls}`}>{isUp && !isZero ? '+' : ''}{formatDailyChangePct(d.toNumber())}</span>;
         },
       },
-      { id: 'source', accessorFn: (r) => r.source, header: 'Kaynak', meta: { width: 100, mobile: 'meta' }, cell: ({ getValue }) => <span className="text-muted-foreground">{sourceLabel(getValue<string>())}</span> },
+      { id: 'source', accessorFn: (r) => r.source, header: 'Kaynak', meta: { width: 180, mobile: 'meta' }, cell: ({ getValue }) => <span className="text-muted-foreground">{sourceLabel(getValue<string>())}</span> },
     ],
     [changeByKey],
   );

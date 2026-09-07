@@ -49,27 +49,30 @@ export function DocumentsTable({
   }
 
   const columns = useMemo<ColumnDef<ExportDocRow, unknown>[]>(() => {
-    // Tur 7 P2 ihracat-belgeler-03 kök neden düzeltmesi (yalnızca ortak belge panosu,
-    // showShipmentColumn=true): bu üç sütun (Belge, Sevkiyat, Müşteri) meta.width taşımıyordu —
-    // DataTable'ın auto table-layout'u kalan 982px'i bunlara yığıyordu. satis modülünün Tur 11
-    // kalıbı (channels-table.tsx 'Kanal'): hem TD'ye SABİT `meta.width` hem içerik span'ine BİREBİR
-    // aynı piksel değerinde `max-w-[…] truncate` verilir — yalnızca width vermek yetmiyor (tabloda
-    // width'siz başka sütun kalmadığından oransal esneme TÜM sütunlara eşit oranda yayılıyor),
-    // yalnızca truncate vermek de yetmiyor (TD kendi payını almaya devam ediyor).
+    // Tur 7 P2 ihracat-belgeler-03 kök neden düzeltmesi (ortak belge panosu, showShipmentColumn=true):
+    // bu üç sütun (Belge, Sevkiyat, Müşteri) meta.width taşımıyordu — DataTable'ın auto table-layout'u
+    // kalan 982px'i bunlara yığıyordu. satis modülünün Tur 11 kalıbı (channels-table.tsx 'Kanal'): hem
+    // TD'ye SABİT `meta.width` hem içerik span'ine BİREBİR aynı piksel değerinde `max-w-[…] truncate`
+    // verilir. NOT (Tur 8 ölçümüyle netleşti — bkz. `docs/DESIGN-SCORECARD.md` ölçüm notları): bu
+    // `meta.width`/`max-w` YİNE DE tabloyu MUTLAK piksele kilitlemiyor — auto-layout, görünür TÜM
+    // sütunların `meta.width` değerlerini TEK bir ortak çarpanla (kapsayıcı genişliği / width toplamı)
+    // orantılı ölçekliyor; `max-w-[…] truncate` yalnızca görsel taşma/kırpma sınırı, sütunun gerçek
+    // render genişliğini SABİTlemiyor. Aşağıdaki tüm `width` değerleri bu orantılı ölçeklemeye göre
+    // (gerçek içerik genişliği + pay) SEÇİLMİŞ taban değerlerdir — bkz. scripts/probe-ihracat-r8c-fix.ts.
     //
-    // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false, ihracat-detay-18)
-    // BİLE İSTE bu kalıp uygulanMADI: o bağlamda görünür sütun sayısı yalnızca 3'e (Belge/Durum/
-    // Eylemler) düşüyor — 'Belge'ye sabit width vermek panodaki gibi çalışmıyor, aksine 'Durum'u da
-    // aynı oransal esnemeye sokup (130px→384px, slack 293px) YENİ bir P2 doğuruyor (ölçüldü,
-    // scripts/probe-ihracat-r8-fix.ts): 1152px'lik kapsayıcıda yalnızca 2 gerçek bilgi sütunu
-    // (Belge+Durum) varken satır başına düşen genişlik matematiksel olarak 120px'in altına
-    // indirilemiyor (Belge no/Vade/Sorumlu'yu varsayılan görünür yapmak da seçenek değil — bu tam
-    // olarak Tur 1'de KAPATILAN ihracat-belgeler-01'i yeniden açar, bkz. aşağıdaki `sparseDefault`
-    // yorumu). Kök neden yerine gerçek çözüm: bu dar bağlamda tabloyu 1152px'e ZORLAMAMAK —
-    // aşağıda DataTable'a verilen `className` ile `min-w-full`/`w-full` iptal edilip tablo GERÇEK
-    // içerik genişliğine (~390px) küçülüyor, artan boşluk sütunlara değil TABLONUN SAĞINA
-    // bırakılıyor (satis-kanallar-03 bulgusunun orijinal hedef metninde önerilen ideal: "artan
-    // genişlik sütunlara değil tablonun sağındaki boşluğa bırakılmalı").
+    // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false, ihracat-detay-18/-19):
+    // Tur 7'de bu bağlamda görünür sütun sayısı yalnızca 3'e (Belge/Durum/Eylemler) düştüğü için
+    // 'Belge'ye sabit width vermek 'Durum'u da aynı oransal esnemeye sokup YENİ bir P2 doğuruyordu
+    // (130px→384px, slack 293px) — o turda kök neden yerine geçici çözüm olarak tablo `[&_table]:
+    // !w-auto !min-w-0` ile 1152px'lik panelin GERÇEK içerik genişliğine (~365px) küçültüldü; bu
+    // ölü alanı sütunun İÇİNDEN tablonun SAĞINA taşıdı, ORTADAN KALDIRMADI (ihracat-detay-19, P1,
+    // panel 1152px / tablo 365px → 787px ölü blok). Tur 8 kök neden düzeltmesi: `docNo` (Belge no)
+    // ve `dueDate` (Vade) VARSAYILAN GÖRÜNÜR yapılıp (aşağıdaki `sparseDefault` artık yalnızca
+    // showShipmentColumn=true dalında uygulanıyor — panodaki doluluk oranı burada geçersiz, bu dar
+    // bağlamda GERÇEK bilgi taşıyan sütun sayısını 3'ten 5'e çıkarmak gerekiyordu) tabloyu 5 gerçek
+    // sütuna (Belge/Durum/Belge no/Vade/Eylemler) yayıyor — genişlik kilidi kaldırılıyor, taban
+    // width'ler bu 5 sütunun toplamı 1152'ye orantılı ölçeklendiğinde her birinin slack'i ≤150px
+    // kalacak şekilde seçildi (bkz. probe-ihracat-r8c-fix.ts ölçümü).
     const base: ColumnDef<ExportDocRow, unknown>[] = [
       showShipmentColumn
         ? {
@@ -77,7 +80,7 @@ export function DocumentsTable({
             cell: ({ row }) => <span className="block max-w-[220px] truncate" title={row.original.name}>{row.original.name}</span>,
           }
         : {
-            accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', className: 'max-w-[320px] truncate' },
+            accessorKey: 'name', header: 'Belge', meta: { mobile: 'title', width: 170, className: 'max-w-[320px] truncate' },
             cell: ({ row }) => <span className="block max-w-[320px] truncate" title={row.original.name}>{row.original.name}</span>,
           },
     ];
@@ -91,24 +94,37 @@ export function DocumentsTable({
         cell: ({ getValue }) => <span className="block max-w-[228px] truncate text-muted-foreground" title={getValue<string>() ?? undefined}>{getValue<string>()}</span>,
       });
     }
-    // `defaultHidden` (Tur 2 P1 ihracat-detay-06 kök neden düzeltmesi): önceden yalnızca ortak belge
-    // panosunda (/ihracat/belgeler, showShipmentColumn=true) uygulanıyordu — "doluluk tek sevkiyatın
-    // kendi sekmesinde daha yüksektir" varsayımı YANLIŞTI: ölçüm tam tersini gösterdi (panoda Belge no
-    // 26/30 boş, burada 7/8; Vade ve Sorumlu HER İKİ bağlamda da %100 boş). Belge no/Vade/Sorumlu
-    // satırların %80'inden fazlasında boş olduğundan (Tur 1 P1 ihracat-belgeler-01 ile birebir aynı
-    // kusur) varsayılan gizleme artık KOŞULSUZ — sütun görünürlüğü menüsünden her iki bağlamda da
-    // açılabilir kalır.
+    // `defaultHidden` (Tur 2 P1 ihracat-detay-06 kök neden düzeltmesi): Tur 3'te ortak belge panosu
+    // (showShipmentColumn=true) VE sevkiyatın kendi Belgeler sekmesi (showShipmentColumn=false) için
+    // KOŞULSUZ uygulanmıştı — panoda Belge no 26/30 boş, burada 7/8; Vade ve Sorumlu HER İKİ bağlamda
+    // %100 boş idi. Tur 8'de bu, showShipmentColumn=false dalı için YENİDEN gözden geçirildi: o dar
+    // bağlamda (yalnızca 3 gerçek sütun: Belge/Durum/Eylemler) doluluk oranı düşük olsa da Belge no ve
+    // Vade'yi gizli tutmanın matematiksel bedeli, tabloyu panelin (1152px) yalnızca %32'sine sıkıştırıp
+    // sağda 787px ölü blok bırakmaktı (ihracat-detay-19, P1 — kriter 5). Doluluk oranı (kriter 3/12)
+    // düşük kalsa da (Belge no ~1-2/8 dolu) genişlik ölü alanı (kriter 5, P1) daha ağır basıyor —
+    // `sparseDefault` bu YÜZDEN artık yalnızca showShipmentColumn=true dalında (ortak panoda, 30
+    // satırlık daha büyük örneklemde gerçekten sparse) uygulanıyor; Sorumlu HER İKİ bağlamda da
+    // (ikisinde de %100 boş, doldurucu bir sütun değil) gizli kalır — sütun görünürlüğü menüsünden
+    // her iki bağlamda da açılabilir.
     const sparseDefault = { defaultHidden: true } as const;
     base.push(
-      { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: 130, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="export_doc" /> },
-      { accessorKey: 'docNo', header: 'Belge no', meta: { width: 140, mobile: 'hidden', ...sparseDefault }, cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span> },
+      { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: showShipmentColumn ? 130 : 110, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="export_doc" /> },
+      {
+        accessorKey: 'docNo', header: 'Belge no',
+        meta: { width: showShipmentColumn ? 140 : 130, mobile: 'hidden', ...(showShipmentColumn ? sparseDefault : {}) },
+        cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span>,
+      },
       // `mobile: 'meta'` (Tur 1 P1, ihracat-belgeler-02 kök neden): önceden bu sütun mobil kartta
       // varsayılan 'row' (= `rest`) sayılıyordu — docNo/responsibleName zaten 'hidden' olduğundan
       // `rest`in TEK/SON elemanı bu oluyor, mobile-cards.tsx onu METRİK yuvasına koyuyordu; sütun boş
       // olduğunda (30/30 satırda) yuva anlamsız bir '—' ile doluyordu. 'meta' işaretiyle boş değer hiç
       // eklenmiyor (mobile-cards.tsx `isEmptyValue` filtresi), dolu olduğunda da metrik değil bağlam
       // ipucu olarak görünür.
-      { accessorKey: 'dueDate', header: 'Vade', meta: { width: 100, mobile: 'meta', ...sparseDefault }, cell: ({ getValue }) => { const v = getValue<string | null>(); return v ? formatDate(v) : <span className="text-muted-foreground">—</span>; } },
+      {
+        accessorKey: 'dueDate', header: 'Vade',
+        meta: { width: showShipmentColumn ? 100 : 90, mobile: 'meta', ...(showShipmentColumn ? sparseDefault : {}) },
+        cell: ({ getValue }) => { const v = getValue<string | null>(); return v ? formatDate(v) : <span className="text-muted-foreground">—</span>; },
+      },
       { accessorKey: 'responsibleName', header: 'Sorumlu', meta: { width: 140, mobile: 'hidden', ...sparseDefault }, cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span> },
     );
     return base;
@@ -126,15 +142,16 @@ export function DocumentsTable({
         searchPlaceholder="Belge, sevkiyat, müşteri ara…"
         filters={filters}
         rowActions={rowActions}
-        // ihracat-detay-18 kök neden düzeltmesi (yalnızca sevkiyat detayının kendi Belgeler
-        // sekmesinde, showShipmentColumn=false): DataTable'ın <table> öğesi `min-w-full`/`w-full`
-        // ile kapsayıcıyı DOLDURMAYA zorlanıyor (bkz. data-table.tsx'teki Tur 2 P0 yorumu) — 3
-        // sütunlu bu dar tabloda bu, tek esnek sütuna (Belge) 762px'e varan ölü alan yığıyordu.
-        // Paylaşılan bileşen DEĞİŞTİRİLMEDEN (kural 2), yalnızca BU KULLANIMDA `[&_table]:!w-auto
-        // [&_table]:!min-w-0` ile o zorlama iptal edilir — tablo gerçek içerik genişliğine küçülür,
-        // artan boşluk sütunlara değil (satis-kanallar-03'ün orijinal hedefindeki gibi) tablonun
-        // SAĞINA bırakılır.
-        className={!showShipmentColumn ? '[&_table]:!w-auto [&_table]:!min-w-0' : undefined}
+        // ihracat-detay-18/-19 kök neden düzeltmesi (sevkiyatın kendi Belgeler sekmesi,
+        // showShipmentColumn=false): Tur 7'de bu dar (3 sütun) bağlamda DataTable'ın <table>
+        // öğesinün kapsayıcıyı DOLDURMAYA zorlanması (`min-w-full`/`w-full`) tek esnek sütuna
+        // (Belge) 762px'e varan ölü alan yığdığı için `[&_table]:!w-auto [&_table]:!min-w-0` ile bu
+        // zorlama iptal edilmişti — ama bu, ölü alanı sütunun İÇİNDEN tablonun SAĞINA taşımaktan
+        // başka bir şey yapmıyordu (panel 1152px, küçültülmüş tablo 365px → 787px ölü blok,
+        // ihracat-detay-19, P1). Tur 8'de kök neden düzeltildi: yukarıdaki sütun tanımlarında
+        // Belge no/Vade varsayılan görünür yapılıp (5 gerçek sütun artık 1152px'i orantılı
+        // dolduruyor) BU KİLİT KALDIRILDI — DataTable yine kapsayıcıyı dolduruyor, ama artık
+        // dolduracak gerçek sütun sayısı yeterli.
         emptyTitle="Belge yok"
         emptyDescription="Sevkiyat oluşturulunca rejime göre belge takip listesi otomatik kurulur."
         // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false) özel kart — Tur 2 P1
