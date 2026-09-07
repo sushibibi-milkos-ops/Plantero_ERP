@@ -299,12 +299,18 @@ export function DataTableMobileCards<T>({
                     // yalnızca bu span'ın KENDİ metin akışını keser — hücre `flexRender` ile bir BLOK
                     // öğe (ör. `<div>`) basıyorsa (ör. bakim/makineler "Makine" hücresi, ad+kategori
                     // için `<div><div>ad</div>…</div>`) tarayıcı taşan metni "…" OLMADAN sert kesiyordu
-                    // (scrollWidth>clientWidth ama görünürde üç nokta yok). `[&>*]:truncate` doğrudan
-                    // çocuğa da aynı kırpma kuralını zorlar — ama YALNIZCA kendi çok-satırlı kırpmasını
-                    // (line-clamp + whitespace-normal, ör. bakim/orders-table.tsx "Başlık") taşımayan
-                    // çocuklarda: `:not([class*="line-clamp"])` o kasıtlı, kendi kendine yeten deseni
-                    // ezmez (aksi halde `whitespace-nowrap` o span'ın `whitespace-normal`ıyla çakışırdı).
-                    <span className="min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap [&>*]:min-w-0 [&>*]:max-w-full [&>*:not([class*='line-clamp'])]:truncate">
+                    // (scrollWidth>clientWidth ama görünürde üç nokta yok). İlk deneme yalnızca DOĞRUDAN
+                    // çocuğa (`[&>*]`) uyguluyordu — machines-table.tsx'in ad hücresi 2 seviye iç içe
+                    // (`<div><div>ad</div>…</div>`) olduğundan gerçek metni taşıyan İÇ div'e hiç
+                    // ulaşmıyordu (dıştaki div'e white-space:nowrap uygulamak metnin KENDİSİ hâlâ iç
+                    // div'de normal sarabildiği için satır 2'ye taşıp kartın sabit yüksekliğinde dikey
+                    // kesiliyordu — scrollWidth===clientWidth yanıltıcı biçimde "taşma yok" gösteriyordu
+                    // çünkü taşma yatay değil DİKEYDİ). `[&_*]` (TÜM torunlar) ile düzeltildi: satırı
+                    // taşıyan en iç blok da dahil her seviye tek satıra sabitlenir. `:not([class*="line-
+                    // clamp"])` kendi çok-satırlı kırpmasını (line-clamp + whitespace-normal, ör.
+                    // bakim/orders-table.tsx "Başlık") taşıyan kasıtlı, kendi kendine yeten deseni ezmez
+                    // (aksi halde `whitespace-nowrap` o span'ın `whitespace-normal`ıyla çakışırdı).
+                    <span className="min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap [&_*]:min-w-0 [&_*]:max-w-full [&_*:not([class*='line-clamp'])]:truncate">
                       {flexRender(subtitle.column.columnDef.cell, subtitle.getContext())}
                     </span>
                   ) : null}
