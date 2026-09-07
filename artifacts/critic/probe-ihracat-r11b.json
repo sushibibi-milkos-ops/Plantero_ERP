@@ -1,0 +1,275 @@
+{
+ "sevkiyatlar": {
+  "focus": [
+   {
+    "inMain": true,
+    "tag": "A",
+    "label": "Yeni sevkiyat",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "1px",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   }
+  ],
+  "numsSample": [
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "10.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   }
+  ],
+  "numsTotal": 16
+ },
+ "belgeler": {
+  "focus": [
+   {
+    "inMain": true,
+    "tag": "INPUT",
+    "label": "",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   }
+  ],
+  "numsSample": [
+   {
+    "t": "EUR.1 dolaşım sertifik",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "EUR.1 dolaşım sertifik",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   }
+  ],
+  "numsTotal": 32
+ },
+ "kurlar": {
+  "focus": [
+   {
+    "inMain": true,
+    "tag": "BUTTON",
+    "label": "Bugünü çek",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   }
+  ],
+  "numsSample": [
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "07.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "06.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "06.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "05.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "05.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "04.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "04.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "03.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "03.09.2026",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   }
+  ],
+  "numsTotal": 40
+ },
+ "gtip": {
+  "focus": [
+   {
+    "inMain": true,
+    "tag": "INPUT",
+    "label": "",
+    "outline": "0px none oklab(0.55 -0.141272 0.0751154 / 0.5)",
+    "offset": "0px",
+    "ring": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+   }
+  ],
+  "numsSample": [
+   {
+    "t": "2x Badem Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "3x Badem Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "6x Badem Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "2x Fındık",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "3x Fındık Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "6x Fındık Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "2x Kaju Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "3x Kaju Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "6x Kaju Bazı",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "%100 Oat Spredable",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   },
+   {
+    "t": "%100 Oat Chocolate Spr",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   }
+  ],
+  "numsTotal": 40
+ },
+ "yeni": {
+  "focus": [],
+  "numsSample": [],
+  "numsTotal": 0
+ },
+ "detay": {
+  "focus": [],
+  "numsSample": [
+   {
+    "t": "Badem İçeceği 1 Litrel",
+    "fvn": "normal",
+    "ff": "Inter",
+    "align": "start"
+   }
+  ],
+  "numsTotal": 7
+ },
+ "empty": {
+  "sevkiyatlar": {
+   "text": "ık sevkiyatAçık sevkiyat tutarıGümrükteBelgesi eksikDurum0 kayıtSevkiyat noMüşteriDurumÜlkeRejimBelgelerTutar (döviz)ETDOluşturmaTutar (₺)Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+   "svgInEmpty": 17
+  },
+  "belgeler": {
+   "text": ";padding:calc(round(nearest, calc(var(--number-flow-mask-height, 0.25em) / 2), 1px) * 2) 0}13Durum0 kayıtBelgeSevkiyatMüşteriDurumEylemlerEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+   "svgInEmpty": 10
+  },
+  "kurlar": {
+   "text": "16.0721.0727.0702.0808.0814.0820.0826.0801.0907.09₺30,0₺33,0₺36,0₺39,0₺42,0Para birimi0 kayıtTarihPara birimiAlışSatışGünlük değişimKaynakEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+   "svgInEmpty": 16
+  },
+  "gtip": {
+   "text": "n konsantreleri ve dokulandırılmış proteinli maddeler2202.99LTBitkisel içecekler (badem/yulaf/kaju sütü vb.)EşlemeTip0 kayıtSKUÜrünTipGTİPEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+   "svgInEmpty": 11
+  }
+ },
+ "mobileTouch": {
+  "sevkiyatlar": [],
+  "belgeler": [],
+  "kurlar": [],
+  "gtip": [],
+  "yeni": [],
+  "detay": [
+   {
+    "tag": "A",
+    "cls": "font-mono hover:underline",
+    "t": "DN-2026-000028",
+    "w": 109,
+    "h": 20
+   }
+  ]
+ }
+}
