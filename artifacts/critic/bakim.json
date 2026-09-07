@@ -2,7 +2,7 @@
   "module": "bakim",
   "round": 12,
   "note": "Tur 11: 7 rotanın tamamı yeniden çekildi (pnpm shot) ve ölçüldü (artifacts/critic/measure-bakim-r11{,b}/*.json, scripts/probe-bakim-r11c.ts + probe-bakim-r11d.ts). KAPANDI: bakim-makineler-07 (P1, k6) — 390px mobil kartın metrik yuvasında artık çıplak tamsayı yok (0/36 ihlal; 11 kartta dd.MM.yyyy \"Sonraki bakım\", 25 kartta \"—\"). KAPANDI: bakim-isemirleri-detay-12 (P2, k4) — \"Yapılıyor\" dolgulu+pulse, \"Tamamlandı\" dolgusuz halka (border-2 + bg-background); renk tonu değişmeden anatomi farkı ölçülebilir. AÇIK KALDI: bakim-oee-04 (P2, shell/kpi-strip.tsx) — @390 KpiStripRow scrollWidth 792 > clientWidth 358 (OEE, 5 kart), aynı bileşen /bakim/makineler'de 632 > 358 (4 kart). YENİ: bakim-isemirleri-detay-13 (P1, k5) — \"Olay geçmişi\" zaman çizgisi nedensel sıraya göre monoton değil ve deterministik değil: audit_log satırları aynı mikrosaniyeyi taşıyor, sorgu yalnızca asc(at) ile sıralıyor, ikincil anahtar yok. Kod taraması TEMİZ (bakım modülü): transition-all / transition: all / ease-in / scale(0) / ≥300ms süre / origin-* YOK; tek hareket `transition-transform group-hover:scale-105` (machine-detail.tsx fotoğraf döşemesi), `motion-safe:animate-pulse` (order-timeline.tsx) ve `animate-spin` (bekleyen aksiyon). `hover:` varyantı globals.css:9-16'da @media (hover:hover) and (pointer:fine) ile global olarak korunuyor. VERİ NOTU (tasarım bulgusu DEĞİL, seed/db'ye ait): \"Tamamlandı\" iş emirlerinde checklist_results tüm maddeleri done:false taşıyor (MO-2026-000003/4/5) — ekran veriyi doğru basıyor ama \"Kontrol listesi tamamlandı\" çözüm metniyle çelişiyor.",
-  "measuredAt": "2026-09-07T07:33:31.270Z",
+  "measuredAt": "2026-09-07T08:14:58.000Z",
   "routes": {
     "/bakim/makineler": {
       "round": 11,
@@ -395,18 +395,7 @@
       "verdict": "Linear",
       "sampleId": "ba035ca9-d4a3-4985-b584-246976080a7b (MO-2026-000001, 2 fotoğraf)",
       "scoreNotes": "Tur 11 delta (+1/−1): k4 4→5, k5 5→4. k4 (+1): bakim-isemirleri-detay-12 kapandı — zaman çizgisi noktalarında \"Yapılıyor\" dolgulu + motion-safe:animate-pulse, \"Tamamlandı\" dolgusuz halka (border-2 + bg-background); renk tonu değişmeden ayrım anatomiye taşındı, ekranda doğrulandı (artifacts/screens/bakim-is-emirleri-42f49874-677c-4376-81b0-0786ad6f093d/desktop.png). k5 (−1): YENİ bulgu bakim-isemirleri-detay-13 (P1) — \"Olay geçmişi\" listesi nedensel sıraya göre monoton değil: MO-2026-000005'te Yapılıyor → Planlandı → Tamamlandı (yaşam döngüsü sırası 2 → 1 → 3). Sıralama aynı zamanda deterministik değil; 3 audit satırı da 2026-09-07 07:13:37.137781+00 taşıyor ve sorgu yalnızca asc(at) ile sıralıyor. 6 iş emrinin 1'i bugün yanlış, kalan 5'i tesadüfen doğru. Değişmeyen ölçümler: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 20/19, fontSizes {13:44, 12:20, 11:12}, h1 24px/600 (mobil 20px/600). 390px'te ölçülen 44px altı öğeler gerçek dokunma hedefi DEĞİL: kontrol listesi kutuları disabled (salt okunur, 16px) ve \"Periyodik plan\" satır içi metin bağlantısı (display:inline, 35,5px). Toplam 59 ≥ 57 ama açık P1 var → KAZANAN: Linear.",
-      "open": [
-        {
-          "id": "bakim-isemirleri-detay-13",
-          "criterion": 5,
-          "severity": "P1",
-          "text": "\"Olay geçmişi\" zaman çizgisi nedensel sıraya göre monoton değil ve sıralaması deterministik değil. Aynı iş emrinin audit_log satırlarının tamamı birebir aynı zaman damgasını taşıyor (seed tek transaction'da yazıyor), sorgu ise yalnızca `asc(auditLog.at)` ile sıralıyor — ikincil anahtar olmadığı için satır sırası Postgres'in döndürdüğü rastgele sıraya kalıyor. Sonuç: liste \"başladı → planlandı → tamamlandı\" gibi okunuyor; zaman çizgisi kendi anlattığı hikâyeyi çürütüyor.",
-          "measure": "scripts/probe-bakim-r11d.ts (6 iş emrinin tamamı, 1440x900): MO-2026-000005 → DOM sırası [\"Yapılıyor\",\"Planlandı\",\"Tamamlandı\"], yaşam döngüsü rankları [2,1,3] → monotonic=false (1/6 rota-kaydı ihlalli, 5/6 tesadüfen doğru). psql: `select at, action, after->>'status' from audit_log where record_id='42f49874-…'` → üç satır da 2026-09-07 07:13:37.137781+00. queries.ts:288 `.orderBy(asc(auditLog.at))` tek anahtar.",
-          "target": "getMaintenanceOrderEvents sıralaması deterministik ve yaşam döngüsüne uygun olsun: `.orderBy(asc(auditLog.at), asc(<durum rank CASE: reported 0, planned 1, in_progress 2, waiting_parts 3, done 4, cancelled 5>), asc(auditLog.id))`. Kabul: probe-bakim-r11d.ts 6/6 iş emrinde monotonic=true ve aynı sayfa iki kez yüklendiğinde DOM sırası birebir aynı.",
-          "file": "apps/web/src/modules/maintenance/queries.ts:282-288 (getMaintenanceOrderEvents)",
-          "openedRound": 11
-        }
-      ],
+      "open": [],
       "closed": [
         {
           "id": "bakim-isemirleri-detay-01",
@@ -589,6 +578,20 @@
           "measureAfter": "scripts/probe-bakim-r11.ts (Tur 11, /bakim/is-emirleri/41a37c8c-0989-4854-b189-10f511afad83, 1440x900): \"Yapılıyor\" noktası → bg oklch(0.55 0.16 152) (dolgulu), border 0px, animationName=\"pulse\"; \"Tamamlandı\" noktası → bg oklch(0.985 0.002 250) (arka plan rengi, dolgusuz), border 2px solid oklch(0.6 0.16 152) (halka), animationName=\"none\" — dolgu/halka anatomisi farkı ölçülebilir. Renk tonu (lib/status.ts) DEĞİŞTİRİLMEDİ. Ekran kanıtı: artifacts/screens/bakim-is-emirleri-41a37c8c-0989-4854-b189-10f511afad83/desktop.png (\"Olay geçmişi\"). | Tur 11 kritik doğrulaması: /bakim/is-emirleri/42f49874-677c-4376-81b0-0786ad6f093d ekranında üç nokta üç ayrı anatomi taşıyor — Yapılıyor dolgulu yeşil, Planlandı dolgulu mavi (info), Tamamlandı dolgusuz yeşil halka. Kapalı kalır.",
           "verifiedBy": "ölçüm (pnpm typecheck/lint + scripts/probe-bakim-r11.ts, Tur 11)",
           "fixNote": "order-timeline.tsx: HOLLOW_STATUSES/PULSE_STATUSES + RING_BORDER_CLASS eklendi; in_progress dolgulu+motion-safe:animate-pulse, done dolgusuz halka (border-2 + bg-background). status-badge.tsx work_order desenine paralel; ortak dosyalar (lib/status.ts, status-badge.tsx) DEĞİŞTİRİLMEDİ."
+        },
+        {
+          "id": "bakim-isemirleri-detay-13",
+          "criterion": 5,
+          "severity": "P1",
+          "text": "\"Olay geçmişi\" zaman çizgisi nedensel sıraya göre monoton değil ve sıralaması deterministik değil. Aynı iş emrinin audit_log satırlarının tamamı birebir aynı zaman damgasını taşıyor (seed tek transaction'da yazıyor), sorgu ise yalnızca `asc(auditLog.at)` ile sıralıyor — ikincil anahtar olmadığı için satır sırası Postgres'in döndürdüğü rastgele sıraya kalıyor. Sonuç: liste \"başladı → planlandı → tamamlandı\" gibi okunuyor; zaman çizgisi kendi anlattığı hikâyeyi çürütüyor.",
+          "measure": "scripts/probe-bakim-r11d.ts (6 iş emrinin tamamı, 1440x900): MO-2026-000005 → DOM sırası [\"Yapılıyor\",\"Planlandı\",\"Tamamlandı\"], yaşam döngüsü rankları [2,1,3] → monotonic=false (1/6 rota-kaydı ihlalli, 5/6 tesadüfen doğru). psql: `select at, action, after->>'status' from audit_log where record_id='42f49874-…'` → üç satır da 2026-09-07 07:13:37.137781+00. queries.ts:288 `.orderBy(asc(auditLog.at))` tek anahtar.",
+          "target": "getMaintenanceOrderEvents sıralaması deterministik ve yaşam döngüsüne uygun olsun: `.orderBy(asc(auditLog.at), asc(<durum rank CASE: reported 0, planned 1, in_progress 2, waiting_parts 3, done 4, cancelled 5>), asc(auditLog.id))`. Kabul: probe-bakim-r11d.ts 6/6 iş emrinde monotonic=true ve aynı sayfa iki kez yüklendiğinde DOM sırası birebir aynı.",
+          "file": "apps/web/src/modules/maintenance/queries.ts:282-288 (getMaintenanceOrderEvents)",
+          "openedRound": 11,
+          "closedRound": 12,
+          "measureAfter": "scripts/probe-bakim-r11d.ts (Tur 12, güncel id'lerle yeniden çalıştırıldı — pnpm db:reset id'leri yeniden üretti) 6/6 iş emrinde monotonic=true: MO-2026-000001 [\"Bildirildi\",\"Yapılıyor\",\"Tamamlandı\"] rank [0,2,3]; MO-2026-000002 aynı desen; MO-2026-000003/4/5 [\"Planlandı\",\"Yapılıyor\",\"Tamamlandı\"] rank [1,2,3]; MO-2026-000006 tek olay [\"Bildirildi\"] rank [0]. Betik art arda 2 kez çalıştırıldı, çıktı birebir aynı (diff temiz) — DOM sırası deterministik. psql doğrulaması (MO-2026-000005, id=52b5bd88-693c-43f2-8b3a-7b045c43157a): audit_log'daki 3 satır hâlâ birebir aynı zaman damgasını taşıyor (2026-09-07 08:06:21.300542+00, action sırası update/create/post — fiziksel sıra hâlâ nedensel sırayla örtüşmüyor) ama ekranda artık Planlandı→Yapılıyor→Tamamlandı doğru sırada; ikincil sıralama anahtarı fiziksel/rastgele satır sırasını maskeliyor. Ekran kanıtı: artifacts/screens/bakim-is-emirleri-52b5bd88-693c-43f2-8b3a-7b045c43157a/{desktop,mobile}.png (\"Olay geçmişi\" bölümü, masaüstü+mobil).",
+          "verifiedBy": "ölçüm (pnpm typecheck/lint + scripts/probe-bakim-r11d.ts x2 + psql, Tur 12)",
+          "fixNote": "queries.ts getMaintenanceOrderEvents: .orderBy(asc(auditLog.at)) tek anahtarına, yaşam döngüsü sırasına göre bir SQL CASE (reported 0 → planned 1 → in_progress 2 → waiting_parts 3 → done 4 → cancelled 5 → else 6) ikincil anahtar, asc(auditLog.id) üçüncül anahtar olarak eklendi. Şema/ortak dosya değişmedi; order-timeline.tsx render sırası sorgudan geldiği gibi kaldı."
         }
       ]
     },
