@@ -268,6 +268,68 @@ describe('quality/recall', () => {
     });
   });
 
+  it("initiate(): AYNI fiziksel irsaliyeye FEFO'nun böldüğü İKİ farklı mamul lotunun HER İKİSİ için de ayrı 'delivered' recall_items satırı üretir (I60 kök neden düzeltmesi, checks/60_recall_delivered_item_completeness.sql)", async () => {
+    await withRollback(async (tx) => {
+      const base = await seedProductionBase(tx);
+      const { lot: rootLot } = await receiveRawHelper(tx, base, `RC60-${base.s}`, '100', '10', { toLocationId: base.loc.hamR01.id, status: 'released' });
+
+      async function produceLot(qty: string) {
+        const { workOrder } = await createWorkOrder(tx, { productId: base.finished.id, warehouseId: base.wh.id, plannedQty: d(qty) }, ctx);
+        await releaseWorkOrder(tx, workOrder.id, ctx);
+        await startWorkOrder(tx, workOrder.id, ctx);
+        await autoConsumeRemaining(tx, workOrder.id, ctx); // rootLot'tan FEFO ile tüketir (stokta tek hammadde lotu)
+        const { lot } = await finishWorkOrder(tx, { workOrderId: workOrder.id, producedQty: d(qty) }, ctx);
+        if (!lot) throw new Error('Mamul lot oluşmadı');
+        const [quant] = await tx.select({ locationId: schema.stockQuants.locationId }).from(schema.stockQuants).where(eq(schema.stockQuants.lotId, lot.id)).limit(1);
+        return { lot, locationId: quant!.locationId };
+      }
+
+      // Aynı hammadde lotundan (rootLot) iki AYRI iş emriyle iki farklı mamul lotu üretilir.
+      const a = await produceLot('30');
+      const b = await produceLot('30');
+      expect(a.lot.id).not.toBe(b.lot.id);
+
+      // FEFO'nun tek sipariş satırını böldüğü tipik senaryo: İKİ mamul lotu TEK bir fiziksel irsaliyeye
+      // (aynı deliveries.id) iki AYRI delivery_lines satırı olarak sevk edilir.
+      const [delivery] = await tx
+        .insert(deliveries)
+        .values({ docNo: `DN60-${base.s}`, status: 'delivered', partnerId: base.customer.id, warehouseId: base.wh.id, origin: 'chain' })
+        .returning();
+      await tx.insert(deliveryLines).values([
+        { deliveryId: delivery!.id, productId: base.finished.id, qty: '30.0000', pickedQty: '30.0000', uomId: base.kg.id, lotId: a.lot.id, fromLocationId: a.locationId },
+        { deliveryId: delivery!.id, productId: base.finished.id, qty: '30.0000', pickedQty: '30.0000', uomId: base.kg.id, lotId: b.lot.id, fromLocationId: b.locationId },
+      ]);
+      await postStockMove(tx, { kind: 'delivery', productId: base.finished.id, lotId: a.lot.id, fromLocationId: a.locationId, toLocationId: base.loc.cust.id, qty: d('30'), uomId: base.kg.id, refType: 'delivery', refId: delivery!.id, refNo: delivery!.docNo }, ctx);
+      await postStockMove(tx, { kind: 'delivery', productId: base.finished.id, lotId: b.lot.id, fromLocationId: b.locationId, toLocationId: base.loc.cust.id, qty: d('30'), uomId: base.kg.id, refType: 'delivery', refId: delivery!.id, refNo: delivery!.docNo }, ctx);
+
+      const { recall } = await simulate(tx, { rootLotId: rootLot.id, direction: 'forward', reason: 'I60 regresyon' }, ctx);
+      await initiate(tx, recall.id, ctx);
+
+      const delivered = await tx.select().from(recallItems).where(and(eq(recallItems.recallId, recall.id), eq(recallItems.hop, 'delivered')));
+      // Kök neden düzeltmesinden ÖNCE: bu irsaliye TEK satır (yalnızca ilk ziyaret edilen lot) üretirdi.
+      expect(delivered.length).toBe(2);
+      expect(new Set(delivered.map((i) => i.deliveryId))).toEqual(new Set([delivery!.id]));
+
+      const itemA = delivered.find((i) => i.lotId === a.lot.id);
+      const itemB = delivered.find((i) => i.lotId === b.lot.id);
+      expect(itemA).toBeTruthy();
+      expect(itemB).toBeTruthy();
+      expect(itemA!.qtyDelivered).toBe('30.0000');
+      expect(itemB!.qtyDelivered).toBe('30.0000');
+
+      // I60 SQL kontrolüyle birebir aynı doğrulama: zincir üyesi her lotun GERÇEKTEN sevk edildiği
+      // her (delivery, lot) çifti için mutlaka bir 'delivered' satırı olmalı — hiçbiri kayıp değil.
+      const shippedPairs = await tx
+        .select({ deliveryId: deliveryLines.deliveryId, lotId: deliveryLines.lotId })
+        .from(deliveryLines)
+        .where(inArray(deliveryLines.lotId, [a.lot.id, b.lot.id]));
+      for (const pair of shippedPairs) {
+        const match = delivered.find((i) => i.deliveryId === pair.deliveryId && i.lotId === pair.lotId);
+        expect(match, `(${pair.deliveryId}/${pair.lotId}) için kayıp recall_items satırı`).toBeTruthy();
+      }
+    });
+  });
+
   it('buildDraftMessage(): müşteriye giden taslak ham Decimal string basmaz (tur 1 P1 core-recall-01)', () => {
     const impact: RecallImpact = {
       lots: [], workOrders: [], deliveries: [], customers: [],

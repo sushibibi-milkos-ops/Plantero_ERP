@@ -38,9 +38,21 @@ export type TraceNode = {
    * içindeki `visit(lot, depth)` kapanışı bu düğümü tam olarak `lot.lot.id`nin sevkiyatlarını
    * gezerken yaratır; o an hangi lotun sevk edildiği zaten bilinir — bu alan olmadan `simulateRecall`
    * yalnızca `{id, docNo, status, qty}` görüyordu ve `recall.ts::initiate()` her 'delivered' kalemine
-   * zincirin İLK (genelde kök hammadde) lotunu yazmak zorunda kalıyordu.
+   * zincirin İLK (genelde kök hammadde) lotunu yazmak zorunda kalıyordu. Tek-lotlu (yaygın) sevkiyat
+   * durumunda hâlâ tek başına doğrudur; birden çok lotlu sevkiyatta `lotShares`in İLK elemanıyla
+   * aynıdır (geriye dönük uyumluluk).
    */
   lotId?: string | null;
+  /**
+   * P0 düzeltmesi (I60 — `packages/db/src/checks/60_recall_delivered_item_completeness.sql`):
+   * yalnızca `kind:'delivery'` düğümlerinde, BİRDEN FAZLA zincir-üyesi lot AYNI fiziksel irsaliyeye
+   * (aynı `deliveries.id`) FEFO ile bölündüğünde dolu — her katkı veren lotun kendi payını
+   * (`{lotId, qty}`) taşır. `Graph.add()` aynı `id`+`kind:'delivery'` ile ikinci (üçüncü, ...) kez
+   * çağrıldığında (bkz. altındaki `add()`) düğümü ÜZERİNE YAZMAK yerine bu diziye ekler ve `qty`yi
+   * toplar — eskiden ikinci lotun payı düğümde HİÇ görünmüyordu (yalnızca kenar olarak vardı,
+   * `simulateRecall` kenarları hiç okumuyordu). Tek-lotlu sevkiyatta `null`/tek elemanlı kalır.
+   */
+  lotShares?: Array<{ lotId: string; qty: string }> | null;
 };
 
 export type TraceEdge = { from: string; to: string; label?: string; qty?: string };
@@ -68,9 +80,25 @@ class Graph {
     const existing = this.nodes.get(id);
     if (existing) {
       if (node.depth < existing.depth) existing.depth = node.depth;
+      /**
+       * P0 düzeltmesi (I60): FEFO aynı fiziksel irsaliyeyi (aynı `deliveries.id`) birden fazla
+       * zincir-üyesi lota bölebilir — `stock/deliveries.ts::reserveFefo`nun kendi sözleşmesi
+       * ("FEFO birden çok lota düşerse satır bölünür, aynı deliveryId farklı lotId"). Böyle bir
+       * ikinci (üçüncü, ...) ziyarette node'u SESSİZCE atlamak yerine — ilk lotun payını KORUYARAK
+       * — ikinci lotun kendi payını `lotShares`e ekleriz ve gösterilecek toplam `qty`yi TOPLARIZ.
+       * `existing.lotId` (tekil alan) kasıtlı olarak İLK lotta kalır — geriye dönük uyumluluk.
+       */
+      if (node.kind === 'delivery' && node.lotId) {
+        if (!existing.lotShares) {
+          existing.lotShares = existing.lotId ? [{ lotId: existing.lotId, qty: existing.qty ?? '0.0000' }] : [];
+        }
+        existing.lotShares.push({ lotId: node.lotId, qty: node.qty ?? '0.0000' });
+        existing.qty = toDb(D(existing.qty).plus(D(node.qty)));
+      }
       return id;
     }
-    this.nodes.set(id, { ...node, id });
+    const lotShares = node.kind === 'delivery' && node.lotId ? [{ lotId: node.lotId, qty: node.qty ?? '0.0000' }] : (node.lotShares ?? undefined);
+    this.nodes.set(id, { ...node, id, lotShares });
     return id;
   }
   has(kind: TraceNodeKind, id: string) { return this.nodes.has(nodeId(kind, id)); }
@@ -264,15 +292,20 @@ export type RecallImpact = {
   lots: Array<{ id: string; lotNo: string; status: string | null; product: string | null; depth: number }>;
   workOrders: Array<{ id: string; docNo: string; status: string | null }>;
   /**
-   * P0 düzeltmesi (I59): `lotId` — bu sevkiyatın gerçekten taşıdığı lot. `initiate()` 'delivered'
-   * `recall_items` satırlarını artık bu alanla yazar; eskiden sabit `impact.lots[0]` kullanılıyordu.
-   * Bilinen sınırlama: aynı fiziksel irsaliyede zincirden BİRDEN FAZLA farklı lot sevk edildiyse (aynı
-   * `deliveries.id` iki ayrı lotun `traceForward` ziyaretinde düğüm olarak belirirse) `Graph.add` ilk
-   * ekleneni korur — yalnızca ilk karşılaşılan lotun id'si tutulur. Bu, recall_items'ın bugünkü
-   * tasarımıyla (sevkiyat başına TEK satır — `initiate()`'teki `for (const d of impact.deliveries)`)
-   * zaten var olan bir sınırlamadır; birincil hata (TÜM satırların kök lotu taşıması) bu turda kapandı.
+   * P0 düzeltmesi (I59): `lotId` — bu sevkiyatın gerçekten taşıdığı (İLK karşılaşılan) lot.
+   * `initiate()` 'delivered' `recall_items` satırlarını artık bu alanla yazar; eskiden sabit
+   * `impact.lots[0]` kullanılıyordu.
+   *
+   * P0 düzeltmesi (I60, `packages/db/src/checks/60_recall_delivered_item_completeness.sql`):
+   * `lotShares` — aynı fiziksel irsaliyeye (aynı `deliveries.id`) FEFO'nun BİRDEN FAZLA zincir-üyesi
+   * lotu böldüğü durumda, katkı veren HER lotun kendi payı (`{lotId, qty}`). `Graph.add()` artık bu
+   * durumda düğümü üzerine yazmak yerine paylara ekliyor (bkz. `trace.ts::Graph.add`) — eskiden
+   * ikinci (ve sonraki) lotların payı düğümde HİÇ görünmüyor, `initiate()` bu lotlar için hiçbir
+   * `recall_items` satırı üretmiyordu (I60'ın yakaladığı kayıp). `qty` (üstteki alan) TÜM payların
+   * toplamıdır; `lotId` yalnızca İLK payı yansıtır — tek-lotlu (yaygın) sevkiyatta `lotShares` tek
+   * elemanlıdır ve `lotId` ile birebir aynı bilgiyi taşır.
    */
-  deliveries: Array<{ id: string; docNo: string; status: string | null; qty: string; lotId: string | null }>;
+  deliveries: Array<{ id: string; docNo: string; status: string | null; qty: string; lotId: string | null; lotShares?: Array<{ lotId: string; qty: string }> | null }>;
   customers: Array<{ id: string; name: string }>;
   /**
    * Tur 2 P1 (kalite-geri-cagirma-id-06): zincirdeki lotlar farklı ölçü birimlerinde olabilir
@@ -297,7 +330,7 @@ export async function simulateRecall(db: DbOrTx, lotId: string, direction: 'forw
 
   const lots = new Map<string, RecallImpact['lots'][number]>();
   const wos = new Map<string, RecallImpact['workOrders'][number]>();
-  const dels = new Map<string, Omit<RecallImpact['deliveries'][number], 'lotId'> & { uom: string | null; lotId: string | null }>();
+  const dels = new Map<string, Omit<RecallImpact['deliveries'][number], 'lotId' | 'lotShares'> & { uom: string | null; lotId: string | null; lotShares: Array<{ lotId: string; qty: string }> | null }>();
   const customers = new Map<string, RecallImpact['customers'][number]>();
   let qtyInStock = ZERO;
   // Sevkiyat düğümünün kendisi (yalnızca ileri izlemede üretilir) hem toplamı hem birimini taşır —
@@ -310,7 +343,7 @@ export async function simulateRecall(db: DbOrTx, lotId: string, direction: 'forw
         const cur = lots.get(rawId);
         if (!cur || n.depth < cur.depth) lots.set(rawId, { id: rawId, lotNo: n.label, status: n.status ?? null, product: n.sub, depth: n.depth });
       } else if (n.kind === 'work_order') wos.set(rawId, { id: rawId, docNo: n.label, status: n.status ?? null });
-      else if (n.kind === 'delivery') dels.set(rawId, { id: rawId, docNo: n.label, status: n.status ?? null, qty: n.qty ?? '0.0000', uom: n.uom ?? null, lotId: n.lotId ?? null });
+      else if (n.kind === 'delivery') dels.set(rawId, { id: rawId, docNo: n.label, status: n.status ?? null, qty: n.qty ?? '0.0000', uom: n.uom ?? null, lotId: n.lotId ?? null, lotShares: n.lotShares ?? null });
       else if (n.kind === 'partner' && n.sub?.startsWith('Müşteri')) customers.set(rawId, { id: rawId, name: n.label });
     }
   }

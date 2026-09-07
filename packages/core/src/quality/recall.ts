@@ -168,17 +168,30 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
      * P0 düzeltmesi (I59, checks/59_recall_delivered_lot_identity.sql): eskiden BURADA sabit
      * `impact.lots[0]?.id` (neredeyse her zaman zincirin kök/hammadde lotu) yazılıyordu — sevkiyatın
      * GERÇEKTE taşıdığı lotla hiçbir ilgisi yoktu. `lots/trace.ts::traceForward` artık her sevkiyat
-     * düğümünü tam olarak hangi lotu ziyaret ederken ürettiğini (`d.lotId`) taşıyor — bu, tek
-     * hammadde lotundan birden fazla mamul lotu üretilip AYRI irsaliyelerle sevk edildiği (tipik
-     * üretim zinciri geri çağırması) her senaryoda doğru lotu yazar. `d.lotId` yalnızca çok eski
-     * (bu düzeltmeden önce alınmış) bir `recalls.impact` anlık görüntüsü tazelenmeden kullanılırsa
-     * boş olabilir — `initiate()` etkiyi HER ZAMAN taze hesapladığından (üstteki `traceSimulateRecall`
-     * çağrısı) bu dal pratikte tetiklenmez; kök lota geri düşüş yalnızca tip güvenliği içindir.
+     * düğümünü tam olarak hangi lotu ziyaret ederken ürettiğini (`d.lotId`) taşıyor.
+     *
+     * P0 düzeltmesi (I60, checks/60_recall_delivered_item_completeness.sql): FEFO tek bir sipariş
+     * satırını AYNI fiziksel irsaliyeye (aynı `d.id`) BİRDEN FAZLA zincir-üyesi lota bölebilir
+     * (`stock/deliveries.ts::reserveFefo`). Eskiden bu döngü irsaliye başına TEK satır yazıyordu —
+     * `trace.ts::Graph.add()` node dedup'i yüzünden `d.lotId`/`d.qty` yalnızca İLK ziyaret edilen
+     * lotu yansıtıyordu, ikinci (üçüncü, ...) lotun bu irsaliyeyle taşınan payı hiçbir `recall_items`
+     * satırına dönüşmüyordu — o lot geri çağırma kaydında/ekranında/müşteri bildiriminde TAMAMEN
+     * görünmez kalıyordu. `d.lotShares` artık AYNI irsaliyeye katkı veren HER lotun kendi payını
+     * (`{lotId, qty}`) taşıyor (bkz. `trace.ts::Graph.add`) — burada bu paylar üzerinde ikinci bir iç
+     * döngüyle gezilip HER lot için kendi gerçek `qtyDelivered` payıyla AYRI bir `recall_items` satırı
+     * yazılır (irsaliye+lot başına tek satır — şema zaten `deliveryId`+`lotId` ikilisini taşıyor, ek
+     * kolon gerekmedi). `lotShares` yalnızca çok eski (bu düzeltmeden önce alınmış, tazelenmemiş) bir
+     * `recalls.impact` anlık görüntüsünde boş olabilir — `initiate()` etkiyi HER ZAMAN taze
+     * hesapladığından (üstteki `traceSimulateRecall` çağrısı) bu dal pratikte tetiklenmez; tek-payla
+     * geri düşüş (eski I59 davranışı) yalnızca tip güvenliği/geriye dönük uyumluluk içindir.
      */
-    await tx.insert(recallItems).values({
-      recallId, lotId: d.lotId ?? impact.lots[0]?.id ?? recall.rootLotId, hop: 'delivered', depth: 0, deliveryId: d.id,
-      qtyInStock: toDb(0), qtyDelivered: toDb(d.qty), action: 'notify_customer', actionStatus: 'pending',
-    });
+    const shares = d.lotShares && d.lotShares.length > 0 ? d.lotShares : [{ lotId: d.lotId ?? impact.lots[0]?.id ?? recall.rootLotId, qty: d.qty }];
+    for (const share of shares) {
+      await tx.insert(recallItems).values({
+        recallId, lotId: share.lotId, hop: 'delivered', depth: 0, deliveryId: d.id,
+        qtyInStock: toDb(0), qtyDelivered: toDb(share.qty), action: 'notify_customer', actionStatus: 'pending',
+      });
+    }
   }
 
   /**
