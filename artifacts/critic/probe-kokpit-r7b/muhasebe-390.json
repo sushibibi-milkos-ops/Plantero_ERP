@@ -1,0 +1,95 @@
+{
+ "as": "muhasebe",
+ "vp": "390x844",
+ "bySection": {
+  "Banka": {
+   "heights": [
+    64,
+    63
+   ],
+   "lines": [
+    2
+   ],
+   "n": 3
+  },
+  "Mutabakat kuyruğu": {
+   "heights": [
+    64,
+    63
+   ],
+   "lines": [
+    3
+   ],
+   "n": 8
+  },
+  "Geciken alacak": {
+   "heights": [
+    64,
+    63
+   ],
+   "lines": [
+    3
+   ],
+   "n": 4
+  }
+ },
+ "dupes": [],
+ "colBottoms": [],
+ "colSpread": 0,
+ "rightSpread": {
+  "Banka": 0,
+  "Mutabakat kuyruğu": 0,
+  "Geciken alacak": 0
+ },
+ "secs": [
+  {
+   "t": "Banka",
+   "top": 256,
+   "bottom": 537,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "KDV pozisyonu",
+   "top": 553,
+   "bottom": 720,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Mutabakat kuyruğu",
+   "top": 736,
+   "bottom": 1293,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Geciken alacak",
+   "top": 1309,
+   "bottom": 1732,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Bugünün tahsilatları",
+   "top": 1748,
+   "bottom": 2018,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Nakit projeksiyonu (3 ay)",
+   "top": 2034,
+   "bottom": 2156,
+   "left": 16,
+   "w": 358
+  },
+  {
+   "t": "Break-even'a uzaklık",
+   "top": 2172,
+   "bottom": 2336,
+   "left": 16,
+   "w": 358
+  }
+ ]
+}

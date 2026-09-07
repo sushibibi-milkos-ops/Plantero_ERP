@@ -117,8 +117,15 @@ export function FinanceDashboardView({ data, paymentsToday }: { data: FinanceCar
                   <li key={r.id}>
                     <RowLink href="/muhasebe/mutabakat">
                       <span className="min-w-0 flex-1 truncate">{r.partnerName ?? r.counterpartyName ?? r.description}</span>
-                      <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">%{Math.round(Number(r.confidence) * 100)}</span>
-                      <MoneyCell value={r.amount} className="shrink-0" />
+                      {/* Kök neden: güven yüzdesi ilk denemede MoneyCell'den AYRI üçüncü bir doğrudan
+                          çocuk olarak eklenmişti — ROW_BASE mobilde `flex-col` olduğu için bu, satırı
+                          3 satıra (84,5px) çıkarıp modülün mobil bandını (56-72px) aşıyordu. `OverdueTop5List`
+                          (shared.tsx) ile AYNI desen: sağdaki iki alan (güven + tutar) `sm:contents` ile
+                          TEK mobil satırında gruplanır, masaüstünde düzleşip ayrı sütun olur. */}
+                      <span className="flex shrink-0 items-center justify-between gap-3 sm:contents">
+                        <span className="text-[11px] tabular-nums text-muted-foreground">%{Math.round(Number(r.confidence) * 100)}</span>
+                        <MoneyCell value={r.amount} />
+                      </span>
                     </RowLink>
                   </li>
                 ))}
