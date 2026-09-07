@@ -176,7 +176,7 @@ export async function initiate(tx: DbOrTx, recallId: string, ctx: ActorCtx): Pro
      * çağrısı) bu dal pratikte tetiklenmez; kök lota geri düşüş yalnızca tip güvenliği içindir.
      */
     await tx.insert(recallItems).values({
-      recallId, lotId: impact.lots[0]?.id ?? recall.rootLotId, hop: 'delivered', depth: 0, deliveryId: d.id,
+      recallId, lotId: d.lotId ?? impact.lots[0]?.id ?? recall.rootLotId, hop: 'delivered', depth: 0, deliveryId: d.id,
       qtyInStock: toDb(0), qtyDelivered: toDb(d.qty), action: 'notify_customer', actionStatus: 'pending',
     });
   }
