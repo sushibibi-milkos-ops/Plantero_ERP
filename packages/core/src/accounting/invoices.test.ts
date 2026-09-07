@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq, and } from 'drizzle-orm';
-import { journals, salesChannels, invoices, invoiceLines, deliveryLines, stockMoves, type Tx } from '@plantero/db';
+import { journals, salesChannels, invoices, invoiceLines, deliveryLines, stockMoves, auditLog, type Tx } from '@plantero/db';
 import { createExpensePurchaseInvoice, createCreditNote, cancelInvoice, getAging } from './invoices.js';
 import { postJournalEntry, getPartnerBalance } from './journal.js';
 import { createAndReceive } from '../stock/receipts.js';
@@ -94,6 +94,12 @@ describe('accounting/invoices — gider faturası, iade, iptal, yaşlandırma', 
       expect((await probe.bal('320', 'VUK')).toFixed(4)).toBe('-7440.0000');
       // UFRS defterine de düşmüş olmalı (ledger:'both')
       expect((await probe.bal('770', 'UFRS')).toFixed(4)).toBe('6200.0000');
+
+      // P1 regresyon (Tur 7, I17): fonksiyon kendi audit izini ÜRETİR — çağıran katmanın (seed/action)
+      // writeAudit'ine güvenilmez.
+      const audits = await tx.select().from(auditLog).where(and(eq(auditLog.tableName, 'invoices'), eq(auditLog.recordId, invoice.id)));
+      expect(audits.length).toBeGreaterThanOrEqual(1);
+      expect(audits.some((a) => a.action === 'create')).toBe(true);
     });
   });
 
@@ -126,6 +132,12 @@ describe('accounting/invoices — gider faturası, iade, iptal, yaşlandırma', 
 
       const err = await expectReject(tx, (sp) => createCreditNote(sp, { invoiceId: source.id, reason: 'tekrar' }, ctx));
       expect(String((err as Error).message)).toMatch(/zaten/);
+
+      // P1 regresyon (Tur 7, I17): `createCreditNote`'un boşluğunu kapatan hiçbir çağıran-katman
+      // workaround'u yoktu (seed onu hiç çağırmıyor) — fonksiyon kendi audit izini üretmeli.
+      const audits = await tx.select().from(auditLog).where(and(eq(auditLog.tableName, 'invoices'), eq(auditLog.recordId, note.id)));
+      expect(audits.length).toBeGreaterThanOrEqual(1);
+      expect(audits.some((a) => a.action === 'create')).toBe(true);
     });
   });
 

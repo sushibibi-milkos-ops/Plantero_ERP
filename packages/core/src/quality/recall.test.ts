@@ -140,6 +140,52 @@ describe('quality/recall', () => {
     });
   });
 
+  it("recordRecallAction('return'): müşteriden fiziksel iadeyi karantinaya postStockMove(kind='recall_return') ile taşır (Tur 7 P0 I57 kök neden düzeltmesi)", async () => {
+    await withRollback(async (tx) => {
+      const base = await seedBase(tx);
+      const lot = await createLot(tx, { productId: base.raw.id, lotNo: `RC6-${base.s}`, origin: 'receipt', unitCost: d(50), status: 'released' }, ctx);
+      await postStockMove(tx, { kind: 'receipt', productId: base.raw.id, lotId: lot.id, fromLocationId: base.loc.sup.id, toLocationId: base.loc.hamR01.id, qty: d(40), uomId: base.kg.id, unitCost: d(50), refType: 'receipt', refId: lot.id }, ctx);
+
+      // 25 kg zaten müşteriye sevk edilmiş (irsaliye 'delivered' — initiate()'in irsaliye iptal
+      // bloğu yalnızca draft/reserved/picking/picked'ı iptal eder, delivered'a dokunmaz).
+      const [delivery] = await tx
+        .insert(deliveries)
+        .values({ docNo: `DN-RETURN-${base.s}`, status: 'delivered', partnerId: base.customer.id, warehouseId: base.wh.id, origin: 'chain' })
+        .returning();
+      await tx.insert(deliveryLines).values({
+        deliveryId: delivery!.id, productId: base.raw.id, qty: '25.0000', pickedQty: '25.0000', uomId: base.kg.id,
+        lotId: lot.id, fromLocationId: base.loc.hamR01.id,
+      });
+      await postStockMove(tx, { kind: 'delivery', productId: base.raw.id, lotId: lot.id, fromLocationId: base.loc.hamR01.id, toLocationId: base.loc.cust.id, qty: d(25), uomId: base.kg.id, refType: 'delivery', refId: delivery!.id, refLineId: undefined, refNo: delivery!.docNo }, ctx);
+
+      const { recall } = await simulate(tx, { rootLotId: lot.id, direction: 'both', reason: 'Aflatoksin şüphesi' }, ctx);
+      await initiate(tx, recall.id, ctx);
+
+      const items = await tx.select().from(recallItems).where(and(eq(recallItems.recallId, recall.id), eq(recallItems.hop, 'delivered')));
+      const deliveredItem = items.find((i) => i.deliveryId === delivery!.id);
+      expect(deliveredItem).toBeTruthy();
+      expect(Number(deliveredItem!.qtyDelivered)).toBeCloseTo(25, 4);
+
+      const { stockQuants, stockMoves } = schema;
+      const before = await tx.select().from(stockQuants).where(and(eq(stockQuants.lotId, lot.id), eq(stockQuants.locationId, base.loc.kar.id)));
+      const beforeQty = before.reduce((acc, q) => acc + Number(q.qty), 0);
+
+      const updated = await recordRecallAction(tx, deliveredItem!.id, 'return', 'Müşteriden iade alındı', ctx);
+      expect(updated.actionStatus).toBe('done');
+      expect(updated.action).toBe('return');
+
+      // Fiziksel iade: karantina lokasyonunda 25 kg artmış olmalı.
+      const after = await tx.select().from(stockQuants).where(and(eq(stockQuants.lotId, lot.id), eq(stockQuants.locationId, base.loc.kar.id)));
+      const afterQty = after.reduce((acc, q) => acc + Number(q.qty), 0);
+      expect(afterQty - beforeQty).toBeCloseTo(25, 4);
+
+      // TEK stok yazma noktası: kind='recall_return', refType='recall_item', refId=item.id.
+      const moves = await tx.select().from(stockMoves).where(and(eq(stockMoves.kind, 'recall_return'), eq(stockMoves.refType, 'recall_item'), eq(stockMoves.refId, deliveredItem!.id)));
+      expect(moves.length).toBe(1);
+      expect(Number(moves[0]!.qty)).toBeCloseTo(25, 4);
+    });
+  });
+
   it('buildDraftMessage(): müşteriye giden taslak ham Decimal string basmaz (tur 1 P1 core-recall-01)', () => {
     const impact: RecallImpact = {
       lots: [], workOrders: [], deliveries: [], customers: [],

@@ -125,6 +125,11 @@ export async function createExpensePurchaseInvoice(tx: DbOrTx, input: CreateExpe
 
   await indexDocument(tx, { type: 'invoice', recordId: invoice!.id, docNo, partnerId: partner.id, status: 'posted', origin: 'manual', title: `Gider Faturası ${docNo}`, amount: grandTotal, docDate: new Date(invoiceDate) });
 
+  // P1 düzeltmesi (docs/DESIGN-SCORECARD.md Tur 7, I17): stok/muhasebe servislerindeki "core kendi
+  // kendini denetler" ilkesiyle aynı — çağıran katmanın (action/seed) audit çağrısına güvenilmez,
+  // fonksiyonun kendisi ürettiği `invoices` satırı için audit izi bırakır.
+  await writeAudit(tx, { action: 'create', tableName: 'invoices', recordId: invoice!.id, summary: `Gider faturası ${docNo}: ${partner.name} (${toDb(grandTotal)} ₺)`, after: posted }, ctx);
+
   const finalLines = await tx.select().from(invoiceLines).where(eq(invoiceLines.invoiceId, invoice!.id)).orderBy(invoiceLines.sequence);
   return { invoice: posted!, lines: finalLines };
 }
@@ -327,6 +332,12 @@ export async function createCreditNote(tx: DbOrTx, input: CreateCreditNoteInput,
 
   await linkDocuments(tx, { sourceType: 'invoice', sourceId: source.id, targetType: 'invoice', targetId: note!.id, amount: D(source.grandTotal) }, ctx);
   await indexDocument(tx, { type: 'invoice', recordId: note!.id, docNo, partnerId: partner.id, status: 'posted', origin: 'chain', title: `İade Faturası ${docNo}`, amount: D(source.grandTotal), docDate: new Date(invoiceDate) });
+
+  // P1 düzeltmesi (docs/DESIGN-SCORECARD.md Tur 7, I17): `createExpensePurchaseInvoice`'un aksine
+  // bu fonksiyonun boşluğunu kapatan hiçbir çağıran-katman workaround'u yoktu (seed hiç çağırmıyor) —
+  // stok/muhasebe servislerindeki "core kendi kendini denetler" ilkesiyle aynı, ürettiği `invoices`
+  // satırı için kendi audit izini bırakır.
+  await writeAudit(tx, { action: 'create', tableName: 'invoices', recordId: note!.id, summary: `İade faturası ${docNo}: ${partner.name} — ${input.reason} (kaynak ${source.docNo})`, after: posted }, ctx);
 
   const finalLines = await tx.select().from(invoiceLines).where(eq(invoiceLines.invoiceId, note!.id)).orderBy(invoiceLines.sequence);
   return { invoice: posted!, lines: finalLines };

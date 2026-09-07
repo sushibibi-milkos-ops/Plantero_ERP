@@ -5,7 +5,7 @@ import { nextDocNo } from '../sequences.js';
 import { writeAudit } from '../audit/index.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
 import { postStockMove } from '../stock/ledger.js';
-import { getScrapLocation, getQuarantineLocation } from '../stock/locations.js';
+import { getScrapLocation, getQuarantineLocation, getCustomersLocation } from '../stock/locations.js';
 import { simulateRecall as traceSimulateRecall, type RecallImpact } from '../lots/trace.js';
 import { notify } from '../notifications/send.js';
 import { indexDocument, linkDocuments } from '../documents/chain.js';
@@ -258,6 +258,36 @@ export async function recordRecallAction(tx: DbOrTx, itemId: string, action: Rec
   const [recall] = await tx.select().from(recalls).where(eq(recalls.id, item.recallId)).for('update');
   if (!recall) throw new NotFoundError('Geri çağırma', item.recallId);
   if (recall.status === 'closed') throw new DomainError('RECALL_CLOSED', `${recall.docNo} kapatılmış — aksiyon eklenemez`, { recallId: recall.id });
+
+  if (action === 'return' && D(item.qtyDelivered).gt(0)) {
+    /**
+     * P0 düzeltmesi (docs/DESIGN-SCORECARD.md Tur 7 — `action='return'` hiçbir `postStockMove`
+     * üretmiyordu, `destroy` dalının tersine): müşteriden fiziksel geri çağırma iadesi, `destroy`
+     * dalıyla BİREBİR aynı kalıbı izler — TEK stok yazma noktası (`postStockMove`). Kaynak sanal
+     * müşteri lokasyonu (`getCustomersLocation` — CLAUDE.md kural 3, ARCHITECTURE §6 kural 3: müşteri
+     * usage'ı sanal, quant tutulmaz, bu yüzden `INSUFFICIENT_STOCK` kontrolü burada devreye girmez),
+     * hedef ürünün sevk edildiği DEPONUN karantina lokasyonu (fiziksel mal, tekrar satılabilir hale
+     * gelmeden önce kalite tutmada kalmalı — doğrudan `internal`'a değil). `qty` bu recall_item'ın
+     * anlık görüntüsündeki `qtyDelivered` (initiate() zaten `impact.deliveries`ten bu değeri
+     * hesaplamıştı); `refType:'recall_item'` ile bu belirli aksiyona bağlanır (`recalls`'a değil —
+     * aynı recall'da birden çok delivered kalemi ayrı ayrı iade edilebilir).
+     * `accounting/mapping.ts`'teki `recall_return` eşlemesi (152 borç / 621 alacak) hazır; ek muhasebe
+     * kodu gerekmiyor.
+     */
+    const [lot] = await tx.select().from(stockLots).where(eq(stockLots.id, item.lotId)).limit(1);
+    if (!lot) throw new NotFoundError('Lot', item.lotId);
+    if (!item.deliveryId) throw new ValidationError('Bu kalemin bağlı olduğu bir sevkiyat yok; fiziksel iade işlenemedi', { itemId: item.id });
+    const [delivery] = await tx.select({ warehouseId: deliveries.warehouseId }).from(deliveries).where(eq(deliveries.id, item.deliveryId)).limit(1);
+    if (!delivery?.warehouseId) throw new NotFoundError('Sevkiyat deposu', item.deliveryId);
+
+    const customersLoc = await getCustomersLocation(tx);
+    const quarantineLoc = await getQuarantineLocation(tx, delivery.warehouseId);
+    await postStockMove(tx, {
+      kind: 'recall_return', productId: lot.productId, lotId: lot.id, fromLocationId: customersLoc.id, toLocationId: quarantineLoc.id,
+      qty: D(item.qtyDelivered), uomId: lot.uomId, refType: 'recall_item', refId: item.id, refNo: recall.docNo, origin: 'manual',
+      note: note ?? `Geri çağırma ${recall.docNo} — müşteriden fiziksel iade`,
+    }, ctx);
+  }
 
   if (action === 'destroy') {
     const [lot] = await tx.select().from(stockLots).where(eq(stockLots.id, item.lotId)).limit(1);
