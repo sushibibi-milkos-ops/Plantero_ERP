@@ -1,8 +1,8 @@
 {
  "module": "bakim",
  "round": 7,
- "note": "Tur 7 — gorsel-critic. Tur 6 sonrası builder düzeltmeleri (ad5fa7c) yeniden ölçüldü. KAPANANLAR (ölçümle doğrulandı): bakim-oee-10 — /bakim/oee @390 açılışta aktif nokta 4→0 (3/3 tekrar, hasTouch+isMobile bağlamı, scripts/probe-bakim-r7d.ts); bakim-oee-11 — \"Hat bazlı OEE\" sarmalayıcısı artık scrollbar-thin scroll-fade-x (sw 588 > cw 324 ama standart kaydırma göstergesiyle işaretli); bakim-yeni-04 — /bakim/is-emirleri/yeni @390 ölü kaydırma 338→80px, kaydırma sonunda eylem çubuğu alt gezinmenin 23px üstünde (scripts/probe-bakim-r7c.ts, artifacts/critic/bakim-r7-yeni-390-bottom.png). YENİ (P1): /bakim/is-emirleri/[id] — fotoğrafı olan iş emrinde (MO-2026-000002) \"Fotoğraflar\" kartı 1×1 px siyah PNG yer tutucusunu object-cover ile 269×269 (masaüstü) / 154×154 (390px) opak siyah kareye ölçekliyor. Tur 6 fotoğrafsız MO-2026-000006 üzerinde ölçüldüğü için görülmemişti. AÇIK KALAN P2: bakim-oee-12 (OEE trendinde en üst seri ile grafik üst kenarı arasında pay 0px — gridTop 4 = curve y 4, her iki viewport), bakim-oee-04 (KPI şeridi @390: /bakim/oee 5 karttan 2'si, /bakim/makineler 4 karttan 2'si tam görünüyor — ortak bileşen kpi-strip.tsx). Kod düzeyi tarama TEMİZ: apps/web/src/modules/maintenance + app/(app)/bakim içinde transition-all / \"transition: all\" / ease-in / duration>300ms / scale(0) / origin-* yok; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) altında. Not: görevdeki /operator rotası uygulamada yok (apps/web/src/app/(app) altında operator dizini bulunmuyor) — 1024×768 çekimi yapılamadı.",
- "measuredAt": "2026-09-07",
+ "note": "Tur 7 — gorsel-critic. Tur 6 sonrası builder düzeltmeleri (ad5fa7c) yeniden ölçüldü. KAPANANLAR (ölçümle doğrulandı): bakim-oee-10 — /bakim/oee @390 açılışta aktif nokta 4→0 (3/3 tekrar, hasTouch+isMobile bağlamı, scripts/probe-bakim-r7d.ts); bakim-oee-11 — \"Hat bazlı OEE\" sarmalayıcısı artık scrollbar-thin scroll-fade-x (sw 588 > cw 324 ama standart kaydırma göstergesiyle işaretli); bakim-yeni-04 — /bakim/is-emirleri/yeni @390 ölü kaydırma 338→80px, kaydırma sonunda eylem çubuğu alt gezinmenin 23px üstünde (scripts/probe-bakim-r7c.ts, artifacts/critic/bakim-r7-yeni-390-bottom.png). YENİ (P1): /bakim/is-emirleri/[id] — fotoğrafı olan iş emrinde (MO-2026-000002) \"Fotoğraflar\" kartı 1×1 px siyah PNG yer tutucusunu object-cover ile 269×269 (masaüstü) / 154×154 (390px) opak siyah kareye ölçekliyor. Tur 6 fotoğrafsız MO-2026-000006 üzerinde ölçüldüğü için görülmemişti. AÇIK KALAN P2: bakim-oee-12 (OEE trendinde en üst seri ile grafik üst kenarı arasında pay 0px — gridTop 4 = curve y 4, her iki viewport), bakim-oee-04 (KPI şeridi @390: /bakim/oee 5 karttan 2'si, /bakim/makineler 4 karttan 2'si tam görünüyor — ortak bileşen kpi-strip.tsx). Kod düzeyi tarama TEMİZ: apps/web/src/modules/maintenance + app/(app)/bakim içinde transition-all / \"transition: all\" / ease-in / duration>300ms / scale(0) / origin-* yok; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) altında. Not: görevdeki /operator rotası uygulamada yok (apps/web/src/app/(app) altında operator dizini bulunmuyor) — 1024×768 çekimi yapılamadı. | Tur 8 (builder düzeltmesi): bakim-isemirleri-06 (P1) kapatıldı — order-detail.tsx PhotoThumb ile naturalWidth≤8px yer tutucu fotoğraflar artık ikon döşemesi olarak gösteriliyor (img DOM'da yok). bakim-oee-12 (P2) kapatıldı — oee-charts.tsx YAxis domain'i veri maksimumunun ≥%5 üstüne alındı (topPad 0→76.5px). bakim-oee-04 (P2) AÇIK KALDI — kök neden apps/web/src/components/kpi-strip.tsx (ortak bileşen); bakım modülü yazım kapsamı dışında, sharedComponentRequest olarak raporlandı.",
+ "measuredAt": "2026-09-07 (Tur 8 düzeltme doğrulaması)",
  "routes": {
   "/bakim/makineler": {
    "round": 7,
@@ -367,18 +367,7 @@
    "verdict": "KAZANAN: Linear — toplam 59 ≥ 57 ve hiçbir kriter < 4, ama 1 açık P1 var (bakim-isemirleri-06); kazanma kuralı: açık P0/P1 yok.",
    "sampleId": "4e8faceb-c7d3-426d-a7ae-7dd20d398356 (MO-2026-000006, reported) + 9c621b3c-f7ba-4098-aa83-d6a08f60da1d (MO-2026-000003, periyodik/done)",
    "scoreNotes": "Tur 7 delta (−1): k12 5→4 — YENİ bulgu bakim-isemirleri-06. Tur 6 fotoğrafsız MO-2026-000006 üzerinde ölçülmüştü; bu tur fotoğraflı MO-2026-000002 (8ac32a70) ölçüldü ve \"Fotoğraflar (1)\" kartı 1×1 px siyah PNG yer tutucusunu object-cover ile 269×269 px opak siyah kareye (mobilde 154×154) ölçeklerken yakalandı — sayfanın en büyük tek görsel öğesi bozuk bir blok gibi okunuyor. Diğer ölçümler değişmedi: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 21/20, h1 24px/600 (mobil 20px/600), fontSizes {13:46, 12:23, 11:15} = 3 kademe, 390px'te 44px altı görünür dokunma hedefi yok, \"Boş alanları göster (9)\" ile alan gürültüsü kapalı, olay geçmişi ve belge zinciri dolu.",
-   "open": [
-    {
-     "id": "bakim-isemirleri-06",
-     "criterion": 12,
-     "severity": "P1",
-     "text": "\"Fotoğraflar\" kartı, seed'in 1×1 px siyah PNG yer tutucusunu (packages/db/src/seed/maintenance.ts:149 PLACEHOLDER_PHOTO) `aspect-square` + `object-cover` ile büyütüyor: masaüstünde 269×269, 390px'te 154×154 opak siyah kare. Sayfanın en büyük tek görsel öğesi bozuk/boş bir blok gibi görünüyor; gerçek fotoğraf ile yer tutucu arasında görsel ayrım yok.",
-     "measure": "Tur 7 @1440x900 ve @390x844 (scripts/probe-bakim-r7b.ts / probe-bakim-r7.ts, MO-2026-000002): img naturalWidth×naturalHeight = 1×1, render 269×269 (masaüstü) / 154×154 (390px), src data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB… (1×1 siyah)",
-     "target": "Yer tutucu görsel siyah kare basmasın: (a) render tarafında naturalWidth ≤ 8px olan görsel için ikon+dosya adı yer tutucu döşemesi (bg-muted, Camera 16px, 11px muted dosya adı, object-cover yok) ya da (b) seed'de gerçek boyutlu (≥ 320×320) örnek JPEG. Kabul: fotoğraf döşemesinde tek renk (siyah) piksel oranı < %90.",
-     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx:174-187 (Image fill unoptimized object-cover) + packages/db/src/seed/maintenance.ts:149 (PLACEHOLDER_PHOTO)",
-     "openedRound": 7
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "id": "bakim-isemirleri-detay-01",
@@ -533,6 +522,20 @@
      "verifiedBy": "ölçüm (pnpm shot + pnpm measure/probe-bakim-r4-skeleton/touch/qty/qty-machine.ts, Tur 4)",
      "measureAfter": "pnpm tsx scripts/probe-bakim-r4-qty-machine.ts /bakim/makineler/43e9fa1f-1fc8-4fba-bada-466b2dc2cecd (MK-011) ve probe-bakim-r4-qty.ts /bakim/is-emirleri/4c16b9fb-f6dc-4be2-8d02-e142d1523ae0 (aynı makine) → iki route'ta da 'Güç' hücresinin innerHTML'i birebir aynı: `<span class=\"num inline-flex items-baseline justify-end whitespace-nowrap\">5<span class=\"ml-1 font-sans text-[11px] text-muted-foreground\">kW</span></span>` (fark 0).",
      "fixNote": "bakim-isemirleri-detay-10 ile aynı kök neden/aynı düzeltme (order-detail.tsx üç alanı da QtyCell'e çevrildi) — iki kardeş ekran artık aynı bileşeni aynı çıktıyla kullanıyor."
+    },
+    {
+     "id": "bakim-isemirleri-06",
+     "criterion": 12,
+     "severity": "P1",
+     "text": "\"Fotoğraflar\" kartı, seed'in 1×1 px siyah PNG yer tutucusunu (packages/db/src/seed/maintenance.ts:149 PLACEHOLDER_PHOTO) `aspect-square` + `object-cover` ile büyütüyor: masaüstünde 269×269, 390px'te 154×154 opak siyah kare. Sayfanın en büyük tek görsel öğesi bozuk/boş bir blok gibi görünüyor; gerçek fotoğraf ile yer tutucu arasında görsel ayrım yok.",
+     "measure": "Tur 7 @1440x900 ve @390x844 (scripts/probe-bakim-r7b.ts / probe-bakim-r7.ts, MO-2026-000002): img naturalWidth×naturalHeight = 1×1, render 269×269 (masaüstü) / 154×154 (390px), src data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB… (1×1 siyah)",
+     "target": "Yer tutucu görsel siyah kare basmasın: (a) render tarafında naturalWidth ≤ 8px olan görsel için ikon+dosya adı yer tutucu döşemesi (bg-muted, Camera 16px, 11px muted dosya adı, object-cover yok) ya da (b) seed'de gerçek boyutlu (≥ 320×320) örnek JPEG. Kabul: fotoğraf döşemesinde tek renk (siyah) piksel oranı < %90.",
+     "file": "apps/web/src/modules/maintenance/components/order-detail.tsx:174-187 (Image fill unoptimized object-cover) + packages/db/src/seed/maintenance.ts:149 (PLACEHOLDER_PHOTO)",
+     "openedRound": 7,
+     "closedRound": 8,
+     "verifiedBy": "ölçüm (pnpm measure/probe + pnpm shot, Tur 8 — scripts/probe-bakim-r7e.ts)",
+     "measureAfter": "MO-2026-000001 (2 foto) ve MO-2026-000002 (1 foto) üzerinde yeniden ölçüldü (scripts/probe-bakim-r7e.ts): \"Fotoğraflar\" döşemesinde artık <img> hiç render edilmiyor (hasImg=false, imgNaturalW/H=null) — yer tutucu fotoğraflarda tespit (naturalWidth ≤ 8px) render anında yapılıp döşeme bg-muted zemin (oklch(0.967 0.001 286.4), opak siyah DEĞİL) + ortada 16px Camera ikonu + altında 11px text-muted-foreground dosya adı (\"ariza-mk005-1.png\" vb.) ile değiştiriliyor; gerçek bir fotoğraf yüklenirse (naturalWidth > 8px) <Image object-cover> değişmeden kalıyor. Görsel doğrulama: artifacts/screens/bakim-is-emirleri-b0a69cf5-85ed-4295-b069-412b0064436b/{desktop,mobile}.png.",
+     "fixNote": "Kök neden render tarafında düzeltildi (öneri (a)): order-detail.tsx içine PhotoThumb bileşeni eklendi — <Image onLoad> ile naturalWidth ölçülür, ≤8px ise (1×1 seed yer tutucusu ve benzeri bozuk/çok küçük dosyalar) img hiç DOM'a girmeden yerine nötr ikon döşemesi basılır. Seed'deki PLACEHOLDER_PHOTO'ya dokunulmadı — düzeltme genel: gerçek üretimde de bozuk/eksik bir fotoğraf dosyası aynı döşemeyi alır."
     }
    ]
   },
@@ -829,16 +832,6 @@
      "target": "mobilde ya 2 sütunlu ızgara (2×2+1) ya da ilk ekranda en az 3 kartın tamamı görünsün",
      "file": "apps/web/src/components/kpi-strip.tsx (ortak bileşen — kök neden shell'e ait; burada yalnızca etkisi izleniyor)",
      "openedRound": 3
-    },
-    {
-     "id": "bakim-oee-12",
-     "criterion": 5,
-     "severity": "P2",
-     "text": "OEE trendinde \"Kullanılabilirlik\" serisi (%99,6) grafiğin en üst gridline'ı ile çakışıyor: çizgi kartın üst kenarına yapışık çiziliyor, seri ile %100 gridline'ı ayrışmıyor. Y ekseni domaini `niceTicks` ile veri maksimumuna tam oturuyor, üst pay yok.",
-     "measure": "Tur 6 @1440x900 ve @390x844 (scripts/probe-bakim-r6.ts): `.recharts-area-curve` (availability) bbox y=4; en üst yatay gridline y=4 → aradaki pay 0px",
-     "target": "en üst seri ile grafik üst kenarı arasında ≥8px pay (Y domain üst sınırı veri maksimumunun ≥%5 üstüne alınır)",
-     "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx (YAxis domain / niceTicks)",
-     "openedRound": 6
     }
    ],
    "closed": [
@@ -995,6 +988,20 @@
      "verifiedBy": "ölçüm (pnpm exec tsx scripts/probe-bakim-r6.ts, Tur 7)",
      "measureAfter": "@390x844 (scripts/probe-bakim-r6.ts): sarmalayıcı artık `scrollbar-thin scroll-fade-x` taşıyor (div.scrollbar-thin.scroll-fade-x.overflow-x-auto, sw=588 cw=324 — taşma aynı ama artık uygulamanın standart kaydırma göstergesiyle işaretli, kanban-board/data-table/document-chain ile aynı desen); ekran görüntüsünde (artifacts/screens/bakim-oee/mobile.png) kart kenarında görünür bir kaydırma çubuğu var, kesik kenarda yarım glif yok (kesim yalnızca `whitespace-nowrap` sütun sınırında, kelime/karakter ortasında değil). @1440x900 tabloda taşma yok (emptyBelow 26px).",
      "fixNote": "oee/page.tsx: \"Hat bazlı OEE\" tablosunun sarmalayıcısı (`div.mt-4.overflow-x-auto`) ikiye ayrıldı — dış `div` yalnızca kart çerçevesini (rounded-xl border bg-card p-4) taşır, tabloyu saran YENİ iç `div`'e `scrollbar-thin scroll-fade-x overflow-x-auto` eklendi (varsayılan `--scroll-fade-bg: var(--card)` zaten dış kartın zeminiyle eşleşiyor, ek stil gerekmedi)."
+    },
+    {
+     "id": "bakim-oee-12",
+     "criterion": 5,
+     "severity": "P2",
+     "text": "OEE trendinde \"Kullanılabilirlik\" serisi (%99,6) grafiğin en üst gridline'ı ile çakışıyor: çizgi kartın üst kenarına yapışık çiziliyor, seri ile %100 gridline'ı ayrışmıyor. Y ekseni domaini `niceTicks` ile veri maksimumuna tam oturuyor, üst pay yok.",
+     "measure": "Tur 6 @1440x900 ve @390x844 (scripts/probe-bakim-r6.ts): `.recharts-area-curve` (availability) bbox y=4; en üst yatay gridline y=4 → aradaki pay 0px",
+     "target": "en üst seri ile grafik üst kenarı arasında ≥8px pay (Y domain üst sınırı veri maksimumunun ≥%5 üstüne alınır)",
+     "file": "apps/web/src/modules/maintenance/components/oee-charts.tsx (YAxis domain / niceTicks)",
+     "openedRound": 6,
+     "closedRound": 8,
+     "verifiedBy": "ölçüm (pnpm measure/probe, Tur 8 — scripts/probe-bakim-r7f.ts)",
+     "measureAfter": "Yeniden ölçüldü (scripts/probe-bakim-r7f.ts), her iki viewport'ta aynı: gridTop 4, minCurveY 80.5, topPad 76.5px (hedef ≥8px) @1440x900 ve @390x844 — \"Kullanılabilirlik\" serisi artık grafiğin üst kenarından belirgin şekilde ayrışıyor (bkz. artifacts/screens/bakim-oee/desktop.png).",
+     "fixNote": "oee-charts.tsx OeeTrendChart: niceTicks'e verilen değer dizisine veri maksimumunun %5 fazlası (Math.max(0, ...rawValues) * 1.05) sentetik bir üst sınır olarak eklendi — Y domain üst sınırı artık her zaman gerçek veri maksimumunun gözle görülür şekilde üstünde kalıyor, niceTicks/niceStep mantığı (packages paylaşılan değil, modül içi import) değişmedi."
     }
    ]
   }
