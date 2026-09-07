@@ -104,25 +104,14 @@
     5,
     5,
     5,
-    4,
     5,
-    4,
+    5,
+    5,
     5
    ],
-   "total": 58,
-   "scoreNotes": "Kriter 9 (mobil düzen): 5→4 — kapalı+faturalı sevkiyatın Fatura & kur sekmesindeki fatura bağlantısı 390px'te 137×19,5px (yükseklik 44 < 44) ve dokunmatikte hiçbir bağlantı işareti taşımıyor (ihracat-detay-23). Kriter 11 (tutarlılık): 5→4 — aynı sayfada iki belge bağlantısı farklı: \"Bağlı irsaliye\" DN bağlantısı text-primary + underline + min-h-11, \"İhracat faturası\" INV bağlantısı gövde rengi + alt çizgisiz + 19,5px. Diğer 10 kriter Tur 12 ile aynı: satır 36px, taşma yok, Vade 7/8 + Net/Brüt kg dolu, odak halkası 6/6 görünür, koyu tema doğrulandı. Toplam 58 (≥57) ama açık P1 nedeniyle rota kazanmıyor.",
-   "open": [
-    {
-     "id": "ihracat-detay-23",
-     "criterion": 9,
-     "severity": "P1",
-     "text": "\"Fatura & kur\" sekmesindeki \"İhracat faturası\" kartında faturaya giden TEK bağlantı (INV-…) 390px'te 137×19,5px — dikey dolgu/min-height yok — ve dokunmatik cihazda bağlantı olduğuna dair hiçbir işaret taşımıyor: rengi gövde metniyle birebir aynı (oklch(0.21 0.006 285.9)), text-decoration:none, tek işaret `hover:underline` ve o da globals.css:10 @custom-variant hover ile (hover:hover) and (pointer:fine) altında olduğundan dokunmatikte hiç tetiklenmiyor. Bu, Tur 11'de \"Bağlı irsaliye\" için kapatılan ihracat-detay-22'nin AYNI DOSYADAKİ ikizi (satır 246 düzeltilmiş, satır 162 atlanmış); bu yüzden aynı sayfada iki belge bağlantısı farklı görünüyor (kriter 11 de 4'e düştü). Yalnızca faturası olan sevkiyatta (EXP-2026-000001) render edildiği için Tur 11/12 probları (EXP-2026-000002, faturasız) bunu göremedi.",
-     "measure": "390x844 ve 1440x900, /ihracat/sevkiyatlar/<EXP-2026-000001>, \"Fatura & kur\" sekmesi — probe-ihracat-r13d.json: a[href^=\"/muhasebe/faturalar/\"] 137×19,5px, color=oklch(0.21 0.006 285.9) (= body color), textDecorationLine=none. Karşılaştırma, aynı sayfa: a[href^=\"/depo/sevkiyat/\"] 332×44px (390px), iç span color=oklch(0.55 0.16 152) + underline.",
-     "target": "Bağlantı kutusu ≥44px yükseklik (ör. `flex min-h-11 items-center`) VE hover'dan bağımsız kalıcı bağlantı işareti (ihracat-detay-22 düzeltmesiyle aynı kalıp: doküman no `text-primary underline decoration-border underline-offset-2`). Kabul ölçütü: probe-ihracat-r13d.ts ile 390px'te h ≥ 44 ve link rengi ≠ body rengi (ya da textDecorationLine=underline).",
-     "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx:162 (İhracat faturası kartındaki Link)",
-     "openedRound": 13
-    }
-   ],
+   "total": 60,
+   "scoreNotes": "Tur 13 düzeltmesi doğrulandı: ihracat-detay-23 kapatıldı (sevkiyatlar/[id]/page.tsx:162 fatura bağlantısı artık Bağlı irsaliye kalıbıyla birebir aynı — min-h-11 + text-primary + underline, 390px'te 332x44). Kriter 9 ve 11 5'e döndü, toplam 58->60. Diğer 10 kriter Tur 12/13 ile aynı: satır 36px, taşma yok, Vade 7/8 + Net/Brüt kg dolu, odak halkası 6/6, koyu tema doğrulandı.",
+   "open": [],
    "closed": [
     {
      "id": "ihracat-detay-18",
@@ -428,6 +417,18 @@
      },
      "measureAfter": "1440x900, EXP-2026-000002 (id yeniden okunarak): Çeki listesi sekmesi 'Net kg'=41,2 'Brüt kg'=43,26 (önceki: her ikisi de '—', filled=0/1); üstteki 'Proforma & gümrük' panelindeki 'Net/brüt ağırlık' alanı artık '41,2 kg / 43,26 kg' basıyor (önceki: '—/—'). EXP-2026-000001 (kapanmış): Net kg=7,5 Brüt kg=7,875. psql: export_packages.net_weight_kg/gross_weight_kg artık 2/2 satırda >0 (önceki: 0.0000, 2/2); export_shipments.net_weight_kg/gross_weight_kg her iki sevkiyatta da >0 (önceki: 0.0000/NULL). Kök neden gerçek eksik referans veridir (products.weight_kg Excel importunda taşınmıyor, masterdata seed bu modülün dosya sınırı DIŞINDA) — packages/core/src/export/shipments.ts::buildPackingList DOĞRU çalışıyor (0×qty=0), değiştirilmedi. Düzeltme KENDİ yazma alanında (export_packages/export_shipments): packages/db/src/seed/export.ts::fillPackageWeights, buildPackingList'İN AYNI ambalaj payı formülünü (brüt=net×1,05) koruyarak, sevk edilen SKU'ların ambalaj tipinden türetilmiş gerçekçi birim net ağırlıkla (UNIT_NET_WEIGHT_KG) satır satır geriye dönük patch eder — postStockMove/postJournalEntry'ye dokunmadan, yalnızca bu iki alan güncellenir. pnpm db:check: I52 (export_package_lot_integrity) dahil 60/60 kural YEŞİL. Ekran kanıtı: artifacts/critic/ihracat-r11-tmp-ceki.png.",
      "closedRound": 11
+    },
+    {
+     "id": "ihracat-detay-23",
+     "criterion": 9,
+     "severity": "P1",
+     "text": "\"Fatura & kur\" sekmesindeki \"İhracat faturası\" kartında faturaya giden TEK bağlantı (INV-…) 390px'te 137×19,5px — dikey dolgu/min-height yok — ve dokunmatik cihazda bağlantı olduğuna dair hiçbir işaret taşımıyor: rengi gövde metniyle birebir aynı (oklch(0.21 0.006 285.9)), text-decoration:none, tek işaret `hover:underline` ve o da globals.css:10 @custom-variant hover ile (hover:hover) and (pointer:fine) altında olduğundan dokunmatikte hiç tetiklenmiyor. Bu, Tur 11'de \"Bağlı irsaliye\" için kapatılan ihracat-detay-22'nin AYNI DOSYADAKİ ikizi (satır 246 düzeltilmiş, satır 162 atlanmış); bu yüzden aynı sayfada iki belge bağlantısı farklı görünüyor (kriter 11 de 4'e düştü). Yalnızca faturası olan sevkiyatta (EXP-2026-000001) render edildiği için Tur 11/12 probları (EXP-2026-000002, faturasız) bunu göremedi.",
+     "measure": "390x844 ve 1440x900, /ihracat/sevkiyatlar/<EXP-2026-000001>, \"Fatura & kur\" sekmesi — probe-ihracat-r13d.json: a[href^=\"/muhasebe/faturalar/\"] 137×19,5px, color=oklch(0.21 0.006 285.9) (= body color), textDecorationLine=none. Karşılaştırma, aynı sayfa: a[href^=\"/depo/sevkiyat/\"] 332×44px (390px), iç span color=oklch(0.55 0.16 152) + underline.",
+     "target": "Bağlantı kutusu ≥44px yükseklik (ör. `flex min-h-11 items-center`) VE hover'dan bağımsız kalıcı bağlantı işareti (ihracat-detay-22 düzeltmesiyle aynı kalıp: doküman no `text-primary underline decoration-border underline-offset-2`). Kabul ölçütü: probe-ihracat-r13d.ts ile 390px'te h ≥ 44 ve link rengi ≠ body rengi (ya da textDecorationLine=underline).",
+     "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx:162 (İhracat faturası kartındaki Link)",
+     "openedRound": 13,
+     "measureAfter": "390x844 ve 1440x900, /ihracat/sevkiyatlar/EXP-2026-000001, \"Fatura & kur\" sekmesi — probe-ihracat-r13d.json (yeniden çalıştırıldı, Tur 13 düzeltmesi sonrası): a[href^=\"/muhasebe/faturalar/\"] (INV-2026-000012) artık 390px'te 332x44px (yükseklik 44, önceki 137x19,5), 1440px'te 542x44px; iç span color=oklch(0.55 0.16 152) (Bağlı irsaliye ile BİREBİR aynı yeşil) + textDecorationLine=underline (kalıcı, hover'a bağlı değil) — body rengi oklch(0.21 0.006 285.9) ile artık aynı DEĞİL. Kabul ölçütü karşılandı: h>=44 VE renk != body VE underline. sevkiyatlar/[id]/page.tsx:162 satırındaki Link, satır 244-250'deki \"Bağlı irsaliye\" kalıbıyla (-mx-1 flex min-h-11 items-center gap-2 rounded-md px-1 font-mono text-[13px] hover:bg-accent/40 + iç span text-primary underline decoration-border underline-offset-2) birebir aynı hale getirildi. Ekran görüntüsü: artifacts/critic/ihracat-r13-fatura-{390,1440}.png.",
+     "closedRound": 13
     }
    ]
   },
