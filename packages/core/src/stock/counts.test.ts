@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { stockQuants, approvals, stockCounts } from '@plantero/db';
+import { stockQuants, approvals, stockCounts, stockCountLines } from '@plantero/db';
 import { createCount, snapshotCount, recordCount, submitReview, approveCount, postCount, cancelCount } from './counts.js';
 import { rejectQueueItem } from '../notifications/approvals/dispatch.js';
 import { receiveRawHelper } from './__test-utils__.js';
@@ -134,6 +134,42 @@ describe('stock/counts', () => {
         postedCancelErr = e;
       }
       expect((postedCancelErr as DomainError).code).toBe('COUNT_ALREADY_POSTED');
+    });
+  });
+
+  it('postCount: varyanslı VE varyanssız satırların ikisi de is_approved=true olarak işaretlenir (Tur 13 P2 kök neden düzeltmesi)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      // İki ayrı lot, iki ayrı lokasyon — biri sayımda fark verecek, diğeri tam tutacak.
+      await receiveRawHelper(tx, b, 'CNT-5A', '100', '10', { toLocationId: b.loc.hamR01.id, status: 'released' });
+      await receiveRawHelper(tx, b, 'CNT-5B', '50', '10', { toLocationId: b.loc.hamR02.id, status: 'released' });
+
+      const count = await createCount(tx, { warehouseId: b.wh.id, scopeLocationId: b.loc.ham.id, countDate: new Date() }, ctx);
+      const snap = await snapshotCount(tx, count.id, ctx);
+      expect(snap.lines).toHaveLength(2);
+
+      const varyansliLine = snap.lines.find((l) => l.systemQty === '100.0000')!;
+      const varyanssizLine = snap.lines.find((l) => l.systemQty === '50.0000')!;
+
+      // Önce satırlar (postCount'tan önce) hiçbir zaman onaylı olamaz — snapshot anında default false.
+      expect(varyansliLine.isApproved).toBe(false);
+      expect(varyanssizLine.isApproved).toBe(false);
+
+      await recordCount(tx, { countId: count.id, lineId: varyansliLine.id, countedQty: d(97) }, ctx); // fark: -3
+      await recordCount(tx, { countId: count.id, lineId: varyanssizLine.id, countedQty: d(50) }, ctx); // fark: 0
+      await submitReview(tx, count.id, ctx);
+      await approveCount(tx, count.id, ctx);
+      const posted = await postCount(tx, count.id, ctx);
+      expect(posted.count.status).toBe('posted');
+
+      const finalLines = await tx.select().from(stockCountLines).where(eq(stockCountLines.countId, count.id));
+      const finalVaryansli = finalLines.find((l) => l.id === varyansliLine.id)!;
+      const finalVaryanssiz = finalLines.find((l) => l.id === varyanssizLine.id)!;
+      // Varyanslı satır (count_loss hareketi üretir) onaylı işaretlenir — önceki davranışta da doğruydu.
+      expect(finalVaryansli.isApproved).toBe(true);
+      // Kök neden düzeltmesi: varyanssız satır (hiç stok hareketi üretmez) da artık onaylı işaretlenir —
+      // önceki davranışta bu satır sonsuza kadar is_approved=false kalıyordu.
+      expect(finalVaryanssiz.isApproved).toBe(true);
     });
   });
 });

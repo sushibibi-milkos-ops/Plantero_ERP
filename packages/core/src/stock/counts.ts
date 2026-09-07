@@ -206,8 +206,13 @@ export async function postCount(tx: DbOrTx, countId: string, ctx: ActorCtx): Pro
         qty: variance.abs(), uomId: product.uomId, unitCost: D(line.unitCost), refType: 'stock_count', refId: countId, refLineId: line.id, refNo: count.docNo, origin: 'manual', movedAt,
       }, ctx);
     }
-    await tx.update(stockCountLines).set({ isApproved: true }).where(eq(stockCountLines.id, line.id));
   }
+  // Tur 13 P2 düzeltmesi: is_approved artık yalnızca varyanslı satırlarda değil, sayım
+  // 'posted' durumuna geçtiğinde İNCELENMİŞ/ONAYLANMIŞ tüm satırlarda (varyans=0 dahil) set
+  // edilir — alanın anlamı "bu satır kayıt anında onaylı sayım sürecinin parçasıydı"dır, "bu
+  // satırda stok hareketi üretildi" değil. Önceki davranış varyanssız satırları sonsuza kadar
+  // isApproved=false bırakıyordu (kök neden: hareket üretimiyle aynı if bloğuna bağımlıydı).
+  await tx.update(stockCountLines).set({ isApproved: true }).where(eq(stockCountLines.countId, countId));
 
   const [updated] = await tx.update(stockCounts).set({ status: 'posted', postedAt: movedAt, updatedBy: ctx.userId ?? null }).where(eq(stockCounts.id, countId)).returning();
   await indexDocument(tx, { type: 'stock_count', recordId: countId, docNo: count.docNo, status: 'posted', origin: 'manual', title: `Sayım ${count.docNo}`, docDate: movedAt });
