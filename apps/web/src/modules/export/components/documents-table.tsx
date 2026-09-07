@@ -111,7 +111,7 @@ export function DocumentsTable({
       { id: 'status', accessorFn: (r) => r.status, header: 'Durum', meta: { width: showShipmentColumn ? 130 : 110, mobile: 'badge' }, cell: ({ getValue }) => <StatusBadge status={getValue<string>()} kind="export_doc" /> },
       {
         accessorKey: 'docNo', header: 'Belge no',
-        meta: { width: showShipmentColumn ? 140 : 130, mobile: 'hidden', ...(showShipmentColumn ? sparseDefault : {}) },
+        meta: { width: showShipmentColumn ? 140 : 100, mobile: 'hidden', ...(showShipmentColumn ? sparseDefault : {}) },
         cell: ({ getValue }) => getValue<string | null>() || <span className="text-muted-foreground">—</span>,
       },
       // `mobile: 'meta'` (Tur 1 P1, ihracat-belgeler-02 kök neden): önceden bu sütun mobil kartta
@@ -152,6 +152,7 @@ export function DocumentsTable({
         // Belge no/Vade varsayılan görünür yapılıp (5 gerçek sütun artık 1152px'i orantılı
         // dolduruyor) BU KİLİT KALDIRILDI — DataTable yine kapsayıcıyı dolduruyor, ama artık
         // dolduracak gerçek sütun sayısı yeterli.
+        className={!showShipmentColumn ? '[&_table]:!table-fixed' : undefined}
         emptyTitle="Belge yok"
         emptyDescription="Sevkiyat oluşturulunca rejime göre belge takip listesi otomatik kurulur."
         // Sevkiyat detayının KENDİ Belgeler sekmesinde (showShipmentColumn=false) özel kart — Tur 2 P1

@@ -128,7 +128,16 @@ function MetaChain({ items, leadingSeparator }: { items: { key: string; node: Re
             else itemRefs.current.delete(it.key);
           }}
         >
-          {leadingSeparator || i > 0 ? <span aria-hidden className="text-muted-foreground/40"> · </span> : null}
+          {/* Kök neden (shell-mobile-card-meta-sep-space-01 / shell-mobile-card-meta-gap-01 /
+              shell-mobcard-separator-gap-01, kriter 1/11 — üç farklı modül turunda AYNI kusur ayrı
+              ayrı bulunmuş): ayraç METİN içindeki BAŞTAKİ boşluk (" · ") bu span kendi flex bağlamının
+              (satır-2 sarmalayıcısı) ilk/tek satırlık inline akışının EN BAŞINDA olduğunda CSS beyaz-
+              boşluk işlemesiyle çöküyordu (satır başı/sonu boşlukları her zaman sıfır genişliğe iner) —
+              sağdaki boşluk METNİN ORTASINDA kaldığı için çökmüyor, yalnızca SOL taraf asimetrik
+              basılıyordu ("…Protein· v1"). Metin boşluğu yerine gerçek CSS kutusu (`mx-1`) kullanılır:
+              iki yanı da düzen kutusuyla (whitespace collapse'a tabi olmayan margin) ayrılır, ayraç
+              karakteri kendisi tek başına ortalanır. */}
+          {leadingSeparator || i > 0 ? <span aria-hidden className="mx-1 text-muted-foreground/40">·</span> : null}
           {it.node}
         </span>
       ))}
@@ -286,7 +295,16 @@ export function DataTableMobileCards<T>({
                     İki alt kutuya ayrılmış (Tur 16): alt başlık KÜÇÜLÜR, meta bit'leri KÜÇÜLMEZ. */}
                 <div className="mobile-card-subtitle-row flex min-w-0 flex-1 items-baseline text-xs text-muted-foreground">
                   {subtitle ? (
-                    <span className="min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap">
+                    // Kök neden (shell-mobile-card-subtitle-ellipsis-01, kriter 5): `text-ellipsis`
+                    // yalnızca bu span'ın KENDİ metin akışını keser — hücre `flexRender` ile bir BLOK
+                    // öğe (ör. `<div>`) basıyorsa (ör. bakim/makineler "Makine" hücresi, ad+kategori
+                    // için `<div><div>ad</div>…</div>`) tarayıcı taşan metni "…" OLMADAN sert kesiyordu
+                    // (scrollWidth>clientWidth ama görünürde üç nokta yok). `[&>*]:truncate` doğrudan
+                    // çocuğa da aynı kırpma kuralını zorlar — ama YALNIZCA kendi çok-satırlı kırpmasını
+                    // (line-clamp + whitespace-normal, ör. bakim/orders-table.tsx "Başlık") taşımayan
+                    // çocuklarda: `:not([class*="line-clamp"])` o kasıtlı, kendi kendine yeten deseni
+                    // ezmez (aksi halde `whitespace-nowrap` o span'ın `whitespace-normal`ıyla çakışırdı).
+                    <span className="min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap [&>*]:min-w-0 [&>*]:max-w-full [&>*:not([class*='line-clamp'])]:truncate">
                       {flexRender(subtitle.column.columnDef.cell, subtitle.getContext())}
                     </span>
                   ) : null}

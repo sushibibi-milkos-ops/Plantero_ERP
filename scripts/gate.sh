@@ -24,6 +24,17 @@
 #      `apps/web/tsconfig.json` "include" alanını aynı anda güncelleyip birbirinin build'ini
 #      yarıda bozabilir (gözlemlenen gerçek çakışma: "ENOENT ... pages-manifest.json").
 #      Kilit bunu tamamen önler; ikinci koşu ilkinin bitmesini bekler, çakışmaz.
+#   6) (P2 düzeltmesi) `db:check` de kök package.json'da AYNI `/tmp/plantero-gate-build.lock`
+#      flock'unu paylaşır (`db:reset` gibi) — önceden yalnızca `db:reset` bu kilidi bekliyordu,
+#      `db:check` beklemiyordu: bir ajanın `db:reset`'i (drop+push+seed) TAM başka bir ajanın
+#      `db:check`'i çalışırken tetiklenirse check TÜM kurallarda "relation ... does not exist"
+#      ile patlıyordu (gözlemlenen gerçek çakışma — kalıcı bir bütünlük kusuru DEĞİL, yalnızca
+#      gözlem penceresi çakışması). İki script de artık aynı kilidi ALIP BIRAKTIĞI için (her
+#      `flock <lock> <komut>` çağrısı kendi ömrü boyunca tutar, komut bitince serbest bırakır)
+#      reset ve check asla aynı anda başka bir oturumla iç içe geçmez — art arda gelen iki
+#      `pnpm db:reset && pnpm db:check` çağrısı (aynı ajan, satır 32-33) birbirini ETKİLEMEZ
+#      (aynı oturumun ardışık, çakışmayan iki kilit alışı), yalnızca FARKLI ajanların eşzamanlı
+#      reset/check'i artık sıraya girer.
 set -uo pipefail
 GREP=${1:-phase1}; L=${2:-/tmp/plantero-gate}; mkdir -p "$L"
 cd "$(dirname "$0")/.."
