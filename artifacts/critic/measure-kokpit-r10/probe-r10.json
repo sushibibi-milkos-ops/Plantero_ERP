@@ -1,0 +1,2375 @@
+{
+  "admin-1440": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Günlük kanal satışları",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 420.5,
+        "left": 264
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 600,
+        "left": 264
+      },
+      {
+        "title": "Bugün",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1105,
+        "left": 264
+      },
+      {
+        "title": "Onay kuyruğu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1226.5,
+        "left": 264
+      },
+      {
+        "title": "Son aktiviteler",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1615.5,
+        "left": 264
+      },
+      {
+        "title": "Banka",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 488,
+        "left": 848
+      },
+      {
+        "title": "Üretim hatları",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 709.5,
+        "left": 848
+      },
+      {
+        "title": "Kritik stok",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 926.5,
+        "left": 848
+      },
+      {
+        "title": "SKT riski",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1253,
+        "left": 848
+      },
+      {
+        "title": "Geciken alacak",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1538.5,
+        "left": 848
+      }
+    ],
+    "sectionCount": 10,
+    "rows": {
+      "n": 33,
+      "min": 40,
+      "max": 54.5,
+      "heights": [
+        40,
+        44,
+        52.5,
+        54.5
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 74,
+      "nonTab": 6,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Genel Müdür",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "%0,2 tamamlandı",
+          "fs": "11px",
+          "cls": ""
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 gerekiyor",
+          "fs": "11px",
+          "cls": ""
+        },
+        {
+          "t": "· 2 kez",
+          "fs": "13px",
+          "cls": "text-muted-foreground"
+        },
+        {
+          "t": "· 2 kez",
+          "fs": "13px",
+          "cls": "text-muted-foreground"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fs": "11px",
+          "cls": "shrink-0"
+        }
+      ]
+    },
+    "badges": {
+      "n": 11,
+      "filled": 11,
+      "unfilled": 0,
+      "list": [
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kalite bekliyor",
+          "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+          "color": "oklch(0.5 0.14 70)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Üretimde",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [
+      {
+        "title": "Üretim hatları",
+        "svg": 1,
+        "buttons": 4,
+        "h": 205.5
+      },
+      {
+        "title": "Kritik stok",
+        "svg": 3,
+        "buttons": 2,
+        "h": 201
+      }
+    ],
+    "rightEdges": [
+      {
+        "title": "Günlük kanal satışları",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Bugün",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Onay kuyruğu",
+        "pads": [
+          1,
+          9
+        ]
+      },
+      {
+        "title": "Son aktiviteler",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Banka",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Üretim hatları",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Kritik stok",
+        "pads": [
+          1
+        ]
+      },
+      {
+        "title": "SKT riski",
+        "pads": [
+          1,
+          9,
+          17
+        ]
+      },
+      {
+        "title": "Geciken alacak",
+        "pads": [
+          1,
+          9,
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 264,
+          "bottom": 1615.5,
+          "n": 5
+        },
+        {
+          "left": 848,
+          "bottom": 1538.5,
+          "n": 5
+        }
+      ],
+      "diff": 77
+    },
+    "zeros": [
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "€0,00",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "num inline-block text-right whitespace-nowrap text"
+      },
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      }
+    ],
+    "fontSizes": {
+      "12px": 31,
+      "24px": 1,
+      "14px": 2,
+      "13px": 74,
+      "15px": 13,
+      "11px": 21,
+      "10px": 12
+    }
+  },
+  "admin-390": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Günlük kanal satışları",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 400.5,
+        "left": 16
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 580,
+        "left": 16
+      },
+      {
+        "title": "Bugün",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1149,
+        "left": 16
+      },
+      {
+        "title": "Onay kuyruğu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1332,
+        "left": 16
+      },
+      {
+        "title": "Son aktiviteler",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1881,
+        "left": 16
+      },
+      {
+        "title": "Banka",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 2178,
+        "left": 16
+      },
+      {
+        "title": "Üretim hatları",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 2435.5,
+        "left": 16
+      },
+      {
+        "title": "Kritik stok",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 2704.5,
+        "left": 16
+      },
+      {
+        "title": "SKT riski",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 3210,
+        "left": 16
+      },
+      {
+        "title": "Geciken alacak",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 3649,
+        "left": 16
+      }
+    ],
+    "sectionCount": 10,
+    "rows": {
+      "n": 33,
+      "min": 44,
+      "max": 64.5,
+      "heights": [
+        44,
+        60,
+        62.5,
+        63,
+        63.5,
+        64.5
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 75,
+      "nonTab": 7,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Genel Müdür",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "%0,2 tamamlandı",
+          "fs": "11px",
+          "cls": ""
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 gerekiyor",
+          "fs": "11px",
+          "cls": ""
+        },
+        {
+          "t": "· 16 kez",
+          "fs": "13px",
+          "cls": "text-muted-foreground"
+        },
+        {
+          "t": "· 2 kez",
+          "fs": "13px",
+          "cls": "text-muted-foreground"
+        },
+        {
+          "t": "· 2 kez",
+          "fs": "13px",
+          "cls": "text-muted-foreground"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fs": "11px",
+          "cls": "shrink-0"
+        }
+      ]
+    },
+    "badges": {
+      "n": 11,
+      "filled": 11,
+      "unfilled": 0,
+      "list": [
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kalite bekliyor",
+          "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+          "color": "oklch(0.5 0.14 70)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Üretimde",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [
+      {
+        "title": "Üretim hatları",
+        "svg": 1,
+        "buttons": 4,
+        "h": 241.5
+      },
+      {
+        "title": "Kritik stok",
+        "svg": 3,
+        "buttons": 2,
+        "h": 253
+      }
+    ],
+    "rightEdges": [
+      {
+        "title": "Günlük kanal satışları",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Bugün",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Onay kuyruğu",
+        "pads": [
+          1,
+          9,
+          10
+        ]
+      },
+      {
+        "title": "Son aktiviteler",
+        "pads": [
+          1,
+          17,
+          18.4
+        ]
+      },
+      {
+        "title": "Banka",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Üretim hatları",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Kritik stok",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "SKT riski",
+        "pads": [
+          1,
+          9,
+          10,
+          17
+        ]
+      },
+      {
+        "title": "Geciken alacak",
+        "pads": [
+          1,
+          9,
+          10,
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 16,
+          "bottom": 3649,
+          "n": 10
+        }
+      ],
+      "diff": 0
+    },
+    "zeros": [
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "€0,00",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "num inline-block text-right whitespace-nowrap text"
+      },
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      }
+    ],
+    "fontSizes": {
+      "12px": 31,
+      "20px": 1,
+      "14px": 2,
+      "13px": 75,
+      "15px": 13,
+      "11px": 21,
+      "10px": 12
+    }
+  },
+  "depo-1440": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Karantina",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 529,
+        "left": 264
+      },
+      {
+        "title": "SKT riski",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 586.5,
+        "left": 848
+      },
+      {
+        "title": "Bugün",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1057.5,
+        "left": 264
+      }
+    ],
+    "sectionCount": 3,
+    "rows": {
+      "n": 20,
+      "min": 40,
+      "max": 44,
+      "heights": [
+        40,
+        44
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 40,
+      "nonTab": 2,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Depo özeti",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "4 lot bekliyor",
+          "fs": "13px",
+          "cls": "text-muted-foreground"
+        }
+      ]
+    },
+    "badges": {
+      "n": 10,
+      "filled": 10,
+      "unfilled": 0,
+      "list": [
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kalite bekliyor",
+          "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+          "color": "oklch(0.5 0.14 70)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [],
+    "rightEdges": [
+      {
+        "title": "Karantina",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "SKT riski",
+        "pads": [
+          1,
+          9,
+          17
+        ]
+      },
+      {
+        "title": "Bugün",
+        "pads": [
+          1,
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 264,
+          "bottom": 1057.5,
+          "n": 2
+        },
+        {
+          "left": 848,
+          "bottom": 586.5,
+          "n": 1
+        }
+      ],
+      "diff": 471
+    },
+    "zeros": [
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      }
+    ],
+    "fontSizes": {
+      "12px": 34,
+      "24px": 1,
+      "14px": 1,
+      "13px": 34,
+      "15px": 4,
+      "10px": 4,
+      "11px": 9
+    }
+  },
+  "depo-390": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Karantina",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 601,
+        "left": 16
+      },
+      {
+        "title": "SKT riski",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1106.5,
+        "left": 16
+      },
+      {
+        "title": "Bugün",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1802.5,
+        "left": 16
+      }
+    ],
+    "sectionCount": 3,
+    "rows": {
+      "n": 20,
+      "min": 44,
+      "max": 63.5,
+      "heights": [
+        44,
+        62.5,
+        63,
+        63.5
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 40,
+      "nonTab": 2,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Depo özeti",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "4 lot bekliyor",
+          "fs": "13px",
+          "cls": "text-muted-foreground"
+        }
+      ]
+    },
+    "badges": {
+      "n": 10,
+      "filled": 10,
+      "unfilled": 0,
+      "list": [
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kalite bekliyor",
+          "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+          "color": "oklch(0.5 0.14 70)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Tamamlandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [],
+    "rightEdges": [
+      {
+        "title": "Karantina",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "SKT riski",
+        "pads": [
+          1,
+          9,
+          10,
+          17
+        ]
+      },
+      {
+        "title": "Bugün",
+        "pads": [
+          1,
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 16,
+          "bottom": 1802.5,
+          "n": 3
+        }
+      ],
+      "diff": 0
+    },
+    "zeros": [
+      {
+        "t": "0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      }
+    ],
+    "fontSizes": {
+      "12px": 34,
+      "20px": 1,
+      "14px": 1,
+      "13px": 34,
+      "15px": 4,
+      "10px": 4,
+      "11px": 9
+    }
+  },
+  "muhasebe-1440": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Banka",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 488,
+        "left": 264
+      },
+      {
+        "title": "KDV pozisyonu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 609.5,
+        "left": 264
+      },
+      {
+        "title": "Mutabakat kuyruğu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 998.5,
+        "left": 264
+      },
+      {
+        "title": "Geciken alacak",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 545.5,
+        "left": 848
+      },
+      {
+        "title": "Bugünün tahsilatları",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 743,
+        "left": 848
+      },
+      {
+        "title": "Nakit projeksiyonu (3 ay)",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 881.5,
+        "left": 848
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1061,
+        "left": 848
+      }
+    ],
+    "sectionCount": 7,
+    "rows": {
+      "n": 16,
+      "min": 40,
+      "max": 44,
+      "heights": [
+        40,
+        44
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 57,
+      "nonTab": 4,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Muhasebe / ",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "Nakit projeksiyonu (3 ay)",
+          "fs": "13px",
+          "cls": "text-[13px] font-semibold"
+        },
+        {
+          "t": "%0,2 tamamlandı",
+          "fs": "11px",
+          "cls": ""
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 gerekiyor",
+          "fs": "11px",
+          "cls": ""
+        }
+      ]
+    },
+    "badges": {
+      "n": 0,
+      "filled": 0,
+      "unfilled": 0,
+      "list": []
+    },
+    "empties": [
+      {
+        "title": "Bugünün tahsilatları",
+        "svg": 3,
+        "buttons": 2,
+        "h": 181.5
+      }
+    ],
+    "rightEdges": [
+      {
+        "title": "Banka",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "KDV pozisyonu",
+        "pads": [
+          1,
+          9
+        ]
+      },
+      {
+        "title": "Mutabakat kuyruğu",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Geciken alacak",
+        "pads": [
+          1,
+          9,
+          17
+        ]
+      },
+      {
+        "title": "Bugünün tahsilatları",
+        "pads": [
+          1
+        ]
+      },
+      {
+        "title": "Nakit projeksiyonu (3 ay)",
+        "pads": [
+          1,
+          9
+        ]
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "pads": [
+          1,
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 264,
+          "bottom": 998.5,
+          "n": 3
+        },
+        {
+          "left": 848,
+          "bottom": 1061,
+          "n": 4
+        }
+      ],
+      "diff": 62.5
+    },
+    "zeros": [
+      {
+        "t": "€0,00",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "num inline-block text-right whitespace-nowrap text"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      }
+    ],
+    "fontSizes": {
+      "12px": 10,
+      "24px": 1,
+      "14px": 2,
+      "13px": 45,
+      "10px": 14,
+      "15px": 10,
+      "11px": 10
+    }
+  },
+  "muhasebe-390": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Banka",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 537,
+        "left": 16
+      },
+      {
+        "title": "KDV pozisyonu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 720,
+        "left": 16
+      },
+      {
+        "title": "Mutabakat kuyruğu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1293,
+        "left": 16
+      },
+      {
+        "title": "Geciken alacak",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1732,
+        "left": 16
+      },
+      {
+        "title": "Bugünün tahsilatları",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1981.5,
+        "left": 16
+      },
+      {
+        "title": "Nakit projeksiyonu (3 ay)",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 2120,
+        "left": 16
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 2299.5,
+        "left": 16
+      }
+    ],
+    "sectionCount": 7,
+    "rows": {
+      "n": 16,
+      "min": 44,
+      "max": 63,
+      "heights": [
+        44,
+        63
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 57,
+      "nonTab": 4,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Muhasebe / ",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "Nakit projeksiyonu (3 ay)",
+          "fs": "13px",
+          "cls": "text-[13px] font-semibold"
+        },
+        {
+          "t": "%0,2 tamamlandı",
+          "fs": "11px",
+          "cls": ""
+        },
+        {
+          "t": "23 gün kaldı · günlük ₺67.689 gerekiyor",
+          "fs": "11px",
+          "cls": ""
+        }
+      ]
+    },
+    "badges": {
+      "n": 0,
+      "filled": 0,
+      "unfilled": 0,
+      "list": []
+    },
+    "empties": [
+      {
+        "title": "Bugünün tahsilatları",
+        "svg": 3,
+        "buttons": 2,
+        "h": 233.5
+      }
+    ],
+    "rightEdges": [
+      {
+        "title": "Banka",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "KDV pozisyonu",
+        "pads": [
+          1,
+          9,
+          10
+        ]
+      },
+      {
+        "title": "Mutabakat kuyruğu",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Geciken alacak",
+        "pads": [
+          1,
+          9,
+          10,
+          17
+        ]
+      },
+      {
+        "title": "Bugünün tahsilatları",
+        "pads": [
+          1
+        ]
+      },
+      {
+        "title": "Nakit projeksiyonu (3 ay)",
+        "pads": [
+          1,
+          9
+        ]
+      },
+      {
+        "title": "Break-even'a uzaklık",
+        "pads": [
+          1,
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 16,
+          "bottom": 2299.5,
+          "n": 7
+        }
+      ],
+      "diff": 0
+    },
+    "zeros": [
+      {
+        "t": "€0,00",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "num inline-block text-right whitespace-nowrap text"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      },
+      {
+        "t": "₺0",
+        "color": "oklab(0.552 0.00438335 -0.0153879 / 0.7)",
+        "cls": "text-[15px] font-semibold tabular-nums text-muted-"
+      }
+    ],
+    "fontSizes": {
+      "12px": 10,
+      "20px": 1,
+      "14px": 2,
+      "13px": 45,
+      "10px": 14,
+      "15px": 10,
+      "11px": 10
+    }
+  },
+  "satis-1440": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Satış hunisi",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 448,
+        "left": 264
+      },
+      {
+        "title": "En çok satan 5 (son 30 gün)",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 526,
+        "left": 848
+      },
+      {
+        "title": "Son siparişler",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 997,
+        "left": 264
+      }
+    ],
+    "sectionCount": 3,
+    "rows": {
+      "n": 15,
+      "min": 40,
+      "max": 40,
+      "heights": [
+        40
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 47,
+      "nonTab": 3,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Satış özeti",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "En çok satan 5 (son 30 gün)",
+          "fs": "13px",
+          "cls": "text-[13px] font-semibold"
+        },
+        {
+          "t": "Badem İçeceği 1 Litrelik UHT",
+          "fs": "13px",
+          "cls": "min-w-0 flex-1 truncate"
+        }
+      ]
+    },
+    "badges": {
+      "n": 10,
+      "filled": 10,
+      "unfilled": 0,
+      "list": [
+        {
+          "t": "Sipariş onaylı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Faturalandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Faturalandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Faturalandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [],
+    "rightEdges": [
+      {
+        "title": "Satış hunisi",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "En çok satan 5 (son 30 gün)",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Son siparişler",
+        "pads": [
+          1,
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 264,
+          "bottom": 997,
+          "n": 2
+        },
+        {
+          "left": 848,
+          "bottom": 526,
+          "n": 1
+        }
+      ],
+      "diff": 471
+    },
+    "zeros": [],
+    "fontSizes": {
+      "12px": 38,
+      "24px": 1,
+      "14px": 1,
+      "13px": 33,
+      "11px": 5
+    }
+  },
+  "satis-390": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Satış hunisi",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 428,
+        "left": 16
+      },
+      {
+        "title": "En çok satan 5 (son 30 gün)",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 809,
+        "left": 16
+      },
+      {
+        "title": "Son siparişler",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1505,
+        "left": 16
+      }
+    ],
+    "sectionCount": 3,
+    "rows": {
+      "n": 15,
+      "min": 62.5,
+      "max": 63,
+      "heights": [
+        62.5,
+        63
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 47,
+      "nonTab": 3,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Satış özeti",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "En çok satan 5 (son 30 gün)",
+          "fs": "13px",
+          "cls": "text-[13px] font-semibold"
+        },
+        {
+          "t": "Badem İçeceği 1 Litrelik UHT",
+          "fs": "13px",
+          "cls": "min-w-0 flex-1 truncate"
+        }
+      ]
+    },
+    "badges": {
+      "n": 10,
+      "filled": 10,
+      "unfilled": 0,
+      "list": [
+        {
+          "t": "Sipariş onaylı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Faturalandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Taslak",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Faturalandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Faturalandı",
+          "bg": "oklab(0.6 -0.141272 0.0751154 / 0.12)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Sevk edildi",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [],
+    "rightEdges": [
+      {
+        "title": "Satış hunisi",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "En çok satan 5 (son 30 gün)",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Son siparişler",
+        "pads": [
+          1,
+          17,
+          20.9
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 16,
+          "bottom": 1505,
+          "n": 3
+        }
+      ],
+      "diff": 0
+    },
+    "zeros": [],
+    "fontSizes": {
+      "12px": 38,
+      "20px": 1,
+      "14px": 1,
+      "13px": 33,
+      "11px": 5
+    }
+  },
+  "uretim_sefi-1440": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sections": [
+      {
+        "title": "Hat durumu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 481.5,
+        "left": 264
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 679,
+        "left": 264
+      },
+      {
+        "title": "Son duruşlar",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 904,
+        "left": 264
+      },
+      {
+        "title": "Son iş emirleri",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 765,
+        "left": 848
+      }
+    ],
+    "sectionCount": 4,
+    "rows": {
+      "n": 15,
+      "min": 40,
+      "max": 54.5,
+      "heights": [
+        40,
+        52.5,
+        54.5
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 18,
+      "nonTab": 6,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Üretim şefi",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "Fire oranı (7g)",
+          "fs": "12px",
+          "cls": "truncate text-xs font-medium text-muted-foreground"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fs": "11px",
+          "cls": "shrink-0"
+        },
+        {
+          "t": "Fire kırılımı (7 gün)",
+          "fs": "13px",
+          "cls": "text-[13px] font-semibold"
+        },
+        {
+          "t": "Son 7 günde fire kaydı yok",
+          "fs": "14px",
+          "cls": "font-medium text-sm"
+        },
+        {
+          "t": "%100 Oat Spredable",
+          "fs": "13px",
+          "cls": "min-w-0 flex-1 truncate"
+        }
+      ]
+    },
+    "badges": {
+      "n": 12,
+      "filled": 10,
+      "unfilled": 2,
+      "list": [
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Üretimde",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Devam ediyor",
+          "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+          "color": "oklch(0.5 0.14 70)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Planlandı",
+          "bg": "oklab(0.6 -0.051303 -0.140954 / 0.1)",
+          "color": "oklch(0.6 0.15 250)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Bitti",
+          "bg": "rgba(0, 0, 0, 0)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Üretimde",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Bitti",
+          "bg": "rgba(0, 0, 0, 0)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [
+      {
+        "title": "Hat durumu",
+        "svg": 1,
+        "buttons": 4,
+        "h": 205.5
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "svg": 3,
+        "buttons": 2,
+        "h": 181.5
+      }
+    ],
+    "rightEdges": [
+      {
+        "title": "Hat durumu",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "pads": [
+          1
+        ]
+      },
+      {
+        "title": "Son duruşlar",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Son iş emirleri",
+        "pads": [
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 264,
+          "bottom": 904,
+          "n": 3
+        },
+        {
+          "left": 848,
+          "bottom": 765,
+          "n": 1
+        }
+      ],
+      "diff": 139
+    },
+    "zeros": [],
+    "fontSizes": {
+      "12px": 24,
+      "24px": 1,
+      "14px": 2,
+      "13px": 24,
+      "11px": 12
+    }
+  },
+  "uretim_sefi-390": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sections": [
+      {
+        "title": "Hat durumu",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 497.5,
+        "left": 16
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 766.5,
+        "left": 16
+      },
+      {
+        "title": "Son duruşlar",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1073.5,
+        "left": 16
+      },
+      {
+        "title": "Son iş emirleri",
+        "headerH": 44,
+        "radius": "12px",
+        "border": "1px oklab(0.92 0.00112267 -0.00383922 / 0.7)",
+        "bottom": 1658.5,
+        "left": 16
+      }
+    ],
+    "sectionCount": 4,
+    "rows": {
+      "n": 15,
+      "min": 59.5,
+      "max": 64.5,
+      "heights": [
+        59.5,
+        63.5,
+        64.5
+      ]
+    },
+    "dupeRows": [],
+    "tabular": {
+      "leafsWithDigits": 18,
+      "nonTab": 6,
+      "sample": [
+        {
+          "t": "7 Eylül 2026 · Tire tesisi · Üretim şefi",
+          "fs": "14px",
+          "cls": "mt-1 text-sm text-muted-foreground"
+        },
+        {
+          "t": "Fire oranı (7g)",
+          "fs": "12px",
+          "cls": "truncate text-xs font-medium text-muted-foreground"
+        },
+        {
+          "t": "1 açık iş emri",
+          "fs": "11px",
+          "cls": "shrink-0"
+        },
+        {
+          "t": "Fire kırılımı (7 gün)",
+          "fs": "13px",
+          "cls": "text-[13px] font-semibold"
+        },
+        {
+          "t": "Son 7 günde fire kaydı yok",
+          "fs": "14px",
+          "cls": "font-medium text-sm"
+        },
+        {
+          "t": "%100 Oat Spredable",
+          "fs": "13px",
+          "cls": "min-w-0 flex-1 truncate"
+        }
+      ]
+    },
+    "badges": {
+      "n": 12,
+      "filled": 10,
+      "unfilled": 2,
+      "list": [
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Üretimde",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Boşta",
+          "bg": "oklab(0.967 0.000282341 -0.000959314 / 0.6)",
+          "color": "oklch(0.552 0.016 285.9)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Devam ediyor",
+          "bg": "oklab(0.72 0.0581434 0.159748 / 0.15)",
+          "color": "oklch(0.5 0.14 70)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Planlandı",
+          "bg": "oklab(0.6 -0.051303 -0.140954 / 0.1)",
+          "color": "oklch(0.6 0.15 250)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Bitti",
+          "bg": "rgba(0, 0, 0, 0)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Üretimde",
+          "bg": "oklab(0.55 -0.141272 0.0751154 / 0.1)",
+          "color": "oklch(0.55 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Bitti",
+          "bg": "rgba(0, 0, 0, 0)",
+          "color": "oklch(0.6 0.16 152)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        },
+        {
+          "t": "Kapatıldı",
+          "bg": "oklch(0.967 0.001 286.4)",
+          "color": "oklab(0.21 0.00164376 -0.00577045 / 0.8)",
+          "h": 20,
+          "fs": "11px"
+        }
+      ]
+    },
+    "empties": [
+      {
+        "title": "Hat durumu",
+        "svg": 1,
+        "buttons": 4,
+        "h": 241.5
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "svg": 3,
+        "buttons": 2,
+        "h": 253
+      }
+    ],
+    "rightEdges": [
+      {
+        "title": "Hat durumu",
+        "pads": [
+          17
+        ]
+      },
+      {
+        "title": "Fire kırılımı (7 gün)",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Son duruşlar",
+        "pads": [
+          1,
+          17
+        ]
+      },
+      {
+        "title": "Son iş emirleri",
+        "pads": [
+          17
+        ]
+      }
+    ],
+    "colBalance": {
+      "cols": [
+        {
+          "left": 16,
+          "bottom": 1658.5,
+          "n": 4
+        }
+      ],
+      "diff": 0
+    },
+    "zeros": [],
+    "fontSizes": {
+      "12px": 24,
+      "20px": 1,
+      "14px": 2,
+      "13px": 24,
+      "11px": 12
+    }
+  }
+}
