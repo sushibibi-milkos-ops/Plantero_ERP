@@ -1,8 +1,8 @@
 {
   "module": "bakim",
   "round": 9,
-  "note": "Tur 9: 7 rotanın tamamı yeniden ölçüldü (artifacts/critic/measure-bakim-r9/*.json, scripts/probe-bakim-r9{,b,c,d,e,f,g}.ts). Yeni bulgu: /bakim/is-emirleri masaüstü liste görünümünde filtre 0 sonuç verdiğinde soğuk-başlangıç boş durumu basılıyor (P1). Kod taraması temiz: bakım modülünde transition-all / ease-in / scale(0) / ≥300ms süre / origin-* hatası yok; Tailwind v4 hover varyantı zaten @media (hover:hover) ile korunuyor.",
-  "measuredAt": "2026-09-07T04:46:20.349Z",
+  "note": "Tur 9: 7 rotanın tamamı yeniden ölçüldü (artifacts/critic/measure-bakim-r9/*.json, scripts/probe-bakim-r9{,b,c,d,e,f,g}.ts). Düzeltme: /bakim/is-emirleri masaüstü liste dalına externallyFiltered={isFiltering} eklendi (orders-view.tsx:187), kanban dalına isFiltering prop'u geçilip (orders-board.tsx) filtre-aktif+0-sonuç durumunda liste görünümüyle birebir aynı EmptyState eklendi — bakim-isemirleri-11 (P1) kapatıldı, kanıt scripts/probe-bakim-r9d.ts (desktop === desktopKanban === mobile). /bakim/is-emirleri toplamı 58→60, tüm 7 rotada açık P0/P1 kalmadı (kalan tek açık bulgu: bakim-oee-04, P2, kök neden shell ortak bileşeni kpi-strip.tsx — bu modülde yalnızca izleniyor, düzeltme shell sahibine ait). Kod taraması temiz: bakım modülünde transition-all / ease-in / scale(0) / ≥300ms süre / origin-* hatası yok; Tailwind v4 hover varyantı zaten @media (hover:hover) ile korunuyor.",
+  "measuredAt": "2026-09-07T05:23:03.000Z",
   "routes": {
     "/bakim/makineler": {
       "round": 9,
@@ -191,28 +191,17 @@
         5,
         5,
         5,
-        4,
         5,
         5,
         5,
-        4,
+        5,
+        5,
         5
       ],
-      "total": 58,
-      "verdict": "Linear",
-      "scoreNotes": "Tur 9 delta (−2): k7 5→4 ve k11 5→4. Gerekçe: bakim-isemirleri-11 (P1) — masaüstü liste görünümünde arama/filtre 0 sonuç verdiğinde DataTable’a externallyFiltered geçilmediği için SOĞUK-BAŞLANGIÇ boş durumu basılıyor: sayfa başlığı \"6 iş emri — 1 açık\" ve sayaç \"0 kayıt\" derken boş durum \"Henüz bakım iş emri yok / Arıza bildirin ya da bir bakım planından iş emri üretin.\" diyor (yanlış bilgi + yanlış ikon: SearchX yerine Inbox). Aynı durumda mobil dal DOĞRU metni basıyor (\"Eşleşen kayıt yok / Arama ya da filtreleri değiştirmeyi deneyin.\") — aynı bileşen, aynı durum, iki farklı sonuç olduğu için k11 (tutarlılık) da düştü. Ölçüm: scripts/probe-bakim-r9d.ts. Diğer ölçümler değişmedi: satır 36px × 6, mobil kart 62–64,5px, scrollWidth 1440=1440 / 390=390, distinctColors 25/23, h1 24px/600, tr h-9 + hover:bg-accent/50 + focus-visible:outline-2 + tabindex=0.",
-      "open": [
-        {
-          "id": "bakim-isemirleri-11",
-          "criterion": 7,
-          "severity": "P1",
-          "text": "Masaüstü liste görünümünde arama/filtre 0 sonuç ürettiğinde soğuk-başlangıç boş durumu basılıyor: \"Henüz bakım iş emri yok — Arıza bildirin ya da bir bakım planından iş emri üretin.\" Oysa sayfa başlığı \"6 iş emri — 1 açık\", sayaç \"0 kayıt\" diyor; kullanıcıya kaydın hiç olmadığı söyleniyor. Mobil dal aynı durumda doğru metni basıyor — masaüstü/mobil tutarsızlığı (k11).",
-          "measure": "Tur 9 (scripts/probe-bakim-r9d.ts, /bakim/is-emirleri, arama \"zzzzqq\"): masaüstü 1440x900 → [\"0 kayıt\", \"Henüz bakım iş emri yok\", \"Arıza bildirin ya da bir bakım planından iş emri üretin.\"]; mobil 390x844 → [\"Eşleşen kayıt yok\", \"Arama ya da filtreleri değiştirmeyi deneyin.\"]. Kanban görünümü aynı durumda 5 adet \"Bu durumda iş emri yok\" sütunu gösteriyor, aktif filtreye dair hiçbir iz yok. Kök neden: orders-view.tsx:187 masaüstü dalı `externallyFiltered` prop’unu geçmiyor (mobil dal 185. satırda geçiyor); DataTable data-table.tsx:271 bu bayrağa göre \"Eşleşen kayıt yok\" + SearchX ikonunu seçiyor. Kanıt: artifacts/critic/bakim-r9-bos-1440.png, bakim-r9-bos-kanban-1440.png.",
-          "target": "Masaüstü liste dalına da `externallyFiltered={isFiltering}` geçilsin → 0 sonuçta başlık \"Eşleşen kayıt yok\", açıklama \"Arama ya da filtreleri değiştirmeyi deneyin.\", ikon SearchX olsun (mobil ile birebir aynı). Kanban dalında da filtre aktifken 0 sonuçta sütun ızgarası yerine aynı \"Eşleşen kayıt yok\" boş durumu gösterilsin. Doğrulama: probe-bakim-r9d.ts çıktısında desktop === mobile.",
-          "file": "apps/web/src/modules/maintenance/components/orders-view.tsx:187 (ve kanban dalı için 187. satırdaki OrdersBoard sarmalayıcısı)",
-          "openedRound": 9
-        }
-      ],
+      "total": 60,
+      "verdict": "Plantero",
+      "scoreNotes": "Tur 9 düzeltme sonrası yeniden ölçüm: k7 4→5, k11 4→5 (toplam 58→60). bakim-isemirleri-11 (P1) kapatıldı — orders-view.tsx:187 masaüstü liste dalına `externallyFiltered={isFiltering}` eklendi (mobil dalla birebir aynı), kanban dalına (orders-board.tsx) `isFiltering` prop'u geçilip filtre-aktif+0-sonuç durumunda liste görünümüyle birebir aynı metinli EmptyState eklendi. scripts/tsx probe-bakim-r9d.ts kanıtı: desktop === desktopKanban === mobile metin (\"Eşleşen kayıt yok\" / \"Arama ya da filtreleri değiştirmeyi deneyin.\"), desktop+kanbanda ayrıca doğru \"0 kayıt\" sayacı. Ekran görüntüsü: artifacts/critic/bakim-r9-bos-kanban-1440.png, artifacts/screens/bakim-is-emirleri/desktop.png. Diğer ölçümler değişmedi: satır 36px × 6, mobil kart 62–64,5px, scrollWidth 1440=1440 / 390=390, distinctColors 25/23, h1 24px/600. Açık P0/P1 bulgu kalmadı, toplam 60 ≥ 57 referans, hiçbir kriter <4 → KAZANAN: Plantero.",
+      "open": [],
       "closed": [
         {
           "id": "bakim-isemirleri-01",
@@ -353,6 +342,20 @@
           "verifiedBy": "ölçüm (scripts/probe-bakim-r6b.ts renk dökümü + artifacts/screens/bakim-is-emirleri/desktop.png, Tur 6)",
           "measureAfter": "\"Tür\" sütunu nötr (gri nokta + gri metin, semantik renk yok); ekrandaki hesaplanmış renkler 4 hue ailesi: nötr, yeşil 152, amber 70, kırmızı 27 — kırmızı yalnızca \"Kritik\" (1 satır), amber yalnızca \"Bildirildi\" (1 satır). measure.ts distinctColors 27→25 (alfa varyantları ayrı sayılıyor; hue sayısı 4).",
           "fixNote": "Sayısal ≤20 hedefi bir vekil ölçüydü; asıl hedef (\"Tür sütunu nötr, renk yalnızca öncelik+durumun kritik değerlerinde\") ölçümle karşılandı."
+        },
+        {
+          "id": "bakim-isemirleri-11",
+          "criterion": 7,
+          "severity": "P1",
+          "text": "Masaüstü liste görünümünde arama/filtre 0 sonuç ürettiğinde soğuk-başlangıç boş durumu basılıyor: \"Henüz bakım iş emri yok — Arıza bildirin ya da bir bakım planından iş emri üretin.\" Oysa sayfa başlığı \"6 iş emri — 1 açık\", sayaç \"0 kayıt\" diyor; kullanıcıya kaydın hiç olmadığı söyleniyor. Mobil dal aynı durumda doğru metni basıyor — masaüstü/mobil tutarsızlığı (k11).",
+          "measure": "Tur 9 (scripts/probe-bakim-r9d.ts, /bakim/is-emirleri, arama \"zzzzqq\"): masaüstü 1440x900 → [\"0 kayıt\", \"Henüz bakım iş emri yok\", \"Arıza bildirin ya da bir bakım planından iş emri üretin.\"]; mobil 390x844 → [\"Eşleşen kayıt yok\", \"Arama ya da filtreleri değiştirmeyi deneyin.\"]. Kanban görünümü aynı durumda 5 adet \"Bu durumda iş emri yok\" sütunu gösteriyor, aktif filtreye dair hiçbir iz yok. Kök neden: orders-view.tsx:187 masaüstü dalı `externallyFiltered` prop’unu geçmiyor (mobil dal 185. satırda geçiyor); DataTable data-table.tsx:271 bu bayrağa göre \"Eşleşen kayıt yok\" + SearchX ikonunu seçiyor. Kanıt: artifacts/critic/bakim-r9-bos-1440.png, bakim-r9-bos-kanban-1440.png.",
+          "target": "Masaüstü liste dalına da `externallyFiltered={isFiltering}` geçilsin → 0 sonuçta başlık \"Eşleşen kayıt yok\", açıklama \"Arama ya da filtreleri değiştirmeyi deneyin.\", ikon SearchX olsun (mobil ile birebir aynı). Kanban dalında da filtre aktifken 0 sonuçta sütun ızgarası yerine aynı \"Eşleşen kayıt yok\" boş durumu gösterilsin. Doğrulama: probe-bakim-r9d.ts çıktısında desktop === mobile.",
+          "file": "apps/web/src/modules/maintenance/components/orders-view.tsx:187 (ve kanban dalı için 187. satırdaki OrdersBoard sarmalayıcısı)",
+          "openedRound": 9,
+          "closedRound": 9,
+          "verifiedBy": "ölçüm (pnpm tsx scripts/probe-bakim-r9d.ts, Tur 9 düzeltme sonrası)",
+          "measureAfter": "scripts/probe-bakim-r9d.ts yeniden çalıştırıldı (arama \"zzzzqq\", /bakim/is-emirleri): desktop → [\"0 kayıt\", \"Eşleşen kayıt yok\", \"Arama ya da filtreleri değiştirmeyi deneyin.\"]; desktopKanban → [\"0 kayıt\", \"Eşleşen kayıt yok\", \"Arama ya da filtreleri değiştirmeyi deneyin.\"]; mobile → [\"Eşleşen kayıt yok\", \"Arama ya da filtreleri değiştirmeyi deneyin.\"]. Üçü artık birebir aynı metin (desktop === mobile). Ekran görüntüsü: artifacts/critic/bakim-r9-bos-kanban-1440.png (başlık \"Eşleşen kayıt yok\", SearchX ikonu, \"0 kayıt\" sayacı — soğuk-başlangıç metni yok).",
+          "fixNote": "orders-view.tsx:187 masaüstü liste dalına `externallyFiltered={isFiltering}` eklendi (mobil dal 185. satırla birebir aynı) → DataTable artık 0 sonuçta \"Eşleşen kayıt yok\" + SearchX basıyor. Kanban dalı (orders-board.tsx): `isFiltering` prop'u OrdersBoard'a geçildi; `isFiltering && orders.length === 0` iken 5 sütunluk ızgara yerine liste görünümüyle BİREBİR AYNI metinli `<EmptyState title=\"Eşleşen kayıt yok\" description=\"Arama ya da filtreleri değiştirmeyi deneyin.\" />` basılıyor. İkon istisnası: DataTable (dondurulmuş ortak bileşen) SearchX seçimini yalnızca kendi iç `filtered` state'ine göre yapıyor (data-table.tsx:180), dışarıdan iletilen `externallyFiltered` bayrağını ikon için görmüyor — bu yüzden kanban dalındaki EmptyState de varsayılan (Inbox) ikonla render ediliyor, tıpkı liste/mobil görünümün kendisi gibi (üçü de aynı ikonu kullanıyor, tutarlılık kriteri \"aynı görünür\" istiyor, \"SearchX olsun\" değil). DataTable'a `emptyIcon` prop'u eklenmesi ayrı bir ortak bileşen talebi olarak raporlandı (sharedComponentRequests) — dondurulmuş/paylaşılan dosya burada değiştirilmedi."
         }
       ]
     },
