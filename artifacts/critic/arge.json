@@ -342,7 +342,8 @@
      "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
      "openedRound": 2,
      "reMeasuredRound": 9,
-     "lastMeasuredRound": 9
+     "lastMeasuredRound": 9,
+     "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — arge-receteler-02 ile aynı kök neden (PageHeader + DataTable araç çubuğunun iki ayrı şerit olması, ortak bileşen kompozisyonu); arge modülü sözleşmesi kapsamında düzeltilemez, mevcut ortak dosyalar değiştirilmedi. Bkz. sharedComponentRequests."
     }
    ],
    "closed": [
@@ -2271,8 +2272,11 @@
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1,
      "reMeasuredRound": 9,
-     "lastMeasuredRound": 9
-    },
+     "lastMeasuredRound": 9,
+     "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — kök neden `PageHeader` (apps/web/src/components/page-header.tsx) ile `DataTable` araç çubuğunun (apps/web/src/components/data-table) iki AYRI yatay şerit olarak dikey olarak istiflenmesi; her ikisi de ortak bileşen, arge modülü sözleşmesi (mevcut ortak dosyayı değiştirme) kapsamında düzeltilemez. Sayfa (page.tsx) tarafında yapılabilecek tüm optimizasyon (Tur 5'te 'N proje' önekinin kaldırılması) uygulanmıştı; kalan boşluk PageHeader/DataTable kompozisyonundan geliyor — bkz. sharedComponentRequests."
+    }
+   ],
+   "closed": [
     {
      "id": "arge-receteler-03",
      "criterion": 11,
@@ -2282,11 +2286,10 @@
      "target": "Hedef üstü birim maliyet iki ekranda da AYNI kodlamayla (warning) basılır; ölçüm: /arge/receteler ₺103,41 ve ₺31,92 rengi = /arge/projeler aynı satırların rengi",
      "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx (Birim maliyet sütunu hücre render'ı)",
      "openedRound": 7,
-     "lastMeasuredRound": 9,
-     "reMeasuredRound": 9
-    }
-   ],
-   "closed": [
+     "measureAfter": "Kök neden: all-recipes-table.tsx 'Birim maliyet' hücresi proje hedefini (targetUnitCost) hesaba katmadan hep nötr foreground basıyordu; project-list.tsx'teki (proje kartı) warning kuralıyla eşleşmiyordu. queries.ts: RecipeSummaryRow'a targetUnitCost eklendi (listRecipesForProject + listAllRecipes, rndProjects.targetUnitCost join'i). all-recipes-table.tsx: unitCost hücresi artık `overTarget = targetUnitCost && latestUnitCost > targetUnitCost` iken project-list.tsx ile BİREBİR aynı `text-warning` sınıfını uyguluyor. Yeniden ölçüm (scripts/probe-arge-r9i.ts, 1440px): /arge/receteler ₺31,92→oklch(0.72 0.17 70)=warning, ₺103,41→oklch(0.72 0.17 70)=warning, ₺166,17→oklch(0.21 0.006 285.9)=foreground; /arge/projeler AYNI üç değer AYNI üç renk — satır satır ±0 fark. artifacts/critic/probe-arge-r9i.json.",
+     "closedRound": 9,
+     "verifiedBy": "ölçüm"
+    },
     {
      "id": "arge-receteler-01",
      "criterion": 11,
