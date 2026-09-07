@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { CheckCircle2, Loader2, Play, XCircle } from 'lucide-react';
+import { Camera, CheckCircle2, Loader2, Play, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -22,6 +22,40 @@ import { startOrderAction, markWaitingPartsAction, updateChecklistAction, comple
 import type { MaintenanceOrderDetail } from '../queries';
 import { DOWNTIME_REASON_LABELS, MACHINE_CATEGORY_LABELS } from '../labels';
 import { OrderTimeline } from './order-timeline';
+
+// Kriter 12 (Tur 7 P1 bakim-isemirleri-06) kök neden düzeltmesi: seed'in 1×1 px siyah PNG yer
+// tutucusu (packages/db/src/seed/maintenance.ts PLACEHOLDER_PHOTO) `fill` + `object-cover` ile
+// döşemeye büyütülünce opak siyah kare olarak okunuyordu — gerçek fotoğraf ile ayırt edilemiyordu.
+// Şema/servis dosyası dışında bir düzeltme yeri olmadığından (attachments.storagePath serbest metin/
+// data URL, boyut bilgisi tutulmuyor) yer tutucu üretimi burada, RENDER anında tespit edilir: görsel
+// yüklendiğinde `naturalWidth` ≤ 8px ise (1×1 placeholder ve benzeri bozuk/çok küçük dosyalar) resmin
+// kendisi hiç basılmaz, yerine nötr bir simge döşemesi gösterilir — gerçek bir fotoğraf normal
+// boyutuyla değişmeden kalır.
+function PhotoThumb({ src, fileName }: { src: string; fileName: string }) {
+  const [isPlaceholder, setIsPlaceholder] = useState(false);
+  return (
+    <div className="relative aspect-square bg-muted">
+      {isPlaceholder ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-2 text-center">
+          <Camera className="size-4 text-muted-foreground" aria-hidden />
+          <span className="line-clamp-1 w-full text-[11px] text-muted-foreground">{fileName}</span>
+        </div>
+      ) : (
+        <Image
+          src={src}
+          alt={fileName}
+          fill
+          unoptimized
+          className="object-cover"
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            if (img.naturalWidth > 0 && img.naturalWidth <= 8) setIsPlaceholder(true);
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrderDetail; canExecute: boolean }) {
   const router = useRouter();
@@ -177,9 +211,7 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
             {photos.map((p) => (
               <div key={p.id} className="overflow-hidden rounded-lg border border-border/60">
-                <div className="relative aspect-square bg-muted">
-                  <Image src={p.storagePath} alt={p.fileName} fill unoptimized className="object-cover" />
-                </div>
+                <PhotoThumb src={p.storagePath} fileName={p.fileName} />
                 <div className="p-1.5 text-[11px] text-muted-foreground">{formatDateTime(p.createdAt)}</div>
               </div>
             ))}

@@ -86,7 +86,12 @@ function TrendTooltip({ active, payload, label }: { active?: boolean; payload?: 
 
 export function OeeTrendChart({ data }: { data: OeeTrendPoint[] }) {
   const points = data.map((d) => ({ day: d.day, oee: Number(d.oeePct), availability: Number(d.availabilityPct), performance: Number(d.performancePct), quality: Number(d.qualityPct) }));
-  const ticks = niceTicks(points.flatMap((p) => [p.oee, p.availability, p.performance, p.quality]), 5);
+  const rawValues = points.flatMap((p) => [p.oee, p.availability, p.performance, p.quality]);
+  // Kriter 5 (Tur 6 P2 bakim-oee-12) kök neden düzeltmesi: niceTicks üst sınırı veri maksimumuna
+  // (ör. %99,6) tam oturabiliyordu — en üst seri ile grafik üst kenarı arasında pay kalmıyordu
+  // (gridTop = curve y). Veri maksimumunun en az %5 üstünü de tick hesabına dahil ederek domain
+  // üst sınırının veri maksimumundan gözle görülür şekilde yukarıda kalması garanti edilir.
+  const ticks = niceTicks([...rawValues, Math.max(0, ...rawValues) * 1.05], 5);
   const { gateProps, areaGateProps, handlers } = useTooltipGate();
 
   return (
