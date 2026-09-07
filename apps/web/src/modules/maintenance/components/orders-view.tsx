@@ -184,7 +184,13 @@ export function OrdersView({ orders }: { orders: MaintenanceOrderRow[] }) {
       <div className="md:hidden">
         <OrdersTable orders={filtered} searchable={false} filters={[]} externallyFiltered={isFiltering} />
       </div>
-      <div className="hidden md:block">{view === 'kanban' ? <OrdersBoard orders={filtered} /> : <OrdersTable orders={filtered} searchable={false} filters={[]} />}</div>
+      <div className="hidden md:block">
+        {view === 'kanban' ? (
+          <OrdersBoard orders={filtered} isFiltering={isFiltering} />
+        ) : (
+          <OrdersTable orders={filtered} searchable={false} filters={[]} externallyFiltered={isFiltering} />
+        )}
+      </div>
     </div>
   );
 }

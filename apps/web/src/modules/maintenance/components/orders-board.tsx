@@ -3,11 +3,12 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Camera, CheckCircle2, Play, XCircle, MoreHorizontal } from 'lucide-react';
+import { Camera, CheckCircle2, Play, XCircle, MoreHorizontal, SearchX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { StatusBadge } from '@/components/status-badge';
 import { ConfirmDialog } from '@/components/confirm-dialog';
+import { EmptyState } from '@/components/empty-state';
 import { getStatusInfo } from '@/lib/status';
 import { relativeTime } from '@/lib/format';
 import { startOrderAction, cancelOrderAction } from '../actions';
