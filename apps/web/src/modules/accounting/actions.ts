@@ -186,16 +186,24 @@ export const importBankStatementAction = withAudit('accounting.importStatement',
   const user = await requirePermission('accounting.reconcile');
   const input = importSchema.parse(raw);
 
-  const lines = input.source === 'mt940'
-    ? parseMt940(input.fileText).transactions
-    : parseCsv(input.fileText);
+  // MT940 :60F:/:62F: açılış/kapanış bakiyesi zorunludur (parseMt940 eksikse throw eder); 'D' (borç) bakiyeyi
+  // negatife, 'C' (alacak) pozitife çevirip importStatement()'a geçiriyoruz — aksi halde bank_statement_imports
+  // opening/closing_balance NULL kalır VE bank_accounts.statement_balance (kokpit/muhasebe/finans banka KPI'ları
+  // + cashflowRecompute nakit akışı tahmininin başlangıç noktası) hiç güncellenmez (bkz. docs/INVARIANTS.md I66).
+  const mt940 = input.source === 'mt940' ? parseMt940(input.fileText) : null;
+  const lines = mt940 ? mt940.transactions : parseCsv(input.fileText);
   const parsedForImport = lines.map((l) => ({
     externalRef: l.externalRef, txDate: l.txDate, valueDate: l.valueDate ?? null, amount: D(l.amount),
     currency: l.currency || undefined, balanceAfter: l.balanceAfter ? D(l.balanceAfter) : null, description: l.description || '(açıklama yok)',
     txType: l.txType ?? null,
   }));
+  const signedBalance = (b: { mark: 'D' | 'C'; amount: string }) => D(b.amount).mul(b.mark === 'D' ? -1 : 1);
 
-  const result = await db.transaction((tx) => importStatement(tx, { bankAccountId: input.bankAccountId, source: input.source, lines: parsedForImport }, user.actor));
+  const result = await db.transaction((tx) => importStatement(tx, {
+    bankAccountId: input.bankAccountId, source: input.source, lines: parsedForImport,
+    openingBalance: mt940 ? signedBalance(mt940.openingBalance) : null,
+    closingBalance: mt940 ? signedBalance(mt940.closingBalance) : null,
+  }, user.actor));
   revalidatePath('/muhasebe/banka');
   return {
     data: result,
