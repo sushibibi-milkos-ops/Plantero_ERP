@@ -763,7 +763,8 @@
      "klavyeAktivasyonu": "CDP forcePseudoState — :active+:focus-visible → transform none (klavyede ölçek YOK); yalnız :active → scale(0.97)"
     }
    },
-   "open": [
+   "open": [],
+   "closed": [
     {
      "id": "arge-board-16",
      "criterion": 11,
@@ -773,10 +774,9 @@
      "target": "Kanban kartı da paylaşılan odak dilini kullansın: focus-visible'da outline 0 + `ring-[3px] ring-ring/50` (ölçüm: kartın focus-visible boxShadow'unda 3px ring, outlineWidth 0px)",
      "file": "apps/web/src/modules/rnd/components/board-card.tsx:35-38",
      "openedRound": 10,
-     "lastMeasuredRound": 10
-    }
-   ],
-   "closed": [
+     "measureAfter": "Kök neden düzeltmesi: kart bir paylaşılan `Button` DEĞİL, modül içi native `<button>` (board-card.tsx) — düzeltme ortak bileşene dokunmadan yapıldı. `outline-none` + `focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50` eklendi (board-card.tsx ~35-42), Button'daki (apps/web/src/components/ui/button.tsx) aynı odak sınıflarıyla birebir. Yeniden ölçüm (scripts/probe-arge-r10f.ts, aynı proje/kart, 1440×900, gerçek Tab + CDP forcePseudoState): kart :focus-visible → outline \"0px none\", boxShadow katmanlarından biri \"oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px\" (Button \"Kart ekle\" ile BİREBİR aynı ring rengi/genişliği), border \"1px oklch(0.55 0.16 152)\"; gerçek Tab ile karta ulaşıldığında da (`tabbedTo`) aynı 3px ring ölçülüyor — kabul ölçüsü (outlineWidth 0px, boxShadow'da 3px ring) karşılandı. Görsel kanıt: artifacts/critic/arge-r10-board-focus.png (kart artık Button ile aynı yeşil ring). `pnpm typecheck` ve `pnpm --filter @plantero/web lint` temiz.",
+     "closedRound": 10
+    },
     {
      "id": "arge-board-01",
      "criterion": 9,
@@ -1551,17 +1551,6 @@
    },
    "open": [
     {
-     "id": "arge-recete-40",
-     "criterion": 6,
-     "severity": "P1",
-     "text": "390px'te malzeme satırının salt-okunur \"B. maliyet\" değeri (kaynak = Ortalama/Son alış) satırın taban hizasına oturmuyor: aynı satırdaki Miktar birimi, Kaynak seçici ve Fire % kutuları 44px'lik izin dikey merkezinde dururken sayı 12px yukarıda, kendi hücresinin üst kenarından taşmış gibi asılı kalıyor. Manuel kaynaklı satırda (NumberInput) hiza doğru — yani aynı sütunun içinde iki farklı dikey hiza var; sayı sütununda taban hizası kırıldığında değer görsel olarak bir üst satıra aitmiş gibi okunuyor.",
-     "measure": "tur 10 (390×844, RD-2026-000001 v1 · Taslak): satır içi dikey merkez (cy) — Badem/Manuel: B.maliyet ₺(input) 680 vs Kaynak 680 → 0px; Hurma Şurubu: ₺120,00 769 vs Ortalama 781 → 12px; Deniz Tuzu: ₺15,00 870 vs 882 → 12px; Kavanoz 500ml: ₺22,00 971 vs 983 → 12px. 3/4 satırda 12px sapma. Görsel kanıt: artifacts/critic/arge-r10-precete-390-satirlar.png",
-     "target": "390px'te 4/4 satırda |cy(B. maliyet) − cy(Kaynak)| ≤ 1px (ör. salt-okunur hücreye `flex h-11 items-center justify-end md:h-auto md:block`, ya da MoneyCell'e `flex min-h-11 items-center` mobil sarmalayıcı)",
-     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:705-732 (`<div className=\"min-w-0 md:block md:px-2 md:text-right\">` + `<MoneyCell value={uCost} digits={2} className=\"block w-full\" />`)",
-     "openedRound": 10,
-     "lastMeasuredRound": 10
-    },
-    {
      "id": "arge-recete-41",
      "criterion": 6,
      "severity": "P2",
@@ -1570,10 +1559,23 @@
      "target": "Sütundaki 4/4 satırda ₺ ile ilk rakam arası ≤4px (ör. manuel satırda öneki inline yaz: değerle birlikte sağa yaslı tek metin bloğu)",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:708-723 (NumberInput prefix=\"₺\" + inputClassName pl-6/md:pl-7)",
      "openedRound": 10,
-     "lastMeasuredRound": 10
+     "lastMeasuredRound": 10,
+     "ownerNote": "Tur 10 düzeltme turu: KAPATILMADI — kök neden paylaşılan `NumberInput` bileşeninde (apps/web/src/components/form/number-input.tsx:117): ₺ öneki `absolute left-2.5` ile sabit konumlanıyor, değer ise `text-right`; basamak sayısı satırdan satıra değiştikçe önek-rakam arası boşluk da değişiyor. arge modülü sözleşmesi kapsamında mevcut ortak dosya değiştirilmedi (yalnızca yeni dosya eklenebilir). Bkz. sharedComponentRequests."
     }
    ],
    "closed": [
+    {
+     "id": "arge-recete-40",
+     "criterion": 6,
+     "severity": "P1",
+     "text": "390px'te malzeme satırının salt-okunur \"B. maliyet\" değeri (kaynak = Ortalama/Son alış) satırın taban hizasına oturmuyor: aynı satırdaki Miktar birimi, Kaynak seçici ve Fire % kutuları 44px'lik izin dikey merkezinde dururken sayı 12px yukarıda, kendi hücresinin üst kenarından taşmış gibi asılı kalıyor. Manuel kaynaklı satırda (NumberInput) hiza doğru — yani aynı sütunun içinde iki farklı dikey hiza var; sayı sütununda taban hizası kırıldığında değer görsel olarak bir üst satıra aitmiş gibi okunuyor.",
+     "measure": "tur 10 (390×844, RD-2026-000001 v1 · Taslak): satır içi dikey merkez (cy) — Badem/Manuel: B.maliyet ₺(input) 680 vs Kaynak 680 → 0px; Hurma Şurubu: ₺120,00 769 vs Ortalama 781 → 12px; Deniz Tuzu: ₺15,00 870 vs 882 → 12px; Kavanoz 500ml: ₺22,00 971 vs 983 → 12px. 3/4 satırda 12px sapma. Görsel kanıt: artifacts/critic/arge-r10-precete-390-satirlar.png",
+     "target": "390px'te 4/4 satırda |cy(B. maliyet) − cy(Kaynak)| ≤ 1px (ör. salt-okunur hücreye `flex h-11 items-center justify-end md:h-auto md:block`, ya da MoneyCell'e `flex min-h-11 items-center` mobil sarmalayıcı)",
+     "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:705-732 (`<div className=\"min-w-0 md:block md:px-2 md:text-right\">` + `<MoneyCell value={uCost} digits={2} className=\"block w-full\" />`)",
+     "openedRound": 10,
+     "measureAfter": "Kök neden düzeltmesi: salt-okunur \"B. maliyet\" hücresi artık `<div className=\"flex min-h-11 items-center justify-end md:block md:min-h-0\">` ile sarmalanıyor (cost-simulator.tsx ~727-736) — mobilde MoneyCell komşu Miktar/Kaynak/Fire % kontrolleriyle aynı 44px izde dikey merkezleniyor, masaüstünde (md:) flex/min-h iptal olup eski `block` davranışı (Tur 5 arge-recete-25 sağ kenar hizası) korunuyor. Yeniden ölçüm (scripts/probe-arge-r10g.ts, aynı kayıt — Fıstık Bazı RD-2026-000001 v1 · Taslak, 390×844): satır içi dikey merkez (cy) — Badem/Manuel 658 vs Kaynak 658 (0px); Hurma Şurubu 759 vs 759 (0px); Deniz Tuzu 860 vs 860 (0px); Kavanoz 500ml 961 vs 961 (0px) → 4/4 satırda |Δcy| = 0px ≤ 1px hedefi karşılandı. Görsel kanıt (öncesi/sonrası): artifacts/critic/arge-r10-precete-390-satirlar.png / artifacts/critic/arge-r10-precete-390-satirlar-after.png. `pnpm typecheck` ve `pnpm --filter @plantero/web lint` temiz; `pnpm --filter @plantero/core test` 54/54 dosya yeşil (bu modülde core değişmedi, regresyon kontrolü).",
+     "closedRound": 10
+    },
     {
      "id": "arge-recete-39",
      "criterion": 9,
