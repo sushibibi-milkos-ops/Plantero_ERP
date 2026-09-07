@@ -62,6 +62,8 @@ pids_listening_on_port() {
 # Makine-genelinde sabit kilit dosyası (log dizininden bağımsız — farklı $L ile çağrılsa
 # bile aynı host'taki tüm gate.sh koşuları aynı kilidi paylaşır).
 GATE_LOCK=/tmp/plantero-gate-build.lock
+# NOT: kök package.json "db:reset" de bu kilidi (flock) bekler: başka bir ajanın sıfırlaması, kapı
+# build+start+e2e bloğu sürerken veritabanını boşaltıp e2e koşusunu düşüremez (Aşama-4 tur-7 kırığı).
 exec 9>"$GATE_LOCK"
 echo "== build kilidi bekleniyor (paylaşılan makinede eşzamanlı başka bir gate.sh koşusu olabilir)"
 flock 9
