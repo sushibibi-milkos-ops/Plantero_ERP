@@ -50,7 +50,18 @@ export function MachinesTable({ machines }: { machines: MachineListRow[] }) {
         cell: ({ row }) => <QtyCell value={row.original.runtimeHours} uom="sa" />,
       },
       {
-        id: 'openOrderCount', accessorFn: (r) => r.openOrderCount, header: 'Açık iş emri', meta: { align: 'right', width: 100 },
+        // Kök neden (Tur 10 P1 bakim-makineler-07): bu sütun `rest` listesinin (meta.mobile
+        // ayarsız kalan sütunlar) sonuncusuydu, DataTableMobileCards mobil kartta "tek metrik"i
+        // hep SONUNCU `rest` alanından seçtiği için mobil kart etiketsiz/birimsiz çıplak bir
+        // tamsayı ("0") basıyordu — masaüstünde bu sayıya anlamı "Açık iş emri" sütun başlığı
+        // veriyordu, mobilde başlık yok. Aynı hamlede modülün en değerli alanı "Sonraki bakım"
+        // (nextDueAt) karttan tamamen düşüyordu. `mobile:'hidden'` ile bu sütun mobil kart
+        // hesabından tamamen çıkarılır (masaüstü tablosu etkilenmez — meta.mobile yalnızca
+        // mobile-cards.tsx tarafından okunur) ve `rest` listesinde TEK kalan alan nextDueAt olur;
+        // metrik artık kendini açıklayan bir tarih (14.09.2026), gecikmede zaten var olan
+        // AlertTriangle + text-destructive ile. Bkz. /bakim/planlar — aynı yuvaya zaten tarih
+        // basıyor (probe-bakim-r10e.ts), desen modül içinde tutarlı hale gelir.
+        id: 'openOrderCount', accessorFn: (r) => r.openOrderCount, header: 'Açık iş emri', meta: { align: 'right', width: 100, mobile: 'hidden' },
         cell: ({ row }) => (row.original.openOrderCount > 0 ? <span className="num font-medium text-warning">{row.original.openOrderCount}</span> : <span className="num text-muted-foreground">0</span>),
       },
     ],
