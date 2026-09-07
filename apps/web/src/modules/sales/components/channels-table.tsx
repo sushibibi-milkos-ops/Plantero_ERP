@@ -42,10 +42,10 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         // toptan) son senkron zamanından daha temel bir kimlik bilgisi, masaüstündeki 2. sütun konumuyla
         // aynı önceliği mobilde de taşımalı — mobil hiyerarşi artık masaüstüyle aynı dili konuşuyor.
         id: 'kind', accessorFn: (r) => CHANNEL_KIND_LABELS[r.channel.kind] ?? r.channel.kind, header: 'Tip',
-        meta: { width: 130, mobile: 'subtitle', className: 'text-muted-foreground' },
+        meta: { width: 140, mobile: 'subtitle', className: 'text-muted-foreground' },
       },
       {
-        id: 'orderCount', accessorFn: (r) => r.orderCount, header: 'Sipariş (ay)', meta: { align: 'right', width: 100, mobile: 'hidden' },
+        id: 'orderCount', accessorFn: (r) => r.orderCount, header: 'Sipariş/ay', meta: { align: 'right', width: 75, mobile: 'hidden' },
         cell: ({ row }) => <span className={`num tabular-nums ${row.original.orderCount === 0 ? 'text-muted-foreground/70' : ''}`}>{row.original.orderCount}</span>,
       },
       {
@@ -66,7 +66,7 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
       // şekilde: commissionPct hâlâ `rest`'te (masaüstünde görünür, mobilde metrik yuvasını kaybeder —
       // "diğer rest alanları mobil kartta hiç gösterilmez" kuralı burada da geçerli) ama monthRevenue
       // artık son sıradaki gerçek metrik.
-      { id: 'monthRevenue', header: 'Bu ay', meta: { align: 'right', width: 110 }, cell: ({ row }) => <MoneyCell value={row.original.monthRevenue} /> },
+      { id: 'monthRevenue', header: 'Bu ay', meta: { align: 'right', width: 120 }, cell: ({ row }) => <MoneyCell value={row.original.monthRevenue} /> },
       {
         // mobile:'meta' (Tur 5 P2 bulgusu — önceden 'subtitle'): kanal TİPİ kimlik bilgisi olarak
         // kartın 2. satırına taşındı, son senkron zamanı etiketsiz tek satırlık "meta" konumuna iner —
@@ -79,7 +79,7 @@ export function ChannelsTable({ rows }: { rows: ChannelCardRow[] }) {
         // `undefined` döner — `isEmptyValue` bunu "veri yok" sayıp satırı sessizce atıyordu (7 kartın
         // 7'sinde de "son senkron" hiç görünmüyordu). accessorFn eklendi, sıralama/filtre davranışı
         // değişmedi (ikisi de zaten kapalıydı).
-        id: 'lastSyncedAt', accessorFn: (r) => r.lastSyncedAt, header: 'Son senkron', meta: { width: 150, mobile: 'meta', className: 'text-xs text-muted-foreground' },
+        id: 'lastSyncedAt', accessorFn: (r) => r.lastSyncedAt, header: 'Son senkron', meta: { width: 140, mobile: 'meta', className: 'text-xs text-muted-foreground' },
         cell: ({ row }) => {
           const { channel, lastSyncedAt, pendingErrors } = row.original;
           const syncSupported = CHANNEL_SYNC_SUPPORTED.has(channel.code);

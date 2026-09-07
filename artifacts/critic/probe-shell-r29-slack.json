@@ -1,0 +1,90 @@
+{
+ "/satis/fiyat-listeleri": {
+  "tableW": 1152,
+  "cols": [
+   {
+    "head": "Liste",
+    "thW": 478,
+    "content": 380,
+    "slack": 98
+   },
+   {
+    "head": "Kod",
+    "thW": 151,
+    "content": 59,
+    "slack": 92
+   },
+   {
+    "head": "Para birimi",
+    "thW": 127,
+    "content": 22,
+    "slack": 105
+   },
+   {
+    "head": "KDV",
+    "thW": 126,
+    "content": 33,
+    "slack": 93
+   },
+   {
+    "head": "Geçerlilik",
+    "thW": 132,
+    "content": 42,
+    "slack": 90
+   },
+   {
+    "head": "Satır",
+    "thW": 138,
+    "content": 46,
+    "slack": 93
+   }
+  ]
+ },
+ "/satis/kanallar": {
+  "tableW": 1152,
+  "cols": [
+   {
+    "head": "Kanal",
+    "thW": 299,
+    "content": 240,
+    "slack": 59
+   },
+   {
+    "head": "Tip",
+    "thW": 174,
+    "content": 106,
+    "slack": 68
+   },
+   {
+    "head": "Sipariş/ay",
+    "thW": 121,
+    "content": 8,
+    "slack": 113
+   },
+   {
+    "head": "Komisyon",
+    "thW": 120,
+    "content": 29,
+    "slack": 91
+   },
+   {
+    "head": "Bu ay",
+    "thW": 149,
+    "content": 81,
+    "slack": 69
+   },
+   {
+    "head": "Son senkron",
+    "thW": 174,
+    "content": 84,
+    "slack": 90
+   },
+   {
+    "head": "",
+    "thW": 115,
+    "content": 68,
+    "slack": 47
+   }
+  ]
+ }
+}

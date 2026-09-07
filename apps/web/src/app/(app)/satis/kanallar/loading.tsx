@@ -16,7 +16,7 @@ export default function ChannelsLoading() {
         <Skeleton className="h-8 w-64 rounded-md" />
         <Skeleton className="h-8 w-8 rounded-md" />
       </div>
-      <DataTableSkeleton columns={7} rows={7} headers={['Kanal', 'Tip', 'Bugün', 'Bu ay', 'Sipariş (ay)', 'Komisyon', 'Son senkron']} />
+      <DataTableSkeleton columns={7} rows={7} headers={['Kanal', 'Tip', 'Sipariş/ay', 'Komisyon', 'Bu ay', 'Son senkron', '']} />
     </div>
   );
 }

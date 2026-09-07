@@ -37,15 +37,15 @@ export function PriceListsTable({ rows, products }: { rows: Row[]; products: Sel
         // Tur 10 P2 satis-fiyat-03: mobil karttaki tek meta ipucu para birimiydi, ama liste adı zaten
         // parantez içinde para birimini taşıyor ("İhracat Fiyat Listesi (EUR)") — kart aynı bilgiyi
         // iki kez basıyordu. Kod (masaüstünde zaten gösterilen kimlik alanı) daha yeni bilgi taşır.
-        id: 'code', accessorFn: (r) => r.code, header: 'Kod', meta: { width: 110, className: 'font-mono text-[11px] text-muted-foreground', mobile: 'meta' },
+        id: 'code', accessorFn: (r) => r.code, header: 'Kod', meta: { width: 120, className: 'font-mono text-[11px] text-muted-foreground', mobile: 'meta' },
       },
       // Boş "Kanal" sütunu kaldırıldı (Tur 5 P1 bulgusu): 3 fiyat listesinin 3'ü de tek bir kanala
       // değil, bir kanal GRUBUNA bağlı (channel_id null) — sütun ~370px kaplayıp 3 satırın 3'ünde de
       // '—' basıyordu, tablodaki en geniş sütun sıfır bilgi taşıyordu.
       { id: 'currency', accessorFn: (r) => r.currency, header: 'Para birimi', meta: { width: 100, className: 'font-mono text-xs', mobile: 'hidden' } },
-      { id: 'includesVat', header: 'KDV', meta: { width: 80, mobile: 'hidden' }, cell: ({ row }) => (row.original.includesVat ? 'Dahil' : 'Hariç') },
+      { id: 'includesVat', header: 'KDV', meta: { width: 100, mobile: 'hidden' }, cell: ({ row }) => (row.original.includesVat ? 'Dahil' : 'Hariç') },
       {
-        id: 'validity', header: 'Geçerlilik', meta: { width: 150, mobile: 'hidden', className: 'text-xs text-muted-foreground' },
+        id: 'validity', header: 'Geçerlilik', meta: { width: 105, mobile: 'hidden', className: 'text-xs text-muted-foreground' },
         cell: ({ row }) => (row.original.validFrom ? formatDate(row.original.validFrom) : 'Süresiz') + (row.original.validTo ? ` → ${formatDate(row.original.validTo)}` : ''),
       },
       {
@@ -57,7 +57,7 @@ export function PriceListsTable({ rows, products }: { rows: Row[]; products: Sel
         // "Satır" başlığının altında anlamlı olan ÇIPLAK sayıyı basıyor (mobilde başlık yok — "33" ne
         // olduğu belirsiz). Hücre artık birimi kendi taşıyor ("33 satır") — masaüstünde "Satır" başlığı
         // altında hafif tekrar ama belirsizlik yok, mobilde tek başına anlamlı.
-        id: 'items', accessorFn: (r) => r.itemCount, header: 'Satır', meta: { align: 'right', width: 76, mobile: 'row' },
+        id: 'items', accessorFn: (r) => r.itemCount, header: 'Satır', meta: { align: 'right', width: 110, mobile: 'row' },
         cell: ({ row }) => <span className="num tabular-nums">{row.original.itemCount} satır</span>,
       },
     ],

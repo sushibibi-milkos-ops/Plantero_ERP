@@ -18,3 +18,4 @@ Döngüler yeşile ulaştıktan sonra ele alınacak, modül ajanlarının raporl
 - Kokpit: birden çok uzman rolü olan kullanıcı tek pano görür (öncelik sırası kodda); banka toplamı yalnızca TRY hesapları.
 - Fatura tutarları 4 ondalıklı kuruş-altı kalabiliyor (ör. 919,9999): KDV dahil liste fiyatının net fiyata çevrilmesinden; kalıcı çözüm satır/toplamların 2 ondalığa yuvarlanması (Satış/Muhasebe).
 - Ana veri: bazı SKU'larda `products.weightKg` boş (Excel kaynaklı) → ihracat packing list net/brüt kg 0 görünebilir.
+- Geliştirme ortamı: tek paylaşımlı `pnpm dev` (:3000) sürecine karşı birden çok Playwright/agent oturumu çalışınca Next 15 dev sunucusu bellek eşiğinde kendini yeniden başlatıp açık isteği kesebiliyor (`artifacts/critic/shell.json` shell-shared-devserver-flake-01, P2). Kod düzeltmesi değil; kapı koşuları bu yüzden izole `next build && next start` (scripts/gate.sh) üzerinden yapılır. Paralel oturumlar için ayrı PORT önerilir.
