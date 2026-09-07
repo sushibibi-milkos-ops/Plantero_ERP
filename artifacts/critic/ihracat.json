@@ -1,7 +1,7 @@
 {
  "module": "ihracat",
- "round": 14,
- "note": "Tur 13. Tur 12 kartından (commit 012cdf7) bu yana ihracat modülünde tek satır değişiklik yok; ortak bileşenlerde YALNIZCA apps/web/src/components/data-table/mobile-cards.tsx (+17/-1, 27f3d9a — mobil kart aksiyon oluğu yer tutucusu). İhracat mobil kartlarında regresyon yok: sevkiyatlar 64px, belgeler 60px, gtip 60px, kurlar 64px, detay 64px; 390px yatay taşma yok. 6 rota × (1440x900 + 390x844) + detay 4 sekme × 2 viewport + kapalı/taslak özet + belgeler + liste 1024x768 + koyu tema (kurlar, detay) yeniden çekildi ve Read ile incelendi. Ölçüm: measure-ihracat-r13/ (13 dosya), probe-ihracat-r13.json (sütun genişliği/dolu/distinct + satır hover), r13b (gerçek Tab, boş arama, 390px dokunma hedefi — 6 rotada 0 ihlal), r13c (odak halkası 250ms bekleyerek + kırpılmış görüntü: 18/18 elemanda :focus-visible true, buton/kartta yeşil kenarlık oklch(0.55 0.16 152) + halka), r13d (kapalı sevkiyatın Fatura & kur sekmesindeki bağlantılar). YENİ P1 (ihracat-detay-23): Tur 11 P1 ihracat-detay-22 için yapılan düzeltme İKİZ bağlantıya uygulanmamış. Aynı dosyada (sevkiyatlar/[id]/page.tsx) satır 246 \"Bağlı irsaliye\" bağlantısı min-h-11 + text-primary + underline ile düzeltilmişken, satır 162 \"İhracat faturası\" kartındaki fatura bağlantısı hâlâ 137×19,5px (390px), rengi gövde metniyle BİREBİR aynı (oklch(0.21 0.006 285.9)), text-decoration:none ve tek işareti hover:underline — globals.css:10 @custom-variant hover (hover:hover) and (pointer:fine) altında olduğundan dokunmatikte hiç tetiklenmiyor. Tur 11/12 probları EXP-2026-000002 (faturasız) üzerinde ölçtüğü için bu bağlantı hiç render edilmemiş; kapalı+faturalı EXP-2026-000001 ile ölçüldüğünde ortaya çıktı. Aynı sayfada iki belge bağlantısının farklı görünmesi kriter 11i de düşürüyor. Tur 12 açık P2 ihracat-kurlar-13 YENİDEN ÖLÇÜLDÜ, AÇIK: Kaynak sütunu 185px, 25/25 satırda \"TCMB\", distinct=1. ihracat-detay-22 (Tur 11 P1) KAPALI DOĞRULANDI: \"Bağlı irsaliye\" bağlantısı 1440px 1126×44, 390px 332×44; iç span text-primary + underline. Kod taraması TEMİZ: modül dosyalarında transition-all / transition: all / ease-in / scale(0) / ≥300ms süre / origin-* yok; tek animasyon fetch-rates-button.tsx animate-spin. 8 hover: kullanımının hepsi globals.css:10 gated variant üzerinden. NOT (bulgu değil): /ihracat/belgeler \"Müşteri\" sütunu 342px, 30/30 satırda \"BioGrün Handels GmbH\" (distinct=1) ve /ihracat/sevkiyatlar \"Müşteri\" (3/3) + \"Oluşturma\" (3/3) da distinct=1. Bunlar VERİ inceliği (tohumda tek ihracat müşterisi, tek gün) — mimari kısıt değil; ihracat-kurlar-13 ise eşleme yüzünden yapısal olarak ASLA farklılaşamaz, o yüzden yalnızca o açık. Aynı gerekçeyle /ihracat/sevkiyatlar 3 satırla ilk ekranda ≥15 satır ölçütünü karşılamıyor; tablo anatomisi (36px satır, 13px) doğru, eksik olan tohum verisi. Satır hover: yalnızca tıklanabilir tablolarda (sevkiyatlar) arka plan değişiyor (oklab 0.955/0.5); belgeler/kurlar/gtip satırlarında bg değişmiyor — data-table.tsx:256 `clickable &&` koşulu, Tur 11 ve 12 ölçümleriyle birebir aynı, bilinçli ve belgelenmiş tercih (aksiyonlu satırlarda \"…\" menüsü hover ile beliriyor). Gerekçesiz puan düşürülmedi.",
+ "round": 15,
+ "note": "Tur 15. Tur 14 kartından (057d76c) bu yana apps/web altında TEK SATIR değişiklik yok (git diff --stat boş) — puanlar yeniden ölçüldü, gerekçesiz düşüş yapılmadı. Veritabanı yeniden tohumlandı, sevkiyat kimlikleri değişti. 6 rota × (1440x900 + 390x844) + detay 4 sekme × 2 viewport + kapalı/taslak özet + liste 1024x768 + kurlar koyu tema yeniden çekildi ve Read ile incelendi. Ölçüm: measure-ihracat-r15/ (12 dosya), probe-ihracat-r15.json (sütun genişliği/distinct + satır hover), probe-ihracat-r15c.json (zincir kart sırası, iki kayıt × iki yükleme). YENİ P1 shell-documentchain-order-01 (kriter 11): belge zinciri kart sırası kayıttan kayda ters dönüyor — kök neden core/documents/chain.ts:148 doc_date sıralaması + document-chain.tsx:125 reverse. Bu bulgu ortak bileşen kaynaklı (shell), fakat /ihracat/sevkiyatlar/[id] ekranında görünür olduğundan o rota bu tur KAZANMIYOR (59/57, açık P1). Diğer 5 rota 60/60, açık P0/P1 yok → kazanıyor. Açık P2 ihracat-kurlar-13 yeniden ölçüldü, açık (kazanmayı engellemiyor). Kod taraması TEMİZ: ihracat modülü + ihracat sayfalarında transition-all / transition: all / ease-in / scale(0) / ≥300ms süre / origin-* yok; tek animasyon fetch-rates-button.tsx animate-spin; 9 hover: kullanımının hepsi globals.css:10 gated variant üzerinden.",
  "measurements": {
   "tool": "pnpm measure + scripts/probe-ihracat-r13{,b,c,d}.ts",
   "files": [
@@ -26,7 +26,7 @@
  },
  "routes": {
   "/ihracat/sevkiyatlar": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -44,7 +44,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 13 ile aynı (60). Tüm ölçümler yeniden alındı ve eşleşti: 1440 scrollWidth=clientWidth=1440 (overflowX=false), tablo kapsayıcı scrollW=containerW=1152, satır 36px, h1 24px/600, ekranda 8 font kademesi (10/11/12/13/14/15/18/24) ama gövde 13px baskın (49 öğe), 22 farklı renk. 390px: scrollW=clientW=390, kart 64px, 44px altı GERÇEK etkileşimli öğe 0 (breadcrumb-page bir <span>, tıklanabilir değil). 1024x768 operatör görünümü: belge scrollWidth=1024 (sayfa taşması yok), geniş tablo yalnızca kendi overflow-x kapsayıcısında kayıyor — kural gereği doğru. Odak halkası ekran görüntüsüyle doğrulandı (focus-sevkiyatlar-0/1.png: \"Yeni sevkiyat\" ve arama alanı görünür yeşil halka; getComputedStyle geçiş ortasında 0px okuyor, görsel kanıt esas alındı). Satır hover oklab(0.955 .../0.5). Para hücreleri tabular-nums + sağ hizalı, sıfır tutar soluk.",
+   "scoreNotes": "Tur 14 ile aynı (60). Kod değişmedi (git diff 057d76c..HEAD apps/web = boş), ölçümler baştan alındı ve eşleşti: 1440 scrollWidth=clientWidth=1440, tablo kapsayıcı scrollW=containerW=1152, satır 36px, h1 24px/600, 22 renk, satır hover rgba(0,0,0,0) → oklab(0.955 .../0.5). 390px: scrollW=clientW=390, kart 63,5px, 44px altı GERÇEK etkileşimli öğe 0 (yalnız breadcrumb <span> işaretlendi, tıklanabilir değil). 1024x768 operatör görünümü: sayfa taşması yok, geniş tablo yalnız kendi overflow-x kapsayıcısında kayıyor. Müşteri (3/3) ve Oluşturma (3/3) distinct=1 — tohum verisi inceliği, bulgu açılmadı.",
    "open": [],
    "closed": [
     {
@@ -91,7 +91,7 @@
    ]
   },
   "/ihracat/sevkiyatlar/[id]": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "probeId": "e7c470c7-ef19-4c11-ace0-5a77377b84b7 (EXP-2026-000002, gümrükte) + 150d33db-63e4-4ae8-8b9b-92db2ca818a1 (EXP-2026-000001, kapalı) + 0eb2515b-bf8e-4af4-b081-5f82f4a0397e (taslak)",
@@ -106,12 +106,25 @@
     5,
     5,
     5,
-    5,
+    4,
     5
    ],
-   "total": 60,
-   "scoreNotes": "Tur 13 ile aynı (60). EXP-2026-000002 (gümrükte) ve EXP-2026-000001 (kapalı) yeniden çekildi: kapalı sevkiyatta belge zinciri 4 halka (Sipariş → İrsaliye → İhracat sevkiyatı → Fatura), gümrüktekinde 3 halka + \"Devam belgesi yok\" kesik çerçeveli boş kutu. 4 sekmenin tümü (Sipariş satırları / Çeki listesi / Belgeler / Fatura & kur) masaüstü + 390px çekildi; hepsinde scrollW=containerW=1152, satır 36px. Fatura & kur boş durumu ikon+başlık+açıklama ile özenli, Kur bilgisi paneli dolu (EUR ₺37,2000, TL karşılığı ₺624.960,00). 390px: 0 dokunma ihlali, tek kolon, sekme şeridi yatay kayıyor. Koyu tema doğrulandı (dark-detay-1440.png).",
-   "open": [],
+   "total": 59,
+   "scoreNotes": "Kriter 11 (tutarlılık) 5→4: YENİ P1 shell-documentchain-order-01. Belge zinciri kartlarının sırası kayıtlar arasında değişiyor — EXP-2026-000001: Sipariş(x=264) › İrsaliye(472) › İhracat sevkiyatı(680) › Fatura(888); EXP-2026-000002: İrsaliye(264) › Sipariş(472) › İhracat sevkiyatı(680). İki kaydın bağlantı topolojisi BİREBİR aynı (document_links: sales_order→export_shipment + delivery→export_shipment, ikisi de derinlik 1); sırayı belirleyen tek şey document_index.doc_date içindeki tohum ekleme milisaniyesi. Aynı ekranda okun anlamı bir kayıtta doğru, diğerinde ters (irsaliye siparişin kaynağı gibi görünüyor — CLAUDE.md kural 3). Diğer 11 kriter Tur 14 ile aynı (5): 4 sekme × 2 viewport + kapalı/taslak özet yeniden çekildi, satır 36px, scrollW=containerW=1152, 390px 0 dokunma ihlali, \"Fatura & kur\" boş durumu ikon+başlık+açıklama ile özenli, Tur 13 P1 (ihracat-detay-23, fatura bağlantısı) kod okumasıyla kapalı doğrulandı: satır 162 ve 246 artık aynı kalıp (min-h-11 + text-primary + underline).",
+   "open": [
+    {
+     "id": "shell-documentchain-order-01",
+     "module": "shell",
+     "criterion": 11,
+     "severity": "P1",
+     "text": "DocumentChain kartlarının sırası aynı ekranın iki kaydında farklı: EXP-2026-000001 \"Sipariş › İrsaliye › İhracat sevkiyatı › Fatura\" (kanonik), EXP-2026-000002 \"İrsaliye › Sipariş › İhracat sevkiyatı\" (ters). İki kaydın bağlantı topolojisi birebir aynı (document_links: sales_order→export_shipment ve delivery→export_shipment, ikisi de derinlik 1). Kök neden: packages/core/src/documents/chain.ts:148 aynı derinlikteki düğümleri `doc_date` artan sıraya diziyor, document-chain.tsx:125 bu diziyi ters çeviriyor; document_index.doc_date tohum/oluşturma zaman damgası olduğu için sırayı 20–67 ms'lik ekleme farkı belirliyor. Sonuç: kartlar arasındaki \"›\" oku bir kayıtta belge zincirinin gerçek yönünü, diğerinde tersini iddia ediyor (CLAUDE.md kural 3: teklif → sipariş → irsaliye → fatura).",
+     "measure": "1440x900, artifacts/critic/probe-ihracat-r15c.json — EXP-2026-000001: [Sipariş SO-2026-000023 @x264, İrsaliye DN-2026-000020 @472, İhracat sevkiyatı @680, Fatura INV-2026-000012 @888]; EXP-2026-000002: [İrsaliye DN-2026-000028 @264, Sipariş SO-2026-000031 @472, İhracat sevkiyatı @680]. psql document_index.doc_date: DN-2026-000020 11:39:09.668 < SO-2026-000023 11:39:09.735 (ters çevrilince Sipariş önce), SO-2026-000031 11:39:11.652 < DN-2026-000028 11:39:11.672 (ters çevrilince İrsaliye önce). Ekran görüntüleri: artifacts/screens/ihracat-r15-tabs/kapali-ozet-1440.png ve detay-belgeler-1440.png.",
+     "target": "Aynı derinlikteki düğümler tarihe değil KANONİK belge sırasına göre dizilsin (teklif < sipariş < irsaliye/mal kabul < ihracat sevkiyatı < fatura < tahsilat); tarih yalnız eşit ranktaki düğümler için ikincil anahtar kalsın. Kabul ölçütü: 3 sevkiyatın üçünde de zincir \"Sipariş › İrsaliye › İhracat sevkiyatı › (Fatura)\" sırasında render edilsin ve sıra art arda 2 yüklemede birebir aynı olsun (probe-ihracat-r15c.ts ile doğrulanabilir).",
+     "file": "packages/core/src/documents/chain.ts:148 (toNodes sıralaması) + apps/web/src/components/document-chain.tsx:125 (chronologicalUpstream)",
+     "openedRound": 15,
+     "not": "Ortak bileşen + core kaynaklı — DESIGN-SCORECARD kural 5 gereği shell modülüne yazılır; aynı bulgu diğer modüllerde tekrar açılmaz. Ancak /ihracat/sevkiyatlar/[id] ekranında görünür olduğu için bu rotanın kazanmasını engeller."
+    }
+   ],
    "closed": [
     {
      "id": "ihracat-detay-18",
@@ -433,7 +446,7 @@
    ]
   },
   "/ihracat/sevkiyatlar/yeni": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -451,7 +464,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 13 ile aynı (60). 1440: scrollW=1440, 13px gövde, 24px/600 başlık, 13 farklı renk. 390: scrollW=390, tek kolon, yapışkan alt aksiyon çubuğu; 44px altı gerçek hedef 0 (3 adet 1x1 gizli native select shadcn Select'in yerel yedeği, sayılmaz). Sipariş seçici 11 seçenek taşıyor. Odak halkası ilk kontrolde 3px ring (oklab 0.55 -0.141 0.075 / 0.5) ölçüldü.",
+   "scoreNotes": "Tur 14 ile aynı (60). 1440: scrollW=1440, gövde 13px (40 öğe), h1 24px/600, 13 renk. 390: scrollW=390, tek kolon, yapışkan alt aksiyon çubuğu; 44px altı gerçek hedef 0 — measure çıktısındaki 3 kayıt 1×1px gizli native <select> (shadcn Select yedeği, görünmez), breadcrumb ise <span>.",
    "open": [],
    "closed": [
     {
@@ -563,7 +576,7 @@
    ]
   },
   "/ihracat/belgeler": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -581,7 +594,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 13 ile aynı (60). 30 satır, satır 36px, scrollW=containerW=1152, 390px kart 60px ve 0 dokunma ihlali. Boş durum (arama \"zzzqqq\") ikon + \"Eşleşen kayıt yok\" + yönlendirme metniyle çekildi. Müşteri sütunu distinct=1/30 (342px) tohum verisinde tek ihracat müşterisi olduğundan; tasarım kaynaklı değil, bulgu açılmadı (Tur 12/13 kararıyla aynı).",
+   "scoreNotes": "Tur 14 ile aynı (60). 30 satır × 36px, scrollW=containerW=1152, 390px kart 60px, 0 dokunma ihlali, 20 renk. Belge sütunu distinct=12, Durum distinct=5. Müşteri sütunu distinct=1/30 (342px) tohumda tek ihracat müşterisi olduğundan — veri inceliği, bulgu açılmadı (Tur 12/13/14 kararıyla aynı).",
    "open": [],
    "closed": [
     {
@@ -648,7 +661,7 @@
    ]
   },
   "/ihracat/kurlar": {
-   "round": 14,
+   "round": 15,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -666,14 +679,14 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 13 ile aynı (60). Stripe kalıbı korunuyor: KPI'lar dikey hairline ayraçla, 90 günlük iki çizgili grafik (EUR mor / USD mavi), tablo 25 satır x 36px, Alış/Satış/Günlük değişim JetBrains Mono + tabular-nums + sağ hizalı, delta rengi yalnızca yön için. Tarih sütunu Inter/proporsiyonel (metin genişliği 68,56–71,38px) ama sola hizalı olduğundan raga görünmüyor — bulgu açılmadı. Açık P2 ihracat-kurlar-13 yeniden ölçüldü: Kaynak sütunu hâlâ 185px, distinct=1, 25/25 satır \"TCMB\" (DB'de TCMB-SEED 172 + TCMB 8) — açık kalıyor, kazanmayı engellemiyor.",
+   "scoreNotes": "Tur 14 ile aynı (60). Stripe kalıbı korunuyor: KPI'lar dikey hairline ayraçla, 90 günlük iki çizgili grafik, tablo 25×36px, Alış/Satış/Günlük değişim tabular-nums + sağ hizalı, delta rengi yalnız yön için. Koyu tema yeniden çekildi (ihracat-r15-kurlar-dark-1440.png): zemin/kart/ızgara tokenleri doğru, grafik çizgileri okunur. Açık P2 ihracat-kurlar-13 YENİDEN ÖLÇÜLDÜ, AÇIK: Kaynak sütunu 185px, distinct=1, 25/25 \"TCMB\" — kazanmayı engellemiyor.",
    "open": [
     {
      "id": "ihracat-kurlar-13",
      "criterion": 3,
      "severity": "P2",
      "text": "\"Kaynak\" sütunu tablonun 185px'ini (%16) alıyor ama 25/25 satırda aynı değeri (\"TCMB\") basıyor — sıfır bilgi. Veritabanında iki değer var (TCMB-SEED 172, TCMB 8) ama Tur 4'te açılan etiket eşlemesi (ihracat-kurlar-08) ikisini de \"TCMB\"ye çeviriyor, yani bu sütun mevcut mimaride ASLA farklı bir değer gösteremez. Linear/Stripe bu bilgiyi sütun yerine başlığa (\"TCMB, son güncelleme 07.09.2026\" — zaten sayfanın alt başlığında yazıyor) koyar.",
-     "measure": "1440x900 /ihracat/kurlar, probe-ihracat-r14.json kurlar.tables[0].cols[5]: Kaynak width=185px, distinct=1, rows=25, sample=[\"TCMB\"]; psql: exchange_rates.source = TCMB-SEED(172) + TCMB(8) — ekranda tek etiket",
+     "measure": "1440x900 /ihracat/kurlar, probe-ihracat-r15.json routes.kurlar.tables[0].cols[5]: Kaynak width=185px, distinct=1, rows=25, sample=[\"TCMB\"]; psql: exchange_rates.source = TCMB-SEED(172) + TCMB(8) — ekranda tek etiket",
      "target": "Ekranda görünen her sütun en az 2 farklı değer taşısın. \"Kaynak\" sütunu varsayılan gizli olsun (meta.defaultHidden — sütun seçicisinden açılabilir kalır; kaynak bilgisi zaten sayfa alt başlığında) ya da eşleme kaldırılıp gerçek kaynak (TCMB / manuel giriş) ayrıştırılsın. Kabul ölçütü: probe-ihracat-r9.ts ile görünür sütunların hepsinde distinctValues ≥ 2.",
      "file": "apps/web/src/modules/export/components/rates-table.tsx (Kaynak sütunu)",
      "openedRound": 9,
@@ -684,7 +697,7 @@
       "round11": "DENENDİ, GERİ ALINDI — kasıtlı olarak AÇIK bırakıldı. `meta.defaultHidden:true` ile sütun varsayılan kapatıldığında (rates-table.tsx), DataTable'ın <table>'ı `min-w-full` ile kapsayıcıya zorlandığından kalan 5 sütunun TAMAMI slack>145px'e çıktı (ölçüldü: Tarih 149, Para birimi 150, Alış 146, Satış 146, Günlük değişim 159 — hepsi Tur 8'de kapatılmış ihracat-kurlar-12'nin (kriter 5, hedef <=120px) eşiğinin üstünde), yani bir P2'yi kapatmaya çalışırken kapanmış bir P1/P2'yi (kurlar-12) yeniden açıyordu. `[&_table]:!w-auto` ile tabloyu kapsayıcıdan daraltmak da ihracat-detay-19'un (Tur 8) AYNI sınıf kusurunu (tablonun sağında ölü alan) üretiyordu — bu ikisi arasında salınan bir çözüm, net bir kazanım değil. Kök neden çözümü (gerçek bir 6. bilgi sütunu ya da tablo dışı bir 'Kaynak: TCMB' etiketi) bu turun bütçesini aşıyor; değişiklik geri alındı (rates-table.tsx kod yorumunda gerekçe kayıtlı), ölçüm hâlâ Tur 10 ile birebir: Kaynak width=185 rows=25 filled=25 distinct=1.",
       "round12": "AÇIK. probe-ihracat-r12.json kurlar.tables[0].cols → Kaynak width=185, rows=25, filled=25, distinct=1, sample=[\"TCMB\"]. psql: select source,count(*) from exchange_rates group by 1 → TCMB-SEED / TCMB (ikisi de UI'da \"TCMB\"). Mobilde de 25/25 kartın meta satırında \"TCMB\" tekrar ediyor (artifacts/screens/ihracat-kurlar/mobile.png). Kaynak dosya rates-table.tsx Tur 11'de yalnızca AÇIKLAMA yorumu aldı, davranış değişmedi."
      },
-     "lastMeasuredRound": 14
+     "lastMeasuredRound": 15
     }
    ],
    "closed": [
@@ -854,7 +867,7 @@
    ]
   },
   "/ihracat/gtip": {
-   "round": 14,
+   "round": 15,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -872,7 +885,7 @@
     5
    ],
    "total": 60,
-   "scoreNotes": "Tur 13 ile aynı (60). 39 satır x ~37px, scrollW=containerW=1152, 4 GTİP kartı üstte, satır içi GTİP seçici 44px dokunma yüksekliğinde (data-[size=default]:h-11). 390px: kart 60px, 0 dokunma ihlali. Boş durum çekildi. Tip sütunu distinct=2 (filtreli), GTİP sütunu distinct=2 — tohumda 38/39 ürün eşlenmemiş olduğundan; veri kaynaklı, bulgu açılmadı.",
+   "scoreNotes": "Tur 14 ile aynı (60). 39 satır × 36,5–37px, scrollW=containerW=1152, 15 renk, 4 GTİP kartı üstte. 390px: kart 60px, 0 dokunma ihlali. SKU distinct=39, Ürün distinct=39, Tip distinct=2, GTİP distinct=2 — sütunların hepsi bilgi taşıyor.",
    "open": [],
    "closed": [
     {
@@ -1034,9 +1047,18 @@
    "file": "apps/web/src/components/confirm-dialog.tsx:4,72-80",
    "openedRound": 5,
    "not": "Ortak bileşen kaynaklı — DESIGN-SCORECARD kural 5 gereği shell'e yazılır, modüllerde tekrar açılmaz."
+  },
+  {
+   "module": "shell",
+   "id": "shell-documentchain-order-01",
+   "criterion": 11,
+   "severity": "P1",
+   "text": "DocumentChain: aynı derinlikteki zincir düğümleri doc_date (tohum ms) sırasına göre diziliyor, bu yüzden belge zinciri kayıttan kayda ters yönde çizilebiliyor. Ayrıntı ve ölçüm: /ihracat/sevkiyatlar/[id] açık bulgusu.",
+   "file": "packages/core/src/documents/chain.ts:148 + apps/web/src/components/document-chain.tsx:125",
+   "openedRound": 15
   }
  ],
- "shipmentIdUsed": "47587da6-f20a-45cb-aabf-4627f8eb4156 (EXP-2026-000002, gümrükte) · ba3026f7-dffb-4bc7-947b-51f9fb57f88e (EXP-2026-000001, kapalı, faturalı) · b9497774-629a-4e25-8a84-3f14b0a0707a (EXP-2026-000003, taslak) — veritabanı yeniden tohumlandı, Tur 11/12 kimlikleri geçersiz",
- "measuredAt": "2026-09-07T10:06:04.289Z",
+ "shipmentIdUsed": "4748fced-4be1-4ba3-8075-bd8cece757f6 (EXP-2026-000001, kapalı, faturalı) · f598ae9c-04bc-400d-b908-55d8914eabcb (EXP-2026-000002, gümrükte) · 5d04e334-ba0c-4a2c-b069-d0a94116f61c (EXP-2026-000003, taslak) — veritabanı yeniden tohumlandı, Tur 13/14 kimlikleri geçersiz",
+ "measuredAt": "2026-09-07T12:28:06.321Z",
  "updatedAt": "2026-09-07"
 }

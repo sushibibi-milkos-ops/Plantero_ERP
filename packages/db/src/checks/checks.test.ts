@@ -163,7 +163,7 @@ const FILES = await checkFiles();
 // seed'de her ikisi de 0 ihlal (seed'deki tek transfer aynı depo içi/tek bacak, tek sayımın tüm
 // hareketleri sağlam) — bu turdan itibaren sürekli regresyon güvenlik ağı (bkz.
 // checks/63_transfer_move_linkage.sql, checks/64_count_line_move_linkage.sql üst yorumları).
-const RULE_COUNT = 65;
+const RULE_COUNT = 66;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
