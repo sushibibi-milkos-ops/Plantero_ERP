@@ -66,10 +66,13 @@ export function DocumentsTable({
       },
     ];
     if (showShipmentColumn) {
-      base.push({ id: 'shipmentDocNo', accessorFn: (r) => r.shipmentDocNo, header: 'Sevkiyat', meta: { width: 130, className: 'font-mono', mobile: 'subtitle' } });
       base.push({
-        id: 'partnerName', accessorFn: (r) => r.partnerName, header: 'Müşteri', meta: { width: 190, mobile: 'hidden', className: 'max-w-[190px] truncate' },
-        cell: ({ getValue }) => <span className="block max-w-[190px] truncate text-muted-foreground" title={getValue<string>() ?? undefined}>{getValue<string>()}</span>,
+        id: 'shipmentDocNo', accessorFn: (r) => r.shipmentDocNo, header: 'Sevkiyat', meta: { width: 150, className: 'max-w-[150px] truncate font-mono', mobile: 'subtitle' },
+        cell: ({ getValue }) => <span className="block max-w-[150px] truncate font-mono" title={getValue<string>() ?? undefined}>{getValue<string>()}</span>,
+      });
+      base.push({
+        id: 'partnerName', accessorFn: (r) => r.partnerName, header: 'Müşteri', meta: { width: 228, mobile: 'hidden', className: 'max-w-[228px] truncate' },
+        cell: ({ getValue }) => <span className="block max-w-[228px] truncate text-muted-foreground" title={getValue<string>() ?? undefined}>{getValue<string>()}</span>,
       });
     }
     // `defaultHidden` (Tur 2 P1 ihracat-detay-06 kök neden düzeltmesi): önceden yalnızca ortak belge

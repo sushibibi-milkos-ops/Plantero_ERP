@@ -3,10 +3,19 @@
  * (slack), ihracat tabloları. db:reset sonrası sevkiyat id'leri değiştiği için probe-ihracat-r7.ts'in
  * sabit SHIP UUID'si artık geçersiz — bu betik güncel EXP-2026-000002 (gümrükte) id'sini kullanır.
  */
+import { execSync } from 'node:child_process';
 import { defaultBaseUrl, launchBrowser, openRoute } from './lib/browser';
 
 const BASE = defaultBaseUrl();
-const SHIP = 'b15d0813-8995-4117-b809-3fe23e54f236'; // EXP-2026-000002 (customs) — güncel db:reset sonrası id
+// Bu makinede eşzamanlı başka bir oturum `db:reset` çalıştırabilir (bkz. tur-7 P2 bulgusu) — sabit
+// UUID her an geçersiz kalabilir. EXP-2026-000002'nin id'sini HER ÇALIŞTIRMADA veritabanından
+// canlı okuyoruz.
+function resolveShipmentId(): string {
+  const out = execSync(`psql "${process.env.DATABASE_URL}" -t -A -c "select id from export_shipments where doc_no = 'EXP-2026-000002';"`, { encoding: 'utf8' }).trim();
+  if (!out) throw new Error('EXP-2026-000002 bulunamadı — db:seed/db:reset çalıştırılmış mı?');
+  return out;
+}
+const SHIP = resolveShipmentId();
 
 const TARGETS: Array<{ name: string; route: string; tab?: string }> = [
   { name: 'sevkiyatlar', route: '/ihracat/sevkiyatlar' },
