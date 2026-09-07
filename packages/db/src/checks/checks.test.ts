@@ -133,7 +133,22 @@ const FILES = await checkFiles();
 // toplam miktarı doğrular, lot kimliğini değil). Canlı doğrulama: checks/59_recall_delivered_lot_identity.sql
 // üst yorumunda — rollback'li vitest transaction'ında 2 farklı mamul lotu/2 sevkiyatla üretildi, ikisi
 // de aynı (kök) lotId'yi taşıdı, I59 anında 2 ihlal verdi. Fresh seed'de dormant (recall_items 0 satır).
-const RULE_COUNT = 59;
+// I60 (veri-critic Tur 11, YENİ): I59'un kendi kök nedenini kapatan `packages/core/src/lots/trace.ts`
+// `Graph.add()` node-dedup'i, I59'un ele almadığı BİR DAHA farklı sınıf bir hataya açık kaldı: aynı
+// FİZİKSEL irsaliyeye (aynı `deliveries.id`) FEFO'nun İKİ farklı zincir-üyesi lotu bölmesi (bkz.
+// `stock/deliveries.ts::reserveFefo`'nun kendi sözleşmesi — "FEFO birden çok lota düşerse satır
+// bölünür, aynı deliveryId, farklı lotId") durumunda `g.add({id:delivery.id, kind:'delivery',
+// lotId:<lot>})` ikinci lot için çağrıldığında var olan node'u HİÇ güncellemez — `initiate()`'in
+// `impact.deliveries` döngüsü bu yüzden o irsaliyeyi TEK satır (yalnızca ilk ziyaret edilen lot)
+// olarak görür, ikinci lotun o irsaliyeyle taşınan payı için `recall_items` satırı HİÇ ÜRETİLMEZ —
+// I59 yalnızca VAR OLAN satırların doğruluğunu kontrol ettiğinden bu KAYIP satırı hiç yakalayamaz.
+// Canlı doğrulama: checks/60_recall_delivered_item_completeness.sql üst yorumunda — I59'un testiyle
+// birebir aynı üretim kurulumu (aynı hammadde lotundan 2 iş emriyle 2 mamul lotu), ama 2 AYRI
+// irsaliye yerine TEK irsaliyeye (2 delivery_lines, aynı deliveryId) sevk edildi; commit'li canlı
+// egzersizde `recall_items WHERE hop='delivered'` yalnızca 1 satır (30 kg) üretti, gerçekte 60 kg
+// (2 lot) sevk edilmişti — I60 anında 1 ihlal verdi (`recall_delivered_item_missing`). Fresh seed'de
+// dormant (I59 ile aynı sebep: recall_items 0 satır).
+const RULE_COUNT = 60;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
