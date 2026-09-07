@@ -1,0 +1,70 @@
+{
+ "oeeDecimals": {
+  "OEE": {
+   "values": [
+    "%0,14",
+    "%0,24",
+    "%1,2"
+   ],
+   "decimals": [
+    2,
+    1
+   ]
+  },
+  "Kullanılabilirlik": {
+   "values": [
+    "%100",
+    "%99,48",
+    "%99,38"
+   ],
+   "decimals": [
+    0,
+    2
+   ]
+  },
+  "Performans": {
+   "values": [
+    "%0,14",
+    "%0,26",
+    "%1,2"
+   ],
+   "decimals": [
+    2,
+    1
+   ]
+  },
+  "Kalite": {
+   "values": [
+    "%3,33",
+    "%6,63",
+    "%9,97"
+   ],
+   "decimals": [
+    2
+   ]
+  }
+ },
+ "doneOrderAnimations": [
+  {
+   "cls": "absolute top-1 -left-[18.5px] size-2.5 rounded-full ring-4 ring-background bg-primary moti",
+   "anim": "pulse",
+   "dur": "2s"
+  }
+ ],
+ "emptyMakineler": {
+  "rows": 36,
+  "text": false
+ },
+ "kpi_oee": {
+  "scrollWidth": 792,
+  "clientWidth": 358,
+  "cards": 5,
+  "fullyVisible": 2
+ },
+ "kpi_makineler": {
+  "scrollWidth": 632,
+  "clientWidth": 358,
+  "cards": 4,
+  "fullyVisible": 2
+ }
+}
