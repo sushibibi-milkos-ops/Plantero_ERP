@@ -1,11 +1,11 @@
 {
   "module": "bakim",
   "round": 9,
-  "note": "Tur 7 — gorsel-critic. Tur 6 sonrası builder düzeltmeleri (ad5fa7c) yeniden ölçüldü. KAPANANLAR (ölçümle doğrulandı): bakim-oee-10 — /bakim/oee @390 açılışta aktif nokta 4→0 (3/3 tekrar, hasTouch+isMobile bağlamı, scripts/probe-bakim-r7d.ts); bakim-oee-11 — \"Hat bazlı OEE\" sarmalayıcısı artık scrollbar-thin scroll-fade-x (sw 588 > cw 324 ama standart kaydırma göstergesiyle işaretli); bakim-yeni-04 — /bakim/is-emirleri/yeni @390 ölü kaydırma 338→80px, kaydırma sonunda eylem çubuğu alt gezinmenin 23px üstünde (scripts/probe-bakim-r7c.ts, artifacts/critic/bakim-r7-yeni-390-bottom.png). YENİ (P1): /bakim/is-emirleri/[id] — fotoğrafı olan iş emrinde (MO-2026-000002) \"Fotoğraflar\" kartı 1×1 px siyah PNG yer tutucusunu object-cover ile 269×269 (masaüstü) / 154×154 (390px) opak siyah kareye ölçekliyor. Tur 6 fotoğrafsız MO-2026-000006 üzerinde ölçüldüğü için görülmemişti. AÇIK KALAN P2: bakim-oee-12 (OEE trendinde en üst seri ile grafik üst kenarı arasında pay 0px — gridTop 4 = curve y 4, her iki viewport), bakim-oee-04 (KPI şeridi @390: /bakim/oee 5 karttan 2'si, /bakim/makineler 4 karttan 2'si tam görünüyor — ortak bileşen kpi-strip.tsx). Kod düzeyi tarama TEMİZ: apps/web/src/modules/maintenance + app/(app)/bakim içinde transition-all / \"transition: all\" / ease-in / duration>300ms / scale(0) / origin-* yok; hover globals.css:10 @custom-variant ile (hover:hover) and (pointer:fine) altında. Not: görevdeki /operator rotası uygulamada yok (apps/web/src/app/(app) altında operator dizini bulunmuyor) — 1024×768 çekimi yapılamadı. | Tur 8 (builder düzeltmesi): bakim-isemirleri-06 (P1) kapatıldı — order-detail.tsx PhotoThumb ile naturalWidth≤8px yer tutucu fotoğraflar artık ikon döşemesi olarak gösteriliyor (img DOM'da yok). bakim-oee-12 (P2) kapatıldı — oee-charts.tsx YAxis domain'i veri maksimumunun ≥%5 üstüne alındı (topPad 0→76.5px). bakim-oee-04 (P2) AÇIK KALDI — kök neden apps/web/src/components/kpi-strip.tsx (ortak bileşen); bakım modülü yazım kapsamı dışında, sharedComponentRequest olarak raporlandı. | Tur 9 (builder düzeltmesi): bakim-oee-13 (P1) kapatıldı — /bakim/oee YAxis tavanı sabit [0,25,50,75,100]/domain=[0,100] (kök neden: Tur 6 düzeltmesi niceTicks girdisine max*1.05 ekleyip 50-adımlı yuvarlamada %150 tick üretiyordu); scripts/probe-bakim-r8f.ts ile her iki viewportta doğrulandı (en üst tick %100, ölü bant 0%). Test-fixture bulgusu (test-photo.png 1×1→48×48 PNG) zaten önceki oturumda düzeltilmiş bulundu, doğrulandı (file 48x48 PNG). bakim-oee-04 (P2) AÇIK KALDI — kök neden kpi-strip.tsx (ortak bileşen), sharedComponentRequest olarak raporlandı.",
-  "measuredAt": "2026-09-07 (Tur 9 builder düzeltme doğrulaması)",
+  "note": "Tur 9: 7 rotanın tamamı yeniden ölçüldü (artifacts/critic/measure-bakim-r9/*.json, scripts/probe-bakim-r9{,b,c,d,e,f,g}.ts). Yeni bulgu: /bakim/is-emirleri masaüstü liste görünümünde filtre 0 sonuç verdiğinde soğuk-başlangıç boş durumu basılıyor (P1). Kod taraması temiz: bakım modülünde transition-all / ease-in / scale(0) / ≥300ms süre / origin-* hatası yok; Tailwind v4 hover varyantı zaten @media (hover:hover) ile korunuyor.",
+  "measuredAt": "2026-09-07T04:46:20.349Z",
   "routes": {
     "/bakim/makineler": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -17,14 +17,14 @@
         5,
         5,
         5,
-        5,
+        4,
         5,
         5,
         5
       ],
-      "total": 60,
-      "verdict": "KAZANAN: Plantero — 60 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok.",
-      "scoreNotes": "Tur 8 yeniden ölçüm (artifacts/critic/measure-bakim-r8/*.json): satır 36,5–37px × 36 @13px, mobil kart 63,5px (56–72 bandı), scrollWidth 1440=1440 / 390=390 (overflowX false), fontSizes {13:238, 11:110, 12:12}, distinctColors 17/15, h1 24px/600 (mobil 20px/600), 390px'te 44px altı görünür dokunma hedefi yok, mobil kartlarda <8px boşluklu metin çifti yok (scripts/probe-bakim-r8c.ts tight=[]). Delta 0. KPI şeridi @390 4 karttan 2'si tam görünüyor — ortak bileşen (kpi-strip.tsx), bakim-oee-04 (P2) altında bir kez izleniyor.",
+      "total": 59,
+      "verdict": "Plantero",
+      "scoreNotes": "Tur 9 delta (−1): k9 5→4. Gerekçe (yeni ölçüm): KPI şeridi @390x844 scrollWidth 632 > clientWidth 358; 4 karttan yalnızca 2 tanesi tam görünüyor, operasyonel olarak en kritik olan \"Arızalı\" kartı ekran kenarında kesik (scripts/…/g.ts). Kök neden ortak bileşen (kpi-strip.tsx) — bakim-oee-04 (P2, shell) altında BİR KEZ izleniyor, burada tekrar açılmadı; kazanmayı engellemez (toplam 59 ≥ 57, hiçbir kriter <4, açık P0/P1 yok). Diğer ölçümler değişmedi: satır 36,5–37px × 36 @13px, mobil kart 63,5px, scrollWidth 1440=1440 / 390=390 (overflowX false), fontSizes {13:238, 11:110, 12:12}, distinctColors 17/15, h1 24px/600 (mobil 20px/600), 390px’te 44px altı görünür dokunma hedefi yok. Filtrelenmiş boş durum DOĞRU (\"Eşleşen kayıt yok / Arama ya da filtreleri değiştirmeyi deneyin.\" — probe-bakim-r9e.ts).",
       "open": [],
       "closed": [
         {
@@ -114,7 +114,7 @@
       ]
     },
     "/bakim/planlar": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -132,8 +132,8 @@
         5
       ],
       "total": 60,
-      "verdict": "KAZANAN: Plantero — 60 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok.",
-      "scoreNotes": "Tur 8 yeniden ölçüm (artifacts/critic/measure-bakim-r8/*.json): satır 36px × 12, mobil kart 63,5px, scrollWidth 1440=1440 / 390=390, fontSizes {13:94, 12:21, 11:14}, distinctColors 17/15, h1 24px/600. Mobil kartlarda <8px boşluklu metin çifti yok (probe-bakim-r8c.ts tight=[]). Delta 0.",
+      "verdict": "Plantero",
+      "scoreNotes": "Tur 9 delta 0. Yeniden ölçüm: satır 36px × 12, mobil kart 63,5px, scrollWidth 1440=1440 / 390=390 (overflowX false), fontSizes {13:94, 12:21, 11:14}, distinctColors 17/15, h1 24px/600. Mobil kartlarda <8px yatay boşluklu metin çifti YOK (probe-bakim-r9.ts planlar390 = []). Bu rotada KPI şeridi yok — k9 5 kalır. Filtrelenmiş boş durum doğru (\"Eşleşen kayıt yok\", probe-bakim-r9e.ts).",
       "open": [],
       "closed": [
         {
@@ -181,7 +181,7 @@
       ]
     },
     "/bakim/is-emirleri": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -191,17 +191,28 @@
         5,
         5,
         5,
+        4,
         5,
         5,
         5,
-        5,
-        5,
+        4,
         5
       ],
-      "total": 60,
-      "verdict": "KAZANAN: Plantero — 60 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok.",
-      "scoreNotes": "Tur 8 yeniden ölçüm (artifacts/critic/measure-bakim-r8/*.json): satır 36px × 6 (tr class h-9 + hover:bg-accent/50 + focus-visible:outline-2 outline-ring, tabindex=0 — kriter 8 doğrulandı, scripts/probe-bakim-r8e.ts), mobil kart 62–64,5px, scrollWidth 1440=1440 / 390=390, distinctColors 25/23, h1 24px/600. Delta 0.",
-      "open": [],
+      "total": 58,
+      "verdict": "Linear",
+      "scoreNotes": "Tur 9 delta (−2): k7 5→4 ve k11 5→4. Gerekçe: bakim-isemirleri-11 (P1) — masaüstü liste görünümünde arama/filtre 0 sonuç verdiğinde DataTable’a externallyFiltered geçilmediği için SOĞUK-BAŞLANGIÇ boş durumu basılıyor: sayfa başlığı \"6 iş emri — 1 açık\" ve sayaç \"0 kayıt\" derken boş durum \"Henüz bakım iş emri yok / Arıza bildirin ya da bir bakım planından iş emri üretin.\" diyor (yanlış bilgi + yanlış ikon: SearchX yerine Inbox). Aynı durumda mobil dal DOĞRU metni basıyor (\"Eşleşen kayıt yok / Arama ya da filtreleri değiştirmeyi deneyin.\") — aynı bileşen, aynı durum, iki farklı sonuç olduğu için k11 (tutarlılık) da düştü. Ölçüm: scripts/probe-bakim-r9d.ts. Diğer ölçümler değişmedi: satır 36px × 6, mobil kart 62–64,5px, scrollWidth 1440=1440 / 390=390, distinctColors 25/23, h1 24px/600, tr h-9 + hover:bg-accent/50 + focus-visible:outline-2 + tabindex=0.",
+      "open": [
+        {
+          "id": "bakim-isemirleri-11",
+          "criterion": 7,
+          "severity": "P1",
+          "text": "Masaüstü liste görünümünde arama/filtre 0 sonuç ürettiğinde soğuk-başlangıç boş durumu basılıyor: \"Henüz bakım iş emri yok — Arıza bildirin ya da bir bakım planından iş emri üretin.\" Oysa sayfa başlığı \"6 iş emri — 1 açık\", sayaç \"0 kayıt\" diyor; kullanıcıya kaydın hiç olmadığı söyleniyor. Mobil dal aynı durumda doğru metni basıyor — masaüstü/mobil tutarsızlığı (k11).",
+          "measure": "Tur 9 (scripts/probe-bakim-r9d.ts, /bakim/is-emirleri, arama \"zzzzqq\"): masaüstü 1440x900 → [\"0 kayıt\", \"Henüz bakım iş emri yok\", \"Arıza bildirin ya da bir bakım planından iş emri üretin.\"]; mobil 390x844 → [\"Eşleşen kayıt yok\", \"Arama ya da filtreleri değiştirmeyi deneyin.\"]. Kanban görünümü aynı durumda 5 adet \"Bu durumda iş emri yok\" sütunu gösteriyor, aktif filtreye dair hiçbir iz yok. Kök neden: orders-view.tsx:187 masaüstü dalı `externallyFiltered` prop’unu geçmiyor (mobil dal 185. satırda geçiyor); DataTable data-table.tsx:271 bu bayrağa göre \"Eşleşen kayıt yok\" + SearchX ikonunu seçiyor. Kanıt: artifacts/critic/bakim-r9-bos-1440.png, bakim-r9-bos-kanban-1440.png.",
+          "target": "Masaüstü liste dalına da `externallyFiltered={isFiltering}` geçilsin → 0 sonuçta başlık \"Eşleşen kayıt yok\", açıklama \"Arama ya da filtreleri değiştirmeyi deneyin.\", ikon SearchX olsun (mobil ile birebir aynı). Kanban dalında da filtre aktifken 0 sonuçta sütun ızgarası yerine aynı \"Eşleşen kayıt yok\" boş durumu gösterilsin. Doğrulama: probe-bakim-r9d.ts çıktısında desktop === mobile.",
+          "file": "apps/web/src/modules/maintenance/components/orders-view.tsx:187 (ve kanban dalı için 187. satırdaki OrdersBoard sarmalayıcısı)",
+          "openedRound": 9
+        }
+      ],
       "closed": [
         {
           "id": "bakim-isemirleri-01",
@@ -346,7 +357,7 @@
       ]
     },
     "/bakim/is-emirleri/[id]": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -364,9 +375,9 @@
         5
       ],
       "total": 60,
-      "verdict": "KAZANAN: Linear — toplam 59 ≥ 57 ve hiçbir kriter < 4, ama 1 açık P1 var (bakim-isemirleri-06); kazanma kuralı: açık P0/P1 yok.",
-      "sampleId": "4e8faceb-c7d3-426d-a7ae-7dd20d398356 (MO-2026-000006, reported) + 9c621b3c-f7ba-4098-aa83-d6a08f60da1d (MO-2026-000003, periyodik/done)",
-      "scoreNotes": "Tur 8 delta (+1): k12 4→5 — bakim-isemirleri-06 kapandı ve bağımsız doğrulandı. MO-2026-000001 (2 fotoğraflı, en kötü durum) üzerinde ölçüldü: sayfada <img> yok (measure images=0), \"Fotoğraflar (2)\" döşemeleri bg-muted zemin + 16px Camera ikonu + 11px dosya adı (\"ariza-mk005-1.png\") + 11px zaman damgası; opak siyah blok yok (artifacts/screens/bakim-is-emirleri-208a5535-6972-4f54-998e-ac73c325f03c/{desktop,mobile}.png). Diğer ölçümler: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 19/18, h1 24px/600 (mobil 20px/600), fontSizes {13:47, 12:24, 11:18}, 390px'te 44px altı görünür dokunma hedefi yok.",
+      "verdict": "Plantero",
+      "sampleId": "ba035ca9-d4a3-4985-b584-246976080a7b (MO-2026-000001, 2 fotoğraf)",
+      "scoreNotes": "Tur 9 delta 0 (veritabanı yeniden tohumlandı, örnek id değişti). Yeniden ölçüm: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 19/18, h1 24px/600 (mobil 20px/600), fontSizes {13:47, 12:24, 11:18}, 390px’te 44px altı görünür dokunma hedefi yok. Fotoğraf ızgarası ölçüldü (probe-bakim-r9.ts photoTiles1440): md:grid-cols-4 → 270,5px sütun, döşeme 271×299px (271 kare + 28px zaman damgası satırı) — devasa gri blok yok, bakim-isemirleri-06 kapalı kalır. Kod taraması: order-detail.tsx’te transition-all/ease-in/scale(0)/≥300ms yok.",
       "open": [],
       "closed": [
         {
@@ -540,7 +551,7 @@
       ]
     },
     "/bakim/makineler/[id]": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -558,9 +569,9 @@
         5
       ],
       "total": 60,
-      "verdict": "KAZANAN: Plantero — 60 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok.",
-      "sampleId": "33337421-27cf-411d-be97-5575b41d9222 (MK-001, Ön ezme)",
-      "scoreNotes": "Tur 8 yeniden ölçüm (artifacts/critic/measure-bakim-r8/*.json): MK-001 (ded6686c) üzerinde ölçüldü — scrollWidth 1440=1440 / 390=390, distinctColors 19/18, h1 24px/600 (mobil 20px/600), fontSizes {13:37, 12:9, 11:9, 14:8}, sekmeler 44px ve mobilde yatay kaydırma soldurmasıyla, 390px'te 44px altı görünür dokunma hedefi yok. Delta 0.",
+      "verdict": "Plantero",
+      "sampleId": "aa5d7575-e217-4929-b1ec-16c44bb628bc (MK-001)",
+      "scoreNotes": "Tur 9 delta 0 (yeniden tohumlama sonrası MK-001 id değişti). Yeniden ölçüm: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 19/18, h1 24px/600 (mobil 20px/600), fontSizes {13:37, 11:9, 12:9, 14:8}; \"Son iş emirleri\" bağlantı satırları 44px (min-h-11), sekmeler mobilde yatay kaydırma + soldurma ile; 390px’te 44px altı görünür dokunma hedefi yok. Bu rotada KPI şeridi yok — k9 5 kalır.",
       "open": [],
       "closed": [
         {
@@ -692,7 +703,7 @@
       ]
     },
     "/bakim/is-emirleri/yeni": {
-      "round": 8,
+      "round": 9,
       "reference": "linear",
       "referenceTotal": 57,
       "scores": [
@@ -710,8 +721,8 @@
         5
       ],
       "total": 60,
-      "verdict": "KAZANAN: Plantero — 60 ≥ 57, hiçbir kriter < 4, açık P0/P1 yok.",
-      "scoreNotes": "Tur 8 yeniden ölçüm (artifacts/critic/measure-bakim-r8/*.json): scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 16/15, h1 24px/600 (mobil 20px/600), fontSizes {13:30, 14:4, 11:3}, 390px'te 44px altı görünür dokunma hedefi yalnızca FormSelect'in 1×1 gizli native <select>'i (ortak bileşen, görünmez). Delta 0.",
+      "verdict": "Plantero",
+      "scoreNotes": "Tur 9 delta 0. Yeniden ölçüm: scrollWidth 1440=1440 / 390=390 (overflowX false), distinctColors 16/15, h1 24px/600 (mobil 20px/600), fontSizes {13:30, 14:4, 11:3}. Yeni doğrulama (scripts/probe-bakim-r9b.ts, 390x844, sayfa sonuna kaydırılmış — maxScroll 70): fotoğraf ekleme döşemesi 103×103px, y 544→646; sabit aksiyon çubuğunun butonu y 708→752 (44px), alt gezinme y 787→844 — elementFromPoint ile döşemenin %15/%50/%90 noktalarında ÖRTÜLME YOK. 390px’te 44px altı tek dokunma hedefi FormSelect’in 1×1 gizli native <select>’i (ortak bileşen, görünmez). Bu rotada KPI şeridi yok — k9 5 kalır.",
       "open": [],
       "closed": [
         {
@@ -820,15 +831,15 @@
         5
       ],
       "total": 59,
-      "verdict": "KAZANAN: Plantero — 59 ≥ 56, hiçbir kriter < 4, açık P0/P1 yok (kalan tek bulgu P2, ortak bileşen).",
-      "scoreNotes": "Tur 9 (builder düzeltmesi, kritik bulgusu üzerine): k5 4→5, bakim-oee-13 kapandı — YAxis tavanı sabit [0,25,50,75,100]/domain=[0,100] (yüzde ekseni artık tanım üst sınırını aşamaz), deadTopPx 76.5→0, en üst tick %150→%100 (scripts/probe-bakim-r8f.ts, her iki viewport). k9 4 KALDI: bakim-oee-04 açık — KPI şeridi @390 scrollWidth 792 > clientWidth 358, kök neden apps/web/src/components/kpi-strip.tsx (ortak bileşen); bakım modülü yazım kapsamı dışında, sharedComponentRequest olarak raporlandı. Diğer ölçümler değişmedi (satır 36px×3, scrollWidth 1440=1440/390=390, distinctColors 17/15, h1 24px/600).",
+      "verdict": "Plantero",
+      "scoreNotes": "Tur 9 (kritik yeniden ölçümü) delta 0 — k5 5 (bakim-oee-13 Tur 9’da kapandı: YAxis domain [0,100], en üst tick %100), k9 4 (bakim-oee-04 açık, P2). Yeniden ölçüm: KpiStripRow @390 scrollWidth 792 > clientWidth 358, 5 karttan 2’si tam görünüyor (3. kart \"Performans\" kesik) — değişmedi. Rakam sunumu doğrulandı (probe-bakim-r9f.ts): \"Hat bazlı OEE\" tablosundaki tüm sayısal hücreler font-variant-numeric: tabular-nums + text-align: right; KPI değerleri 13px/tabular-nums. Odak halkası doğrulandı (probe-bakim-r9g.ts): \"Tüm hatlar/HAT1/HAT2/HAT3\" çipleri gerçek Tab ile :focus-visible eşleşiyor ve outline-ring/50 renginde görünür halka çiziyor (artifacts/critic/bakim-r9-oee-focus-chip.png) — k8 5 doğrulandı. Diğer: satır 36px × 3, scrollWidth 1440=1440 / 390=390, distinctColors 17/15, h1 24px/600. Toplam 59 ≥ Stripe 56, hiçbir kriter <4, açık P0/P1 yok → KAZANAN: Plantero (bakim-oee-04 P2 kazanmayı engellemez).",
       "open": [
         {
           "id": "bakim-oee-04",
           "criterion": 9,
           "severity": "P2",
           "text": "Mobilde 5 kartlık KPI şeridinde ilk ekranda yalnızca 2 kart tam görünüyor; 3. kart (\"Performans\") etiket ortasından kesik.",
-          "measure": "Tur 6 (yeniden ölçüldü, değişmedi): KpiStripRow scrollWidth 792 > clientWidth 358 @390x844; 3. kart (\"Performans\") 390px kenarında kesik. Belge kökünde taşma yok (390=390).",
+          "measure": "Tur 9 (yeniden ölçüldü, değişmedi): KpiStripRow scrollWidth 792 > clientWidth 358 @390x844; 5 karttan yalnızca 2’si tam görünür, 3. kart (\"Performans\") 390px kenarında kesik. Aynı kök neden /bakim/makineler’de de ölçüldü: scrollWidth 632 > clientWidth 358, 4 karttan 2’si tam, \"Arızalı\" kesik. Belge kökünde taşma yok (390=390).",
           "target": "mobilde ya 2 sütunlu ızgara (2×2+1) ya da ilk ekranda en az 3 kartın tamamı görünsün",
           "file": "apps/web/src/components/kpi-strip.tsx (ortak bileşen — kök neden shell'e ait; burada yalnızca etkisi izleniyor)",
           "openedRound": 3

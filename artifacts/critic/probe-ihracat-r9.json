@@ -1,0 +1,1024 @@
+{
+ "_ids": {
+  "SHIP": "0f9035b9-a5c9-47c0-b4f9-05654a4ed910",
+  "SHIP_CLOSED": "424e3c84-1303-4e90-aa0c-745eaa824e0c"
+ },
+ "sevkiyatlar_tables": [
+  {
+   "tableWidth": 1152,
+   "containerWidth": 1152,
+   "containerScrollWidth": 1152,
+   "rows": 3,
+   "cols": [
+    {
+     "head": "Sevkiyat no",
+     "width": 158,
+     "maxContent": 117,
+     "slack": 41,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 3,
+     "sample": [
+      "EXP-2026-000001",
+      "EXP-2026-000002",
+      "EXP-2026-000003"
+     ]
+    },
+    {
+     "head": "Müşteri",
+     "width": 190,
+     "maxContent": 146,
+     "slack": 44,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 1,
+     "sample": [
+      "BioGrün Handels GmbH"
+     ]
+    },
+    {
+     "head": "Durum",
+     "width": 140,
+     "maxContent": 82,
+     "slack": 58,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 3,
+     "sample": [
+      "Kapalı",
+      "Gümrükte",
+      "Taslak"
+     ]
+    },
+    {
+     "head": "Ülke",
+     "width": 65,
+     "maxContent": 41,
+     "slack": 24,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 2,
+     "sample": [
+      "DE",
+      "NL"
+     ]
+    },
+    {
+     "head": "Rejim",
+     "width": 76,
+     "maxContent": 52,
+     "slack": 24,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 2,
+     "sample": [
+      "ETGB",
+      "Standart"
+     ]
+    },
+    {
+     "head": "Belgeler",
+     "width": 87,
+     "maxContent": 63,
+     "slack": 24,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 3,
+     "sample": [
+      "9/11",
+      "2/8",
+      "6/11"
+     ]
+    },
+    {
+     "head": "Tutar (döviz)",
+     "width": 120,
+     "maxContent": 96,
+     "slack": 24,
+     "align": "right",
+     "rowsWithText": 3,
+     "distinctValues": 3,
+     "sample": [
+      "€270,00",
+      "€16.800,00",
+      "€0,00"
+     ]
+    },
+    {
+     "head": "ETD",
+     "width": 96,
+     "maxContent": 68,
+     "slack": 28,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 2,
+     "sample": [
+      "—",
+      "10.09.2026"
+     ]
+    },
+    {
+     "head": "Oluşturma",
+     "width": 99,
+     "maxContent": 75,
+     "slack": 24,
+     "align": "left",
+     "rowsWithText": 3,
+     "distinctValues": 1,
+     "sample": [
+      "07.09.2026"
+     ]
+    },
+    {
+     "head": "Tutar (₺)",
+     "width": 120,
+     "maxContent": 81,
+     "slack": 39,
+     "align": "right",
+     "rowsWithText": 3,
+     "distinctValues": 3,
+     "sample": [
+      "₺10.044,00",
+      "₺624.960,00",
+      "₺2.678,40"
+     ]
+    }
+   ]
+  }
+ ],
+ "sevkiyatlar_kpi": [],
+ "sevkiyatlar_scroll": {
+  "sw": 1440,
+  "cw": 1440
+ },
+ "sevkiyatlar_hiddenCols": "Sütunlar",
+ "belgeler_tables": [
+  {
+   "tableWidth": 1152,
+   "containerWidth": 1152,
+   "containerScrollWidth": 1152,
+   "rows": 30,
+   "cols": [
+    {
+     "head": "Belge",
+     "width": 330,
+     "maxContent": 220,
+     "slack": 110,
+     "align": "left",
+     "rowsWithText": 30,
+     "distinctValues": 12,
+     "sample": [
+      "ATR dolaşım belgesi",
+      "EUR.1 dolaşım sertifikası",
+      "Sağlık sertifikası"
+     ]
+    },
+    {
+     "head": "Sevkiyat",
+     "width": 225,
+     "maxContent": 150,
+     "slack": 75,
+     "align": "left",
+     "rowsWithText": 30,
+     "distinctValues": 3,
+     "sample": [
+      "EXP-2026-000001",
+      "EXP-2026-000002",
+      "EXP-2026-000003"
+     ]
+    },
+    {
+     "head": "Müşteri",
+     "width": 342,
+     "maxContent": 228,
+     "slack": 114,
+     "align": "left",
+     "rowsWithText": 30,
+     "distinctValues": 1,
+     "sample": [
+      "BioGrün Handels GmbH"
+     ]
+    },
+    {
+     "head": "Durum",
+     "width": 195,
+     "maxContent": 91,
+     "slack": 104,
+     "align": "left",
+     "rowsWithText": 30,
+     "distinctValues": 5,
+     "sample": [
+      "Gerekmiyor",
+      "Gerekli",
+      "Gönderildi"
+     ]
+    },
+    {
+     "head": "Eylemler",
+     "width": 60,
+     "maxContent": 50,
+     "slack": 10,
+     "align": "right",
+     "rowsWithText": 0,
+     "distinctValues": 0,
+     "sample": []
+    }
+   ]
+  }
+ ],
+ "belgeler_kpi": [],
+ "belgeler_scroll": {
+  "sw": 1440,
+  "cw": 1440
+ },
+ "belgeler_hiddenCols": "Sütunlar",
+ "kurlar_tables": [
+  {
+   "tableWidth": 1152,
+   "containerWidth": 1152,
+   "containerScrollWidth": 1152,
+   "rows": 25,
+   "cols": [
+    {
+     "head": "Tarih",
+     "width": 185,
+     "maxContent": 71,
+     "slack": 114,
+     "align": "left",
+     "rowsWithText": 25,
+     "distinctValues": 13,
+     "sample": [
+      "07.09.2026",
+      "06.09.2026",
+      "05.09.2026"
+     ]
+    },
+    {
+     "head": "Para birimi",
+     "width": 201,
+     "maxContent": 89,
+     "slack": 112,
+     "align": "left",
+     "rowsWithText": 25,
+     "distinctValues": 2,
+     "sample": [
+      "EUR",
+      "USD"
+     ]
+    },
+    {
+     "head": "Alış",
+     "width": 175,
+     "maxContent": 62,
+     "slack": 112,
+     "align": "right",
+     "rowsWithText": 25,
+     "distinctValues": 23,
+     "sample": [
+      "₺37,2000",
+      "₺34,0738",
+      "₺38,5000"
+     ]
+    },
+    {
+     "head": "Satış",
+     "width": 175,
+     "maxContent": 62,
+     "slack": 112,
+     "align": "right",
+     "rowsWithText": 25,
+     "distinctValues": 23,
+     "sample": [
+      "Satış₺37,4000",
+      "Satış₺34,2237",
+      "Satış₺38,7000"
+     ]
+    },
+    {
+     "head": "Günlük değişim",
+     "width": 231,
+     "maxContent": 117,
+     "slack": 115,
+     "align": "right",
+     "rowsWithText": 25,
+     "distinctValues": 18,
+     "sample": [
+      "-%3,36",
+      "+%0,75",
+      "+%4,66"
+     ]
+    },
+    {
+     "head": "Kaynak",
+     "width": 185,
+     "maxContent": 71,
+     "slack": 115,
+     "align": "left",
+     "rowsWithText": 25,
+     "distinctValues": 1,
+     "sample": [
+      "TCMB"
+     ]
+    }
+   ]
+  }
+ ],
+ "kurlar_kpi": [],
+ "kurlar_scroll": {
+  "sw": 1440,
+  "cw": 1440
+ },
+ "kurlar_hiddenCols": "Sütunlar",
+ "gtip_tables": [
+  {
+   "tableWidth": 1152,
+   "containerWidth": 1152,
+   "containerScrollWidth": 1152,
+   "rows": 39,
+   "cols": [
+    {
+     "head": "SKU",
+     "width": 179,
+     "maxContent": 70,
+     "slack": 109,
+     "align": "left",
+     "rowsWithText": 39,
+     "distinctValues": 39,
+     "sample": [
+      "110010001",
+      "110010002",
+      "110010003"
+     ]
+    },
+    {
+     "head": "Ürün",
+     "width": 519,
+     "maxContent": 420,
+     "slack": 99,
+     "align": "left",
+     "rowsWithText": 39,
+     "distinctValues": 39,
+     "sample": [
+      "BADEM BAZI",
+      "2x Badem Bazı",
+      "3x Badem Bazı"
+     ]
+    },
+    {
+     "head": "Tip",
+     "width": 151,
+     "maxContent": 71,
+     "slack": 81,
+     "align": "left",
+     "rowsWithText": 39,
+     "distinctValues": 2,
+     "sample": [
+      "Mamul",
+      "Hammadde"
+     ]
+    },
+    {
+     "head": "GTİP",
+     "width": 303,
+     "maxContent": 279,
+     "slack": 24,
+     "align": "left",
+     "rowsWithText": 39,
+     "distinctValues": 2,
+     "sample": [
+      "Eşlenmedi",
+      "0901.21"
+     ]
+    }
+   ]
+  }
+ ],
+ "gtip_kpi": [],
+ "gtip_scroll": {
+  "sw": 1440,
+  "cw": 1440
+ },
+ "gtip_hiddenCols": "Sütunlar",
+ "detay_customs": {
+  "Sipariş satırları": {
+   "panelWidth": 1152,
+   "tableWidth": 1152,
+   "deadRightPx": 0,
+   "panelHeight": 72,
+   "text": "ÜrünSKUMiktarSevk edilenBirim fiyatTutarBadem İçeceği 1 Litrelik UHT19001009940 ADET40€420,00€16.800,00Badem İçeceği 1 Litrelik UHT190010099·40 ADET€16.800,00"
+  },
+  "Sipariş satırları__cols": [
+   {
+    "tableWidth": 1152,
+    "containerWidth": 1152,
+    "containerScrollWidth": 1152,
+    "rows": 1,
+    "cols": [
+     {
+      "head": "Ürün",
+      "width": 292,
+      "maxContent": 268,
+      "slack": 24,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "Badem İçeceği 1 Litrelik UHT"
+      ]
+     },
+     {
+      "head": "SKU",
+      "width": 175,
+      "maxContent": 65,
+      "slack": 110,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "190010099"
+      ]
+     },
+     {
+      "head": "Miktar",
+      "width": 160,
+      "maxContent": 64,
+      "slack": 96,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "40 ADET"
+      ]
+     },
+     {
+      "head": "Sevk edilen",
+      "width": 160,
+      "maxContent": 94,
+      "slack": 66,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "40"
+      ]
+     },
+     {
+      "head": "Birim fiyat",
+      "width": 175,
+      "maxContent": 86,
+      "slack": 89,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "€420,00"
+      ]
+     },
+     {
+      "head": "Tutar",
+      "width": 189,
+      "maxContent": 73,
+      "slack": 116,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "€16.800,00"
+      ]
+     }
+    ]
+   }
+  ],
+  "Çeki listesi": {
+   "panelWidth": 1152,
+   "tableWidth": 1152,
+   "deadRightPx": 0,
+   "panelHeight": 72,
+   "text": "Kap noÜrünSKULotMiktarGTİPNet kgBrüt kg#1Badem İçeceği 1 Litrelik UHT190010099PL-260822-H1-0540 ADET2202.99——Badem İçeceği 1 Litrelik UHTPL-260822-H1-05190010099·#140 ADET"
+  },
+  "Çeki listesi__cols": [
+   {
+    "tableWidth": 1152,
+    "containerWidth": 1152,
+    "containerScrollWidth": 1152,
+    "rows": 1,
+    "cols": [
+     {
+      "head": "Kap no",
+      "width": 98,
+      "maxContent": 68,
+      "slack": 30,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "#1"
+      ]
+     },
+     {
+      "head": "Ürün",
+      "width": 246,
+      "maxContent": 222,
+      "slack": 24,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "Badem İçeceği 1 Litrelik UHT"
+      ]
+     },
+     {
+      "head": "SKU",
+      "width": 147,
+      "maxContent": 65,
+      "slack": 82,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "190010099"
+      ]
+     },
+     {
+      "head": "Lot",
+      "width": 184,
+      "maxContent": 104,
+      "slack": 80,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "PL-260822-H1-05"
+      ]
+     },
+     {
+      "head": "Miktar",
+      "width": 135,
+      "maxContent": 64,
+      "slack": 70,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "40 ADET"
+      ]
+     },
+     {
+      "head": "GTİP",
+      "width": 122,
+      "maxContent": 55,
+      "slack": 67,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "2202.99"
+      ]
+     },
+     {
+      "head": "Net kg",
+      "width": 110,
+      "maxContent": 65,
+      "slack": 45,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "—"
+      ]
+     },
+     {
+      "head": "Brüt kg",
+      "width": 110,
+      "maxContent": 69,
+      "slack": 41,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "—"
+      ]
+     }
+    ]
+   }
+  ],
+  "Belgeler": {
+   "panelWidth": 1152,
+   "tableWidth": 1152,
+   "deadRightPx": 0,
+   "panelHeight": 368,
+   "text": "Durum8 kayıtBelgeDurumBelge noVadeEylemlerProforma faturaGönderildiPF-EXP-2026-000002—Ticari faturaGerekli——Çeki listesi (packing list)Hazır——Menşe şahadetnamesiGerekli——Sağlık ser"
+  },
+  "Belgeler__cols": [
+   {
+    "tableWidth": 1152,
+    "containerWidth": 1152,
+    "containerScrollWidth": 1152,
+    "rows": 8,
+    "cols": [
+     {
+      "head": "Belge",
+      "width": 448,
+      "maxContent": 320,
+      "slack": 128,
+      "align": "left",
+      "rowsWithText": 8,
+      "distinctValues": 8,
+      "sample": [
+       "Proforma fatura",
+       "Ticari fatura",
+       "Çeki listesi (packing list)"
+      ]
+     },
+     {
+      "head": "Durum",
+      "width": 198,
+      "maxContent": 91,
+      "slack": 107,
+      "align": "left",
+      "rowsWithText": 8,
+      "distinctValues": 4,
+      "sample": [
+       "Gönderildi",
+       "Gerekli",
+       "Hazır"
+      ]
+     },
+     {
+      "head": "Belge no",
+      "width": 281,
+      "maxContent": 139,
+      "slack": 142,
+      "align": "left",
+      "rowsWithText": 8,
+      "distinctValues": 2,
+      "sample": [
+       "PF-EXP-2026-000002",
+       "—"
+      ]
+     },
+     {
+      "head": "Vade",
+      "width": 155,
+      "maxContent": 57,
+      "slack": 98,
+      "align": "left",
+      "rowsWithText": 8,
+      "distinctValues": 1,
+      "sample": [
+       "—"
+      ]
+     },
+     {
+      "head": "Eylemler",
+      "width": 69,
+      "maxContent": 50,
+      "slack": 19,
+      "align": "right",
+      "rowsWithText": 0,
+      "distinctValues": 0,
+      "sample": []
+     }
+    ]
+   }
+  ],
+  "Fatura & kur": {
+   "panelWidth": 1152,
+   "tableWidth": null,
+   "deadRightPx": null,
+   "panelHeight": 217,
+   "text": "İhracat faturasıHenüz bağlı fatura yokSevkiyat yüklendikten (Yüklendi/Teslim edildi) ve faturalandıktan sonra buraya bağlanır.Kur bilgisiPara birimiEURKur (TCMB)₺37,2000Kur tarihi0"
+  },
+  "Fatura & kur__cols": []
+ },
+ "detay_closed": {
+  "Sipariş satırları": {
+   "panelWidth": 1152,
+   "tableWidth": 1152,
+   "deadRightPx": 0,
+   "panelHeight": 72,
+   "text": "ÜrünSKUMiktarSevk edilenBirim fiyatTutarPlantero COSTA RICA KAHVE16002000130 ADET30€9,00€270,00Plantero COSTA RICA KAHVE160020001·30 ADET€270,00"
+  },
+  "Sipariş satırları__cols": [
+   {
+    "tableWidth": 1152,
+    "containerWidth": 1152,
+    "containerScrollWidth": 1152,
+    "rows": 1,
+    "cols": [
+     {
+      "head": "Ürün",
+      "width": 298,
+      "maxContent": 274,
+      "slack": 24,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "Plantero COSTA RICA KAHVE"
+      ]
+     },
+     {
+      "head": "SKU",
+      "width": 174,
+      "maxContent": 65,
+      "slack": 109,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "160020001"
+      ]
+     },
+     {
+      "head": "Miktar",
+      "width": 159,
+      "maxContent": 64,
+      "slack": 95,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "30 ADET"
+      ]
+     },
+     {
+      "head": "Sevk edilen",
+      "width": 159,
+      "maxContent": 94,
+      "slack": 65,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "30"
+      ]
+     },
+     {
+      "head": "Birim fiyat",
+      "width": 174,
+      "maxContent": 86,
+      "slack": 88,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "€9,00"
+      ]
+     },
+     {
+      "head": "Tutar",
+      "width": 188,
+      "maxContent": 58,
+      "slack": 131,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "€270,00"
+      ]
+     }
+    ]
+   }
+  ],
+  "Çeki listesi": {
+   "panelWidth": 1152,
+   "tableWidth": 1152,
+   "deadRightPx": 0,
+   "panelHeight": 72,
+   "text": "Kap noÜrünSKULotMiktarGTİPNet kgBrüt kg#1Plantero COSTA RICA KAHVE160020001PL-260801-H2-0230 ADET0901.21——Plantero COSTA RICA KAHVEPL-260801-H2-02160020001·#130 ADET"
+  },
+  "Çeki listesi__cols": [
+   {
+    "tableWidth": 1152,
+    "containerWidth": 1152,
+    "containerScrollWidth": 1152,
+    "rows": 1,
+    "cols": [
+     {
+      "head": "Kap no",
+      "width": 98,
+      "maxContent": 68,
+      "slack": 29,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "#1"
+      ]
+     },
+     {
+      "head": "Ürün",
+      "width": 250,
+      "maxContent": 226,
+      "slack": 24,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "Plantero COSTA RICA KAHVE"
+      ]
+     },
+     {
+      "head": "SKU",
+      "width": 146,
+      "maxContent": 65,
+      "slack": 81,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "160020001"
+      ]
+     },
+     {
+      "head": "Lot",
+      "width": 183,
+      "maxContent": 104,
+      "slack": 79,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "PL-260801-H2-02"
+      ]
+     },
+     {
+      "head": "Miktar",
+      "width": 134,
+      "maxContent": 64,
+      "slack": 70,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "30 ADET"
+      ]
+     },
+     {
+      "head": "GTİP",
+      "width": 122,
+      "maxContent": 55,
+      "slack": 66,
+      "align": "left",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "0901.21"
+      ]
+     },
+     {
+      "head": "Net kg",
+      "width": 110,
+      "maxContent": 65,
+      "slack": 44,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "—"
+      ]
+     },
+     {
+      "head": "Brüt kg",
+      "width": 110,
+      "maxContent": 69,
+      "slack": 41,
+      "align": "right",
+      "rowsWithText": 1,
+      "distinctValues": 1,
+      "sample": [
+       "—"
+      ]
+     }
+    ]
+   }
+  ],
+  "Belgeler": {
+   "panelWidth": 1152,
+   "tableWidth": 1152,
+   "deadRightPx": 0,
+   "panelHeight": 476,
+   "text": "Durum11 kayıtBelgeDurumBelge noVadeEylemlerProforma faturaGönderildiPF-EXP-2026-000001—Ticari faturaGönderildiINV-2026-000012—Çeki listesi (packing list)Hazır——ATR dolaşım belgesiG"
+  },
+  "Belgeler__cols": [
+   {
+    "tableWidth": 1152,
+    "containerWidth": 1152,
+    "containerScrollWidth": 1152,
+    "rows": 11,
+    "cols": [
+     {
+      "head": "Belge",
+      "width": 450,
+      "maxContent": 320,
+      "slack": 130,
+      "align": "left",
+      "rowsWithText": 11,
+      "distinctValues": 11,
+      "sample": [
+       "Proforma fatura",
+       "Ticari fatura",
+       "Çeki listesi (packing list)"
+      ]
+     },
+     {
+      "head": "Durum",
+      "width": 199,
+      "maxContent": 91,
+      "slack": 108,
+      "align": "left",
+      "rowsWithText": 11,
+      "distinctValues": 5,
+      "sample": [
+       "Gönderildi",
+       "Hazır",
+       "Gerekmiyor"
+      ]
+     },
+     {
+      "head": "Belge no",
+      "width": 278,
+      "maxContent": 136,
+      "slack": 141,
+      "align": "left",
+      "rowsWithText": 11,
+      "distinctValues": 4,
+      "sample": [
+       "PF-EXP-2026-000001",
+       "INV-2026-000012",
+       "—"
+      ]
+     },
+     {
+      "head": "Vade",
+      "width": 156,
+      "maxContent": 57,
+      "slack": 99,
+      "align": "left",
+      "rowsWithText": 11,
+      "distinctValues": 1,
+      "sample": [
+       "—"
+      ]
+     },
+     {
+      "head": "Eylemler",
+      "width": 69,
+      "maxContent": 50,
+      "slack": 20,
+      "align": "right",
+      "rowsWithText": 0,
+      "distinctValues": 0,
+      "sample": []
+     }
+    ]
+   }
+  ],
+  "Fatura & kur": {
+   "panelWidth": 1152,
+   "tableWidth": null,
+   "deadRightPx": null,
+   "panelHeight": 228,
+   "text": "İhracat faturası INV-2026-000012Tahsil edildiTutar€270,00TL karşılığı₺10.044,00Kur₺37,2000Vade14.09.2026Tahsil edilen€270,00Kalan€0,00Kur bilgisiPara birimiEURKur (TCMB)₺37,2000Kur"
+  },
+  "Fatura & kur__cols": []
+ },
+ "detay_mobil": {
+  "Sipariş satırları": {
+   "sw": 390,
+   "cw": 390,
+   "tables": [
+    {
+     "w": 0,
+     "sw": 0
+    }
+   ]
+  },
+  "Çeki listesi": {
+   "sw": 390,
+   "cw": 390,
+   "tables": [
+    {
+     "w": 0,
+     "sw": 0
+    }
+   ]
+  },
+  "Belgeler": {
+   "sw": 390,
+   "cw": 390,
+   "tables": [
+    {
+     "w": 0,
+     "sw": 0
+    }
+   ]
+  },
+  "Fatura & kur": {
+   "sw": 390,
+   "cw": 390,
+   "tables": []
+  }
+ }
+}
