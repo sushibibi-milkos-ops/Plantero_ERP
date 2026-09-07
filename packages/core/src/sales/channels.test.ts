@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { eq } from 'drizzle-orm';
-import { salesChannels, partners, products, channelOrders, type Tx } from '@plantero/db';
+import { salesChannels, partners, products, channelOrders, salesOrders, type Tx } from '@plantero/db';
 import { ingestChannelOrders, getChannelRevenue, type ChannelOrderInput } from './channels.js';
 import { withRollback, seedBase, ctx, today, type Base } from '../__tests__/helpers.js';
 
@@ -63,6 +63,37 @@ describe('sales/channels', () => {
       const row = rows.find((r) => r.channelId === channel.id)!;
       expect(row.orderCount).toBe(1);
       expect(row.subtotal.toFixed(2)).toBe('100.00'); // 2×50
+    });
+  });
+
+  // Tur 14 P0 kök neden düzeltmesi (checks/65_channel_order_amount_drift.sql, I65): kanaldaki statik
+  // commissionPct'in pazaryerinin o siparişe özel GERÇEK raporladığı kesintiden SAPTIĞI (canlı modda her
+  // zaman olacak) durumu simüle eder — channel.commissionPct='20' iken channel_orders GERÇEKTE %35
+  // komisyon bildiriyor (subtotal=200, gerçek komisyon=70, gerçek net=130).
+  it('convertChannelOrder GERÇEK channel_orders kesintilerini sales_orders\'a aktarır (statik oranla yeniden hesaplamaz)', async () => {
+    await withRollback(async (tx) => {
+      const b = await seedBase(tx);
+      const channel = await seedChannelWithPartner(tx, b); // commissionPct='20' (statik, sipariş bazlı gerçek oranla ASLA örtüşmemeli)
+
+      const realOrder: ChannelOrderInput = {
+        externalId: 'TY-REAL-001', orderedAt: `${today()}T10:00:00.000Z`, externalStatus: 'Delivered', customerName: 'Test Müşteri',
+        // subtotal (satırlardan) = 2×100 = 200. Pazaryeri GERÇEKTE %35 komisyon uyguluyor (statik %20 DEĞİL).
+        grossAmount: '200.0000', commissionAmount: '70.0000', shippingAmount: '0.0000', netAmount: '130.0000', currency: 'TRY',
+        lines: [{ barcode: `BC-${b.s}`, productName: 'Ürün', qty: '2', unitPrice: '100.0000' }],
+      };
+      const res = await ingestChannelOrders(tx, channel.id, [realOrder], ctx);
+      expect(res).toMatchObject({ fetched: 1, converted: 1, errors: 0 });
+
+      const [co] = await tx.select().from(channelOrders).where(eq(channelOrders.channelId, channel.id));
+      expect(co!.commissionAmount).toBe('70.0000'); // ham kayıt her zaman gerçek raporu taşır (değişmez)
+
+      const [so] = await tx.select().from(salesOrders).where(eq(salesOrders.id, co!.salesOrderId!));
+      // Statik %20 ile YENİDEN hesaplansaydı 200×0.20=40.0000 olurdu — bu artık BEKLENMİYOR.
+      expect(so!.commissionAmount).toBe('70.0000');
+      expect(so!.shippingDeduction).toBe('0.0000');
+      expect(so!.netRevenue).toBe('130.0000');
+      // otherDeduction = subtotal(200) − commission(70) − shipping(0) − net(130) = 0 (bu senaryoda tam örtüşüyor)
+      expect(so!.otherDeduction).toBe('0.0000');
     });
   });
 });

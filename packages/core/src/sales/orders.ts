@@ -218,6 +218,39 @@ export async function recomputeOrderTotals(tx: DbOrTx, orderId: string, channelR
     .where(eq(salesOrders.id, orderId));
 }
 
+export type RealChannelDeductions = { commissionAmount: Decimal; shippingDeduction: Decimal; netRevenue: Decimal };
+
+/**
+ * Kök neden düzeltmesi (tur 14 P0, `checks/65_channel_order_amount_drift.sql`, I65): pazaryeri
+ * senkronundan dönüştürülen siparişlerde `recomputeOrderTotals`/`computeChannelDeductions`in kanal
+ * ayarındaki STATİK orana göre YENİDEN hesapladığı komisyon/kargo/net ciro tutarlarının üzerine,
+ * pazaryerinin KENDİ API'sinin o siparişe özel raporladığı GERÇEK tutarları (`channel_orders.
+ * commission_amount/shipping_amount/net_amount`) yazar — statik oran canlı modda hiçbir zaman
+ * pazaryerinin gerçek (kategori/kampanya bazlı) oranıyla birebir örtüşmez. `otherDeduction`, satırlardan
+ * hesaplanan `subtotal` ile bu üç GERÇEK tutar arasındaki farkı (`subtotal − commission − shipping −
+ * net`) taşıyan bir bakiye olarak türetilir — statik oranın açıklayamadığı fark (promosyon, kampanya,
+ * yuvarlama) sessizce kaybolmaz, "diğer kesinti" kaleminde görünür kalır. Yalnızca pazaryeri senkronu
+ * (`channels.ts::convertChannelOrder`) çağırır; elle oluşturulan siparişlerde `computeChannelDeductions`
+ * (statik oran) bir TAHMİN/varsayılan olarak kullanılmaya devam eder — gerçek rakam yoktur çünkü.
+ */
+export async function applyRealChannelDeductions(tx: DbOrTx, orderId: string, real: RealChannelDeductions): Promise<void> {
+  const [order] = await tx.select().from(salesOrders).where(eq(salesOrders.id, orderId)).limit(1);
+  if (!order) throw new NotFoundError('Satış belgesi', orderId);
+  const subtotal = D(order.subtotal);
+  const commissionAmount = round4(real.commissionAmount);
+  const shippingDeduction = round4(real.shippingDeduction);
+  const netRevenue = round4(real.netRevenue);
+  const otherDeduction = round4(subtotal.minus(commissionAmount).minus(shippingDeduction).minus(netRevenue));
+
+  await tx
+    .update(salesOrders)
+    .set({
+      commissionAmount: toDb(commissionAmount), shippingDeduction: toDb(shippingDeduction),
+      otherDeduction: toDb(otherDeduction), netRevenue: toDb(netRevenue),
+    })
+    .where(eq(salesOrders.id, orderId));
+}
+
 /** Satırları tamamen değiştirir (yalnızca düzenlenebilir durumdaki belgeler — taslak teklif/sipariş). */
 export async function updateLines(tx: DbOrTx, orderId: string, lines: SalesLineInput[], ctx: ActorCtx): Promise<SalesDocWithLines> {
   const [order] = await tx.select().from(salesOrders).where(eq(salesOrders.id, orderId)).for('update');

@@ -4,7 +4,7 @@ import { channelOrders, salesChannels, salesOrders, partners, products, type DbO
 import { D, toDb } from '../money.js';
 import { businessDate } from '../dates.js';
 import { NotFoundError, ValidationError, DomainError } from '../auth/errors.js';
-import { createSalesDoc, confirmOrder, resolveDefaultSalesWarehouse } from './orders.js';
+import { createSalesDoc, confirmOrder, resolveDefaultSalesWarehouse, applyRealChannelDeductions } from './orders.js';
 import type { ActorCtx } from '../types.js';
 
 /**
@@ -78,6 +78,10 @@ export async function convertChannelOrder(tx: DbOrTx, channelOrderId: string, ct
     externalOrderNo: co.externalId, origin: 'manual',
     lines: lines.map((l) => ({ productId: productByBarcode.get(l.barcode)!.id, qty: D(l.qty), unitPrice: D(l.unitPrice) })),
   }, ctx);
+  // Kök neden (tur 14 P0, I65): createSalesDoc/recomputeOrderTotals kesintileri kanalın STATİK oranıyla
+  // yeniden hesapladı; burada pazaryerinin GERÇEK raporladığı tutarlarla (co.commissionAmount/
+  // shippingAmount/netAmount) üzerine yazılır — bkz. orders.ts::applyRealChannelDeductions.
+  await applyRealChannelDeductions(tx, order.id, { commissionAmount: D(co.commissionAmount), shippingDeduction: D(co.shippingAmount), netRevenue: D(co.netAmount) });
   const { delivery } = await confirmOrder(tx, order.id, ctx);
 
   await tx.update(channelOrders).set({ salesOrderId: order.id, syncStatus: 'converted', syncError: null }).where(eq(channelOrders.id, co.id));
