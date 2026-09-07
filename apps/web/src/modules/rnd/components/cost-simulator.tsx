@@ -725,12 +725,20 @@ export function CostSimulator({
                           />
                         )} />
                       ) : (
+                        // flex min-h-11 items-center: kök neden düzeltmesi (Tur 10 P1 arge-recete-40) —
+                        // mobilde bu hücre komşu Miktar/Kaynak/Fire% kontrolleriyle aynı 44px'lik satır
+                        // izini paylaşıyor ama MoneyCell salt metin olduğundan grid hücresinin (align-items
+                        // stretch) ÜST kenarına yapışıp değeri 12px yukarı asılı bırakıyordu (manuel
+                        // NumberInput satırında 0px sapma, salt-okunur satırlarda 12px). Sarmalayıcı artık
+                        // dikey merkezliyor; masaüstünde (md:) flex/min-h iptal, eski `block` davranışı korunur.
                         // block w-full: sabit grid sütunu artık sağ kenarı BELİRLİYOR (kök neden
                         // düzeltmesi, Tur 5 P1 arge-recete-25) — MoneyCell inline-block olduğundan
                         // dolayı önceden içerik kadar dar kalıp satırdan satıra farklı bir sağ kenarda
                         // duruyordu (₺120,00→163px, ₺15,00→155px); artık HER satırda AYNI sütun
                         // genişliğinin sağına yaslanıyor.
-                        <MoneyCell value={uCost} digits={2} className="block w-full" />
+                        <div className="flex min-h-11 items-center justify-end md:block md:min-h-0">
+                          <MoneyCell value={uCost} digits={2} className="block w-full" />
+                        </div>
                       )}
                     </div>
                     <div className="min-w-0 md:block md:px-2 md:text-right" role="cell">

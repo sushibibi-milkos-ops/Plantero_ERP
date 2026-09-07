@@ -33,8 +33,14 @@ export function BoardCard({ card, onOpen, dragging = false }: { card: BoardCardR
       type="button"
       onClick={onOpen}
       className={cn(
-        'w-full min-h-11 rounded-lg border border-border/60 bg-card p-2.5 text-left shadow-[0_1px_2px_rgba(0,0,0,0.04)]',
+        'w-full min-h-11 rounded-lg border border-border/60 bg-card p-2.5 text-left shadow-[0_1px_2px_rgba(0,0,0,0.04)] outline-none',
         'transition-[transform,box-shadow,opacity] duration-150 ease-out hover:border-border hover:shadow-sm active:scale-[0.98]',
+        // focus-visible:border-ring + ring-[3px] ring-ring/50: kök neden düzeltmesi (Tur 10 P2
+        // arge-board-16) — kart, tarayıcının varsayılan `outline: 1px auto` odak halkasını
+        // gösteriyordu, panodaki paylaşılan Button'ların (Kart ekle/Kolon ekle) 3px yumuşak
+        // box-shadow ring dilinden farklıydı. Kart panonun BİRİNCİL klavye hedefi olduğundan artık
+        // aynı odak dilini kullanıyor (bkz. apps/web/src/components/ui/button.tsx focus-visible sınıfları).
+        'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
         (isDragging || dragging) && 'shadow-lg ring-1 ring-primary/40 opacity-90',
       )}
     >
