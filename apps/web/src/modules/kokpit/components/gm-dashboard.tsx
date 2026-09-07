@@ -160,7 +160,17 @@ export function GmDashboardView({ data, today }: { data: GmDashboard; today: Coc
                       {a.summary ? <span> · {a.summary}</span> : <span> · {a.action} · {a.tableName}</span>}
                       {a.count > 1 ? <span className="text-muted-foreground"> · {a.count} kez</span> : null}
                     </span>
-                    <span className="shrink-0 text-[11px] text-muted-foreground" title={formatDateTime(a.at)}>{relativeTime(a.at)}</span>
+                    {/* Tur 9 P2 düzeltmesi (kokpit-activity-dupe-06, kriter 12): `groupConsecutiveActivity`
+                        yalnızca ARDIŞIK tekrarları katlıyor — ardışık olmayan aynı (kullanıcı, özet)
+                        çiftleri ayrı satır kalabiliyor, üstelik hepsi aynı göreli etiketi ("2 dakika
+                        önce") taşıdığından iki satır birbirinden AYIRT EDİLEMİYORDU. Kök neden burada:
+                        gerçek zaman damgaları farklı olduğu sürece (aynı milisaniyede iki audit
+                        satırı pratikte oluşmaz) mutlak saat (`formatTime`, tabular-nums) her zaman
+                        ayırt edici — göreli etikete katlanmadan eklenir, gruplama semantiği (gerçek
+                        art arda tekrarların `count` ile katlanması) korunur. */}
+                    <span className="shrink-0 text-[11px] text-muted-foreground tabular-nums" title={formatDateTime(a.at)}>
+                      {relativeTime(a.at)} · {formatTime(a.at)}
+                    </span>
                   </Row>
                 </li>
               ))}
