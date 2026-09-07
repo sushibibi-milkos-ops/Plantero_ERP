@@ -1,0 +1,124 @@
+{
+ "as": "admin",
+ "vp": "1440x900",
+ "bySection": {
+  "Bugün": {
+   "h": [
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3
+   ]
+  },
+  "Son aktiviteler": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "Banka": {
+   "h": [
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    1,
+    1,
+    1
+   ]
+  },
+  "Üretim hatları": {
+   "h": [
+    52.5,
+    52.5,
+    52.5
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "SKT riski": {
+   "h": [
+    40,
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "Geciken alacak": {
+   "h": [
+    40,
+    40,
+    40,
+    40
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2
+   ]
+  }
+ },
+ "empties": [
+  {
+   "section": "Kritik stok",
+   "h": 231,
+   "sectionH": 277,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Kritik stok yok",
+    "Kapsama süresi tedarik süresinin altına "
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [],
+ "liAbove": 11,
+ "cellAbove": 0,
+ "kpiAbove": 0,
+ "emptyAboveH": 130,
+ "vh": 900
+}

@@ -1,0 +1,106 @@
+{
+ "as": "depo",
+ "vp": "390x844",
+ "bySection": {
+  "Karantina": {
+   "h": [
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  "SKT riski": {
+   "h": [
+    63.5,
+    63.5,
+    63.5,
+    63.5,
+    63.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  "Bugün": {
+   "h": [
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5,
+    62.5
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "empties": [],
+ "clipped": [
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti",
+   "clientW": 248,
+   "scrollW": 277,
+   "cls": "min-w-0 flex-1 truncate"
+  },
+  {
+   "text": "Anadolu Kuruyemiş ve Tarım Ürünleri Ltd. Şti",
+   "clientW": 248,
+   "scrollW": 277,
+   "cls": "min-w-0 flex-1 truncate"
+  },
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler",
+   "clientW": 248,
+   "scrollW": 331,
+   "cls": "min-w-0 flex-1 truncate"
+  },
+  {
+   "text": "Aromatik Kimya Aroma ve Katkı Ltd. Şti.",
+   "clientW": 240,
+   "scrollW": 242,
+   "cls": "min-w-0 flex-1 truncate"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+   "clientW": 248,
+   "scrollW": 257,
+   "cls": "min-w-0 flex-1 truncate"
+  },
+  {
+   "text": "Tatlısu Tatlandırıcı ve Katkı Maddeleri A.Ş.",
+   "clientW": 240,
+   "scrollW": 257,
+   "cls": "min-w-0 flex-1 truncate"
+  }
+ ],
+ "liAbove": 5,
+ "cellAbove": 4,
+ "kpiAbove": 0,
+ "emptyAboveH": 0,
+ "vh": 844
+}

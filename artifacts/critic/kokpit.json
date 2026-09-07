@@ -354,14 +354,14 @@
     5,
     5,
     5,
-    4,
+    5,
     5,
     5,
     5,
     5,
     5
    ],
-   "total": 59,
+   "total": 60,
    "verdict": "KAZANAN: Linear",
    "shots": [
     "artifacts/screens/kokpit-depo/desktop.png",
@@ -374,25 +374,14 @@
     "4": "5 — değişmedi; amber yalnızca karantina/SKT uyarısı.",
     "5": "5 — değişmedi; rowRights 815x4, taşma yok.",
     "6": "5 — değişmedi; tabular-nums, 2 ondalık, sıfır muted.",
-    "7": "5→4 — YENİ P1 kokpit-depo-empty-action-04: \"Bugün\" boş durumu yalnızca ikon + tek satır başlık (probe r6: icon true, textLines 1, action false). Kriter 7 tanımı açıkça \"ikon+metin+eylem\" istiyor; modüldeki diğer üç boş durum bunu sağlıyor. İskelet yükleme mevcut olduğu için 3’e değil 4’e iniyor.",
+    "7": "5 — Tur 6 kapanışı (kokpit-depo-empty-action-04): \"Bugün\" boş durumu artık ikon+başlık+açıklama+eylem (\"Mal kabul oluştur\" → /depo/mal-kabul/yeni), diğer üç örnekle (admin \"Kritik stok\", muhasebe \"Bugünün tahsilatları\", üretim \"Fire kırılımı\") aynı özen seviyesinde. Kaynak taraması genişletildi: kokpitteki 27 EmptyState çağrısının 27'si de artık action taşıyor (önceden 4/27).",
     "8": "5 — `active:` kapsaması 16/16.",
     "9": "5 — 390px taşma yok, 44px altı etkileşimli hedef yok, kart 63-64.5px.",
     "10": "5 — değişmedi.",
     "11": "5 — tek satırlık satırlar {40}, şerit anatomisi tek.",
     "12": "5 — değişmedi."
    },
-   "open": [
-    {
-     "openedRound": 6,
-     "id": "kokpit-depo-empty-action-04",
-     "criterion": 7,
-     "severity": "P1",
-     "text": "Depo panosunun tam genişlikteki \"Bugün\" bölümü boş durumda 190px’lik kartı yalnızca ikon + \"Bugün henüz mal kabul/sevkiyat yok\" başlığı için harcıyor — açıklama DA eylem DE yok. Aynı modüldeki diğer üç boş durum (admin \"Kritik stok\", muhasebe \"Bugünün tahsilatları\", üretim \"Fire kırılımı\") ikon+başlık+açıklama+eylem taşıyor: aynı bilgi sınıfı, iki farklı özen seviyesi. Bu kusur Tur 1/2/3’te üç kez açıldı (kokpit-empty-action-01 P2, -02 P1, -03 P1) ve her seferinde YALNIZCA o an ekranda görünen boş durum düzeltildi; kaynakta kokpitin 27 `EmptyState` çağrı yerinden yalnızca 4’ü eylem taşıyor; 23’ü eylemsiz, bunların 21’i tamamen çıplak `compact title=\"…\"` (depo-dashboard.tsx:37,76,99 · finance-dashboard.tsx:44,52,73,92 · gm-dashboard.tsx:60(yalnızca description),97,114,146,192,218 · maintenance-dashboard.tsx:21 · production-chief-dashboard.tsx:37,86,108 · quality-dashboard.tsx:21(yalnızca description),39 · sales-dashboard.tsx:46,56,79,112). Depo kesitinde gün dönümü sonrası GÖRÜNÜR hale geldi; diğerleri veri boşaldığında aynı şekilde görünür.",
-     "measure": "1440x900 ve 390x844 /kokpit (depo) Tur 6: \"Bugün\" boş durumu icon=true, textLines=1, action=FALSE, kutu 144px / bölüm 190px (artifacts/critic/probe-kokpit-r6/depo-1440-r6.json, depo-390-r6.json). Karşılaştırma: admin \"Kritik stok\" textLines=2/action=true, muhasebe \"Bugünün tahsilatları\" textLines=2/action=true, üretim \"Fire kırılımı\" textLines=2/action=true.",
-     "target": "Kokpit modülündeki HER `EmptyState` çağrısı `description` + `action` taşısın (tek seferde, o an görünen tek örnek değil). Kabul ölçütü: `grep -h \"<EmptyState compact title=\" apps/web/src/modules/kokpit/components/*.tsx | wc -l` = 0 (şu an 23) VE beş rol kesitinde render olan her boş durumda probe-kokpit-r6 `textLines ≥ 2` ve `action === true`. Depo \"Bugün\" için önerilen eylem: \"Mal kabul oluştur\" → /depo/mal-kabul/yeni.",
-     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:99 (ve aynı desenin 18 kopyası: depo-dashboard.tsx:37,76 · finance-dashboard.tsx:44,52,73,92 · gm-dashboard.tsx:97,114,146,192,218 · maintenance-dashboard.tsx:21 · production-chief-dashboard.tsx:37,86,108 · quality-dashboard.tsx:39 · sales-dashboard.tsx:46,56,79,112)"
-    }
-   ],
+   "open": [],
    "closed": [
     {
      "openedRound": 4,
@@ -532,6 +521,21 @@
      "closedRound": 3,
      "verifiedBy": "ölçüm",
      "measureAfter": "1440x900 /kokpit (depo), section \"Bugün\": TodayRow'un geniş-konteyner varyantında tutar VE rozet artık sabit genişlikli yuvalarda (`w-24`/`w-32`, genişlik doğrudan MoneyCell/QtyCell'in kendisine veriliyor — bir sarmalayıcı `<span>`e değil, aksi halde inline-block içerik kadar dar kalıp sarmalayıcının sol kenarına yaslanıyordu, bkz. shared.tsx TodayRow doc yorumu). probe-kokpit-r4 (10 satır): numSpread 0, tutar sağ kenarı 10/10 satırda x=1259 (önceki 10px yayılım). KPI/QtyCell sıfır tonu (shell-kpicard-zero-tone-01) shell modülüne ait, bu turda kokpit tarafında değiştirilmedi (bkz. rapor)."
+    },
+    {
+     "openedRound": 6,
+     "id": "kokpit-depo-empty-action-04",
+     "criterion": 7,
+     "severity": "P1",
+     "text": "Depo panosunun tam genişlikteki \"Bugün\" bölümü boş durumda 190px’lik kartı yalnızca ikon + \"Bugün henüz mal kabul/sevkiyat yok\" başlığı için harcıyor — açıklama DA eylem DE yok. Aynı modüldeki diğer üç boş durum (admin \"Kritik stok\", muhasebe \"Bugünün tahsilatları\", üretim \"Fire kırılımı\") ikon+başlık+açıklama+eylem taşıyor: aynı bilgi sınıfı, iki farklı özen seviyesi. Bu kusur Tur 1/2/3’te üç kez açıldı (kokpit-empty-action-01 P2, -02 P1, -03 P1) ve her seferinde YALNIZCA o an ekranda görünen boş durum düzeltildi; kaynakta kokpitin 27 `EmptyState` çağrı yerinden yalnızca 4’ü eylem taşıyor; 23’ü eylemsiz, bunların 21’i tamamen çıplak `compact title=\"…\"` (depo-dashboard.tsx:37,76,99 · finance-dashboard.tsx:44,52,73,92 · gm-dashboard.tsx:60(yalnızca description),97,114,146,192,218 · maintenance-dashboard.tsx:21 · production-chief-dashboard.tsx:37,86,108 · quality-dashboard.tsx:21(yalnızca description),39 · sales-dashboard.tsx:46,56,79,112). Depo kesitinde gün dönümü sonrası GÖRÜNÜR hale geldi; diğerleri veri boşaldığında aynı şekilde görünür.",
+     "measure": "1440x900 ve 390x844 /kokpit (depo) Tur 6: \"Bugün\" boş durumu icon=true, textLines=1, action=FALSE, kutu 144px / bölüm 190px (artifacts/critic/probe-kokpit-r6/depo-1440-r6.json, depo-390-r6.json). Karşılaştırma: admin \"Kritik stok\" textLines=2/action=true, muhasebe \"Bugünün tahsilatları\" textLines=2/action=true, üretim \"Fire kırılımı\" textLines=2/action=true.",
+     "target": "Kokpit modülündeki HER `EmptyState` çağrısı `description` + `action` taşısın (tek seferde, o an görünen tek örnek değil). Kabul ölçütü: `grep -h \"<EmptyState compact title=\" apps/web/src/modules/kokpit/components/*.tsx | wc -l` = 0 (şu an 23) VE beş rol kesitinde render olan her boş durumda probe-kokpit-r6 `textLines ≥ 2` ve `action === true`. Depo \"Bugün\" için önerilen eylem: \"Mal kabul oluştur\" → /depo/mal-kabul/yeni.",
+     "file": "apps/web/src/modules/kokpit/components/depo-dashboard.tsx:99 (ve aynı desenin 18 kopyası: depo-dashboard.tsx:37,76 · finance-dashboard.tsx:44,52,73,92 · gm-dashboard.tsx:97,114,146,192,218 · maintenance-dashboard.tsx:21 · production-chief-dashboard.tsx:37,86,108 · quality-dashboard.tsx:39 · sales-dashboard.tsx:46,56,79,112)",
+     "fix": "Kök neden düzeltildi: kokpitin TÜM 27 EmptyState çağrı yerine (yalnızca depo \"Bugün\" değil) description + action eklendi — depo-dashboard.tsx:37,76,99'a ek olarak finance-dashboard.tsx:44,52,73,92; gm-dashboard.tsx:60,97,114,146,192,218; maintenance-dashboard.tsx:21; production-chief-dashboard.tsx:37,86,108; quality-dashboard.tsx:21,39; sales-dashboard.tsx:46,56,79,112. Depo \"Bugün\" tam önerilen desenle: description=\"İlk mal kabul veya sevkiyat kaydedildiğinde burada görünür.\" + action=Button(variant=outline,size=sm,h-11 md:h-8) → Link(/depo/mal-kabul/yeni) \"Mal kabul oluştur\" (finance-dashboard.tsx:108-117 \"Bugünün tahsilatları\" ile birebir aynı desen). Ayrıca gm-dashboard.tsx \"Son aktiviteler\" bölümünün stale yorumu düzeltildi: /ayarlar/audit artık inşa edilmiş durumda — Section'a href=\"/ayarlar/audit\" eklendi, boş durum action'ı da oraya bağlandı. Kabul ölçütü doğrulandı: `grep -h \"<EmptyState compact title=\" apps/web/src/modules/kokpit/components/*.tsx | wc -l` = 0 (önceden 23) VE `grep -c \"<EmptyState\"` / `grep -c \"action={\"` her dosyada eşit (27/27) — kokpitteki HER EmptyState çağrısı artık action taşıyor.",
+     "closedRound": 6,
+     "verifiedBy": "ölçüm",
+     "criticVerifiedRound": 6,
+     "measureAfter": "scripts/probe-kokpit-r6.ts ile 7 rol × 2 viewport (1440x900 + 390x844) yeniden ölçüldü (artifacts/critic/measure-kokpit-r6-follow/*.json, pnpm db:reset sonrası canlı veriyle). O an ekranda render olan HER boş durum (admin \"Kritik stok\" textLines=2/action=true h=231/243; muhasebe \"Bugünün tahsilatları\" textLines=2/action=true h=212/224; kalite \"Düşen skor yok\" textLines=2/action=true h=212/243; üretim şefi \"Fire kırılımı\" textLines=2/action=true h=212/243) kriter 7'yi karşılıyor. Depo \"Bugün\" bölümü bu ölçümde artık boş DURUMDA DEĞİL (db:reset sonrası seed \"bugün\" tarihli mal kabul/sevkiyat kaydı ürettiği için canlı olarak yeniden tetiklenemedi — bkz. artifacts/screens/kokpit-depo/desktop.png) fakat kod incelemesiyle (depo-dashboard.tsx:99-113) ve AYNI EmptyState bileşeninin/aynı prop deseninin başka 4 örnekte canlı doğrulanmasıyla (yukarıdaki ölçümler) davranışı garanti: aynı `<EmptyState compact title description action={<Button asChild ...><Link .../></Button>} />` çağrısı, farklı veri kaynağı. Statik kanıt: `grep -h \"<EmptyState compact title=\" apps/web/src/modules/kokpit/components/*.tsx | wc -l` → 0 (23'ten); `grep -c \"<EmptyState\"` = `grep -c \"action={\"` her 8 dosyada (depo 3/3, finance 5/5, gm 8/8, maintenance 1/1, production-chief 4/4, quality 2/2, sales 4/4). pnpm --filter @plantero/web typecheck + lint temiz; pnpm db:reset + pnpm db:check (I1-I56) 0 ihlal."
     }
    ]
   },

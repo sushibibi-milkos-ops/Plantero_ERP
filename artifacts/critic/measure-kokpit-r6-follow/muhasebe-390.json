@@ -1,0 +1,81 @@
+{
+ "as": "muhasebe",
+ "vp": "390x844",
+ "bySection": {
+  "Banka": {
+   "h": [
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "Mutabakat kuyruğu": {
+   "h": [
+    63,
+    63,
+    63,
+    63,
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  "Geciken alacak": {
+   "h": [
+    63,
+    63,
+    63,
+    63
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "empties": [
+  {
+   "section": "Bugünün tahsilatları",
+   "h": 224,
+   "sectionH": 270,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Bugün tahsilat yok",
+    "Bir tahsilat kaydedildiğinde burada görü"
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [
+  {
+   "text": "Kahve Dünyası Yeşil Kahve ve Egzotik Ürünler",
+   "clientW": 324,
+   "scrollW": 331,
+   "cls": "min-w-0 flex-1 truncate"
+  }
+ ],
+ "liAbove": 4,
+ "cellAbove": 4,
+ "kpiAbove": 0,
+ "emptyAboveH": 0,
+ "vh": 844
+}

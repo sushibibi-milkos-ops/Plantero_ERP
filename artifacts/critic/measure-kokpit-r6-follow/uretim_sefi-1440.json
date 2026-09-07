@@ -1,0 +1,74 @@
+{
+ "as": "uretim_sefi",
+ "vp": "1440x900",
+ "bySection": {
+  "Hat durumu": {
+   "h": [
+    52.5,
+    52.5,
+    52.5
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "Son duruşlar": {
+   "h": [
+    19.5,
+    19.5,
+    19.5,
+    19.5
+   ],
+   "lines": [
+    1,
+    2,
+    1,
+    2
+   ]
+  },
+  "Son iş emirleri": {
+   "h": [
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5,
+    58.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "empties": [
+  {
+   "section": "Fire kırılımı (7 gün)",
+   "h": 212,
+   "sectionH": 258,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Son 7 günde fire kaydı yok",
+    "İş emri tamamlanırken fire girildiğinde "
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [],
+ "liAbove": 14,
+ "cellAbove": 0,
+ "kpiAbove": 0,
+ "emptyAboveH": 212,
+ "vh": 900
+}

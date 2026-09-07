@@ -1,0 +1,25 @@
+{
+ "as": "kalite",
+ "vp": "390x844",
+ "bySection": {},
+ "empties": [
+  {
+   "section": "Düşen tedarikçi skorları",
+   "h": 243,
+   "sectionH": 289,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Düşen skor yok",
+    "Önceki döneme göre puanı düşen tedarikçi"
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [],
+ "liAbove": 0,
+ "cellAbove": 0,
+ "kpiAbove": 0,
+ "emptyAboveH": 243,
+ "vh": 844
+}

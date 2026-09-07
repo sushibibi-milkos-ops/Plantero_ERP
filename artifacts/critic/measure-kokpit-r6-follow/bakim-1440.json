@@ -1,0 +1,21 @@
+{
+ "as": "bakim",
+ "vp": "1440x900",
+ "bySection": {
+  "Durmuş makineler": {
+   "h": [
+    40
+   ],
+   "lines": [
+    2
+   ]
+  }
+ },
+ "empties": [],
+ "clipped": [],
+ "liAbove": 1,
+ "cellAbove": 0,
+ "kpiAbove": 0,
+ "emptyAboveH": 0,
+ "vh": 900
+}

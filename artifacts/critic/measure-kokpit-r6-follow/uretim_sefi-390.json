@@ -1,0 +1,117 @@
+{
+ "as": "uretim_sefi",
+ "vp": "390x844",
+ "bySection": {
+  "Hat durumu": {
+   "h": [
+    64.5,
+    64.5,
+    64.5
+   ],
+   "lines": [
+    2,
+    2,
+    2
+   ]
+  },
+  "Son duruşlar": {
+   "h": [
+    19.5,
+    19.5,
+    19.5,
+    19.5
+   ],
+   "lines": [
+    1,
+    1,
+    2,
+    1
+   ]
+  },
+  "Son iş emirleri": {
+   "h": [
+    64.5,
+    64.5,
+    64.5,
+    64.5,
+    64.5,
+    64.5,
+    64.5,
+    64.5
+   ],
+   "lines": [
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  }
+ },
+ "empties": [
+  {
+   "section": "Fire kırılımı (7 gün)",
+   "h": 243,
+   "sectionH": 289,
+   "icon": true,
+   "textLines": 2,
+   "texts": [
+    "Son 7 günde fire kaydı yok",
+    "İş emri tamamlanırken fire girildiğinde "
+   ],
+   "action": true
+  }
+ ],
+ "clipped": [
+  {
+   "text": "WO-2026-000007 · Strawberry Protein Mixi",
+   "clientW": 246,
+   "scrollW": 264,
+   "cls": "min-w-0 truncate font-mono"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 125,
+   "scrollW": 146,
+   "cls": "min-w-0 flex-1 truncate text-xs text-muted-foregro"
+  },
+  {
+   "text": "Toz Karıştırma & Dolum",
+   "clientW": 125,
+   "scrollW": 132,
+   "cls": "min-w-0 flex-1 truncate text-xs text-muted-foregro"
+  },
+  {
+   "text": "Saşe / Stick Toz Dolum",
+   "clientW": 127,
+   "scrollW": 130,
+   "cls": "min-w-0 flex-1 truncate text-xs text-muted-foregro"
+  },
+  {
+   "text": "Toz Karıştırma & Dolum",
+   "clientW": 127,
+   "scrollW": 132,
+   "cls": "min-w-0 flex-1 truncate text-xs text-muted-foregro"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 127,
+   "scrollW": 146,
+   "cls": "min-w-0 flex-1 truncate text-xs text-muted-foregro"
+  },
+  {
+   "text": "Bazlar, Barista & Kremalar",
+   "clientW": 127,
+   "scrollW": 146,
+   "cls": "min-w-0 flex-1 truncate text-xs text-muted-foregro"
+  }
+ ],
+ "liAbove": 3,
+ "cellAbove": 0,
+ "kpiAbove": 0,
+ "emptyAboveH": 243,
+ "vh": 844
+}
