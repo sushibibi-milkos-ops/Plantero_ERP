@@ -1,0 +1,246 @@
+{
+ "empty_projeler": {
+  "svgs": [
+   {
+    "w": 12,
+    "h": 12,
+    "y": 214,
+    "cls": "lucide lucide-arrow-up size-3 shrink-0 t"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 214,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 214,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 214,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 214,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 214,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 214,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 16,
+    "h": 16,
+    "y": 271,
+    "cls": "lucide lucide-search-x size-4"
+   }
+  ],
+  "emptyBlockText": "Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "btns": [
+   "Yeni proje",
+   "Aramayı temizle",
+   "Durum",
+   "Liste görünümü",
+   "Kart görünümü",
+   "Sütunlar",
+   "Kod",
+   "Proje",
+   "Durum",
+   "Ürün / SKU",
+   "Birim maliyet",
+   "Sahibi",
+   "Lansman"
+  ]
+ },
+ "empty_receteler": {
+  "svgs": [
+   {
+    "w": 12,
+    "h": 12,
+    "y": 184,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 184,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 184,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 184,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 184,
+    "cls": "lucide lucide-arrow-down size-3 shrink-0"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 184,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 12,
+    "h": 12,
+    "y": 184,
+    "cls": "lucide lucide-chevrons-up-down size-3 sh"
+   },
+   {
+    "w": 16,
+    "h": 16,
+    "y": 241,
+    "cls": "lucide lucide-search-x size-4"
+   }
+  ],
+  "emptyBlockText": "Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "btns": [
+   "Aramayı temizle",
+   "Durum",
+   "Sütunlar",
+   "Reçete",
+   "Proje",
+   "Versiyon",
+   "Durum",
+   "Birim maliyet",
+   "Versiyonlar",
+   "Devrolmuş BOM"
+  ]
+ },
+ "focus_argeprojeler": [
+  {
+   "tag": "BUTTON",
+   "label": "Yeni proje",
+   "fv": true,
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "INPUT",
+   "label": "Tabloda ara",
+   "fv": true,
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.0163989) 0px 0px 0px 0.0655955px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Durum",
+   "fv": true,
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Liste görünümü",
+   "fv": true,
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Kart görünümü",
+   "fv": true,
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  }
+ ],
+ "focus_cdereceteler": [
+  {
+   "tag": "A",
+   "label": "Pano",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+   "boxShadow": "none"
+  },
+  {
+   "tag": "A",
+   "label": "Deneme Reçeteleri",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+   "boxShadow": "none"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Yeni deneme reçetesi",
+   "fv": true,
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "v1Taslak",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "none"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Yeni versiyon",
+   "fv": true,
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px"
+  }
+ ],
+ "focus_accecdeboard": [
+  {
+   "tag": "A",
+   "label": "Pano",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+   "boxShadow": "none"
+  },
+  {
+   "tag": "A",
+   "label": "Deneme Reçeteleri",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+   "boxShadow": "none"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Fikir",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "none"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Formülasyon",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "none"
+  },
+  {
+   "tag": "BUTTON",
+   "label": "Pilot Üretim",
+   "fv": true,
+   "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+   "boxShadow": "none"
+  }
+ ]
+}

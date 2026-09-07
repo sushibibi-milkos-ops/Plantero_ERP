@@ -1,0 +1,499 @@
+{
+ "projeler_1440_offset": {
+  "firstRowTop_viewport": 238,
+  "firstRowTop_mainOffset": 190,
+  "rowHeight": 36,
+  "h1Top_mainOffset": 24,
+  "theadTop_mainOffset": 154,
+  "theadBg": "rgba(0, 0, 0, 0)"
+ },
+ "projeler_1440_money": [
+  {
+   "t": "₺31,92",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null,
+   "srOnly": []
+  },
+  {
+   "t": "₺166,17",
+   "color": "oklch(0.21 0.006 285.9)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null,
+   "srOnly": []
+  },
+  {
+   "t": "₺103,41",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null,
+   "srOnly": []
+  }
+ ],
+ "projeler_1440_hedefKelimesi": false,
+ "projeler_1440_edges": [
+  {
+   "h": "Kod",
+   "thRight": 380,
+   "tdRight": 380
+  },
+  {
+   "h": "Proje",
+   "thRight": 776,
+   "tdRight": 776
+  },
+  {
+   "h": "Durum",
+   "thRight": 896,
+   "tdRight": 896
+  },
+  {
+   "h": "Ürün / SKU",
+   "thRight": 1046,
+   "tdRight": 1046
+  },
+  {
+   "h": "Birim maliyet",
+   "thRight": 1176,
+   "tdRight": 1176
+  },
+  {
+   "h": "Sahibi",
+   "thRight": 1306,
+   "tdRight": 1306
+  },
+  {
+   "h": "Lansman",
+   "thRight": 1416,
+   "tdRight": 1416
+  }
+ ],
+ "projeler_1440_rowHover": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+ "projeler_1440_rowRest": "rgba(0, 0, 0, 0)",
+ "projeler_1440_rowFocus": {
+  "tabindex": "0",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px"
+ },
+ "projeler_390_offset": {
+  "firstRowTop_viewport": 0,
+  "firstRowTop_mainOffset": -48,
+  "rowHeight": 0,
+  "h1Top_mainOffset": 16,
+  "theadTop_mainOffset": -48,
+  "theadBg": "rgba(0, 0, 0, 0)"
+ },
+ "receteler_1440_offset": {
+  "firstRowTop_viewport": 208,
+  "firstRowTop_mainOffset": 160,
+  "rowHeight": 36,
+  "h1Top_mainOffset": 24,
+  "theadTop_mainOffset": 124,
+  "theadBg": "rgba(0, 0, 0, 0)"
+ },
+ "receteler_1440_money": [
+  {
+   "t": "₺166,17",
+   "color": "oklch(0.21 0.006 285.9)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null,
+   "srOnly": []
+  },
+  {
+   "t": "₺103,41",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null,
+   "srOnly": []
+  },
+  {
+   "t": "₺31,92",
+   "color": "oklch(0.72 0.17 70)",
+   "fvn": "tabular-nums",
+   "align": "right",
+   "title": null,
+   "aria": null,
+   "srOnly": []
+  }
+ ],
+ "receteler_1440_hedefKelimesi": false,
+ "receteler_1440_edges": [
+  {
+   "h": "Reçete",
+   "thRight": 708,
+   "tdRight": 708
+  },
+  {
+   "h": "Proje",
+   "thRight": 831,
+   "tdRight": 831
+  },
+  {
+   "h": "Versiyon",
+   "thRight": 921,
+   "tdRight": 921
+  },
+  {
+   "h": "Durum",
+   "thRight": 1051,
+   "tdRight": 1051
+  },
+  {
+   "h": "Birim maliyet",
+   "thRight": 1171,
+   "tdRight": 1171
+  },
+  {
+   "h": "Versiyonlar",
+   "thRight": 1276,
+   "tdRight": 1276
+  },
+  {
+   "h": "Devrolmuş BOM",
+   "thRight": 1416,
+   "tdRight": 1416
+  }
+ ],
+ "receteler_1440_rowHover": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+ "receteler_1440_rowRest": "rgba(0, 0, 0, 0)",
+ "receteler_1440_rowFocus": {
+  "tabindex": "0",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px"
+ },
+ "receteler_390_offset": {
+  "firstRowTop_viewport": 0,
+  "firstRowTop_mainOffset": -48,
+  "rowHeight": 0,
+  "h1Top_mainOffset": 16,
+  "theadTop_mainOffset": -48,
+  "theadBg": "rgba(0, 0, 0, 0)"
+ },
+ "recete_1440_solidGreen": [
+  {
+   "text": "Yeni deneme reçetesi",
+   "bg": "oklch(0.55 0.16 152)",
+   "w": 186,
+   "h": 32
+  },
+  {
+   "text": "Onaya gönder",
+   "bg": "oklch(0.55 0.16 152)",
+   "w": 136,
+   "h": 32
+  }
+ ],
+ "recete_1440_prefixGap": [
+  {
+   "label": "₺",
+   "prefixRight": 1310.9,
+   "firstDigitX": 1360,
+   "gap": 49.1,
+   "val": "0,35"
+  },
+  {
+   "label": "₺",
+   "prefixRight": 1076.7,
+   "firstDigitX": 1119.4,
+   "gap": 42.7,
+   "val": "38,00"
+  }
+ ],
+ "recete_1440_moneyCells": [
+  {
+   "t": "₺31,92",
+   "fvn": "tabular-nums",
+   "size": "24px"
+  },
+  {
+   "t": "₺28,00",
+   "fvn": "tabular-nums",
+   "size": "12px"
+  },
+  {
+   "t": "₺5,81",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺5,81",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺2,40",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺120,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺2,40",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺0,03",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺15,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺0,03",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺22,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺22,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  }
+ ],
+ "recete_390_solidGreen": [
+  {
+   "text": "Onaya gönder",
+   "bg": "oklch(0.55 0.16 152)",
+   "w": 44,
+   "h": 44
+  }
+ ],
+ "recete_390_prefixGap": [
+  {
+   "label": "₺",
+   "prefixRight": 218.7,
+   "firstDigitX": 328,
+   "gap": 109.3,
+   "val": "0,35"
+  },
+  {
+   "label": "₺",
+   "prefixRight": 250.7,
+   "firstDigitX": 269.4,
+   "gap": 18.7,
+   "val": "38,00"
+  }
+ ],
+ "recete_390_moneyCells": [
+  {
+   "t": "₺31,92",
+   "fvn": "tabular-nums",
+   "size": "24px"
+  },
+  {
+   "t": "₺28,00",
+   "fvn": "tabular-nums",
+   "size": "12px"
+  },
+  {
+   "t": "₺5,81",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺5,81",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺2,40",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺120,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺2,40",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺0,03",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺15,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺0,03",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺22,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  },
+  {
+   "t": "₺22,00",
+   "fvn": "tabular-nums",
+   "size": "13px"
+  }
+ ],
+ "recete_390_mobilFire": [
+  {
+   "v": "1,0000",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 166,
+   "h": 44,
+   "x": 23
+  },
+  {
+   "v": "96",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 166,
+   "h": 44,
+   "x": 23
+  },
+  {
+   "v": "0,35",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 166,
+   "h": 44,
+   "x": 201
+  },
+  {
+   "v": "0,1500",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 70,
+   "h": 44,
+   "x": 29
+  },
+  {
+   "v": "38,00",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 72,
+   "h": 44,
+   "x": 233
+  },
+  {
+   "v": "2",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 52,
+   "h": 44,
+   "x": 309
+  },
+  {
+   "v": "0,0200",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 70,
+   "h": 44,
+   "x": 29
+  },
+  {
+   "v": "0",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 52,
+   "h": 44,
+   "x": 309
+  },
+  {
+   "v": "0,0020",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 70,
+   "h": 44,
+   "x": 29
+  },
+  {
+   "v": "0",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 52,
+   "h": 44,
+   "x": 309
+  },
+  {
+   "v": "1,0000",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 70,
+   "h": 44,
+   "x": 29
+  },
+  {
+   "v": "0",
+   "aria": null,
+   "title": null,
+   "ph": "0",
+   "w": 52,
+   "h": 44,
+   "x": 309
+  }
+ ],
+ "recete_390_gorunurFire": [
+  "Verim %"
+ ],
+ "board_1440_scroller": [
+  {
+   "tag": "DIV",
+   "cls": "scrollbar-thin scroll-fade-x flex h-[calc(100dvh-28.5rem)] min-h-[320p",
+   "sw": 1864,
+   "cw": 1152
+  }
+ ],
+ "board_1440_solidGreen": [],
+ "board_1440_cardFocus": {
+  "sel": "BUTTON.grid size-11 shrink-0 cursor-grab place-",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px"
+ },
+ "board_390_scroller": [
+  {
+   "tag": "DIV",
+   "cls": "scrollbar-thin mb-2 flex items-center gap-1.5 overflow-x-auto pb-1",
+   "sw": 454,
+   "cw": 358
+  },
+  {
+   "tag": "DIV",
+   "cls": "scrollbar-thin scroll-fade-x flex h-[calc(100dvh-28.5rem)] min-h-[320p",
+   "sw": 1864,
+   "cw": 358
+  }
+ ],
+ "board_390_solidGreen": []
+}

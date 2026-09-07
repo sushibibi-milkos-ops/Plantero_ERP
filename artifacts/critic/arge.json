@@ -1,6 +1,6 @@
 {
  "module": "arge",
- "round": 12,
+ "round": 13,
  "updatedAt": "2026-09-07",
  "reference": {
   "linear": 57,
@@ -22,7 +22,7 @@
  ],
  "routes": {
   "/arge/projeler": {
-   "round": 12,
+   "round": 13,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -41,7 +41,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 12. Açık iki P2 yeniden ölçüldü, ikisi de AÇIK: (a) arge-projeler-08 (c2) ilk tablo satırı viewport 238px / <main> ofseti 190px — tur 4-12 boyunca birebir aynı; 390px ilk kart viewport 306px / main ofseti 258px, kart yüksekliği 64px. (b) arge-projeler-09 (c4) 3/3 para hücresinde hâlâ title/aria yok, 2/3 hücre warning oklch(0.72 0.17 70), ekranda 'hedef' sözcüğü geçmiyor (main.textContent kontrolü false) — c4 tanımı (renk yalnızca anlam taşır) ihlal edilmediği için puan düşmez. Diğer 11 kriter yeniden ölçüldü, tur 11 ile aynı: 1440 satır 36/36/36, sw=cw=1440 (taşma yok), h1 24/600 (mobil 20/600), 390'da <44px etkileşimli hedef YOK (yalnızca etkileşimsiz breadcrumb metni), 17/16 farklı renk, para 3/3 tabular-nums + sağa hizalı, thead oklch(0.967) hairline bant. Kod taraması temiz: transition-all/ease-in/scale(0)/>=300ms yok, hover globals.css'te @media (hover:hover) and (pointer:fine) ile korunuyor, geçişler transition-[transform,box-shadow] 150ms ease-out. Açık P0/P1 yok, toplam 59 >= 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 13. İki açık P2 yeniden ölçüldü, ikisi de AÇIK ve DEĞİŞMEMİŞ: (a) arge-projeler-08 (c2) ilk tablo satırı viewport 238px / <main> ofseti 190px (h1 24, thead 154) — tur 4-13 birebir aynı; 390px ilk kart viewport 306 / main ofseti 258, kart 63.5px. (b) arge-projeler-09 (c4) 3/3 para hücresinde title/aria/sr-only yok, 2/3 hücre warning oklch(0.72 0.17 70), main.textContent'te 'hedef' yok. Diğer 10 kriter yeniden ölçüldü, tur 12 ile aynı: sw=cw=1440 ve 390 (taşma yok), satır 36/36/36, h1 24/600 (mobil 20/600), font kademeleri 13px baskın, 17/16 renk, para 3/3 tabular-nums + sağa hizalı, satır hover accent/50 + rest saydam, gerçek Tab'da 3px accent ring (150ms ease), 390'da <44px etkileşimli hedef yok, boş durumda SearchX ikon + başlık + ipucu + 'Aramayı temizle'. Kod taraması temiz (transition-all/ease-in/scale(0)/>=300ms yok; hover globals.css'te (hover:hover) and (pointer:fine) ile korunuyor; süreler 150-200ms ease-out). Açık P0/P1 yok, toplam 59 >= 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -445,7 +445,79 @@
      }
     ],
     "hedefKelimesiEkranda": false,
-    "round": 12
+    "round": 12,
+    "round13": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "rowHeights_1440": [
+      36,
+      36,
+      36
+     ],
+     "rowHeights_390": [
+      63.5,
+      63.5,
+      63.5
+     ],
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 8,
+      "12": 11,
+      "13": 32,
+      "14": 3,
+      "15": 1,
+      "18": 1,
+      "24": 1
+     },
+     "distinctColors_1440": 17,
+     "distinctColors_390": 16,
+     "firstRowTop_viewport": 238,
+     "firstRowTop_mainOffset": 190,
+     "h1Top_mainOffset": 24,
+     "theadTop_mainOffset": 154,
+     "firstCardTop_390_viewport": 306,
+     "firstCardTop_390_mainOffset": 258,
+     "cardH_390": 63.5,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] 'Projeler' 47.8x19.5 (etkileşimsiz metin)"
+     ],
+     "money": [
+      {
+       "t": "₺31,92",
+       "color": "oklch(0.72 0.17 70)=warning",
+       "fvn": "tabular-nums",
+       "align": "right",
+       "title": null,
+       "aria": null
+      },
+      {
+       "t": "₺166,17",
+       "color": "oklch(0.21 0.006 285.9)=foreground",
+       "fvn": "tabular-nums",
+       "align": "right",
+       "title": null,
+       "aria": null
+      },
+      {
+       "t": "₺103,41",
+       "color": "oklch(0.72 0.17 70)=warning",
+       "fvn": "tabular-nums",
+       "align": "right",
+       "title": null,
+       "aria": null
+      }
+     ],
+     "hedefKelimesi_main": false,
+     "rowHover": "tr:hover → oklab(0.955 … / 0.5) = accent/50 (rest saydam)",
+     "focusRing": "gerçek Tab, t=450ms: 'Yeni proje' box-shadow oklab(0.55 -0.141 0.075 / 0.5) 0 0 0 3px, outline none; input 2px ring; geçiş 150ms cubic-bezier(.4,0,.2,1) (t=0'da halka henüz 0px — animasyon, hata değil)",
+     "bosDurum": "arama 'zzzzqqq' → SearchX 16px ikon + 'Eşleşen kayıt yok' + 'Arama ya da filtreleri değiştirmeyi deneyin.' + '0 kayıt' + input 'Aramayı temizle' × (artifacts/critic/arge-r13-bos-projeler.png)"
+    }
    },
    "open": [
     {
@@ -453,12 +525,12 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar içerik alanında 168px tüketiliyor (Linear başlığı, sayacı ve filtreyi tek satırda tutar). /arge/receteler ile aynı kalıp (arge-receteler-02).",
-     "measure": "tur 12 yeniden ölçüm: 1440px ilk tablo satırı viewport 238px / <main> ofseti 190px (h1 ofseti 24, thead 154) — tur 4-12 birebir aynı. 390px: ilk kart viewport 306px / <main> ofseti 258px, kart yüksekliği 64px. Hedef ≤112px (masaüstü) / ≤176px (mobil).",
+     "measure": "tur 13 yeniden ölçüm: 1440px ilk tablo satırı viewport 238px / <main> ofseti 190px (h1 ofseti 24, thead 154) — tur 4-13 birebir aynı. 390px: ilk kart viewport 306px / <main> ofseti 258px, kart yüksekliği 63.5px. Hedef ≤112px (masaüstü) / ≤176px (mobil).",
      "target": "Başlık + '3 kayıt' + filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/projeler/page.tsx",
      "openedRound": 2,
-     "reMeasuredRound": 11,
-     "lastMeasuredRound": 11,
+     "reMeasuredRound": 13,
+     "lastMeasuredRound": 13,
      "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — arge-receteler-02 ile aynı kök neden (PageHeader + DataTable araç çubuğunun iki ayrı şerit olması, ortak bileşen kompozisyonu); arge modülü sözleşmesi kapsamında düzeltilemez, mevcut ortak dosyalar değiştirilmedi. Bkz. sharedComponentRequests."
     },
     {
@@ -466,11 +538,12 @@
      "criterion": 4,
      "severity": "P2",
      "text": "Tablo görünümünde \"Birim maliyet\" değerleri hedef aşımında warning (turuncu) basılıyor ama ekranda hedefi gösteren hiçbir şey yok: ₺31,92 turuncu, ₺166,17 nötr — kullanıcı küçük sayının neden uyarı rengiyle basıldığını çözemiyor. Aynı modülün KART görünümü aynı olguyu \"₺31,92 / hedef ₺28,00\" ile açıklıyor (project-list.tsx:167-174), tablo görünümü açıklamıyor.",
-     "measure": "tur 12 (1440×900): 3/3 para hücresinde title/aria-label yok; ₺31,92 ve ₺103,41 oklch(0.72 0.17 70)=warning, ₺166,17 oklch(0.21 0.006 285.9)=foreground. main.textContent içinde 'hedef' sözcüğü YOK (false).",
+     "measure": "tur 13 (1440×900): 3/3 para hücresinde title/aria-label/sr-only YOK; ₺31,92 ve ₺103,41 oklch(0.72 0.17 70)=warning, ₺166,17 oklch(0.21 0.006 285.9)=foreground. main.textContent içinde 'hedef' sözcüğü YOK (false).",
      "target": "Hedef üstü hücrelerde hedef değeri ekranda çözülebilir olsun: hücreye title/aria (ör. \"Hedef ₺28,00 · %14 üstü\") ya da kart görünümündeki gibi \"/ hedef ₺X\" son eki → renkli 2/2 hücrede hedef bilgisi erişilebilir.",
      "file": "apps/web/src/modules/rnd/components/project-list.tsx:82-89 (tablo sütunu)",
      "openedRound": 11,
-     "lastMeasuredRound": 11
+     "lastMeasuredRound": 13,
+     "reMeasuredRound": 13
     }
    ],
    "closed": [
@@ -574,7 +647,7 @@
    ]
   },
   "/arge/projeler/[id]/board": {
-   "round": 12,
+   "round": 13,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -593,7 +666,7 @@
    ],
    "total": 60,
    "winner": "Plantero",
-   "scoreNotes": "Tur 12. Açık bulgu yok; 12 kriter yeniden ölçüldü ve tur 11 ile aynı: sayfa sw=cw=1440 (overflowX false), kanban yatay kaydırma yalnızca kendi kabında (div.scrollbar-thin.scroll-fade-x sw=1864 / cw=1152 — tasarlanmış kaydırıcı, sayfa taşması değil), h1 24/600 (mobil 20/600), 390'da <44px etkileşimli hedef YOK, 19/17 farklı renk, font kademesi 11/13/14+24 (3 kademe + rozet), 'Kart ekle' hedefi 230×36, 'Kolon ekle' 256×40. Kod taraması temiz (transition-[transform,box-shadow,opacity] 150ms ease-out, active:scale-[0.98], hover gated). Toplam 60 >= 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 13. Açık bulgu yok; 12 kriter yeniden ölçüldü ve tur 12 ile aynı: sayfa gövdesinde taşma yok (1440 ve 390'da sw=cw), yatay kaydırma yalnız kanban kolon şeridinde (sw 1864 / cw 1152, kasıtlı), h1 24/600 (mobil 20/600), 19/17 renk, ekranda dolu vurgu buton 0 (birincil eylem kart/kolon ekleme ghost), 390'da <44px etkileşimli hedef yok, kart odağı Button diliyle aynı 3px ring. Kod taraması temiz. Toplam 60 >= 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "columnHeights_1440": [
      588,
@@ -879,7 +952,35 @@
      "kap": "div.scrollbar-thin.scroll-fade-x"
     },
     "distinctColors_390": 17,
-    "round": 12
+    "round": 12,
+    "round13": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 27,
+      "12": 1,
+      "13": 34,
+      "14": 9,
+      "15": 1,
+      "18": 1,
+      "24": 1
+     },
+     "distinctColors_1440": 19,
+     "distinctColors_390": 17,
+     "kanbanScroller": "main içi tek yatay kaydırıcı: div.scrollbar-thin.scroll-fade-x sw=1864 / cw=1152 (kanban, kasıtlı); sayfa gövdesinde taşma yok",
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] 'Pano' 31.3x19.5 (etkileşimsiz metin)"
+     ],
+     "soliAccentButtons_1440": 0,
+     "focusRing": "sekme bağlantıları/aşama çipleri outline auto 1px accent; paylaşılan Button 3px ring (kart odağı tur 10'da Button diliyle eşitlendi)"
+    }
    },
    "open": [],
    "closed": [
@@ -1103,7 +1204,7 @@
    ]
   },
   "/arge/projeler/[id]/receteler": {
-   "round": 12,
+   "round": 13,
    "reference": "stripe",
    "referenceTotal": 56,
    "scores": [
@@ -1122,7 +1223,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 12. Açık iki P2 yeniden ölçüldü, ikisi de AÇIK: (a) arge-recete-41 (c6) 'Birim maliyet' sütununda ₺ öneki ile ilk rakam arası 1440px'te manuel satır 42,7px / 'Genel gider (parti)' 49,1px; 390px'te 18,7px / 109,3px — hedef ≤4px, tur 10-12 boyunca değişmedi. (b) arge-recete-42 (c1) 1440×900'de dolu vurgu (oklch(0.55 0.16 152)) buton sayısı hâlâ 2: 'Yeni deneme reçetesi' 186×32 + 'Onaya gönder' 136×32; 390px'te 1 (yalnız 'Onaya gönder' 44×44) → mobil temiz, masaüstü açık. Diğer kriterler yeniden ölçüldü, tur 11 ile aynı: sw=cw (1440 ve 390), h1 24/600 (mobil 20/600), 390'da <44px etkileşimli hedef YOK (tüm input/select 44px yüksek), 21/18 farklı renk, hedef sapması ekranda açıklanıyor (%14 hedef üstü + 'Hedef ₺28,00'), ilerleme çubuğu warning. Yeni P2 (arge-recete-43, c5): mobil satırda Fire % değeri ('2'/'0', 52×44, x=309) görünür etiketsiz basılıyor; erişilebilirlik tarafı sr-only 'Fire %' ile karşılanmış, c5 tanımı (sağ hizalı sayılar/hairline ayraç/taşma) ihlal edilmediği için PUAN DÜŞMEZ. Kod taraması temiz. Açık P0/P1 yok, toplam 59 >= 56 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 13. Üç açık P2 yeniden ölçüldü, üçü de AÇIK: (a) arge-recete-41 (c6) ₺ öneki ile ilk rakam arası 1440'ta 49.1px ('0,35') ve 42.7px ('38,00'), 390'da 109.3 / 18.7 — aynı sütundaki salt-okunur MoneyCell'lerde önek rakama bitişik; hedef <=4px. (b) arge-recete-42 (c1) 1440'ta eşzamanlı dolu-vurgu buton 2 ('Yeni deneme reçetesi' 186x32, 'Onaya gönder' 136x32). (c) arge-recete-43 (c5) 390'da fire alanı 52x44 x=309, değer '2'/'0', görünür birim/etiket yok. Diğer kriterler tur 12 ile aynı: taşma yok, para 12/12 tabular-nums 2 ondalık, h1 24/600 (mobil 20/600), 21/18 renk, mobilde <44px etkileşimli hedef yok, klavye odağında 3px accent ring. Kod taraması temiz. Açık P0/P1 yok, toplam 59 >= 57 → KAZANAN: Plantero (delta 0).",
    "measures": {
     "rowHeights_1440": [
      39,
@@ -1714,7 +1815,76 @@
     "touchTargetsBelow44_390": [
      "span[data-slot=breadcrumb-page] 'Deneme Reçeteleri' 117.4x19.5 (etkileşimsiz metin)"
     ],
-    "round": 12
+    "round": 12,
+    "round13": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 19,
+      "12": 8,
+      "13": 67,
+      "14": 7,
+      "15": 1,
+      "18": 1,
+      "24": 2
+     },
+     "distinctColors_1440": 21,
+     "distinctColors_390": 18,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] 'Deneme Reçeteleri' 117.4x19.5 (etkileşimsiz metin)"
+     ],
+     "moneyTypography": "12/12 para değeri tabular-nums, 2 ondalık; boyutlar 24px (hedef bandı) / 13px (satır+özet) / 12px (hedef)",
+     "solidAccent_1440": [
+      {
+       "text": "Yeni deneme reçetesi",
+       "bg": "oklch(0.55 0.16 152)",
+       "w": 186,
+       "h": 32
+      },
+      {
+       "text": "Onaya gönder",
+       "bg": "oklch(0.55 0.16 152)",
+       "w": 136,
+       "h": 32
+      }
+     ],
+     "solidAccent_390": [
+      {
+       "text": "Onaya gönder",
+       "bg": "oklch(0.55 0.16 152)",
+       "w": 44,
+       "h": 44
+      }
+     ],
+     "prefixGap_1440": [
+      {
+       "val": "0,35",
+       "gap": 49.1
+      },
+      {
+       "val": "38,00",
+       "gap": 42.7
+      }
+     ],
+     "prefixGap_390": [
+      {
+       "val": "0,35",
+       "gap": 109.3
+      },
+      {
+       "val": "38,00",
+       "gap": 18.7
+      }
+     ],
+     "mobilFire": "fire input value '2'/'0', 52x44, x=309; aria/title yok; görünür 'Fire'/'%' metni yok (yalnız ayrı alan 'Verim %')"
+    }
    },
    "open": [
     {
@@ -1722,34 +1892,38 @@
      "criterion": 6,
      "severity": "P2",
      "text": "Aynı \"Birim maliyet\" sütununda para birimi iki farklı biçimde basılıyor: manuel kaynaklı satırda ₺ öneki hücrenin solunda tek başına duruyor (kutu dinlenmede kenarlıksız olduğu için sahipsiz bir glif gibi görünüyor), salt-okunur satırlarda ₺ rakama bitişik. Stripe tutarları tek bir para dili ile basar.",
-     "measure": "tur 12 yeniden ölçüm (canvas metin genişliğiyle ilk rakamın x'i): 1440px manuel satır ₺→'38,00' 42,7px, 'Genel gider (parti)' ₺→'0,35' 49,1px; 390px manuel satır 18,7px, 'Genel gider (parti)' 109,3px. Aynı sütundaki salt-okunur MoneyCell'lerde ₺ rakama bitişik (₺120,00). Hedef ≤4px.",
+     "measure": "tur 13 yeniden ölçüm (canvas metin genişliğiyle ilk rakamın x'i): 1440px manuel satır ₺→'38,00' 42,7px, 'Genel gider (parti)' ₺→'0,35' 49,1px; 390px manuel satır 18,7px, 'Genel gider (parti)' 109,3px. Aynı sütundaki salt-okunur MoneyCell'lerde ₺ rakama bitişik (₺120,00). Hedef ≤4px.",
      "target": "Sütundaki 4/4 satırda ₺ ile ilk rakam arası ≤4px (ör. manuel satırda öneki inline yaz: değerle birlikte sağa yaslı tek metin bloğu)",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx:708-723 (NumberInput prefix=\"₺\" + inputClassName pl-6/md:pl-7)",
      "openedRound": 10,
-     "lastMeasuredRound": 11,
+     "lastMeasuredRound": 13,
      "ownerNote": "Tur 10 düzeltme turu: KAPATILMADI — kök neden paylaşılan `NumberInput` bileşeninde (apps/web/src/components/form/number-input.tsx:117): ₺ öneki `absolute left-2.5` ile sabit konumlanıyor, değer ise `text-right`; basamak sayısı satırdan satıra değiştikçe önek-rakam arası boşluk da değişiyor. arge modülü sözleşmesi kapsamında mevcut ortak dosya değiştirilmedi (yalnızca yeni dosya eklenebilir). Bkz. sharedComponentRequests.",
-     "owner": "shell"
+     "owner": "shell",
+     "reMeasuredRound": 13
     },
     {
      "id": "arge-recete-42",
      "criterion": 1,
      "severity": "P2",
      "text": "Ekranda aynı anda iki DOLU vurgu rengi buton var: sol raydaki \"Yeni deneme reçetesi\" ve kart başlığındaki \"Onaya gönder\". Stripe/Linear bir görünümde tek birincil eylem bırakır; ikinci \"yeni\" eylemi ikincil (outline/ghost + artı ikonu) olur, aksi hâlde ekranın gerçek birincil eylemi (versiyonu onaya göndermek) ikinci bir yeşil blokla rekabet ediyor.",
-     "measure": "tur 12 (1440×900): background oklch(0.55 0.16 152) olan görünür buton sayısı 2 — 'Yeni deneme reçetesi' 186×32, 'Onaya gönder' 136×32. 390px'te 1 ('Onaya gönder' 44×44 ikon butonu).",
+     "measure": "tur 13 (1440×900): background oklch(0.55 0.16 152) olan görünür buton sayısı 2 — 'Yeni deneme reçetesi' 186×32, 'Onaya gönder' 136×32. 390px'te 1 ('Onaya gönder' 44×44 ikon butonu).",
      "target": "Görünümde eşzamanlı dolu-vurgu buton sayısı 1 (sol raydaki \"Yeni deneme reçetesi\" outline/secondary'ye iner; \"Onaya gönder\" tek birincil kalır).",
      "file": "apps/web/src/modules/rnd/components/recipe-workspace.tsx (sol ray \"Yeni deneme reçetesi\" tetikleyicisi)",
      "openedRound": 11,
-     "lastMeasuredRound": 11
+     "lastMeasuredRound": 13,
+     "reMeasuredRound": 13
     },
     {
      "id": "arge-recete-43",
      "criterion": 5,
      "severity": "P2",
      "text": "390px'te malzeme satırının en sağındaki Fire % değeri görünür etiketsiz/birimsiz basılıyor: satır '0,1500 KG · Manuel · ₺ 38,00 · 2' okunuyor, sondaki '2' neyin yüzdesi belli değil (masaüstünde 'Fire %' sütun başlığı var, mobilde başlık satırı yok). Erişilebilirlik tarafı her satırda sr-only 'Fire %' ile karşılanmış; eksik olan yalnızca görsel birim.",
-     "measure": "tur 12 (390×844): fire input value '2'/'0', 52×44, x=309; aria-label/title yok, sr-only 'Fire %' var; görünür 'Fire' metni 0 eleman.",
+     "measure": "tur 13 (390×844): fire input value '2'/'0', 52×44, x=309; aria-label/title yok; görünür 'Fire'/'%' metni 0 eleman (yalnız ayrı bir alan olan 'Verim %' geçiyor).",
      "target": "Mobilde fire alanının yanında görünür birim/etiket olsun (ör. sağına '%' son eki ya da 11px muted 'Fire') → 390px'te görünür 'Fire'/'%' işareti ≥1 ve satırdaki 4/4 sayı birimli okunur.",
      "file": "apps/web/src/modules/rnd/components/cost-simulator.tsx (satır grid'i, Fire % hücresi)",
-     "openedRound": 12
+     "openedRound": 12,
+     "lastMeasuredRound": 13,
+     "reMeasuredRound": 13
     }
    ],
    "closed": [
@@ -2332,7 +2506,7 @@
    ]
   },
   "/arge/receteler": {
-   "round": 12,
+   "round": 13,
    "reference": "linear",
    "referenceTotal": 57,
    "scores": [
@@ -2351,7 +2525,7 @@
    ],
    "total": 59,
    "winner": "Plantero",
-   "scoreNotes": "Tur 12. Açık iki P2 yeniden ölçüldü, ikisi de AÇIK: (a) arge-receteler-02 (c2) 1440px ilk tablo satırı viewport 208px / <main> ofseti 160px (h1 24, thead 124) — tur 5-12 aynı; 390px ilk kart viewport 220px / main ofseti 172px, kart 64px. (b) arge-receteler-04 (c4) 3/3 para hücresinde title/aria yok, 2/3 warning, ekranda 'hedef' sözcüğü yok — c4 tanımı ihlal edilmediği için puan düşmez. Diğer kriterler tur 11 ile aynı: satır 36/36/36, sw=cw (1440 ve 390), h1 24/600 (mobil 20/600), 390'da <44px etkileşimli hedef YOK, 21/20 farklı renk (3 durum rozeti + warning para), para 3/3 tabular-nums + sağa hizalı, thead oklch(0.967). Kod taraması temiz. Açık P0/P1 yok, toplam 59 >= 57 → KAZANAN: Plantero (delta 0).",
+   "scoreNotes": "Tur 13. İki açık P2 yeniden ölçüldü, ikisi de AÇIK: (a) arge-receteler-02 (c2) ilk tablo satırı viewport 208 / main ofseti 160 (h1 24, thead 124) — tur 5-13 aynı; 390px ilk kart 220/172. (b) arge-receteler-04 (c4) 3/3 para hücresinde title/aria yok, 2/3 warning, 'hedef' sözcüğü ekranda yok. Diğer kriterler tur 12 ile aynı: taşma yok (1440/390), satır 36px, h1 24/600 (mobil 20/600), 21/20 renk, para tabular-nums + sağa hizalı, hover/focus ölçüldü, boş durumda ikon+başlık+ipucu+'Aramayı temizle', mobilde <44px etkileşimli hedef yok. Toplam 59 >= 57, açık P0/P1 yok → KAZANAN: Plantero (delta 0).",
    "measures": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
@@ -2684,7 +2858,79 @@
     },
     "distinctColors_390": 20,
     "hedefKelimesiEkranda": false,
-    "round": 12
+    "round": 12,
+    "round13": {
+     "scrollWidth_1440": 1440,
+     "clientWidth_1440": 1440,
+     "overflowX_1440": false,
+     "scrollWidth_390": 390,
+     "clientWidth_390": 390,
+     "overflowX_390": false,
+     "rowHeights_1440": [
+      36,
+      36,
+      36
+     ],
+     "rowHeights_390": [
+      63.5,
+      63.5,
+      63.5
+     ],
+     "h1_1440": "24px/600",
+     "h1_390": "20px/600",
+     "fontSizes_1440": {
+      "10": 2,
+      "11": 5,
+      "12": 9,
+      "13": 37,
+      "14": 1,
+      "15": 1,
+      "18": 1,
+      "24": 1
+     },
+     "distinctColors_1440": 21,
+     "distinctColors_390": 20,
+     "firstRowTop_viewport": 208,
+     "firstRowTop_mainOffset": 160,
+     "h1Top_mainOffset": 24,
+     "theadTop_mainOffset": 124,
+     "firstCardTop_390_viewport": 220,
+     "firstCardTop_390_mainOffset": 172,
+     "cardH_390": 63.5,
+     "touchTargetsBelow44_390": [
+      "span[data-slot=breadcrumb-page] 'Deneme Reçeteleri' 117.4x19.5 (etkileşimsiz metin)"
+     ],
+     "money": [
+      {
+       "t": "₺166,17",
+       "color": "foreground",
+       "fvn": "tabular-nums",
+       "align": "right",
+       "title": null,
+       "aria": null
+      },
+      {
+       "t": "₺103,41",
+       "color": "oklch(0.72 0.17 70)=warning",
+       "fvn": "tabular-nums",
+       "align": "right",
+       "title": null,
+       "aria": null
+      },
+      {
+       "t": "₺31,92",
+       "color": "oklch(0.72 0.17 70)=warning",
+       "fvn": "tabular-nums",
+       "align": "right",
+       "title": null,
+       "aria": null
+      }
+     ],
+     "hedefKelimesi_main": false,
+     "rowHover": "tr:hover → oklab(0.955 … / 0.5) = accent/50 (rest saydam)",
+     "focusRing": "gerçek Tab, t=450ms: 'Yeni proje' box-shadow oklab(0.55 -0.141 0.075 / 0.5) 0 0 0 3px, outline none; input 2px ring; geçiş 150ms cubic-bezier(.4,0,.2,1) (t=0'da halka henüz 0px — animasyon, hata değil)",
+     "bosDurum": "arama 'zzzzqqq' → SearchX 16px + 'Eşleşen kayıt yok' + ipucu + 'Aramayı temizle' (artifacts/critic/arge-r13-bos-receteler.png)"
+    }
    },
    "open": [
     {
@@ -2692,12 +2938,12 @@
      "criterion": 2,
      "severity": "P2",
      "text": "Başlık, açıklama ve filtre şeridi üç ayrı satırda; ilk tablo satırına kadar 168px dikey alan tüketiliyor.",
-     "measure": "tur 12 yeniden ölçüm: 1440px ilk tablo satırı viewport 208px / <main> ofseti 160px (h1 ofseti 24, thead 124) — tur 5-12 aynı. 390px: ilk kart viewport 220px / <main> ofseti 172px, kart yüksekliği 64px. Hedef ≤112px (masaüstü).",
+     "measure": "tur 13 yeniden ölçüm: 1440px ilk tablo satırı viewport 208px / <main> ofseti 160px (h1 ofseti 24, thead 124) — tur 5-13 aynı. 390px: ilk kart viewport 220px / <main> ofseti 172px, kart yüksekliği 63.5px. Hedef ≤112px (masaüstü).",
      "target": "Başlık ile filtre şeridi tek satırda; ilk satır içerik ofseti ≤112px",
      "file": "apps/web/src/app/(app)/arge/receteler/page.tsx",
      "openedRound": 1,
-     "reMeasuredRound": 11,
-     "lastMeasuredRound": 11,
+     "reMeasuredRound": 13,
+     "lastMeasuredRound": 13,
      "ownerNote": "Tur 9 düzeltme turu: KAPATILMADI — kök neden `PageHeader` (apps/web/src/components/page-header.tsx) ile `DataTable` araç çubuğunun (apps/web/src/components/data-table) iki AYRI yatay şerit olarak dikey olarak istiflenmesi; her ikisi de ortak bileşen, arge modülü sözleşmesi (mevcut ortak dosyayı değiştirme) kapsamında düzeltilemez. Sayfa (page.tsx) tarafında yapılabilecek tüm optimizasyon (Tur 5'te 'N proje' önekinin kaldırılması) uygulanmıştı; kalan boşluk PageHeader/DataTable kompozisyonundan geliyor — bkz. sharedComponentRequests."
     },
     {
@@ -2705,11 +2951,12 @@
      "criterion": 4,
      "severity": "P2",
      "text": "Kardeş bulgu arge-projeler-09 ile aynı: \"Birim maliyet\" hedef aşımında warning basılıyor, ama ekranda hedef değeri yok — ₺103,41 ve ₺31,92 turuncu, ₺166,17 nötr; kullanıcı kuralı ekrandan çözemiyor.",
-     "measure": "tur 12 (1440×900): 3/3 para hücresinde title/aria yok; ₺103,41 ve ₺31,92 warning oklch(0.72 0.17 70), ₺166,17 foreground. main.textContent içinde 'hedef' YOK.",
+     "measure": "tur 13 (1440×900): 3/3 para hücresinde title/aria/sr-only yok; ₺103,41 ve ₺31,92 warning oklch(0.72 0.17 70), ₺166,17 foreground. main.textContent içinde 'hedef' YOK.",
      "target": "Hedef üstü hücreler hedefi ekranda erişilebilir kılsın (title/aria \"Hedef ₺X · %Y üstü\" ya da \"/ hedef ₺X\" son eki) → renkli 2/2 hücrede hedef okunabilir.",
      "file": "apps/web/src/modules/rnd/components/all-recipes-table.tsx:34-45",
      "openedRound": 11,
-     "lastMeasuredRound": 11
+     "lastMeasuredRound": 13,
+     "reMeasuredRound": 13
     }
    ],
    "closed": [

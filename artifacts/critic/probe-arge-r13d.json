@@ -1,0 +1,426 @@
+{
+ "focus_argeprojeler": [
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Yeni proje",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Yeni proje",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.496479) 0px 0px 0px 2.97887px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Yeni proje",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "INPUT",
+    "label": "Tabloda ara",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, box-shadow / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "INPUT",
+    "label": "Tabloda ara",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, box-shadow / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "INPUT",
+    "label": "Tabloda ara",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, box-shadow / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Durum",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.0163989) 0px 0px 0px 0.0983932px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Durum",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Durum",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Liste görünümü",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Liste görünümü",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Liste görünümü",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  }
+ ],
+ "focus_rgereceteler": [
+  {
+   "t0": {
+    "tag": "INPUT",
+    "label": "Tabloda ara",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, box-shadow / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "INPUT",
+    "label": "Tabloda ara",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.496479) 0px 0px 0px 1.98592px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, box-shadow / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "INPUT",
+    "label": "Tabloda ara",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, box-shadow / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Durum",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Durum",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.496479) 0px 0px 0px 2.97887px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Durum",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Sütunlar",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Sütunlar",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Sütunlar",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Reçete",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "transform / 0.14s / cubic-bezier(0.23, 1, 0.32, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Reçete",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "transform / 0.14s / cubic-bezier(0.23, 1, 0.32, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Reçete",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "transform / 0.14s / cubic-bezier(0.23, 1, 0.32, 1)"
+   }
+  }
+ ],
+ "focus_cdereceteler": [
+  {
+   "t0": {
+    "tag": "A",
+    "label": "Pano",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "A",
+    "label": "Pano",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "A",
+    "label": "Pano",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "A",
+    "label": "Deneme Reçeteleri",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "A",
+    "label": "Deneme Reçeteleri",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "A",
+    "label": "Deneme Reçeteleri",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Yeni deneme reçetesi",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0 0 0 / 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Yeni deneme reçetesi",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Yeni deneme reçetesi",
+    "fv": true,
+    "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.55 -0.141272 0.0751154 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+    "transition": "color, background-color, border-color, box-shadow, transform / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "v1Taslak",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "transform / 0.14s / cubic-bezier(0.23, 1, 0.32, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "v1Taslak",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "transform / 0.14s / cubic-bezier(0.23, 1, 0.32, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "v1Taslak",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "transform / 0.14s / cubic-bezier(0.23, 1, 0.32, 1)"
+   }
+  }
+ ],
+ "focus_accecdeboard": [
+  {
+   "t0": {
+    "tag": "A",
+    "label": "Pano",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "A",
+    "label": "Pano",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "A",
+    "label": "Pano",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "A",
+    "label": "Deneme Reçeteleri",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "A",
+    "label": "Deneme Reçeteleri",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "A",
+    "label": "Deneme Reçeteleri",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:1px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Fikir",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Fikir",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Fikir",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  },
+  {
+   "t0": {
+    "tag": "BUTTON",
+    "label": "Formülasyon",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t150": {
+    "tag": "BUTTON",
+    "label": "Formülasyon",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   },
+   "t450": {
+    "tag": "BUTTON",
+    "label": "Formülasyon",
+    "fv": true,
+    "outline": "auto 1px oklab(0.55 -0.141272 0.0751154 / 0.5) off:0px",
+    "boxShadow": "none",
+    "transition": "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to / 0.15s / cubic-bezier(0.4, 0, 0.2, 1)"
+   }
+  }
+ ]
+}

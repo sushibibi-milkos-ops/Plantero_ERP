@@ -1,0 +1,62 @@
+{
+ "focus__arge_projeler": [
+  {
+   "inMain": true,
+   "tag": "BUTTON",
+   "label": "Yeni proje",
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+   "fv": true
+  }
+ ],
+ "focus_arge_receteler": [
+  {
+   "inMain": true,
+   "tag": "INPUT",
+   "label": "Tabloda ara",
+   "outline": "none 0px oklab(0.55 -0.141272 0.0751154 / 0.5)",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0",
+   "fv": true
+  }
+ ],
+ "focus__cde_receteler": [],
+ "focus_cc_e_cde_board": [],
+ "empty_projeler": {
+  "hasRows": false,
+  "text": "Ar-Ge ProjeleriTrello mantığı kanban board, versiyonlu deneme reçetesi ve canlı maliyet simülasyonu Yeni projeDurum0 kayıtKodProjeDurumÜrün / SKUBirim maliyetSahibiLansmanEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da",
+  "bigSvgs": 0,
+  "btns": [
+   "Proje",
+   "Durum",
+   "Ürün / SKU",
+   "Birim maliyet",
+   "Sahibi",
+   "Lansman"
+  ]
+ },
+ "empty_receteler": {
+  "hasRows": false,
+  "text": "Deneme ReçeteleriDurum0 kayıtReçeteProjeVersiyonDurumBirim maliyetVersiyonlarDevrolmuş BOMEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "bigSvgs": 0,
+  "btns": [
+   "Proje",
+   "Versiyon",
+   "Durum",
+   "Birim maliyet",
+   "Versiyonlar",
+   "Devrolmuş BOM"
+  ]
+ },
+ "mob_projeler": {
+  "firstCardTop_viewport": 306,
+  "firstCardTop_mainOffset": 258,
+  "cardH": 63.5,
+  "count": 3
+ },
+ "mob_receteler": {
+  "firstCardTop_viewport": 220,
+  "firstCardTop_mainOffset": 172,
+  "cardH": 63.5,
+  "count": 3
+ }
+}
