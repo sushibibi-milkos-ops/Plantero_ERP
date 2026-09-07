@@ -148,7 +148,7 @@ const FILES = await checkFiles();
 // egzersizde `recall_items WHERE hop='delivered'` yalnızca 1 satır (30 kg) üretti, gerçekte 60 kg
 // (2 lot) sevk edilmişti — I60 anında 1 ihlal verdi (`recall_delivered_item_missing`). Fresh seed'de
 // dormant (I59 ile aynı sebep: recall_items 0 satır).
-const RULE_COUNT = 60;
+const RULE_COUNT = 62;
 describe(`bütünlük kontrolleri (I1..${RULE_COUNT}) — sözdizimsel çalışırlık`, () => {
   it(`checks/ altında tam olarak ${RULE_COUNT} kural dosyası var (01..${RULE_COUNT})`, () => {
     expect(FILES).toHaveLength(RULE_COUNT);
