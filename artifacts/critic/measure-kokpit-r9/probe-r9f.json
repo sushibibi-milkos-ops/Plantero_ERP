@@ -1,0 +1,104 @@
+{
+  "soft-1440": {
+    "clicked": true,
+    "hit": {
+      "busyClass": "",
+      "children": [
+        "mb-5 space-y-2 md:mb-6",
+        "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:",
+        "grid gap-4 lg:grid-cols-2 lg:items-start"
+      ],
+      "strip": {
+        "cls": "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:divide-y-0",
+        "display": "grid",
+        "gridCols": "287.5px 287.5px 287.5px 287.5px",
+        "overflowX": "visible",
+        "borderTopWidth": "1px",
+        "borderTopColor": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+        "radius": "8px",
+        "w": 1152,
+        "h": 66,
+        "n": 4,
+        "childW": [
+          287.5,
+          287.5,
+          287.5,
+          287.5
+        ],
+        "childH": [
+          64,
+          64,
+          64,
+          64
+        ]
+      },
+      "flexRowHeights": [
+        566,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        566
+      ]
+    }
+  },
+  "soft-390": {
+    "clicked": true,
+    "hit": {
+      "busyClass": "",
+      "children": [
+        "mb-5 space-y-2 md:mb-6",
+        "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:",
+        "grid gap-4 lg:grid-cols-2 lg:items-start"
+      ],
+      "strip": {
+        "cls": "mb-6 grid grid-cols-2 divide-x divide-y divide-border/60 rounded-lg border border-border/60 sm:grid-cols-4 sm:divide-y-0",
+        "display": "grid",
+        "gridCols": "178px 178px",
+        "overflowX": "visible",
+        "borderTopWidth": "1px",
+        "borderTopColor": "oklab(0.92 0.00112267 -0.00383922 / 0.6)",
+        "radius": "8px",
+        "w": 358,
+        "h": 132,
+        "n": 4,
+        "childW": [
+          178,
+          178,
+          178,
+          178
+        ],
+        "childH": [
+          65,
+          65,
+          65,
+          65
+        ]
+      },
+      "flexRowHeights": [
+        566,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        44,
+        566
+      ]
+    }
+  }
+}
