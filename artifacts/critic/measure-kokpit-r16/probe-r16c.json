@@ -1,0 +1,161 @@
+{
+  "admin": {
+    "mainW": 1200,
+    "leftBottom": 1601,
+    "rightBottom": 1538.5,
+    "colSpread": 62.5,
+    "leftTitles": [
+      "Günlük kanal satışları",
+      "Break-even'a uzaklık",
+      "Bugün",
+      "Onay kuyruğu",
+      "Son aktiviteler"
+    ],
+    "rightTitles": [
+      "Banka",
+      "Üretim hatları",
+      "Kritik stok",
+      "SKT riski",
+      "Geciken alacak"
+    ],
+    "fullTitles": [],
+    "strip": {
+      "n": 4,
+      "widths": [
+        287.3,
+        288.3,
+        288.3,
+        288.3
+      ],
+      "sum": 1152,
+      "parentW": 1152,
+      "lastRight": 1416,
+      "parentRight": 1416,
+      "pct": 100
+    },
+    "docH": 1641
+  },
+  "depo": {
+    "mainW": 1200,
+    "leftBottom": 529,
+    "rightBottom": 586.5,
+    "colSpread": 57.5,
+    "leftTitles": [
+      "Karantina"
+    ],
+    "rightTitles": [
+      "SKT riski"
+    ],
+    "fullTitles": [
+      "Bugün"
+    ],
+    "strip": {
+      "n": 4,
+      "widths": [
+        287.3,
+        288.3,
+        288.3,
+        288.3
+      ],
+      "sum": 1152,
+      "parentW": 1152,
+      "lastRight": 1416,
+      "parentRight": 1416,
+      "pct": 100
+    },
+    "docH": 1098
+  },
+  "muhasebe": {
+    "mainW": 1200,
+    "leftBottom": 998.5,
+    "rightBottom": 1061,
+    "colSpread": 62.5,
+    "leftTitles": [
+      "Banka",
+      "KDV pozisyonu",
+      "Mutabakat kuyruğu"
+    ],
+    "rightTitles": [
+      "Geciken alacak",
+      "Bugünün tahsilatları",
+      "Nakit projeksiyonu (3 ay)",
+      "Break-even'a uzaklık"
+    ],
+    "fullTitles": [],
+    "strip": {
+      "n": 5,
+      "widths": [
+        229.6,
+        230.6,
+        230.6,
+        230.6,
+        230.6
+      ],
+      "sum": 1152,
+      "parentW": 1152,
+      "lastRight": 1416,
+      "parentRight": 1416,
+      "pct": 100
+    },
+    "docH": 1101
+  },
+  "satis": {
+    "mainW": 1200,
+    "leftBottom": 448,
+    "rightBottom": 526,
+    "colSpread": 78,
+    "leftTitles": [
+      "Satış hunisi"
+    ],
+    "rightTitles": [
+      "En çok satan 5 (son 30 gün)"
+    ],
+    "fullTitles": [
+      "Son siparişler"
+    ],
+    "strip": {
+      "n": 3,
+      "widths": [
+        196,
+        196,
+        196
+      ],
+      "sum": 588,
+      "parentW": 1152,
+      "lastRight": 852,
+      "parentRight": 1416,
+      "pct": 51
+    },
+    "docH": 1037
+  },
+  "uretim_sefi": {
+    "mainW": 1200,
+    "leftBottom": 904,
+    "rightBottom": 765,
+    "colSpread": 139,
+    "leftTitles": [
+      "Hat durumu",
+      "Fire kırılımı (7 gün)",
+      "Son duruşlar"
+    ],
+    "rightTitles": [
+      "Son iş emirleri"
+    ],
+    "fullTitles": [],
+    "strip": {
+      "n": 4,
+      "widths": [
+        287.3,
+        288.3,
+        288.3,
+        288.3
+      ],
+      "sum": 1152,
+      "parentW": 1152,
+      "lastRight": 1416,
+      "parentRight": 1416,
+      "pct": 100
+    },
+    "docH": 944
+  }
+}
