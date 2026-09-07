@@ -139,19 +139,6 @@
      "recheck": {
       "round11": "AÇIK. probe-ihracat-r11.json detay:Çeki listesi → Net kg width=110 filled=0; Brüt kg width=110 filled=0. psql: export_packages.net_weight_kg/gross_weight_kg = 0.0000 (2/2 satır), export_shipments net/gross = 0.0000."
      }
-    },
-    {
-     "id": "ihracat-detay-22",
-     "criterion": 9,
-     "criterionAlso": [
-      8
-     ],
-     "severity": "P1",
-     "text": "Sevkiyat detayının en altındaki \"Bağlı irsaliye\" kartında, sevkiyatı kaynak irsaliyesine bağlayan TEK bağlantı (DN-2026-000028 → /depo/sevkiyat/<id>) 390px'te 109×20 px: yükseklik 20px, dikey dolgu 0, min-height yok. Ayrıca dokunmatik cihazda bağlantı olduğuna dair hiçbir işaret yok — rengi gövde metniyle aynı, tek işaret `hover:underline` ve `hover:` globals.css:10'daki @custom-variant ile (hover:hover) and (pointer:fine) altında olduğu için dokunmatikte hiç tetiklenmiyor. Aynı kartın sağındaki StatusBadge ile birlikte satır zaten 324px genişliğinde; satırın tamamı hedef yapılmalı.",
-     "measure": "390×844, probe-ihracat-r11f.json: a.font-mono boundingBox w=109 h=20 (EXP-2026-000002 ve EXP-2026-000001'de aynı), paddingTop/Bottom 0px, minHeight auto, parentH 20. probe-ihracat-r11b.json mobileTouch.detay = tek ihlal. Görsel: artifacts/critic/ihracat-r11-dnlink-EXP-2026-000002.png (bağlantı, düz metinden ayırt edilemiyor).",
-     "target": "390px'te bu bağlantının dokunma hedefi ≥44×44 px olsun ve dokunmatikte bağlantı olduğu görünsün. Önerilen: `<Link>`i satırın tamamına genişlet — `flex min-h-11 items-center justify-between -mx-1 px-1 rounded-md` — ve doküman numarasını `text-primary` (ya da kalıcı `underline-offset-2 decoration-border`) ile işaretle; rozet Link'in içinde kalsın. Kabul ölçütü: probe-ihracat-r11f.ts ile h ≥ 44 ve probe-ihracat-r11b.ts mobileTouch.detay = [] (0 ihlal); 1440px görünüm bozulmasın (satır yüksekliği ≤ 44px kalabilir, masaüstünde min-h yalnız mobilde uygulanacaksa `sm:min-h-0`).",
-     "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx:234-241",
-     "openedRound": 11
     }
    ],
    "closed": [
@@ -411,6 +398,21 @@
      "openedRound": 8,
      "closedRound": 8,
      "measureAfter": "1440x900, EXP-2026-000002 (id yeniden okunarak, db:reset sonrası), scripts/probe-ihracat-r8c-fix.ts: panelWidth=1152, toolbarWidth=1152, tableWidth=1152, theadRowWidth=1152, rowWidth=1152 -> deadRightPx=0 (onceki 787). Kok neden documents-table.tsx:137'deki `[&_table]:!w-auto [&_table]:!min-w-0` kilidi KALDIRILDI; showShipmentColumn=false dalinda `docNo` (Belge no) ve `dueDate` (Vade) sparseDefault'tan cikarilip varsayilan gorunur yapildi (5 gercek sutun: Belge/Durum/Belge no/Vade/Eylemler). Sutun genislikleri (name=260, status=110, docNo=120, dueDate=90 -- showShipmentColumn=true dalinda DEGISMEDI) tarayicida deneysel olcum ile (izole Playwright deneyi: auto table-layout meta.width'i basit ortak carpanla degil, icerik-tabanli bir esik ile olceklendigi tespit edildi -- bkz. documents-table.tsx yorum) tum sutunlarin slack'i <=150px kalacak sekilde bulundu. Sonuc: Belge 448/320->slack128, Durum 198/91->107, Belge no 281/139->142, Vade 155/57->98, Eylemler 69/50->19 -- besi de <=150px. Regresyon yok: /ihracat/belgeler panosu (showShipmentColumn=true) 330/225/342/195/60 ile TUR 7'deki gibi <=120px korunuyor; detay Siparis satirlari (292/268->24) ve Ceki listesi (246/222->24) degismedi. document.documentElement scrollWidth=clientWidth 1440'ta ve 390'da (mobil kart gorunumu etkilenmedi). e2e/phase4-export-maint-rnd.spec.ts 'Akis: Ihracat sevkiyat zinciri + kur farki' serisi (11 adim, Adim 9 gumruk dahil) 11/11 yesil. Ekran goruntusu: artifacts/screens/ihracat-r8c-fix-tabs/documents-{desktop,mobile}.png."
+    },
+    {
+     "id": "ihracat-detay-22",
+     "criterion": 9,
+     "criterionAlso": [
+      8
+     ],
+     "severity": "P1",
+     "text": "Sevkiyat detayının en altındaki \"Bağlı irsaliye\" kartında, sevkiyatı kaynak irsaliyesine bağlayan TEK bağlantı (DN-2026-000028 → /depo/sevkiyat/<id>) 390px'te 109×20 px: yükseklik 20px, dikey dolgu 0, min-height yok. Ayrıca dokunmatik cihazda bağlantı olduğuna dair hiçbir işaret yok — rengi gövde metniyle aynı, tek işaret `hover:underline` ve `hover:` globals.css:10'daki @custom-variant ile (hover:hover) and (pointer:fine) altında olduğu için dokunmatikte hiç tetiklenmiyor. Aynı kartın sağındaki StatusBadge ile birlikte satır zaten 324px genişliğinde; satırın tamamı hedef yapılmalı.",
+     "measure": "390×844, probe-ihracat-r11f.json: a.font-mono boundingBox w=109 h=20 (EXP-2026-000002 ve EXP-2026-000001'de aynı), paddingTop/Bottom 0px, minHeight auto, parentH 20. probe-ihracat-r11b.json mobileTouch.detay = tek ihlal. Görsel: artifacts/critic/ihracat-r11-dnlink-EXP-2026-000002.png (bağlantı, düz metinden ayırt edilemiyor).",
+     "target": "390px'te bu bağlantının dokunma hedefi ≥44×44 px olsun ve dokunmatikte bağlantı olduğu görünsün. Önerilen: `<Link>`i satırın tamamına genişlet — `flex min-h-11 items-center justify-between -mx-1 px-1 rounded-md` — ve doküman numarasını `text-primary` (ya da kalıcı `underline-offset-2 decoration-border`) ile işaretle; rozet Link'in içinde kalsın. Kabul ölçütü: probe-ihracat-r11f.ts ile h ≥ 44 ve probe-ihracat-r11b.ts mobileTouch.detay = [] (0 ihlal); 1440px görünüm bozulmasın (satır yüksekliği ≤ 44px kalabilir, masaüstünde min-h yalnız mobilde uygulanacaksa `sm:min-h-0`).",
+     "file": "apps/web/src/app/(app)/ihracat/sevkiyatlar/[id]/page.tsx:234-241",
+     "openedRound": 11,
+     "measureAfter": "390x844, probe-ihracat-r11f.json (redeğerlendirme): a.font-mono (artık satırın tamamı) boundingBox w=332 h=44 (EXP-2026-000002 ve EXP-2026-000001 birebir aynı), paddingTop/Bottom 0px ama minHeight=44px, display=flex, parentH=106 — dokunma hedefi artık >=44px. probe-ihracat-r11b.json mobileTouch.detay = [] (0 ihlal; diğer 5 rotayla birlikte). Kök neden düzeltmesi: page.tsx:236-249 daki <div><Link>…</Link><StatusBadge/></div> yapısı kaldırıldı; <Link> artık satırın tamamını (StatusBadge dahil) kaplıyor ('-mx-1 flex min-h-11 items-center justify-between gap-2 rounded-md px-1 font-mono text-[13px] hover:bg-accent/40'), doküman no kalıcı olarak text-primary + underline decoration-border underline-offset-2 ile işaretli (dokunmatikte de bağlantı olduğu görünüyor; hover artık yalnızca arka plan tonu için, tek işaret değil). Görsel kanıt: artifacts/critic/ihracat-r11-dnlink-EXP-2026-000002.png (yeniden çekildi) ve artifacts/screens/ihracat-sevkiyatlar-9fc0ff46-6e7f-4adb-851c-4599e3fd71a8/{desktop,mobile}.png — 1440px kart görünümü bozulmadı (satır 44px oldu, yan yana StatusBadge ile hizalı), 390px'te Bağlı irsaliye satırı tam genişlik dokunma hedefi ve görünür yeşil bağlantı rengi taşıyor. pnpm typecheck ve pnpm lint (apps/web) temiz.",
+     "closedRound": 11
     }
    ]
   },

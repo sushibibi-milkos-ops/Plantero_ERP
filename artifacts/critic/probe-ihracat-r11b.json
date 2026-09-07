@@ -262,14 +262,6 @@
   "kurlar": [],
   "gtip": [],
   "yeni": [],
-  "detay": [
-   {
-    "tag": "A",
-    "cls": "font-mono hover:underline",
-    "t": "DN-2026-000028",
-    "w": 109,
-    "h": 20
-   }
-  ]
+  "detay": []
  }
 }
