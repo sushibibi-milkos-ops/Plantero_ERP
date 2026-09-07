@@ -177,6 +177,15 @@ export function DataTableMobileCards<T>({
   renderCard?: (row: T) => React.ReactNode;
 }) {
   const rows = table.getRowModel().rows;
+  // Tur 25 P2 kök neden düzeltmesi (shell-mobile-card-action-gutter-01): `rowActions` prop'u
+  // verilmiş bir tabloda menü YALNIZCA BAZI satırlarda dolu dönüyorsa (ör. /bakim/is-emirleri —
+  // sadece açık iş emrinde menü var), aksiyon sütunu o satırlarda hiç render edilmiyordu — rozet
+  // sütununun sağ kenarı satırdan satıra kayıyordu (ölçüm: 6 karttan 5'i 363px, 1'i 313px, 50px
+  // fark). Bu listede EN AZ BİR satırda gerçek menü varsa (`anyRowHasActions`), menüsüz satırlar da
+  // aynı genişlikte görünmez bir yer tutucu alır — oluk sabitlenir. Hiçbir satırda menü yoksa
+  // (`rowActions` hiç verilmemiş ya da tüm satırlar boş döndürüyorsa) oluk tamamen kalkar, eski
+  // davranış (regresyon yok).
+  const anyRowHasActions = rowActions ? rows.some((r) => (rowActions(r.original)?.length ?? 0) > 0) : false;
   return (
     <ul className="space-y-2">
       {rows.map((row) => {
@@ -272,7 +281,14 @@ export function DataTableMobileCards<T>({
                   {flexRender(b.column.columnDef.cell, b.getContext())}
                 </div>
               ))}
-              {actions.length ? <DataTableRowActions row={row.original} actions={actions} /> : null}
+              {actions.length ? (
+                <DataTableRowActions row={row.original} actions={actions} />
+              ) : anyRowHasActions ? (
+                // Görünmez yer tutucu: gerçek butonla (size-11 md:size-6, -my-3 md:my-0) BİREBİR
+                // aynı kutu boyutu — rozet sütununun sağ kenarı bu satırda da diğerleriyle hizalı
+                // kalsın diye, ama tıklanamaz/okunamaz (aria-hidden, etkileşimsiz).
+                <span aria-hidden className="-my-3 size-11 shrink-0 md:my-0 md:size-6" />
+              ) : null}
             </div>
             {/* Satır 2: alt başlık (+ meta ipuçları) solda, tek metrik sağda — kalıp burada durur.
                 Kök neden (Tur 11 P1 shell-mobile-card-truncate-01): sol grup önceden `flex` bir
