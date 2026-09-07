@@ -1,0 +1,62 @@
+{
+  "EXP-2026-000001": [
+    {
+      "x": 264,
+      "label": "Sipariş",
+      "docNo": "SO-2026-000023",
+      "tag": "A"
+    },
+    {
+      "x": 472,
+      "label": "İrsaliye",
+      "docNo": "DN-2026-000020",
+      "tag": "A"
+    },
+    {
+      "x": 680,
+      "label": "İhracat sevkiyatı",
+      "docNo": "EXP-2026-000001",
+      "tag": "A"
+    },
+    {
+      "x": 888,
+      "label": "Fatura",
+      "docNo": "INV-2026-000012",
+      "tag": "A"
+    }
+  ],
+  "EXP-2026-000002": [
+    {
+      "x": 264,
+      "label": "Sipariş",
+      "docNo": "SO-2026-000031",
+      "tag": "A"
+    },
+    {
+      "x": 472,
+      "label": "İrsaliye",
+      "docNo": "DN-2026-000028",
+      "tag": "A"
+    },
+    {
+      "x": 680,
+      "label": "İhracat sevkiyatı",
+      "docNo": "EXP-2026-000002",
+      "tag": "A"
+    }
+  ],
+  "EXP-2026-000003": [
+    {
+      "x": 264,
+      "label": "Sipariş",
+      "docNo": "SO-2026-000032",
+      "tag": "A"
+    },
+    {
+      "x": 472,
+      "label": "İhracat sevkiyatı",
+      "docNo": "EXP-2026-000003",
+      "tag": "A"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+ "empty_makineler": {
+  "visRows": 0,
+  "text": "asite raporu ekipmanlarıToplam makineÇalışıyorArızalıVadesi geçen bakımDurum0 kayıtKodMakineHatDurumSonraki bakımÇalışma saatiAçık iş emriEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgs": 13
+ },
+ "empty_planlar": {
+  "visRows": 0,
+  "text": "Bakım Planları12 periyodik plan — 0 vadesi geldi Yeni planDurum0 kayıtPlanMakineAralıkSon yapılanSonrakiSorumluDurumEylemlerEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgs": 14
+ },
+ "empty_isemirleri": {
+  "visRows": 0,
+  "text": "a ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.NoBaşlıkMakineTürÖncelikDurumEylemlerEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+  "svgs": 26
+ },
+ "rowStates": {
+  "cls": "group/row h-9 border-b border-border/50 last:border-0 cursor-pointer hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
+  "bgIdle": "rgba(0, 0, 0, 0)",
+  "height": 37
+ },
+ "rowHoverBg": "oklab(0.955 0.000564683 -0.00191863 / 0.5)",
+ "focusRing": {
+  "tag": "A",
+  "cls": "rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+  "outline": "oklab(0.55 -0.141272 0.0751154 / 0.5) none 0px",
+  "outlineWidth": "0px"
+ },
+ "cards_makineler": {
+  "count": 36,
+  "min": 63.5,
+  "max": 63.5
+ },
+ "cards_planlar": {
+  "count": 14,
+  "min": 0,
+  "max": 0
+ },
+ "cards_isemirleri": {
+  "count": 14,
+  "min": 0,
+  "max": 0
+ }
+}

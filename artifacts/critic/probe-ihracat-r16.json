@@ -1,0 +1,340 @@
+{
+  "chain": {
+    "EXP-2026-000001": [
+      [],
+      [],
+      []
+    ],
+    "EXP-2026-000002": [
+      [],
+      [],
+      []
+    ],
+    "EXP-2026-000003": [
+      [],
+      [],
+      []
+    ]
+  },
+  "routes": {
+    "sevkiyatlar": {
+      "tables": [
+        {
+          "ti": 0,
+          "tableW": 1152,
+          "containerW": 1152,
+          "scrollW": 1152,
+          "rowCount": 3,
+          "cols": [
+            {
+              "h": "Sevkiyat no",
+              "width": 158,
+              "rows": 3,
+              "distinct": 3,
+              "sample": [
+                "EXP-2026-000001",
+                "EXP-2026-000002",
+                "EXP-2026-000003"
+              ]
+            },
+            {
+              "h": "Müşteri",
+              "width": 190,
+              "rows": 3,
+              "distinct": 1,
+              "sample": [
+                "BioGrün Handels GmbH"
+              ]
+            },
+            {
+              "h": "Durum",
+              "width": 140,
+              "rows": 3,
+              "distinct": 3,
+              "sample": [
+                "Kapalı",
+                "Gümrükte",
+                "Taslak"
+              ]
+            },
+            {
+              "h": "Ülke",
+              "width": 65,
+              "rows": 3,
+              "distinct": 2,
+              "sample": [
+                "DE",
+                "NL"
+              ]
+            },
+            {
+              "h": "Rejim",
+              "width": 76,
+              "rows": 3,
+              "distinct": 2,
+              "sample": [
+                "ETGB",
+                "Standart"
+              ]
+            },
+            {
+              "h": "Belgeler",
+              "width": 87,
+              "rows": 3,
+              "distinct": 3,
+              "sample": [
+                "9/11",
+                "2/8",
+                "6/11"
+              ]
+            },
+            {
+              "h": "Tutar (döviz)",
+              "width": 120,
+              "rows": 3,
+              "distinct": 3,
+              "sample": [
+                "€270,00",
+                "€16.800,00",
+                "€0,00"
+              ]
+            },
+            {
+              "h": "ETD",
+              "width": 96,
+              "rows": 3,
+              "distinct": 2,
+              "sample": [
+                "—",
+                "10.09.2026"
+              ]
+            },
+            {
+              "h": "Oluşturma",
+              "width": 99,
+              "rows": 3,
+              "distinct": 1,
+              "sample": [
+                "07.09.2026"
+              ]
+            },
+            {
+              "h": "Tutar (₺)",
+              "width": 120,
+              "rows": 3,
+              "distinct": 3,
+              "sample": [
+                "₺10.044,00",
+                "₺624.960,00",
+                "₺2.678,40"
+              ]
+            }
+          ]
+        }
+      ],
+      "rowBgBefore": "rgba(0, 0, 0, 0)",
+      "rowBgAfter": "oklab(0.955 0.000564683 -0.00191863 / 0.5)"
+    },
+    "belgeler": {
+      "tables": [
+        {
+          "ti": 0,
+          "tableW": 1152,
+          "containerW": 1152,
+          "scrollW": 1152,
+          "rowCount": 30,
+          "cols": [
+            {
+              "h": "Belge",
+              "width": 330,
+              "rows": 30,
+              "distinct": 12,
+              "sample": [
+                "ETGB (mikro ihracat beyanı)",
+                "Sağlık sertifikası",
+                "Çeki listesi (packing list)"
+              ]
+            },
+            {
+              "h": "Sevkiyat",
+              "width": 225,
+              "rows": 30,
+              "distinct": 3,
+              "sample": [
+                "EXP-2026-000001",
+                "EXP-2026-000002",
+                "EXP-2026-000003"
+              ]
+            },
+            {
+              "h": "Müşteri",
+              "width": 342,
+              "rows": 30,
+              "distinct": 1,
+              "sample": [
+                "BioGrün Handels GmbH"
+              ]
+            },
+            {
+              "h": "Durum",
+              "width": 195,
+              "rows": 30,
+              "distinct": 5,
+              "sample": [
+                "Alındı",
+                "Gerekli",
+                "Hazır"
+              ]
+            },
+            {
+              "h": "Eylemler",
+              "width": 60,
+              "rows": 30,
+              "distinct": 1,
+              "sample": [
+                ""
+              ]
+            }
+          ]
+        }
+      ],
+      "rowBgBefore": "rgba(0, 0, 0, 0)",
+      "rowBgAfter": "rgba(0, 0, 0, 0)"
+    },
+    "kurlar": {
+      "tables": [
+        {
+          "ti": 0,
+          "tableW": 1152,
+          "containerW": 1152,
+          "scrollW": 1152,
+          "rowCount": 25,
+          "cols": [
+            {
+              "h": "Tarih",
+              "width": 185,
+              "rows": 25,
+              "distinct": 13,
+              "sample": [
+                "07.09.2026",
+                "06.09.2026",
+                "05.09.2026"
+              ]
+            },
+            {
+              "h": "Para birimi",
+              "width": 201,
+              "rows": 25,
+              "distinct": 2,
+              "sample": [
+                "EUR",
+                "USD"
+              ]
+            },
+            {
+              "h": "Alış",
+              "width": 175,
+              "rows": 25,
+              "distinct": 23,
+              "sample": [
+                "₺37,2000",
+                "₺34,0738",
+                "₺38,5000"
+              ]
+            },
+            {
+              "h": "Satış",
+              "width": 175,
+              "rows": 25,
+              "distinct": 23,
+              "sample": [
+                "Satış₺37,4000",
+                "Satış₺34,2237",
+                "Satış₺38,7000"
+              ]
+            },
+            {
+              "h": "Günlük değişim",
+              "width": 231,
+              "rows": 25,
+              "distinct": 18,
+              "sample": [
+                "-%3,36",
+                "+%0,75",
+                "+%4,66"
+              ]
+            },
+            {
+              "h": "Kaynak",
+              "width": 185,
+              "rows": 25,
+              "distinct": 1,
+              "sample": [
+                "TCMB"
+              ]
+            }
+          ]
+        }
+      ],
+      "rowBgBefore": "rgba(0, 0, 0, 0)",
+      "rowBgAfter": "rgba(0, 0, 0, 0)"
+    },
+    "gtip": {
+      "tables": [
+        {
+          "ti": 0,
+          "tableW": 1152,
+          "containerW": 1152,
+          "scrollW": 1152,
+          "rowCount": 39,
+          "cols": [
+            {
+              "h": "SKU",
+              "width": 179,
+              "rows": 39,
+              "distinct": 39,
+              "sample": [
+                "110010001",
+                "110010002",
+                "110010003"
+              ]
+            },
+            {
+              "h": "Ürün",
+              "width": 519,
+              "rows": 39,
+              "distinct": 39,
+              "sample": [
+                "BADEM BAZI",
+                "2x Badem Bazı",
+                "3x Badem Bazı"
+              ]
+            },
+            {
+              "h": "Tip",
+              "width": 151,
+              "rows": 39,
+              "distinct": 2,
+              "sample": [
+                "Mamul",
+                "Hammadde"
+              ]
+            },
+            {
+              "h": "GTİP",
+              "width": 303,
+              "rows": 39,
+              "distinct": 2,
+              "sample": [
+                "Eşlenmedi",
+                "0901.21"
+              ]
+            }
+          ]
+        }
+      ],
+      "rowBgBefore": "rgba(0, 0, 0, 0)",
+      "rowBgAfter": "rgba(0, 0, 0, 0)"
+    }
+  }
+}

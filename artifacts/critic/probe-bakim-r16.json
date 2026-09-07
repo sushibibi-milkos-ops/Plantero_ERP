@@ -1,0 +1,230 @@
+{
+ "d_makineler": {
+  "suspects": [],
+  "violations": [],
+  "violationCount": 0,
+  "rowCount": 36,
+  "rowHeights": [
+   36.5,
+   37
+  ],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "d_planlar": {
+  "suspects": [],
+  "violations": [],
+  "violationCount": 0,
+  "rowCount": 12,
+  "rowHeights": [
+   36
+  ],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "d_isemirleri": {
+  "suspects": [],
+  "violations": [],
+  "violationCount": 0,
+  "rowCount": 6,
+  "rowHeights": [
+   0
+  ],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "d_isemirleriDetay": {
+  "suspects": [],
+  "violations": [
+   {
+    "kind": "anim-pulse-2s",
+    "cls": "absolute top-1 -left-[18.5px] size-2.5 rounded-full ring-4 ring-background bg-pr"
+   }
+  ],
+  "violationCount": 1,
+  "rowCount": 0,
+  "rowHeights": [],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "d_isemirleriReported": {
+  "suspects": [],
+  "violations": [],
+  "violationCount": 0,
+  "rowCount": 0,
+  "rowHeights": [],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "d_isemirleriYeni": {
+  "suspects": [],
+  "violations": [],
+  "violationCount": 0,
+  "rowCount": 0,
+  "rowHeights": [],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "d_makinelerDetay": {
+  "suspects": [],
+  "violations": [],
+  "violationCount": 0,
+  "rowCount": 0,
+  "rowHeights": [],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "d_oee": {
+  "suspects": [],
+  "violations": [],
+  "violationCount": 0,
+  "rowCount": 3,
+  "rowHeights": [
+   36
+  ],
+  "scrollWidth": 1440,
+  "clientWidth": 1440
+ },
+ "m_makineler": {
+  "kpi": {
+   "scrollWidth": 632,
+   "clientWidth": 358,
+   "cards": 4,
+   "fullyVisible": 2
+  },
+  "small": [],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "m_planlar": {
+  "kpi": null,
+  "small": [],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "m_isemirleri": {
+  "kpi": null,
+  "small": [],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "m_isemirleriDetay": {
+  "kpi": null,
+  "small": [],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "m_isemirleriReported": {
+  "kpi": {
+   "scrollWidth": 374,
+   "clientWidth": 358,
+   "cards": 5,
+   "fullyVisible": 4
+  },
+  "small": [],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "m_isemirleriYeni": {
+  "kpi": null,
+  "small": [
+   {
+    "tag": "select",
+    "cls": "",
+    "text": "DüşükNormalYüksekKritik ",
+    "w": 1,
+    "h": 1,
+    "aria": "true"
+   }
+  ],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "m_makinelerDetay": {
+  "kpi": {
+   "scrollWidth": 374,
+   "clientWidth": 358,
+   "cards": 7,
+   "fullyVisible": 6
+  },
+  "small": [],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "m_oee": {
+  "kpi": {
+   "scrollWidth": 792,
+   "clientWidth": 358,
+   "cards": 5,
+   "fullyVisible": 2
+  },
+  "small": [],
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ "oeeDecimals": {
+  "OEE": {
+   "values": [
+    "%0,14",
+    "%0,24",
+    "%1,2"
+   ],
+   "decimals": [
+    2,
+    1
+   ]
+  },
+  "Kullanılabilirlik": {
+   "values": [
+    "%100",
+    "%99,48",
+    "%99,38"
+   ],
+   "decimals": [
+    0,
+    2
+   ]
+  },
+  "Performans": {
+   "values": [
+    "%0,14",
+    "%0,26",
+    "%1,2"
+   ],
+   "decimals": [
+    2,
+    1
+   ]
+  },
+  "Kalite": {
+   "values": [
+    "%3,33",
+    "%6,63",
+    "%9,97"
+   ],
+   "decimals": [
+    2
+   ]
+  }
+ },
+ "anim_done": [
+  {
+   "cls": "absolute top-1 -left-[18.5px] size-2.5 rounded-full ring-4 ring-background bg-primary moti",
+   "anim": "pulse",
+   "dur": "2s"
+  }
+ ],
+ "anim_reported": [],
+ "empty_makineler": {
+  "rows": 36,
+  "text": "Makineler36 makine kartı — kapasite raporu ekipmanlarıToplam makinenumber-flow-react > span{font-kerning:none;display:inline-block;line-height:var(--number-flow-char-height, 1em) !important;padding:calc(round(nearest, calc(var(--number-flow-mask-height, 0.25em) / 2), 1px) * 2) 0}36Çalışıyornumber-flow-react > span{font-kerning:none;display:inline-block;line-height:var(--number-flow-char-height, 1e"
+ },
+ "empty_planlar": {
+  "rows": 12,
+  "text": "Bakım Planları12 periyodik plan — 0 vadesi geldi Yeni planDurum12 kayıtPlanMakineAralıkSon yapılanSonrakiSorumluDurumEylemler500 çalışma saatinde rulman kontrolüMK-002 Püre makinesi (ball mill mikser)500 çalışma saati——Bakım SorumlusuAktifGünlük hassasiyet testiMK-023 Metal dedektörü (30×25)1 gün07.09.202608.09.2026Bakım SorumlusuAktifHaftalık stick nozul temizliğiMK-018 Stick dolum makinesi (20 g"
+ },
+ "empty_isemirleri": {
+  "rows": 12,
+  "text": "Bakım İş Emirleri6 iş emri — 1 açık Arıza bildirDurumTürÖncelik6 kayıtNoBaşlıkMakineTürÖncelikDurumEylemlerMO-2026-000006Mikser motorunda anormal sesMK-011 Silindirik toz mikser 200 kg (HAT2)ArızaYüksekBildirildiMO-2026-000002Gramaj sapması — toz dolumu tutarsızMK-014 Dikey toz dolum makinesi (otomatik)ArızaKritikTamamlandı1MO-2026-000001Dolum başlığı sızdırıyorMK-005 Sıvı dolum makinesi 1 (YKM AY"
+ }
+}
