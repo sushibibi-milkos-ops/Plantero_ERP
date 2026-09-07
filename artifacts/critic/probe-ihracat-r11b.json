@@ -18,13 +18,13 @@
     "align": "start"
    },
    {
-    "t": "10.09.2026",
+    "t": "07.09.2026",
     "fvn": "normal",
     "ff": "Inter",
     "align": "start"
    },
    {
-    "t": "07.09.2026",
+    "t": "10.09.2026",
     "fvn": "normal",
     "ff": "Inter",
     "align": "start"
@@ -244,7 +244,7 @@
    "svgInEmpty": 17
   },
   "belgeler": {
-   "text": ";padding:calc(round(nearest, calc(var(--number-flow-mask-height, 0.25em) / 2), 1px) * 2) 0}13Durum0 kayıtBelgeSevkiyatMüşteriDurumEylemlerEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
+   "text": ";padding:calc(round(nearest, calc(var(--number-flow-mask-height, 0.25em) / 2), 1px) * 2) 0}11Durum0 kayıtBelgeSevkiyatMüşteriDurumEylemlerEşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.Eşleşen kayıt yokArama ya da filtreleri değiştirmeyi deneyin.",
    "svgInEmpty": 10
   },
   "kurlar": {
