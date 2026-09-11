@@ -13,6 +13,7 @@
     "generate": "drizzle-kit generate",
     "studio": "drizzle-kit studio",
     "seed": "tsx src/seed/index.ts",
+    "bootstrap": "tsx src/bootstrap.ts",
     "wait-for-schema": "tsx src/wait-for-schema.ts",
     "reset": "tsx src/reset.ts && drizzle-kit push --force && tsx src/wait-for-schema.ts && tsx src/seed/index.ts",
     "check": "tsx src/checks/run.ts",
