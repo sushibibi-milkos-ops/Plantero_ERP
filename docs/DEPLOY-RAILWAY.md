@@ -23,8 +23,9 @@ Depodaki dosyalar:
      ```
      (İki değer de Railway'in referans değişkenidir; panelde "Add Reference" ile seçilir.)
 5. **Worker servisi.** *+ Create → GitHub Repo* ile aynı depoyu ikinci kez ekleyin → *Settings → Config-as-code* alanına `railway.worker.json` yazın. Variables aynı iki satır. Domain gerekmez.
-6. **Deploy.** İlk derleme 8–12 dakika sürer (Chromium indirme + `next build`). Web servisi ayağa kalkarken günlükte sırayla `[bootstrap] veritabanı boş — şema uygulanıyor`, `[bootstrap] tam seed başlıyor`, `[bootstrap] hazır`, `[deploy] web başlıyor` görünür. Seed 1–2 dakika sürer; sağlık ucu 10 dakikaya kadar bekler.
-7. **Giriş.** Domain'i açın → `admin@plantero.local` / `Plantero!2026`. Diğer hesaplar `docs/TEST-ACCOUNTS.md`.
+6. **Değişiklikleri uygulayın.** Railway değişken ve ayar değişikliklerini bekletir: panelin üstünde beliren mor **Deploy** (ya da "Apply N changes") düğmesine basmadan hiçbir değişiklik canlıya geçmez. Günlükte `ECONNREFUSED` görüyorsanız neredeyse her zaman bu adım atlanmıştır.
+7. **Deploy.** İlk derleme 8–12 dakika sürer (Chromium indirme + `next build`). Web servisi ayağa kalkarken günlükte sırayla `[bootstrap] veritabanı boş — şema uygulanıyor`, `[bootstrap] tam seed başlıyor`, `[bootstrap] hazır`, `[deploy] web başlıyor` görünür. Seed 1–2 dakika sürer; sağlık ucu 10 dakikaya kadar bekler.
+8. **Giriş.** Domain'i açın → `admin@plantero.local` / `Plantero!2026`. Diğer hesaplar `docs/TEST-ACCOUNTS.md`.
 
 ## İsteğe bağlı değişkenler
 
@@ -34,6 +35,12 @@ Depodaki dosyalar:
 | `BIZIMHESAP_API_KEY`, `TRENDYOL_*`, `HEPSIBURADA_*`, `WHATSAPP_*`, `SMTP_URL`, `OPEN_BANKING_API_KEY` | boş | Boşsa ilgili entegrasyon sandbox modunda deterministik sahte veri üretir. |
 | `TCMB_LIVE` | boş | `1` ise TCMB kuru gerçek servisten çekilir. |
 | `PLANTERO_BOOTSTRAP` | `1` | `0` yapılırsa açılışta boş veritabanına şema/seed uygulanmaz. |
+
+## Railway depoyu kendisi algıladıysa (Railpack)
+
+Servisler kanvasta `@plantero/web` / `@plantero/worker` adıyla göründüyse Railway, `Dockerfile` yerine kendi algılayıcısıyla (Railpack) kurmuş ve her paketi kendi `start` betiğiyle başlatmıştır. Bu da çalışır: `apps/web` ve `apps/worker` paketlerinin `start` betikleri aynı `scripts/deploy/*.sh` dosyalarını çağırır, şema/seed bootstrap'ı yine koşar. Tek fark: bu yolda Chromium kurulmadığından PDF üretimi (satın alma siparişi, proforma, irsaliye PDF'i) çalışmaz. PDF gerekiyorsa servis → *Settings → Build → Builder* alanını **Dockerfile** yapın.
+
+Teşhis için `https://<adres>/api/health` her zaman JSON döner: `db:false` → bağlantı yok (DATABASE_URL), `tables:0` → şema yok, `seeded:false` → seed yok.
 
 ## Notlar
 

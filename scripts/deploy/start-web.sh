@@ -3,7 +3,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 
-: "${DATABASE_URL:?DATABASE_URL tanımlı olmalı}"
+if [ -z "${DATABASE_URL:-}" ]; then
+  echo "[deploy] HATA: DATABASE_URL tanımlı değil. Railway'de web servisi → Variables → Add Reference → Postgres.DATABASE_URL ekleyip üstteki 'Deploy' düğmesiyle değişikliği uygulayın." >&2
+  exit 1
+fi
 
 if [ "${PLANTERO_BOOTSTRAP:-1}" = "1" ]; then
   pnpm --filter @plantero/db bootstrap
