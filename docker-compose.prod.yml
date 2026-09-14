@@ -1,0 +1,78 @@
+# Tek sunucu kurulumu (AWS Lightsail/EC2 ya da herhangi bir VPS): Postgres + Redis + web + worker + Caddy (HTTPS).
+# Kullanım: scripts/deploy/vps-install.sh  (ya da elle: docker compose -f docker-compose.prod.yml up -d --build)
+# .env içinde: PLANTERO_DOMAIN (boşsa yalnızca HTTP :80), POSTGRES_PASSWORD, isteğe bağlı API anahtarları.
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: plantero
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-plantero}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d plantero"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: [redisdata:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web:
+    build: .
+    image: plantero:latest
+    restart: unless-stopped
+    command: ["bash", "scripts/deploy/start-web.sh"]
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-plantero}@postgres:5432/plantero
+      REDIS_URL: redis://redis:6379
+      PORT: "3000"
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TCMB_LIVE: ${TCMB_LIVE:-}
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 240s
+
+  worker:
+    image: plantero:latest
+    restart: unless-stopped
+    command: ["bash", "scripts/deploy/start-worker.sh"]
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-plantero}@postgres:5432/plantero
+      REDIS_URL: redis://redis:6379
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TCMB_LIVE: ${TCMB_LIVE:-}
+    depends_on:
+      web: { condition: service_healthy }   # şema/seed web açılışında yüklenir; worker dolu DB'ye gelir
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      PLANTERO_DOMAIN: ${PLANTERO_DOMAIN:-}
+    volumes:
+      - ./scripts/deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    depends_on: [web]
+
+volumes:
+  pgdata:
+  redisdata:
+  caddydata:
+  caddyconfig:

@@ -1,0 +1,5 @@
+# PLANTERO_DOMAIN doluysa (örn. erp.plantero.co) otomatik Let's Encrypt HTTPS; boşsa yalnızca HTTP :80 (IP ile erişim).
+{$PLANTERO_DOMAIN::80} {
+	encode gzip
+	reverse_proxy web:3000
+}
