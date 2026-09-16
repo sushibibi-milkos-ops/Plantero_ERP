@@ -6,6 +6,8 @@ import { withJobRun } from './lib/run.js';
 import { QUEUES, TZ, type QueueDef } from './queues.js';
 
 const REDIS_URL = process.env.REDIS_URL ?? 'redis://localhost:6379';
+/** Günlüğe yazılırken kimlik bilgisi gizlenir (redis://default:şifre@host → redis://host). */
+const REDIS_LABEL = REDIS_URL.replace(/\/\/[^@/]*@/, '//');
 const REDIS_CONNECT_TIMEOUT_MS = 3_000;
 
 /**
@@ -29,7 +31,7 @@ async function connectRedis(): Promise<IORedis | null> {
     ]);
     return connection;
   } catch (err) {
-    console.warn(`[worker] Redis bağlantısı kurulamadı (${REDIS_URL}); in-process zamanlayıcıya düşülüyor. Neden: ${err instanceof Error ? err.message : String(err)}`);
+    console.warn(`[worker] Redis bağlantısı kurulamadı (${REDIS_LABEL}); in-process zamanlayıcıya düşülüyor. Neden: ${err instanceof Error ? err.message : String(err)}`);
     connection.disconnect();
     return null;
   }
@@ -71,7 +73,7 @@ async function startBullMq(connection: IORedis): Promise<void> {
     }
   }
 
-  console.log(`[worker] BullMQ aktif (Redis: ${REDIS_URL}), ${queueDefs.length} kuyruk kayıtlı.`);
+  console.log(`[worker] BullMQ aktif (Redis: ${REDIS_LABEL}), ${queueDefs.length} kuyruk kayıtlı.`);
 }
 
 /* ------------------------------------------------------------------ */

@@ -6,5 +6,6 @@ if [ -z "${DATABASE_URL:-}" ]; then
   echo "[deploy] HATA: DATABASE_URL tanımlı değil (worker servisi → Variables → Add Reference → Postgres.DATABASE_URL)." >&2
   exit 1
 fi
-echo "[deploy] worker başlıyor (REDIS_URL ${REDIS_URL:-tanımsız → in-process zamanlayıcı})"
+REDIS_LABEL="$(printf '%s' "${REDIS_URL:-}" | sed -E 's#//[^@/]*@#//#')"
+echo "[deploy] worker başlıyor (Redis: ${REDIS_LABEL:-tanımsız → in-process zamanlayıcı})"
 exec pnpm exec tsx src/index.ts

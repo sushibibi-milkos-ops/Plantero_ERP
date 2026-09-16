@@ -39,6 +39,8 @@ export default defineConfig({
     timezoneId: 'Europe/Istanbul',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    // Uzak dağıtıma (ör. Railway) proxy arkasından koşarken sertifika zinciri doğrulanamayabilir.
+    ignoreHTTPSErrors: process.env.PLAYWRIGHT_IGNORE_HTTPS_ERRORS === '1',
     ...(executablePath ? { launchOptions: { executablePath } } : {}),
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],

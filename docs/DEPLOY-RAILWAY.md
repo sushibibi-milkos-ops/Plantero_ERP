@@ -14,7 +14,8 @@ Depodaki dosyalar:
 2. **Postgres ekle.** Proje panelinde *+ Create → Database → PostgreSQL*.
 3. **Redis ekle.** *+ Create → Database → Redis*.
 4. **Web servisi.** GitHub'dan gelen servisi seçin → *Settings*:
-   - *Config-as-code* → `railway.json` (varsayılan zaten bu dosyayı bulur).
+   - *Build → Builder* **Dockerfile** olmalı (Railway 2026'da config-as-code'u kaldırdı; `railway.json` artık okunmaz, ayarlar servis panelinden ya da API ile verilir).
+   - *Deploy → Start Command*: `bash scripts/deploy/start-web.sh`, *Healthcheck Path*: `/api/health`.
    - *Networking → Generate Domain* ile bir adres alın (`https://….up.railway.app`).
    - *Variables* sekmesine:
      ```
@@ -22,7 +23,7 @@ Depodaki dosyalar:
      REDIS_URL    = ${{Redis.REDIS_URL}}
      ```
      (İki değer de Railway'in referans değişkenidir; panelde "Add Reference" ile seçilir.)
-5. **Worker servisi.** *+ Create → GitHub Repo* ile aynı depoyu ikinci kez ekleyin → *Settings → Config-as-code* alanına `railway.worker.json` yazın. Variables aynı iki satır. Domain gerekmez.
+5. **Worker servisi.** *+ Create → GitHub Repo* ile aynı depoyu ikinci kez ekleyin → *Settings → Build → Builder* **Dockerfile**, *Deploy → Start Command*: `bash scripts/deploy/start-worker.sh`. Variables aynı iki satır. Domain gerekmez.
 6. **Değişiklikleri uygulayın.** Railway değişken ve ayar değişikliklerini bekletir: panelin üstünde beliren mor **Deploy** (ya da "Apply N changes") düğmesine basmadan hiçbir değişiklik canlıya geçmez. Günlükte `ECONNREFUSED` görüyorsanız neredeyse her zaman bu adım atlanmıştır.
 7. **Deploy.** İlk derleme 8–12 dakika sürer (Chromium indirme + `next build`). Web servisi ayağa kalkarken günlükte sırayla `[bootstrap] veritabanı boş — şema uygulanıyor`, `[bootstrap] tam seed başlıyor`, `[bootstrap] hazır`, `[deploy] web başlıyor` görünür. Seed 1–2 dakika sürer; sağlık ucu 10 dakikaya kadar bekler.
 8. **Giriş.** Domain'i açın → `admin@plantero.local` / `Plantero!2026`. Diğer hesaplar `docs/TEST-ACCOUNTS.md`.
