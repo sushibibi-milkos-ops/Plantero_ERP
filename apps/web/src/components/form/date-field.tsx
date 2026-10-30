@@ -15,6 +15,14 @@ import { FieldLabel, type BaseFieldProps } from './fields';
 const ISO = 'yyyy-MM-dd';
 const TR = 'dd.MM.yyyy';
 
+/**
+ * Takvimin yıl açılır listesi: react-day-picker `startMonth`/`endMonth` verilmezse yalnızca içinde
+ * bulunulan yıla kadar gösterir (iş emri planlamasında 2027+ seçilemiyordu). Varsayılan aralık
+ * 2020–2040; çağıran `fromDate`/`toDate` ile daraltabilir.
+ */
+const DEFAULT_FROM = new Date(2020, 0, 1);
+const DEFAULT_TO = new Date(2040, 11, 31);
+
 function isoToDate(iso: string | null | undefined): Date | undefined {
   if (!iso) return undefined;
   const d = parse(iso, ISO, new Date());
@@ -32,8 +40,8 @@ export function DateInput({
   placeholder = 'gg.aa.yyyy',
   clearable = true,
   className,
-  fromDate,
-  toDate,
+  fromDate = DEFAULT_FROM,
+  toDate = DEFAULT_TO,
   id,
   'aria-describedby': ariaDescribedBy,
   'aria-label': ariaLabel,
