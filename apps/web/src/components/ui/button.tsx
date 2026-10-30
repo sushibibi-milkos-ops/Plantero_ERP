@@ -17,38 +17,38 @@ const buttonVariants = cva(
   // burada AÇIKÇA tekrarlanır — Tur 4 P2'de Enter/Boşluk'la klavye aktivasyonunun da `:active`'i
   // tetikleyip gereksiz küçülme oynattığı bug'ı geri getirmemek için guard KORUNUR (çıplak
   // `active:scale-[0.97]` klavye akışını yeniden bozar).
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 outline-none [&:active:not(:focus-visible)]:scale-[0.97] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 outline-none [&:active:not(:focus-visible)]:scale-[0.97] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
+        // iPadOS: dolgulu tint (kapsül). Basınca hafif koyulaşır (scale 0.97 globals.css + zemin).
         // disabled: opacity yerine düz bg-muted/text-muted-foreground — bg-primary'nin %50 opaklığı
-        // 2:1 kontrast veriyordu (WCAG AA eşiği 4,5:1); devre dışı olduğu artık renkle değil, "soluk yeşil
-        // bozuk buton" değil düz gri ile anlaşılıyor.
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none",
+        // 2:1 kontrast veriyordu (WCAG AA eşiği 4,5:1).
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80 disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 disabled:opacity-50",
-        // Zeminleri zaten background/transparan olduğu için opaklık düşüşü buralarda kontrastı AA eşiğinin altına düşürmüyor.
+          "bg-destructive text-white hover:bg-destructive/90 active:bg-destructive/80 focus-visible:ring-destructive/25 dark:text-destructive-foreground disabled:opacity-50",
+        // "Tinted" (iOS): tint %15 zemin + tint metin — ikincil ama belirgin eylemler.
+        tinted:
+          "bg-primary/15 text-(--ink-primary) hover:bg-primary/20 active:bg-primary/25 disabled:opacity-50",
+        // iOS'ta çerçeveli düğme yoktur; beyaz kapsül + hairline + ince gölge (kart zemini üstünde okunur).
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 disabled:opacity-50",
+          "border border-border bg-card text-foreground shadow-xs hover:bg-accent active:bg-accent dark:bg-secondary dark:hover:bg-secondary/80 disabled:opacity-50",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 disabled:opacity-50",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/70 active:bg-secondary/60 disabled:opacity-50",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 disabled:opacity-50",
-        link: "text-primary underline-offset-4 hover:underline disabled:opacity-50",
+          "hover:bg-accent hover:text-accent-foreground active:bg-accent disabled:opacity-50",
+        link: "text-primary underline-offset-4 hover:underline disabled:opacity-50 rounded-md",
       },
       size: {
-        // h-11 md:h-9: 390px'te varsayılan boyut 36px'te kalıyordu — depo modülünün eldivenli/el
-        // terminalli kullanım bağlamında (mal kabul, sevkiyat, transfer, sayım "Yeni …" ve "Kabul
-        // et"/"Vazgeç" aksiyonları) WCAG 2.5.8/iOS 44px eşiğinin altına düşüyordu (Tur 5 P1 bulgusu).
-        // Masaüstünde (md+) yoğun tablo/form ekranlarında 36px korunur — Linear kalıbı.
-        default: "h-11 px-4 py-2 has-[>svg]:px-3 md:h-9",
-        xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
-        "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-8",
-        "icon-lg": "size-10",
+        // h-11 md:h-10: mobilde 44px dokunma hedefi (iOS HIG / WCAG 2.5.8); masaüstünde 40px.
+        default: "h-11 px-5 py-2 has-[>svg]:px-4 md:h-10",
+        xs: "h-7 gap-1 px-2.5 text-xs has-[>svg]:px-2 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-9 gap-1.5 px-3.5 has-[>svg]:px-3",
+        lg: "h-12 px-7 text-base has-[>svg]:px-5",
+        icon: "size-10",
+        "icon-xs": "size-7 [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "size-9",
+        "icon-lg": "size-11",
       },
     },
     defaultVariants: {

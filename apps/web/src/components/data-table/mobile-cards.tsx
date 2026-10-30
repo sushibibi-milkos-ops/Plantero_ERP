@@ -186,8 +186,10 @@ export function DataTableMobileCards<T>({
   // (`rowActions` hiç verilmemiş ya da tüm satırlar boş döndürüyorsa) oluk tamamen kalkar, eski
   // davranış (regresyon yok).
   const anyRowHasActions = rowActions ? rows.some((r) => (rowActions(r.original)?.length ?? 0) > 0) : false;
+  // iPadOS inset grouped: kartlar tek beyaz yuvarlak kümede, aralarında sol 16px boşluklu hairline.
+  // Özel `renderCard` kendi kartını çizer — o durumda eski ayrı kart dizilimi korunur.
   return (
-    <ul className="space-y-2">
+    <ul className={cn(renderCard ? 'space-y-2' : 'grouped-card border border-border/50')}>
       {rows.map((row) => {
         if (renderCard) {
           return (
@@ -237,8 +239,9 @@ export function DataTableMobileCards<T>({
               // p-2.5 (p-3 değil): 2 satırlık kalıpta 12px dolgu bazı rotalarda (rozet+badge satırı
               // beklenenden birkaç px taşan) kartı 72px hedefinin hemen üstüne taşıyordu — 10px hâlâ
               // rahat, referans aralığın (56-72px) içinde güvenli pay bırakır.
-              'rounded-lg border border-border/70 bg-card p-2.5',
-              onRowClick && 'cursor-pointer active:bg-accent/50',
+              'relative px-4 py-3',
+              'after:absolute after:right-0 after:bottom-0 after:left-4 after:h-px after:bg-border last:after:hidden',
+              onRowClick && 'cursor-pointer transition-colors active:bg-accent/70',
             )}
           >
             {/* Satır 1: başlık solda, rozet(ler) + aksiyon menüsü sağda.
@@ -261,7 +264,7 @@ export function DataTableMobileCards<T>({
               {/* leading-5 (20px): text-[14px] boyut ipucu olmadan gelir, satır yüksekliği gövdenin
                   1.5 varsayılanına (21px) düşerdi — kartı 72px hedefinin (kriter 3) hemen üstüne
                   taşıyordu (72.5px ölçüldü). */}
-              <div className="min-w-0 flex-1 truncate text-[14px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:truncate">
+              <div className="min-w-0 flex-1 truncate text-[15px] leading-5 font-medium [&>*]:min-w-0 [&>*]:max-w-full [&>*]:truncate">
                 {title ? flexRender(title.column.columnDef.cell, title.getContext()) : null}
               </div>
               {badges.map((b) => (

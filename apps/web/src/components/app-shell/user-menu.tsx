@@ -47,8 +47,8 @@ export function UserMenu() {
           aria-label="Kullanıcı menüsü"
           data-testid="user-menu"
         >
-          <Avatar className="size-7 border">
-            <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">{initials(user.fullName)}</AvatarFallback>
+          <Avatar className="size-7">
+            <AvatarFallback className="bg-primary/15 text-[11px] font-semibold text-(--ink-primary)">{initials(user.fullName)}</AvatarFallback>
           </Avatar>
         </button>
       </DropdownMenuTrigger>
@@ -59,7 +59,7 @@ export function UserMenu() {
           {user.roles.length ? (
             <div className="mt-1.5 flex flex-wrap gap-1">
               {user.roles.map((r) => (
-                <Badge key={r} variant="secondary" className="h-5 px-1.5 text-[10px] font-medium">
+                <Badge key={r} variant="secondary" className="h-5 px-1.5 text-[11px] font-medium">
                   {roleLabel(r)}
                 </Badge>
               ))}

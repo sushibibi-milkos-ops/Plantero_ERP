@@ -52,12 +52,12 @@ export function DataTableToolbar<TData>({
     <div className="mb-3 flex flex-wrap items-center gap-2">
       {searchable ? (
         <div className="relative w-full sm:w-64">
-          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={globalFilter}
             onChange={(e) => table.setGlobalFilter(e.target.value)}
             placeholder={searchPlaceholder}
-            className="h-11 pl-8 text-[13px] md:h-8 md:text-[13px]"
+            className="h-11 pl-9 text-[17px] md:h-9 md:text-[15px]"
             aria-label="Tabloda ara"
           />
           {globalFilter ? (
@@ -87,17 +87,17 @@ export function DataTableToolbar<TData>({
               <Button
                 variant="outline"
                 size="sm"
-                className={cn('h-11 border border-border/70 bg-card text-[13px] md:h-8', selected.size && 'border-primary/40 bg-primary/5')}
+                className={cn('h-11 border border-border bg-card text-[14px] md:h-9', selected.size && 'border-primary/40 bg-primary/10 text-(--ink-primary)')}
               >
                 <ListFilter className="size-3.5" />
                 {f.title}
                 {selected.size ? (
-                  <span className="ml-0.5 rounded bg-primary/10 px-1.5 py-px font-mono text-[10px] text-primary">{selected.size}</span>
+                  <span className="ml-0.5 rounded-full bg-primary/15 px-1.5 py-px text-[11px] font-semibold tabular-nums text-(--ink-primary)">{selected.size}</span>
                 ) : null}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="min-w-48">
-              <DropdownMenuLabel className="text-[11px] tracking-wide text-muted-foreground uppercase">{f.title}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-[12px] text-muted-foreground">{f.title}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {f.options.map((o) => {
                 const count = facets.get(o.value) ?? 0;
@@ -115,7 +115,7 @@ export function DataTableToolbar<TData>({
                   >
                     {o.tone ? <span className={cn('size-1.5 rounded-full', TONE_DOT[o.tone])} /> : o.icon ? <o.icon className="size-3.5" /> : null}
                     <span className="flex-1">{o.label}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground">{count}</span>
+                    <span className="text-[12px] tabular-nums text-muted-foreground">{count}</span>
                   </DropdownMenuCheckboxItem>
                 );
               })}
@@ -133,13 +133,13 @@ export function DataTableToolbar<TData>({
       })}
 
       {hasColumnFilters ? (
-        <Button variant="ghost" size="sm" className="h-11 text-[13px] md:h-8" onClick={() => table.resetColumnFilters()}>
+        <Button variant="ghost" size="sm" className="h-11 text-[14px] text-primary md:h-9" onClick={() => table.resetColumnFilters()}>
           Sıfırla <X className="size-3.5" />
         </Button>
       ) : null}
 
       <div className="ml-auto flex items-center gap-2">
-        {total !== undefined ? <span className="hidden text-xs text-muted-foreground tabular-nums sm:inline">{total.toLocaleString('tr-TR')} kayıt</span> : null}
+        {total !== undefined ? <span className="hidden text-[13px] text-muted-foreground tabular-nums sm:inline">{total.toLocaleString('tr-TR')} kayıt</span> : null}
         {extra}
         {columnToggle ? (
           <DropdownMenu>
@@ -149,7 +149,7 @@ export function DataTableToolbar<TData>({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-44">
-              <DropdownMenuLabel className="text-[11px] tracking-wide text-muted-foreground uppercase">Sütunlar</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-[12px] text-muted-foreground">Sütunlar</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {table
                 .getAllLeafColumns()

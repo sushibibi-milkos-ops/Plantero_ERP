@@ -1,29 +1,30 @@
 import { cn } from '@/lib/utils';
 import { getStatusInfo, type StatusKind, type StatusTone } from '@/lib/status';
 
+// iPadOS "tinted" kapsül: tint %15 zemin + koyultulmuş tint metin (--ink-*: AA kontrast).
 const TONE_CLASSES: Record<StatusTone, { badge: string; dot: string }> = {
-  neutral: { badge: 'bg-muted text-foreground/80 border-transparent', dot: 'bg-foreground/50' },
-  muted: { badge: 'bg-muted/60 text-muted-foreground border-transparent', dot: 'bg-muted-foreground/60' },
-  info: { badge: 'bg-info/10 text-info border-transparent', dot: 'bg-info' },
-  success: { badge: 'bg-success/12 text-success border-transparent', dot: 'bg-success' },
-  warning: { badge: 'bg-warning/15 text-[oklch(0.5_0.14_70)] border-transparent dark:text-warning', dot: 'bg-warning' },
-  danger: { badge: 'bg-destructive/10 text-destructive border-transparent', dot: 'bg-destructive' },
-  primary: { badge: 'bg-primary/10 text-primary border-transparent', dot: 'bg-primary' },
+  neutral: { badge: 'bg-fill text-foreground/80 border-transparent', dot: 'bg-foreground/45' },
+  muted: { badge: 'bg-fill text-muted-foreground border-transparent', dot: 'bg-muted-foreground/60' },
+  info: { badge: 'bg-info/15 text-(--ink-info) border-transparent', dot: 'bg-info' },
+  success: { badge: 'bg-success/15 text-(--ink-success) border-transparent', dot: 'bg-success' },
+  warning: { badge: 'bg-warning/18 text-(--ink-warning) border-transparent', dot: 'bg-warning' },
+  danger: { badge: 'bg-destructive/12 text-(--ink-danger) border-transparent', dot: 'bg-destructive' },
+  primary: { badge: 'bg-primary/15 text-(--ink-primary) border-transparent', dot: 'bg-primary' },
 };
 
 /** `emphasis="subtle"` metin/nokta rengini korur ama dolguyu kaldırır (bkz. work_order özel durumu aşağıda). */
 const TONE_TEXT: Record<StatusTone, string> = {
   neutral: 'text-foreground/80',
   muted: 'text-muted-foreground',
-  info: 'text-info',
-  success: 'text-success',
-  warning: 'text-[oklch(0.5_0.14_70)] dark:text-warning',
-  danger: 'text-destructive',
-  primary: 'text-primary',
+  info: 'text-(--ink-info)',
+  success: 'text-(--ink-success)',
+  warning: 'text-(--ink-warning)',
+  danger: 'text-(--ink-danger)',
+  primary: 'text-(--ink-primary)',
 };
 
 /**
- * Durum rozeti: sözlükten TR etiket + ton. Nokta + metin (Linear tarzı), 20px yükseklik.
+ * Durum rozeti: sözlükten TR etiket + ton. iPadOS tinted kapsül (tint %15 zemin + tint metin) + nokta, 24px yükseklik.
  * `kind` verilirse enuma özel etiket kullanılır; `label` ile ezilebilir.
  */
 export function StatusBadge({
@@ -71,7 +72,7 @@ export function StatusBadge({
       data-status={status ?? ''}
       className={cn(
         'inline-flex shrink-0 items-center gap-1.5 rounded-full border font-medium whitespace-nowrap',
-        size === 'sm' ? 'h-5 px-2 text-[11px]' : 'h-6 px-2.5 text-xs',
+        size === 'sm' ? 'h-6 px-2.5 text-[12px]' : 'h-7 px-3 text-[13px]',
         subtle ? cn('border-transparent bg-transparent', TONE_TEXT[resolvedTone]) : t.badge,
         className,
       )}

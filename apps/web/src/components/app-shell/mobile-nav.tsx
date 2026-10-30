@@ -22,10 +22,8 @@ export function MobileNav() {
       <nav
         aria-label="Hızlı erişim"
         className={cn(
-          // %85 opaklık altındaki form etiketleri/kanban kartlarının şeffaf camdan sızmasına yol
-          // açıyordu (Tur 2 bulgusu); üst hairline zaten katman ayrımını sağlıyor, opaklığı /95'e
-          // çıkarmak "kirli cam" etkisini keserken blur'u korur.
-          'fixed inset-x-0 bottom-0 z-30 flex border-t border-border/60 bg-background/95 backdrop-blur-md md:hidden',
+          // iPadOS sekme çubuğu: yarı saydam materyal (blur + doygunluk), üstte hairline.
+          'material fixed inset-x-0 bottom-0 z-30 flex border-t border-border md:hidden',
           'pb-[env(safe-area-inset-bottom)]',
         )}
       >
@@ -38,11 +36,11 @@ export function MobileNav() {
               data-pressable
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex h-14 flex-1 flex-col items-center justify-center gap-1 text-[10px] font-medium',
-                active ? 'text-primary' : 'text-muted-foreground',
+                'flex h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium tracking-[0.1px]',
+                active ? 'text-(--ink-primary) dark:text-primary' : 'text-muted-foreground',
               )}
             >
-              <t.icon className="size-5" strokeWidth={active ? 2.2 : 1.75} />
+              <t.icon className="size-6" strokeWidth={active ? 2.1 : 1.6} />
               {t.label}
             </Link>
           );
@@ -50,29 +48,29 @@ export function MobileNav() {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(true)}
-          className="flex h-14 flex-1 flex-col items-center justify-center gap-1 text-[10px] font-medium text-muted-foreground"
+          className="flex h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium tracking-[0.1px] text-muted-foreground"
         >
-          <LayoutGrid className="size-5" strokeWidth={1.75} />
+          <LayoutGrid className="size-6" strokeWidth={1.6} />
           Menü
         </button>
       </nav>
 
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent side="left" className="w-[85vw] max-w-xs gap-0 p-0 ease-drawer data-[state=closed]:duration-200 data-[state=open]:duration-[220ms]">
-          <SheetHeader className="border-b border-border/60 px-4 py-3">
+        <SheetContent side="left" className="w-[85vw] max-w-xs gap-0 p-0 ">
+          <SheetHeader className="border-b border-border px-5 py-3.5">
             <SheetTitle asChild>
               <div>
                 <Logotype size="sm" />
               </div>
             </SheetTitle>
-            <div className="text-xs text-muted-foreground">
+            <div className="text-[13px] text-muted-foreground">
               {user.fullName} · {user.roles.map(roleLabel).join(', ')}
             </div>
           </SheetHeader>
-          <div className="scrollbar-thin flex-1 overflow-y-auto px-2 py-2">
+          <div className="scrollbar-thin flex-1 overflow-y-auto px-3 py-2">
             {nav.map((group) => (
               <div key={group.id} className="mb-2">
-                <div className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">{group.label}</div>
+                <div className="px-3 pt-3 pb-1 text-[12px] font-medium tracking-[0.2px] text-muted-foreground uppercase">{group.label}</div>
                 <ul>
                   {group.items.map((item) => {
                     const active = isActivePath(pathname, item.href);
@@ -82,11 +80,11 @@ export function MobileNav() {
                           href={item.href}
                           data-pressable
                           className={cn(
-                            'flex h-10 items-center gap-3 rounded-md px-2 text-sm',
-                            active ? 'bg-accent font-medium text-foreground' : 'text-foreground/80',
+                            'flex h-11 items-center gap-3 rounded-[10px] px-3 text-[15px]',
+                            active ? 'bg-primary/15 font-medium text-(--ink-primary) dark:text-primary' : 'text-foreground/85',
                           )}
                         >
-                          <item.icon className={cn('size-4', active ? 'text-primary' : 'text-muted-foreground')} strokeWidth={1.75} />
+                          <item.icon className={cn('size-[18px]', active ? 'text-primary' : 'text-muted-foreground')} strokeWidth={1.75} />
                           {item.label}
                         </Link>
                       </li>
@@ -96,8 +94,8 @@ export function MobileNav() {
               </div>
             ))}
           </div>
-          <form action={logout} className="border-t border-border/60 p-2">
-            <button type="submit" className="flex h-10 w-full items-center gap-3 rounded-md px-2 text-sm text-destructive">
+          <form action={logout} className="border-t border-border p-3">
+            <button type="submit" className="flex h-11 w-full items-center gap-3 rounded-[10px] px-3 text-[15px] text-destructive">
               <LogOut className="size-4" /> Çıkış yap
             </button>
           </form>

@@ -117,9 +117,9 @@ export function KpiCard({
         <span
           className={cn(
             'inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-px font-medium tabular-nums',
-            good === null && 'bg-muted text-muted-foreground',
-            good === true && 'bg-success/12 text-success',
-            good === false && 'bg-destructive/10 text-destructive',
+            good === null && 'bg-fill text-muted-foreground',
+            good === true && 'bg-success/15 text-(--ink-success)',
+            good === false && 'bg-destructive/12 text-(--ink-danger)',
           )}
         >
           <DeltaIcon className="size-3" />
@@ -148,8 +148,8 @@ export function KpiCard({
     // ayrılır), etiket tek satır (text-xs truncate), sabit yükseklik — bir şeritteki tüm kartlar
     // aynı taban çizgisinde durur (Tur 2 bulgusu: 115px vs 134px karışık yükseklik).
     <>
-      <div className="truncate text-xs font-medium text-muted-foreground">{title}</div>
-      <div className="mt-1 truncate text-[19px] leading-none font-semibold tracking-tight tabular-nums">{valueNode}</div>
+      <div className="truncate text-[13px] font-medium text-muted-foreground">{title}</div>
+      <div className="mt-1 truncate text-[22px] leading-none font-bold tracking-[-0.4px] tabular-nums">{valueNode}</div>
       {deltaNode}
     </>
   ) : (
@@ -166,7 +166,7 @@ export function KpiCard({
       </div>
       <div className="mt-2 flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <div className="truncate text-[22px] leading-none font-semibold tracking-tight tabular-nums">{valueNode}</div>
+          <div className="truncate text-[28px] leading-none font-bold tracking-[-0.5px] tabular-nums">{valueNode}</div>
           {deltaNode}
         </div>
         {/* Kök neden (Tur 1 P0 kokpit-kpi-clip-01): sparkline sabit ~96px genişlik alıyordu — kart
@@ -192,17 +192,17 @@ export function KpiCard({
       ? [
           // Mobil: kendi küçük kartı (152×72 — 140'ta uzun başlıklar aşırı kırpılıyordu, Tur 4 P1),
           // yatay kaydırma şeridinde snap-start.
-          'h-[72px] w-[152px] shrink-0 snap-start rounded-lg border border-border/70 bg-card px-3 py-2',
+          'h-[88px] w-[172px] shrink-0 snap-start rounded-[14px] border border-border/50 bg-card px-3.5 py-2.5',
           // Masaüstü: çerçevesiz/gölgesiz taban + SOL kenarlıkla dikey hairline (`divide-x` kaldırıldı —
           // `md:border-0` onu her zaman sıfırlıyordu, ikisi aynı anda tanımlıyken kazanan üretilen
           // CSS'in kaynak sırasına bağlıydı ve pratikte hiç ayraç görünmüyordu, Tur 4 P1 bulgusu).
           // İlk kart kenarlıksız (`md:first:border-l-0`).
-          'md:h-20 md:w-auto md:snap-align-none md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:border-border/60 md:first:border-l-0 md:bg-transparent md:px-4 md:py-3',
+          'md:h-24 md:w-auto md:snap-align-none md:rounded-none md:border-y-0 md:border-r-0 md:border-l md:border-border/60 md:first:border-l-0 md:bg-transparent md:px-5 md:py-3.5',
           // `stripCompact`: 3 ya da daha az kart — sabit min genişlik, esnek büyümez (aksi halde
           // birkaç kart 1600px şeride yayılır). Aksi halde eskisi gibi `flex-1`.
           stripCompact ? 'md:min-w-[196px] md:shrink-0 md:flex-none md:grow-0' : 'md:flex-1 md:shrink',
         ]
-      : '@container rounded-xl border border-border/70 bg-card p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03)]',
+      : '@container rounded-[14px] border border-border/50 bg-card p-4 shadow-xs',
     // active:bg-*: `data-pressable` zaten globals.css'in gövde-genelindeki basma seçicisinden ölçek
     // (scale) animasyonu alıyor (shell-button-active-state-01 kök nedeniyle AYNI sınıf) — buradaki
     // zemin koyulaşması RowLink/Button'daki gibi İKİNCİ, TAMAMLAYICI bir basma sinyali; ölçekle
@@ -210,8 +210,8 @@ export function KpiCard({
     (href || onClick) &&
       (isStrip
         ? 'hover:bg-accent/40 active:bg-accent/60 md:hover:bg-accent/30 md:active:bg-accent/45'
-        : 'hover:border-border hover:shadow-[0_1px_2px_rgb(0_0_0/0.04),0_8px_20px_-12px_rgb(0_0_0/0.15)] active:border-border active:bg-accent/20'),
-    active && (isStrip ? 'bg-primary/5 md:bg-primary/5' : 'border-primary/60 ring-2 ring-primary/15'),
+        : 'hover:bg-accent/30 active:bg-accent/50'),
+    active && (isStrip ? 'bg-primary/8 md:bg-primary/8' : 'border-primary/60 ring-2 ring-primary/20'),
     className,
   );
 

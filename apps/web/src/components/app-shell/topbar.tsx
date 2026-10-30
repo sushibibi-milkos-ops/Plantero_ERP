@@ -52,10 +52,10 @@ export function Topbar() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-30 flex h-12 items-center gap-2 border-b border-border/60 px-3 md:px-5',
-        // Kaydırılan satırlar/etiketler arkadan sızmasın diye neredeyse tam opak (Tur 4 P1 bulgusu —
-        // önceki /70 okunabilir seviyede sızdırıyordu). Blur zemin altındaki bulanıklığı korur.
-        'bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/92',
+        'sticky top-0 z-30 flex h-12 items-center gap-2 border-b border-border px-3 md:px-6',
+        // iPadOS gezinme çubuğu: yarı saydam materyal (zemin %72 + blur-xl + doygunluk) — içerik altından
+        // bulanık kayar. `prefers-reduced-transparency`'de globals.css `.material` opaklaştırır.
+        'material',
       )}
     >
       <Button variant="ghost" size="icon-sm" className="size-11 md:hidden" onClick={() => setMobileMenuOpen(true)} aria-label="Menü">
@@ -63,7 +63,7 @@ export function Topbar() {
       </Button>
 
       <Breadcrumb className="min-w-0 flex-1">
-        <BreadcrumbList className="flex-nowrap gap-1 text-[13px] sm:gap-1.5">
+        <BreadcrumbList className="flex-nowrap gap-1 text-[14px] sm:gap-1.5">
           {crumbs.map((c, i) => {
             const last = i === crumbs.length - 1;
             return (
@@ -74,7 +74,7 @@ export function Topbar() {
                       <Link href={c.href}>{c.label}</Link>
                     </BreadcrumbLink>
                   ) : (
-                    <BreadcrumbPage className="truncate font-medium">{c.label}</BreadcrumbPage>
+                    <BreadcrumbPage className="truncate font-semibold">{c.label}</BreadcrumbPage>
                   )}
                 </BreadcrumbItem>
                 {!last ? <BreadcrumbSeparator className="hidden sm:flex [&>svg]:size-3" /> : null}
@@ -88,14 +88,15 @@ export function Topbar() {
         type="button"
         onClick={() => setCommandOpen(true)}
         className={cn(
-          'hidden h-8 w-56 items-center gap-2 rounded-md border border-border/70 bg-muted/40 px-2.5 text-[13px] text-muted-foreground md:inline-flex lg:w-64',
-          'hover:border-border hover:bg-muted/70 hover:text-foreground',
+          // iOS arama alanı: gri kapsül (#767680 @ %12), 10px köşe, lupe solda
+          'hidden h-9 w-56 items-center gap-2 rounded-[10px] bg-fill px-3 text-[15px] text-muted-foreground transition-colors md:inline-flex lg:w-64',
+          'hover:text-foreground',
         )}
         aria-label="Ara (⌘K)"
       >
-        <Search className="size-3.5" />
+        <Search className="size-4" />
         <span className="flex-1 text-left">Ara veya git…</span>
-        <kbd className="rounded border bg-background px-1.5 py-px font-mono text-[10px] text-muted-foreground">⌘K</kbd>
+        <kbd className="rounded-md bg-card/70 px-1.5 py-px font-mono text-[11px] text-muted-foreground">⌘K</kbd>
       </button>
       <Button variant="ghost" size="icon-sm" className="size-11 md:hidden" onClick={() => setCommandOpen(true)} aria-label="Ara">
         <Search className="size-4" />

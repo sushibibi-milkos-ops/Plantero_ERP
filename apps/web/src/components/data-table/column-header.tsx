@@ -29,7 +29,7 @@ export function DataTableColumnHeader<TData, TValue>({
       onClick={column.getToggleSortingHandler()}
       className={cn(
         'group/th -mx-1.5 inline-flex h-7 max-w-full items-center gap-1 rounded px-1.5 text-left whitespace-nowrap select-none',
-        'hover:bg-muted/70 hover:text-foreground',
+        'hover:bg-fill hover:text-foreground',
         // Kök neden (P2 shell-datatable-sortheader-focus-01, kriter 8): odak halkası token'ı yoktu,
         // klavye odağı UA'nın varsayılan `outline: auto 1px`'ine düşüyordu — uygulamanın geri kalanı
         // (Button, DateField vb.) hep aynı 3px `ring-ring/50` verir; sıralama başlığı tek istisnaydı.

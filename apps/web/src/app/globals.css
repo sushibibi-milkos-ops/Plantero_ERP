@@ -16,11 +16,28 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Tasarım token'ları                                                  */
+/* Tasarım token'ları — iPadOS tasarım dili (tint: Plantero yeşili)    */
 /* ------------------------------------------------------------------ */
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Sistem yazı yığını: Apple cihazlarda SF Pro (optik boyutlandırma tarayıcıda otomatik),
+     diğer platformlarda Inter yedeği. Inter, `system-ui`'den ÖNCE — Linux/Windows'ta system-ui
+     rastgele bir yüze (DejaVu vb.) düşüyordu. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", var(--font-inter), system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* iOS tip ölçeği: gövde 15px (text-sm), ikincil 13px (text-xs), giriş/büyük gövde 17px (text-base) */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.2308;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.4;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.4118;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.3158;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.2727;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 1.2143;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -44,6 +61,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-fill: var(--fill);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -58,12 +76,18 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Yarıçap: 8px temel */
+  /* Yarıçap ölçeği (iPadOS): sm 8 · md 10 (düğme/alan) · lg 12 (kart) · xl 16 (sheet/büyük kart) · 2xl 20 */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Gölgeler: kartlarda neredeyse yok, yüzen öğelerde (popover/sheet) yumuşak ve büyük */
+  --shadow-xs: 0 0.5px 1px rgb(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-md: 0 0 0 0.5px rgb(0 0 0 / 0.06), 0 10px 30px -6px rgb(0 0 0 / 0.16);
+  --shadow-lg: 0 0 0 0.5px rgb(0 0 0 / 0.06), 0 24px 60px -12px rgb(0 0 0 / 0.28);
 
   /* Hareket eğrileri — yerleşik ease-out/ease-in-out'u güçlü eğrilerle değiştirir */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -71,82 +95,107 @@
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* Açık tema — nötr zinc, tek vurgu: Plantero yeşili */
+/* Açık tema — iOS "grouped background" zemini, beyaz kartlar, tek tint: Plantero yeşili.
+   İkincil metin #6E6E73 sınıfında (beyaz üstünde 5,0:1, gruplu zeminde 4,7:1 — WCAG AA);
+   iOS'un #8E8E93'ü küçük boyutta AA'yı geçemediği için kullanılmadı. */
 :root {
-  --radius: 8px;
-  --background: oklch(0.985 0.002 250);
-  --foreground: oklch(0.21 0.006 285.9);
+  --radius: 12px;
+  --background: oklch(0.963 0.004 286);
+  --foreground: oklch(0.2 0.004 286);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.006 285.9);
+  --card-foreground: oklch(0.2 0.004 286);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.006 285.9);
-  --primary: oklch(0.55 0.16 152);
-  --primary-foreground: oklch(0.985 0.01 152);
-  --secondary: oklch(0.967 0.001 286.4);
-  --secondary-foreground: oklch(0.274 0.006 286);
-  --muted: oklch(0.967 0.001 286.4);
-  --muted-foreground: oklch(0.552 0.016 285.9);
-  --accent: oklch(0.955 0.002 286.4);
-  --accent-foreground: oklch(0.21 0.006 285.9);
-  --destructive: oklch(0.577 0.245 27.3);
-  --destructive-foreground: oklch(0.985 0 0);
-  --success: oklch(0.6 0.16 152);
-  --warning: oklch(0.72 0.17 70);
-  --info: oklch(0.6 0.15 250);
-  --border: oklch(0.92 0.004 286.3);
-  --input: oklch(0.9 0.004 286.3);
-  --ring: oklch(0.55 0.16 152);
+  --popover-foreground: oklch(0.2 0.004 286);
+  --primary: oklch(0.51 0.145 152);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.935 0.004 286);
+  --secondary-foreground: oklch(0.25 0.004 286);
+  --muted: oklch(0.945 0.004 286);
+  --muted-foreground: oklch(0.52 0.008 286);
+  --accent: oklch(0.945 0.004 286);
+  --accent-foreground: oklch(0.2 0.004 286);
+  --destructive: oklch(0.577 0.235 27.3);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.55 0.15 152);
+  --warning: oklch(0.75 0.17 70);
+  --info: oklch(0.55 0.17 255);
+  /* Ayraç: 1px @ %8 siyah = hairline (iOS separator). `input`: alan çerçevesi gereken yerler (seçici vb.) */
+  --border: oklch(0 0 0 / 8%);
+  --input: oklch(0 0 0 / 14%);
+  --ring: oklch(0.51 0.145 152);
+  /* iOS "tertiary fill" — #767680 @ %12: arama alanı, metin girişi, segment zemini */
+  --fill: oklch(0.569 0.015 286 / 12%);
+  /* Tint zemin üstündeki metin için koyultulmuş tonlar (rozet: tint %15 zemin + bu metin) */
+  --ink-primary: oklch(0.42 0.12 152);
+  --ink-success: oklch(0.42 0.12 152);
+  --ink-info: oklch(0.45 0.16 255);
+  --ink-warning: oklch(0.46 0.12 65);
+  --ink-danger: oklch(0.49 0.21 27);
   --chart-1: oklch(0.55 0.16 152);
   --chart-2: oklch(0.6 0.15 250);
   --chart-3: oklch(0.72 0.17 70);
   --chart-4: oklch(0.65 0.2 20);
   --chart-5: oklch(0.6 0.12 300);
-  --sidebar: oklch(0.975 0.002 250);
-  --sidebar-foreground: oklch(0.37 0.01 285.9);
-  --sidebar-primary: oklch(0.55 0.16 152);
-  --sidebar-primary-foreground: oklch(0.985 0.01 152);
-  --sidebar-accent: oklch(0.935 0.004 286.4);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.9);
-  --sidebar-border: oklch(0.92 0.004 286.3);
-  --sidebar-ring: oklch(0.55 0.16 152);
+  /* Kenar çubuğu: yarı saydam materyal (backdrop-blur ile birlikte) */
+  --sidebar: oklch(0.975 0.003 286 / 72%);
+  --sidebar-foreground: oklch(0.28 0.004 286);
+  --sidebar-primary: oklch(0.51 0.145 152);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.51 0.145 152 / 14%);
+  --sidebar-accent-foreground: oklch(0.42 0.12 152);
+  --sidebar-border: oklch(0 0 0 / 8%);
+  --sidebar-ring: oklch(0.51 0.145 152);
+  --material: oklch(0.963 0.004 286 / 72%);
+  --material-solid: oklch(0.963 0.004 286 / 94%);
+  --scrim: oklch(0 0 0 / 32%);
 }
 
+/* Koyu tema — saf siyah zemin, #1C1C1E gruplu kartlar, #2C2C2E yükseltilmiş yüzeyler */
 .dark {
-  --background: oklch(0.16 0.005 285.8);
-  --foreground: oklch(0.96 0.002 286.4);
-  --card: oklch(0.2 0.006 285.9);
-  --card-foreground: oklch(0.96 0.002 286.4);
-  --popover: oklch(0.2 0.006 285.9);
-  --popover-foreground: oklch(0.96 0.002 286.4);
-  --primary: oklch(0.7 0.16 152);
-  --primary-foreground: oklch(0.16 0.03 152);
-  --secondary: oklch(0.27 0.006 286);
-  --secondary-foreground: oklch(0.96 0.002 286.4);
-  --muted: oklch(0.25 0.006 286);
-  --muted-foreground: oklch(0.7 0.015 286);
-  --accent: oklch(0.27 0.006 286);
-  --accent-foreground: oklch(0.96 0.002 286.4);
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.227 0.004 286);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.275 0.004 286);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.74 0.17 152);
+  --primary-foreground: oklch(0.15 0.03 152);
+  --secondary: oklch(0.294 0.004 286);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.26 0.004 286);
+  --muted-foreground: oklch(0.74 0.005 286);
+  --accent: oklch(0.294 0.004 286);
+  --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.7 0.19 22.2);
-  --destructive-foreground: oklch(0.985 0 0);
-  --success: oklch(0.72 0.16 152);
-  --warning: oklch(0.8 0.16 75);
-  --info: oklch(0.7 0.13 250);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.7 0.16 152);
-  --chart-1: oklch(0.7 0.16 152);
-  --chart-2: oklch(0.7 0.13 250);
-  --chart-3: oklch(0.8 0.16 75);
+  --destructive-foreground: oklch(0.15 0 0);
+  --success: oklch(0.76 0.17 152);
+  --warning: oklch(0.82 0.16 75);
+  --info: oklch(0.72 0.14 255);
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(1 0 0 / 20%);
+  --ring: oklch(0.74 0.17 152);
+  --fill: oklch(0.569 0.015 286 / 24%);
+  --ink-primary: oklch(0.8 0.15 152);
+  --ink-success: oklch(0.8 0.15 152);
+  --ink-info: oklch(0.78 0.12 255);
+  --ink-warning: oklch(0.84 0.14 80);
+  --ink-danger: oklch(0.76 0.16 22);
+  --chart-1: oklch(0.74 0.17 152);
+  --chart-2: oklch(0.72 0.13 255);
+  --chart-3: oklch(0.82 0.16 75);
   --chart-4: oklch(0.72 0.18 20);
   --chart-5: oklch(0.7 0.12 300);
-  --sidebar: oklch(0.18 0.005 285.8);
-  --sidebar-foreground: oklch(0.8 0.008 286);
-  --sidebar-primary: oklch(0.7 0.16 152);
-  --sidebar-primary-foreground: oklch(0.16 0.03 152);
-  --sidebar-accent: oklch(0.26 0.006 286);
-  --sidebar-accent-foreground: oklch(0.96 0.002 286.4);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.7 0.16 152);
+  --sidebar: oklch(0.18 0.004 286 / 72%);
+  --sidebar-foreground: oklch(0.88 0.004 286);
+  --sidebar-primary: oklch(0.74 0.17 152);
+  --sidebar-primary-foreground: oklch(0.15 0.03 152);
+  --sidebar-accent: oklch(0.74 0.17 152 / 18%);
+  --sidebar-accent-foreground: oklch(0.82 0.15 152);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.74 0.17 152);
+  --material: oklch(0.12 0.003 286 / 72%);
+  --material-solid: oklch(0.12 0.003 286 / 94%);
+  --scrim: oklch(0 0 0 / 55%);
 }
 
 /* ------------------------------------------------------------------ */
@@ -159,10 +208,13 @@
   html {
     @apply font-sans antialiased;
     text-rendering: optimizeLegibility;
+    /* Dokunmatik: iOS gibi dokunuşta gri vurgu kutusu yok (basma geri bildirimi scale + zemin) */
+    -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "cv11", "ss01";
+    font-size: 0.9375rem;
+    line-height: 1.4;
   }
   ::selection {
     background: color-mix(in oklch, var(--primary) 22%, transparent);
@@ -210,6 +262,37 @@
 @utility tabular {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
+}
+/* Yarı saydam materyal (toolbar / sidebar / sheet): iOS "regular material" — blur + doygunluk.
+   Altından kayan içerik bulanık görünür; reduced-transparency tercihinde opaklaşır (aşağıda). */
+@utility material {
+  background-color: var(--material);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+}
+@utility material-thick {
+  background-color: color-mix(in oklch, var(--popover) 82%, transparent);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(40px) saturate(180%);
+}
+/* Large Title: iOS büyük başlık (28px mobil / 32px masaüstü, 700, negatif tracking) */
+@utility large-title {
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+@media (min-width: 48rem) {
+  .large-title {
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+  }
+}
+/* Inset grouped: beyaz yuvarlak kart, satır arası hairline (sol boşluk 16px) */
+@utility grouped-card {
+  border-radius: 14px;
+  background-color: var(--card);
+  overflow: hidden;
 }
 /* Hairline ayraç */
 @utility hairline {
@@ -282,11 +365,30 @@
   }
 }
 
+/* Şeffaflık azaltma: materyaller yarı opak değil, neredeyse düz zemin olur (blur kalkar) */
+@media (prefers-reduced-transparency: reduce) {
+  .material,
+  .material-thick {
+    background-color: var(--popover);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (prefers-contrast: more) {
+  :root {
+    --border: oklch(0 0 0 / 28%);
+    --input: oklch(0 0 0 / 40%);
+  }
+  .dark {
+    --border: oklch(1 0 0 / 36%);
+    --input: oklch(1 0 0 / 46%);
+  }
+}
+
 /* cmdk / sonner ince ayarlar */
 [cmdk-group-heading] {
-  @apply px-2 py-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase;
+  @apply px-2 py-1.5 text-[12px] font-medium text-muted-foreground;
 }
 [data-sonner-toaster] {
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  font-family: var(--font-sans);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", var(--font-inter), system-ui, sans-serif;
 }

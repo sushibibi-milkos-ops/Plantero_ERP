@@ -36,7 +36,7 @@ function SheetOverlay({
     <SheetPrimitive.Overlay
       data-slot="sheet-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0",
+        "fixed inset-0 z-50 bg-(--scrim) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0",
         className
       )}
       {...props}
@@ -60,23 +60,25 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          // duration-220: projenin hareket bütçesi (globals.css enter-up, 220ms) — 300ms tek istisnaydı (Tur 4 P2 bulgusu).
-          "fixed z-50 flex flex-col gap-4 bg-background shadow-lg transition ease-drawer data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=open]:animate-in data-[state=open]:duration-[220ms]",
+          // iPadOS sayfası/yan paneli: yarı saydam kalın materyal (blur), yuvarlak köşe, hairline kenar +
+          // büyük yumuşak gölge. Açılış 350ms spring-benzeri eğri (ease-drawer), kapanış 250ms.
+          // Giriş ve çıkış AYNI yoldan (slide-in-from-X / slide-out-to-X).
+          "material-thick fixed z-50 flex flex-col gap-4 text-popover-foreground shadow-lg transition ease-drawer data-[state=closed]:animate-out data-[state=closed]:duration-250 data-[state=open]:animate-in data-[state=open]:duration-350",
           side === "right" &&
-            "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+            "inset-y-0 right-0 h-full w-3/4 rounded-l-[20px] border-l border-border/40 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
           side === "left" &&
-            "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+            "inset-y-0 left-0 h-full w-3/4 rounded-r-[20px] border-r border-border/40 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
           side === "top" &&
-            "inset-x-0 top-0 h-auto border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+            "inset-x-0 top-0 h-auto rounded-b-[20px] border-b border-border/40 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
           side === "bottom" &&
-            "inset-x-0 bottom-0 h-auto border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+            "inset-x-0 bottom-0 h-auto rounded-t-[20px] border-t border-border/40 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
           className
         )}
         {...props}
       >
         {children}
         {showCloseButton && (
-          <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-secondary">
+          <SheetPrimitive.Close className="absolute top-3.5 right-3.5 grid size-8 place-items-center rounded-full bg-fill text-muted-foreground transition-[opacity,background-color] hover:bg-fill/70 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus:outline-hidden disabled:pointer-events-none">
             <XIcon className="size-4" />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
@@ -113,7 +115,7 @@ function SheetTitle({
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
-      className={cn("font-semibold text-foreground", className)}
+      className={cn("text-lg font-semibold tracking-[-0.2px] text-foreground", className)}
       {...props}
     />
   )

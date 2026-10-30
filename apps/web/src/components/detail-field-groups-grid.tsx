@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { DetailField, DetailGroupHeading, type DetailFieldGroup } from './detail-fields';
+import { DetailField, type DetailFieldGroup } from './detail-fields';
+import { InsetSection } from './inset-list';
 
 /**
  * `DetailFieldGroups`'un (detail-fields.tsx) sabit-ızgara varyantı — yeni bir dosya olarak eklendi,
@@ -20,24 +21,23 @@ export function DetailFieldGroupsGrid({ groups, className }: { groups: DetailFie
   const hiddenCount = groups.reduce((acc, g) => acc + g.fields.filter((f) => !f.value).length, 0);
 
   return (
-    <div className={cn('space-y-4', className)}>
-      {groups.map((g) => {
-        const visible = g.fields.filter((f) => showEmpty || f.value);
-        if (visible.length === 0) return null;
-        return (
-          <div key={g.title} className="space-y-3">
-            <DetailGroupHeading>{g.title}</DetailGroupHeading>
-            {/* Sabit ray: sayfa boyunca her grup aynı sütun sayısını kullanır. */}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
+    <div className={cn(className)}>
+      {/* iPadOS inset grouped: her grup beyaz yuvarlak bir kart; lg+ iki sütun (kartlar bölünmez). */}
+      <div className="lg:columns-2 lg:gap-x-5">
+        {groups.map((g) => {
+          const visible = g.fields.filter((f) => showEmpty || f.value);
+          if (visible.length === 0) return null;
+          return (
+            <InsetSection key={g.title} title={g.title}>
               {visible.map((f) => (
                 <DetailField key={f.label} label={f.label} empty={!f.value}>
                   {f.node}
                 </DetailField>
               ))}
-            </div>
-          </div>
-        );
-      })}
+            </InsetSection>
+          );
+        })}
+      </div>
       {hiddenCount > 0 ? (
         <button
           type="button"
@@ -46,7 +46,7 @@ export function DetailFieldGroupsGrid({ groups, className }: { groups: DetailFie
           // (~18px) idi — mobil dokunma hedefi 44px'in yarısından küçüktü. min-h-11 + py-3 dokunma
           // yastığını büyütür, -mx-3 (yatay) buton kutusunun sol kenarını görsel metinle hizalı tutar
           // (yastık dışa değil içe doğru büyümüş gibi görünür).
-          className="-mx-3 flex min-h-11 items-center px-3 py-3 text-[12px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground md:mx-0 md:min-h-0 md:px-0 md:py-0"
+          className="-mx-3 flex min-h-11 items-center px-3 py-3 text-[13px] text-primary hover:opacity-70 md:mx-0 md:min-h-0 md:px-0 md:py-0"
         >
           {showEmpty ? 'Boş alanları gizle' : `Boş alanları göster (${hiddenCount})`}
         </button>

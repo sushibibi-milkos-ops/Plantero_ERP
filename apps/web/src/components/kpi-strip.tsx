@@ -45,7 +45,8 @@ export function KpiStripRow({ children, className }: { children: React.ReactNode
         'relative mb-6',
         'scrollbar-thin scroll-fade-x flex gap-2 overflow-x-auto pb-1',
         'snap-x snap-mandatory md:snap-none',
-        'md:gap-0 md:overflow-visible md:bg-transparent md:pb-0 md:[background-image:none]',
+        // Masaüstü: tek beyaz iOS kartı (14px köşe) içinde hairline ile ayrılmış bloklar.
+        'md:gap-0 md:overflow-hidden md:rounded-[14px] md:border md:border-border/50 md:bg-card md:pb-0 md:[background-image:none]',
         compact && 'md:justify-start',
         className,
       )}

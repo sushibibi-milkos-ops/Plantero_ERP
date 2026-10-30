@@ -72,7 +72,7 @@ function trIncludes(hay: unknown, needle: string): boolean {
 }
 
 /**
- * Linear yoğunluğunda veri tablosu: 36px satır, 13px metin, hairline ayraç.
+ * iPadOS liste yoğunluğunda veri tablosu: 44px satır, 14px metin, hairline ayraç, beyaz yuvarlak kart.
  * Sıralama, global arama (TR duyarsız), faceted filtreler, sütun gizleme,
  * sayfalama ya da sanallaştırma, satır tıklama, satır aksiyon menüsü,
  * yükleniyor iskeleti, boş durum, mobilde kart görünümü.
@@ -196,7 +196,7 @@ export function DataTable<T>({
   // Tam opak arka plan (var(--muted), /40 saydamlığı YOK) — sabitlenmiş başlık kaydırılan satırların
   // üzerinden geçer; saydam olsaydı altındaki hücreler sızardı (Tur 4 P1 bulgusu).
   const headerRow = () => (
-    <tr className="border-b border-border/60 bg-[var(--muted)]">
+    <tr className="border-b border-border/60 bg-card">
       {table.getHeaderGroups().flatMap((hg) =>
         hg.headers.map((h) => {
           const meta = h.column.columnDef.meta;
@@ -206,7 +206,7 @@ export function DataTable<T>({
               scope="col"
               style={widthStyle(meta)}
               className={cn(
-                'h-9 px-3 text-left align-middle text-[12px] font-medium whitespace-nowrap text-muted-foreground',
+                'h-10 px-3 text-left align-middle text-[13px] font-medium whitespace-nowrap text-muted-foreground first:pl-4 last:pr-4',
                 meta?.align === 'right' && 'text-right',
                 meta?.align === 'center' && 'text-center',
                 meta?.headerClassName,
@@ -228,7 +228,7 @@ export function DataTable<T>({
           key={cell.id}
           style={widthStyle(meta)}
           className={cn(
-            'h-9 px-3 align-middle text-[13px] whitespace-nowrap',
+            'h-11 px-3 align-middle text-[14px] whitespace-nowrap first:pl-4 last:pr-4',
             meta?.align === 'right' && 'text-right',
             meta?.align === 'center' && 'text-center',
             meta?.className,
@@ -249,11 +249,11 @@ export function DataTable<T>({
       : undefined,
     tabIndex: clickable ? 0 : undefined,
     className: cn(
-      'group/row h-9 border-b border-border/50 last:border-0',
+      'group/row h-11 border-b border-border/60 transition-colors last:border-0',
       // focus-visible eskiden yalnızca hover ile aynı arka plan tonunu ekleyip outline'ı kaldırıyordu
       // — klavyeyle gezen kullanıcı hangi satırda olduğunu göremiyordu (hover'dan ayırt edilemiyordu).
       // Görünür bir halka geri eklendi; arka plan tonu ek bir sinyal olarak kalır.
-      clickable && 'cursor-pointer hover:bg-accent/50 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
+      clickable && 'cursor-pointer hover:bg-accent/40 active:bg-accent/70 focus-visible:bg-accent/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
       rowClassName?.(row.original),
     ),
   });
@@ -300,7 +300,7 @@ export function DataTable<T>({
           contain-paint: kart içi taşan içeriğin ICB'ye (documentElement) sızmasını engeller (bir
           sütunun min-content genişliği sayfa genişliğini aşsa bile sayfa yatay kaymaz; kaydırma
           yalnızca aşağıdaki overflow-x-auto kapsayıcısında olur). */}
-      <div className={cn('contain-paint', !mobileTable && 'hidden md:block')}>
+      <div className={cn('contain-paint rounded-[14px] border border-border/50 bg-card', !mobileTable && 'hidden md:block')}>
         {rows.length === 0 ? (
           <div>
             <table className="w-full">
@@ -352,7 +352,7 @@ export function DataTable<T>({
       {!mobileTable ? (
         <div className="md:hidden">
           {rows.length === 0 ? (
-            <div className="rounded-lg border border-border/70 bg-card">{empty}</div>
+            <div className="rounded-[14px] border border-border/50 bg-card">{empty}</div>
           ) : (
             <DataTableMobileCards
               table={table}

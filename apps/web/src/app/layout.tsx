@@ -4,7 +4,8 @@ import { Providers } from './providers';
 import './globals.css';
 
 /**
- * Yazı tipleri next/font ile derleme zamanında indirilir ve self-host edilir.
+ * Yazı tipleri: Apple cihazlarda SF Pro (sistem yığını, globals.css `--font-sans`); diğer platformlarda
+ * Inter yedeği next/font ile derleme zamanında indirilir ve self-host edilir.
  * Ağ yoksa `fallback` yığını (system-ui / ui-monospace) devreye girer;
  * `adjustFontFallback` metrikleri eşleyerek düzen kaymasını önler.
  */
@@ -35,8 +36,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fafafa' },
-    { media: '(prefers-color-scheme: dark)', color: '#18181b' },
+    { media: '(prefers-color-scheme: light)', color: '#f2f2f7' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
   ],
 };
 

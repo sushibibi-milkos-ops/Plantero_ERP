@@ -11,7 +11,7 @@ export function Toaster() {
       duration={3500}
       toastOptions={{
         classNames: {
-          toast: 'text-[13px] border-border/60 shadow-[0_1px_2px_rgb(0_0_0/0.06),0_12px_32px_-12px_rgb(0_0_0/0.25)]',
+          toast: 'text-[13px] rounded-[14px] border-border/50 backdrop-blur-2xl shadow-[0_0_0_0.5px_rgb(0_0_0/0.06),0_12px_32px_-12px_rgb(0_0_0/0.28)]',
           description: 'text-muted-foreground',
         },
       }}
