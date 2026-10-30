@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/page-header';
 import { StatusBadge } from '@/components/status-badge';
 import {
   getProductById, listProductBarcodes, getProductStockBreakdown, listProductMoves, listProductBoms,
-  listProductPriceItems, listProductCustomerPrices, listProductSuppliers, listAuditFor, getBomCostRollup, listPartners,
+  listProductPriceItems, listProductCustomerPrices, listProductSuppliers, listAuditFor, getBomCostRollup, listPartners, getBomTree,
 } from '@/modules/masterdata/queries';
 import { DetailTabs, type ProductTabDef } from '@/modules/masterdata/components/product-detail-tabs';
 import { ProductGeneralTab } from '@/modules/masterdata/components/product-general-tab';
@@ -30,9 +30,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProductDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ tab?: string }> }) {
+export default async function ProductDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ tab?: string; bom?: string }> }) {
   const { id } = await params;
-  await searchParams;
+  const { bom: bomParam } = await searchParams;
   const user = await requirePermission('masterdata.view');
   const canManage = userCan(user, 'masterdata.manage');
   const canChangeIdentity = userCan(user, 'admin.settings');
@@ -68,6 +68,12 @@ export default async function ProductDetailPage({ params, searchParams }: { para
     }),
   );
 
+  // Ürün ağacı: ?bom= ile seçilen (aktif/taslak) versiyon, yoksa aktif, yoksa en yüksek versiyonlu taslak
+  const selectableBoms = boms.filter((b) => b.status !== 'archived');
+  const selectedBom =
+    selectableBoms.find((b) => b.id === bomParam) ?? selectableBoms.find((b) => b.status === 'active') ?? selectableBoms[0] ?? null;
+  const bomTree = selectedBom ? await getBomTree(id, { bomId: selectedBom.id }).catch(() => null) : null;
+
   const supplierOptions = partners
     .filter((pt) => pt.kind === 'supplier' || pt.kind === 'both')
     .map((pt) => ({ value: pt.id, label: `${pt.name} (${pt.code})` }));
@@ -98,7 +104,7 @@ export default async function ProductDetailPage({ params, searchParams }: { para
       ),
     },
     { value: 'stok', label: 'Stok', content: <ProductStockTab rows={stockRows} uomCode={uomCode} /> },
-    { value: 'recete', label: 'Reçete', content: <ProductBomTab boms={boms} unitCosts={unitCostsByBom} /> },
+    { value: 'recete', label: 'Reçete', content: <ProductBomTab boms={boms} unitCosts={unitCostsByBom} tree={bomTree} selectedBomId={selectedBom?.id ?? null} canManage={canManage} /> },
     { value: 'fiyatlar', label: 'Fiyatlar', content: <ProductPricesTab priceItems={priceItems} customerPrices={customerPrices} /> },
     { value: 'tedarikciler', label: 'Tedarikçiler', content: <ProductSuppliersTab productId={id} suppliers={suppliers} supplierOptions={supplierOptions} canManage={canManage} /> },
     { value: 'hareketler', label: 'Hareketler', content: <ProductMovesTab rows={moves as never} uomCode={uomCode} /> },

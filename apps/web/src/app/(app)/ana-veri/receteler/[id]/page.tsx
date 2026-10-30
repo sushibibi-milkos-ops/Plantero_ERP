@@ -5,9 +5,10 @@ import { requirePermission, userCan } from '@/lib/auth';
 import { PageHeader } from '@/components/page-header';
 import { StatusBadge } from '@/components/status-badge';
 import { EmptyState } from '@/components/empty-state';
-import { getBomById, listBomLines, listBomVersions, getBomCostRollup, listBomComponentCandidates, listAuditFor } from '@/modules/masterdata/queries';
+import { getBomById, listBomLines, listBomVersions, getBomCostRollup, listBomComponentCandidates, listAuditFor, getBomTree } from '@/modules/masterdata/queries';
 import { DetailTabs, type ProductTabDef } from '@/modules/masterdata/components/product-detail-tabs';
 import { BomDetailForm } from '@/modules/masterdata/components/bom-detail-form';
+import { BomFlow } from '@/modules/masterdata/components/bom-flow';
 import { BomHeaderActions } from '@/modules/masterdata/components/bom-header-actions';
 import { BomVersionHistory } from '@/modules/masterdata/components/bom-version-history';
 import { AuditTab } from '@/modules/masterdata/components/audit-tab';
@@ -36,6 +37,8 @@ export default async function BomDetailPage({ params }: { params: Promise<{ id: 
     listAuditFor('boms', id),
   ]);
 
+  const bomTree = await getBomTree(bom.b.productId, { bomId: id }).catch(() => null);
+
   const rollup = await getBomCostRollup(id).catch(() => ({ materialCost: '0', overheadCost: '0', unitCost: '0', lines: [], bomId: id, effectiveOutputQty: '0' }));
   const versionRollups = await Promise.all(
     versions.map(async (v) => {
@@ -50,6 +53,7 @@ export default async function BomDetailPage({ params }: { params: Promise<{ id: 
 
   const tabs: ProductTabDef[] = [
     { value: 'bilesenler', label: 'Bileşenler', content: <BomDetailForm bom={{ id: bom.b.id, code: bom.b.code, status: bom.b.status, productId: bom.b.productId, sku: bom.sku, name: bom.b.name, outputQty: bom.b.outputQty, outputUomCode: bom.outputUomCode, expectedYieldPct: bom.b.expectedYieldPct, cycleMinutes: bom.b.cycleMinutes, overheadPerBatch: bom.b.overheadPerBatch, overheadPerUnit: bom.b.overheadPerUnit, note: bom.b.note }} lines={lines as never} rollup={rollup} candidates={candidates as never} canManage={canManage} /> },
+    { value: 'agac', label: 'Ürün ağacı', content: <BomFlow tree={bomTree} linkRoot canManage={canManage} /> },
     {
       value: 'versiyonlar',
       label: 'Versiyonlar',

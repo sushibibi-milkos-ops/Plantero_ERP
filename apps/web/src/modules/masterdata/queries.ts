@@ -4,6 +4,9 @@ import { alias } from 'drizzle-orm/pg-core';
 import { and, asc, desc, eq, gt, inArray, sql } from 'drizzle-orm';
 import { db, schema, type ParsedProduct } from '@plantero/db';
 import { rollupBomCost, D, toDb } from '@plantero/core';
+import { buildBomTree, type BomTree, type BomTreeLoader, type LoadedBom, type LoadedProduct } from './bom-tree';
+
+export type { BomTree, BomTreeNode, BomNodeKind } from './bom-tree';
 
 const {
   products, productCategories, productBarcodes, uoms,
@@ -638,6 +641,78 @@ export async function listBomVersions(productId: string) {
 
 export async function getBomCostRollup(bomId: string) {
   return rollupBomCost(db, bomId);
+}
+
+/**
+ * Çok seviyeli ürün ağacı: ürünün aktif (veya verilen) reçetesinden başlayarak, üretilen bileşenlerin
+ * kendi aktif reçeteleriyle özyinelemeli açılır. Miktarlar reçete çıktı miktarına normalize (1 birim üst
+ * ürün başına); döngü ve derinlik koruması `buildBomTree`'de (saf, test edilebilir).
+ * Reçetesi yoksa `null`.
+ */
+export async function getBomTree(productId: string, opts: { bomId?: string } = {}): Promise<BomTree | null> {
+  const productUom = alias(uoms, 'product_uom');
+  const lineUom = alias(uoms, 'line_uom');
+  const productCols = {
+    id: products.id, sku: products.sku, name: products.name, type: products.type,
+    isManufactured: products.isManufactured, uom: productUom.code,
+  };
+
+  const loader: BomTreeLoader = {
+    async getProduct(id) {
+      const [row] = await db.select(productCols).from(products).innerJoin(productUom, eq(productUom.id, products.uomId)).where(eq(products.id, id)).limit(1);
+      return row ?? null;
+    },
+    async getBom(id, o) {
+      const pick = async (where: ReturnType<typeof and>, order: 'version' | 'none') => {
+        const q = db.select().from(boms).where(where);
+        const [row] = order === 'version' ? await q.orderBy(desc(boms.version)).limit(1) : await q.limit(1);
+        return row ?? null;
+      };
+      let bom = o.bomId ? await pick(and(eq(boms.id, o.bomId), eq(boms.productId, id)), 'none') : null;
+      if (!bom) bom = await pick(and(eq(boms.productId, id), eq(boms.status, 'active')), 'version');
+      if (!bom && o.allowDraft) bom = await pick(and(eq(boms.productId, id), eq(boms.status, 'draft')), 'version');
+      if (!bom) return null;
+
+      const [lineRows, lineRef, rollup] = await Promise.all([
+        db
+          .select({ l: bomLines, p: productCols, uom: lineUom.code })
+          .from(bomLines)
+          .innerJoin(products, eq(products.id, bomLines.productId))
+          .innerJoin(productUom, eq(productUom.id, products.uomId))
+          .innerJoin(lineUom, eq(lineUom.id, bomLines.uomId))
+          .where(eq(bomLines.bomId, bom.id))
+          .orderBy(asc(bomLines.sequence)),
+        bom.defaultLineId
+          ? db.select({ id: schema.productionLines.id, code: schema.productionLines.code, name: schema.productionLines.name }).from(schema.productionLines).where(eq(schema.productionLines.id, bom.defaultLineId)).limit(1)
+          : Promise.resolve([]),
+        getBomCostRollup(bom.id).catch(() => null),
+      ]);
+      const costByLine = new Map((rollup?.lines ?? []).map((r) => [r.lineId, r.unitCost]));
+
+      const out: LoadedBom = {
+        id: bom.id,
+        code: bom.code,
+        version: bom.version,
+        status: bom.status,
+        outputQty: bom.outputQty,
+        cycleMinutes: bom.cycleMinutes,
+        line: lineRef[0] ?? null,
+        unitCost: rollup?.unitCost ?? null,
+        lines: lineRows.map((r) => ({
+          id: r.l.id,
+          product: r.p as LoadedProduct,
+          qty: r.l.qty,
+          uom: r.uom,
+          scrapPct: r.l.scrapPct,
+          isByproduct: r.l.isByproduct,
+          unitCost: costByLine.get(r.l.id) ?? null,
+        })),
+      };
+      return out;
+    },
+  };
+
+  return buildBomTree(productId, loader, opts);
 }
 
 /**

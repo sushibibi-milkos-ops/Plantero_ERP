@@ -2,21 +2,71 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { StatusBadge } from '@/components/status-badge';
 import { MoneyCell } from '@/components/money-cell';
-import { EmptyState } from '@/components/empty-state';
 import { formatQty, formatPct } from '@/lib/format';
 import { BOM_STATUS_LABELS } from '../product-labels';
 import type { schema } from '@plantero/db';
+import { cn } from '@/lib/utils';
+import type { BomTree } from '../bom-tree';
+import { BomFlow } from './bom-flow';
 
 type BomRow = (typeof schema.boms.$inferSelect);
 
-export function ProductBomTab({ boms, unitCosts }: { boms: BomRow[]; unitCosts: Record<string, string> }) {
+export function ProductBomTab({
+  boms,
+  unitCosts,
+  tree,
+  selectedBomId,
+  canManage = false,
+}: {
+  boms: BomRow[];
+  unitCosts: Record<string, string>;
+  /** Seçili reçetenin çok seviyeli ağacı (reçete yoksa null) */
+  tree: BomTree | null;
+  selectedBomId: string | null;
+  canManage?: boolean;
+}) {
   if (boms.length === 0) {
-    return <EmptyState compact title="Reçete tanımlı değil" description="Bu ürün için henüz bir BOM (reçete) oluşturulmamış." />;
+    return <BomFlow tree={null} canManage={canManage} />;
   }
   const active = boms.find((b) => b.status === 'active');
+  // Seçilebilir versiyonlar: aktif + taslak (arşiv yalnızca geçmiş tablosundan açılır)
+  const selectable = boms.filter((b) => b.status !== 'archived');
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      <section aria-labelledby="bom-tree-title" className="space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 id="bom-tree-title" className="text-sm font-medium">
+            Ürün ağacı
+          </h3>
+          {selectable.length > 1 ? (
+            <nav aria-label="Reçete versiyonu" className="flex flex-wrap gap-1">
+              {selectable.map((b) => {
+                const on = b.id === selectedBomId;
+                return (
+                  <Link
+                    key={b.id}
+                    href={`?tab=recete&bom=${b.id}`}
+                    replace
+                    scroll={false}
+                    prefetch={false}
+                    aria-current={on ? 'true' : undefined}
+                    className={cn(
+                      'inline-flex h-11 items-center gap-1.5 rounded-md border px-2.5 text-[12px] transition-[transform,background-color,color,border-color] duration-150 ease-out active:scale-[0.97] md:h-7',
+                      on ? 'border-foreground/30 bg-accent font-medium text-foreground' : 'border-border/70 text-muted-foreground hover:bg-accent hover:text-foreground',
+                    )}
+                  >
+                    v{b.version}
+                    <span className="text-[11px] font-normal text-muted-foreground">{BOM_STATUS_LABELS[b.status] ?? b.status}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          ) : null}
+        </div>
+        <BomFlow tree={tree} canManage={canManage} />
+      </section>
+
       {active ? (
         <div className="rounded-lg border border-border/70 bg-card p-4">
           <div className="flex items-center justify-between">
