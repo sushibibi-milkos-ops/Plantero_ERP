@@ -149,6 +149,18 @@ async function seedPlans(tx: DbOrTx, byCode: Map<string, typeof machines.$inferS
 const PLACEHOLDER_PHOTO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 
 const addHours = (d: Date, h: number): Date => new Date(d.getTime() + h * 3_600_000);
+/**
+ * Seed gece yarısına yakın (Europe/Istanbul) koşarsa `reportedAt + 1,5 saat` bir SONRAKİ takvim gününe
+ * taşıyor; `completeOrder` bakım maliyet fişini o `asOf` tarihiyle postaladığından yevmiye "gelecek
+ * tarihli" kalıyordu (I33). Bu yüzden ileri alınan zaman damgaları aynı iş gününün son saniyesiyle
+ * sınırlanır: takvim günü değişecekse 23:59:30 (+03) kullanılır — duruş süresi kısalır ama tarih
+ * bugünde kalır.
+ */
+const clampToBusinessDay = (d: Date, ref: Date): Date => {
+  const day = businessDate(ref);
+  return businessDate(d) === day ? d : new Date(`${day}T23:59:30+03:00`);
+};
+const forward = (from: Date, h: number): Date => clampToBusinessDay(addHours(from, h), from);
 
 async function seedOrders(
   tx: DbOrTx,
@@ -166,15 +178,15 @@ async function seedOrders(
     machineId: byCode.get('MK-005')!.id, title: 'Dolum başlığı sızdırıyor', description: 'Vardiya başında nozul altında sıvı birikmesi fark edildi.',
     priority: 'high', photos: [{ fileName: 'ariza-mk005-1.png', mimeType: 'image/png', dataUrl: PLACEHOLDER_PHOTO }, { fileName: 'ariza-mk005-2.png', mimeType: 'image/png', dataUrl: PLACEHOLDER_PHOTO }],
   }, SYSTEM_ACTOR);
-  await startOrder(tx, bo1.id, SYSTEM_ACTOR, { asOf: addHours(bo1.reportedAt, 0.1) });
-  await completeOrder(tx, bo1.id, { rootCause: 'Nozul contası aşınmış', resolution: 'Conta değiştirildi, sızdırmazlık test edildi', laborMinutes: 75, laborCost: '450', partsCost: '180', asOf: addHours(bo1.reportedAt, 1.5) }, SYSTEM_ACTOR);
+  await startOrder(tx, bo1.id, SYSTEM_ACTOR, { asOf: forward(bo1.reportedAt, 0.1) });
+  await completeOrder(tx, bo1.id, { rootCause: 'Nozul contası aşınmış', resolution: 'Conta değiştirildi, sızdırmazlık test edildi', laborMinutes: 75, laborCost: '450', partsCost: '180', asOf: forward(bo1.reportedAt, 1.5) }, SYSTEM_ACTOR);
 
   const bo2 = await reportBreakdown(tx, {
     machineId: byCode.get('MK-014')!.id, title: 'Gramaj sapması — toz dolumu tutarsız', description: 'Ardışık paketlerde ±3g sapma gözlendi, hat durduruldu.',
     priority: 'critical', photos: [{ fileName: 'ariza-mk014-1.png', mimeType: 'image/png', dataUrl: PLACEHOLDER_PHOTO }],
   }, SYSTEM_ACTOR);
-  await startOrder(tx, bo2.id, SYSTEM_ACTOR, { asOf: addHours(bo2.reportedAt, 0.05) });
-  await completeOrder(tx, bo2.id, { rootCause: 'Yük hücresi kalibrasyon kayması', resolution: 'Yeniden kalibre edildi', laborMinutes: 40, laborCost: '200', partsCost: '0', asOf: addHours(bo2.reportedAt, 0.75) }, SYSTEM_ACTOR);
+  await startOrder(tx, bo2.id, SYSTEM_ACTOR, { asOf: forward(bo2.reportedAt, 0.05) });
+  await completeOrder(tx, bo2.id, { rootCause: 'Yük hücresi kalibrasyon kayması', resolution: 'Yeniden kalibre edildi', laborMinutes: 40, laborCost: '200', partsCost: '0', asOf: forward(bo2.reportedAt, 0.75) }, SYSTEM_ACTOR);
 
   // 3 periyodik, TAMAMLANMIŞ — periyodik bakımın kendisi duruş üretmez (yalnızca arıza `downtimes`
   // açar, bkz. orders.ts); yalnızca başlangıç/bitiş saatleri gerçekçi bir çalışma süresi (dk cinsinden)
@@ -188,8 +200,8 @@ async function seedOrders(
     const plan = plans.get(def.machineCode);
     if (!plan) throw new Error(`seed:maintenance — periyodik plan bulunamadı: ${def.machineCode}`);
     const { order } = await generateOrderForPlan(tx, plan, SYSTEM_ACTOR, { scheduledFor: businessDate(now) });
-    await startOrder(tx, order.id, SYSTEM_ACTOR, { asOf: addHours(order.reportedAt, 0.02) });
-    await completeOrder(tx, order.id, { resolution: 'Kontrol listesi tamamlandı, anormallik yok', asOf: addHours(order.reportedAt, def.durationMinutes / 60) }, SYSTEM_ACTOR);
+    await startOrder(tx, order.id, SYSTEM_ACTOR, { asOf: forward(order.reportedAt, 0.02) });
+    await completeOrder(tx, order.id, { resolution: 'Kontrol listesi tamamlandı, anormallik yok', asOf: forward(order.reportedAt, def.durationMinutes / 60) }, SYSTEM_ACTOR);
   }
 
   // 1 AÇIK arıza — makine hâlâ down, kanban/liste "reported" kolonunda görünür.
