@@ -5,7 +5,6 @@ import {
   warehouses, locations, productionLines,
   salesChannels, priceLists, priceListItems,
   partners, supplierProducts,
-  boms, bomLines,
   type locationUsageEnum, type channelKindEnum, type productTypeEnum,
 } from '../schema/index.js';
 import { parseAnaVeri, importAnaVeri } from '../import/anaveri.js';
@@ -448,169 +447,11 @@ async function seedPartners(db: DbOrTx, summary: SeedSummary, channelIdByCode: M
 }
 
 /* ==================================================================== */
-/* 6) Reçeteler (BOM)                                                   */
+/* 6) Reçeteler (BOM) — seed/uretim-bom.ts                              */
 /* ==================================================================== */
-
-type RecipeLine = { sku: string; qtyPerUnit: number; scales?: boolean };
-const R = (sku: string, qtyPerUnit: number, scales = true): RecipeLine => ({ sku, qtyPerUnit, scales });
-
-const JAR_PACK = (rawSku: string, rawQty: number, sweetenerQty: number, saltQty: number): RecipeLine[] => [
-  R(rawSku, rawQty), R('302030000', sweetenerQty), R('307020000', saltQty),
-  R('401010000', 1), R('401020000', 1), R('401030000', 1),
-];
-
-const RECIPE_BY_BASE7: Record<string, RecipeLine[]> = {
-  // Bazlar (Bitkisel Süt Konsantreleri) — jar 500ml
-  '1100100': JAR_PACK('301030000', 0.15, 0.03, 0.002), // Badem Bazı
-  '1100200': JAR_PACK('301040000', 0.15, 0.03, 0.002), // Fındık Bazı
-  '1100300': JAR_PACK('301050000', 0.15, 0.03, 0.002), // Kaju Bazı
-  '1100301': JAR_PACK('301050000', 0.18, 0.02, 0.002), // Kaju Bazı ABD
-  '1100400': JAR_PACK('301060000', 0.15, 0.03, 0.002), // Yulaf Bazı
-  // Barista Base — daha koyu kıvam
-  '1200100': JAR_PACK('301030000', 0.20, 0.02, 0.002),
-  '1200200': JAR_PACK('301040000', 0.20, 0.02, 0.002),
-  '1200300': JAR_PACK('301050000', 0.20, 0.02, 0.002),
-  '1200400': JAR_PACK('301060000', 0.20, 0.02, 0.002),
-  // Protein Tozları — doypack 1kg (tozun net ağırlığı ~500g)
-  '1300100': [R('301010000', 0.30), R('301020000', 0.10), R('302010000', 0.01), R('303010000', 0.005), R('303020000', 0.003), R('306010000', 0.02), R('305010000', 0.002), R('307010000', 0.02), R('402010000', 1), R('401030000', 1)],
-  '1300101': [R('301010000', 0.30), R('301020000', 0.10), R('302010000', 0.01), R('303010000', 0.005), R('303020000', 0.003), R('306010000', 0.02), R('305010000', 0.002), R('307010000', 0.02), R('304030000', 0.03), R('304040000', 0.005), R('304020000', 0.003), R('402010000', 1), R('401030000', 1)],
-  '1300102': [R('301010000', 0.30), R('301020000', 0.10), R('302010000', 0.01), R('303010000', 0.005), R('303020000', 0.003), R('306010000', 0.02), R('305010000', 0.002), R('307010000', 0.02), R('304050000', 0.005), R('304020000', 0.003), R('402010000', 1), R('401030000', 1)],
-  // Sürülebilir Ürünler — ball mill ezme, jar
-  '1400301': JAR_PACK('301050000', 0.35, 0.08, 0.002).concat([R('304030000', 0.05)]), // Kakaolu Kaju Ezmesi
-  '1400400': JAR_PACK('301060000', 0.40, 0.05, 0.002), // %100 Oat Spredable
-  '1400401': JAR_PACK('301060000', 0.35, 0.06, 0.002).concat([R('304030000', 0.05)]), // Oat Chocolate Spredable
-  // Toz Kremalar — 10gr x 10 saşe kutu
-  '1500400': [R('301060000', 0.006), R('307010000', 0.002), R('304020000', 0.0005), R('402020000', 1), R('401030000', 1, false)],
-  // Kahveler — kraft torba 250g
-  '1600100': [R('308010000', 0.25), R('402030000', 1), R('401030000', 1)],
-  '1600200': [R('308010000', 0.25), R('402030000', 1), R('401030000', 1)],
-  '1600300': [R('308010000', 0.25), R('402030000', 1), R('401030000', 1)],
-  '1600400': [R('308010000', 0.25), R('402030000', 1), R('401030000', 1)],
-  '1600500': [R('308010000', 0.25), R('402030000', 1), R('401030000', 1)],
-  // Egzotik Ürünler
-  '1600600': [R('308020000', 0.08), R('402010000', 1), R('401030000', 1)], // Matcha
-  '1600700': [R('308030000', 0.10), R('402010000', 1), R('401030000', 1)], // Vanilya Tozu
-  '1600800': JAR_PACK('308040000', 0.30, 0.05, 0.001), // Hurma Ezmesi (kavanoz)
-};
-
-const SET_RECIPES: Record<string, string[]> = {
-  '180010101': ['110010001', '110020001', '110030001'],
-  '180010201': ['110010001', '110020001', '110040001'],
-  '180010301': ['110010001', '110020001', '110040001', '110030001'],
-  '180020101': ['130010001', '130010201', '130010101'],
-  '180020201': ['110010001', '110020001', '110030001', '130010001', '130010201', '130010101'],
-};
-
-const HAT1_FAMILIES = new Set(['Bitkisel Süt Konsantreleri (Bazlar)', 'Barista Serisi', 'Sürülebilir Ürünler', 'Toz Kremalar']);
-const HAT2_FAMILIES = new Set(['Protein Tozları', 'Kahveler', 'Paketler & Setler']);
-
-function pickLineCode(p: { category2: string | null; packaging: string | null; name: string }): 'HAT1' | 'HAT2' | 'HAT3' {
-  const pack = (p.packaging ?? '').toLocaleLowerCase('tr-TR');
-  if (pack.includes('saşe') || pack.includes('sase') || pack.includes('stick')) return 'HAT3';
-  if (p.category2 && HAT1_FAMILIES.has(p.category2)) return 'HAT1';
-  if (p.category2 && HAT2_FAMILIES.has(p.category2)) return 'HAT2';
-  if (p.name.toLocaleUpperCase('tr-TR').includes('EZMESİ')) return 'HAT1';
-  return 'HAT2';
-}
-
-const CYCLE_MINUTES: Record<'HAT1' | 'HAT2' | 'HAT3', number> = { HAT1: 45, HAT2: 30, HAT3: 20 };
-
-async function seedBoms(db: DbOrTx, summary: SeedSummary): Promise<void> {
-  log('masterdata', 'reçeteler (BOM)...');
-  const allProducts = await db.select().from(products);
-  const bySku = new Map(allProducts.map((p) => [p.sku, p]));
-  const lineRows = await db.select().from(productionLines);
-  const lineIdByCode = new Map(lineRows.map((l) => [l.code, l.id]));
-
-  let bomCount = 0;
-  let bomLineCount = 0;
-
-  const finished = allProducts.filter((p) => p.type === 'finished' && p.status === 'active' && !p.sku.startsWith('170') && p.isManufactured);
-
-  for (const p of finished) {
-    const [existing] = await db.select({ id: boms.id }).from(boms).where(eq(boms.code, `BOM-${p.sku}-v1`)).limit(1);
-    if (existing) continue; // idempotent: zaten var, tekrar oluşturma
-
-    const isSet = p.sku.startsWith('180');
-    const lineCode = isSet ? 'HAT2' : pickLineCode({ category2: p.category2, packaging: p.packaging, name: p.name });
-    const defaultLineId = lineIdByCode.get(lineCode) ?? null;
-
-    type Draft = { productId: string; qty: string; uomId: string; sequence: number };
-    const draftLines: Draft[] = [];
-
-    if (isSet) {
-      const componentSkus = SET_RECIPES[p.sku];
-      if (!componentSkus) {
-        log('masterdata', `  UYARI: ${p.sku} için set bileşeni tanımlı değil — BOM atlandı`);
-        continue;
-      }
-      let seq = 10;
-      for (const compSku of componentSkus) {
-        const comp = bySku.get(compSku);
-        if (!comp) {
-          log('masterdata', `  UYARI: ${p.sku} set bileşeni bulunamadı: ${compSku}`);
-          continue;
-        }
-        draftLines.push({ productId: comp.id, qty: '1.0000', uomId: comp.uomId, sequence: seq });
-        seq += 10;
-      }
-      const etiket = bySku.get('401030000');
-      if (etiket) draftLines.push({ productId: etiket.id, qty: '1.0000', uomId: etiket.uomId, sequence: seq });
-    } else {
-      const base7 = p.sku.slice(0, 7);
-      const recipe = RECIPE_BY_BASE7[base7];
-      if (!recipe) {
-        log('masterdata', `  UYARI: ${p.sku} (base ${base7}) için reçete tanımlı değil — BOM atlandı`);
-        continue;
-      }
-      let seq = 10;
-      for (const line of recipe) {
-        const ing = bySku.get(line.sku);
-        if (!ing) {
-          log('masterdata', `  UYARI: ${p.sku} reçetesinde hammadde bulunamadı: ${line.sku}`);
-          continue;
-        }
-        const qty = line.scales === false ? line.qtyPerUnit : line.qtyPerUnit * p.packQty;
-        draftLines.push({ productId: ing.id, qty: qty.toFixed(4), uomId: ing.uomId, sequence: seq });
-        seq += 10;
-      }
-      // Bazlar ailesinde 6+ adetlik paketler için dış koli
-      if (p.category2 === 'Bitkisel Süt Konsantreleri (Bazlar)' && p.packQty >= 6) {
-        const koli = bySku.get('401040000');
-        if (koli) draftLines.push({ productId: koli.id, qty: '1.0000', uomId: koli.uomId, sequence: seq });
-      }
-    }
-
-    if (draftLines.length === 0) continue;
-
-    const [bom] = await db
-      .insert(boms)
-      .values({
-        code: `BOM-${p.sku}-v1`,
-        productId: p.id,
-        version: 1,
-        name: `${p.name} — Standart Reçete`,
-        status: 'active',
-        outputQty: '1.0000',
-        outputUomId: p.uomId,
-        expectedYieldPct: '97',
-        cycleMinutes: isSet ? 15 : CYCLE_MINUTES[lineCode],
-        defaultLineId,
-        overheadPerBatch: '50.0000',
-        overheadPerUnit: '0.5000',
-        note: 'Seed: gerçek reçete verisi yok — makul varsayılan reçete (bkz. docs/ASSUMPTIONS.md A4)',
-      })
-      .returning({ id: boms.id });
-    if (!bom) continue;
-    bomCount++;
-
-    await db.insert(bomLines).values(draftLines.map((d) => ({ bomId: bom.id, productId: d.productId, qty: d.qty, uomId: d.uomId, sequence: d.sequence })));
-    bomLineCount += draftLines.length;
-  }
-
-  summary.add('boms', bomCount);
-  summary.add('bom_lines', bomLineCount);
-}
+// Uydurma örnek reçeteler kaldırıldı: reçeteler artık gerçek Üretim Excel'inden
+// (data/import/Plantero_Uretim_Ana_Excel.xlsx) `seed/uretim-bom.ts` adımıyla üretilir
+// (çok seviyeli: mamul → yarı mamul baz + ambalaj; yarı mamul → hammaddeler).
 
 /* ==================================================================== */
 /* Orkestrasyon                                                         */
@@ -622,5 +463,4 @@ export async function seedMasterdata(db: DbOrTx, summary: SeedSummary): Promise<
   await seedWarehousesAndLocations(db, summary);
   const { channelIdByCode } = await seedChannelsAndPriceLists(db, summary);
   await seedPartners(db, summary, channelIdByCode);
-  await seedBoms(db, summary);
 }

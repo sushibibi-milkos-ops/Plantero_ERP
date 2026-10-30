@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { requirePermission } from '@/lib/auth';
-import { listLineCards } from '@/modules/production/queries';
+import { listLineCards, listProducibleByLine } from '@/modules/production/queries';
 import { LineCards } from '@/modules/production/components/line-cards';
+import { LineProducibleProducts } from '@/modules/production/components/line-producible-products';
 import { PageHeader } from '@/components/page-header';
 import { D } from '@plantero/core';
 
@@ -10,7 +11,8 @@ export const dynamic = 'force-dynamic';
 
 export default async function ProductionLinesPage() {
   await requirePermission('production.view');
-  const lines = await listLineCards();
+  const [lines, producible] = await Promise.all([listLineCards(), listProducibleByLine()]);
+  const rowsByLine = Object.fromEntries(lines.map((l) => [l.id, producible.get(l.id) ?? []]));
 
   // Açıklama kartların altındaki hat adlarını kelimesi kelimesine tekrar etmesin diye gerçek bir özet
   // hesaplanır. Bugünkü üretim miktarını hatlar arası toplamamıza dikkat edilir: hatlar farklı birim
@@ -28,7 +30,10 @@ export default async function ProductionLinesPage() {
           ediyordu (Tur 5 bulgusu, P2, is-emirleri/page.tsx ile aynı desen). sr-only: ekran okuyucu
           için kalır, açıklama satırı görsel başlığın yerini alır. */}
       <PageHeader title={<span className="max-md:sr-only">Üretim Hatları</span>} description={description} />
-      <LineCards lines={lines} />
+      <div className="space-y-8">
+        <LineCards lines={lines} />
+        <LineProducibleProducts lines={lines.map((l) => ({ id: l.id, code: l.code, name: l.name }))} rowsByLine={rowsByLine} />
+      </div>
     </>
   );
 }

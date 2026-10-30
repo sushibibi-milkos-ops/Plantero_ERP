@@ -201,6 +201,20 @@ export async function listProductBoms(productId: string) {
   return db.select().from(boms).where(eq(boms.productId, productId)).orderBy(desc(boms.version));
 }
 
+/**
+ * Reçetelerin varsayılan üretim hattı (ürün kartı reçete sekmesinde "Hat" göstermek için):
+ * `{ [bomId]: { code: 'HAT1', name: 'Bazlar, Barista & Kremalar' } }`. Hattı olmayan reçete haritada yer almaz.
+ */
+export async function getBomLineLabels(bomIds: string[]): Promise<Record<string, { code: string; name: string }>> {
+  if (bomIds.length === 0) return {};
+  const rows = await db
+    .select({ bomId: boms.id, code: schema.productionLines.code, name: schema.productionLines.name })
+    .from(boms)
+    .innerJoin(schema.productionLines, eq(schema.productionLines.id, boms.defaultLineId))
+    .where(inArray(boms.id, bomIds));
+  return Object.fromEntries(rows.map((r) => [r.bomId, { code: r.code, name: r.name }]));
+}
+
 export async function listProductPriceItems(productId: string) {
   return db
     .select({ item: priceListItems, listCode: priceLists.code, listName: priceLists.name, currency: priceLists.currency })

@@ -1,8 +1,8 @@
-import { eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import type { DbOrTx } from '../client.js';
-import { products, warehouses, locations, workOrders, uoms, partners } from '../schema/index.js';
+import { products, warehouses, locations, workOrders, partners, boms, bomLines } from '../schema/index.js';
 import {
-  D, SYSTEM_ACTOR, writeAudit,
+  D, SYSTEM_ACTOR, writeAudit, ZERO,
   createWorkOrder, releaseWorkOrder, startWorkOrder, pauseWorkOrder, resumeWorkOrder,
   autoConsumeRemaining, recordScrap, finishWorkOrder, closeWorkOrder,
   consumeLot, pickFefo, resolveWarehouseRoot,
@@ -44,11 +44,6 @@ async function tireWarehouse(tx: DbOrTx) {
   if (!row) throw new Error('seed:production — TIRE deposu bulunamadı');
   return row;
 }
-async function uomByCode(tx: DbOrTx, code: string) {
-  const [row] = await tx.select().from(uoms).where(eq(uoms.code, code)).limit(1);
-  if (!row) throw new Error(`seed:production — birim bulunamadı: ${code}`);
-  return row;
-}
 async function firstSupplier(tx: DbOrTx) {
   const [row] = await tx.select().from(partners).where(eq(partners.kind, 'supplier')).limit(1);
   if (!row) throw new Error('seed:production — tedarikçi bulunamadı');
@@ -65,37 +60,47 @@ const addDaysStr = (base: string, days: number): string => {
 const TODAY = new Date().toISOString().slice(0, 10);
 
 /**
- * İş emirlerinin tükettiği hammadde/ambalaj — 8 reçetenin toplam ihtiyacı üstüne %20-50 pay ile.
- * Bu ürünlerin `depo` seed'inde açılış (origin='opening') lotları zaten var ama I5 kuralı ("her
- * tüketim lotunun origin_receipt_id VEYA origin_work_order_id'si dolu") açılış lotlarını (kaynak
- * belgesiz açılış bakiyesi) kapsamaz. Üretim tüketiminin belge zincirini koparmaması için burada
- * gerçek bir mal kabulle (origin_receipt_id dolu) taze, daha yakın SKT'li lotlar açılır — FEFO bu
- * lotları açılış lotlarından önce seçer, böylece tüketim zinciri her zaman mal kabule kadar izlenir.
+ * İş emirlerinin tükettiği hammadde/ambalaj — çok seviyeli aktif reçetelerden (mamul → yarı mamul → hammadde)
+ * türetilen toplam ihtiyacın üstüne %35 pay + 1 birim ile. Liste artık sabit değil: `seed/uretim-bom.ts`
+ * gerçek Üretim Excel'inden reçeteleri kurduğu için ihtiyaç aktif BOM'lar açılarak hesaplanır.
+ * Bu ürünlerin `depo` seed'inde açılış (origin='opening') lotları olabilir ama I5 kuralı ("her tüketim
+ * lotunun origin_receipt_id VEYA origin_work_order_id'si dolu") açılış lotlarını (kaynak belgesiz açılış
+ * bakiyesi) kapsamaz. Üretim tüketiminin belge zincirini koparmaması için burada gerçek bir mal kabulle
+ * (origin_receipt_id dolu) taze, daha yakın SKT'li lotlar açılır — FEFO bu lotları açılış lotlarından önce
+ * seçer, böylece tüketim zinciri her zaman mal kabule kadar izlenir. Yeni (Excel'den gelen) SKU'ların
+ * başka stoğu yoktur; ihtiyaçları yalnızca bu takviyeyle karşılanır.
  */
-const CONSUMED_SUPPLEMENT: Array<{ sku: string; qty: number; unitCost: number; uomCode: 'KG' | 'ADET' }> = [
-  { sku: '301030000', qty: 30, unitCost: 320, uomCode: 'KG' }, // Badem
-  { sku: '301040000', qty: 25, unitCost: 280, uomCode: 'KG' }, // Fındık
-  { sku: '301060000', qty: 60, unitCost: 40, uomCode: 'KG' }, // Yulaf (jar + saşe reçeteleri; saşe reçetesi pack_qty ile ölçeklenir)
-  { sku: '302030000', qty: 20, unitCost: 120, uomCode: 'KG' }, // Hurma Şurubu
-  { sku: '307020000', qty: 5, unitCost: 15, uomCode: 'KG' }, // Deniz Tuzu
-  { sku: '301010000', qty: 60, unitCost: 210, uomCode: 'KG' }, // Isolated Pea Protein
-  { sku: '301020000', qty: 25, unitCost: 45, uomCode: 'KG' }, // Nohut Tozu
-  { sku: '302010000', qty: 6, unitCost: 700, uomCode: 'KG' }, // Suklaroz
-  { sku: '303010000', qty: 4, unitCost: 450, uomCode: 'KG' }, // Guar Gum
-  { sku: '303020000', qty: 4, unitCost: 450, uomCode: 'KG' }, // Xhantam Gum
-  { sku: '306010000', qty: 8, unitCost: 150, uomCode: 'KG' }, // Inulin
-  { sku: '305010000', qty: 3, unitCost: 1200, uomCode: 'KG' }, // b2+b12+e
-  { sku: '307010000', qty: 10, unitCost: 260, uomCode: 'KG' }, // Cream (saşe reçetesi pack_qty ile ölçeklenir)
-  { sku: '304020000', qty: 3, unitCost: 900, uomCode: 'KG' }, // masker
-  { sku: '304050000', qty: 3, unitCost: 900, uomCode: 'KG' }, // Çilek Aroma Verici
-  { sku: '308010000', qty: 20, unitCost: 250, uomCode: 'KG' }, // Kahve Çekirdeği
-  { sku: '401010000', qty: 300, unitCost: 22, uomCode: 'ADET' }, // Kavanoz 500ml
-  { sku: '401020000', qty: 300, unitCost: 10, uomCode: 'ADET' }, // Kapak
-  { sku: '401030000', qty: 450, unitCost: 8, uomCode: 'ADET' }, // Etiket
-  { sku: '402010000', qty: 150, unitCost: 18, uomCode: 'ADET' }, // Doypack 1kg
-  { sku: '402020000', qty: 220, unitCost: 9, uomCode: 'ADET' }, // Saşe 10g
-  { sku: '402030000', qty: 50, unitCost: 15, uomCode: 'ADET' }, // Kraft Kahve Torbası 250g
-];
+const LEGACY_UNIT_COST: Record<string, number> = {
+  '301030000': 320, '301040000': 280, '301060000': 40, '302030000': 120, '307020000': 15, '301010000': 210, '301020000': 45,
+  '302010000': 700, '303010000': 450, '303020000': 450, '306010000': 150, '305010000': 1200, '307010000': 260, '304020000': 900,
+  '304050000': 900, '308010000': 250, '401010000': 22, '401020000': 10, '401030000': 8, '402010000': 18, '402020000': 9, '402030000': 15,
+};
+
+/** Bir ürünün aktif reçetesi (en yüksek versiyon) */
+async function activeBomOf(tx: DbOrTx, productId: string) {
+  const [bom] = await tx.select().from(boms).where(and(eq(boms.productId, productId), eq(boms.status, 'active'))).orderBy(desc(boms.version)).limit(1);
+  return bom ?? null;
+}
+
+/**
+ * Aktif reçeteyi yarı mamullere kadar açar; yaprak (hammadde/ambalaj) ihtiyaçlarını biriktirir.
+ * Yarı mamul bileşenleri kendi aktif reçetesiyle açılır (bileşen miktarı / reçete çıktısı oranında).
+ */
+async function collectLeafRequirements(tx: DbOrTx, productId: string, qty: ReturnType<typeof D>, acc: Map<string, ReturnType<typeof D>>, depth = 0): Promise<void> {
+  if (depth > 6) throw new Error('seed:production — reçete derinliği 6\'yı aştı (döngü?)');
+  const bom = await activeBomOf(tx, productId);
+  if (!bom) {
+    acc.set(productId, (acc.get(productId) ?? ZERO).plus(qty));
+    return;
+  }
+  const lines = await tx.select({ line: bomLines, type: products.type }).from(bomLines).innerJoin(products, eq(products.id, bomLines.productId)).where(eq(bomLines.bomId, bom.id));
+  for (const { line, type } of lines) {
+    if (line.isByproduct) continue;
+    const need = D(line.qty).mul(qty).div(D(bom.outputQty)).mul(D(1).plus(D(line.scrapPct).div(100)));
+    if (type === 'semi_finished') await collectLeafRequirements(tx, line.productId, need, acc, depth + 1);
+    else acc.set(line.productId, (acc.get(line.productId) ?? ZERO).plus(need));
+  }
+}
 
 async function locationByCode(tx: DbOrTx, code: string) {
   const [row] = await tx.select().from(locations).where(eq(locations.code, code)).limit(1);
@@ -103,9 +108,7 @@ async function locationByCode(tx: DbOrTx, code: string) {
   return row;
 }
 
-async function seedConsumptionSupplement(tx: DbOrTx, warehouseId: string, summary: SeedSummary): Promise<void> {
-  const kg = await uomByCode(tx, 'KG');
-  const adet = await uomByCode(tx, 'ADET');
+async function seedConsumptionSupplement(tx: DbOrTx, warehouseId: string, requirements: Map<string, ReturnType<typeof D>>, summary: SeedSummary): Promise<void> {
   const supplier = await firstSupplier(tx);
   // Hedef lokasyon açıkça verilir: `TIRE/HAM` kökü toplanabilir (isPickable) değildir — varsayılan
   // koyma çözümü (resolveDefaultPutawayLocation) HAM'ın doğrudan alt rafları (R01/R02/R03) da
@@ -113,19 +116,57 @@ async function seedConsumptionSupplement(tx: DbOrTx, warehouseId: string, summar
   const hamShelf = await locationByCode(tx, 'TIRE/HAM/R01/A');
   const ambShelf = await locationByCode(tx, 'TIRE/AMB');
   const lines: ReceiptLineInput[] = [];
-  for (const s of CONSUMED_SUPPLEMENT) {
-    const product = await productBySku(tx, s.sku);
+  const entries = [...requirements.entries()];
+  const rows = await Promise.all(entries.map(async ([productId, need]) => {
+    const [p] = await tx.select().from(products).where(eq(products.id, productId)).limit(1);
+    return { p: p!, need };
+  }));
+  rows.sort((a, b) => a.p.sku.localeCompare(b.p.sku));
+  for (const { p, need } of rows) {
+    if (p.type !== 'raw_material' && p.type !== 'packaging') continue;
+    const isKg = p.type === 'raw_material';
+    const qty = D(need).mul(1.35).plus(1).ceil();
+    const std = D(p.standardCost);
+    const unitCost = std.gt(0) ? std : D(LEGACY_UNIT_COST[p.sku] ?? (isKg ? 100 : 5));
     lines.push({
-      productId: product.id, qty: D(s.qty), uomId: s.uomCode === 'KG' ? kg.id : adet.id, unitCost: D(s.unitCost),
-      supplierLotNo: `SEED-URT-${s.sku}`, expiryDate: addDaysStr(TODAY, 10), disposition: 'released',
-      toLocationId: s.uomCode === 'KG' ? hamShelf.id : ambShelf.id,
+      productId: p.id, qty, uomId: p.uomId, unitCost,
+      supplierLotNo: `SEED-URT-${p.sku}`, expiryDate: addDaysStr(TODAY, 10), disposition: 'released',
+      toLocationId: isKg ? hamShelf.id : ambShelf.id,
     });
   }
-  const { receipt, createdLotIds } = await createAndReceive(tx, { warehouseId, partnerId: supplier.id, supplierDeliveryNo: 'SEED-URT-TEDARIK', origin: 'manual', note: 'Seed: üretim iş emirleri için hammadde/ambalaj takviyesi (FEFO önceliği açılış lotlarından önce)', lines }, SYSTEM_ACTOR);
+  const { receipt, createdLotIds } = await createAndReceive(tx, { warehouseId, partnerId: supplier.id, supplierDeliveryNo: 'SEED-URT-TEDARIK', origin: 'manual', note: 'Seed: üretim iş emirleri için hammadde/ambalaj takviyesi (çok seviyeli reçete ihtiyacı; FEFO önceliği açılış lotlarından önce)', lines }, SYSTEM_ACTOR);
   await auditCreate(tx, 'receipts', receipt.id, `Mal kabul ${receipt.docNo} kaydedildi (üretim takviyesi, ${lines.length} satır)`);
   await auditReceiptLots(tx, receipt.docNo, createdLotIds);
   summary.add('receipts (üretim hammadde takviyesi)', 1);
   log('production', `hammadde/ambalaj takviyesi alındı: ${receipt.docNo} (${lines.length} satır)`);
+}
+
+/**
+ * Çok seviyeli reçete: mamul iş emrinden ÖNCE, aktif reçetesindeki her yarı mamul için kapalı bir yarı mamul
+ * iş emri (gerçek FEFO tüketim → yarı mamul lotu) çalıştırılır. Böylece mamul tüketimi yarı mamul lotundan,
+ * yarı mamul lotu da hammadde mal kabulüne kadar (origin_work_order_id → tüketim → mal kabul) izlenebilir.
+ */
+async function runSemiFinishedPrerequisites(tx: DbOrTx, mamulSku: string, mamulQty: number, day: string, warehouseId: string, summary: SeedSummary): Promise<void> {
+  const mamul = await productBySku(tx, mamulSku);
+  const bom = await activeBomOf(tx, mamul.id);
+  if (!bom) return;
+  const lines = await tx.select({ line: bomLines, p: products }).from(bomLines).innerJoin(products, eq(products.id, bomLines.productId)).where(eq(bomLines.bomId, bom.id));
+  for (const { line, p } of lines) {
+    if (p.type !== 'semi_finished') continue;
+    const need = D(line.qty).mul(mamulQty).div(D(bom.outputQty));
+    const plannedQty = need.mul(1.1).ceil();
+    const producedQty = need.mul(1.04).ceil();
+    const ymDay = addDaysStr(day, -1);
+    const startedAt = at(ymDay, '07:30');
+    const { workOrder } = await createWorkOrder(tx, { productId: p.id, plannedQty, warehouseId, plannedStart: startedAt, origin: 'manual', note: `Seed: ${mamul.name} için yarı mamul baz partisi` }, SYSTEM_ACTOR);
+    await releaseWorkOrder(tx, workOrder.id, SYSTEM_ACTOR);
+    await startWorkOrder(tx, workOrder.id, SYSTEM_ACTOR, { asOf: startedAt });
+    await autoConsumeRemaining(tx, workOrder.id, SYSTEM_ACTOR, { asOf: addHours(startedAt, 1) });
+    const finishedAt = addHours(startedAt, 4);
+    await finishWorkOrder(tx, { workOrderId: workOrder.id, producedQty, asOf: finishedAt }, SYSTEM_ACTOR);
+    await closeWorkOrder(tx, workOrder.id, SYSTEM_ACTOR, { asOf: addHours(finishedAt, 1) });
+    summary.add(`work_orders (yarı mamul, kapalı: ${p.name})`, 1);
+  }
 }
 
 type ClosedDef = { sku: string; plannedQty: number; producedQty: number; day: string; withScrap: boolean };
@@ -146,6 +187,7 @@ const FINISHED_RUNS: Array<{ sku: string; plannedQty: number; producedQty: numbe
 
 async function runClosedWorkOrder(tx: DbOrTx, def: ClosedDef, warehouseId: string, summary: SeedSummary): Promise<void> {
   const product = await productBySku(tx, def.sku);
+  await runSemiFinishedPrerequisites(tx, def.sku, def.plannedQty, def.day, warehouseId, summary);
   const startedAt = at(def.day, '08:00');
 
   const { workOrder } = await createWorkOrder(tx, { productId: product.id, plannedQty: D(def.plannedQty), warehouseId, plannedStart: startedAt, origin: 'manual', note: 'Seed: geçmiş üretim koşusu' }, SYSTEM_ACTOR);
@@ -165,6 +207,7 @@ async function runClosedWorkOrder(tx: DbOrTx, def: ClosedDef, warehouseId: strin
 
 async function runFinishedWorkOrder(tx: DbOrTx, def: { sku: string; plannedQty: number; producedQty: number; day: string }, warehouseId: string, summary: SeedSummary): Promise<void> {
   const product = await productBySku(tx, def.sku);
+  await runSemiFinishedPrerequisites(tx, def.sku, def.plannedQty, def.day, warehouseId, summary);
   const startedAt = at(def.day, '08:30');
 
   const { workOrder } = await createWorkOrder(tx, { productId: product.id, plannedQty: D(def.plannedQty), warehouseId, plannedStart: startedAt, origin: 'manual', note: 'Seed: bitmiş, kapatılmayı bekliyor' }, SYSTEM_ACTOR);
@@ -178,6 +221,7 @@ async function runFinishedWorkOrder(tx: DbOrTx, def: { sku: string; plannedQty: 
 /** 1 devam eden iş emri: kısmi tüketim + duruş (mola) olayı, in_progress durumunda kalır */
 async function runInProgressWorkOrder(tx: DbOrTx, warehouseId: string, summary: SeedSummary): Promise<void> {
   const product = await productBySku(tx, '130010201'); // Strawberry Protein Mixi — HAT2
+  await runSemiFinishedPrerequisites(tx, '130010201', 70, TODAY, warehouseId, summary);
   // `at(TODAY, '07:30')` UTC 07:30 üretir — İstanbul'da 10:30. Seed günün herhangi bir saatinde
   // çalıştırılabildiğinden (ör. 10:30 İstanbul'dan önce), bu sabit saat gerçek "şimdi"den ileride
   // kalabiliyordu: operatör terminalinde SÜRE karosu çalışan bir kronometre yerine donmuş 00:00:00
@@ -226,7 +270,12 @@ export async function seedProduction(tx: DbOrTx, summary: SeedSummary): Promise<
   log('production', 'iş emirleri (kapalı/bitmiş/devam eden/planlanmış)...');
   const tire = await tireWarehouse(tx);
 
-  await seedConsumptionSupplement(tx, tire.id, summary);
+  // Toplam hammadde/ambalaj ihtiyacı: tüketim yapan (planlanmış hariç) iş emirlerinin aktif reçeteleri yarı mamullere
+  // kadar açılır. Yarı mamul partileri mamul ihtiyacından %10 fazla planlandığı için takviye payı bunu da kapsar.
+  const requirements = new Map<string, ReturnType<typeof D>>();
+  for (const def of [...CLOSED_RUNS, ...FINISHED_RUNS]) await collectLeafRequirements(tx, (await productBySku(tx, def.sku)).id, D(def.plannedQty).mul(1.1), requirements);
+  await collectLeafRequirements(tx, (await productBySku(tx, '130010201')).id, D(70).mul(1.1), requirements); // devam eden: Strawberry Protein Mixi
+  await seedConsumptionSupplement(tx, tire.id, requirements, summary);
 
   for (const def of CLOSED_RUNS) await runClosedWorkOrder(tx, def, tire.id, summary);
   for (const def of FINISHED_RUNS) await runFinishedWorkOrder(tx, def, tire.id, summary);

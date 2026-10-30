@@ -3,6 +3,7 @@ import { log, parseOnlyArg, SeedSummary } from './_helpers.js';
 import { seedCore } from './core.js';
 import { seedUoms } from './uoms.js';
 import { seedMasterdata } from './masterdata.js';
+import { seedUretimBom } from './uretim-bom.js';
 import { seedAccounting } from './accounting.js';
 import { seedFinance } from './finance.js';
 import { seedStock } from './stock.js';
@@ -35,6 +36,9 @@ const SEED_STEPS: Array<{ name: string; run: (tx: DbOrTx, summary: SeedSummary) 
   { name: 'core', run: seedCore },
   { name: 'uoms', run: seedUoms },
   { name: 'masterdata', run: seedMasterdata },
+  // `uretim-bom`: gerçek Üretim Excel'inden çok seviyeli reçeteler (mamul → yarı mamul baz + ambalaj → hammadde);
+  // masterdata'dan SONRA (ürünler/hatlar/tedarikçiler hazır), production'dan ÖNCE (iş emirleri aktif BOM'u kullanır).
+  { name: 'uretim-bom', run: seedUretimBom },
   { name: 'accounting', run: seedAccounting },
   { name: 'finance', run: seedFinance },
   { name: 'purchasing', run: seedPurchasing },

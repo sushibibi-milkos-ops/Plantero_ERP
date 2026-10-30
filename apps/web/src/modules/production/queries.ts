@@ -6,7 +6,7 @@ import { businessDate, addDays } from '@plantero/core/dates';
 
 const {
   workOrders, workOrderMaterials, workOrderConsumptions, workOrderOutputs, workOrderScraps, workOrderEvents,
-  products, uoms, boms, productionLines, warehouses, locations, stockLots, users, roles, userRoles, downtimes,
+  products, uoms, boms, bomLines, productionLines, warehouses, locations, stockLots, users, roles, userRoles, downtimes,
 } = schema;
 
 /* ==================================================================== */
@@ -486,4 +486,100 @@ export async function listLineShiftSummaries(lineIds: string[]): Promise<LineShi
       };
     }),
   );
+}
+
+/* ==================================================================== */
+/* /uretim/hatlar — hat bazlı üretilebilir ürünler                      */
+/* ==================================================================== */
+
+export type LineProducibleRow = {
+  productId: string;
+  sku: string;
+  name: string;
+  /** mamul (satılabilir) ya da yarı mamul (baz) */
+  kind: 'finished' | 'semi_finished';
+  bomId: string;
+  bomCode: string;
+  bomVersion: number;
+  lineId: string;
+  /** Ürün ağacı derinliği: 1 = yalnızca hammadde/ambalaj; 2+ = alt reçetesi (yarı mamul) olan çok seviyeli ağaç */
+  depth: number;
+  /** Doğrudan bileşen sayısı (yan ürünler hariç) */
+  componentCount: number;
+  /** Doğrudan bileşenlerden kaç tanesi alt reçeteli (yarı mamul veya başka mamul) */
+  subAssemblyCount: number;
+  outputQty: string;
+  uomCode: string;
+  cycleMinutes: number | null;
+};
+
+/**
+ * Tüm hatlar için üretilebilir ürünler: aktif reçetesinin varsayılan hattı (`boms.defaultLineId`) o hat olan
+ * mamuller + yarı mamuller. Ürün ağacı derinliği aktif reçeteler zincirinden hesaplanır (döngü korumalı).
+ * Hat kartları sayfası tüm hatları tek sorguda ister; tek hat için `listLineProducibleProducts` kullanılır.
+ */
+export async function listProducibleByLine(): Promise<Map<string, LineProducibleRow[]>> {
+  const activeBoms = await db
+    .select({ b: boms, p: products, uomCode: uoms.code })
+    .from(boms)
+    .innerJoin(products, eq(products.id, boms.productId))
+    .leftJoin(uoms, eq(uoms.id, boms.outputUomId))
+    .where(and(eq(boms.status, 'active'), eq(products.status, 'active'), isNotNull(boms.defaultLineId)));
+
+  const bomByProduct = new Map<string, (typeof activeBoms)[number]>();
+  for (const r of activeBoms) {
+    const cur = bomByProduct.get(r.p.id);
+    if (!cur || r.b.version > cur.b.version) bomByProduct.set(r.p.id, r); // activateBom tek aktif versiyon garantiler; yine de en yüksek
+  }
+  const bomIds = Array.from(bomByProduct.values()).map((r) => r.b.id);
+  const lineRows = bomIds.length ? await db.select({ bomId: bomLines.bomId, productId: bomLines.productId, isByproduct: bomLines.isByproduct }).from(bomLines).where(inArray(bomLines.bomId, bomIds)) : [];
+  const childrenByBom = new Map<string, string[]>();
+  for (const l of lineRows) {
+    if (l.isByproduct) continue;
+    const list = childrenByBom.get(l.bomId) ?? [];
+    list.push(l.productId);
+    childrenByBom.set(l.bomId, list);
+  }
+
+  const depthMemo = new Map<string, number>();
+  const depthOf = (productId: string, trail: Set<string>): number => {
+    const memo = depthMemo.get(productId);
+    if (memo !== undefined) return memo;
+    const entry = bomByProduct.get(productId);
+    if (!entry || trail.has(productId)) return 0; // alt reçetesi yok → yaprak (derinliğe katkısı yok)
+    trail.add(productId);
+    let deepest = 0;
+    for (const child of childrenByBom.get(entry.b.id) ?? []) deepest = Math.max(deepest, depthOf(child, trail));
+    trail.delete(productId);
+    const depth = 1 + deepest;
+    depthMemo.set(productId, depth);
+    return depth;
+  };
+
+  const result = new Map<string, LineProducibleRow[]>();
+  for (const [productId, r] of bomByProduct) {
+    if (r.p.type !== 'finished' && r.p.type !== 'semi_finished') continue;
+    const lineId = r.b.defaultLineId!;
+    const children = childrenByBom.get(r.b.id) ?? [];
+    const row: LineProducibleRow = {
+      productId, sku: r.p.sku, name: r.p.name, kind: r.p.type, bomId: r.b.id, bomCode: r.b.code, bomVersion: r.b.version, lineId,
+      depth: depthOf(productId, new Set()),
+      componentCount: children.length,
+      subAssemblyCount: children.filter((c) => bomByProduct.has(c)).length,
+      outputQty: r.b.outputQty, uomCode: r.uomCode ?? '', cycleMinutes: r.b.cycleMinutes,
+    };
+    const list = result.get(lineId) ?? [];
+    list.push(row);
+    result.set(lineId, list);
+  }
+  // mamuller önce, sonra yarı mamuller; ad sırası (TR)
+  for (const list of result.values()) {
+    list.sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'finished' ? -1 : 1) || a.name.localeCompare(b.name, 'tr'));
+  }
+  return result;
+}
+
+/** Bir hatta tanımlı (aktif reçetesinin varsayılan hattı o hat olan) mamul + yarı mamuller, ürün ağacı derinliğiyle. */
+export async function listLineProducibleProducts(lineId: string): Promise<LineProducibleRow[]> {
+  return (await listProducibleByLine()).get(lineId) ?? [];
 }
