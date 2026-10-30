@@ -1,5 +1,14 @@
 import { expect, test, type Page } from '@playwright/test';
+import { execSync } from 'node:child_process';
 import { loginAs } from './fixtures/auth';
+
+const DATABASE_URL = process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/plantero';
+
+function psqlOne(query: string): string | null {
+  const escaped = query.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\$/g, '\\$');
+  const out = execSync(`psql "${DATABASE_URL}" -t -A -c "${escaped}"`, { encoding: 'utf-8' }).trim();
+  return out || null;
+}
 
 /**
  * Ortak `NumberInput` odak yarışı regresyonu (tur 14 P0 kök nedeni):
@@ -60,7 +69,18 @@ test('/finans/tahsilat/yeni — Tutar ve satır tahsisi: odak + "1.020,00" yazma
   await loginAs(page, 'admin');
   await page.goto('/finans/tahsilat/yeni');
   await expect(page).toHaveURL(/tahsilat\/yeni/);
-  await comboboxSelect(page, 'Cari seçin…', 'Migros', /Migros/);
+  // Açık (tahsil edilmemiş) satış faturası olan bir cari — SABİT bir müşteri adına bağlı DEĞİL: seed'deki
+  // banka mutabakatı (SEED-BT-*) faturaları vade tarihine göre otomatik kapatır (örn. Migros'un 60 gün
+  // vadeli faturası bugün vadesini geçtiyse tahsil edilmiş olur) — bu yüzden "hangi cari açık" tarihe
+  // bağlı; test satır tahsisi checkbox'ını her zaman gerçekten açık faturası olan bir cariyle sınar.
+  const openPartner = psqlOne(`
+    select p.name from invoices i join partners p on p.id = i.partner_id
+    where i.kind = 'sales' and i.status in ('posted', 'partially_paid') and i.residual > 0 and i.currency = 'TRY'
+    order by i.residual desc, p.name limit 1
+  `);
+  expect(openPartner, 'Seed: açık satış faturası olan en az bir cari bulunmalı').toBeTruthy();
+  const escapeRe = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  await comboboxSelect(page, 'Cari seçin…', openPartner!.split(' ')[0]!, new RegExp(escapeRe(openPartner!)));
 
   // Ana tutar (FormMoney)
   const amount = page.getByLabel(/^Tutar/).first();
@@ -71,7 +91,7 @@ test('/finans/tahsilat/yeni — Tutar ve satır tahsisi: odak + "1.020,00" yazma
   await reference.click();
   await expect(amount).toHaveValue('1.020,00');
 
-  // Satır tahsisi: checkbox → kalan (3799.9998, ekranda 3.800,00) otomatik dolar; odak + yazma
+  // Satır tahsisi: checkbox → faturanın kalanı (4 ondalıklı, ekranda 2 ondalık) otomatik dolar; odak + yazma
   const rowCheckbox = page.getByRole('checkbox', { name: /tahsis et$/ }).first();
   await rowCheckbox.click();
   const alloc = page.getByLabel(/için tahsis edilecek para miktarı/).first();

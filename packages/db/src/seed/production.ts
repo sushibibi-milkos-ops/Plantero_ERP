@@ -58,6 +58,8 @@ const addDaysStr = (base: string, days: number): string => {
   return d.toISOString().slice(0, 10);
 };
 const TODAY = new Date().toISOString().slice(0, 10);
+/** İki ISO gün (YYYY-MM-DD) arasında erken olanı */
+const earlierDay = (a: string, b: string): string => (a < b ? a : b);
 
 /**
  * İş emirlerinin tükettiği hammadde/ambalaj — çok seviyeli aktif reçetelerden (mamul → yarı mamul → hammadde)
@@ -154,8 +156,11 @@ async function runSemiFinishedPrerequisites(tx: DbOrTx, mamulSku: string, mamulQ
   for (const { line, p } of lines) {
     if (p.type !== 'semi_finished') continue;
     const need = D(line.qty).mul(mamulQty).div(D(bom.outputQty));
-    const plannedQty = need.mul(1.1).ceil();
-    const producedQty = need.mul(1.04).ceil();
+    // Yarı mamul partisi mamulün ihtiyacının üstünde üretilir (%25 emniyet payı): yarı mamul depoda ortak ara
+    // stok olarak kalır; sonradan açılan yeni mamul iş emirleri (ör. e2e zinciri: Oat Coffee Creamer × 20 =
+    // 200 yarı mamul) kendi yarı mamul partisini beklemeden mevcut lottan tüketebilir.
+    const plannedQty = need.mul(1.3).ceil();
+    const producedQty = need.mul(1.25).ceil();
     const ymDay = addDaysStr(day, -1);
     const startedAt = at(ymDay, '07:30');
     const { workOrder } = await createWorkOrder(tx, { productId: p.id, plannedQty, warehouseId, plannedStart: startedAt, origin: 'manual', note: `Seed: ${mamul.name} için yarı mamul baz partisi` }, SYSTEM_ACTOR);
@@ -176,7 +181,13 @@ const CLOSED_RUNS: ClosedDef[] = [
   { sku: '110010001', plannedQty: 100, producedQty: 98, day: addDaysStr(TODAY, -28), withScrap: false }, // BADEM BAZI — HAT1
   { sku: '140040001', plannedQty: 60, producedQty: 57, day: addDaysStr(TODAY, -21), withScrap: true }, // %100 Oat Spredable — HAT1
   { sku: '130010001', plannedQty: 50, producedQty: 47, day: addDaysStr(TODAY, -14), withScrap: true }, // Plain Protein Mixi — HAT2
-  { sku: '150040001', plannedQty: 200, producedQty: 196, day: addDaysStr(TODAY, -7), withScrap: false }, // Oat Coffee Creamer — HAT3
+  // Oat Coffee Creamer — HAT3. Gün, saatten bağımsız olarak AÇILIŞ lotlarından (SKT 2027-08-15) ÖNCE sona eren
+  // bir SKT üretsin diye en geç 2026-08-03 günüyle sınırlanır (lot SKT'si = üretim günü + 365): FEFO sevkiyatları
+  // (sales seed: Migros / Trendyol / Hepsiburada siparişleri) bu üretim lotundan çıkar, lot KISMEN sevk
+  // edilmiş ve eldeki stoğu kalmış olur (izlenebilirlik: iş emri → yarı mamul lotu → hammadde ← → sevkiyat → müşteri).
+  // Bugüne göre göreli gün (-7) saat ilerledikçe SKT'yi açılış lotlarının ardına itiyor, hiçbir üretim lotu hiç
+  // sevk edilmiyordu.
+  { sku: '150040001', plannedQty: 200, producedQty: 196, day: earlierDay(addDaysStr(TODAY, -7), '2026-08-03'), withScrap: false },
 ];
 
 /** 2 bitmiş ama kapatılmamış iş emri */

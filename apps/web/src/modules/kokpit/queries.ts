@@ -5,7 +5,7 @@ import { db, schema } from '@plantero/db';
 import { D, toDb } from '@plantero/core';
 import { businessDate } from '@plantero/core/dates';
 import {
-  getGmDashboard, getWarehouseCards, getProductionChiefCards, getFinanceCards, getSalesCards,
+  getGmDashboard, getCriticalStockSummary, getWarehouseCards, getProductionChiefCards, getFinanceCards, getSalesCards,
   getQualityCards, getMaintenanceCards,
   type GmDashboard, type WarehouseCards, type ProductionChiefCards, type FinanceCards, type SalesCards,
   type QualityCards, type MaintenanceCards,
@@ -80,7 +80,16 @@ const cachedDashboardByRole: Record<CockpitDashboard['role'], () => Promise<Cock
 
 export async function getCockpitDashboard(roles: string[]): Promise<CockpitDashboard> {
   const role = resolveDashboardRole(roles);
-  return cachedDashboardByRole[role]();
+  const cached = await cachedDashboardByRole[role]();
+  // Kritik stok kalemi sayısı önbellekten OKUNMAZ: `unstable_cache` süresi dolunca bayat değeri
+  // döndürüp arka planda yeniler (stale-while-revalidate) — "Motoru çalıştır" / worker kritik stok
+  // motoru `reorder_rules.last_days_of_cover` değerini güncelledikten sonra ilk açılışta eski sayı
+  // (ör. 0) görünüyor, DB'deki gerçek kritik kalem sayısı (ör. 1) ise ekrana yansımıyordu. Sorgu tek
+  // tablo + iki join'dir (ucuz), gerçek durumu göstermek önbellek kazancından önemlidir.
+  if (cached.role === 'gm') {
+    return { role: 'gm', data: { ...cached.data, criticalStock: await getCriticalStockSummary(db) } };
+  }
+  return cached;
 }
 
 export type CockpitTodayItem = {

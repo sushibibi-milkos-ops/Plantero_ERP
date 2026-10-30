@@ -13,7 +13,14 @@ import { loginAs } from './fixtures/auth';
  *
  * Ürün seçimi: HAT1'de seed'in kendi "devam eden" iş emri (BADEM BAZI) zaten bulunuyor — aynı
  * hat+ürün ile çakışmamak için bu akış HAT3'ün tek varsayılan ürünü olan "Oat Coffee Creamer"
- * (150040001, ana hammaddesi Yulaf 301060000) üzerinden yürütülür.
+ * (150040001) üzerinden yürütülür.
+ *
+ * Reçete çok seviyelidir (seed/uretim-bom.ts, gerçek Üretim Excel'i): Oat Coffee Creamer = 10 × yarı mamul
+ * "Oat Creamer Toz Karışımı 10g" (250040000) + 10 × ambalaj "evepack"; yarı mamulün kendi reçetesi hammaddeleri
+ * (OAT POWDER, Inulin, ...) tüketir. İş emri doğrudan yarı mamul LOTUNU tükettiğinden operatör adımları
+ * (FEFO dışı onay, karantina engeli) ve geriye izleme yarı mamul lotu üzerinden sınanır; yarı mamul lotları bu
+ * akışta ayrı mal kabullerle (Adım 1c/1d) alınır, Yulaf mal kabulü (Adım 1/1b) mal kabul + muhasebe fişi
+ * doğrulamasıdır.
  */
 
 const DATABASE_URL = process.env.DATABASE_URL ?? 'postgres://postgres:postgres@localhost:5432/plantero';
@@ -106,6 +113,9 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
   test.setTimeout(120_000);
 
   const ctx: {
+    /** Yulaf mal kabulü (Adım 1/1b) */
+    yulafReceiptId?: string; yulafLotNo?: string;
+    /** Yarı mamul bileşen mal kabulü (Adım 1c/1d): serbest lot + karantina lotu; iş emri bu lotları tüketir */
     receiptId?: string; rawLotNo?: string; quarantineLotNo?: string;
     woId?: string; woDocNo?: string; producedLotId?: string; producedLotNo?: string;
     orderId?: string; orderDocNo?: string; deliveryId?: string; deliveryDocNo?: string;
@@ -188,17 +198,16 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
 
     await page.getByRole('button', { name: 'Kabul et' }).click();
     await page.waitForURL(/\/depo\/mal-kabul\/[0-9a-f-]{36}$/);
-    ctx.receiptId = page.url().split('/').pop()!;
-
     // Ekranda: lot rozeti + lokasyon (bkz. visibleText — ReceiptLinesTable bir DataTable, satır
     // DOM'da masaüstü+mobil olmak üzere iki kez durur)
     await expect(visibleText(page, supplierLotNo)).toBeVisible();
     await expect(visibleText(page, 'TIRE/HAM/R01/A')).toBeVisible();
 
-    ctx.rawLotNo = supplierLotNo;
+    ctx.yulafLotNo = supplierLotNo;
+    ctx.yulafReceiptId = page.url().split('/').pop()!;
   });
 
-  test('Adım 1b — ikinci mal kabul: aynı üründen küçük bir parti "Karantina" kararıyla alınır (operatör engel testi için)', async () => {
+  test('Adım 1b — ikinci mal kabul: aynı üründen küçük bir parti "Karantina" kararıyla alınır', async () => {
     const quarantineLotNo = `QA-Q-${RUN}`;
 
     await page.goto('/depo/mal-kabul/yeni');
@@ -219,6 +228,52 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
 
     const lotStatus = psqlOne(`select status from stock_lots where lot_no = '${quarantineLotNo}'`);
     expect(lotStatus).toBe('quarantine');
+  });
+
+  test('Adım 1c — yarı mamul bileşen partisi: "Oat Creamer Toz Karışımı 10g" 250 ADET, serbest, SKT +200 gün → Kabul et (iş emrinin tüketeceği lot)', async () => {
+    const supplierLotNo = `QA-YM-${RUN}`;
+
+    await page.goto('/depo/mal-kabul/yeni');
+    await expect(page.getByRole('heading', { name: 'Yeni Mal Kabul' })).toBeVisible();
+
+    await comboboxSelect(page, 'Tedarikçi seçin', 'Anadolu', /Anadolu Kuruyemiş/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '250040000', /Oat Creamer Toz Karışımı 10g/);
+
+    await page.getByLabel(/^Miktar/).fill('250');
+    await page.getByLabel('Birim maliyet').fill('4');
+    await page.getByLabel('Tedarikçi lot no').fill(supplierLotNo);
+    await fillDateField(page, 'SKT', trDate(200));
+    await comboboxSelect(page, 'Lokasyon', 'TIRE/MAMUL/R01', 'TIRE/MAMUL/R01');
+
+    await page.getByRole('button', { name: 'Kabul et' }).click();
+    await page.waitForURL(/\/depo\/mal-kabul\/[0-9a-f-]{36}$/);
+    ctx.receiptId = page.url().split('/').pop()!;
+    await expect(visibleText(page, supplierLotNo)).toBeVisible();
+
+    const lot = psqlRows(`select status, expiry_date from stock_lots where lot_no = '${supplierLotNo}'`)[0]!;
+    expect(lot[0]).toBe('released');
+    ctx.rawLotNo = supplierLotNo;
+  });
+
+  test('Adım 1d — yarı mamulden küçük bir parti "Karantina" kararıyla alınır (operatör engel testi için)', async () => {
+    const quarantineLotNo = `QA-YMQ-${RUN}`;
+
+    await page.goto('/depo/mal-kabul/yeni');
+    await comboboxSelect(page, 'Tedarikçi seçin', 'Anadolu', /Anadolu Kuruyemiş/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '250040000', /Oat Creamer Toz Karışımı 10g/);
+    await page.getByLabel(/^Miktar/).fill('5');
+    await page.getByLabel('Birim maliyet').fill('4');
+    await page.getByLabel('Tedarikçi lot no').fill(quarantineLotNo);
+
+    await page.getByLabel('Karar').click();
+    await page.getByRole('option', { name: 'Karantina', exact: true }).click();
+    await comboboxSelect(page, 'Lokasyon', 'TIRE/KARANTINA', 'TIRE/KARANTINA');
+
+    await page.getByRole('button', { name: 'Kabul et' }).click();
+    await page.waitForURL(/\/depo\/mal-kabul\/[0-9a-f-]{36}$/);
+
+    const lotStatus = psqlOne(`select status from stock_lots where lot_no = '${quarantineLotNo}'`);
+    expect(lotStatus).toBe('quarantine');
     ctx.quarantineLotNo = quarantineLotNo;
   });
 
@@ -227,7 +282,7 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
       select sm.id, sm.kind, sm.qty, sm.value, sm.journal_entry_id, l.status, l.expiry_date
       from stock_moves sm
       join stock_lots l on l.id = sm.lot_id
-      where l.lot_no = '${ctx.rawLotNo}' and sm.ref_type = 'receipt'
+      where l.lot_no = '${ctx.yulafLotNo}' and sm.ref_type = 'receipt'
     `);
     expect(rows.length, 'Yulaf lotu için tam olarak bir mal kabul hareketi olmalı').toBe(1);
     const [, kind, qty, value, journalEntryId, status] = rows[0]!;
@@ -262,7 +317,7 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
     await page.getByPlaceholder('Ürün, SKU ara…').fill('301060000');
     await page.getByText('Yulaf', { exact: true }).first().click();
     // /depo/stok satır kırılımı da bir DataTable (stock-table.tsx) — bkz. visibleText.
-    await expect(visibleText(page, ctx.rawLotNo!)).toBeVisible();
+    await expect(visibleText(page, ctx.yulafLotNo!)).toBeVisible();
     await page.keyboard.press('Escape');
   });
 
@@ -275,8 +330,10 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
     // Hat, reçetenin varsayılan hattı (HAT3) otomatik dolar.
     await expect(page.getByLabel('Hat')).toHaveText(/HAT3/);
 
-    // Malzeme önizlemesi: Yulaf satırı eksik değil (adım 1'de 100 KG kabul edildi)
-    await expect(page.getByRole('cell', { name: 'Yulaf' })).toBeVisible({ timeout: 10_000 });
+    // Malzeme önizlemesi: reçetenin bileşenleri — yarı mamul baz + ambalaj — eksik değil (yarı mamul stoğu
+    // seed'deki 500 ADET + adım 1c'de kabul edilen 250 ADET; 20 × 10 = 200 ADET gerekir, evepack seed'de bol)
+    await expect(page.getByRole('cell', { name: 'Oat Creamer Toz Karışımı 10g' })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole('cell', { name: 'evepack' })).toBeVisible();
     const shortageWarning = page.getByText('Bazı malzemelerde eldeki serbest stok yetersiz');
     await expect(shortageWarning).toHaveCount(0);
 
@@ -318,8 +375,8 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
     await op.getByRole('button', { name: 'Başlat' }).click();
     await expect(op.getByText('Devam ediyor').or(op.getByText('Süre'))).toBeVisible();
 
-    // Okut: adım 1'in Yulaf lotu FEFO sırasında değil (mevcut lotların SKT'si daha erken) →
-    // "FEFO sırası dışı lot" uyarısı beklenir; "Yine de kullan" ile onaylanır.
+    // Okut: adım 1c'nin yarı mamul lotu FEFO sırasında değil (seed'deki yarı mamul lotunun SKT'si daha erken) →
+    // "FEFO sırası dışı lot" uyarısı beklenir; "Yine de kullan" ile onaylanır (yarı mamul ihtiyacının tamamı bu lottan tüketilir).
     const scanInput = op.getByPlaceholder(/Lot \/ barkod okutun/);
     await scanInput.fill(ctx.rawLotNo!);
     await scanInput.press('Enter');
@@ -328,7 +385,7 @@ test.describe('Akış: Mal kabul → üretim → satış → fatura → izlenebi
     await expect(op.getByRole('dialog')).toBeHidden();
     await expect(op.getByText(ctx.rawLotNo!)).toBeVisible();
 
-    // Adım 1b'de karantinaya alınan Yulaf lotu okutulunca ENGEL beklenir (LOT_NOT_RELEASED)
+    // Adım 1d'de karantinaya alınan yarı mamul lotu okutulunca ENGEL beklenir (LOT_NOT_RELEASED)
     await scanInput.fill(ctx.quarantineLotNo!);
     await scanInput.press('Enter');
     await expect(op.getByText(new RegExp(`${ctx.quarantineLotNo}.*serbest değil`))).toBeVisible({ timeout: 10_000 });
