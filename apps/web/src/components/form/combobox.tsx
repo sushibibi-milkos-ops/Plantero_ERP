@@ -92,8 +92,9 @@ export function Combobox({
           className={cn(
             // h-11 md:h-9: 390px'te 36px dokunma hedefi WCAG/iOS 44px eşiğinin altındaydı (Tur 2
             // bulgusu) — fields.tsx'teki Input/SelectTrigger ile aynı kalıp.
-            'flex h-11 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 text-left text-[13px] shadow-xs outline-none md:h-9',
-            'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30',
+            // iPadOS dili: Input/SelectTrigger ile aynı dolgulu kapsül (bg-fill, 10px köşe, odakta beyaz + tint halka).
+            'flex h-11 w-full items-center justify-between gap-2 rounded-[10px] border border-transparent bg-fill px-3.5 text-left text-base outline-none transition-[color,background-color,box-shadow] md:h-10 md:text-sm',
+            'focus-visible:border-ring/70 focus-visible:bg-card focus-visible:ring-[3px] focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50',
             'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
             !selected && 'text-muted-foreground',
             className,
