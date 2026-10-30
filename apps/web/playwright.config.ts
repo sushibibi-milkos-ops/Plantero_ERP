@@ -17,8 +17,12 @@ function findChromium(): string | undefined {
     .sort()
     .at(-1);
   if (!dir) return undefined;
-  const bin = join(BROWSERS_DIR, dir, 'chrome-linux', 'chrome');
-  return existsSync(bin) ? bin : undefined;
+  // Playwright 1.5x+ Linux paketi `chrome-linux64/` altında; eski sürümler `chrome-linux/`.
+  for (const sub of ['chrome-linux64', 'chrome-linux']) {
+    const bin = join(BROWSERS_DIR, dir, sub, 'chrome');
+    if (existsSync(bin)) return bin;
+  }
+  return undefined;
 }
 
 const executablePath = findChromium();
