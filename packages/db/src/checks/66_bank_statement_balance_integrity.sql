@@ -36,6 +36,10 @@ FROM bank_statement_imports bsi
 LEFT JOIN (SELECT import_id, SUM(amount) AS total FROM bank_transactions GROUP BY import_id) tx
   ON tx.import_id = bsi.id
 WHERE bsi.opening_balance IS NOT NULL AND bsi.closing_balance IS NOT NULL
+  -- Tamamı mükerrer olan yeniden içe aktarım (imported_count = 0, duplicate_count > 0) hiç satır
+  -- yazmaz; açılış/kapanış bakiyesi ekstrenin kendisine aittir, bu partinin satır toplamına değil —
+  -- aritmetik denetim yalnızca en az bir satır yazan partilere uygulanır (e2e Adım 3b mükerrer testi).
+  AND NOT (bsi.imported_count = 0 AND bsi.duplicate_count > 0)
   AND abs((bsi.opening_balance + COALESCE(tx.total, 0)) - bsi.closing_balance) > 0
 
 UNION ALL
