@@ -2,19 +2,26 @@ import { and, eq, ne, sql } from 'drizzle-orm';
 import Decimal from 'decimal.js';
 import type { DbOrTx } from '../client.js';
 import { products, productCategories, uoms, partners, supplierProducts, productionLines, boms } from '../schema/index.js';
-import { SYSTEM_ACTOR, writeAudit, createBomVersion, activateBom, rollupBomCost } from '@plantero/core';
+import { SYSTEM_ACTOR, writeAudit, createBomVersion, activateBom, rollupBomCost, updateProduct } from '@plantero/core';
 import { parseUretimBom } from '../import/uretim-bom.js';
 import { buildBomPlan, type PlanBom, type PlanItem, type UretimBomPlan } from '../import/uretim-bom-plan.js';
+import { CONCENTRATE_RENAMES, CONCENTRATE_RENAME_REASON } from '../import/konsantre-adlari.js';
 import { log, readImportFile, type SeedSummary } from './_helpers.js';
 
 /**
  * Üretim Ana Excel'inden (data/import/Plantero_Uretim_Ana_Excel.xlsx) çok seviyeli ürün ağacı aktarımı.
  *
+ *  0. Ürün hiyerarşisi (kullanıcı kararı, A16): satılabilir konsantre mamullerin adı "X BAZI" → "X Sütü Konsantresi"
+ *     (hammadde BADEM PUREE → yarı mamul "Badem Bazı 250ml" → mamul "Badem Sütü Konsantresi"); SKU/barkod değişmez,
+ *     `updateProduct` + audit ile tek seferlik yeniden adlandırma. Reçete adları yeni adı taşısın diye plandan ÖNCE.
  *  1. Excel ayrıştırılır (import/uretim-bom.ts), mevcut ana veriyle eşlenip plana çevrilir (import/uretim-bom-plan.ts)
  *  2. Excel'de karşılığı olmayan kalemler yeni SKU olarak açılır: hammadde T=3, ambalaj T=4, yarı mamul T=2
  *     (ürün adı Excel'deki gibi; tedarikçi partner yoksa tedarikçi olarak açılır; fiyat TL → standardCost)
  *  3. Her mamul / yarı mamul için core BOM servisleriyle (createBomVersion + activateBom) aktif reçete,
  *     `boms.defaultLineId` ZORUNLU (docs/PRODUCTION-LINES.md hat ataması)
+ *
+ * YALNIZCA görünür Excel sayfaları okunur (gizli sayfalar atlanır — kullanıcı kararı); görünür sayfada reçetesi olmayan
+ * mamuller ("Yulaf Sütü Konsantresi", "BARISTA BASE - YULAF BAZI") aktif BOM'suz kalır.
  *
  * Masterdata adımından SONRA, accounting/stock/production adımlarından ÖNCE çalışır. Idempotent: bir ürünün
  * zaten `[uretim-bom]` işaretli aktif reçetesi varsa dokunulmaz. Eski (uydurma) seed reçeteleri varsa yeni
@@ -120,6 +127,32 @@ async function createSuppliers(tx: DbOrTx, items: PlanItem[]): Promise<{ partner
   return { partners: newPartners, links };
 }
 
+/** Konsantre mamul adlarını kullanıcı kararıyla düzeltir (A16). Idempotent: ad zaten yeniyse dokunmaz. */
+async function renameConcentrates(tx: DbOrTx): Promise<number> {
+  let renamed = 0;
+  for (const r of CONCENTRATE_RENAMES) {
+    const [p] = await tx.select().from(products).where(eq(products.sku, r.sku)).limit(1);
+    if (!p) {
+      log('uretim-bom', `  ad düzeltmesi atlandı (ürün yok): ${r.sku}`);
+      continue;
+    }
+    if (p.name === r.to) continue;
+    if (p.name !== r.from) {
+      log('uretim-bom', `  ad düzeltmesi atlandı (beklenmeyen ad "${p.name}"): ${r.sku}`);
+      continue;
+    }
+    const note = [p.note, `Ad değişikliği (A16): "${r.from}" → "${r.to}". Kaynak: kullanıcı kararı (konsantre = son ürün, baz = ara ürün).`].filter(Boolean).join(' · ');
+    const updated = await updateProduct(tx, p.id, { name: r.to, note }, { allowIdentityChange: true, reason: CONCENTRATE_RENAME_REASON });
+    await writeAudit(
+      tx,
+      { action: 'update', tableName: 'products', recordId: p.id, summary: `Ürün adı düzeltildi (${r.sku}): "${r.from}" → "${r.to}" — ${CONCENTRATE_RENAME_REASON}`, before: { name: p.name, note: p.note }, after: { name: updated.name, note: updated.note } },
+      SYSTEM_ACTOR,
+    );
+    renamed++;
+  }
+  return renamed;
+}
+
 /** Mevcut SKU'lar için Excel fiyatı (yalnızca standardCost 0 ise). */
 async function applyPriceUpdates(tx: DbOrTx, updates: UretimBomPlan['priceUpdates']): Promise<number> {
   let n = 0;
@@ -215,7 +248,11 @@ export async function loadUretimBomPlan(tx: DbOrTx): Promise<UretimBomPlan> {
 }
 
 export async function seedUretimBom(tx: DbOrTx, summary: SeedSummary): Promise<void> {
-  log('uretim-bom', 'Plantero_Uretim_Ana_Excel.xlsx okunuyor, reçete planı çıkarılıyor...');
+  const renamed = await renameConcentrates(tx);
+  log('uretim-bom', `${renamed} konsantre mamul yeniden adlandırıldı ("X BAZI" → "X Sütü Konsantresi", A16)`);
+  summary.add('products (konsantre mamul ad düzeltmesi)', renamed);
+
+  log('uretim-bom', 'Plantero_Uretim_Ana_Excel.xlsx okunuyor (yalnızca görünür sayfalar), reçete planı çıkarılıyor...');
   const plan = await loadUretimBomPlan(tx);
   for (const n of plan.notes) log('uretim-bom', `  not: ${n}`);
 
@@ -233,6 +270,7 @@ export async function seedUretimBom(tx: DbOrTx, summary: SeedSummary): Promise<v
   const byOrigin = (o: string) => plan.boms.filter((b) => b.origin === o).length;
   log('uretim-bom', `kaynak: ${byOrigin('excel')} Excel, ${byOrigin('derived')} türetilen (çoklu paket/set), ${byOrigin('placeholder')} yer tutucu`);
   for (const p of plan.placeholderProducts) log('uretim-bom', `  yer tutucu reçete (Excel'de yok): ${p.sku} ${p.name}`);
+  for (const p of plan.noRecipeProducts) log('uretim-bom', `  reçete yok (aktif BOM açılmadı): ${p.sku} ${p.name} — ${p.reason}`);
 
   summary.add('products (Üretim Excel: yeni SKU)', itemCount);
   summary.add('partners (Üretim Excel: tedarikçi)', sup.partners);

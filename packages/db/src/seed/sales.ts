@@ -301,13 +301,13 @@ async function fulfillOrder(tx: DbOrTx, orderId: string, bucket: Bucket): Promis
 }
 
 async function seedManualOrders(tx: DbOrTx, summary: SeedSummary): Promise<void> {
-  // Müşteri özel fiyat: Yeşil Sofra (C-000004), BADEM BAZI için toptan fiyatın altında — resolvePrice
+  // Müşteri özel fiyat: Yeşil Sofra (C-000004), Badem Sütü Konsantresi (mamul) için toptan fiyatın altında — resolvePrice
   // önceliğini (müşteri özel > liste) ekranda göstermek için.
   const yesilSofra = await customerByCode(tx, 'C-000004');
-  const bademBazi = await productBySku(tx, '110010001');
+  const bademKonsantre = await productBySku(tx, '110010001');
   await tx
     .insert(customerPrices)
-    .values({ partnerId: yesilSofra.id, productId: bademBazi.id, minQty: '0', price: '210.0000', currency: 'TRY' })
+    .values({ partnerId: yesilSofra.id, productId: bademKonsantre.id, minQty: '0', price: '210.0000', currency: 'TRY' })
     .onConflictDoNothing();
 
   const warehouse = await warehouseByCode(tx, 'TIRE');

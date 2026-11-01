@@ -178,7 +178,7 @@ type ClosedDef = { sku: string; plannedQty: number; producedQty: number; day: st
 
 /** 4 kapalı iş emri — farklı hatlar/ürünler (BOM'un varsayılan hattına göre HAT1/HAT2/HAT3'e dağılır) */
 const CLOSED_RUNS: ClosedDef[] = [
-  { sku: '110010001', plannedQty: 100, producedQty: 98, day: addDaysStr(TODAY, -28), withScrap: false }, // BADEM BAZI — HAT1
+  { sku: '110010001', plannedQty: 100, producedQty: 98, day: addDaysStr(TODAY, -28), withScrap: false }, // Badem Sütü Konsantresi — HAT1 (mamul; yarı mamul Badem Bazı 250ml tüketir)
   { sku: '140040001', plannedQty: 60, producedQty: 57, day: addDaysStr(TODAY, -21), withScrap: true }, // %100 Oat Spredable — HAT1
   { sku: '130010001', plannedQty: 50, producedQty: 47, day: addDaysStr(TODAY, -14), withScrap: true }, // Plain Protein Mixi — HAT2
   // Oat Coffee Creamer — HAT3. Gün, saatten bağımsız olarak AÇILIŞ lotlarından (SKT 2027-08-15) ÖNCE sona eren
@@ -192,7 +192,7 @@ const CLOSED_RUNS: ClosedDef[] = [
 
 /** 2 bitmiş ama kapatılmamış iş emri */
 const FINISHED_RUNS: Array<{ sku: string; plannedQty: number; producedQty: number; day: string }> = [
-  { sku: '110020001', plannedQty: 80, producedQty: 76, day: addDaysStr(TODAY, -3) }, // FINDIK BAZI — HAT1
+  { sku: '110020001', plannedQty: 80, producedQty: 76, day: addDaysStr(TODAY, -3) }, // Fındık Sütü Konsantresi — HAT1
   { sku: '160010001', plannedQty: 40, producedQty: 39, day: TODAY }, // Plantero Guatemala Kahve — HAT2
 ];
 
@@ -264,7 +264,7 @@ async function runInProgressWorkOrder(tx: DbOrTx, warehouseId: string, summary: 
 
 /** 1 planlanmış iş emri: yarın için, henüz serbest bırakılmadı */
 async function runPlannedWorkOrder(tx: DbOrTx, warehouseId: string, summary: SeedSummary): Promise<void> {
-  const product = await productBySku(tx, '110030001'); // KAJU BAZI — HAT1
+  const product = await productBySku(tx, '110030001'); // Kaju Sütü Konsantresi — HAT1
   const plannedStart = at(addDaysStr(TODAY, 1), '08:00');
   const { workOrder } = await createWorkOrder(tx, { productId: product.id, plannedQty: D(90), warehouseId, plannedStart, origin: 'manual', note: 'Seed: yarın planlandı' }, SYSTEM_ACTOR);
   summary.add('work_orders (planlanmış)', 1);

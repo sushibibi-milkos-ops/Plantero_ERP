@@ -284,16 +284,16 @@ type FinishedDef = { sku: string; cost: number; qty: number; line: 'HAT1' | 'HAT
 const FINISHED: FinishedDef[] = [
   { sku: '140040101', cost: 105, qty: 60, line: 'HAT1', lots: 1, shelfLife: 365 }, // %100 Oat Chocolate Spredable
   { sku: '140040001', cost: 95, qty: 70, line: 'HAT1', lots: 1, shelfLife: 365 }, // %100 Oat Spredable
-  { sku: '110010002', cost: 280, qty: 40, line: 'HAT1', lots: 1, shelfLife: 365 }, // 2x Badem Bazı
-  { sku: '110020002', cost: 250, qty: 40, line: 'HAT1', lots: 1, shelfLife: 365 }, // 2x Fındık
-  { sku: '110030002', cost: 320, qty: 35, line: 'HAT1', lots: 1, shelfLife: 365 }, // 2x Kaju Bazı
-  { sku: '110010003', cost: 420, qty: 30, line: 'HAT1', lots: 1, shelfLife: 365 }, // 3x Badem Bazı
-  { sku: '110020003', cost: 375, qty: 30, line: 'HAT1', lots: 1, shelfLife: 365 }, // 3x Fındık Bazı
-  { sku: '110030003', cost: 480, qty: 25, line: 'HAT1', lots: 1, shelfLife: 365 }, // 3x Kaju Bazı
-  { sku: '110010006', cost: 840, qty: 15, line: 'HAT1', lots: 1, shelfLife: 365 }, // 6x Badem Bazı
-  { sku: '110020006', cost: 750, qty: 15, line: 'HAT1', lots: 1, shelfLife: 365 }, // 6x Fındık Bazı
-  { sku: '110030006', cost: 960, qty: 12, line: 'HAT1', lots: 1, shelfLife: 365 }, // 6x Kaju Bazı
-  { sku: '110010001', cost: 140, qty: 120, line: 'HAT1', lots: 2, shelfLife: 365 }, // BADEM BAZI
+  { sku: '110010002', cost: 280, qty: 40, line: 'HAT1', lots: 1, shelfLife: 365 }, // 2x Badem Sütü Konsantresi
+  { sku: '110020002', cost: 250, qty: 40, line: 'HAT1', lots: 1, shelfLife: 365 }, // 2x Fındık Sütü Konsantresi
+  { sku: '110030002', cost: 320, qty: 35, line: 'HAT1', lots: 1, shelfLife: 365 }, // 2x Kaju Sütü Konsantresi
+  { sku: '110010003', cost: 420, qty: 30, line: 'HAT1', lots: 1, shelfLife: 365 }, // 3x Badem Sütü Konsantresi
+  { sku: '110020003', cost: 375, qty: 30, line: 'HAT1', lots: 1, shelfLife: 365 }, // 3x Fındık Sütü Konsantresi
+  { sku: '110030003', cost: 480, qty: 25, line: 'HAT1', lots: 1, shelfLife: 365 }, // 3x Kaju Sütü Konsantresi
+  { sku: '110010006', cost: 840, qty: 15, line: 'HAT1', lots: 1, shelfLife: 365 }, // 6x Badem Sütü Konsantresi
+  { sku: '110020006', cost: 750, qty: 15, line: 'HAT1', lots: 1, shelfLife: 365 }, // 6x Fındık Sütü Konsantresi
+  { sku: '110030006', cost: 960, qty: 12, line: 'HAT1', lots: 1, shelfLife: 365 }, // 6x Kaju Sütü Konsantresi
+  { sku: '110010001', cost: 140, qty: 120, line: 'HAT1', lots: 2, shelfLife: 365 }, // Badem Sütü Konsantresi
   { sku: '180010101', cost: 425, qty: 25, line: 'HAT1', lots: 1, shelfLife: 365 }, // BADEM FINDIK KAJU PAKET
   { sku: '180020201', cost: 460, qty: 20, line: 'HAT1', lots: 1, shelfLife: 365 }, // BADEM FINDIK KAJU_ PLAIN STRAWBERRY CHOCOLATE
   { sku: '180010301', cost: 480, qty: 20, line: 'HAT1', lots: 1, shelfLife: 365 }, // BADEM FINDIK YULAF KAJU PAKET
@@ -308,10 +308,10 @@ const FINISHED: FinishedDef[] = [
   { sku: '190010099', cost: 30, qty: 480, line: 'HAT1', lots: 1, shelfLife: 300 }, // Badem İçeceği 1L UHT (palet)
   { sku: '170003001', cost: 320, qty: 15, line: 'HAT2', lots: 1, shelfLife: null }, // Blender Mikser
   { sku: '130010101', cost: 195, qty: 70, line: 'HAT2', lots: 1, shelfLife: 365 }, // Double Chocolate Protein Mixi
-  { sku: '110020001', cost: 125, qty: 140, line: 'HAT1', lots: 2, shelfLife: 365 }, // FINDIK BAZI
+  { sku: '110020001', cost: 125, qty: 140, line: 'HAT1', lots: 2, shelfLife: 365 }, // Fındık Sütü Konsantresi
   { sku: '160080001', cost: 95, qty: 90, line: 'HAT1', lots: 1, shelfLife: 365 }, // Hurma Ezmesi
-  { sku: '110030001', cost: 160, qty: 110, line: 'HAT1', lots: 2, shelfLife: 365 }, // KAJU BAZI
-  { sku: '110030101', cost: 165, qty: 45, line: 'HAT1', lots: 1, shelfLife: 365 }, // Kaju Bazı ABD_alternatif
+  { sku: '110030001', cost: 160, qty: 110, line: 'HAT1', lots: 2, shelfLife: 365 }, // Kaju Sütü Konsantresi
+  { sku: '110030101', cost: 165, qty: 45, line: 'HAT1', lots: 1, shelfLife: 365 }, // Kaju Sütü Konsantresi (ABD alternatif)
   { sku: '140030101', cost: 175, qty: 55, line: 'HAT1', lots: 1, shelfLife: 365 }, // Kakaolu Kaju Ezmesi
   { sku: '160060001', cost: 340, qty: 40, line: 'HAT2', lots: 1, shelfLife: 365 }, // Matcha
   { sku: '150040001', cost: 60, qty: 150, line: 'HAT3', lots: 2, shelfLife: 365 }, // Oat Coffee Creamer (10 saşe)
@@ -326,7 +326,7 @@ const FINISHED: FinishedDef[] = [
   { sku: '170004001', cost: 165, qty: 20, line: 'HAT2', lots: 1, shelfLife: null }, // Termos
   { sku: '160050001', cost: 140, qty: 80, line: 'HAT2', lots: 1, shelfLife: 365 }, // Türk Kahvesi
   { sku: '160070001', cost: 180, qty: 45, line: 'HAT2', lots: 1, shelfLife: 365 }, // Vanilya Tozu
-  { sku: '110040001', cost: 55, qty: 200, line: 'HAT1', lots: 2, shelfLife: 365 }, // YULAF BAZI
+  { sku: '110040001', cost: 55, qty: 200, line: 'HAT1', lots: 2, shelfLife: 365 }, // Yulaf Sütü Konsantresi (reçetesi yok: görünür Excel sayfasında yok)
   { sku: '170010001', cost: 240, qty: 18, line: 'HAT2', lots: 1, shelfLife: null }, // Yoga Matı
   { sku: '190040003', cost: 66, qty: 60, line: 'HAT1', lots: 1, shelfLife: 300 }, // Yulaf İçeceği 1L UHT (3'lü)
   { sku: '190040001', cost: 22, qty: 190, line: 'HAT1', lots: 2, shelfLife: 300 }, // Yulaf İçeceği 1L UHT (tekli)
@@ -493,14 +493,14 @@ async function seedTransfers(tx: DbOrTx, summary: SeedSummary, rawPlacements: Pl
   }
 
   // T2 — Tire → Buca (transit'te bırakılır, "Teslim al" henüz yapılmamış)
-  const bademBazi = finishedPlacements.find((p) => p.sku === '110010001');
-  if (bademBazi) {
+  const bademKonsantre = finishedPlacements.find((p) => p.sku === '110010001');
+  if (bademKonsantre) {
     const bucaMamulR01 = await loc(tx, 'BUCA/MAMUL/R01');
     const adet = await uom(tx, 'ADET');
-    const moveQty = Math.min(30, Number(bademBazi.qty));
+    const moveQty = Math.min(30, Number(bademKonsantre.qty));
     const { transfer } = await createTransfer(tx, {
       fromWarehouseId: tire.id, toWarehouseId: buca.id, scheduledDate: addDaysStr(OPEN_FROM, 34), reason: 'Buca depo ilk sevkiyatı',
-      lines: [{ productId: bademBazi.productId, lotId: bademBazi.lotId, qty: D(moveQty), uomId: adet.id, fromLocationId: bademBazi.locationId, toLocationId: bucaMamulR01.id }],
+      lines: [{ productId: bademKonsantre.productId, lotId: bademKonsantre.lotId, qty: D(moveQty), uomId: adet.id, fromLocationId: bademKonsantre.locationId, toLocationId: bucaMamulR01.id }],
     }, SYSTEM_ACTOR);
     await auditCreate(tx, 'transfers', transfer.id, `Transfer ${transfer.docNo} oluşturuldu (Tire → Buca)`);
     const done2 = await completeTransfer(tx, transfer.id, SYSTEM_ACTOR); // → in_transit (TIRE/SEVK); receiveTransfer bilerek çağrılmıyor

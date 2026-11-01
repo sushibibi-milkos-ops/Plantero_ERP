@@ -5,6 +5,8 @@ import ExcelJS from 'exceljs';
  *
  * Çalışma kitabı dağınıktır: ürün başına ayrı sayfalar, bazı sayfalarda alt alta / yan yana
  * birden çok "Bill of Material" bloğu, gizli deneme sayfaları, formül hataları (#N/A, #VALUE!).
+ * KULLANICI KARARI: gizli (hidden / veryHidden) sayfalar TAMAMEN atlanır — ne reçete bloğu ne RM
+ * fiyatı üretirler; yalnızca görünür sayfalar okunur (`skippedHidden` listesi rapor içindir).
  * Bu dosya YALNIZCA okur ve ham blokları çıkarır (DB'ye dokunmaz, eşleme yapmaz):
  *
  *   blok = { sayfa, başlık, parti büyüklüğü, satırlar[{grup, ad, tedarikçi, oran, miktar, fiyatTL}] }
@@ -100,6 +102,7 @@ export type BomRawLine = {
 
 export type BomBlock = {
   sheet: string;
+  /** Her zaman false — gizli sayfalardan blok üretilmez (alan geriye dönük uyumluluk için duruyor) */
   hidden: boolean;
   /** Blok başlığı (ürün/reçete adı) — bulunamazsa sayfa adı */
   title: string;
@@ -126,7 +129,10 @@ export type RmListItem = {
 };
 
 export type ParsedUretimBom = {
+  /** Çalışma kitabındaki tüm sayfalar (gizli olanlar `hidden: true`; yalnızca listelenir, okunmaz) */
   sheets: Array<{ name: string; hidden: boolean }>;
+  /** Gizli oldukları için okunmayan sayfaların adları */
+  skippedHidden: string[];
   blocks: BomBlock[];
   rmList: RmListItem[];
   warnings: string[];
@@ -375,19 +381,24 @@ function parseRmList(grid: Grid): RmListItem[] {
   return items;
 }
 
-/** Üretim Ana Excel'ini okur: tüm sayfalar (gizliler dahil) taranır, reçete blokları + RM fiyat listesi döner. */
+/** Üretim Ana Excel'ini okur: YALNIZCA görünür sayfalar taranır (gizliler atlanır); reçete blokları + RM fiyat listesi döner. */
 export async function parseUretimBom(buffer: Buffer | ArrayBuffer | Uint8Array): Promise<ParsedUretimBom> {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.load(buffer as ArrayBuffer);
 
   const warnings: string[] = [];
   const sheets: ParsedUretimBom['sheets'] = [];
+  const skippedHidden: string[] = [];
   const blocks: BomBlock[] = [];
   let rmList: RmListItem[] = [];
 
   for (const ws of wb.worksheets) {
     const hidden = ws.state !== 'visible';
     sheets.push({ name: ws.name, hidden });
+    if (hidden) {
+      skippedHidden.push(ws.name);
+      continue; // kullanıcı kararı: gizli sayfalar dikkate alınmaz
+    }
     const grid = readGrid(ws);
     if (ws.name.trim().toLowerCase() === 'rm list') {
       rmList = parseRmList(grid);
@@ -407,7 +418,7 @@ export async function parseUretimBom(buffer: Buffer | ArrayBuffer | Uint8Array):
     }
   }
   if (rmList.length === 0) warnings.push('RM List sayfası bulunamadı ya da boş');
-  return { sheets, blocks, rmList, warnings };
+  return { sheets, skippedHidden, blocks, rmList, warnings };
 }
 
 /** Sayfa + (kısmi) başlık ile blok seçer. `index` aynı başlıkla birden çok blok varsa kaçıncısı (0 tabanlı). */

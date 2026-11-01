@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parseUretimBom, parseTrNumber, foldKey, findBlock, ingredientLinesOf, type ParsedUretimBom, type BomBlock } from './uretim-bom.js';
 import { buildBomPlan, planSkus, type CatalogProduct } from './uretim-bom-plan.js';
+import { CONCENTRATE_RENAMES } from './konsantre-adlari.js';
 import { parseAnaVeri } from './anaveri.js';
 
 const dataDir = path.resolve(import.meta.dirname, '../../../../data/import');
@@ -46,11 +47,25 @@ describe('parseTrNumber / foldKey', () => {
 });
 
 describe('parseUretimBom — gerçek dosya', () => {
-  it('tüm sayfalar (gizliler dahil) taranır ve RM Listesi okunur', () => {
+  it('YALNIZCA görünür sayfalar okunur: gizli sayfalar listelenir ama blok üretmez; RM Listesi okunur', () => {
     const sheetNames = parsed.sheets.map((s) => s.name.trim());
     expect(sheetNames).toContain('ALMOND 250GR');
     expect(sheetNames).toContain('OAT 500GR');
     expect(parsed.sheets.find((s) => s.name.trim() === 'OAT 500GR')?.hidden).toBe(true);
+    expect(parsed.skippedHidden.map((n) => n.trim())).toEqual(
+      expect.arrayContaining(['OAT 500GR', 'Bitkisel Baz Barista Ana Sheet', 'Barista 500GR Complex Nuts', 'Plantero Çilek Protein Mix', 'Plantero Çikolata Protein Mix', 'Plantero 250GR Bases']),
+    );
+    // hiçbir blok gizli sayfadan gelmez
+    const hiddenNames = new Set(parsed.sheets.filter((s) => s.hidden).map((s) => s.name));
+    expect(parsed.blocks.filter((b) => hiddenNames.has(b.sheet))).toEqual([]);
+    expect(parsed.blocks.every((b) => !b.hidden)).toBe(true);
+    // görünür sayfa seti (kullanıcı listesi)
+    const visible = parsed.sheets.filter((s) => !s.hidden).map((s) => s.name.trim());
+    expect(visible).toEqual([
+      'COGs summary', 'RM List', 'PRODUCTION worksheet', 'Plantero Protein Mix Reçeteleri', 'KAJUBEAR 300GR', 'MATCHA POWDER', 'OATPOWDER 20GR', 'ALMOND 250GR',
+      'Barista 300GR Complex Citru (2)', '250 gram bitkisel skonsantreler',
+    ]);
+    expect(findBlock(parsed, 'OAT 500GR')).toBeUndefined();
     expect(parsed.rmList.length).toBeGreaterThanOrEqual(15);
     const badem = parsed.rmList.find((r) => r.description === 'BADEM PUREE');
     expect(badem?.tlPerKg).toBe(361);
@@ -113,9 +128,42 @@ describe('parseUretimBom — gerçek dosya', () => {
     expect(pea.priceTL).toBe(110); // "110,00 ₺" metni sayıya çevrildi
   });
 
+  it('PRODUCTION worksheet 900. satır STRAWBERRY, Protein Mix Reçeteleri 47. satır ile aynı karışım (SKU 130010201 kaynağı)', () => {
+    const a = parsed.blocks.find((b) => b.sheet.trim() === 'PRODUCTION worksheet' && b.headerRow === 900)!;
+    const b = parsed.blocks.find((x) => x.sheet.trim() === 'Plantero Protein Mix Reçeteleri' && x.headerRow === 47)!;
+    expect(a.title).toBe('STRAWBERRY');
+    const ra = ingredientLinesOf(a).map((l) => [l.name, l.ratio!.toFixed(4)]);
+    const rb = ingredientLinesOf(b).map((l) => [l.name, l.ratio!.toFixed(4)]);
+    expect(ra).toEqual(rb);
+  });
+
   it('formül hataları (#N/A, #VALUE!) satır üretmez', () => {
     const b = findBlock(parsed, 'Barista 300GR Complex Citru (2)', 'Cashew Barista')!;
     expect(b.lines.some((l) => /water/i.test(l.name) && l.qty !== null)).toBe(false);
+  });
+});
+
+describe('konsantre mamul adları (A16) — ürün hiyerarşisi', () => {
+  it('her yeniden adlandırmanın "from" adı Excel ana verisiyle BİREBİR aynıdır, SKU tektir, hedef ad "Sütü Konsantresi" kalıbıdır', () => {
+    const byName = new Map(catalog.map((c) => [c.sku, c.name]));
+    expect(new Set(CONCENTRATE_RENAMES.map((r) => r.sku)).size).toBe(CONCENTRATE_RENAMES.length);
+    for (const r of CONCENTRATE_RENAMES) {
+      expect(byName.get(r.sku), r.sku).toBe(r.from);
+      expect(r.to).toMatch(/Sütü Konsantresi/);
+      expect(r.to).not.toMatch(/Baz/i);
+      expect(r.sku).toMatch(/^1100[1-4]/);
+    }
+    expect(CONCENTRATE_RENAMES.find((r) => r.sku === '110010001')!.to).toBe('Badem Sütü Konsantresi');
+    expect(CONCENTRATE_RENAMES.find((r) => r.sku === '110030101')!.to).toBe('Kaju Sütü Konsantresi (ABD alternatif)');
+    expect(CONCENTRATE_RENAMES).toHaveLength(14);
+  });
+
+  it('barista (120xxxxxx) mamullerine dokunulmaz; yarı mamul adları "… Bazı 250ml" kalıbında kalır', () => {
+    expect(CONCENTRATE_RENAMES.some((r) => r.sku.startsWith('12'))).toBe(false);
+    const plan = buildBomPlan(parsed, catalog);
+    const ym = plan.newItems.filter((i) => i.type === 'semi_finished').map((i) => i.name);
+    expect(ym).toEqual(expect.arrayContaining(['Badem Bazı 250ml', 'Fındık Bazı 250ml', 'Kaju Bazı 250ml']));
+    expect(ym.some((n) => /Konsantre/.test(n))).toBe(false);
   });
 });
 
@@ -150,7 +198,39 @@ describe('buildBomPlan — eşleme ve çok seviyeli reçete planı', () => {
     const hat3 = plan.boms.filter((b) => b.lineCode === 'HAT3').map((b) => b.productSku).sort();
     expect(hat3).toEqual(['150040001', '250040000']);
     expect(plan.boms.find((b) => b.productSku === '130010001')!.lineCode).toBe('HAT2');
-    expect(plan.boms.find((b) => b.productSku === '120040001')!.lineCode).toBe('HAT1');
+    expect(plan.boms.find((b) => b.productSku === '120010001')!.lineCode).toBe('HAT1');
+  });
+
+  it('gizli sayfadan türeyen reçeteler YOK: Yulaf Sütü Konsantresi ve Barista Yulaf "reçete yok" kalır, yarı mamulleri açılmaz', () => {
+    const plan = buildBomPlan(parsed, catalog);
+    const skus = planSkus(plan);
+    const bomProducts = new Set(plan.boms.map((b) => b.productSku));
+    expect(bomProducts.has('110040001')).toBe(false);
+    expect(bomProducts.has('120040001')).toBe(false);
+    for (const gone of ['120040001', '210040000', '220040000', '301100000', '401140000']) expect(skus.has(gone)).toBe(false);
+    // 110040001 yalnızca set ürünlerinin (türetilen) bileşeni olarak geçebilir
+    const usedIn = plan.boms.filter((b) => b.lines.some((l) => l.sku === '110040001')).map((b) => b.productSku).sort();
+    expect(usedIn).toEqual(['180010201', '180010301']);
+    expect(plan.newItems.map((i) => i.sku)).not.toContain('210040000');
+    expect(plan.noRecipeProducts.map((p) => p.sku).sort()).toEqual(['110040001', '120040001']);
+    expect(plan.noRecipeProducts.every((p) => p.reason.includes('gizli'))).toBe(true);
+    // yarı mamul sayısı: 13 → 11
+    expect(plan.boms.filter((b) => b.kind === 'yarimamul')).toHaveLength(11);
+    // bu mamuller yer tutucu da DEĞİL
+    expect(plan.placeholderProducts.map((p) => p.sku)).not.toContain('110040001');
+    expect(plan.placeholderProducts.map((p) => p.sku)).not.toContain('120040001');
+  });
+
+  it('protein mix mamulleri görünür "Protein Mix Reçeteleri" sayfasından: PLAIN 94, KAKAO 24, STRAWBERRY 47', () => {
+    const plan = buildBomPlan(parsed, catalog);
+    const src = (sku: string) => plan.boms.find((b) => b.productSku === sku)!.source;
+    expect(src('230010000')).toContain('Plantero Protein Mix Reçeteleri');
+    expect(src('230010000')).toContain('satır 94');
+    expect(src('230010100')).toContain('satır 24');
+    expect(src('230010200')).toContain('satır 47');
+    // hiçbir reçete kaynağı gizli bir sayfa adı taşımaz
+    const hidden = parsed.skippedHidden.map((n) => n.trim());
+    for (const b of plan.boms) for (const h of hidden) expect(b.source.includes(h)).toBe(false);
   });
 
   it('OATPOWDER 20GR → Oat Coffee Creamer: 10 saşe + oranlar 10 g saşeye ölçeklenir', () => {
@@ -177,11 +257,14 @@ describe('buildBomPlan — eşleme ve çok seviyeli reçete planı', () => {
     expect([...planSkus(plan)].filter((s) => !known.has(s))).toEqual([]);
   });
 
-  it('38 mamul reçetesinin tamamı planlanır, eksik mamul yok; yer tutucular ayrıca listelenir', () => {
+  it('üretilebilir mamullerin 36\'sı planlanır; kalan 2\'si (Yulaf Sütü Konsantresi, Barista Yulaf) "reçete yok"; yer tutucular ayrıca listelenir', () => {
     const plan = buildBomPlan(parsed, catalog);
     const manufactured = catalog.filter((c) => c.type === 'finished' && c.isManufactured).map((c) => c.sku);
     const planned = new Set(plan.boms.filter((b) => b.kind === 'mamul').map((b) => b.productSku));
-    expect(manufactured.filter((s) => !planned.has(s))).toEqual([]);
+    const missing = manufactured.filter((s) => !planned.has(s));
+    expect(missing.sort()).toEqual(['110040001', '120040001']);
+    expect(missing.sort()).toEqual(plan.noRecipeProducts.map((p) => p.sku).sort());
+    expect(planned.size).toBe(36);
     expect(plan.placeholderProducts.length).toBeGreaterThan(0);
     expect(plan.placeholderProducts.map((p) => p.sku)).toContain('160010001');
     expect(plan.placeholderProducts.map((p) => p.sku)).not.toContain('130010001');

@@ -10,7 +10,7 @@ import { log, type SeedSummary } from './_helpers.js';
 /**
  * Ar-Ge modülü seed'i — docs/modules/arge.md §Seed.
  * 3 proje: Fıstık Bazı (yeni SKU adayı, `productId=null`), Şekersiz Protein (mevcut ürün, onay
- * sürecinde), Oat Barista v2 (mevcut ürün, ONAYLANIP üretim BOM'una devrolmuş — kabul kriteri).
+ * sürecinde), Oat Barista v2 (mevcut ürün, ONAYLANIP üretim BOM'una (taslak) devrolmuş — kabul kriteri).
  * Tamamı `@plantero/core/rnd/*` servisleri üzerinden üretilir (elle insert yok — sözleşme #10);
  * her core fonksiyonu kendi audit satırını zaten yazar.
  */
@@ -142,7 +142,7 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   /* Proje 3 — Oat Barista v2 (mevcut ürün, ONAYLANDI + BOM'a DEVROLDU)  */
   /* ================================================================== */
 
-  const baristaProduct = await productBySku(tx, '120040001'); // BARISTA BASE - YULAF BAZI
+  const baristaProduct = await productBySku(tx, '120040001'); // BARISTA BASE - YULAF BAZI (barista mamulü; görünür Excel sayfasında reçetesi yok → aktif BOM'u yok)
   const p3 = await createProject(tx, {
     name: 'Oat Barista v2', productId: baristaProduct.id, ownerId: arge,
     goal: 'Mevcut yulaf bazlı barista ürününde hurma şurubu oranını azaltıp köpük stabilitesini artırmak.',
@@ -160,7 +160,7 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
 
   const p3v1 = await createTrialRecipe(tx, {
     projectId: p3.id, name: 'Oat Barista Reçetesi', batchQty: '1', batchUomId: kg.id, expectedYieldPct: '97', overheadPerBatch: '50', overheadPerUnit: '0.5',
-    changeNote: 'v1 (aktif BOM v1) ile aynı — karşılaştırma taban çizgisi.',
+    changeNote: 'Ürünün mevcut formülasyonu ile aynı — karşılaştırma taban çizgisi.',
     lines: [
       { productId: yulaf.id, qty: '0.20', uomId: kg.id, costSource: 'average', scrapPct: '0' },
       { productId: hurma.id, qty: '0.02', uomId: kg.id, costSource: 'average', scrapPct: '0' },
@@ -185,8 +185,11 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
 
   const { approvalId } = await submitForApproval(tx, p3v2.version.id, argeActor);
   await approveRecipeRelease(tx, approvalId, argeActor); // I49(a): decided_by dolu olmalı — gerçek onaylayıcı (SYSTEM_ACTOR değil)
-  const released = await releaseToBom(tx, p3v2.version.id, { activate: true }, argeActor); // KABUL: devir sonrası iş emri açılabilir (aktif BOM)
-  log('rnd', `Oat Barista v2 üretim BOM'una devredildi: ${released.bomCode} (aktif)`);
+  // Ürünün Excel tabanlı (görünür sayfa) aktif reçetesi YOK (BARISTA BASE - YULAF BAZI: gizli sayfadan türeyen reçete kullanılmaz).
+  // Ar-Ge devri TASLAK BOM üretir (activate:false): düz Ar-Ge reçetesi hat/yarı mamul yapısına oturtulmadan üretime açılmaz;
+  // üretim sorumlusu taslağı yarı mamul + ambalaj yapısına çevirip aktifleştirir.
+  const released = await releaseToBom(tx, p3v2.version.id, { activate: false }, argeActor);
+  log('rnd', `Oat Barista v2 üretim BOM'una devredildi: ${released.bomCode} (taslak — ürünün aktif reçetesi yok)`);
 
   await seedCards(tx, p3.id, p3Cols, [
     { column: 'Formülasyon', title: 'v1 taban formülasyon (mevcut BOM)', trialVersionId: p3v1.rollup.version.id },
@@ -194,7 +197,7 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
     { column: 'Pilot Üretim', title: 'HAT1 pilot parti — v2', description: 'Pilot parti tamamlandı, sonuçlar olumlu.', assigneeId: uretim },
     { column: 'Duyusal Test', title: 'Barista makinesi köpük testi', comment: 'Üç farklı barista makinesinde test edildi — v2 köpük stabilitesi v1\'e göre belirgin şekilde daha iyi.' },
     { column: 'Raf Ömrü', title: '3 aylık raf ömrü izleme', description: 'Aylık numune alımı devam ediyor.' },
-    { column: 'Onay', title: 'Reçete onaylandı ve üretim BOM\'una devredildi', description: `Üretim BOM'u: ${released.bomCode} (aktif). İş emri açılabilir.`, trialVersionId: p3v2.version.id, comment: 'Onay tamamlandı, BOM aktif — üretim planlamasına devredildi.' },
+    { column: 'Onay', title: 'Reçete onaylandı ve üretim BOM\'una devredildi', description: `Üretim BOM'u: ${released.bomCode} (taslak). Üretim sorumlusu yarı mamul + ambalaj yapısına çevirip aktifleştirecek.`, trialVersionId: p3v2.version.id, comment: 'Onay tamamlandı, taslak BOM oluşturuldu — üretim planlamasına devredildi.' },
   ]);
 
   // Onay kolonundaki kartı fiilen "Onay" kolonuna taşı (createCard zaten oraya ekledi; moveCard'ın
@@ -210,5 +213,5 @@ export async function seedRnd(tx: DbOrTx, summary: SeedSummary): Promise<void> {
   summary.add('rnd_projects', 3);
   summary.add('rnd_board_columns', 18);
   summary.add('trial_recipe_versions', 5); // p1 v1, p2 v1, p3 v1+v2, (createNewVersion de v2 sayılır)
-  log('rnd', '3 Ar-Ge projesi seed edildi: Fıstık Bazı (yeni SKU adayı), Şekersiz Protein (onayda), Oat Barista v2 (devredildi, BOM aktif)');
+  log('rnd', '3 Ar-Ge projesi seed edildi: Fıstık Bazı (yeni SKU adayı), Şekersiz Protein (onayda), Oat Barista v2 (devredildi, taslak BOM)');
 }

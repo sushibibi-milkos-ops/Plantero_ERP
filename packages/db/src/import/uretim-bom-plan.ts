@@ -3,10 +3,13 @@ import { foldKey, findBlock, ingredientLinesOf, type BomBlock, type BomRawLine, 
 
 /**
  * Üretim Ana Excel'inden çıkan ham blokları (bkz. `uretim-bom.ts`) mevcut ana veriyle eşler ve çok
- * seviyeli reçete planına çevirir. SAF fonksiyonlar — veritabanına dokunmaz; yazım
+ * seviyeli reçete planına çevirir. Yalnızca GÖRÜNÜR sayfalardan reçete üretilir (gizli sayfalar okuyucuda
+ * atlanır — kullanıcı kararı); görünür sayfada reçetesi olmayan mamul "reçete yok" kalır (`noRecipeProducts`). SAF fonksiyonlar — veritabanına dokunmaz; yazım
  * `seed/uretim-bom.ts` içindedir.
  *
- * Reçete kalıbı (kullanıcı örneği, tüm aileler için aynı):
+ * ÜRÜN HİYERARŞİSİ (kullanıcı kararı): hammadde (ör. BADEM PUREE) → yarı mamul "Badem Bazı 250ml" (ara ürün)
+ * → MAMUL "Badem Sütü Konsantresi" (son ürün, satılabilir).
+ * Reçete kalıbı (tüm aileler için aynı):
  *   mamul  → yarı mamul baz (1 birim) + ambalaj kalemleri
  *   yarı mamul → hammaddeler (Excel oranları × birim net ağırlık)
  *
@@ -85,6 +88,14 @@ export type UretimBomPlan = {
   unusedBlocks: Array<{ sheet: string; title: string; headerRow: number; hidden: boolean; reason: string }>;
   /** Excel'de reçetesi olmayan mamuller (yer tutucu reçete verilenler) */
   placeholderProducts: Array<{ sku: string; name: string }>;
+  /** Görünür sayfalarda reçetesi olmayan ve yer tutucu da verilmeyen üretilebilir mamuller: aktif BOM'suz kalır */
+  noRecipeProducts: Array<{ sku: string; name: string; reason: string }>;
+};
+
+/** Reçetesi yalnızca gizli sayfada bulunan mamuller (kullanıcı kararı: gizli sayfalar dikkate alınmaz → "reçete yok"). */
+const HIDDEN_ONLY_REASON: Record<string, string> = {
+  '110040001': 'Yulaf Bazı reçetesi yalnızca gizli "OAT 500GR" sayfasındaydı; görünür sayfada yok',
+  '120040001': 'Barista Yulaf reçetesi yalnızca gizli "Bitkisel Baz Barista Ana Sheet" sayfasındaydı; görünür sayfada yok',
 };
 
 /* ------------------------------------------------------------------ */
@@ -142,7 +153,6 @@ const NEW_ITEMS: NewDef[] = [
   RAW('301070000', 'BADEM PUREE', 'HAM-KYM-05', KURUYEMIS, 'Püre / Ezme', 'AYDIN', ['badem puree', 'almond', 'almond paste', 'almond puree'], 361, ['badem puree']),
   RAW('301080000', 'FINDIK PUREE', 'HAM-KYM-06', KURUYEMIS, 'Püre / Ezme', 'AYDIN', ['findik puree', 'hazelnut puree', 'hazelnut'], 252, ['findik puree']),
   RAW('301090000', 'KAJU EZMESİ', 'HAM-KYM-07', KURUYEMIS, 'Püre / Ezme', 'ümit', ['kaju ezmesi', 'cashew paste'], 360),
-  RAW('301100000', 'OAT PUREE', 'HAM-KYM-08', KURUYEMIS, 'Püre / Ezme', 'MEURENS', ['oat puree', 'oat'], 336, ['oat puree']),
   RAW('301110000', 'OAT POWDER', 'HAM-KYM-09', KURUYEMIS, 'Toz', null, ['oatpowder', 'oat powder'], 546, [/^oat powder/]),
   RAW('301120000', 'Kabak Çekirdeği Proteini', 'HAM-PRO-03', PROTEIN_MIX, 'Proteinler', null, ['kabak cekirdegi', 'kabak cekirdegi proteini'], 130),
   RAW('302040000', 'PUDRA ŞEKERİ', 'HAM-TAT-04', PROTEIN_MIX, 'Tatlandırıcılar', 'BİM', ['pudra sekeri', 'seker', 'sugar'], 180),
@@ -167,7 +177,6 @@ const NEW_ITEMS: NewDef[] = [
   PACK('401110000', 'AKTEKİN PLASTİK 500CC ŞİŞE 40GR', 'AMB-KVN-05', CAM_PLASTIK, 'Plastik Şişe', 'AKTEKİN', [/^aktekin plastik 500cc/], 8.4, [/^aktekin plastik 500cc/]),
   PACK('401120000', 'PLASTİK POMPA', 'AMB-KVN-06', CAM_PLASTIK, 'Pompa', 'WORKPLAST', ['plastik pompa', '500gr plastic pump'], 26.88, ['plastik pompa']),
   PACK('401130000', 'BARİSTA ETİKETLERİ', 'AMB-ETK-05', ETIKET, 'Etiket', 'ERDAL ETİKET', ['barista etiketleri'], 10),
-  PACK('401140000', 'BAZ ETİKETLERİ', 'AMB-ETK-06', ETIKET, 'Etiket', 'ERDAL ETİKET', ['baz etiketleri'], 1.89, [/^baz etiketleri/]),
   PACK('401150000', 'ETİMAG SHİRİNK 50 MİKRON 106*125MM', 'AMB-SHR-01', 'Karton Ambalaj', 'Shrink', 'ETİMAG', [/^etimag shirink/], 0.42, [/^etimag shirink/]),
   PACK('401160000', 'BAŞTÜRK KAVANOZ İZMİR', 'AMB-KVN-07', CAM_PLASTIK, 'Kavanoz', 'BAŞTÜRK', ['basturk kavanoz izmir'], 4.9, [/^basturk kavanoz/]),
   PACK('402040000', 'evepack', 'AMB-SAS-02', ESNEK, 'Saşe', null, ['evepack'], 1.5),
@@ -180,7 +189,6 @@ const SKU = {
   badem: '301070000',
   findik: '301080000',
   kajuEzmesi: '301090000',
-  oatPuree: '301100000',
   oatPowder: '301110000',
   cam250: '401050000',
   kapakGold: '401060000',
@@ -191,7 +199,6 @@ const SKU = {
   pet500: '401110000',
   pompa: '401120000',
   etiketBarista: '401130000',
-  etiketBaz: '401140000',
   shrink: '401150000',
   kavanozBasturk: '401160000',
   evepack: '402040000',
@@ -215,11 +222,9 @@ const YM_DEFS: Record<string, YmDef> = {
   badem: YM('210010000', 'Badem Bazı 250ml', 'YMM-BAZ-BDM', 'Bitkisel Süt Konsantreleri (Bazlar)', 'Badem'),
   findik: YM('210020000', 'Fındık Bazı 250ml', 'YMM-BAZ-FND', 'Bitkisel Süt Konsantreleri (Bazlar)', 'Fındık'),
   kaju: YM('210030000', 'Kaju Bazı 250ml', 'YMM-BAZ-KJU', 'Bitkisel Süt Konsantreleri (Bazlar)', 'Kaju'),
-  yulaf: YM('210040000', 'Yulaf Bazı 500ml', 'YMM-BAZ-YLF', 'Bitkisel Süt Konsantreleri (Bazlar)', 'Yulaf'),
   baristaBadem: YM('220010000', 'Barista Badem Bazı 300g', 'YMM-BAR-BDM', 'Barista Serisi', 'Badem'),
   baristaFindik: YM('220020000', 'Barista Fındık Bazı 300g', 'YMM-BAR-FND', 'Barista Serisi', 'Fındık'),
   baristaKaju: YM('220030000', 'Barista Kaju Bazı 300g', 'YMM-BAR-KJU', 'Barista Serisi', 'Kaju'),
-  baristaYulaf: YM('220040000', 'Barista Yulaf Bazı 300g', 'YMM-BAR-YLF', 'Barista Serisi', 'Yulaf'),
   plain: YM('230010000', 'Plain Protein Mix Tozu 416g', 'YMM-PRO-PLN', 'Protein Tozları', 'Protein Mix'),
   choc: YM('230010100', 'Double Chocolate Protein Mix Tozu 416g', 'YMM-PRO-CHC', 'Protein Tozları', 'Protein Mix'),
   straw: YM('230010200', 'Strawberry Protein Mix Tozu 416g', 'YMM-PRO-STR', 'Protein Tozları', 'Protein Mix'),
@@ -267,10 +272,6 @@ const RECIPES: Recipe[] = [
     pack: [[SKU.cam250, 1], [SKU.kapakGold, 1], [SKU.etiketKaju, 1], [SKU.bant, 1]], mamulOverheadPerUnit: '10',
   },
   {
-    ym: 'yulaf', block: { sheet: 'OAT 500GR', index: 0, expectFirst: /oat puree/i }, unitNetG: 500, line: 'HAT1', mamulSkus: ['110040001'],
-    pack: [[SKU.pet500, 1], [SKU.pompa, 1], [SKU.etiketBaz, 1], [SKU.shrink, 1]], mamulOverheadPerUnit: '10',
-  },
-  {
     ym: 'baristaBadem', block: { sheet: 'Barista 300GR Complex Citru (2)', titleIncludes: 'Almond Barista', expectFirst: /almond/i }, unitNetG: 300, line: 'HAT1', mamulSkus: ['120010001'],
     pack: [[SKU.pet500, 1], [SKU.pompa, 1], [SKU.etiketBarista, 1]], mamulOverheadPerUnit: '10',
   },
@@ -281,11 +282,6 @@ const RECIPES: Recipe[] = [
   {
     ym: 'baristaKaju', block: { sheet: 'Barista 300GR Complex Citru (2)', titleIncludes: 'Cashew Barista', expectFirst: /cashew paste/i }, unitNetG: 300, line: 'HAT1', mamulSkus: ['120030001'],
     pack: [[SKU.pet500, 1], [SKU.pompa, 1], [SKU.etiketBarista, 1]], mamulOverheadPerUnit: '10',
-  },
-  {
-    ym: 'baristaYulaf', block: { sheet: 'Bitkisel Baz Barista Ana Sheet', index: 0, expectFirst: /^oat$/i }, unitNetG: 300, line: 'HAT1', mamulSkus: ['120040001'],
-    pack: [[SKU.pet500, 1], [SKU.pompa, 1], [SKU.etiketBarista, 1]], mamulOverheadPerUnit: '10',
-    comment: 'Gizli "Bitkisel Baz Barista Ana Sheet" sayfasındaki ilk (Main) OAT Drink bloğu',
   },
   {
     ym: 'plain', block: { sheet: 'Plantero Protein Mix Reçeteleri', headerRow: 94, expectFirst: /isolated pea/i }, unitNetG: 416, line: 'HAT2', mamulSkus: ['130010001'],
@@ -634,28 +630,28 @@ export function buildBomPlan(parsed: ParsedUretimBom, catalog: CatalogProduct[])
     .filter((b) => !usedBlocks.has(b))
     .map((b) => ({ sheet: b.sheet.trim(), title: b.title, headerRow: b.headerRow, hidden: b.hidden, reason: unusedReason(b) }));
 
-  // --- mamul olduğu halde reçetesi çıkmayanlar
+  // --- üretilebilir mamul olduğu halde görünür sayfalarda reçetesi çıkmayanlar: aktif BOM'suz ("reçete yok") kalır
+  const noRecipeProducts: Array<{ sku: string; name: string; reason: string }> = [];
   for (const p of catalog) {
-    if (p.type === 'finished' && p.isManufactured && !mamulHasBom.has(p.sku)) notes.push(`Üretilebilir mamul için reçete planlanmadı: ${p.sku} ${p.name}`);
+    if (p.type === 'finished' && p.isManufactured && !mamulHasBom.has(p.sku)) {
+      const reason = HIDDEN_ONLY_REASON[p.sku] ?? 'Görünür sayfalarda reçete yok';
+      noRecipeProducts.push({ sku: p.sku, name: p.name, reason });
+      notes.push(`Reçete yok (aktif BOM açılmadı): ${p.sku} ${p.name} — ${reason}`);
+    }
   }
 
   // fiyat güncellemeleri: fiyat önceliği RM Listesi; mevcut SKU'lar
   const priceUpdates = [...resolver.priceUpdates.entries()].map(([sku, priceTL]) => ({ sku, priceTL }));
 
-  return { newItems, priceUpdates, boms, matches: resolver.matches, notes, unusedBlocks, placeholderProducts };
+  return { newItems, priceUpdates, boms, matches: resolver.matches, notes, unusedBlocks, placeholderProducts, noRecipeProducts };
 }
 
 function unusedReason(b: BomBlock): string {
   const s = b.sheet.trim().toLowerCase();
-  if (s.startsWith('production worksheet')) return 'Ar-Ge deneme/ara sürüm (Protein Mix Reçeteleri sayfasındaki güncel bloklar kullanıldı)';
-  if (s.includes('protein mix re')) return 'Karşılık gelen satılabilir mamul yok (Orman Meyveli / Mango / Whey varyantları)';
-  if (s.includes('drink-recipe') || s.includes('mince')) return 'UHT içecek / et alternatifi Ar-Ge reçetesi — üretilebilir mamul değil (UHT ürünler arşiv)';
-  if (s.includes('kajubear')) return 'Vanilyalı/yulaflı ezme varyantı — karşılık gelen mamul yok';
+  if (s.startsWith('production worksheet')) return 'Ar-Ge deneme/ara sürüm (Protein Mix Reçeteleri sayfasındaki güncel bloklar kullanıldı; 900/924. satırlar 47/24 ile aynı karışım)';
+  if (s.includes('protein mix re')) return 'Karşılık gelen satılabilir mamul yok (Orman Meyveli / Mango / Whey varyantları) ya da PLAIN için tercih edilen blok değil';
+  if (s.includes('kajubear')) return 'Vanilyalı ezme varyantı — karşılık gelen mamul yok';
   if (s.includes('konsantre') || s.includes('skonsantre')) return 'Aynı konsantrenin yinelenen bloğu (ilk blok kullanıldı) ya da ayrı reçetesi tercih edilen blok';
-  if (s.includes('barista 500gr')) return 'Barista 500GR Almond deneme reçetesi — 300GR Complex sayfası kullanıldı';
-  if (s.includes('bitkisel baz barista')) return 'Ana sayfadaki alternatif/yan blok';
-  if (s.includes('250gr bases')) return 'Yalnızca ambalaj maliyet özeti, reçete içermiyor';
-  if (s.includes('protein mix')) return 'Hidden Ar-Ge protein mix denemesi (güncel değil)';
   return 'Karşılık gelen mamul yok';
 }
 

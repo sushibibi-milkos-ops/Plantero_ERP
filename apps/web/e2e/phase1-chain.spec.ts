@@ -11,7 +11,7 @@ import { loginAs } from './fixtures/auth';
  * Test verisi: seed'in garanti ettiği ana veriye dayanır (SKU'lar, depolar, hesap kodları, TOPTAN
  * kanalı/carisi) — hiçbir sabit ID kullanılmaz; benzersizlik zaman damgalı `RUN` etiketiyle sağlanır.
  *
- * Ürün seçimi: HAT1'de seed'in kendi "devam eden" iş emri (BADEM BAZI) zaten bulunuyor — aynı
+ * Ürün seçimi: HAT1'de seed'in kendi "devam eden" iş emri (Badem Sütü Konsantresi) zaten bulunuyor — aynı
  * hat+ürün ile çakışmamak için bu akış HAT3'ün tek varsayılan ürünü olan "Oat Coffee Creamer"
  * (150040001) üzerinden yürütülür.
  *
@@ -46,7 +46,7 @@ function psqlOne(query: string): string | null {
  * `<FieldLabel>` bir `<FormField>` bağlamı dışında kullanıldığında `htmlFor` hedefsiz kalır (bkz. rapor
  * K-A11Y). Bu yüzden `getByRole(..., { name })` yerine görünür metne göre `filter({ hasText })` kullanılır.
  * Arama terimi SKU ile verilir (ürün adıyla değil) — Türkçe küçük harfe çevirmede "I" → "ı" olduğundan
- * "BADEM BAZI" gibi aramalar "2x/3x/6x Badem Bazı" ile de eşleşip yanlış satırı seçebiliyor (bkz. rapor).
+ * "BADEM SÜTÜ" gibi aramalar "2x/3x/6x Badem Sütü Konsantresi" ile de eşleşip yanlış satırı seçebiliyor (bkz. rapor).
  */
 async function comboboxSelect(page: Page, triggerText: string, search: string, optionMatch: string | RegExp) {
   await page.getByRole('combobox').filter({ hasText: triggerText }).first().click();
@@ -644,7 +644,7 @@ test.describe('Negatifler', () => {
     await loginAs(page, 'admin');
     await page.goto('/satis/siparisler/yeni');
     await comboboxSelect(page, 'Müşteri seçin', 'Doğal Yaşam', /Doğal Yaşam Market/);
-    await comboboxSelect(page, 'Ürün ara ve ekle…', '110010003', /3x Badem Bazı/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110010003', /3x Badem Sütü Konsantresi/);
     await page.getByLabel(/^Miktar/).fill(hugeQty);
     await page.keyboard.press('Tab');
     // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve sunucu
@@ -684,7 +684,7 @@ test.describe('Negatifler', () => {
     const expiredLotNo = `QA-EXP-${RUN}`;
     await page.goto('/depo/mal-kabul/yeni');
     await comboboxSelect(page, 'Tedarikçi seçin', 'Anadolu', /Anadolu Kuruyemiş/);
-    await comboboxSelect(page, 'Ürün ara ve ekle…', '110010002', /2x Badem Bazı/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110010002', /2x Badem Sütü Konsantresi/);
     await page.getByLabel(/^Miktar/).fill('50');
     await page.getByLabel('Birim maliyet').fill('100');
     await page.getByLabel('Tedarikçi lot no').fill(expiredLotNo);
@@ -702,7 +702,7 @@ test.describe('Negatifler', () => {
     const orderQty = Math.floor(availBefore) + 15;
     await page.goto('/satis/siparisler/yeni');
     await comboboxSelect(page, 'Müşteri seçin', 'Doğal Yaşam', /Doğal Yaşam Market/);
-    await comboboxSelect(page, 'Ürün ara ve ekle…', '110010002', /2x Badem Bazı/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110010002', /2x Badem Sütü Konsantresi/);
     await page.getByLabel(/^Miktar/).fill(String(orderQty));
     await page.keyboard.press('Tab');
     // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve sunucu
@@ -726,7 +726,7 @@ test.describe('Negatifler', () => {
   });
 
   test('karantinadaki lot sevk edilemez: FEFO karantina lotunu göz ardı eder', async ({ page }) => {
-    // FINDIK BAZI (110020001) — bu akışın ana zincirinde hiç kullanılmayan, izole bir mamul.
+    // Fındık Sütü Konsantresi (110020001) — bu akışın ana zincirinde hiç kullanılmayan, izole bir mamul.
     const productId = psqlOne(`select id from products where sku='110020001'`)!;
     const availBefore = Number(
       psqlOne(`
@@ -740,7 +740,7 @@ test.describe('Negatifler', () => {
     const quarantineFgLotNo = `QA-QFG-${RUN}`;
     await page.goto('/depo/mal-kabul/yeni');
     await comboboxSelect(page, 'Tedarikçi seçin', 'Anadolu', /Anadolu Kuruyemiş/);
-    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020001', /FINDIK BAZI/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020001', /Fındık Sütü Konsantresi/);
     await page.getByLabel(/^Miktar/).fill('50');
     await page.getByLabel('Birim maliyet').fill('100');
     await page.getByLabel('Tedarikçi lot no').fill(quarantineFgLotNo);
@@ -759,7 +759,7 @@ test.describe('Negatifler', () => {
     const orderQty = Math.floor(availBefore) + 15;
     await page.goto('/satis/siparisler/yeni');
     await comboboxSelect(page, 'Müşteri seçin', 'Doğal Yaşam', /Doğal Yaşam Market/);
-    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020001', /FINDIK BAZI/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020001', /Fındık Sütü Konsantresi/);
     await page.getByLabel(/^Miktar/).fill(String(orderQty));
     await page.keyboard.press('Tab');
     // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve sunucu
@@ -800,7 +800,7 @@ test.describe('Negatifler', () => {
     // İzole bir fatura: kendi ufak siparişimiz (2x Fındık, 2 adet) → onayla → sevk et → faturalandır.
     await page.goto('/satis/siparisler/yeni');
     await comboboxSelect(page, 'Müşteri seçin', 'Doğal Yaşam', /Doğal Yaşam Market/);
-    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020002', /2x Fındık/);
+    await comboboxSelect(page, 'Ürün ara ve ekle…', '110020002', /2x Fındık Sütü Konsantresi/);
     await page.getByLabel(/^Miktar/).fill('2');
     await page.keyboard.press('Tab');
     // Fiyat çözümü (resolvePrice) asenkron: rozet gelmeden kaydedilirse satır 0 ₺ kalır ve fatura

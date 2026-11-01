@@ -155,7 +155,7 @@ test.describe('Akış: Fatura → e-Fatura → Banka mutabakatı → Tahsilat ka
     await loginAs(setupPage, 'admin');
     await setupPage.goto('/satis/siparisler/yeni');
     await comboboxSelect(setupPage, 'Müşteri seçin', 'Doğal Yaşam', /Doğal Yaşam Market/);
-    await comboboxSelect(setupPage, 'Ürün ara ve ekle…', '110020002', /2x Fındık/);
+    await comboboxSelect(setupPage, 'Ürün ara ve ekle…', '110020002', /2x Fındık Sütü Konsantresi/);
     await setupPage.getByLabel(/^Miktar/).fill('2');
     await setupPage.keyboard.press('Tab');
     await expect(setupPage.getByText(/^(Müşteri özel|Kanal listesi|Liste fiyatı|Elle girildi)$/)).toBeVisible({ timeout: 10_000 });
