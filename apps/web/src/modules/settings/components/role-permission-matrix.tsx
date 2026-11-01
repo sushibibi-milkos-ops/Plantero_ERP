@@ -204,7 +204,7 @@ export function RolePermissionMatrix({ role, matrix }: { role: RoleOverview; mat
                             disabled={!editable}
                             onCheckedChange={() => toggle(cell.code)}
                             aria-label={`${MODULE_LABELS[m] ?? m} — ${ACTION_LABELS[a] ?? a} (${cell.code})`}
-                            className="size-5 md:size-4"
+                            className="md:size-4"
                           />
                         </label>
                       </td>

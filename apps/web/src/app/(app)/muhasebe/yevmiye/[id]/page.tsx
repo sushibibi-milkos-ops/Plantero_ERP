@@ -29,7 +29,7 @@ export default async function JournalEntryDetailPage({ params }: { params: Promi
       >
         <div className="flex flex-wrap items-center gap-2">
           <StatusBadge status={entry.status} kind="journal_entry" />
-          {twin ? <Link href={`/muhasebe/yevmiye/${twin.id}`} className="text-[13px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground">İkiz fiş ({twin.ledger}) ↗</Link> : null}
+          {twin ? <Link href={`/muhasebe/yevmiye/${twin.id}`} className="inline-flex min-h-11 items-center text-[13px] text-muted-foreground underline decoration-dotted underline-offset-2 md:min-h-0 hover:text-foreground">İkiz fiş ({twin.ledger}) ↗</Link> : null}
           {entry.refType && entry.refId ? <span className="text-[13px] text-muted-foreground">Kaynak: {entry.refType} · {entry.refNo}</span> : null}
         </div>
       </PageHeader>

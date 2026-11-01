@@ -307,7 +307,7 @@ export function DataTable<T>({
               {/* top-12: topbar'ın (h-12, sticky top-0 z-30) hemen altına sabitlenir; z-10 satırların
                   üzerinde ama topbar'ın altında kalır (Tur 4 P1 bulgusu — önceden thead hiç sabit
                   değildi, kaydırılınca başlıklar tamamen kayboluyordu). */}
-              <thead className="sticky top-12 z-10">{headerRow()}</thead>
+              <thead className="sticky top-[var(--topbar-h)] z-10 md:top-12">{headerRow()}</thead>
             </table>
             {empty}
           </div>

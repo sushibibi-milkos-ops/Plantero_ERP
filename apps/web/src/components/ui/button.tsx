@@ -42,12 +42,13 @@ const buttonVariants = cva(
       size: {
         // h-11 md:h-10: mobilde 44px dokunma hedefi (iOS HIG / WCAG 2.5.8); masaüstünde 40px.
         default: "h-11 px-5 py-2 has-[>svg]:px-4 md:h-10",
-        xs: "h-7 gap-1 px-2.5 text-xs has-[>svg]:px-2 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-9 gap-1.5 px-3.5 has-[>svg]:px-3",
+        // Mobilde (md altı) tüm boyutlar en az 44px dokunma hedefi; masaüstü yoğunluğu md: ile korunur.
+        xs: "h-11 gap-1 px-3 text-xs has-[>svg]:px-2.5 md:h-7 md:px-2.5 md:has-[>svg]:px-2 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-11 gap-1.5 px-3.5 has-[>svg]:px-3 md:h-9",
         lg: "h-12 px-7 text-base has-[>svg]:px-5",
-        icon: "size-10",
-        "icon-xs": "size-7 [&_svg:not([class*='size-'])]:size-3.5",
-        "icon-sm": "size-9",
+        icon: "size-11 md:size-10",
+        "icon-xs": "size-11 md:size-7 [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "size-11 md:size-9",
         "icon-lg": "size-11",
       },
     },

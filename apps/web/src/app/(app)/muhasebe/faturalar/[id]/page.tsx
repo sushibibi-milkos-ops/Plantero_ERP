@@ -45,7 +45,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
           // ayirma isini gorur ama bir YAZI KARAKTERI degildir; hicbir satir bir noktalama
           // isaretiyle baslamaz (olcut tam olarak budur).
           <span className="flex flex-wrap items-center gap-y-1">
-            <Link href={`/muhasebe/cariler/${partner.id}/ekstre`} className="underline decoration-dotted underline-offset-2 hover:text-foreground">{partner.name}</Link>
+            <Link href={`/muhasebe/cariler/${partner.id}/ekstre`} className="inline-flex min-h-11 items-center underline decoration-dotted underline-offset-2 hover:text-foreground md:min-h-0">{partner.name}</Link>
             <span className="ml-3 border-l border-border/60 pl-3">{formatDate(invoice.invoiceDate)}</span>
             <span className="ml-3 border-l border-border/60 pl-3">vade {formatDate(invoice.dueDate)}</span>
             {invoice.origin === 'manual' ? <span className="ml-3 border-l border-border/60 pl-3 text-muted-foreground/70">(manuel)</span> : null}
@@ -57,15 +57,15 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
           <StatusBadge status={invoice.status} kind="invoice" />
           {invoice.kind === 'sales' ? <StatusBadge status={invoice.eInvoiceType === 'none' ? 'not_sent' : invoice.eInvoiceStatus} kind="e_invoice" /> : null}
           {invoice.journalEntryId ? (
-            <Link href={`/muhasebe/yevmiye/${invoice.journalEntryId}`} className="text-[13px] text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground">
+            <Link href={`/muhasebe/yevmiye/${invoice.journalEntryId}`} className="inline-flex min-h-11 items-center text-[13px] text-muted-foreground underline decoration-dotted underline-offset-2 md:min-h-0 hover:text-foreground">
               Yevmiye fişi ↗
             </Link>
           ) : null}
           {detail.linkedCreditNoteId ? (
-            <Link href={`/muhasebe/faturalar/${detail.linkedCreditNoteId}`} className="text-[13px] text-primary underline decoration-dotted underline-offset-2">İade faturası kesildi ↗</Link>
+            <Link href={`/muhasebe/faturalar/${detail.linkedCreditNoteId}`} className="inline-flex min-h-11 items-center text-[13px] text-primary underline decoration-dotted underline-offset-2 md:min-h-0">İade faturası kesildi ↗</Link>
           ) : null}
           {detail.sourceInvoiceId ? (
-            <Link href={`/muhasebe/faturalar/${detail.sourceInvoiceId}`} className="text-[13px] text-muted-foreground underline decoration-dotted underline-offset-2">Kaynak fatura ↗</Link>
+            <Link href={`/muhasebe/faturalar/${detail.sourceInvoiceId}`} className="inline-flex min-h-11 items-center text-[13px] text-muted-foreground underline decoration-dotted underline-offset-2 md:min-h-0">Kaynak fatura ↗</Link>
           ) : null}
         </div>
       </PageHeader>
@@ -113,7 +113,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
               <p className="text-[13px] text-muted-foreground">Henüz tahsilat/ödeme yapılmadı.</p>
             )}
             {invoice.residual !== '0.0000' && invoice.status !== 'cancelled' ? (
-              <Link href="/muhasebe/tahsilatlar" className="mt-3 block text-[13px] text-primary underline decoration-dotted underline-offset-2">
+              <Link href="/muhasebe/tahsilatlar" className="mt-1 flex min-h-11 items-center text-[13px] text-primary underline decoration-dotted underline-offset-2 md:mt-3 md:min-h-0">
                 Tahsilat/ödeme kaydet ↗
               </Link>
             ) : null}

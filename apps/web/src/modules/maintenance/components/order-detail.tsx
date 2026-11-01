@@ -243,7 +243,7 @@ export function OrderDetailView({ detail, canExecute }: { detail: MaintenanceOrd
       </div>
 
       {canExecute && isOpen ? (
-        <div className="sticky bottom-16 -mx-4 z-20 flex flex-wrap items-center gap-2 border-t border-border bg-background px-4 py-3 shadow-[0_-1px_2px_rgb(0_0_0/0.04)] md:static md:mx-0 md:z-auto md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none">
+        <div className="sticky bottom-[calc(var(--tabbar-h)+0.5rem)] -mx-4 z-20 flex flex-wrap items-center gap-2 border-t border-border bg-background px-4 py-3 shadow-[0_-1px_2px_rgb(0_0_0/0.04)] md:static md:mx-0 md:z-auto md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none">
           {pending ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
           {['reported', 'planned', 'waiting_parts'].includes(order.status) ? (
             <Button onClick={() => run(() => startOrderAction({ id: order.id }), 'İş emri işleme alındı')} disabled={pending}>

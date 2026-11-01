@@ -120,7 +120,8 @@ function collect(): Omit<Measurement, 'route' | 'viewport'> {
   const seen = new Set<Element>();
   const touchTargetsBelow44: Array<{ selector: string; w: number; h: number }> = [];
   for (const el of interactive) {
-    if (seen.has(el) || !isVisible(el)) continue;
+    // aria-hidden alt ağacı (ör. Radix'in erişilebilirlik için tuttuğu gizli native <select>) dokunma hedefi değildir
+    if (seen.has(el) || !isVisible(el) || el.closest('[aria-hidden="true"]')) continue;
     seen.add(el);
     // Sarmalayıcı etkileşimli eleman içindeki iç düğmeler (ör. label>input) — ebeveyn zaten sayılır
     const rect = el.getBoundingClientRect();

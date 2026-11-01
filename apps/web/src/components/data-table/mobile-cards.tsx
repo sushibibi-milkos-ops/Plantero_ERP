@@ -352,7 +352,7 @@ export function DataTableMobileCards<T>({
                   ) : null}
                 </div>
                 {metric ? (
-                  <div className="shrink-0 text-[13px] tabular-nums">{flexRender(metric.column.columnDef.cell, metric.getContext())}</div>
+                  <div className="max-w-[62%] shrink-0 truncate text-[13px] tabular-nums">{flexRender(metric.column.columnDef.cell, metric.getContext())}</div>
                 ) : null}
               </div>
             ) : null}

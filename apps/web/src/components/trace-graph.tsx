@@ -82,7 +82,7 @@ function NodeRow({ node, depth }: { node: TraceNode; depth: number }) {
         <Icon className="size-3.5" strokeWidth={1.75} />
       </span>
       <span className="shrink-0 text-[11px] whitespace-nowrap text-muted-foreground">{meta.label}</span>
-      <span className={cn('shrink-0', node.kind === 'lot' && 'font-mono')}>{node.label}</span>
+      <span className={cn('max-w-full shrink-0 break-words', node.kind === 'lot' && 'font-mono')}>{node.label}</span>
       {node.sub ? <span className="hidden min-w-0 truncate text-xs text-muted-foreground sm:inline">{node.sub}</span> : null}
       <span className="ml-auto flex shrink-0 items-center gap-2">
         {node.qty !== null && node.qty !== undefined ? <span className="num text-xs">{formatQty(node.qty, node.uom)}</span> : null}
@@ -155,7 +155,7 @@ export function TraceGraph({
       <li key={id}>
         <NodeRow node={node} depth={depth} />
         {kids.length ? (
-          <ul className="ml-[15px] border-l border-border/70 pl-3">{kids.map((k) => render(k, depth + 1))}</ul>
+          <ul className="ml-2.5 border-l border-border/70 pl-2 md:ml-[15px] md:pl-3">{kids.map((k) => render(k, depth + 1))}</ul>
         ) : null}
       </li>
     );

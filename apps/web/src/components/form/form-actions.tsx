@@ -38,7 +38,7 @@ export function FormActions({
         // z-20 + tam opak arka plan + ince gölge: mobildeki yapışkan halde altındaki içerik hiçbir
         // zaman sızmasın (Tur 2 bulgusu — önceki `/95` yarı saydamdı, z-index de tanımsızdı).
         sticky &&
-          'sticky bottom-16 -mx-4 z-20 bg-background px-4 pb-3 shadow-[0_-1px_2px_rgb(0_0_0/0.04)] md:static md:bottom-auto md:z-auto md:mx-0 md:px-0 md:pb-0 md:shadow-none',
+          'sticky bottom-[calc(var(--tabbar-h)+0.5rem)] -mx-4 z-20 bg-background px-4 pb-3 shadow-[0_-1px_2px_rgb(0_0_0/0.04)] md:static md:bottom-auto md:z-auto md:mx-0 md:px-0 md:pb-0 md:shadow-none',
         className,
       )}
     >

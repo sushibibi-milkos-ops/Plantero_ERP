@@ -179,7 +179,37 @@ export function CountWorkspace({
         <span className="text-sm text-muted-foreground">Toplam fark değeri</span>
         <MoneyCell value={varianceValue} signed className="text-base font-semibold" />
       </div>
-      <div className="overflow-x-auto rounded-lg border border-border/70 bg-card">
+      {/* Telefon: fark satırları inset kart listesi (tablo yatay kaydırma yerine) */}
+      <div className="md:hidden">
+        {varianceLines.length === 0 ? (
+          <div className="grouped-card border border-border/50">
+            <EmptyState compact title="Fark yok" description="Tüm satırlar sistemle uyumlu." />
+          </div>
+        ) : (
+          <ul className="grouped-card border border-border/50">
+            {varianceLines.map((l) => (
+              <li key={l.id} className="relative px-4 py-3 after:absolute after:right-0 after:bottom-0 after:left-4 after:h-px after:bg-border last:after:hidden">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-[15px] leading-5 font-medium break-words">{l.productName}</div>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted-foreground">
+                      <span className="code">{l.locationCode}</span>
+                      {l.lotNo ? <LotBadge lotNo={l.lotNo} /> : null}
+                    </div>
+                  </div>
+                  <MoneyCell value={(Number(l.varianceQty) * Number(l.unitCost)).toFixed(4)} signed className="shrink-0 text-[15px] font-semibold" />
+                </div>
+                <dl className="mt-2 grid grid-cols-3 gap-2 text-[13px]">
+                  <div><dt className="text-muted-foreground">Sistem</dt><dd><QtyCell value={l.systemQty} /></dd></div>
+                  <div><dt className="text-muted-foreground">Sayılan</dt><dd><QtyCell value={l.countedQty} /></dd></div>
+                  <div><dt className="text-muted-foreground">Fark</dt><dd><QtyCell value={l.varianceQty} /></dd></div>
+                </dl>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div className="hidden overflow-x-auto rounded-lg border border-border/70 bg-card md:block">
         <table className="w-full text-[13px]">
           <thead>
             <tr className="border-b border-border/60 bg-muted/40 text-left text-[12px] text-muted-foreground">

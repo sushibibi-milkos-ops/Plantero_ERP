@@ -146,6 +146,10 @@
   --sidebar-border: oklch(0 0 0 / 8%);
   --sidebar-ring: oklch(0.51 0.145 152);
   --material: oklch(0.963 0.004 286 / 72%);
+  /* Telefon kabuğu ölçüleri: alt sekme çubuğu 56px + güvenli alan, üst bar 48px + çentik.
+     `main` alt dolgusu, yapışkan eylem şeritleri ve tablo başlıkları bu değişkenlerden hesaplanır. */
+  --tabbar-h: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  --topbar-h: calc(3rem + env(safe-area-inset-top, 0px));
   --material-solid: oklch(0.963 0.004 286 / 94%);
   --scrim: oklch(0 0 0 / 32%);
 }
@@ -210,6 +214,10 @@
     text-rendering: optimizeLegibility;
     /* Dokunmatik: iOS gibi dokunuşta gri vurgu kutusu yok (basma geri bildirimi scale + zemin) */
     -webkit-tap-highlight-color: transparent;
+    /* iOS Safari: yatay çevirmede otomatik yazı büyütme yok; yatay kaydırma jesti sayfa gezintisi olmasın */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overscroll-behavior-x: none;
   }
   body {
     @apply bg-background text-foreground;
@@ -237,6 +245,43 @@
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Telefon (md altı) — iOS Safari uyumu ve okunabilirlik tabanı          */
+/* ------------------------------------------------------------------ */
+/* Katmansız (layer dışı) yazıldığı için Tailwind yardımcı sınıflarını (text-[13px] vb.) ezer;
+   `md:` ve üstünde etkisizdir. */
+@media (max-width: 47.9375rem) {
+  /* Odaklanınca iOS Safari 16px altı alanlara yakınlaştırır ve sayfa yana kayar: tüm giriş
+     alanları, seçici/combobox tetikleyicileri ve metin alanları telefonda 16px. */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  textarea,
+  select,
+  [data-slot="select-trigger"],
+  [role="combobox"] {
+    font-size: 16px;
+  }
+  /* Küçük etiket kaçış sınıfları (9–11px) telefonda 12px tabanına çıkar: okunabilirlik ölçütü. */
+  .text-\[9px\],
+  .text-\[10px\],
+  .text-\[11px\] {
+    font-size: 12px;
+  }
+  /* Recharts eksen etiketleri/açıklamalar (SVG tspan + satır içi stilli açıklama) 12px tabanı */
+  .recharts-wrapper text,
+  .recharts-wrapper tspan {
+    font-size: 12px;
+  }
+  .recharts-legend-wrapper {
+    font-size: 12px !important;
+  }
+  /* Sheet/dialog/popover içi kaydırma, arkadaki sayfaya zincirlenmesin */
+  [data-slot="sheet-content"],
+  [data-slot="dialog-content"],
+  [data-radix-popper-content-wrapper] {
+    overscroll-behavior: contain;
   }
 }
 

@@ -105,7 +105,12 @@ export function AppShell({
     return (
       <ShellContext.Provider value={value}>
         <div className="min-h-dvh bg-background">
-          <main id="main" className="min-h-dvh px-4 py-4 md:px-6 md:py-6">{children}</main>
+          <main
+            id="main"
+            className="min-h-dvh px-[max(1rem,env(safe-area-inset-left))] pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] md:px-6 md:py-6"
+          >
+            {children}
+          </main>
         </div>
         <CommandMenu />
       </ShellContext.Provider>
@@ -120,8 +125,10 @@ export function AppShell({
           <Topbar />
           {/* pb-32 (128px) mobilde: FormActions (sticky bottom-16, ~52px) + MobileNav (fixed bottom-0,
               h-14=56px) alt 116px'i kaplıyor — eski pb-24 (96px) 20px kısa kalıp formun son alanlarını
-              (ör. "Müşteri sipariş no") tab bar'ın altında bırakıyordu (Tur 2 bulgusu). */}
-          <main id="main" className="flex-1 px-4 pt-4 pb-32 md:px-6 md:pt-8 md:pb-12">
+              (ör. "Müşteri sipariş no") tab bar'ın altında bırakıyordu (Tur 2 bulgusu).
+              Şimdi: --tabbar-h (56px + env(safe-area-inset-bottom)) + 72px eylem şeridi payı — çentikli/ana ekran
+              göstergeli iPhone'larda da son öğe çubuğun üstünde kalır (docs/MOBILE-AUDIT.md). */}
+          <main id="main" className="flex-1 px-4 pt-4 pb-[calc(var(--tabbar-h)+4.5rem)] md:px-6 md:pt-8 md:pb-12">
             <div className="mx-auto w-full max-w-[1400px]">{children}</div>
           </main>
         </div>

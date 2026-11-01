@@ -52,7 +52,8 @@ const LINE_COLS_STYLE = { '--line-cols': 'minmax(0,1fr) 9rem 8rem 7rem 4rem 7rem
  *  sığmaz — Tur 4 P1 arge-recete-21'in "aynı satırda" ilkesi burada SÜTUN başına bir kez uygulanır,
  *  alan başına değil). Kaynak'a en geniş pay (Select metni en uzun: "Ortalama"/"Son alış").
  */
-const MOBILE_LINE_COLS_STYLE = { '--mobile-line-cols': '1.25fr 1.2fr 0.9fr 0.65fr' } as React.CSSProperties;
+// Telefonda giriş alanları 16px (iOS yakınlaştırma) olduğundan 4'lü tek şerit sığmaz: 2×2 ızgara (docs/MOBILE-AUDIT.md).
+const MOBILE_LINE_COLS_STYLE = { '--mobile-line-cols': '1fr 1fr' } as React.CSSProperties;
 
 /** Hücre kontrolleri (Combobox/NumberInput/Select) için ORTAK dinlenme/etkileşim sınıfı — kök neden
  *  düzeltmesi (Tur 5 P1 arge-recete-29): önceki `border-transparent` yaklaşımı REST'te GÖRÜNMEZ ama
@@ -650,7 +651,7 @@ export function CostSimulator({
                       düzeltmesi, Tur 5 P1 arge-recete-27); etiketler artık `sr-only` (aşağısı, FieldLabel)
                       — erişilebilir isim korunur ama görsel yükseklik tüketmez (Tur 6 P1 arge-recete-35,
                       düzenlenebilir kart 129px'ten ≤104px'e). */}
-                  <div className={cn('col-span-2 grid gap-x-1 [grid-template-columns:var(--mobile-line-cols)] md:contents', !editable && 'hidden md:contents')} style={MOBILE_LINE_COLS_STYLE}>
+                  <div className={cn('col-span-2 grid gap-x-2 gap-y-1.5 [grid-template-columns:var(--mobile-line-cols)] md:contents', !editable && 'hidden md:contents')} style={MOBILE_LINE_COLS_STYLE}>
                     <div className="min-w-0 md:block md:px-2 md:text-right" role="cell">
                       <FieldLabel>Miktar</FieldLabel>
                       <div className="flex min-w-0 items-center gap-0.5 md:justify-end md:gap-1">

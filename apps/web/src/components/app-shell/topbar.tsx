@@ -52,7 +52,7 @@ export function Topbar() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-30 flex h-12 items-center gap-2 border-b border-border px-3 md:px-6',
+        'sticky top-0 z-30 flex h-[var(--topbar-h)] items-center gap-2 border-b border-border px-3 pt-[env(safe-area-inset-top)] md:h-12 md:px-6 md:pt-0',
         // iPadOS gezinme çubuğu: yarı saydam materyal (zemin %72 + blur-xl + doygunluk) — içerik altından
         // bulanık kayar. `prefers-reduced-transparency`'de globals.css `.material` opaklaştırır.
         'material',

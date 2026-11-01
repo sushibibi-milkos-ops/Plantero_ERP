@@ -63,7 +63,7 @@ function SheetContent({
           // iPadOS sayfası/yan paneli: yarı saydam kalın materyal (blur), yuvarlak köşe, hairline kenar +
           // büyük yumuşak gölge. Açılış 350ms spring-benzeri eğri (ease-drawer), kapanış 250ms.
           // Giriş ve çıkış AYNI yoldan (slide-in-from-X / slide-out-to-X).
-          "material-thick fixed z-50 flex flex-col gap-4 text-popover-foreground shadow-lg transition ease-drawer data-[state=closed]:animate-out data-[state=closed]:duration-250 data-[state=open]:animate-in data-[state=open]:duration-350",
+          "material-thick fixed z-50 flex flex-col gap-4 overscroll-contain text-popover-foreground shadow-lg transition ease-drawer data-[state=closed]:animate-out data-[state=closed]:duration-250 data-[state=open]:animate-in data-[state=open]:duration-350",
           side === "right" &&
             "inset-y-0 right-0 h-full w-3/4 rounded-l-[20px] border-l border-border/40 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
           side === "left" &&
@@ -71,16 +71,18 @@ function SheetContent({
           side === "top" &&
             "inset-x-0 top-0 h-auto rounded-b-[20px] border-b border-border/40 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
           side === "bottom" &&
-            "inset-x-0 bottom-0 h-auto rounded-t-[20px] border-t border-border/40 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+            "inset-x-0 bottom-0 h-auto max-h-[92dvh] overflow-y-auto pb-[env(safe-area-inset-bottom)] rounded-t-[20px] border-t border-border/40 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
           className
         )}
         {...props}
       >
         {children}
         {showCloseButton && (
-          <SheetPrimitive.Close className="absolute top-3.5 right-3.5 grid size-8 place-items-center rounded-full bg-fill text-muted-foreground transition-[opacity,background-color] hover:bg-fill/70 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus:outline-hidden disabled:pointer-events-none">
-            <XIcon className="size-4" />
-            <span className="sr-only">Close</span>
+          <SheetPrimitive.Close className="group absolute top-1.5 right-1.5 grid size-11 place-items-center rounded-full text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus:outline-hidden disabled:pointer-events-none md:top-3.5 md:right-3.5 md:size-8">
+            <span className="grid size-8 place-items-center rounded-full bg-fill transition-[opacity,background-color] group-hover:bg-fill/70">
+              <XIcon className="size-4" />
+            </span>
+            <span className="sr-only">Kapat</span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Content>

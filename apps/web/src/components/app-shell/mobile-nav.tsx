@@ -36,7 +36,7 @@ export function MobileNav() {
               data-pressable
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium tracking-[0.1px]',
+                'flex h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[12px] leading-none font-medium tracking-[0.1px]',
                 active ? 'text-(--ink-primary) dark:text-primary' : 'text-muted-foreground',
               )}
             >
@@ -48,7 +48,7 @@ export function MobileNav() {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(true)}
-          className="flex h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium tracking-[0.1px] text-muted-foreground"
+          className="flex h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[12px] leading-none font-medium tracking-[0.1px] text-muted-foreground"
         >
           <LayoutGrid className="size-6" strokeWidth={1.6} />
           Menü
